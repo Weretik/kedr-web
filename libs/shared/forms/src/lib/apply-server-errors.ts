@@ -1,6 +1,5 @@
 ﻿import { AbstractControl, FormGroup } from '@angular/forms';
-
-import { ApiError } from '../../../util/src/lib/errors/api-error';
+import { ApiError } from '@shared/util';
 
 export function applyServerErrors(form: FormGroup, error: ApiError): void {
   if (error.code !== 'Validation' || !error.fieldErrors) return;

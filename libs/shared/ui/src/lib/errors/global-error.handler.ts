@@ -1,7 +1,6 @@
 ﻿import { ErrorHandler, Injectable, inject } from '@angular/core';
+import { ApiError, mapToApiError } from '@shared/util';
 
-import { ApiError } from '../../../../util/src/lib/errors/api-error';
-import { mapToApiError } from '../../../../util/src/lib/errors/error-mapper';
 import { NotificationService } from '../services/notification.service';
 import { ToastService } from '../services/toast.service';
 

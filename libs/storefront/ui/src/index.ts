@@ -1,1 +1,2 @@
-export * from './lib/storefront-ui/storefront-ui';
+export * from './lib/layout/footer/footer';
+export * from './lib/layout/header/header';

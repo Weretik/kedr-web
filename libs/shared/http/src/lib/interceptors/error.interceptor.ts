@@ -1,9 +1,8 @@
 ﻿import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { AppLogger } from '@shared/logging';
+import { ApiError } from '@shared/util';
 import { catchError, throwError } from 'rxjs';
-
-import { AppLogger } from '../../../../logging/src/lib/app-logger';
-import { ApiError } from '../../../../util/src/lib/errors/api-error';
 
 type ApiProblemDetails = {
   message?: string;

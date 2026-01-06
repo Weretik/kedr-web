@@ -15,23 +15,36 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@admin/app/*": ["apps/admin/src/app/*"],
-      "@admin/environments/*": ["apps/admin/src/environments/*"],
-      "@storefront/app/*": ["apps/storefront/src/app/*"],
-      "@storefront/environments/*": ["apps/storefront/src/environments/*"],
-      "@storefront/data-access": ["libs/storefront/data-access/src/index.ts"],
-      "@shared/ui": ["libs/shared/ui/src/index.ts"],
-      "@storefront/util": ["libs/storefront/util/src/index.ts"],
       "@admin/util": ["libs/admin/util/src/index.ts"],
       "@admin/ui": ["libs/admin/ui/src/index.ts"],
       "@admin/data-access": ["libs/admin/data-access/src/index.ts"],
+      "@storefront/data-access": ["libs/storefront/data-access/src/index.ts"],
+      "@storefront/ui": ["libs/storefront/ui/src/index.ts"],
+      "@storefront/util": ["libs/storefront/util/src/index.ts"],
+      "@shared/ui": ["libs/shared/ui/src/index.ts"],
       "@shared/data-access": ["libs/shared/data-access/src/index.ts"],
       "@shared/auth": ["libs/shared/auth/src/index.ts"],
       "@shared/config": ["libs/shared/config/src/index.ts"],
       "@shared/http": ["libs/shared/http/src/index.ts"],
       "@shared/util": ["libs/shared/util/src/index.ts"],
       "@shared/logging": ["libs/shared/logging/src/index.ts"],
-      "@shared/forms": ["libs/shared/forms/src/index.ts"]
+      "@shared/forms": ["libs/shared/forms/src/index.ts"],
+      "@storefront/feature/home": ["libs/storefront/feature/home/src/index.ts"],
+      "@storefront/feature/about-us": [
+        "libs/storefront/feature/about-us/src/index.ts"
+      ],
+      "@storefront/feature/contacts": [
+        "libs/storefront/feature/contacts/src/index.ts"
+      ],
+      "@storefront/feature/catalog": [
+        "libs/storefront/feature/catalog/src/index.ts"
+      ],
+      "@storefront/feature/wholesale": [
+        "libs/storefront/feature/wholesale/src/index.ts"
+      ],
+      "@storefront/feature/regions": [
+        "libs/storefront/feature/regions/src/index.ts"
+      ]
     }
   }
 }

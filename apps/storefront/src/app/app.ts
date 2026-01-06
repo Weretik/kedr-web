@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-import { NxWelcome } from './nx-welcome';
+import { Footer, Header } from '@storefront/ui';
+import { Toast } from 'primeng/toast';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [RouterModule, Toast, Footer, Header],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',

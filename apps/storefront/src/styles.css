@@ -4,10 +4,10 @@
 @custom-variant dark (&:where(.my-app-dark, .my-app-dark *));
 
 @theme {
-  --color-brand-primary: #fd9600;
-  --color-brand-neutral: #333333;
-  --color-brand-bg: #e6e6e6;
-  --color-brand-bg-dark: #09090b;
+  --color-brand-primary: #18b125ff;
+  --color-brand-neutral: #272927ff;
+  --color-brand-bg: #f3f5f4;
+  --color-brand-bg-dark: #272927ff;
 }
 
 html {

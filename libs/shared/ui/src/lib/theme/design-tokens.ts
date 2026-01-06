@@ -1,11 +1,11 @@
 ﻿export const tokens = {
   colors: {
-    primary: '#fd9600',
-    neutral: '#333333',
+    primary: '#18b125ff',
+    neutral: '#272927ff',
 
-    info: '#0ea5e9',
+    info: '#38bdf8',
     success: '#22c55e',
-    warning: '#facc15',
+    warning: '#fb923c',
     danger: '#ef4444',
 
     textOnDark: '#ffffff',
