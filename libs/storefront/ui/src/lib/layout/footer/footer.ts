@@ -1,6 +1,5 @@
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { ThemeService } from '@shared/ui';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'lib-footer',
@@ -8,6 +7,4 @@ import { ThemeService } from '@shared/ui';
   templateUrl: './footer.html',
   styleUrl: './footer.css',
 })
-export class Footer {
-  readonly theme = inject(ThemeService);
-}
+export class Footer {}

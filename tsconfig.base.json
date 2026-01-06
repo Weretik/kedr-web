@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@tokens/*": ["tools/tokens/*"],
       "@admin/util": ["libs/admin/util/src/index.ts"],
       "@admin/ui": ["libs/admin/ui/src/index.ts"],
       "@admin/data-access": ["libs/admin/data-access/src/index.ts"],
@@ -44,7 +45,8 @@
       ],
       "@storefront/feature/regions": [
         "libs/storefront/feature/regions/src/index.ts"
-      ]
+      ],
+      "@shared/theme": ["libs/shared/theme/src/index.ts"]
     }
   }
 }

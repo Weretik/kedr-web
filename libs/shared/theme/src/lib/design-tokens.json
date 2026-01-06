@@ -1,0 +1,12 @@
+{
+  "colors": {
+    "primary": "#18b125",
+    "neutral": "#272927",
+    "info": "#38bdf8",
+    "success": "#22c55e",
+    "warning": "#fb923c",
+    "danger": "#ef4444"
+  },
+  "radius": { "md": "10px" },
+  "spacing": { "sm": "0.5rem", "md": "1rem" }
+}

@@ -16,7 +16,8 @@ import {
   loggingInterceptor,
   API_URL,
 } from '@shared/http';
-import { KedrStorePreset, GlobalErrorHandler } from '@shared/ui';
+import { KedrStorePreset } from '@shared/theme';
+import { GlobalErrorHandler } from '@shared/ui';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 

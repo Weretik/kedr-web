@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "tokens:gen": "node tools/tokens/generate-tailwind-palette.mjs"
   },
   "private": true,
   "dependencies": {
@@ -68,6 +69,7 @@
     "@vitest/coverage-v8": "4.0.9",
     "@vitest/ui": "4.0.9",
     "angular-eslint": "21.1.0",
+    "chroma-js": "^3.2.0",
     "cross-env": "^10.1.0",
     "esbuild": "^0.19.2",
     "eslint": "^9.39.2",
