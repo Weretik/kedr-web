@@ -28,6 +28,11 @@ export class Header {
   public items: MegaMenuItem[] | undefined;
 
   public readonly megaMenuPt = {
+    root: {
+      style: {
+        '--p-megamenu-submenu-label-color': 'var(--p-primary-500)',
+      },
+    },
     rootList: {
       style: {
         flexGrow: '1',
@@ -35,6 +40,12 @@ export class Header {
       },
     },
     button: {
+      style: {
+        flexGrow: '1',
+        justifyContent: 'center',
+      },
+    },
+    submenuLabel: {
       style: {
         flexGrow: '1',
         justifyContent: 'center',
