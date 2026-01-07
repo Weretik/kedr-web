@@ -1,1 +1,62 @@
-<p>header works!</p>
+<div
+  class="card fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-surface-950/95 backdrop-blur border-b border-surface-400 dark:border-surface-600"
+>
+  <p-megaMenu [model]="items" [pt]="megaMenuPt">
+    <ng-template #start>
+      <a routerLink="/" class="flex items-center gap-2">
+        <img
+          ngSrc="/assets/logo/class-logo.svg"
+          width="50"
+          height="25"
+          alt="Class Logo"
+          class="h-8 w-auto"
+        />
+        <img
+          ngSrc="/assets/logo/kedr-logo.svg"
+          width="50"
+          height="25"
+          alt="Kedr Logo"
+          class="h-8 w-auto"
+        />
+      </a>
+    </ng-template>
+    <ng-template #end>
+      <div class="flex justify-around items-center">
+        <button
+          pButton
+          severity="secondary"
+          [rounded]="true"
+          [text]="true"
+          (click)="themeService.toggleTheme()"
+          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+          aria-label="Змінити тему"
+        >
+          <i
+            class="pi"
+            [ngClass]="themeService.isDark() ? 'pi-moon' : 'pi-sun'"
+          ></i>
+        </button>
+        <button
+          pButton
+          severity="secondary"
+          [text]="true"
+          [rounded]="true"
+          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+          aria-label="Аккаунт"
+        >
+          <i class="pi pi-user"></i>
+        </button>
+        <button
+          pButton
+          severity="secondary"
+          [text]="true"
+          [rounded]="true"
+          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+          aria-label="Корзина"
+        >
+          <i class="pi pi-shopping-cart"></i>
+        </button>
+      </div>
+    </ng-template>
+  </p-megaMenu>
+</div>
