@@ -7,11 +7,6 @@
 @theme {
   --font-sans:
     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  --color-brand-primary: #18b125ff;
-  --color-brand-neutral: #272927ff;
-  --color-brand-bg: #f3f5f4;
-  --color-brand-bg-dark: #272927ff;
 }
 
 html {
@@ -31,9 +26,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: var(--color-brand-bg);
+  background-color: var(--color-neutral-50);
 }
 
 .my-app-dark body {
-  background-color: var(--color-brand-bg-dark);
+  background-color: var(--color-surface-900);
 }
