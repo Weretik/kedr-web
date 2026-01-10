@@ -1,5 +1,6 @@
 ﻿import fs from 'node:fs';
 import path from 'node:path';
+
 import chroma from 'chroma-js';
 
 const tokensPath = path.resolve('libs/shared/theme/src/lib/design-tokens.json');

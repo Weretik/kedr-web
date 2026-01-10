@@ -1,12 +1,11 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ThemeService } from '@shared/ui';
 import { MegaMenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
-
-import { ThemeService } from '../../../../../../shared/ui/src/lib/services/theme.service';
 
 @Component({
   selector: 'lib-header',
