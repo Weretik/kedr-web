@@ -20,6 +20,43 @@
         />
       </a>
     </ng-template>
+
+    <ng-template #item let-item>
+      @if (item.root) {
+      <a
+        pRipple
+        [routerLink]="item.routerLink"
+        class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-base uppercase"
+        style="border-radius: 2rem"
+      >
+        <i [ngClass]="item.icon"></i>
+        <span class="ml-2">{{ item.label }}</span>
+
+        @if (item.items?.length) {
+        <i class="pi pi-angle-down ml-2" aria-hidden="true"></i>
+        }
+      </a>
+      } @else if (!item.image) {
+      <a class="flex items-center px-4 cursor-pointer mb-2 gap-2">
+        <span class="inline-flex flex-col gap-1">
+          <span class="text-base text-surface-900 dark:text-surface-0">
+            {{ item.label }}
+          </span>
+        </span>
+      </a>
+      } @else {
+      <div class="flex flex-col items-start gap-4">
+        <img [src]="item.image" alt="wholesale-logo" class="w-full" />
+        <span>{{ item.subtext }}</span>
+        <p-button
+          [label]="item.label"
+          [outlined]="true"
+          [routerLink]="item.routerLink"
+        ></p-button>
+      </div>
+      }
+    </ng-template>
+
     <ng-template #end>
       <div class="flex justify-around items-center">
         <button

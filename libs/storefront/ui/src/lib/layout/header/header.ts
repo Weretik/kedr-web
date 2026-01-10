@@ -6,6 +6,7 @@ import { MegaMenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
+import { Ripple } from 'primeng/ripple';
 
 @Component({
   selector: 'lib-header',
@@ -16,6 +17,7 @@ import { MegaMenu } from 'primeng/megamenu';
     AvatarModule,
     NgOptimizedImage,
     RouterLink,
+    Ripple,
   ],
   templateUrl: './header.html',
   styleUrl: './header.css',
@@ -63,8 +65,9 @@ export class Header {
 
     this.items = [
       {
-        label: 'Фурнітура',
+        label: 'Каталог',
         icon: 'pi pi-bookmark-fill',
+        root: true,
         items: [
           [
             {
@@ -75,8 +78,6 @@ export class Header {
                 { label: 'Врізні' },
               ],
             },
-          ],
-          [
             {
               label: 'Замки',
               items: [
@@ -101,8 +102,6 @@ export class Header {
                 { label: 'Ручки-кноби' },
               ],
             },
-          ],
-          [
             {
               label: 'Циліндри',
               items: [
@@ -127,8 +126,6 @@ export class Header {
                 { label: 'TV Stand', routerLink: ['/faq'] },
               ],
             },
-          ],
-          [
             {
               label: 'Інше',
               items: [
@@ -143,23 +140,6 @@ export class Header {
               ],
             },
           ],
-        ],
-      },
-      {
-        label: 'Двері',
-        icon: 'pi pi-bookmark',
-        items: [
-          [
-            {
-              label: 'Міжкімнатні двері',
-              items: [
-                { label: 'Korfad' },
-                { label: 'Leador' },
-                { label: 'Darumi' },
-                { label: 'Syndicate' },
-              ],
-            },
-          ],
           [
             {
               label: 'Вхідні двері',
@@ -171,63 +151,88 @@ export class Header {
                 { label: 'Maximum' },
               ],
             },
+            {
+              label: 'Міжкімнатні двері',
+              items: [
+                { label: 'Korfad' },
+                { label: 'Leador' },
+                { label: 'Darumi' },
+                { label: 'Syndicate' },
+              ],
+            },
+          ],
+        ],
+      },
+      {
+        label: 'Про нас',
+        icon: 'pi pi-exclamation-circle',
+        root: true,
+        items: [
+          [
+            {
+              label: 'Корисне',
+              items: [
+                { label: 'Про компанію' },
+                { label: 'Доставка та оплата' },
+                { label: 'Повернення та обмім' },
+                { label: 'Галерея та відео' },
+                { label: 'Статті' },
+                { label: 'Контакти' },
+              ],
+            },
+          ],
+          [
+            {
+              label: 'Регіони',
+              items: [
+                { label: 'Харків' },
+                { label: 'Київ' },
+                { label: 'Дніпро' },
+                { label: 'Запоріжжя' },
+                { label: 'Миколаїв' },
+                { label: 'Одеса' },
+                { label: 'Полтава' },
+                { label: 'Кривий ріг' },
+                { label: 'Миколаїв' },
+                { label: 'Вінниця' },
+                { label: 'Житомир' },
+                { label: 'Біла церква' },
+                { label: 'Суми' },
+                { label: 'Чернігів' },
+              ],
+            },
+          ],
+          [
+            {
+              label: 'Юридична інформація',
+              items: [
+                { label: 'Угода користувача' },
+                { label: 'Політика конфіденційності' },
+                { label: 'Юридична інформація' },
+                { label: 'Договір публічної оферти' },
+              ],
+            },
+          ],
+          [
+            {
+              items: [
+                {
+                  image:
+                    'https://primefaces.org/cdn/primeng/images/uikit/uikit-system.png',
+                  label: 'Замовити оптом',
+                  routerLink: '/wholesale',
+                  subtext: 'Умови співпраці для оптових партнерів',
+                },
+              ],
+            },
           ],
         ],
       },
       {
         label: 'Замовити оптом',
         icon: 'pi pi-cart-plus',
+        root: true,
         routerLink: '/wholesale',
-      },
-      {
-        label: 'Про нас',
-        icon: 'pi pi-exclamation-circle',
-        items: [
-          [
-            {
-              label: 'Football',
-              items: [
-                { label: 'Kits' },
-                { label: 'Shoes' },
-                { label: 'Shorts' },
-                { label: 'Training' },
-              ],
-            },
-          ],
-          [
-            {
-              label: 'Running',
-              items: [
-                { label: 'Accessories' },
-                { label: 'Shoes' },
-                { label: 'T-Shirts' },
-                { label: 'Shorts' },
-              ],
-            },
-          ],
-          [
-            {
-              label: 'Swimming',
-              items: [
-                { label: 'Kickboard' },
-                { label: 'Nose Clip' },
-                { label: 'Swimsuits' },
-                { label: 'Paddles' },
-              ],
-            },
-          ],
-          [
-            {
-              label: 'Tennis',
-              items: [
-                { label: 'Balls' },
-                { label: 'Rackets' },
-                { label: 'Shoes' },
-                { label: 'Training' },
-              ],
-            },
-          ],
-        ],
       },
     ];
   }
