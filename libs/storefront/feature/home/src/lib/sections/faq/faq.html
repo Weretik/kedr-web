@@ -1,0 +1,29 @@
+<div class="bg-neutral-50 dark:bg-surface-950 p-12 lg:p-20">
+  <div class="flex flex-col items-center mb-10">
+    <div class="flex flex-col items-center gap-4">
+      <h1
+        class="text-3xl font-bold text-surface-900 dark:text-surface-0 leading-tight"
+      >
+        Часті запитання
+      </h1>
+      <p
+        class="text-lg text-surface-700 dark:text-surface-0/70 leading-normal text-center"
+      >
+        Корисна інформація для тих, хто обирає дверну фурнітуру: від замків і
+        ручок до петель та дотягувачів.
+      </p>
+    </div>
+  </div>
+  <div class="card">
+    <p-accordion [value]="0">
+      @for (tab of tabs; track tab.title) {
+      <p-accordion-panel [value]="tab.value">
+        <p-accordion-header>{{ tab.title }}</p-accordion-header>
+        <p-accordion-content>
+          <p class="text-justify whitespace-break-spaces">{{ tab.content }}</p>
+        </p-accordion-content>
+      </p-accordion-panel>
+      }
+    </p-accordion>
+  </div>
+</div>
