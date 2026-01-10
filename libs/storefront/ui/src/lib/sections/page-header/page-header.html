@@ -1,8 +1,12 @@
-<div class="bg-brand-bg dark:bg-surface-950 px-6 py-8 md:px-12 lg:px-20">
-  <div class="flex flex-col gap-4">
+<div class="bg-neutral-50 dark:bg-surface-900 px-6 py-8 md:px-12 lg:px-20">
+  <div class="flex flex-col gap-2">
     <!-- Breadcrumbs -->
-    <div class="card flex justify-center">
-      <p-breadcrumb [home]="home" [model]="config().breadcrumbs" />
+    <div class="flex mt-8">
+      <p-breadcrumb
+        [home]="home"
+        [model]="config().breadcrumbs"
+        [pt]="breadcrumbPt"
+      />
     </div>
 
     <!-- Title + actions -->
