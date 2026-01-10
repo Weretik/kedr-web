@@ -31,7 +31,7 @@ export class CompanyStats {
       description: 'нам довіряють тисячі клієнтів по всій україні.',
     },
     {
-      icon: 'pi pi-map',
+      icon: 'pi pi-truck',
       title: '1 000+',
       description: 'щороку здійснюємо сотні оптових поставок.',
     },

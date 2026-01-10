@@ -1,5 +1,9 @@
 import { Route } from '@angular/router';
 
-import { Wholesale } from './wholesale/wholesale';
-
-export const wholesaleRoutes: Route[] = [{ path: '', component: Wholesale }];
+export const wholesaleRoutes: Route[] = [
+  {
+    path: 'wholesale',
+    loadComponent: () =>
+      import('./wholesale/page/wholesale-page').then((m) => m.WholesalePage),
+  },
+];

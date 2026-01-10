@@ -64,7 +64,7 @@ export class Header {
     this.items = [
       {
         label: 'Фурнітура',
-        icon: 'pi pi-box',
+        icon: 'pi pi-bookmark-fill',
         items: [
           [
             {
@@ -147,7 +147,7 @@ export class Header {
       },
       {
         label: 'Двері',
-        icon: 'pi pi-mobile',
+        icon: 'pi pi-bookmark',
         items: [
           [
             {
@@ -175,8 +175,13 @@ export class Header {
         ],
       },
       {
-        label: 'Sports',
-        icon: 'pi pi-clock',
+        label: 'Замовити оптом',
+        icon: 'pi pi-cart-plus',
+        routerLink: '/wholesale',
+      },
+      {
+        label: 'Про нас',
+        icon: 'pi pi-exclamation-circle',
         items: [
           [
             {
