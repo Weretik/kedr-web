@@ -37,7 +37,10 @@
         }
       </a>
       } @else if (!item.image) {
-      <a class="flex items-center px-4 cursor-pointer mb-2 gap-2">
+      <a
+        class="flex items-center px-4 cursor-pointer mb-2 gap-2"
+        [routerLink]="item.routerLink"
+      >
         <span class="inline-flex flex-col gap-1">
           <span class="text-base text-surface-900 dark:text-surface-0">
             {{ item.label }}

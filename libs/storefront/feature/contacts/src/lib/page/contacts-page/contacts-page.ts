@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
+import { ContactUs } from '../sections/contact-us/contact-us';
+import { OurTeam } from '../sections/our-team/our-team';
+
 @Component({
   selector: 'lib-contacts-page',
-  imports: [PageHeader],
+  imports: [PageHeader, ContactUs, OurTeam],
   templateUrl: './contacts-page.html',
   styleUrl: './contacts-page.css',
 })
 export class ContactsPage {
   headerConfig: PageHeaderConfig = {
     title: 'Контакти',
-    breadcrumbs: [{ label: 'Контакти' }],
+    breadcrumbs: [{ label: 'Про нас' }, { label: 'Контакти' }],
     showSearch: false,
   };
 }

@@ -123,7 +123,7 @@ export class Header {
                 { label: 'заскочки / засувки' },
                 { label: 'з металевою защіпкою' },
                 { label: 'з кевларовою защіпкою' },
-                { label: 'TV Stand', routerLink: ['/faq'] },
+                { label: 'TV Stand' },
               ],
             },
             {
@@ -177,7 +177,7 @@ export class Header {
                 { label: 'Повернення та обмім' },
                 { label: 'Галерея та відео' },
                 { label: 'Статті' },
-                { label: 'Контакти' },
+                { label: 'Контакти', routerLink: ['/contacts'] },
               ],
             },
           ],
