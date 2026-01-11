@@ -1,0 +1,67 @@
+<div class="bg-neutral-50 dark:bg-surface-900 px-6 py-20 md:px-12 lg:px-20">
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <div
+        class="text-surface-900 dark:text-surface-0 text-5xl font-semibold leading-tight"
+      >
+        Асортимент дверної фурнітури
+      </div>
+      <div
+        class="text-surface-600 dark:text-surface-200 text-xl font-normal leading-tight"
+      >
+        широкий вибір товарів завжди у наявності на складі для швидкої
+        комплектації та відвантаження
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for ( item of productList; track item.name){
+      <div
+        class="bg-surface-0 dark:bg-surface-800 shadow-sm rounded-2xl p-2 inline-flex flex-col gap-4"
+      >
+        <img
+          src="{{item.image}}"
+          class="self-stretch h-43.75 rounded-lg object-cover"
+          alt="product"
+        />
+        <div class="self-stretch flex flex-col gap-4">
+          <div class="self-stretch flex-1 p-2 flex flex-col gap-4">
+            <div class="self-stretch inline-flex gap-4">
+              <div class="flex-1 inline-flex flex-col gap-2">
+                <div
+                  class="self-stretch text-surface-900 dark:text-surface-0 text-lg font-medium leading-tight"
+                >
+                  {{item.name}}
+                </div>
+                <div
+                  class="self-stretch text-surface-500 dark:text-surface-400 text-base font-normal leading-tight"
+                >
+                  {{item.description}}
+                </div>
+              </div>
+              <div
+                class="text-surface-800 dark:text-surface-50 text-4xl font-medium leading-tight"
+              >
+                {{ item.price }} грн
+              </div>
+            </div>
+          </div>
+          <div class="self-stretch p-2 inline-flex gap-2">
+            @for(button of item.buttons; track button.label){
+            <button
+              pButton
+              type="button"
+              severity="secondary"
+              outlined
+              class="flex-1 rounded-md! py-2! px-3!"
+            >
+              <span pButtonLabel>{{button.label}}</span>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
