@@ -9,7 +9,7 @@ import {
   withEventReplay,
   withIncrementalHydration,
 } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import {
   baseUrlInterceptor,
   errorInterceptor,
@@ -35,7 +35,12 @@ export const appConfig: ApplicationConfig = {
       ]),
     ),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(appRoutes),
+    provideRouter(
+      appRoutes,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'top',
+      }),
+    ),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     MessageService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
