@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PartnersBrands } from '@storefront/ui';
+import { InStockProducts, PartnersBrands } from '@storefront/ui';
 
 import { CompanyFeatures } from '../../sections/company-features/company-features';
 import { CompanyStats } from '../../sections/company-stats/company-stats';
@@ -8,7 +8,14 @@ import { MainHero } from '../../sections/main-hero/main-hero';
 
 @Component({
   selector: 'lib-home-page',
-  imports: [MainHero, CompanyStats, Faq, CompanyFeatures, PartnersBrands],
+  imports: [
+    MainHero,
+    CompanyStats,
+    Faq,
+    CompanyFeatures,
+    PartnersBrands,
+    InStockProducts,
+  ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
