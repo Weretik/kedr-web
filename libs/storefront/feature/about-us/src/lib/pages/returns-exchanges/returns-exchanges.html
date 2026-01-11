@@ -1,1 +1,244 @@
-<p>returns-exchanges works!</p>
+<lib-page-header [config]="headerConfig" />
+
+<div class="bg-neutral-50 dark:bg-surface-900 px-6 py-20 md:px-12 lg:px-20">
+  <div class="max-w-4xl mx-auto flex flex-col gap-8">
+    <div class="flex flex-col gap-6">
+      <h2
+        class="text-2xl font-medium text-surface-900 dark:text-surface-0 leading-tight"
+      >
+        1: Загальні положення
+      </h2>
+
+      <p-tag
+        value="Вступ"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <p class="text-lg text-surface-700 dark:text-surface-300 leading-normal">
+        Приватне підприємство “Class kedr” прагне забезпечити високу якість
+        обслуговування та задоволення потреб наших клієнтів. Відповідно до
+        законодавства України, ми пропонуємо нашим клієнтам можливість
+        повернення чи обміну товарів у рамках встановлених правил та умов.
+      </p>
+
+      <p-tag
+        value="Обмін та Повернення Товару"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Відповідно до чинного законодавства України, обмін та повернення
+          товару можливе протягом 14 днів з моменту покупки.
+        </li>
+        <li class="whitespace-pre-line">
+          Посилання на закон: Закон України “Про захист прав споживачів” (стаття
+          9), який визначає права споживача на обмін або повернення товару у
+          зазначений термін.
+        </li>
+      </ul>
+
+      <p-tag
+        value="Умови для Повернення/Обміну"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Товар повинен бути в оригінальній упаковці, зберігати всі споживчі
+          властивості, фабричні ярлики і не мати слідів використання.
+        </li>
+        <li class="whitespace-pre-line">
+          Для повернення або обміну необхідно пред’явити документ, що
+          підтверджує покупку.
+        </li>
+      </ul>
+
+      <p-tag
+        value="Винятки з Правил Повернення та Обміну"
+        severity="warn"
+        class="text-base! font-bold! py-1!"
+      />
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Винятки можуть застосовуватися до товарів, виготовлених на
+          індивідуальне замовлення або мають унікальні характеристики, які
+          роблять їх непридатними для подальшого використання іншими клієнтами.
+        </li>
+      </ul>
+      <p class="text-lg text-surface-700 dark:text-surface-300 leading-normal">
+        Ми поважаємо та цінуємо кожного нашого клієнта та прагнемо до того, щоб
+        процес повернення та обміну товару був максимально зручним та прозорим.
+      </p>
+    </div>
+    <div class="flex flex-col gap-6">
+      <h2
+        class="text-2xl font-medium text-surface-900 dark:text-surface-0 leading-tight"
+      >
+        2: Умови обміну та повернення товару
+      </h2>
+
+      <p-tag
+        value="2.1. Основні вимоги до повернення та обміну"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <p class="text-lg text-surface-700 dark:text-surface-300 leading-normal">
+        Приватне підприємство “Class Kedr” передбачає такі умови для повернення
+        або обміну товару:
+      </p>
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Стан товару: Товар має бути в невикористаному стані, зберігати всі
+          споживчі властивості, фабричні ярлики та оригінальну упаковку.
+        </li>
+        <li class="whitespace-pre-line">
+          Доказ покупки: Для повернення чи обміну необхідно пред’явити документ,
+          що підтверджує покупку товару.
+        </li>
+      </ul>
+
+      <p-tag
+        value="2.2. Випадки браку чи помилки з боку ПП “Class Kedr”"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <p class="text-lg text-surface-700 dark:text-surface-300 leading-normal">
+        У разі виявлення браку, помилки у виготовленні або якщо клієнту було
+        відправлено неправильне замовлення, ПП “Class Kedr” бере на себе
+        відповідальність і пропонує такі опції:
+      </p>
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Обмін товару: Обмін на новий товар аналогічної якості або інший товар
+          за погодженням з клієнтом.
+        </li>
+        <li class="whitespace-pre-line">
+          Повернення коштів: Якщо обмін товару неможливий. Повернення грошей
+          займає трохи більше 7 робочих днів.
+        </li>
+        <li class="whitespace-pre-line">
+          Оплата витрат на доставку: Всі витрати на повернення товару у разі
+          браку або помилки з боку ПП “Class Kedr” покриваються нами.
+        </li>
+      </ul>
+
+      <p-tag
+        value="2.3. Повернення товару за ініціативою клієнта"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <p class="text-lg text-surface-700 dark:text-surface-300 leading-normal">
+        Якщо товар не відповідає очікуванням клієнта з причин, не пов’язаних з
+        якістю або помилками з боку ПП “Class Kedr”, застосовуються такі умови:
+      </p>
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Самостійне відправлення: Клієнт бере на себе зобов’язання щодо
+          організації та оплати доставки товару, що повертається.
+        </li>
+        <li class="whitespace-pre-line">
+          Обробка повернення: Після отримання та перевірки товару, ПП “Бреві”
+          здійснить повернення коштів відповідно до встановлених умов.
+        </li>
+      </ul>
+    </div>
+    <div class="flex flex-col gap-6">
+      <h2
+        class="text-2xl font-medium text-surface-900 dark:text-surface-0 leading-tight"
+      >
+        3: Інструкція щодо обміну товару
+      </h2>
+      <p class="text-lg text-surface-700 dark:text-surface-300 leading-normal">
+        Щоб забезпечити ефективний та зрозумілий процес обміну товару для наших
+        клієнтів, Приватне підприємство “Бреві” пропонує наступну покрокову
+        інструкцію:
+      </p>
+
+      <p-tag
+        value="3.1. Зв’язок із Компанією"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Започаткування процесу обміну: Зателефонуйте за номером телефону,
+          вказаним на сайті brevi.com.ua. Наші менеджери доступні для зв’язку в
+          робочі години, які також вказані на сайті.
+        </li>
+        <li class="whitespace-pre-line">
+          Надання інформації про замовлення: Під час дзвінка підготуйте та
+          надайте інформацію про ваше замовлення, включаючи найменування товару
+          та причину обміну.
+        </li>
+      </ul>
+
+      <p-tag
+        value="3.2. Підготовка та відправка Товару"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Упаковка товару: Ретельно запакуйте товар в оригінальну упаковку,
+          переконайтеся, що всі фабричні ярлики на місці.
+        </li>
+        <li class="whitespace-pre-line">
+          Додавання документів: Додайте копію документа, який підтверджує
+          покупку.
+        </li>
+        <li class="whitespace-pre-line">
+          Вибір способу доставки: Визначте відповідний спосіб доставки. У разі
+          обміну товару через брак або помилку з боку ПП “Бреві”, ми відшкодуємо
+          витрати на доставку.
+        </li>
+        <li class="whitespace-pre-line">
+          Інформація про відправлення: Повідомте дату та спосіб відправлення
+          товару, щоб ми могли оперативно обробити ваш запит на обмін.
+        </li>
+      </ul>
+
+      <p-tag
+        value="3.3. Завершення процесу обміну"
+        severity="contrast"
+        class="text-base! font-bold! py-1!"
+      />
+      <ul
+        class="text-lg text-surface-700 dark:text-surface-300 leading-normal list-disc space-y-2 pl-6"
+      >
+        <li class="whitespace-pre-line">
+          Прийом та перевірка товару: Після отримання товару наша команда
+          проведе його перевірку, щоб переконатися у відповідності до умов
+          повернення.
+        </li>
+        <li class="whitespace-pre-line">
+          Здійснення обміну: Після затвердження обміну ми організуємо відправку
+          нового товару в залежності від вашого вибору.
+        </li>
+        <li class="whitespace-pre-line">
+          Повідомлення про статус: Ви будете проінформовані про кожен етап
+          процесу обміну, включаючи підтвердження прийому поверненого товару та
+          відправку нового замовлення.
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<lib-in-stock-products />

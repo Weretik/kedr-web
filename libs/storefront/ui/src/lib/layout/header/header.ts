@@ -164,19 +164,25 @@ export class Header {
         ],
       },
       {
-        label: 'Про нас',
+        label: 'Інформація',
         icon: 'pi pi-exclamation-circle',
         root: true,
         items: [
           [
             {
-              label: 'Корисне',
+              label: 'Про нас',
               items: [
-                { label: 'Про компанію' },
-                { label: 'Доставка та оплата' },
-                { label: 'Повернення та обмім' },
-                { label: 'Галерея та відео' },
-                { label: 'Статті' },
+                { label: 'Про компанію', routerLink: ['/about-company'] },
+                {
+                  label: 'Доставка та оплата',
+                  routerLink: ['/delivery-and-payment'],
+                },
+                {
+                  label: 'Повернення та обмім',
+                  routerLink: ['/returns-exchanges'],
+                },
+                { label: 'Галерея та відео', routerLink: ['/galleria'] },
+                { label: 'Статті', routerLink: ['/articles'] },
                 { label: 'Контакти', routerLink: ['/contacts'] },
               ],
             },
@@ -227,12 +233,6 @@ export class Header {
             },
           ],
         ],
-      },
-      {
-        label: 'Замовити оптом',
-        icon: 'pi pi-cart-plus',
-        root: true,
-        routerLink: '/wholesale',
       },
     ];
   }
