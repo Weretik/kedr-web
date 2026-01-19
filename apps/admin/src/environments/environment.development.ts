@@ -12,7 +12,7 @@
   },
 
   features: {
-    home: true,
+    dashboard: true,
     catalog: true,
   },
 };

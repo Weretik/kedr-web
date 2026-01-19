@@ -14,7 +14,7 @@ import {
   baseUrlInterceptor,
   errorInterceptor,
   loggingInterceptor,
-  API_URL,
+  API_BASE_URL,
 } from '@shared/http';
 import { KedrStorePreset } from '@shared/theme';
 import { GlobalErrorHandler } from '@shared/ui';
@@ -26,7 +26,7 @@ import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    { provide: API_URL, useValue: environment.api.baseUrl },
+    { provide: API_BASE_URL, useValue: environment.api.baseUrl },
     provideHttpClient(
       withInterceptors([
         baseUrlInterceptor,
