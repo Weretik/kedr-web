@@ -3,12 +3,12 @@
   enableHttpLogs: false,
 
   app: {
-    name: 'Kedr Admin',
+    name: 'Kedr Store',
     version: '0.1.0',
   },
 
   api: {
-    baseUrl: 'https://api.Kedr.com.ua/admin',
+    baseUrl: 'https://api.Kedr.com.ua/',
     timeoutMs: 15000,
   },
 
