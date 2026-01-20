@@ -1,12 +1,13 @@
 ﻿import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AppLogger } from '@shared/logging';
 import { ApiError } from '@shared/util';
 import { catchError, throwError } from 'rxjs';
 
-type ApiProblemDetails = {
-  message?: string;
+type ProblemDetails = {
+  type?: string;
   title?: string;
+  status?: number;
+  detail?: string;
+  instance?: string;
   traceId?: string;
   errors?: Record<string, string[]>;
 };
@@ -15,28 +16,44 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-function toProblemDetails(value: unknown): ApiProblemDetails | undefined {
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((x) => typeof x === 'string');
+}
+
+function toProblemDetails(value: unknown): ProblemDetails | undefined {
   if (!isRecord(value)) return undefined;
 
-  const errors = value['errors'];
+  const errorsRaw = value['errors'];
+  let errors: Record<string, string[]> | undefined;
+
+  if (isRecord(errorsRaw)) {
+    const mapped: Record<string, string[]> = {};
+    for (const [k, v] of Object.entries(errorsRaw)) {
+      if (isStringArray(v)) mapped[k] = v;
+    }
+    if (Object.keys(mapped).length > 0) errors = mapped;
+  }
 
   return {
-    message:
-      typeof value['message'] === 'string' ? value['message'] : undefined,
+    type: typeof value['type'] === 'string' ? value['type'] : undefined,
     title: typeof value['title'] === 'string' ? value['title'] : undefined,
+    status: typeof value['status'] === 'number' ? value['status'] : undefined,
+    detail: typeof value['detail'] === 'string' ? value['detail'] : undefined,
+    instance:
+      typeof value['instance'] === 'string' ? value['instance'] : undefined,
     traceId:
       typeof value['traceId'] === 'string' ? value['traceId'] : undefined,
-    errors: isRecord(errors) ? (errors as Record<string, string[]>) : undefined,
+    errors,
   };
 }
 
 function mapHttpError(err: HttpErrorResponse): ApiError {
   if (err.status === 0) {
-    return {
-      code: 'Network',
-      status: 0,
-      message: 'Network error. Check connection.',
-    };
+    const message =
+      err.error instanceof ProgressEvent
+        ? 'Network error (blocked/aborted/offline).'
+        : 'Network error. Check connection.';
+    return { code: 'Network', status: 0, message };
   }
 
   if (err.status === 401)
@@ -45,44 +62,48 @@ function mapHttpError(err: HttpErrorResponse): ApiError {
     return { code: 'Forbidden', status: 403, message: 'Forbidden' };
   if (err.status === 404)
     return { code: 'NotFound', status: 404, message: 'Not found' };
-  if (err.status >= 500)
-    return { code: 'Server', status: err.status, message: 'Server error' };
 
-  const body = toProblemDetails(err.error);
-  const fieldErrors =
-    body?.errors && typeof body.errors === 'object' ? body.errors : undefined;
+  const pd = toProblemDetails(err.error);
+  const fieldErrors = pd?.errors;
 
   const message =
-    body?.message ?? body?.title ?? err.message ?? 'Request failed';
+    pd?.detail?.trim() || pd?.title?.trim() || err.message || 'Request failed';
+
+  if (fieldErrors && err.status >= 400 && err.status < 500) {
+    return {
+      code: 'Validation',
+      status: err.status,
+      message: message || 'Validation failed',
+      fieldErrors,
+      traceId: pd?.traceId,
+    };
+  }
+
+  if (err.status >= 500) {
+    return {
+      code: 'Server',
+      status: err.status,
+      message: message || 'Server error',
+      traceId: pd?.traceId,
+    };
+  }
 
   return {
-    code: fieldErrors ? 'Validation' : 'Unknown',
+    code: 'Unknown',
     status: err.status,
     message,
-    fieldErrors,
-    traceId: body?.traceId,
+    traceId: pd?.traceId,
   };
 }
 
-export const errorInterceptor: HttpInterceptorFn = (request, next) => {
-  const logger = inject(AppLogger);
-
-  return next(request).pipe(
+export const errorInterceptor: HttpInterceptorFn = (_req, next) =>
+  next(_req).pipe(
     catchError((e: unknown) => {
-      const err =
+      const httpErr =
         e instanceof HttpErrorResponse
           ? e
           : new HttpErrorResponse({ error: e });
 
-      logger.logError({
-        method: request.method,
-        url: request.url,
-        status: err.status ?? 0,
-        durationMs: 0,
-        error: err,
-      });
-
-      return throwError(() => mapHttpError(err));
+      return throwError(() => mapHttpError(httpErr));
     }),
   );
-};
