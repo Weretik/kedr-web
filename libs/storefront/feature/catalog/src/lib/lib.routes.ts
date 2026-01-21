@@ -1,5 +1,11 @@
 import { Route } from '@angular/router';
 
-import { Catalog } from './catalog/catalog';
-
-export const catalogRoutes: Route[] = [{ path: '', component: Catalog }];
+export const catalogRoutes: Route[] = [
+  {
+    path: 'catalog/products',
+    loadComponent: () =>
+      import('./pages/product-list-page/product-list-page').then(
+        (m) => m.ProductListPage,
+      ),
+  },
+];

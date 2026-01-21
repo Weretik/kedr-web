@@ -73,7 +73,7 @@ export class Header {
             {
               label: 'Завіси',
               items: [
-                { label: 'Накладні(метелик)' },
+                { label: 'Накладні(метелик)', routerLink: '/catalog/products' },
                 { label: 'Ввертні та приварні' },
                 { label: 'Врізні' },
               ],

@@ -12,6 +12,16 @@ type ProblemDetails = {
   errors?: Record<string, string[]>;
 };
 
+function isProgressEventLike(value: unknown): boolean {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'constructor' in value &&
+    (value as { constructor?: { name?: string } }).constructor?.name ===
+      'ProgressEvent'
+  );
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -49,13 +59,11 @@ function toProblemDetails(value: unknown): ProblemDetails | undefined {
 
 function mapHttpError(err: HttpErrorResponse): ApiError {
   if (err.status === 0) {
-    const message =
-      err.error instanceof ProgressEvent
-        ? 'Network error (blocked/aborted/offline).'
-        : 'Network error. Check connection.';
+    const message = isProgressEventLike(err.error)
+      ? 'Network error (blocked/aborted/offline).'
+      : 'Network error. Check connection.';
     return { code: 'Network', status: 0, message };
   }
-
   if (err.status === 401)
     return { code: 'Unauthorized', status: 401, message: 'Unauthorized' };
   if (err.status === 403)
