@@ -12,7 +12,6 @@ export type GetProductListQuery = {
   IsSale?: boolean;
   IsNew?: boolean;
 
-  PriceTypeId?: number;
   PriceFrom?: number;
   PriceTo?: number;
 

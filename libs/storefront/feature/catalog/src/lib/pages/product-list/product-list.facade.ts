@@ -2,8 +2,8 @@
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import {
-  CatalogApiService,
   type GetProductListQuery,
+  ProductListRepository,
   type ProductListRowDto,
 } from '@storefront/data-access';
 import {
@@ -18,7 +18,7 @@ import type { PagedResult } from '@shared/data-access';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListFacade {
-  private catalogApi = inject(CatalogApiService);
+  private readonly repo = inject(ProductListRepository);
   private route = inject(ActivatedRoute);
 
   readonly categorySlug = toSignal(
@@ -35,7 +35,6 @@ export class ProductListFacade {
   readonly isSale = linkedQueryParam('isSale');
   readonly isNew = linkedQueryParam('isNew');
 
-  readonly priceTypeIdRetail = '10';
   readonly priceFrom = linkedQueryParam('priceFrom');
   readonly priceTo = linkedQueryParam('priceTo');
 
@@ -46,7 +45,6 @@ export class ProductListFacade {
     isSale: (this.isSale() as 'true' | 'false' | null) ?? undefined,
     isNew: (this.isNew() as 'true' | 'false' | null) ?? undefined,
 
-    priceTypeId: this.priceTypeIdRetail,
     priceFrom: this.priceFrom() ?? undefined,
     priceTo: this.priceTo() ?? undefined,
 
@@ -65,8 +63,7 @@ export class ProductListFacade {
     GetProductListQuery
   >({
     params: () => this.apiQuery(),
-    stream: ({ params }) =>
-      this.catalogApi.getProductList(params, this.categorySlug()),
+    stream: ({ params }) => this.repo.getList(params, this.categorySlug()),
   });
 
   // =================
