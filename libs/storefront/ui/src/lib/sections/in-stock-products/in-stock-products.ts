@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ButtonDirective, ButtonLabel } from 'primeng/button';
+
+import { InStockFacade } from './in-stock.facade';
 
 interface Products {
   name: string;
@@ -46,4 +48,10 @@ export class InStockProducts {
       buttons: [{ label: 'Add to Cart' }, { label: 'Buy Now' }],
     },
   ];
+  readonly productsBlockFacade = inject(InStockFacade);
+  readonly productsResource = this.productsBlockFacade.productsResource;
+
+  readonly products = computed(
+    () => this.productsResource.value()?.value ?? [],
+  );
 }
