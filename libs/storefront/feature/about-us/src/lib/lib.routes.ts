@@ -4,30 +4,32 @@ export const aboutUsRoutes: Route[] = [
   {
     path: 'articles',
     loadComponent: () =>
-      import('./pages/articles/articles').then((m) => m.Articles),
+      import('./pages/articles/articles').then((page) => page.Articles),
   },
   {
     path: 'about-company',
     loadComponent: () =>
-      import('./pages/about-company/about-company').then((m) => m.AboutCompany),
+      import('./pages/about-company/about-company').then(
+        (page) => page.AboutCompany,
+      ),
   },
   {
     path: 'delivery-and-payment',
     loadComponent: () =>
       import('./pages/delivery-and-payment/delivery-and-payment').then(
-        (m) => m.DeliveryAndPayment,
+        (page) => page.DeliveryAndPayment,
       ),
   },
   {
     path: 'galleria',
     loadComponent: () =>
-      import('./pages/galleria/galleria').then((m) => m.Galleria),
+      import('./pages/galleria/galleria').then((page) => page.Galleria),
   },
   {
     path: 'returns-exchanges',
     loadComponent: () =>
       import('./pages/returns-exchanges/returns-exchanges').then(
-        (m) => m.ReturnsExchanges,
+        (page) => page.ReturnsExchanges,
       ),
   },
 ];
