@@ -4,15 +4,15 @@ export const catalogRoutes: Route[] = [
   {
     path: 'catalog/products',
     loadComponent: () =>
-      import('./pages/product-list-page/product-list-page').then(
-        (m) => m.ProductListPage,
+      import('./pages/product-list/product-list.page').then(
+        (page) => page.ProductListPage,
       ),
   },
   {
     path: 'catalog/:categorySlug/products',
     loadComponent: () =>
-      import('./pages/product-list-page/product-list-page').then(
-        (m) => m.ProductListPage,
+      import('./pages/product-list/product-list.page').then(
+        (page) => page.ProductListPage,
       ),
   },
 ];
