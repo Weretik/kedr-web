@@ -1,5 +1,6 @@
 ﻿import { Injectable, computed, inject } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import {
   CatalogApiService,
   type GetProductListQuery,
@@ -11,18 +12,24 @@ import {
   ProductListSortUi,
 } from '@storefront/util';
 import { linkedQueryParam } from 'ngxtension/linked-query-param';
+import { map } from 'rxjs';
 
 import type { PagedResult } from '@shared/data-access';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListFacade {
   private catalogApi = inject(CatalogApiService);
+  private route = inject(ActivatedRoute);
+
+  readonly categorySlug = toSignal(
+    this.route.paramMap.pipe(map((pm) => pm.get('categorySlug'))),
+    { initialValue: null },
+  );
 
   readonly search = linkedQueryParam('search');
   readonly page = linkedQueryParam('page', { defaultValue: '1' });
   readonly pageSize = linkedQueryParam('pageSize', { defaultValue: '20' });
   readonly sort = linkedQueryParam('sort', { defaultValue: 'name-asc' });
-  readonly categoryId = linkedQueryParam('categoryId');
 
   readonly inStock = linkedQueryParam('inStock');
   readonly isSale = linkedQueryParam('isSale');
@@ -34,11 +41,10 @@ export class ProductListFacade {
 
   readonly query = computed<ProductListQuery>(() => ({
     search: this.search() ?? undefined,
-    categoryId: this.categoryId() ?? undefined,
 
-    inStock: (this.inStock() as '1' | '0' | null) ?? undefined,
-    isSale: (this.isSale() as '1' | '0' | null) ?? undefined,
-    isNew: (this.isNew() as '1' | '0' | null) ?? undefined,
+    inStock: (this.inStock() as 'true' | 'false' | null) ?? undefined,
+    isSale: (this.isSale() as 'true' | 'false' | null) ?? undefined,
+    isNew: (this.isNew() as 'true' | 'false' | null) ?? undefined,
 
     priceTypeId: this.priceTypeIdRetail,
     priceFrom: this.priceFrom() ?? undefined,
@@ -59,7 +65,8 @@ export class ProductListFacade {
     GetProductListQuery
   >({
     params: () => this.apiQuery(),
-    stream: ({ params }) => this.catalogApi.getProductList(params),
+    stream: ({ params }) =>
+      this.catalogApi.getProductList(params, this.categorySlug()),
   });
 
   // =================
@@ -89,14 +96,13 @@ export class ProductListFacade {
 
   toggleInStock() {
     const currentStock = this.inStock();
-    const nextStock = currentStock === '1' ? '0' : '1';
+    const nextStock = currentStock === 'true' ? 'false' : 'true';
     this.inStock.set(nextStock);
     this.setDefaultPage();
   }
 
   clearFilters() {
     this.search.set(null);
-    this.categoryId.set(null);
 
     this.inStock.set(null);
     this.isSale.set(null);

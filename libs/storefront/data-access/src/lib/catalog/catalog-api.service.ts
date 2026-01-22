@@ -13,6 +13,7 @@ export class CatalogApiService {
 
   getProductList(
     query: GetProductListQuery = {},
+    categorySlug?: string | null,
   ): Observable<PagedResult<ProductListRowDto>> {
     let params = new HttpParams();
 
@@ -20,11 +21,11 @@ export class CatalogApiService {
       if (value === undefined || value === null) continue;
       params = params.set(key, String(value));
     }
+    const url = categorySlug?.trim()
+      ? `/api/catalog/${encodeURIComponent(categorySlug)}/products`
+      : `/api/catalog/products`;
 
-    return this.http.get<PagedResult<ProductListRowDto>>(
-      '/api/catalog/products',
-      { params },
-    );
+    return this.http.get<PagedResult<ProductListRowDto>>(url, { params });
   }
 
   getProductBySlug(
@@ -32,10 +33,8 @@ export class CatalogApiService {
     priceTypeId = 10,
   ): Observable<ProductBySlugDto> {
     const params = new HttpParams().set('priceTypeId', String(priceTypeId));
+    const url = `/api/catalog/products/${productSlug}`;
 
-    return this.http.get<ProductBySlugDto>(
-      `/api/catalog/products/${productSlug}`,
-      { params },
-    );
+    return this.http.get<ProductBySlugDto>(url, { params });
   }
 }

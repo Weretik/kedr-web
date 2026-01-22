@@ -10,7 +10,6 @@ export function mapProductListQueryToApi(
 ): GetProductListQuery {
   return {
     SearchTerm: query.search?.trim() || undefined,
-    CategoryId: toInt(query.categoryId),
 
     InStock: toBool(query.inStock),
     IsSale: toBool(query.isSale),
@@ -62,12 +61,8 @@ function toDecimal(value: string | undefined): number | undefined {
 
 function toBool(value: string | null | undefined): boolean | undefined {
   if (value === null || value === undefined) return undefined;
-  // ?inStock=true/false
   if (value === 'true') return true;
   if (value === 'false') return false;
-  // ?inStock=1/0
-  if (value === '1') return true;
-  if (value === '0') return false;
 
   return undefined;
 }

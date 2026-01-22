@@ -8,4 +8,11 @@ export const catalogRoutes: Route[] = [
         (m) => m.ProductListPage,
       ),
   },
+  {
+    path: 'catalog/:categorySlug/products',
+    loadComponent: () =>
+      import('./pages/product-list-page/product-list-page').then(
+        (m) => m.ProductListPage,
+      ),
+  },
 ];

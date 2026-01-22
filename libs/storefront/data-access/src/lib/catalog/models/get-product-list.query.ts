@@ -7,7 +7,6 @@
 
 export type GetProductListQuery = {
   SearchTerm?: string;
-  CategoryId?: number;
 
   InStock?: boolean;
   IsSale?: boolean;

@@ -2,9 +2,9 @@
   search?: string;
   categoryId?: string;
 
-  inStock?: '1' | '0';
-  isSale?: '1' | '0';
-  isNew?: '1' | '0';
+  inStock?: 'true' | 'false';
+  isSale?: 'true' | 'false';
+  isNew?: 'true' | 'false';
 
   priceTypeId?: string;
   priceFrom?: string;
