@@ -22,8 +22,8 @@ export function mapProductListQueryToApi(
 
     Sort: mapSortUiToApi(query.sort),
 
-    Page: clamp(toInt(query.page) ?? 1, 1, 1_000_000),
-    PageSize: clamp(toInt(query.pageSize) ?? 20, 1, 200),
+    Page: toInt(query.page) ?? 1,
+    PageSize: toInt(query.pageSize) ?? 20,
   };
 }
 
@@ -62,18 +62,12 @@ function toDecimal(value: string | undefined): number | undefined {
 
 function toBool(value: string | null | undefined): boolean | undefined {
   if (value === null || value === undefined) return undefined;
-
   // ?inStock=true/false
   if (value === 'true') return true;
   if (value === 'false') return false;
-
   // ?inStock=1/0
   if (value === '1') return true;
   if (value === '0') return false;
 
   return undefined;
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
 }
