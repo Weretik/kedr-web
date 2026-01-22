@@ -1,0 +1,9 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'lib-product-list.page',
+  imports: [],
+  templateUrl: './product-list.page.html',
+  styleUrl: './product-list.page.css',
+})
+export class ProductListPage {}
