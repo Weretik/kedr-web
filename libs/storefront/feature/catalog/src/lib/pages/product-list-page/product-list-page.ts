@@ -1,13 +1,11 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { CatalogApiService } from '@storefront/data-access';
+import { Component, computed, inject } from '@angular/core';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
-import { linkedQueryParam } from 'ngxtension/linked-query-param';
-import { map } from 'rxjs';
+
+import { ProductListFacade } from '../../fasaade/product-list.facade';
 
 @Component({
   selector: 'lib-product-list-page',
-  imports: [AsyncPipe, PageHeader],
+  imports: [PageHeader],
   templateUrl: './product-list-page.html',
   styleUrl: './product-list-page.css',
 })
@@ -18,13 +16,20 @@ export class ProductListPage {
     showSearch: true,
   };
 
-  readonly search = linkedQueryParam('search');
-  readonly page = linkedQueryParam('page', { defaultValue: '1' });
-  readonly sort = linkedQueryParam('sort', { defaultValue: 'name-asc' });
+  readonly productListFacade = inject(ProductListFacade);
+  readonly productsResource = this.productListFacade.productsResource;
 
-  private catalogApi = inject(CatalogApiService);
+  readonly products = computed(
+    () => this.productsResource.value()?.value ?? [],
+  );
 
-  products$ = this.catalogApi
-    .getProducts({ Page: 1, PageSize: 20 })
-    .pipe(map((r) => r.value ?? []));
+  readonly pagedInfo = computed(() => this.productsResource.value()?.pagedInfo);
+
+  get searchValue(): string {
+    return this.productListFacade.search() ?? '';
+  }
+
+  setSearchValue(v: string) {
+    this.productListFacade.setSearch(v);
+  }
 }

@@ -11,7 +11,7 @@ import type { ProductListRowDto } from './models/product-list-row.dto';
 export class CatalogApiService {
   private http = inject(HttpClient);
 
-  getProducts(
+  getProductList(
     query: GetProductListQuery = {},
   ): Observable<PagedResult<ProductListRowDto>> {
     let params = new HttpParams();
@@ -31,9 +31,7 @@ export class CatalogApiService {
     productSlug: string,
     priceTypeId = 10,
   ): Observable<ProductBySlugDto> {
-    const params = new HttpParams();
-
-    params.set('priceTypeId', String(priceTypeId));
+    const params = new HttpParams().set('priceTypeId', String(priceTypeId));
 
     return this.http.get<ProductBySlugDto>(
       `/api/catalog/products/${productSlug}`,
