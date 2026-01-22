@@ -1,4 +1,7 @@
-<lib-page-header [config]="headerConfig" />
+<lib-page-header
+  [config]="headerConfig"
+  (searchValueChange)="setSearchValue($event)"
+/>
 
 @if (productsResource.isLoading()) {
 <p>Loading...</p>

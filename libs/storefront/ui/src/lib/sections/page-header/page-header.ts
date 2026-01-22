@@ -1,4 +1,5 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ThemeService } from '@shared/ui';
 import { MenuItem } from 'primeng/api';
 import { Breadcrumb } from 'primeng/breadcrumb';
@@ -10,7 +11,7 @@ import { PageHeaderConfig } from './page-header.config';
 
 @Component({
   selector: 'lib-page-header',
-  imports: [Breadcrumb, IconField, InputIcon, InputText],
+  imports: [Breadcrumb, IconField, InputIcon, InputText, FormsModule],
   templateUrl: './page-header.html',
   styleUrl: './page-header.css',
 })
@@ -37,4 +38,11 @@ export class PageHeader {
       },
     },
   }));
+
+  public searchValue = input<string>('');
+  public searchValueChange = output<string>();
+
+  onSearchInput(inputValue: string) {
+    this.searchValueChange.emit(inputValue);
+  }
 }

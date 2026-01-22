@@ -18,7 +18,13 @@
       @if (config().showSearch) {
       <p-iconfield>
         <p-inputicon class="pi pi-search"></p-inputicon>
-        <input pInputText type="text" placeholder="Пошук" />
+        <input
+          pInputText
+          type="text"
+          placeholder="Пошук"
+          [ngModel]="searchValue()"
+          (ngModelChange)="onSearchInput($event)"
+        />
       </p-iconfield>
       }
     </div>
