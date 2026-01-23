@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { InStockProducts, PartnersBrands } from '@storefront/ui';
+import { InStockProducts } from '@storefront/feature/widgets';
+import { PartnersBrands } from '@storefront/ui';
 
 import { CompanyFeatures } from '../../sections/company-features/company-features';
 import { CompanyStats } from '../../sections/company-stats/company-stats';

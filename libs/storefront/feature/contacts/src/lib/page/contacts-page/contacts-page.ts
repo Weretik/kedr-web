@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { InStockProducts, PageHeader, PageHeaderConfig } from '@storefront/ui';
+import { InStockProducts } from '@storefront/feature/widgets';
+import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
 import { ContactUs } from '../sections/contact-us/contact-us';
 import { OurTeam } from '../sections/our-team/our-team';

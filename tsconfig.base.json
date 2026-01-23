@@ -46,7 +46,10 @@
       "@storefront/feature/regions": [
         "libs/storefront/feature/regions/src/index.ts"
       ],
-      "@shared/theme": ["libs/shared/theme/src/index.ts"]
+      "@shared/theme": ["libs/shared/theme/src/index.ts"],
+      "@storefront/feature/widgets": [
+        "libs/storefront/feature/widgets/src/index.ts"
+      ]
     }
   }
 }

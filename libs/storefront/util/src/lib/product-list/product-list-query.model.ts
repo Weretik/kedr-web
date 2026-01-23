@@ -6,7 +6,6 @@
   isSale?: 'true' | 'false';
   isNew?: 'true' | 'false';
 
-  priceTypeId?: string;
   priceFrom?: string;
   priceTo?: string;
 

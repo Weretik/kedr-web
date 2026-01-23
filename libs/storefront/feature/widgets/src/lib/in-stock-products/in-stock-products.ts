@@ -48,8 +48,9 @@ export class InStockProducts {
       buttons: [{ label: 'Add to Cart' }, { label: 'Buy Now' }],
     },
   ];
-  readonly productsBlockFacade = inject(InStockFacade);
-  readonly productsResource = this.productsBlockFacade.productsResource;
+
+  readonly productListFacade = inject(InStockFacade);
+  readonly productsResource = this.productListFacade.productsResource;
 
   readonly products = computed(
     () => this.productsResource.value()?.value ?? [],

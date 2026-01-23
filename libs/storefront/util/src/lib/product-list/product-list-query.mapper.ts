@@ -15,7 +15,6 @@ export function mapProductListQueryToApi(
     IsSale: toBool(query.isSale),
     IsNew: toBool(query.isNew),
 
-    PriceTypeId: toInt(query.priceTypeId),
     PriceFrom: toDecimal(query.priceFrom),
     PriceTo: toDecimal(query.priceTo),
 
