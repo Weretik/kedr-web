@@ -50,9 +50,8 @@ export class ProductListRepository {
       Page: 1,
       PageSize: 10,
       InStock: true,
-      Sort: ProductSort.PriceAsc,
+      Sort: ProductSort.NameAsc,
     };
-
     return this.api.getProductList(query, options.categorySlug ?? null);
   }
 

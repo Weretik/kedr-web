@@ -6,8 +6,8 @@ import { ProductListFacade } from './product-list.facade';
 @Component({
   selector: 'lib-product-list-page',
   imports: [PageHeader],
-  templateUrl: './product-list-page.html',
-  styleUrl: './product-list-page.css',
+  templateUrl: './product-list.page.html',
+  styleUrl: './product-list.page.css',
 })
 export class ProductListPage {
   headerConfig: PageHeaderConfig = {
