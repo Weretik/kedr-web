@@ -4,7 +4,7 @@
   "sourceRoot": "libs/storefront/feature/widgets/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:shared", "type:feature"],
+  "tags": ["scope:storefront", "type:feature"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
