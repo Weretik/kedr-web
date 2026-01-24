@@ -1,0 +1,11 @@
+@if (productsResource.isLoading()) {
+<p>Loading...</p>
+} @if (productsResource.error()) {
+<div>Error</div>
+} @for (p of products(); track p.id) {
+<div>{{ p.name }}</div>
+}
+<div>
+  Page: {{ pagedInfo()?.pageNumber }} / {{ pagedInfo()?.totalPages }} Total: {{
+  pagedInfo()?.totalRecords }}
+</div>
