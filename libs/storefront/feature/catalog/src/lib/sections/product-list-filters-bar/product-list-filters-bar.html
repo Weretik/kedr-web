@@ -1,4 +1,4 @@
-<div class="bg-surface-0 dark:bg-surface-950 p-6 md:p-12 lg:p-20">
+<div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20">
   <div class="flex flex-col lg:flex-row justify-start gap-4 mb-6">
     <div class="flex-1 flex flex-col justify-start items-start gap-2">
       <div
@@ -38,7 +38,7 @@
       <div
         class="self-stretch pb-4 border-b border-surface-200 dark:border-surface-700 flex flex-col justify-center items-start gap-4"
       >
-        <div class="self-stretch py-4 flex justify-between items-center gap-2">
+        <div class="self-stretch flex justify-between items-center gap-2">
           <div
             class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
           >
@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="self-stretch pb-5 flex flex-col justify-start items-start">
+      <div class="self-stretch pt-5 flex flex-col justify-start items-start">
         <div class="card flex justify-center w-full">
           <p-panelmenu [model]="filtersMenu" class="w-full gap-4" />
         </div>
@@ -66,7 +66,7 @@
 
       <p-accordion
         [multiple]="true"
-        [value]="['Ціна', 'Параметри']"
+        [value]="['price', 'parameters']"
         class="w-full border-0! shadow-none!"
       >
         <p-accordion-panel
@@ -81,7 +81,6 @@
               >Ціновий діапазон</span
             >
           </p-accordion-header>
-
           <p-accordion-content>
             <div class="flex flex-col gap-6 pt-2.5">
               <p-slider
@@ -101,7 +100,7 @@
                   currency="UAH"
                   [minFractionDigits]="0"
                   [maxFractionDigits]="0"
-                  placeholder="Мінімальна"
+                  placeholder="мін."
                   inputStyleClass="w-full"
                 >
                 </p-inputNumber>
@@ -112,61 +111,61 @@
                   currency="UAH"
                   [minFractionDigits]="0"
                   [maxFractionDigits]="0"
-                  placeholder="Максимальна"
+                  placeholder="макс."
                   inputStyleClass="w-full"
                 >
                 </p-inputNumber>
               </div>
             </div>
           </p-accordion-content>
+        </p-accordion-panel>
 
-          <p-accordion-panel
-            value="Параметри"
-            class="border-0! border-b! border-surface-200! dark:border-surface-700!"
+        <p-accordion-panel
+          value="parameters"
+          class="border-0! border-b! border-surface-200! dark:border-surface-700!"
+        >
+          <p-accordion-header
+            class="bg-transparent! border-0! p-0! py-4! shadow-none!"
           >
-            <p-accordion-header
-              class="bg-transparent! border-0! p-0! py-4! shadow-none!"
+            <span
+              class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
+              >Параметри</span
             >
-              <span
-                class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
-                >Параметри</span
-              >
-            </p-accordion-header>
-            <p-accordion-content>
-              <div class="flex flex-col gap-3">
-                <div class="flex items-center gap-2">
-                  <p-checkbox
-                    [binary]="true"
-                    inputId="inStock"
-                    [ngModel]="draftInStock()"
-                    (ngModelChange)="draftInStock.set($event)"
-                  >
-                  </p-checkbox>
-                  <label for="inStock">В наявності</label>
-                </div>
-                <div class="flex items-center gap-2">
-                  <p-checkbox
-                    [binary]="true"
-                    inputId="isNew"
-                    [ngModel]="draftIsNew()"
-                    (ngModelChange)="draftIsNew.set($event)"
-                  >
-                  </p-checkbox>
-                  <label for="isNew">Новинки</label>
-                </div>
-                <div class="flex items-center gap-2">
-                  <p-checkbox
-                    [binary]="true"
-                    inputId="isSale"
-                    [ngModel]="draftIsSale()"
-                    (ngModelChange)="draftIsSale.set($event)"
-                  >
-                  </p-checkbox>
-                  <label for="isSale">Розпродаж</label>
-                </div>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <p-checkbox
+                  [binary]="true"
+                  inputId="inStock"
+                  [ngModel]="draftInStock()"
+                  (ngModelChange)="draftInStock.set($event)"
+                >
+                </p-checkbox>
+                <label for="inStock">В наявності</label>
               </div>
-            </p-accordion-content>
-          </p-accordion-panel>
+              <div class="flex items-center gap-2">
+                <p-checkbox
+                  [binary]="true"
+                  inputId="isNew"
+                  [ngModel]="draftIsNew()"
+                  (ngModelChange)="draftIsNew.set($event)"
+                >
+                </p-checkbox>
+                <label for="isNew">Новинки</label>
+              </div>
+              <div class="flex items-center gap-2">
+                <p-checkbox
+                  [binary]="true"
+                  inputId="isSale"
+                  [ngModel]="draftIsSale()"
+                  (ngModelChange)="draftIsSale.set($event)"
+                >
+                </p-checkbox>
+                <label for="isSale">Розпродаж</label>
+              </div>
+            </div>
+          </p-accordion-content>
         </p-accordion-panel>
       </p-accordion>
 
@@ -183,8 +182,9 @@
         </button>
       </div>
     </div>
-    <div
-      class="flex-1 min-h-96 bg-surface-50 dark:bg-surface-800 rounded-2xl border-2 border-dashed border-surface-200 dark:border-surface-700"
-    ></div>
+
+    <div>
+      <lib-product-list />
+    </div>
   </div>
 </div>

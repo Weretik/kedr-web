@@ -24,8 +24,6 @@ export class ProductListPage {
     () => this.productsResource.value()?.value ?? [],
   );
 
-  readonly pagedInfo = computed(() => this.productsResource.value()?.pagedInfo);
-
   get searchValue(): string {
     return this.productListFacade.search() ?? '';
   }

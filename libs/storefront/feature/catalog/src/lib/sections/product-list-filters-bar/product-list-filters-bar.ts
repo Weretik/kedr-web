@@ -17,6 +17,7 @@ import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 
 import { ProductListFacade } from '../../pages/product-list/product-list.facade';
+import { ProductList } from '../product-list/product-list';
 
 import type { ProductListSortUi } from '@storefront/util';
 
@@ -40,6 +41,7 @@ import type { ProductListSortUi } from '@storefront/util';
     MenuModule,
     ButtonIcon,
     PanelMenu,
+    ProductList,
   ],
   templateUrl: './product-list-filters-bar.html',
   styleUrl: './product-list-filters-bar.css',
@@ -49,7 +51,7 @@ export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
 
   readonly minPrice = 0;
-  readonly maxPrice = 100_000;
+  readonly maxPrice = 50_000;
 
   readonly draftSearch = signal('');
   readonly draftSort = signal<ProductListSortUi>('name-asc');
@@ -58,10 +60,7 @@ export class ProductListFiltersBar {
   readonly draftIsSale = signal(false);
   readonly draftIsNew = signal(false);
 
-  readonly draftPrice = signal<[number, number]>([
-    this.minPrice,
-    this.maxPrice,
-  ]);
+  readonly draftPrice = signal<[number | null, number | null]>([null, null]);
 
   sortOptions = [
     {
@@ -109,8 +108,8 @@ export class ProductListFiltersBar {
       this.draftIsSale.set(this.facade.isSale() === 'true');
       this.draftIsNew.set(this.facade.isNew() === 'true');
 
-      const fromPrice = this.toNum(this.facade.priceFrom()) ?? this.minPrice;
-      const toPrice = this.toNum(this.facade.priceTo()) ?? this.maxPrice;
+      const fromPrice = this.toNum(this.facade.priceFrom()) ?? null;
+      const toPrice = this.toNum(this.facade.priceTo()) ?? null;
       this.draftPrice.set([fromPrice, toPrice]);
     });
   }
@@ -121,12 +120,12 @@ export class ProductListFiltersBar {
 
   onPriceFromChange(value: number | null) {
     const [, toPrice] = this.draftPrice();
-    this.draftPrice.set([value ?? this.minPrice, toPrice]);
+    this.draftPrice.set([value ?? null, toPrice]);
   }
 
   onPriceToChange(value: number | null) {
     const [fromPrice] = this.draftPrice();
-    this.draftPrice.set([fromPrice, value ?? this.maxPrice]);
+    this.draftPrice.set([fromPrice, value ?? null]);
   }
 
   applyFilters() {
@@ -150,48 +149,191 @@ export class ProductListFiltersBar {
 
   filtersMenu: MenuItem[] = [
     {
-      label: 'Files',
+      label: 'Фурнітура',
       icon: 'pi pi-file',
       items: [
         {
-          label: 'Images',
+          label: 'Завіси',
           icon: 'pi pi-image',
+          items: [
+            {
+              label: 'Накладні(метелик)',
+            },
+            {
+              label: 'Ввертні та приварні',
+            },
+            {
+              label: 'Врізні',
+            },
+          ],
+        },
+        {
+          label: 'Замки',
+          icon: 'pi pi-image',
+          items: [
+            {
+              label: 'Навестні та велозамки',
+            },
+            {
+              label: 'Комплекти з ручками',
+            },
+            {
+              label: 'Накладні',
+            },
+            {
+              label: 'Сувальдні та з хрестообр. ключем',
+            },
+            {
+              label: 'Врiзні під циліндр',
+            },
+          ],
+        },
+        {
+          label: 'Ручки',
+          icon: 'pi pi-image',
+          items: [
+            {
+              label: 'На розетцi (Kevlar)',
+            },
+            {
+              label: 'На розетцi (HRoz)',
+            },
+            {
+              label: 'На розетцi (Genrich)',
+            },
+            {
+              label: 'На розетцi (Ultara)',
+            },
+            {
+              label: 'З нержавiйки',
+            },
+            {
+              label: 'Ручки-кноби',
+            },
+          ],
+        },
+        {
+          label: 'Циліндри',
+          icon: 'pi pi-image',
+          items: [
+            {
+              label: 'серія BRASS KEY Латунь',
+            },
+            {
+              label: 'серія SMART',
+            },
+            {
+              label: 'серія GWK',
+            },
+            {
+              label: 'серія ZINK під шток',
+            },
+            {
+              label: 'серія ZINK',
+            },
+            {
+              label: 'серія ALU',
+            },
+          ],
+        },
+        {
+          label: 'Міжкімнатні мханізми',
+          icon: 'pi pi-image',
+          items: [
+            {
+              label: 'з магнітною защіпкою',
+            },
+            {
+              label: 'заскочки / засувки',
+            },
+            {
+              label: 'з металевою защіпкою',
+            },
+            {
+              label: 'з кевларовою защіпкою',
+            },
+            {
+              label: 'TV Stand',
+            },
+          ],
+        },
+        {
+          label: 'Інше',
+          icon: 'pi pi-image',
+          items: [
+            {
+              label: 'Броненакладки на циліндр',
+            },
+            {
+              label: 'Ущільнювач',
+            },
+            {
+              label: 'Відбійники',
+            },
+            {
+              label: 'Комплектуючі',
+            },
+            {
+              label: 'Засувки і шпінгалети',
+            },
+            {
+              label: 'Розсувнi системи',
+            },
+            {
+              label: 'Дотягувачі',
+            },
+            {
+              label: 'Вiчка двернi',
+            },
+          ],
         },
       ],
     },
     {
-      label: 'Cloud',
+      label: 'Міжкімнатні двері',
       icon: 'pi pi-cloud',
       items: [
         {
-          label: 'Upload',
+          label: 'Korfad',
           icon: 'pi pi-cloud-upload',
         },
         {
-          label: 'Download',
+          label: 'Leador',
           icon: 'pi pi-cloud-download',
         },
         {
-          label: 'Sync',
-          icon: 'pi pi-refresh',
+          label: 'Darumi',
+          icon: 'pi pi-cloud-upload',
+        },
+        {
+          label: 'Syndicate',
+          icon: 'pi pi-cloud-download',
         },
       ],
     },
     {
-      label: 'Devices',
-      icon: 'pi pi-desktop',
+      label: 'Вхідні двері',
+      icon: 'pi pi-cloud',
       items: [
         {
-          label: 'Phone',
-          icon: 'pi pi-mobile',
+          label: 'Steelguard',
+          icon: 'pi pi-cloud-upload',
         },
         {
-          label: 'Desktop',
-          icon: 'pi pi-desktop',
+          label: 'Lacosta',
+          icon: 'pi pi-cloud-download',
         },
         {
-          label: 'Tablet',
-          icon: 'pi pi-tablet',
+          label: 'Sova',
+          icon: 'pi pi-cloud-upload',
+        },
+        {
+          label: 'MSM',
+          icon: 'pi pi-cloud-download',
+        },
+        {
+          label: 'Maximum',
+          icon: 'pi pi-cloud-upload',
         },
       ],
     },
