@@ -3,6 +3,8 @@
   (searchValueChange)="setSearchValue($event)"
 />
 
+<lib-product-list-filters-bar />
+
 @if (productsResource.isLoading()) {
 <p>Loading...</p>
 } @if (productsResource.error()) {

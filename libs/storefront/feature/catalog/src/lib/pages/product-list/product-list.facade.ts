@@ -98,6 +98,35 @@ export class ProductListFacade {
     this.setDefaultPage();
   }
 
+  public setInStock(checked: boolean) {
+    this.inStock.set(checked ? 'true' : null);
+    this.setDefaultPage();
+  }
+  public setIsSale(checked: boolean) {
+    this.isSale.set(checked ? 'true' : null);
+    this.setDefaultPage();
+  }
+
+  public setIsNew(checked: boolean) {
+    this.isNew.set(checked ? 'true' : null);
+    this.setDefaultPage();
+  }
+
+  public setPriceFrom(value: number | null) {
+    this.priceFrom.set(value == null ? null : String(value));
+    this.setDefaultPage();
+  }
+
+  public setPriceTo(value: number | null) {
+    this.priceTo.set(value == null ? null : String(value));
+    this.setDefaultPage();
+  }
+
+  public setPriceRange(from: number | null, to: number | null) {
+    this.priceFrom.set(from == null ? null : String(from));
+    this.priceTo.set(to == null ? null : String(to));
+    this.setDefaultPage();
+  }
   clearFilters() {
     this.search.set(null);
 
