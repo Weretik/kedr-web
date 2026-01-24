@@ -23,7 +23,7 @@
         pButton
         severity="secondary"
         [outlined]="true"
-        (click)="toggleSortMenu($event)"
+        (click)="sortMenu.toggle($event)"
       >
         <i pButtonIcon class="pi pi-sort-alt"></i>
         <span pButtonLabel>Сортувати</span>
@@ -56,44 +56,10 @@
         </div>
       </div>
 
-      <div
-        class="self-stretch pb-5 flex flex-col justify-start items-start gap-4"
-      >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >Denim</a
-        >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >Sweaters</a
-        >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >T-Shirts</a
-        >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >Pants & Shorts</a
-        >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >Outwear</a
-        >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >Shoes</a
-        >
-        <a
-          tabindex="0"
-          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
-          >Accessories</a
-        >
+      <div class="self-stretch pb-5 flex flex-col justify-start items-start">
+        <div class="card flex justify-center w-full">
+          <p-panelmenu [model]="filtersMenu" class="w-full gap-4" />
+        </div>
       </div>
 
       <p-divider class="w-full m-0"></p-divider>
