@@ -1,0 +1,224 @@
+<div class="bg-surface-0 dark:bg-surface-950 p-6 md:p-12 lg:p-20">
+  <div class="flex flex-col lg:flex-row justify-start gap-4 mb-6">
+    <div class="flex-1 flex flex-col justify-start items-start gap-2">
+      <div
+        class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight"
+      >
+        Women
+      </div>
+      <div
+        class="text-surface-500 dark:text-surface-200 text-xl font-normal leading-normal"
+      >
+        Discover your perfect style from our curated collection
+      </div>
+    </div>
+    <div class="flex flex-col justify-start items-start gap-2">
+      <p-menu
+        #sortMenu
+        [model]="sortOptions"
+        [popup]="true"
+        [appendTo]="'body'"
+      ></p-menu>
+      <button
+        pButton
+        severity="secondary"
+        [outlined]="true"
+        (click)="toggleSortMenu($event)"
+      >
+        <i pButtonIcon class="pi pi-sort-alt"></i>
+        <span pButtonLabel>Сортувати</span>
+      </button>
+    </div>
+  </div>
+
+  <p-divider class="w-full mb-6!"></p-divider>
+
+  <div class="flex flex-col lg:flex-row gap-8">
+    <div class="w-full lg:w-60 flex flex-col justify-start items-start">
+      <div
+        class="self-stretch pb-4 border-b border-surface-200 dark:border-surface-700 flex flex-col justify-center items-start gap-4"
+      >
+        <div class="self-stretch py-4 flex justify-between items-center gap-2">
+          <div
+            class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
+          >
+            Фільтри
+          </div>
+          <button
+            pButton
+            severity="secondary"
+            [text]="true"
+            class="py-1! px-2! text-base! font-normal!"
+            (click)="facade.clearFilters()"
+          >
+            <span pButtonLabel>Очистити</span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="self-stretch pb-5 flex flex-col justify-start items-start gap-4"
+      >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >Denim</a
+        >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >Sweaters</a
+        >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >T-Shirts</a
+        >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >Pants & Shorts</a
+        >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >Outwear</a
+        >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >Shoes</a
+        >
+        <a
+          tabindex="0"
+          class="cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-base leading-tight hover:text-primary-500 duration-150"
+          >Accessories</a
+        >
+      </div>
+
+      <p-divider class="w-full m-0"></p-divider>
+
+      <p-accordion
+        [multiple]="true"
+        [value]="['Ціна', 'Параметри']"
+        class="w-full border-0! shadow-none!"
+      >
+        <p-accordion-panel
+          value="price"
+          class="border-0! border-b! border-surface-200! dark:border-surface-700!"
+        >
+          <p-accordion-header
+            class="bg-transparent! border-0! p-0! py-4! shadow-none!"
+          >
+            <span
+              class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
+              >Ціновий діапазон</span
+            >
+          </p-accordion-header>
+
+          <p-accordion-content>
+            <div class="flex flex-col gap-6 pt-2.5">
+              <p-slider
+                [ngModel]="draftPrice()"
+                (ngModelChange)="onPriceRangeChange($event)"
+                [min]="minPrice"
+                [max]="maxPrice"
+                [range]="true"
+                class="w-full"
+              >
+              </p-slider>
+              <div class="flex gap-2">
+                <p-inputNumber
+                  [ngModel]="draftPrice()[0]"
+                  (ngModelChange)="onPriceFromChange($event)"
+                  mode="currency"
+                  currency="UAH"
+                  [minFractionDigits]="0"
+                  [maxFractionDigits]="0"
+                  placeholder="Мінімальна"
+                  inputStyleClass="w-full"
+                >
+                </p-inputNumber>
+                <p-inputNumber
+                  [ngModel]="draftPrice()[1]"
+                  (ngModelChange)="onPriceToChange($event)"
+                  mode="currency"
+                  currency="UAH"
+                  [minFractionDigits]="0"
+                  [maxFractionDigits]="0"
+                  placeholder="Максимальна"
+                  inputStyleClass="w-full"
+                >
+                </p-inputNumber>
+              </div>
+            </div>
+          </p-accordion-content>
+
+          <p-accordion-panel
+            value="Параметри"
+            class="border-0! border-b! border-surface-200! dark:border-surface-700!"
+          >
+            <p-accordion-header
+              class="bg-transparent! border-0! p-0! py-4! shadow-none!"
+            >
+              <span
+                class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
+                >Параметри</span
+              >
+            </p-accordion-header>
+            <p-accordion-content>
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-2">
+                  <p-checkbox
+                    [binary]="true"
+                    inputId="inStock"
+                    [ngModel]="draftInStock()"
+                    (ngModelChange)="draftInStock.set($event)"
+                  >
+                  </p-checkbox>
+                  <label for="inStock">В наявності</label>
+                </div>
+                <div class="flex items-center gap-2">
+                  <p-checkbox
+                    [binary]="true"
+                    inputId="isNew"
+                    [ngModel]="draftIsNew()"
+                    (ngModelChange)="draftIsNew.set($event)"
+                  >
+                  </p-checkbox>
+                  <label for="isNew">Новинки</label>
+                </div>
+                <div class="flex items-center gap-2">
+                  <p-checkbox
+                    [binary]="true"
+                    inputId="isSale"
+                    [ngModel]="draftIsSale()"
+                    (ngModelChange)="draftIsSale.set($event)"
+                  >
+                  </p-checkbox>
+                  <label for="isSale">Розпродаж</label>
+                </div>
+              </div>
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion-panel>
+      </p-accordion>
+
+      <div
+        class="self-stretch py-6 flex flex-col justify-start items-start gap-2"
+      >
+        <button
+          pButton
+          class="w-full"
+          severity="contrast"
+          (click)="applyFilters()"
+        >
+          <span pButtonLabel>Застосувати</span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex-1 min-h-96 bg-surface-50 dark:bg-surface-800 rounded-2xl border-2 border-dashed border-surface-200 dark:border-surface-700"
+    ></div>
+  </div>
+</div>
