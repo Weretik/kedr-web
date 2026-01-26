@@ -1,5 +1,5 @@
-﻿import { Injectable, computed, inject } from '@angular/core';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+﻿import { Injectable, computed, inject, signal, effect } from '@angular/core';
+import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import {
   type GetProductListQuery,
@@ -12,7 +12,7 @@ import {
   ProductListSortUi,
 } from '@storefront/util';
 import { linkedQueryParam } from 'ngxtension/linked-query-param';
-import { map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 import type { PagedResult } from '@shared/data-access';
 
@@ -75,15 +75,8 @@ export class ProductListFacade {
   private setDefaultPage() {
     this.page.set('1');
   }
-
   public setSearch(value: string) {
-    const currentValue = this.search();
-    const nextValue = value?.trim();
-
-    if (currentValue === nextValue) return;
-
-    this.search.set(nextValue ? nextValue : null);
-    this.setDefaultPage();
+    this.draftSearch.set(value ?? '');
   }
 
   setSort(sort: ProductListSortUi) {
@@ -127,6 +120,7 @@ export class ProductListFacade {
     this.priceTo.set(to == null ? null : String(to));
     this.setDefaultPage();
   }
+
   clearFilters() {
     this.search.set(null);
 
@@ -140,5 +134,29 @@ export class ProductListFacade {
     this.sort.set('name-asc');
     this.page.set('1');
     this.pageSize.set('20');
+  }
+
+  readonly draftSearch = signal<string>('');
+
+  private readonly debouncedSearch = toSignal(
+    toObservable(this.draftSearch).pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+    ),
+    { initialValue: '' },
+  );
+
+  private readonly syncDraftFromUrl = effect(() => {
+    this.draftSearch.set(this.search() ?? '');
+  });
+
+  private readonly commitDebouncedToUrl = effect(() => {
+    this.commitSearch(this.debouncedSearch());
+  });
+
+  private commitSearch(value: string) {
+    const nextValue = value?.trim();
+    this.search.set(nextValue);
+    this.setDefaultPage();
   }
 }

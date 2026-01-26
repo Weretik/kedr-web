@@ -18,8 +18,14 @@ import { PageHeaderConfig } from './page-header.config';
 export class PageHeader {
   public themeService = inject(ThemeService);
   public config = input.required<PageHeaderConfig>();
+  public searchValue = input<string>('');
+  public searchValueChange = output<string>();
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
+
+  onSearchInput(inputValue: string) {
+    this.searchValueChange.emit(inputValue);
+  }
 
   public readonly breadcrumbPt = computed(() => ({
     root: {
@@ -38,11 +44,4 @@ export class PageHeader {
       },
     },
   }));
-
-  public searchValue = input<string>('');
-  public searchValueChange = output<string>();
-
-  onSearchInput(inputValue: string) {
-    this.searchValueChange.emit(inputValue);
-  }
 }

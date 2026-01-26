@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal, ViewChild } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { MenuItem } from 'primeng/api';
@@ -11,15 +11,13 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { Menu, MenuModule } from 'primeng/menu';
+import { MenuModule } from 'primeng/menu';
 import { PanelMenu } from 'primeng/panelmenu';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 
 import { ProductListFacade } from '../../pages/product-list/product-list.facade';
 import { ProductList } from '../product-list/product-list';
-
-import type { ProductListSortUi } from '@storefront/util';
 
 @Component({
   selector: 'lib-product-list-filters-bar',
@@ -47,19 +45,14 @@ import type { ProductListSortUi } from '@storefront/util';
   styleUrl: './product-list-filters-bar.css',
 })
 export class ProductListFiltersBar {
-  @ViewChild('sortMenu') sortMenu!: Menu;
   readonly facade = inject(ProductListFacade);
 
   readonly minPrice = 0;
   readonly maxPrice = 50_000;
 
-  readonly draftSearch = signal('');
-  readonly draftSort = signal<ProductListSortUi>('name-asc');
-
   readonly draftInStock = signal(false);
   readonly draftIsSale = signal(false);
   readonly draftIsNew = signal(false);
-
   readonly draftPrice = signal<[number | null, number | null]>([null, null]);
 
   sortOptions = [
@@ -68,7 +61,6 @@ export class ProductListFiltersBar {
       icon: 'pi pi-sort-amount-up',
       command: () => {
         this.facade.sort.set('name-asc');
-        this.sortMenu.hide();
       },
     },
     {
@@ -76,7 +68,6 @@ export class ProductListFiltersBar {
       icon: 'pi pi-sort-amount-down',
       command: () => {
         this.facade.sort.set('name-desc');
-        this.sortMenu.hide();
       },
     },
     {
@@ -84,7 +75,6 @@ export class ProductListFiltersBar {
       icon: 'pi pi-sort-amount-up',
       command: () => {
         this.facade.sort.set('price-asc');
-        this.sortMenu.hide();
       },
     },
     {
@@ -92,27 +82,19 @@ export class ProductListFiltersBar {
       icon: 'pi pi-sort-amount-down',
       command: () => {
         this.facade.sort.set('price-desc');
-        this.sortMenu.hide();
       },
     },
   ];
 
-  constructor() {
-    effect(() => {
-      this.draftSearch.set(this.facade.search() ?? '');
-      this.draftSort.set(
-        (this.facade.sort() ?? 'name-asc') as ProductListSortUi,
-      );
+  readonly draftSets = effect(() => {
+    this.draftInStock.set(this.facade.inStock() === 'true');
+    this.draftIsSale.set(this.facade.isSale() === 'true');
+    this.draftIsNew.set(this.facade.isNew() === 'true');
 
-      this.draftInStock.set(this.facade.inStock() === 'true');
-      this.draftIsSale.set(this.facade.isSale() === 'true');
-      this.draftIsNew.set(this.facade.isNew() === 'true');
-
-      const fromPrice = this.toNum(this.facade.priceFrom()) ?? null;
-      const toPrice = this.toNum(this.facade.priceTo()) ?? null;
-      this.draftPrice.set([fromPrice, toPrice]);
-    });
-  }
+    const fromPrice = this.toNum(this.facade.priceFrom()) ?? null;
+    const toPrice = this.toNum(this.facade.priceTo()) ?? null;
+    this.draftPrice.set([fromPrice, toPrice]);
+  });
 
   onPriceRangeChange(value: [number, number]) {
     this.draftPrice.set(value);
@@ -129,9 +111,6 @@ export class ProductListFiltersBar {
   }
 
   applyFilters() {
-    this.facade.setSearch(this.draftSearch());
-    this.facade.setSort(this.draftSort());
-
     this.facade.setInStock(this.draftInStock());
     this.facade.setIsSale(this.draftIsSale());
     this.facade.setIsNew(this.draftIsNew());
