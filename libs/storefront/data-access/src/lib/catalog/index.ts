@@ -5,3 +5,4 @@ export * from './models/product-by-slug.dto';
 export * from './models/get-product-list.query';
 
 export * from './repositories/product-list.repository';
+export * from './repositories/product.repository';

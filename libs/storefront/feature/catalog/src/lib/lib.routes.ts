@@ -15,4 +15,11 @@ export const catalogRoutes: Route[] = [
         (page) => page.ProductListPage,
       ),
   },
+  {
+    path: 'catalog/product/:productSlug',
+    loadComponent: () =>
+      import('./pages/product-page/product-page').then(
+        (page) => page.ProductPage,
+      ),
+  },
 ];
