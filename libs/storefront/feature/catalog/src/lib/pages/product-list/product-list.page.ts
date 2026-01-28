@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
-import { ProductListFacade } from './product-list.facade';
 import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/product-list-filters-bar';
+import { ProductListFacade } from '../../state/product-list.facade';
 
 @Component({
   selector: 'lib-product-list-page',
@@ -17,18 +17,18 @@ export class ProductListPage {
     showSearch: true,
   };
 
-  readonly productListFacade = inject(ProductListFacade);
-  readonly productsResource = this.productListFacade.productsResource;
+  readonly facade = inject(ProductListFacade);
+  readonly productsResource = this.facade.productsResource;
 
   readonly products = computed(
     () => this.productsResource.value()?.value ?? [],
   );
 
   get searchValue(): string {
-    return this.productListFacade.search() ?? '';
+    return this.facade.queryState.search() ?? '';
   }
 
   setSearchValue(value: string) {
-    this.productListFacade.setSearch(value);
+    this.facade.queryState.setSearch(value);
   }
 }

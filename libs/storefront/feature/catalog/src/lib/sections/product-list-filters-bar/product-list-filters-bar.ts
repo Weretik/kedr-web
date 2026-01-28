@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
-import { MenuItem } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -16,7 +15,9 @@ import { PanelMenu } from 'primeng/panelmenu';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 
-import { ProductListFacade } from '../../pages/product-list/product-list.facade';
+import { buildFiltersMenu } from './product-list-filters.menu';
+import { buildSortMenu } from './product-list-sort.sort-options';
+import { ProductListFacade } from '../../state/product-list.facade';
 import { ProductList } from '../product-list/product-list';
 
 @Component({
@@ -55,68 +56,44 @@ export class ProductListFiltersBar {
   readonly draftIsNew = signal(false);
   readonly draftPrice = signal<[number | null, number | null]>([null, null]);
 
-  sortOptions = [
-    {
-      label: 'Назва (а → я)',
-      icon: 'pi pi-sort-amount-up',
-      command: () => {
-        this.facade.sort.set('name-asc');
-      },
-    },
-    {
-      label: 'Назва (я → а)',
-      icon: 'pi pi-sort-amount-down',
-      command: () => {
-        this.facade.sort.set('name-desc');
-      },
-    },
-    {
-      label: 'Ціна (min → max)',
-      icon: 'pi pi-sort-amount-up',
-      command: () => {
-        this.facade.sort.set('price-asc');
-      },
-    },
-    {
-      label: 'Ціна (max → min)',
-      icon: 'pi pi-sort-amount-down',
-      command: () => {
-        this.facade.sort.set('price-desc');
-      },
-    },
-  ];
+  readonly sortOptions = buildSortMenu({
+    setSort: (sort) => this.facade.queryState.setSort(sort),
+  });
+  readonly filtersMenu = buildFiltersMenu({
+    goToCategory: (slug) => this.facade.queryState.goToCategory(slug),
+  });
 
-  readonly draftSets = effect(() => {
-    this.draftInStock.set(this.facade.inStock() === 'true');
-    this.draftIsSale.set(this.facade.isSale() === 'true');
-    this.draftIsNew.set(this.facade.isNew() === 'true');
+  private readonly draftSets = effect(() => {
+    this.draftInStock.set(this.facade.queryState.inStock() === 'true');
+    this.draftIsSale.set(this.facade.queryState.isSale() === 'true');
+    this.draftIsNew.set(this.facade.queryState.isNew() === 'true');
 
-    const fromPrice = this.toNum(this.facade.priceFrom()) ?? null;
-    const toPrice = this.toNum(this.facade.priceTo()) ?? null;
+    const fromPrice = this.toNum(this.facade.queryState.priceFrom()) ?? null;
+    const toPrice = this.toNum(this.facade.queryState.priceTo()) ?? null;
     this.draftPrice.set([fromPrice, toPrice]);
   });
 
-  onPriceRangeChange(value: [number, number]) {
+  public onPriceRangeChange(value: [number, number]) {
     this.draftPrice.set(value);
   }
 
-  onPriceFromChange(value: number | null) {
+  public onPriceFromChange(value: number | null) {
     const [, toPrice] = this.draftPrice();
     this.draftPrice.set([value ?? null, toPrice]);
   }
 
-  onPriceToChange(value: number | null) {
+  public onPriceToChange(value: number | null) {
     const [fromPrice] = this.draftPrice();
     this.draftPrice.set([fromPrice, value ?? null]);
   }
 
-  applyFilters() {
-    this.facade.setInStock(this.draftInStock());
-    this.facade.setIsSale(this.draftIsSale());
-    this.facade.setIsNew(this.draftIsNew());
+  public applyFilters() {
+    this.facade.queryState.setInStock(this.draftInStock());
+    this.facade.queryState.setIsSale(this.draftIsSale());
+    this.facade.queryState.setIsNew(this.draftIsNew());
 
     const [fromPrice, toPrice] = this.draftPrice();
-    this.facade.setPriceRange(fromPrice, toPrice);
+    this.facade.queryState.setPriceRange(fromPrice, toPrice);
   }
 
   private toNum(value: string | null): number | null {
@@ -125,196 +102,4 @@ export class ProductListFiltersBar {
     return Number.isFinite(number) ? number : null;
   }
   protected readonly String = String;
-
-  filtersMenu: MenuItem[] = [
-    {
-      label: 'Фурнітура',
-      icon: 'pi pi-file',
-      items: [
-        {
-          label: 'Завіси',
-          icon: 'pi pi-image',
-          items: [
-            {
-              label: 'Накладні(метелик)',
-            },
-            {
-              label: 'Ввертні та приварні',
-            },
-            {
-              label: 'Врізні',
-            },
-          ],
-        },
-        {
-          label: 'Замки',
-          icon: 'pi pi-image',
-          items: [
-            {
-              label: 'Навестні та велозамки',
-            },
-            {
-              label: 'Комплекти з ручками',
-            },
-            {
-              label: 'Накладні',
-            },
-            {
-              label: 'Сувальдні та з хрестообр. ключем',
-            },
-            {
-              label: 'Врiзні під циліндр',
-            },
-          ],
-        },
-        {
-          label: 'Ручки',
-          icon: 'pi pi-image',
-          items: [
-            {
-              label: 'На розетцi (Kevlar)',
-            },
-            {
-              label: 'На розетцi (HRoz)',
-            },
-            {
-              label: 'На розетцi (Genrich)',
-            },
-            {
-              label: 'На розетцi (Ultara)',
-            },
-            {
-              label: 'З нержавiйки',
-            },
-            {
-              label: 'Ручки-кноби',
-            },
-          ],
-        },
-        {
-          label: 'Циліндри',
-          icon: 'pi pi-image',
-          items: [
-            {
-              label: 'серія BRASS KEY Латунь',
-            },
-            {
-              label: 'серія SMART',
-            },
-            {
-              label: 'серія GWK',
-            },
-            {
-              label: 'серія ZINK під шток',
-            },
-            {
-              label: 'серія ZINK',
-            },
-            {
-              label: 'серія ALU',
-            },
-          ],
-        },
-        {
-          label: 'Міжкімнатні мханізми',
-          icon: 'pi pi-image',
-          items: [
-            {
-              label: 'з магнітною защіпкою',
-            },
-            {
-              label: 'заскочки / засувки',
-            },
-            {
-              label: 'з металевою защіпкою',
-            },
-            {
-              label: 'з кевларовою защіпкою',
-            },
-            {
-              label: 'TV Stand',
-            },
-          ],
-        },
-        {
-          label: 'Інше',
-          icon: 'pi pi-image',
-          items: [
-            {
-              label: 'Броненакладки на циліндр',
-            },
-            {
-              label: 'Ущільнювач',
-            },
-            {
-              label: 'Відбійники',
-            },
-            {
-              label: 'Комплектуючі',
-            },
-            {
-              label: 'Засувки і шпінгалети',
-            },
-            {
-              label: 'Розсувнi системи',
-            },
-            {
-              label: 'Дотягувачі',
-            },
-            {
-              label: 'Вiчка двернi',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: 'Міжкімнатні двері',
-      icon: 'pi pi-cloud',
-      items: [
-        {
-          label: 'Korfad',
-          icon: 'pi pi-cloud-upload',
-        },
-        {
-          label: 'Leador',
-          icon: 'pi pi-cloud-download',
-        },
-        {
-          label: 'Darumi',
-          icon: 'pi pi-cloud-upload',
-        },
-        {
-          label: 'Syndicate',
-          icon: 'pi pi-cloud-download',
-        },
-      ],
-    },
-    {
-      label: 'Вхідні двері',
-      icon: 'pi pi-cloud',
-      items: [
-        {
-          label: 'Steelguard',
-          icon: 'pi pi-cloud-upload',
-        },
-        {
-          label: 'Lacosta',
-          icon: 'pi pi-cloud-download',
-        },
-        {
-          label: 'Sova',
-          icon: 'pi pi-cloud-upload',
-        },
-        {
-          label: 'MSM',
-          icon: 'pi pi-cloud-download',
-        },
-        {
-          label: 'Maximum',
-          icon: 'pi pi-cloud-upload',
-        },
-      ],
-    },
-  ];
 }
