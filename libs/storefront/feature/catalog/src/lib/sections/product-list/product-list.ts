@@ -1,7 +1,8 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ButtonDirective } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Message } from 'primeng/message';
 import { Paginator } from 'primeng/paginator';
@@ -23,6 +24,10 @@ import { ProductListFacade } from '../../state/product-list.facade';
     Message,
     Paginator,
     Skeleton,
+    ButtonIcon,
+    ButtonLabel,
+    NgOptimizedImage,
+    RouterLink,
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',

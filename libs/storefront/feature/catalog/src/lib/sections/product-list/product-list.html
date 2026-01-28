@@ -62,7 +62,7 @@
   </div>
   } @else {
   <div class="grid grid-cols-12 gap-4">
-    @for (x of skeletonArray; track $index) {
+    @for (_ of skeletonArray; track $index) {
     <div class="col-span-12 sm:col-span-6 md:col-span-6 xl:col-span-4 p-2">
       <div
         class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
@@ -98,20 +98,15 @@
       </div>
 
       <div class="flex gap-2">
-        <button
-          pButton
-          icon="pi pi-refresh"
-          label="Спробувати ще раз"
-          (click)="onRetry()"
-        ></button>
+        <button pButton (click)="onRetry()">
+          <i pButtonIcon class="pi pi-refresh"></i>
+          <span pButtonLabel>Спробувати ще раз</span>
+        </button>
 
-        <button
-          pButton
-          outlined
-          icon="pi pi-filter-slash"
-          label="Скинути фільтри"
-          (click)="onResetFilters()"
-        ></button>
+        <button pButton outlined (click)="onResetFilters()">
+          <i pButtonIcon class="pi pi-filter-slash"></i>
+          <span pButtonLabel>Скинути фільтри</span>
+        </button>
       </div>
     </div>
   </p-message>
@@ -161,10 +156,11 @@
                 class="w-full h-40 aspect-3/2 rounded-border overflow-hidden bg-white dark:bg-bg-white flex items-center justify-center"
               >
                 <img
-                  [src]="product.photo"
+                  [ngSrc]="product.photo"
                   [alt]="product.name"
                   class="w-full h-full object-contain"
-                  loading="lazy"
+                  [priority]="$index < 6"
+                  fill
                 />
               </div>
             </div>
@@ -188,17 +184,12 @@
               </div>
               <div class="card flex flex-wrap gap-4 justify-center">
                 @if(product.isSale) {
-                <p-message severity="error" variant="outlined" size="small">
-                  Розпродаж
-                </p-message>
+                <p-message severity="error" size="small"> Розпродаж </p-message>
                 } @if(product.isNew) {
-                <p-message severity="info" variant="outlined" size="small">
-                  Новинка
-                </p-message>
+                <p-message severity="info" size="small"> Новинка </p-message>
                 }
                 <p-message
                   [severity]="product.inStock ? 'success' : 'warn'"
-                  variant="outlined"
                   size="small"
                 >
                   @if(product.inStock){ В наявності } @else{ Під замовлення }
@@ -210,14 +201,22 @@
                 {{ product.price +' грн.' }}
               </span>
               <div class="flex flex-row-reverse md:flex-row gap-2">
-                <button pButton icon="pi pi-heart" [outlined]="true"></button>
                 <button
                   pButton
-                  icon="pi pi-shopping-cart"
-                  label="Buy Now"
-                  [disabled]="product.inStock"
+                  [outlined]="true"
+                  [routerLink]="['/product.productSlug']"
+                >
+                  <i pButtonIcon class="pi pi-reply"></i>
+                  <span pButtonLabel>Детальніше</span>
+                </button>
+                <button
+                  pButton
+                  [disabled]="!product.inStock"
                   class="flex-auto md:flex-initial whitespace-nowrap"
-                ></button>
+                >
+                  <i pButtonIcon class="pi pi-shopping-cart"></i>
+                  <span pButtonLabel>У кошик</span>
+                </button>
               </div>
             </div>
           </div>
@@ -239,10 +238,11 @@
                   class="w-full aspect-3/2 rounded-border overflow-hidden bg-white dark:bg-bg-white flex items-center justify-center"
                 >
                   <img
-                    [src]="product.photo"
+                    [ngSrc]="product.photo"
                     [alt]="product.name"
                     class="w-full h-full object-contain"
-                    loading="lazy"
+                    [priority]="$index < 6"
+                    fill
                   />
                 </div>
                 <div class="absolute left-3 top-3 flex flex-col gap-1">
@@ -288,12 +288,16 @@
                 <div class="flex gap-2">
                   <button
                     pButton
-                    icon="pi pi-shopping-cart"
-                    label="Buy Now"
-                    [disabled]="product.inStock"
+                    [disabled]="!product.inStock"
                     class="flex-auto whitespace-nowrap"
-                  ></button>
-                  <button pButton icon="pi pi-heart" outlined></button>
+                  >
+                    <i pButtonIcon class="pi pi-shopping-cart"></i>
+                    <span pButtonLabel>У кошик</span>
+                  </button>
+                  <button pButton outlined>
+                    <i pButtonIcon class="pi pi-reply"></i>
+                    <span pButtonLabel>Детальніше</span>
+                  </button>
                 </div>
               </div>
             </div>
