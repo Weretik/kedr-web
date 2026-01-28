@@ -13,7 +13,7 @@ import { ProductListQueryState } from './product-list.query-state';
 
 import type { PagedResult } from '@shared/data-access';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ProductListFacade {
   private readonly repo = inject(ProductListRepository);
   private route = inject(ActivatedRoute);

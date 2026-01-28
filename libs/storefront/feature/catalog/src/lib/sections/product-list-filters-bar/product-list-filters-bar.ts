@@ -17,7 +17,7 @@ import { SliderModule } from 'primeng/slider';
 
 import { buildFiltersMenu } from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
-import { ProductListFacade } from '../../state/product-list.facade';
+import { ProductListFacade } from '../../state/product-list/product-list.facade';
 import { ProductList } from '../product-list/product-list';
 
 @Component({

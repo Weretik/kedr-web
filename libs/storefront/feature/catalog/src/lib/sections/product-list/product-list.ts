@@ -10,7 +10,7 @@ import { SelectButton } from 'primeng/selectbutton';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
 
-import { ProductListFacade } from '../../state/product-list.facade';
+import { ProductListFacade } from '../../state/product-list/product-list.facade';
 
 @Component({
   selector: 'lib-product-list',
