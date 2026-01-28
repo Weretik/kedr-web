@@ -1,0 +1,6 @@
+<lib-page-header [config]="headerConfig()" />
+
+slug: {{ facade.productSlug() ?? 'null' }} @if
+(facade.productResource.isLoading()) { } @if (facade.productResource.error()) {
+<div class="error-message">{{ facade.productResource.error()?.message }}</div>
+} @else if (facade.productResource.value(); as product) { {{ product.name }} }
