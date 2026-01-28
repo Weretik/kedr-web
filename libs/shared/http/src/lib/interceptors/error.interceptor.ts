@@ -1,6 +1,19 @@
 ﻿import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { ApiError } from '@shared/util';
+import { ApiError, ApiErrorCode } from '@shared/util';
 import { catchError, throwError } from 'rxjs';
+
+export class AppApiError extends Error implements ApiError {
+  constructor(
+    public code: ApiErrorCode,
+    public override message: string,
+    public status?: number,
+    public fieldErrors?: Record<string, string[]>,
+    public traceId?: string,
+  ) {
+    super(message);
+    this.name = 'AppApiError';
+  }
+}
 
 type ProblemDetails = {
   type?: string;
@@ -57,19 +70,17 @@ function toProblemDetails(value: unknown): ProblemDetails | undefined {
   };
 }
 
-function mapHttpError(err: HttpErrorResponse): ApiError {
+function mapHttpError(err: HttpErrorResponse): AppApiError {
   if (err.status === 0) {
     const message = isProgressEventLike(err.error)
       ? 'Network error (blocked/aborted/offline).'
       : 'Network error. Check connection.';
-    return { code: 'Network', status: 0, message };
+    return new AppApiError('Network', message, 0);
   }
   if (err.status === 401)
-    return { code: 'Unauthorized', status: 401, message: 'Unauthorized' };
-  if (err.status === 403)
-    return { code: 'Forbidden', status: 403, message: 'Forbidden' };
-  if (err.status === 404)
-    return { code: 'NotFound', status: 404, message: 'Not found' };
+    return new AppApiError('Unauthorized', 'Unauthorized', 401);
+  if (err.status === 403) return new AppApiError('Forbidden', 'Forbidden', 403);
+  if (err.status === 404) return new AppApiError('NotFound', 'Not found', 404);
 
   const pd = toProblemDetails(err.error);
   const fieldErrors = pd?.errors;
@@ -78,30 +89,32 @@ function mapHttpError(err: HttpErrorResponse): ApiError {
     pd?.detail?.trim() || pd?.title?.trim() || err.message || 'Request failed';
 
   if (fieldErrors && err.status >= 400 && err.status < 500) {
-    return {
-      code: 'Validation',
-      status: err.status,
-      message: message || 'Validation failed',
+    return new AppApiError(
+      'Validation',
+      message || 'Validation failed',
+      err.status,
       fieldErrors,
-      traceId: pd?.traceId,
-    };
+      pd?.traceId,
+    );
   }
 
   if (err.status >= 500) {
-    return {
-      code: 'Server',
-      status: err.status,
-      message: message || 'Server error',
-      traceId: pd?.traceId,
-    };
+    return new AppApiError(
+      'Server',
+      message || 'Server error',
+      err.status,
+      undefined,
+      pd?.traceId,
+    );
   }
 
-  return {
-    code: 'Unknown',
-    status: err.status,
+  return new AppApiError(
+    'Unknown',
     message,
-    traceId: pd?.traceId,
-  };
+    err.status,
+    undefined,
+    pd?.traceId,
+  );
 }
 
 export const errorInterceptor: HttpInterceptorFn = (_req, next) =>
