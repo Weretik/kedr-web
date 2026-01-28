@@ -29,11 +29,11 @@ export class CatalogApiService {
   }
 
   getProductBySlug(
+    priceTypeId: number,
     productSlug: string,
-    priceTypeId = 10,
   ): Observable<ProductBySlugDto> {
     const params = new HttpParams().set('priceTypeId', String(priceTypeId));
-    const url = `/api/catalog/products/${productSlug}`;
+    const url = `/api/catalog/product/${productSlug}`;
 
     return this.http.get<ProductBySlugDto>(url, { params });
   }

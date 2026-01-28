@@ -204,7 +204,7 @@
                 <button
                   pButton
                   [outlined]="true"
-                  [routerLink]="['/product.productSlug']"
+                  [routerLink]="['/catalog','product', product.productSlug]"
                 >
                   <i pButtonIcon class="pi pi-reply"></i>
                   <span pButtonLabel>Детальніше</span>
@@ -294,7 +294,11 @@
                     <i pButtonIcon class="pi pi-shopping-cart"></i>
                     <span pButtonLabel>У кошик</span>
                   </button>
-                  <button pButton outlined>
+                  <button
+                    pButton
+                    outlined
+                    [routerLink]="['/catalog','product', product.productSlug]"
+                  >
                     <i pButtonIcon class="pi pi-reply"></i>
                     <span pButtonLabel>Детальніше</span>
                   </button>
