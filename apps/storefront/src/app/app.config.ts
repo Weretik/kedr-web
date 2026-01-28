@@ -1,4 +1,8 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withFetch,
+} from '@angular/common/http';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
@@ -8,6 +12,7 @@ import {
   provideClientHydration,
   withEventReplay,
   withIncrementalHydration,
+  withHttpTransferCacheOptions,
 } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import {
@@ -28,6 +33,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: API_BASE_URL, useValue: environment.api.baseUrl },
     provideHttpClient(
+      withFetch(),
       withInterceptors([
         baseUrlInterceptor,
         loggingInterceptor,
@@ -41,7 +47,13 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'top',
       }),
     ),
-    provideClientHydration(withEventReplay(), withIncrementalHydration()),
+    provideClientHydration(
+      withEventReplay(),
+      withIncrementalHydration(),
+      withHttpTransferCacheOptions({
+        includePostRequests: false,
+      }),
+    ),
     MessageService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     providePrimeNG({
