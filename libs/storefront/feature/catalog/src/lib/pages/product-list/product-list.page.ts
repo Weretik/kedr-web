@@ -24,11 +24,11 @@ export class ProductListPage {
     () => this.productsResource.value()?.value ?? [],
   );
 
-  get searchValue(): string {
-    return this.facade.queryState.search() ?? '';
+  public get searchValue(): string {
+    return this.facade.queryState.draftSearch();
   }
 
-  setSearchValue(value: string) {
-    this.facade.queryState.setSearch(value);
+  public setSearchValue(value: string) {
+    this.facade.queryState.setSearchDraft(value);
   }
 }

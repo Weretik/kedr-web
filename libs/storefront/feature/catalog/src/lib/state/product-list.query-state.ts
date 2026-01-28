@@ -1,11 +1,10 @@
 ﻿import { Injectable, computed, effect, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Router } from 'express';
+import { Router } from '@angular/router';
 import { linkedQueryParam } from 'ngxtension/linked-query-param';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import type { ProductListQuery, ProductListSortUi } from '@storefront/util';
-
 
 @Injectable({ providedIn: 'root' })
 export class ProductListQueryState {
@@ -42,11 +41,6 @@ export class ProductListQueryState {
   }));
 
   // --- commands (domain-ish;) ---
-  setSearch(value: string): void {
-    this.search.set(String(value));
-    this.setDefaultPage();
-  }
-
   setPage(page: number): void {
     this.page.set(String(page));
   }
@@ -125,7 +119,7 @@ export class ProductListQueryState {
     this.commitSearch(this.debouncedSearch());
   });
 
-  setSearchDraft(value: string): void {
+  public setSearchDraft(value: string): void {
     this.draftSearch.set(value ?? '');
   }
 
