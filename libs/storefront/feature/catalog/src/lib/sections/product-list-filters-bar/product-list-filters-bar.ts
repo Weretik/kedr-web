@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
@@ -15,7 +16,10 @@ import { PanelMenu } from 'primeng/panelmenu';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 
-import { buildFiltersMenu } from './product-list-filters.menu';
+import {
+  buildFiltersMenu,
+  findCategoryLabel,
+} from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
 import { ProductListFacade } from '../../state/product-list/product-list.facade';
 import { ProductList } from '../product-list/product-list';
@@ -47,6 +51,21 @@ import { ProductList } from '../product-list/product-list';
 })
 export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
+  private readonly route = inject(ActivatedRoute);
+
+  readonly categorySlug = signal<string | null>(null);
+
+  constructor() {
+    this.route.paramMap.subscribe((params) => {
+      this.categorySlug.set(params.get('categorySlug'));
+    });
+  }
+
+  readonly categoryName = computed(() => {
+    const slug = this.categorySlug();
+    if (!slug) return 'Категорія: Всі';
+    return findCategoryLabel(slug) ?? 'Категорія: Невідома';
+  });
 
   readonly minPrice = 0;
   readonly maxPrice = 50_000;
@@ -60,7 +79,9 @@ export class ProductListFiltersBar {
     setSort: (sort) => this.facade.queryState.setSort(sort),
   });
 
-  readonly filtersMenu = buildFiltersMenu();
+  readonly filtersMenu = buildFiltersMenu({
+    goToCategory: (slug) => this.facade.queryState.goToCategory(slug),
+  });
 
   private readonly draftSets = effect(() => {
     this.draftInStock.set(this.facade.queryState.inStock() === 'true');

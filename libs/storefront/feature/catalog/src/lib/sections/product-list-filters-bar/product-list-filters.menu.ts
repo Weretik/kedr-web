@@ -1,7 +1,27 @@
 ﻿import type { MenuItem } from 'primeng/api';
 
-export function buildFiltersMenu(): MenuItem[] {
-  return [
+export function buildFiltersMenu(actions: {
+  goToCategory: (slug: string) => void;
+}): (MenuItem & { categorySlug?: string })[] {
+  const applyCommand = (
+    items: (MenuItem & { categorySlug?: string })[],
+  ): (MenuItem & { categorySlug?: string })[] => {
+    return items.map((item) => {
+      const newItem = { ...item };
+      if (newItem.categorySlug && !newItem.command) {
+        const slug = newItem.categorySlug;
+        newItem.command = () => actions.goToCategory(slug);
+      }
+      if (newItem.items) {
+        newItem.items = applyCommand(
+          newItem.items as (MenuItem & { categorySlug?: string })[],
+        );
+      }
+      return newItem;
+    });
+  };
+
+  return applyCommand([
     {
       label: 'Фурнітура',
       icon: 'pi pi-file',
@@ -12,27 +32,18 @@ export function buildFiltersMenu(): MenuItem[] {
           items: [
             {
               label: 'Накладні(метелик)',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-zavisi-nakladni-meteliki-dlia-mizhkimnatnikh-dverei-1707',
-                'products',
-              ],
             },
             {
               label: 'Ввертні та приварні',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-zavisi-vvertni-ta-kovpachki-do-nikh-privarni-zavisi-4457',
-                'products',
-              ],
             },
             {
               label: 'Врізні',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-zavisi-vrizni-dlia-mizhkimnatnikh-dverei-6139',
-                'products',
-              ],
             },
           ],
         },
@@ -42,39 +53,24 @@ export function buildFiltersMenu(): MenuItem[] {
           items: [
             {
               label: 'Навестні та велозамки',
-              routerLink: [
-                '/catalog',
-                'kedr-zamki-navisni-ta-velozamki-1304',
-                'products',
-              ],
+              categorySlug: 'kedr-zamki-navisni-ta-velozamki-1304',
             },
             {
               label: 'Комплекти з ручками',
-              routerLink: [
-                '/catalog',
-                'kedr-komplekti-zamki-z-ruchkami-2716',
-                'products',
-              ],
+              categorySlug: 'kedr-komplekti-zamki-z-ruchkami-2716',
             },
             {
               label: 'Накладні',
-              routerLink: ['/catalog', 'kedr-zamki-nakladni-2722', 'products'],
+              categorySlug: 'kedr-zamki-nakladni-2722',
             },
             {
               label: 'Сувальдні та з хрестообр. ключем',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-zamki-suvaldni-ta-z-khrestoobr.-kliuchem-2775',
-                'products',
-              ],
             },
             {
-              label: 'Врiзні під циліндр',
-              routerLink: [
-                '/catalog',
-                'kedr-zamki-vrizni-pid-tsilindr-5851',
-                'products',
-              ],
+              label: 'Врiзні под циліндр',
+              categorySlug: 'kedr-zamki-vrizni-pid-tsilindr-5851',
             },
           ],
         },
@@ -84,63 +80,38 @@ export function buildFiltersMenu(): MenuItem[] {
           items: [
             {
               label: 'На розетцi (Kevlar)',
-              routerLink: [
-                '/catalog',
-                'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
-                'products',
-              ],
+              categorySlug: 'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
             },
             {
               label: 'На планці',
-              routerLink: [
-                '/catalog',
-                'kedr-ruchki-na-plantsi-5853',
-                'products',
-              ],
+              categorySlug: 'kedr-ruchki-na-plantsi-5853',
             },
             {
               label: 'На розетцi (R-08/R-10)',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-ruchki-na-rozettsi-seriia-standart-r-08-r-10-5915',
-                'products',
-              ],
             },
             {
               label: 'На розетцi (HRoz)',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-ruchki-na-rozettsi-seriia-ekonom-hroz-06-hroz-07-5854',
-                'products',
-              ],
             },
             {
               label: 'На розетцi (Genrich)',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-ruchki-na-rozettsi-seriia-premium-genrich-5904',
-                'products',
-              ],
             },
             {
               label: 'На розетцi (Ultara)',
-              routerLink: [
-                '/catalog',
-                'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
-                'products',
-              ],
+              categorySlug: 'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
             },
             {
               label: 'З нержавiйки',
-              routerLink: [
-                '/catalog',
-                'kedr-ruchki-z-nerzhaviiki-5999',
-                'products',
-              ],
+              categorySlug: 'kedr-ruchki-z-nerzhaviiki-5999',
             },
             {
               label: 'Ручки-кноби',
-              routerLink: ['/catalog', 'kedr-ruchki-knobi-6488', 'products'],
+              categorySlug: 'kedr-ruchki-knobi-6488',
             },
           ],
         },
@@ -150,59 +121,31 @@ export function buildFiltersMenu(): MenuItem[] {
           items: [
             {
               label: 'серія BRASS KEY Латунь',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-brass-key-latun-2680',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-brass-key-latun-2680',
             },
             {
               label: 'серія SMART',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-smart-26929',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-smart-26929',
             },
             {
               label: 'серія GWK',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-gwk-26930',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-gwk-26930',
             },
             {
               label: 'серія ZINK під шток',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-zink-pid-shtok-27124',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-zink-pid-shtok-27124',
             },
             {
               label: 'серія ZINK',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-zink-5852',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-zink-5852',
             },
             {
               label: 'серія ZINK PLK',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-zink-plk-4555',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-zink-plk-4555',
             },
             {
               label: 'серія ALU',
-              routerLink: [
-                '/catalog',
-                'kedr-tsilindri-seriyi-alu-6560',
-                'products',
-              ],
+              categorySlug: 'kedr-tsilindri-seriyi-alu-6560',
             },
           ],
         },
@@ -212,35 +155,22 @@ export function buildFiltersMenu(): MenuItem[] {
           items: [
             {
               label: 'з магнітною защіпкою',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-mizhkimnatni-mekhanizmi-z-magnitnoiu-zashchipkoiu-2197',
-                'products',
-              ],
             },
             {
               label: 'заскочки / засувки',
-              routerLink: [
-                '/catalog',
-                'kedr-mizhkimnatni-zaskochki-zasuvki-2321',
-                'products',
-              ],
+              categorySlug: 'kedr-mizhkimnatni-zaskochki-zasuvki-2321',
             },
             {
               label: 'з металевою защіпкою',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-mizhkimnatni-mekhanizmi-z-metalevoiu-zashchipkoiu-5273',
-                'products',
-              ],
             },
             {
               label: 'з кевларовою защіпкою',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-mizhkimnatni-mekhanizmi-z-kevlarovoiu-zashchipkoiu-6108',
-                'products',
-              ],
             },
           ],
         },
@@ -250,47 +180,37 @@ export function buildFiltersMenu(): MenuItem[] {
           items: [
             {
               label: 'Броненакладки на циліндр',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-bronenakladki-na-tsilindr-ta-nakladki-na-suvaldni-zamki-1230',
-                'products',
-              ],
             },
             {
               label: 'Ущільнювач',
-              routerLink: ['/catalog', 'kedr-ushchilniuvach-1440', 'products'],
+              categorySlug: 'kedr-ushchilniuvach-1440',
             },
             {
               label: 'Відбійники',
-              routerLink: ['/catalog', 'kedr-vidbiiniki-3783', 'products'],
+              categorySlug: 'kedr-vidbiiniki-3783',
             },
             {
               label: 'Комплектуючі',
-              routerLink: ['/catalog', 'kedr-komplektuiuchi-5625', 'products'],
+              categorySlug: 'kedr-komplektuiuchi-5625',
             },
             {
               label: 'Засувки і шпінгалети',
-              routerLink: [
-                '/catalog',
+              categorySlug:
                 'kedr-zasuvki-i-shpingaleti-dlia-vkhidnikh-ta-mizhkimnatnikh-dverei-5912',
-                'products',
-              ],
             },
             {
               label: 'Розсувнi системи',
-              routerLink: [
-                '/catalog',
-                'kedr-rozsuvni-sistemi-6295',
-                'products',
-              ],
+              categorySlug: 'kedr-rozsuvni-sistemi-6295',
             },
             {
               label: 'Дотягувачі',
-              routerLink: ['/catalog', 'kedr-dotiaguvachi-5962', 'products'],
+              categorySlug: 'kedr-dotiaguvachi-5962',
             },
             {
               label: 'Вiчка двернi',
-              routerLink: ['/catalog', 'kedr-vichka-dverni-5957', 'products'],
+              categorySlug: 'kedr-vichka-dverni-5957',
             },
           ],
         },
@@ -302,19 +222,19 @@ export function buildFiltersMenu(): MenuItem[] {
       items: [
         {
           label: 'Korfad',
-          routerLink: ['/catalog', 'm_korfad-8349', 'products'],
+          categorySlug: 'm_korfad-8349',
         },
         {
           label: 'Leador',
-          routerLink: ['/catalog', 'm_leador-8344', 'products'],
+          categorySlug: 'm_leador-8344',
         },
         {
           label: 'Darumi',
-          routerLink: ['/catalog', 'm_darumi-19424', 'products'],
+          categorySlug: 'm_darumi-19424',
         },
         {
           label: 'Syndicate',
-          routerLink: ['/catalog', 'dveri-sindikat-26971', 'products'],
+          categorySlug: 'dveri-sindikat-26971',
         },
       ],
     },
@@ -324,25 +244,57 @@ export function buildFiltersMenu(): MenuItem[] {
       items: [
         {
           label: 'Steelguard',
-          routerLink: ['/catalog', 'dveri-steelguard-7258', 'products'],
+          categorySlug: 'dveri-steelguard-7258',
         },
         {
           label: 'Lacosta',
-          routerLink: ['/catalog', 'dveri-lacosta-7259', 'products'],
+          categorySlug: 'dveri-lacosta-7259',
         },
         {
           label: 'Sova',
-          routerLink: ['/catalog', 'dveri-sova-19425', 'products'],
+          categorySlug: 'dveri-sova-19425',
         },
         {
           label: 'MSM',
-          routerLink: ['/catalog', 'dveri-msm-27083', 'products'],
+          categorySlug: 'dveri-msm-27083',
         },
         {
           label: 'Maximum',
-          routerLink: ['/catalog', 'dveri-tsdkh-8209', 'products'],
+          categorySlug: 'dveri-tsdkh-8209',
         },
       ],
     },
-  ];
+  ]);
+}
+
+export function findCategoryLabel(
+  slug: string | null,
+  items: (MenuItem & { categorySlug?: string })[] = buildFiltersMenu({
+    goToCategory: () => {},
+  }),
+  parentLabels: string[] = [],
+): string | null {
+  if (!slug) return null;
+
+  for (const item of items) {
+    if (item.categorySlug === slug) {
+      const labels = [...parentLabels];
+      if (item.label) {
+        labels.push(item.label);
+      }
+      return labels.join(': ');
+    }
+    if (item.items) {
+      const currentLabels = item.label
+        ? [...parentLabels, item.label]
+        : parentLabels;
+      const found = findCategoryLabel(
+        slug,
+        item.items as (MenuItem & { categorySlug?: string })[],
+        currentLabels,
+      );
+      if (found) return found;
+    }
+  }
+  return null;
 }
