@@ -59,9 +59,8 @@ export class ProductListFiltersBar {
   readonly sortOptions = buildSortMenu({
     setSort: (sort) => this.facade.queryState.setSort(sort),
   });
-  readonly filtersMenu = buildFiltersMenu({
-    goToCategory: (slug) => this.facade.queryState.goToCategory(slug),
-  });
+
+  readonly filtersMenu = buildFiltersMenu();
 
   private readonly draftSets = effect(() => {
     this.draftInStock.set(this.facade.queryState.inStock() === 'true');
