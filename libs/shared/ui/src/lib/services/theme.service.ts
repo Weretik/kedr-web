@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, effect, computed } from '@angular/core';
 import { BrowserStorageService } from '@shared/util';
 
 type ThemeValue = 'dark' | 'light';
@@ -12,31 +12,30 @@ export class ThemeService {
   private readonly DARK_CLASS = 'my-app-dark';
   private readonly THEME_KEY = 'theme';
 
-  private readonly _isDark = signal(false);
-  public readonly isDark = this._isDark.asReadonly();
+  private readonly _theme = signal<ThemeValue>(this.readInitialTheme());
+  readonly theme = this._theme.asReadonly();
+  readonly isDark = computed(() => this._theme() === 'dark');
 
-  public init(): void {
-    const isDark = this.storage.getItem(this.THEME_KEY) === 'dark';
-    this.apply(isDark);
-    this._isDark.set(isDark);
+  private InitTheme = effect(() => {
+    this.document.documentElement.classList.toggle(
+      this.DARK_CLASS,
+      this.isDark(),
+    );
+  });
+  private saveInStorage = effect(() => {
+    this.storage.setItem(this.THEME_KEY, this._theme());
+  });
+
+  setTheme(isDark: boolean): void {
+    this._theme.set(isDark ? 'dark' : 'light');
   }
 
-  public getTheme(): boolean {
-    return this.storage.getItem(this.THEME_KEY) === 'dark';
+  toggleTheme(): void {
+    this._theme.update((t) => (t === 'dark' ? 'light' : 'dark'));
   }
 
-  public setTheme(isDark: boolean): void {
-    const value: ThemeValue = isDark ? 'dark' : 'light';
-    this.storage.setItem(this.THEME_KEY, value);
-    this.apply(isDark);
-    this._isDark.set(isDark);
-  }
-
-  public toggleTheme(): void {
-    this.setTheme(!this.isDark());
-  }
-
-  private apply(isDark: boolean): void {
-    this.document.documentElement.classList.toggle(this.DARK_CLASS, isDark);
+  private readInitialTheme(): ThemeValue {
+    const saved = this.storage.getItem(this.THEME_KEY);
+    return saved === 'dark' ? 'dark' : 'light';
   }
 }
