@@ -96,6 +96,8 @@ export class ProductListQueryState {
     this.sort.set('name-asc');
     this.page.set('1');
     this.pageSize.set('20');
+
+    this.router.navigate(['/catalog', 'products']);
   }
 
   // --- debounced search UX (draft -> debounce -> commit to URL) ---

@@ -115,6 +115,9 @@ export class ProductListFiltersBar {
     const [fromPrice, toPrice] = this.draftPrice();
     this.facade.queryState.setPriceRange(fromPrice, toPrice);
   }
+  public clearFilters() {
+    this.facade.queryState.clear();
+  }
 
   private toNum(value: string | null): number | null {
     if (!value) return null;
