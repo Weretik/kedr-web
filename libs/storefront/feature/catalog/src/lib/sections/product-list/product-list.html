@@ -115,6 +115,16 @@
 
 <div class="card w-full">
   <p-dataview #dv [value]="products()" [layout]="layout" class="w-full">
+    <ng-template #emptymessage>
+      <div
+        class="flex flex-col items-center justify-center p-8 text-surface-500"
+      >
+        <i class="pi pi-search text-4xl mb-4"></i>
+        <p class="text-xl font-medium">Товари не знайдено</p>
+        <p>Спробуйте змінити фільтри або пошуковий запит.</p>
+      </div>
+    </ng-template>
+
     <ng-template #header>
       <div class="flex items-center justify-between w-full">
         <div>

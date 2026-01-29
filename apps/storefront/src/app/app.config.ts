@@ -57,6 +57,9 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     providePrimeNG({
+      translation: {
+        emptyMessage: 'Товари не знайдено',
+      },
       theme: {
         preset: KedrStorePreset,
         options: {
