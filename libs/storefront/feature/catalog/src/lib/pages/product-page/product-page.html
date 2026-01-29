@@ -1,6 +1,177 @@
 <lib-page-header [config]="headerConfig()" />
 
-slug: {{ facade.productSlug() ?? 'null' }} @if
-(facade.productResource.isLoading()) { } @if (facade.productResource.error()) {
+@if (facade.productResource.isLoading()) {
+<div class="card">
+  <div
+    class="rounded border border-surface-200 dark:border-surface-700 p-6 bg-surface-0 dark:bg-surface-900"
+  >
+    <p-skeleton width="100%" height="500px" />
+    <div class="flex justify-between mt-4">
+      <p-skeleton width="4rem" height="2rem" />
+      <p-skeleton width="4rem" height="2rem" />
+    </div>
+  </div>
+</div>
+} @if (facade.productResource.error()) {
 <div class="error-message">{{ facade.productResource.error()?.message }}</div>
-} @else if (facade.productResource.value(); as product) { {{ product.name }} }
+<div class="card w-full">
+  <p-message severity="error" variant="outlined">
+    <div class="flex flex-col gap-3">
+      <div class="font-medium">Не вдалося завантажити товар</div>
+      <div class="text-sm text-surface-600 dark:text-surface-300">
+        Перевірте інтернет або спробуйте ще раз.
+      </div>
+
+      <div class="flex gap-2">
+        <button pButton (click)="onRetry()">
+          <i pButtonIcon class="pi pi-refresh"></i>
+          <span pButtonLabel>Спробувати ще раз</span>
+        </button>
+      </div>
+    </div>
+  </p-message>
+</div>
+} @else if (facade.productResource.value(); as product) {
+<div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20">
+  <div class="flex flex-col lg:flex-row gap-8 mb-16 lg:items-start">
+    <div class="flex-2 flex gap-4 lg:max-w-none">
+      <div class="hidden sm:flex flex-col gap-4 lg:min-w-24">
+        @for (image of images(); track image; let i = $index) { @if
+        (!broken.has(i)) {
+        <div
+          class="w-28 rounded-lg bg-white dark:bg-white overflow-hidden aspect-4/3 flex items-center justify-center cursor-pointer transition-all duration-150"
+          [class]="
+                selectedImageIndex === i
+                    ? 'shadow-[0_0_0_2px] shadow-surface-900 dark:shadow-surface-0 ring-2 ring-surface-900 ' +
+                     'dark:ring-surface-0 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-950'
+                    : ''"
+          (click)="selectedImageIndex = i"
+        >
+          <img
+            [src]="image"
+            class="w-full h-full object-contain"
+            [alt]="i === 0 ? `${product.name} thumbnail` : 'Product scheme'"
+            (error)="markBroken(i)"
+          />
+        </div>
+        } }
+      </div>
+
+      <div class="flex-1 w-full max-w-200">
+        <div
+          class="w-full rounded-lg bg-white overflow-hidden aspect-4/3 flex items-center justify-center"
+        >
+          <p-image
+            [src]="images()[selectedImageIndex]"
+            class="w-full h-full object-contain"
+            [preview]="true"
+            imageClass="w-full h-full object-contain"
+            alt="Product main image"
+          />
+        </div>
+
+        <div class="flex gap-2 sm:hidden h-32 mt-4">
+          @for (image of images(); track image; let i = $index) {
+          <div
+            class="flex flex-1 min-w-16 sm:min-w-20 md:min-w-24 rounded-md sm:rounded-lgbg-white dark:bg-white overflow-hidden aspect-4/3 items-center justify-center cursor-pointer transition-all duration-150"
+            [class]="
+                  selectedImageIndex === i
+                    ? 'shadow-[0_0_0_2px] shadow-surface-900 dark:shadow-surface-0 ring-2 ring-surface-900 ' +
+                     'dark:ring-surface-0 ring-offset-1 sm:ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-950'
+                    : ''
+                "
+            (click)="selectedImageIndex = i"
+          >
+            <img
+              [src]="image"
+              class="w-full h-full object-contain"
+              alt="Product thumbnail"
+            />
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-1 w-full p-5 flex flex-col gap-8">
+      <div class="flex flex-col gap-4">
+        <div class="flex items-start gap-4">
+          <h1
+            class="flex-1 text-surface-900 dark:text-surface-0 text-xl font-semibold leading-tight"
+          >
+            {{product.name}}
+          </h1>
+        </div>
+        <div class="flex items-center justify-between gap-4">
+          <div
+            class="text-surface-900 dark:text-surface-0 text-2xl font-normal leading-tight"
+          >
+            {{product.price }} грн
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-row gap-4">
+          <div
+            class="text-surface-900 dark:text-surface-0 text-sm font-semibold leading-tight"
+          >
+            Категорія:
+          </div>
+          <div
+            class="text-surface-900 dark:text-surface-0 text-sm leading-tight"
+          >
+            <p>{{product.categoryName}}</p>
+          </div>
+        </div>
+
+        @if(product.quantityInPack > 0){
+        <div class="flex flex-row gap-4">
+          <div
+            class="text-surface-900 dark:text-surface-0 text-sm font-semibold leading-tight"
+          >
+            Кількість в упаковці:
+          </div>
+          <div
+            class="text-surface-900 dark:text-surface-0 text-sm leading-tight"
+          >
+            <p>{{product.quantityInPack}} шт.</p>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-4">
+          <div
+            class="text-surface-900 dark:text-surface-0 text-sm font-semibold leading-tight"
+          >
+            Кількість:
+          </div>
+          <p-inputnumber
+            [(ngModel)]="quantity"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            spinnerMode="horizontal"
+            [min]="0"
+            class="w-32"
+            inputStyleClass="w-12 text-center"
+            decrementButtonClass="p-button-text"
+            incrementButtonClass="p-button-text"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+          ></p-inputnumber>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            pButton
+            class="flex-1 py-2! px-4! bg-surface-900! dark:bg-surface-0! text-surface-0! dark:text-surface-900! border-surface-900! dark:border-surface-0! rounded-md! font-medium! text-sm!"
+          >
+            <span pButtonLabel>Додати до кошику</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

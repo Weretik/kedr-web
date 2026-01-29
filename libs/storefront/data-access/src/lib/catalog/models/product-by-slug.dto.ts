@@ -8,5 +8,7 @@
   categoryName: string;
   categorySlug: string;
 
+  quantityInPack: number;
+
   price: number | null;
 }
