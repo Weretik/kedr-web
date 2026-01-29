@@ -1,6 +1,10 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+if (process.env['NODE_ENV'] !== 'production') {
+  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+}
+
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
