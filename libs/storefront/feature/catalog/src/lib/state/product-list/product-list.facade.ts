@@ -33,13 +33,14 @@ export class ProductListFacade {
 
   readonly productsResource = rxResource<
     PagedResult<ProductListRowDto>,
-    GetProductListQuery & { refresh: number }
+    GetProductListQuery & { refresh: number; categorySlug: string | null }
   >({
     params: () => ({
       ...this.apiQuery(),
       refresh: this.refreshToken(),
+      categorySlug: this.categorySlug(),
     }),
-    stream: ({ params }) => this.repo.getList(params, this.categorySlug()),
+    stream: ({ params }) => this.repo.getList(params, params.categorySlug),
   });
 
   // --- commands (thin proxies or domain commands) ---
