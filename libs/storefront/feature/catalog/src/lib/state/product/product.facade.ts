@@ -29,6 +29,6 @@ export class ProductFacade {
   });
 
   public refresh(): void {
-    this.refreshToken.update((v) => v + 1);
+    this.refreshToken.update((value) => value + 1);
   }
 }
