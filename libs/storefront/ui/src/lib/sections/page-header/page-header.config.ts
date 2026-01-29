@@ -4,4 +4,5 @@ export interface PageHeaderConfig {
   title: string;
   breadcrumbs: MenuItem[];
   showSearch?: boolean;
+  hideTitle?: boolean;
 }

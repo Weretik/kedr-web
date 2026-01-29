@@ -14,7 +14,10 @@ import { ProductListFacade } from '../../state/product-list/product-list.facade'
 export class ProductListPage {
   headerConfig: PageHeaderConfig = {
     title: 'Каталог',
-    breadcrumbs: [{ label: 'Каталог' }, { label: 'Товари' }],
+    breadcrumbs: [
+      { label: 'Каталог', routerLink: '/catalog/products' },
+      { label: 'Товари' },
+    ],
     showSearch: true,
   };
 

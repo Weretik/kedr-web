@@ -11,11 +11,11 @@
 
     <!-- Title + actions -->
     <div class="flex flex-col md:flex-row md:justify-between gap-4">
+      @if (!config().hideTitle) {
       <h1 class="text-5xl font-bold text-surface-900 dark:text-surface-0">
         {{ config().title }}
       </h1>
-
-      @if (config().showSearch) {
+      } @if (config().showSearch) {
       <p-iconfield>
         <p-inputicon class="pi pi-search"></p-inputicon>
         <input
