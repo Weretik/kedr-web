@@ -8,7 +8,7 @@
   },
 
   api: {
-    baseUrl: 'https://api.Kedr.com.ua/admin',
+    baseUrl: 'https://classkedr.com.ua/admin',
     timeoutMs: 15000,
   },
 

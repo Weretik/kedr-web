@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
-    "tokens:gen": "node tools/tokens/generate-tailwind-palette.mjs"
+    "tokens:gen": "node tools/tokens/generate-tailwind-palette.mjs",
+    "storefront:start": "node dist/apps/storefront/server/server.mjs"
   },
   "private": true,
   "dependencies": {

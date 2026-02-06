@@ -1,0 +1,11 @@
+﻿node_modules
+dist
+.git
+.vscode
+.idea
+.nx
+.cache
+npm-debug.log
+README.md
+LICENSE
+.env

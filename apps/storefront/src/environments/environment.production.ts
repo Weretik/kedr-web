@@ -8,7 +8,7 @@
   },
 
   api: {
-    baseUrl: 'https://api.Kedr.com.ua/',
+    baseUrl: 'https://api-449981321140.europe-central2.run.app',
     timeoutMs: 15000,
   },
 
