@@ -2,9 +2,13 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '@shared/ui';
+import { CartFacade, CartUiFacade } from '@storefront/data-access';
+import { Cart } from '@storefront/feature/cart';
 import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { Ripple } from 'primeng/ripple';
 
 import { buildMenu } from './header.menu';
@@ -19,6 +23,9 @@ import { buildMenu } from './header.menu';
     NgOptimizedImage,
     RouterLink,
     Ripple,
+    Cart,
+    BadgeModule,
+    OverlayBadgeModule,
   ],
   templateUrl: './header.html',
   styleUrl: './header.css',
@@ -27,6 +34,8 @@ import { buildMenu } from './header.menu';
 })
 export class Header {
   public readonly themeService = inject(ThemeService);
+  readonly cartUi = inject(CartUiFacade);
+  readonly cart = inject(CartFacade);
 
   readonly items = buildMenu();
 

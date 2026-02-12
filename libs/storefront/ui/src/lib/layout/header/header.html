@@ -65,8 +65,8 @@
         <button
           pButton
           severity="secondary"
-          [rounded]="true"
           [text]="true"
+          [rounded]="true"
           (click)="themeService.toggleTheme()"
           class="w-10 h-10 text-surface-500! dark:text-surface-400!"
           aria-label="Змінити тему"
@@ -86,13 +86,32 @@
         >
           <i class="pi pi-user"></i>
         </button>
+        <p-overlaybadge
+          severity="success"
+          [value]="cart.itemsCount()"
+          badgeSize="small"
+          [pt]="{ pcBadge: { root: { class: '-translate-x-2 translate-y-2 scale-80' } } }"
+          [hidden]="cart.itemsCount() === 0"
+        >
+          <button
+            pButton
+            (click)="cartUi.open()"
+            severity="secondary"
+            class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+            [text]="true"
+            [rounded]="true"
+          >
+            <i class="pi pi-shopping-cart"></i>
+          </button>
+        </p-overlaybadge>
         <button
           pButton
+          (click)="cartUi.open()"
           severity="secondary"
+          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
           [text]="true"
           [rounded]="true"
-          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-          aria-label="Корзина"
+          [hidden]="cart.itemsCount() < 0"
         >
           <i class="pi pi-shopping-cart"></i>
         </button>
@@ -100,3 +119,4 @@
     </ng-template>
   </p-megaMenu>
 </div>
+<lib-cart />

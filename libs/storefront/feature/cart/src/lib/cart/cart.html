@@ -1,0 +1,101 @@
+<div
+  id="slideover-cart"
+  [class.hidden]="!cartUi.isOpen()"
+  class="hidden bg-surface-0 dark:bg-surface-900 fixed top-0 right-0 z-[60] shadow-xl w-full md:w-108 h-screen"
+>
+  <div class="flex flex-col h-full">
+    <div
+      class="bg-surface-0 dark:bg-surface-900 p-4 flex items-center justify-between"
+    >
+      <span
+        class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight"
+        >Ваш кошик</span
+      >
+      <button
+        pButton
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        (click)="cartUi.close()"
+      >
+        <i pButtonIcon class="pi pi-times"></i>
+      </button>
+    </div>
+    <div class="flex-auto overflow-y-auto p-4">
+      <ul class="list-none p-0 m-0">
+        @for (item of cart.lines(); track item.variantId; let index = $index) {
+        <li
+          class="flex items-center gap-4 pb-6 mb-6 border-b border-surface-200 dark:border-surface-700 last:border-none last:mb-0 last:pb-0"
+        >
+          <img
+            [src]="item.snapshot.imageUrl"
+            class="w-28 h-28 shrink-0 rounded-lg"
+            [alt]="item.snapshot.title"
+          />
+          <div class="flex-auto">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <span
+                class="text-surface-900 dark:text-surface-0 font-medium leading-tight"
+              >
+                {{ item.snapshot.title }}
+              </span>
+              <span
+                class="text-surface-900 dark:text-surface-0 font-semibold leading-tight"
+              >
+                {{ (item.qty * item.snapshot.unitPrice).toFixed(2) }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <p-inputnumber
+                [ngModel]="item.qty"
+                (ngModelChange)="cart.setQty(item.variantId, $event)"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                [min]="0"
+                inputStyleClass="w-12 text-center py-2 px-1 border-transparent"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+              ></p-inputnumber>
+              <button
+                pButton
+                severity="secondary"
+                [text]="true"
+                (click)="cart.remove(item.variantId)"
+              >
+                <i pButtonIcon class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </li>
+        }
+      </ul>
+    </div>
+    <div class="border-t border-surface p-8">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-surface-900 dark:text-surface-0 font-medium">
+          Загальна сума
+          <span class="text-surface-900 dark:text-surface-0 font-bold">
+            {{ cart.subtotal().toFixed(2) }} грн.
+          </span>
+        </span>
+      </div>
+      <button
+        pButton
+        class="mb-4 w-full"
+        severity="contrast"
+        (click)="goToCheckout()"
+      >
+        <span pButtonLabel> Оформити замовлення </span>
+      </button>
+      <button
+        pButton
+        class="w-full"
+        severity="secondary"
+        [outlined]="true"
+        (click)="cartUi.close()"
+      >
+        <span pButtonLabel> Продовжити закупки </span>
+      </button>
+    </div>
+  </div>
+</div>
