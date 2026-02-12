@@ -13,36 +13,51 @@
           (ngSubmit)="submit()"
           class="flex flex-col gap-4"
         >
-          <p-inputgroup>
-            <p-inputgroup-addon>
-              <i class="pi pi-user"></i>
-            </p-inputgroup-addon>
-            <p-floatlabel variant="on">
-              <input
-                pInputText
-                id="on_firstName"
-                formControlName="firstName"
-                [invalid]="isInvalid('firstName')"
-              />
-              <label for="on_firstName">Ім'я</label>
-            </p-floatlabel>
-          </p-inputgroup>
+          <div class="flex flex-col gap-1">
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-user"></i>
+              </p-inputgroup-addon>
+              <p-floatlabel variant="on">
+                <input
+                  pInputText
+                  id="on_firstName"
+                  formControlName="firstName"
+                  [invalid]="isInvalid('firstName')"
+                />
+                <label for="on_firstName">Ім'я</label>
+              </p-floatlabel>
+            </p-inputgroup>
+            @if (isInvalid('firstName')) { @if
+            (form.get('firstName')?.hasError('required')) {
+            <small class="text-red-500 ml-1">Ім'я обов'язкове</small>
+            } @else if (form.get('firstName')?.hasError('minlength')) {
+            <small class="text-red-500 ml-1"
+              >Ім'я має бути не менше 3 символів</small
+            >
+            } }
+          </div>
 
-          <p-inputgroup>
-            <p-inputgroup-addon>
-              <i class="pi pi-phone"></i>
-            </p-inputgroup-addon>
-            <p-floatlabel variant="on">
-              <p-inputmask
-                id="on_phone"
-                formControlName="phone"
-                [invalid]="isInvalid('phone')"
-                mask="+38 (099) 999-99-99"
-                placeholder="+38 (0__) ___-__-__"
-              />
-              <label for="on_phone">Телефон</label>
-            </p-floatlabel>
-          </p-inputgroup>
+          <div class="flex flex-col gap-1">
+            <p-inputgroup>
+              <p-inputgroup-addon>
+                <i class="pi pi-phone"></i>
+              </p-inputgroup-addon>
+              <p-floatlabel variant="on">
+                <p-inputmask
+                  id="on_phone"
+                  formControlName="phone"
+                  [invalid]="isInvalid('phone')"
+                  mask="+38 (099) 999-99-99"
+                  placeholder="+38 (0__) ___-__-__"
+                />
+                <label for="on_phone">Телефон</label>
+              </p-floatlabel>
+            </p-inputgroup>
+            @if (isInvalid('phone')) {
+            <small class="text-red-500 ml-1">Телефон обов'язковий</small>
+            }
+          </div>
 
           <button pButton type="submit" [disabled]="loading()">
             <span pButtonLabel>Оформити замовлення</span>

@@ -52,7 +52,7 @@ export class CheckoutPage {
   readonly error = this.facade.error;
 
   readonly form = this.formBuilder.nonNullable.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    firstName: ['', [Validators.required, Validators.minLength(3)]],
     phone: ['', Validators.required],
   });
 
