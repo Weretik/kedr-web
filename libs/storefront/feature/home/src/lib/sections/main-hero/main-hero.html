@@ -25,11 +25,11 @@
           </ul>
 
           <div class="flex items-center gap-4 justify-center lg:justify-start">
-            <button pButton type="button">
-              <span pButtonLabel>Learn More</span>
+            <button pButton type="button" (click)="goToCatalog()">
+              <span pButtonLabel> Перейти до каталогу </span>
             </button>
-            <button pButton type="button" outlined>
-              <span pButtonLabel>Live Demo</span>
+            <button pButton type="button" outlined (click)="goToWholesale()">
+              <span pButtonLabel> Замовити оптом </span>
             </button>
           </div>
         </div>
