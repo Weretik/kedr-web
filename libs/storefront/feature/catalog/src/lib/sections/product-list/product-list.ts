@@ -2,6 +2,11 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import {
+  CartFacade,
+  cartLineFromListRow,
+  ProductListRowDto,
+} from '@storefront/data-access';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Message } from 'primeng/message';
@@ -39,6 +44,7 @@ export class ProductList {
   readonly skeletonCount = 6;
   readonly skeletonArray = Array.from({ length: this.skeletonCount });
 
+  readonly cart = inject(CartFacade);
   readonly facade = inject(ProductListFacade);
   readonly productsResource = this.facade.productsResource;
 
@@ -74,5 +80,9 @@ export class ProductList {
   }
   onResetFilters(): void {
     this.facade.queryState.clear();
+  }
+
+  public addToCart(product: ProductListRowDto) {
+    this.cart.addToCart(cartLineFromListRow(product, 1));
   }
 }

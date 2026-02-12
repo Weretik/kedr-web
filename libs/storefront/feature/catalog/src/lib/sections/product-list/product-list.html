@@ -224,6 +224,7 @@
                   pButton
                   [disabled]="!product.inStock"
                   class="flex-auto md:flex-initial whitespace-nowrap"
+                  (click)="addToCart(product)"
                 >
                   <i pButtonIcon class="pi pi-shopping-cart"></i>
                   <span pButtonLabel>У кошик</span>
@@ -301,6 +302,7 @@
                     pButton
                     [disabled]="!product.inStock"
                     class="flex-auto whitespace-nowrap"
+                    (click)="addToCart(product)"
                   >
                     <i pButtonIcon class="pi pi-shopping-cart"></i>
                     <span pButtonLabel>У кошик</span>

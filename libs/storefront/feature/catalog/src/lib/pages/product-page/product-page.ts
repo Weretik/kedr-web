@@ -1,5 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {
+  CartFacade,
+  cartLineFromBySlug,
+  ProductBySlugDto,
+} from '@storefront/data-access';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { GalleriaModule } from 'primeng/galleria';
@@ -29,6 +34,7 @@ import { ProductFacade } from '../../state/product/product.facade';
   providers: [ProductFacade],
 })
 export class ProductPage {
+  readonly cart = inject(CartFacade);
   readonly facade = inject(ProductFacade);
   readonly productResource = this.facade.productResource;
 
@@ -55,8 +61,8 @@ export class ProductPage {
 
     return [product.photo, product.scheme];
   });
-  selectedImageIndex: number = 0;
-  quantity: number = 1;
+  public selectedImageIndex: number = 0;
+  public quantity = signal<number>(1);
 
   public broken = new Set<number>();
   public markBroken(i: number) {
@@ -65,5 +71,9 @@ export class ProductPage {
 
   public onRetry(): void {
     this.facade.refresh();
+  }
+
+  addToCart(product: ProductBySlugDto, qty: number = this.quantity()) {
+    this.cart.addToCart(cartLineFromBySlug(product, qty));
   }
 }
