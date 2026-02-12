@@ -1,13 +1,19 @@
 import { Component, inject, computed } from '@angular/core';
+import {
+  CartFacade,
+  cartLineFromListRow,
+  ProductListRowDto,
+} from '@storefront/data-access';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
+import { Skeleton } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 
 import { InStockFacade } from './in-stock.facade';
 
 @Component({
   selector: 'lib-in-stock-products',
-  imports: [ButtonModule, CarouselModule, TagModule],
+  imports: [ButtonModule, CarouselModule, TagModule, Skeleton],
   templateUrl: './in-stock-products.html',
   styleUrl: './in-stock-products.css',
 })

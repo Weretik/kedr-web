@@ -152,6 +152,7 @@ module.exports = [
                 'type:ui',
                 'type:util',
                 'type:feature',
+                'type:data-access',
                 'scope:shared',
               ],
             },

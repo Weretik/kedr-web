@@ -1,0 +1,148 @@
+﻿<div class="bg-neutral-50 dark:bg-surface-900 p-6 md:p-12 lg:p-20">
+  <div class="flex flex-col lg:flex-row gap-8 lg:gap-20">
+    <div class="flex-1 flex flex-col gap-8">
+      <div class="flex flex-col gap-6 pt-8">
+        <div
+          class="flex items-center justify-between cursor-pointer text-surface-900 dark:text-surface-0 text-xl font-semibold leading-tight w-full"
+        >
+          <span>Контактна інформація</span>
+        </div>
+
+        <form
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+          class="flex flex-col gap-4"
+        >
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-user"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+              <input
+                pInputText
+                id="on_firstName"
+                formControlName="firstName"
+                [invalid]="isInvalid('firstName')"
+              />
+              <label for="on_firstName">Ім'я</label>
+            </p-floatlabel>
+          </p-inputgroup>
+
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-phone"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+              <p-inputmask
+                id="on_phone"
+                formControlName="phone"
+                [invalid]="isInvalid('phone')"
+                mask="+38 (099) 999-99-99"
+                placeholder="+38 (0__) ___-__-__"
+              />
+              <label for="on_phone">Телефон</label>
+            </p-floatlabel>
+          </p-inputgroup>
+
+          <button pButton type="submit" [disabled]="loading()">
+            <span pButtonLabel>Оформити замовлення</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="flex-1 flex flex-col gap-8">
+      <div
+        class="text-surface-900 dark:text-surface-0 text-xl font-semibold leading-tight"
+      >
+        Ваш кошик
+      </div>
+
+      <div class="flex justify-start items-start">
+        <div class="flex-1 h-px bg-surface-200 dark:bg-surface-700"></div>
+      </div>
+
+      <div class="flex flex-col gap-12">
+        @for (item of cart.lines(); track item.variantId; let index = $index) {
+        <div class="flex gap-4">
+          <img
+            class="w-25 h-25 rounded-lg object-cover shrink-0"
+            [src]="item.snapshot.imageUrl"
+            [alt]="item.snapshot.title"
+          />
+          <div class="flex-1 flex flex-col justify-between">
+            <div class="flex flex-col gap-2">
+              <div class="flex gap-2">
+                <div
+                  class="flex-1 text-surface-900 dark:text-surface-0 text-base font-medium leading-tight"
+                >
+                  {{ item.snapshot.title }}
+                </div>
+                <div
+                  class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
+                >
+                  {{ (item.snapshot.unitPrice * item.qty).toFixed(2) }} грн.
+                </div>
+              </div>
+              <div
+                class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight"
+              >
+                {{ item.variantId }}
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <p-inputnumber
+                [ngModel]="item.qty"
+                (ngModelChange)="cart.setQty(item.variantId, $event)"
+                [showButtons]="true"
+                [buttonLayout]="'horizontal'"
+                [step]="1"
+                [min]="1"
+                [max]="99"
+                [inputStyleClass]="'w-10!'"
+                class="w-12!"
+                size="small"
+              >
+                <ng-template #incrementbuttonicon>
+                  <span class="pi pi-plus"></span>
+                </ng-template>
+                <ng-template #decrementbuttonicon>
+                  <span class="pi pi-minus"></span>
+                </ng-template>
+              </p-inputnumber>
+              <button
+                pButton
+                severity="secondary"
+                [text]="true"
+                [rounded]="true"
+                size="small"
+                class="text-surface-500 dark:text-surface-400 hover:text-red-500"
+                (click)="cart.remove(item.variantId)"
+              >
+                <i pButtonIcon class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="flex justify-start items-start">
+        <div class="flex-1 h-px bg-surface-200 dark:bg-surface-700"></div>
+      </div>
+
+      <div class="flex gap-6">
+        <div
+          class="flex-1 text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight"
+        >
+          Всього:
+        </div>
+        <div
+          class="text-right text-surface-900 dark:text-surface-0 text-2xl font-medium leading-tight"
+        >
+          {{ cart.subtotal().toFixed(2) }} грн.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

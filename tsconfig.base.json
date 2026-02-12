@@ -49,7 +49,11 @@
       "@shared/theme": ["libs/shared/theme/src/index.ts"],
       "@storefront/feature/widgets": [
         "libs/storefront/feature/widgets/src/index.ts"
-      ]
+      ],
+      "@storefront/feature/checkout": [
+        "libs/storefront/feature/checkout/src/index.ts"
+      ],
+      "@storefront/feature/cart": ["libs/storefront/feature/cart/src/index.ts"]
     }
   }
 }
