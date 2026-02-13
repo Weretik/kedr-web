@@ -48,10 +48,14 @@ export class ProductList {
   readonly facade = inject(ProductListFacade);
   readonly productsResource = this.facade.productsResource;
 
-  readonly products = computed(
-    () => this.productsResource.value()?.value ?? [],
-  );
-  readonly pagedInfo = computed(() => this.productsResource.value()?.pagedInfo);
+  readonly products = computed(() => {
+    if (this.productsResource.error()) return [];
+    return this.productsResource.value()?.value ?? [];
+  });
+  readonly pagedInfo = computed(() => {
+    if (this.productsResource.error()) return undefined;
+    return this.productsResource.value()?.pagedInfo;
+  });
 
   readonly first = computed(() => {
     const p = this.pagedInfo();
