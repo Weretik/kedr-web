@@ -59,7 +59,7 @@
             }
           </div>
 
-          <button pButton type="submit" [disabled]="loading()">
+          <button pButton type="submit" [disabled]="loading() || form.invalid">
             <span pButtonLabel>Оформити замовлення</span>
           </button>
         </form>
