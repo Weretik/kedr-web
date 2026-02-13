@@ -42,12 +42,12 @@
               <span
                 class="text-surface-900 dark:text-surface-0 font-semibold leading-tight"
               >
-                {{ (item.qty * item.snapshot.unitPrice).toFixed(2) }}
+                {{ (item.quantity * item.snapshot.unitPrice).toFixed(2) }}
               </span>
             </div>
             <div class="flex items-center justify-between">
               <p-inputnumber
-                [ngModel]="item.qty"
+                [ngModel]="item.quantity"
                 (ngModelChange)="cart.setQty(item.variantId, $event)"
                 [showButtons]="true"
                 buttonLayout="horizontal"

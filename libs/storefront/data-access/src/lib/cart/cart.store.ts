@@ -9,12 +9,12 @@ export class CartStore {
   lines = computed(() => this.state().lines);
 
   itemsCount = computed(() =>
-    this.state().lines.reduce((count, line) => count + line.qty, 0),
+    this.state().lines.reduce((count, line) => count + line.quantity, 0),
   );
 
   subtotal = computed(() =>
     this.state().lines.reduce(
-      (subtotal, line) => subtotal + line.qty * line.snapshot.unitPrice,
+      (subtotal, line) => subtotal + line.quantity * line.snapshot.unitPrice,
       0,
     ),
   );
@@ -27,7 +27,10 @@ export class CartStore {
       if (idx >= 0) {
         const existing = cartState.lines[idx];
         const nextLines = [...cartState.lines];
-        nextLines[idx] = { ...existing, qty: existing.qty + newLine.qty };
+        nextLines[idx] = {
+          ...existing,
+          quantity: existing.quantity + newLine.quantity,
+        };
         return { ...cartState, lines: nextLines };
       }
       return { ...cartState, lines: [...cartState.lines, newLine] };
@@ -44,7 +47,7 @@ export class CartStore {
             ? { ...cartLine, qty: newQty }
             : cartLine,
         )
-        .filter((cartLine) => cartLine.qty > 0),
+        .filter((cartLine) => cartLine.quantity > 0),
     }));
   }
 

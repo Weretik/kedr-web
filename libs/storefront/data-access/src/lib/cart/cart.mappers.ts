@@ -10,7 +10,7 @@ function requirePrice(price: number | null): number {
 export function cartLineFromListRow(dto: ProductListRowDto, qty = 1): CartLine {
   return {
     variantId: String(dto.id),
-    qty: Math.max(1, Math.floor(qty)),
+    quantity: Math.max(1, Math.floor(qty)),
     snapshot: {
       title: dto.name,
       imageUrl: dto.photo,
@@ -26,7 +26,7 @@ export function cartLineFromBySlug(
 ): CartLine {
   return {
     variantId: String(dto.id),
-    qty: Math.max(1, Math.floor(qty)),
+    quantity: Math.max(1, Math.floor(qty)),
     snapshot: {
       title: dto.name,
       imageUrl: dto.photo,

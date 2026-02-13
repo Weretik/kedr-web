@@ -1,6 +1,7 @@
 ﻿import { Injectable, inject, signal } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { ApiError } from '@shared/util';
 import { CheckoutDto, OrdersApi } from '@storefront/data-access';
 import { pipe } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -24,7 +25,10 @@ export class CheckoutFacade {
         this.api.createOrder(dto).pipe(
           tapResponse({
             next: () => this.success.set(true),
-            error: () => this.error.set('Order failed'),
+            error: (err: ApiError) => {
+              const trace = err.traceId ? ` (traceId: ${err.traceId})` : '';
+              this.error.set(`${err.message}${trace}`);
+            },
             finalize: () => this.loading.set(false),
           }),
         ),

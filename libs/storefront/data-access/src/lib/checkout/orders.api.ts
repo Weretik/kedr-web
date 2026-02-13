@@ -2,7 +2,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { CheckoutDto, OrderCreatedDto } from './models/checkout-dto';
+import { CheckoutDto } from './models/orders.requests';
+import { OrderCreatedDto } from './models/orders.responses';
 
 @Injectable({ providedIn: 'root' })
 export class OrdersApi {

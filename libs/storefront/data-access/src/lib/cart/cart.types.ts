@@ -9,7 +9,7 @@ export interface CartLineSnapshot {
 
 export interface CartLine {
   variantId: VariantId;
-  qty: number;
+  quantity: number;
   snapshot: CartLineSnapshot;
 }
 

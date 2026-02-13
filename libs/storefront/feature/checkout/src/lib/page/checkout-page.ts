@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CartFacade, CheckoutDto } from '@storefront/data-access';
+import { CartFacade } from '@storefront/data-access';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -18,6 +18,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
+import { mapToCheckoutDto } from '../mappers/checkout.mapper';
 import { CheckoutFacade } from '../state/checkout.facade';
 
 @Component({
@@ -103,7 +104,8 @@ export class CheckoutPage {
       return;
     }
 
-    const dto: CheckoutDto = this.form.getRawValue();
+    const contact = this.form.getRawValue();
+    const dto = mapToCheckoutDto(contact, this.cart.lines());
     this.facade.placeOrder(dto);
   }
 

@@ -96,7 +96,8 @@
                 <div
                   class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
                 >
-                  {{ (item.snapshot.unitPrice * item.qty).toFixed(2) }} грн.
+                  {{ (item.snapshot.unitPrice * item.quantity).toFixed(2) }}
+                  грн.
                 </div>
               </div>
               <div
@@ -107,7 +108,7 @@
             </div>
             <div class="flex justify-between items-center">
               <p-inputnumber
-                [ngModel]="item.qty"
+                [ngModel]="item.quantity"
                 (ngModelChange)="cart.setQty(item.variantId, $event)"
                 [showButtons]="true"
                 [buttonLayout]="'horizontal'"
