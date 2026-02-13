@@ -22,10 +22,10 @@ export class InStockProducts {
   readonly InStockFacade = inject(InStockFacade);
   readonly productsResource = this.InStockFacade.productsResource;
 
-  readonly products = computed(
-    () => this.productsResource.value()?.value ?? [],
-  );
-
+  readonly products = computed(() => {
+    if (this.productsResource.error()) return [];
+    return this.productsResource.value()?.value ?? [];
+  });
   readonly isLoading = computed(() => this.productsResource.isLoading());
   readonly error = computed(() => this.productsResource.error());
 
