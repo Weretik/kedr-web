@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormsModule,
@@ -42,7 +42,7 @@ import { CheckoutFacade } from '../state/checkout.facade';
   styleUrl: './checkout-page.css',
   providers: [MessageService],
 })
-export class CheckoutPage {
+export class CheckoutPage implements OnDestroy {
   readonly cart = inject(CartFacade);
   private readonly formBuilder = inject(FormBuilder);
   private readonly facade = inject(CheckoutFacade);
@@ -112,5 +112,9 @@ export class CheckoutPage {
   isInvalid(name: keyof typeof this.form.controls) {
     const formControl = this.form.controls[name];
     return formControl.touched && formControl.invalid;
+  }
+
+  ngOnDestroy() {
+    this.facade.reset();
   }
 }

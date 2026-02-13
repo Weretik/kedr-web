@@ -14,6 +14,12 @@ export class CheckoutFacade {
   readonly success = signal(false);
   readonly error = signal<string | null>(null);
 
+  reset() {
+    this.success.set(false);
+    this.error.set(null);
+    this.loading.set(false);
+  }
+
   readonly placeOrder = rxMethod<CheckoutDto>(
     pipe(
       tap(() => {

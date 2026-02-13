@@ -44,7 +44,7 @@ export class CartStore {
       lines: cartState.lines
         .map((cartLine) =>
           cartLine.variantId === variantId
-            ? { ...cartLine, qty: newQty }
+            ? { ...cartLine, quantity: newQty }
             : cartLine,
         )
         .filter((cartLine) => cartLine.quantity > 0),
