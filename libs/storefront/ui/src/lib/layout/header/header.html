@@ -104,6 +104,7 @@
             <i class="pi pi-shopping-cart"></i>
           </button>
         </p-overlaybadge>
+        @if (cart.itemsCount() === 0) {
         <button
           pButton
           (click)="cartUi.open()"
@@ -111,10 +112,10 @@
           class="w-10 h-10 text-surface-500! dark:text-surface-400!"
           [text]="true"
           [rounded]="true"
-          [hidden]="cart.itemsCount() < 0"
         >
           <i class="pi pi-shopping-cart"></i>
         </button>
+        }
       </div>
     </ng-template>
   </p-megaMenu>
