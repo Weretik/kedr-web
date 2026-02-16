@@ -20,6 +20,7 @@ import {
   errorInterceptor,
   loggingInterceptor,
   API_BASE_URL,
+  ENABLE_HTTP_LOGS,
 } from '@shared/http';
 import { KedrStorePreset } from '@shared/theme';
 import { GlobalErrorHandler } from '@shared/ui';
@@ -32,6 +33,7 @@ import { environment } from '../environments/environment';
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: API_BASE_URL, useValue: environment.api.baseUrl },
+    { provide: ENABLE_HTTP_LOGS, useValue: environment.enableHttpLogs },
     provideHttpClient(
       withFetch(),
       withInterceptors([
