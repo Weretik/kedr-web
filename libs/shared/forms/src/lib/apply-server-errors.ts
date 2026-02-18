@@ -23,9 +23,12 @@ export function applyServerErrors(form: FormGroup, error: ApiError): void {
 
 function normalizeKey(key: string): string {
   if (!key) return key;
-  return key.length === 1
-    ? key.toLowerCase()
-    : key[0].toLowerCase() + key.slice(1);
+  const parts = key.split('.');
+  const lastPart = parts[parts.length - 1];
+
+  return lastPart.length === 1
+    ? lastPart.toLowerCase()
+    : lastPart[0].toLowerCase() + lastPart.slice(1);
 }
 
 function findControl(form: FormGroup, path: string): AbstractControl | null {

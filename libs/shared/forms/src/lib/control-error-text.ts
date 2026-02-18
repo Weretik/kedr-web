@@ -11,10 +11,10 @@ export function controlErrorText(
   if (server?.length) return server[0];
 
   // client validators
-  if (control.errors['required']) return 'Required';
-  if (control.errors['email']) return 'Invalid email';
-  if (control.errors['minlength']) return 'Too short';
-  if (control.errors['maxlength']) return 'Too long';
+  if (control.errors['required']) return "Обов'язкове поле";
+  if (control.errors['email']) return 'Невірний email';
+  if (control.errors['minlength']) return 'Занадто коротко';
+  if (control.errors['maxlength']) return 'Занадто довго';
 
-  return 'Invalid value';
+  return 'Невірне значення';
 }
