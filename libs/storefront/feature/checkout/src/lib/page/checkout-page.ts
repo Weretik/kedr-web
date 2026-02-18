@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnDestroy } from '@angular/core';
+import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import {
   FormBuilder,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { applyServerErrors, controlErrorText } from '@shared/forms';
+import { NotificationService } from '@shared/ui';
 import { CartFacade } from '@storefront/data-access';
-import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { Dialog } from 'primeng/dialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
@@ -37,20 +39,24 @@ import { CheckoutFacade } from '../state/checkout.facade';
     ReactiveFormsModule,
     FloatLabel,
     InputMask,
+    Dialog,
   ],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.css',
-  providers: [MessageService],
+  providers: [],
 })
 export class CheckoutPage implements OnDestroy {
   readonly cart = inject(CartFacade);
   private readonly formBuilder = inject(FormBuilder);
   private readonly facade = inject(CheckoutFacade);
-  private readonly toast = inject(MessageService);
+  private readonly notify = inject(NotificationService);
+
+  readonly successDialogVisible = signal(false);
 
   readonly loading = this.facade.loading;
   readonly success = this.facade.success;
   readonly error = this.facade.error;
+  readonly orderId = this.facade.orderId;
 
   readonly form = this.formBuilder.nonNullable.group({
     firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -61,14 +67,9 @@ export class CheckoutPage implements OnDestroy {
     effect(() => {
       if (!this.success()) return;
 
-      this.toast.add({
-        severity: 'success',
-        summary: 'Замовлення відправлено',
-        detail: "Дякуємо за замовлення! Ми зв'яжемося з вами найближчим часом.",
-        life: 3500,
-      });
-
       this.cart.clear();
+
+      this.successDialogVisible.set(true);
 
       this.form.reset({
         firstName: '',
@@ -82,12 +83,24 @@ export class CheckoutPage implements OnDestroy {
       const message = this.error();
       if (!message) return;
 
-      this.toast.add({
-        severity: 'error',
-        summary: 'Виникла помилка',
-        detail: message,
-        life: 3500,
-      });
+      this.notify.error('Виникла помилка', message, { lifeMs: 3500 });
+    });
+
+    effect(() => {
+      const err = this.facade.validationError();
+      if (!err) return;
+
+      applyServerErrors(this.form, err);
+
+      const fieldErrors = Object.values(err.fieldErrors ?? {})
+        .flat()
+        .join('. ');
+
+      const detail = fieldErrors
+        ? `Помилки: ${fieldErrors}`
+        : 'Будь ласка, перевірте введені дані';
+
+      this.notify.error('Помилка валідації', detail, { lifeMs: 5000 });
     });
   }
 
@@ -95,12 +108,11 @@ export class CheckoutPage implements OnDestroy {
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.toast.add({
-        severity: 'warn',
-        summary: 'Перевірте поля',
-        detail: "Будь ласка, заповніть обов'язкові поля",
-        life: 3500,
-      });
+      this.notify.warn(
+        'Перевірте поля',
+        "Будь ласка, заповніть обов'язкові поля",
+        { lifeMs: 3500 },
+      );
       return;
     }
 
@@ -112,6 +124,15 @@ export class CheckoutPage implements OnDestroy {
   isInvalid(name: keyof typeof this.form.controls) {
     const formControl = this.form.controls[name];
     return formControl.touched && formControl.invalid;
+  }
+
+  getErrorMessage(name: keyof typeof this.form.controls) {
+    return controlErrorText(this.form.controls[name]);
+  }
+
+  closeSuccessDialog() {
+    this.successDialogVisible.set(false);
+    this.facade.reset();
   }
 
   ngOnDestroy() {

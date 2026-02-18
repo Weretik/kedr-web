@@ -28,14 +28,11 @@
                 <label for="on_firstName">Ім'я</label>
               </p-floatlabel>
             </p-inputgroup>
-            @if (isInvalid('firstName')) { @if
-            (form.get('firstName')?.hasError('required')) {
-            <small class="text-red-500 ml-1">Ім'я обов'язкове</small>
-            } @else if (form.get('firstName')?.hasError('minlength')) {
+            @if (isInvalid('firstName')) {
             <small class="text-red-500 ml-1"
-              >Ім'я має бути не менше 3 символів</small
+              >{{ getErrorMessage('firstName') }}</small
             >
-            } }
+            }
           </div>
 
           <div class="flex flex-col gap-1">
@@ -55,7 +52,9 @@
               </p-floatlabel>
             </p-inputgroup>
             @if (isInvalid('phone')) {
-            <small class="text-red-500 ml-1">Телефон обов'язковий</small>
+            <small class="text-red-500 ml-1"
+              >{{ getErrorMessage('phone') }}</small
+            >
             }
           </div>
 
@@ -162,3 +161,31 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="Дякуємо за замовлення!"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [visible]="successDialogVisible()"
+  (onHide)="closeSuccessDialog()"
+>
+  <div class="flex flex-col gap-3">
+    <div>Ми зв'яжемося з вами найближчим часом.</div>
+
+    @if (orderId()) {
+    <div class="font-semibold">
+      Номер замовлення: <code>{{ orderId() }}</code>
+    </div>
+    }
+
+    <div class="flex justify-end mt-3">
+      <button
+        pButton
+        type="button"
+        label="Закрити"
+        (click)="closeSuccessDialog()"
+      ></button>
+    </div>
+  </div>
+</p-dialog>
