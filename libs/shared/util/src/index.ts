@@ -1,5 +1,3 @@
-export * from './lib/api/api-result';
-
 export * from './lib/services/browser-storage-service';
 
 export * from './lib/errors/api-error';
