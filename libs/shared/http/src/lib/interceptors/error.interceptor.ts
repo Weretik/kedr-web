@@ -1,5 +1,5 @@
 ﻿import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { ApiError, ApiErrorCode } from '@shared/util';
+import { ApiError, ApiErrorCode, ArdalisValidationError } from '@shared/util';
 import { catchError, throwError } from 'rxjs';
 
 export class AppApiError extends Error implements ApiError {
@@ -43,6 +43,31 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((x) => typeof x === 'string');
 }
 
+function toFieldErrorsFromArdalisArray(
+  value: unknown,
+): Record<string, string[]> | undefined {
+  if (!Array.isArray(value)) return undefined;
+
+  const mapped: Record<string, string[]> = {};
+
+  for (const item of value) {
+    if (!isRecord(item)) continue;
+
+    const id = (item['identifier'] ??
+      item['Identifier']) as ArdalisValidationError['identifier'];
+
+    const msg = (item['errorMessage'] ??
+      item['ErrorMessage']) as ArdalisValidationError['errorMessage'];
+
+    if (typeof id !== 'string' || typeof msg !== 'string') continue;
+
+    if (!mapped[id]) mapped[id] = [];
+    mapped[id].push(msg);
+  }
+
+  return Object.keys(mapped).length ? mapped : undefined;
+}
+
 function toProblemDetails(value: unknown): ProblemDetails | undefined {
   if (!isRecord(value)) return undefined;
 
@@ -82,8 +107,10 @@ function mapHttpError(err: HttpErrorResponse): AppApiError {
   if (err.status === 403) return new AppApiError('Forbidden', 'Forbidden', 403);
   if (err.status === 404) return new AppApiError('NotFound', 'Not found', 404);
 
+  const ardalisFieldErrors = toFieldErrorsFromArdalisArray(err.error);
+
   const pd = toProblemDetails(err.error);
-  const fieldErrors = pd?.errors;
+  const fieldErrors = ardalisFieldErrors ?? pd?.errors;
 
   const message =
     pd?.detail?.trim() || pd?.title?.trim() || err.message || 'Request failed';

@@ -16,12 +16,33 @@ function tryGetFieldErrors(
 ): Record<string, string[]> | null {
   const body: unknown = err.error;
 
-  if (!body || typeof body !== 'object') return null;
+  // 1) ProblemDetails.errors
+  if (body && typeof body === 'object' && !Array.isArray(body)) {
+    const errors = (body as { errors?: unknown }).errors;
+    if (errors && typeof errors === 'object') {
+      return errors as Record<string, string[]>;
+    }
+  }
 
-  const errors = (body as { errors?: unknown }).errors;
-  if (!errors || typeof errors !== 'object') return null;
+  // 2) Ardalis ValidationError[]
+  if (Array.isArray(body)) {
+    const mapped: Record<string, string[]> = {};
+    for (const item of body) {
+      if (!item || typeof item !== 'object') continue;
 
-  return errors as Record<string, string[]>;
+      const anyItem = item as Record<string, unknown>;
+      const id = anyItem['identifier'] ?? anyItem['Identifier'];
+      const msg = anyItem['errorMessage'] ?? anyItem['ErrorMessage'];
+
+      if (typeof id !== 'string' || typeof msg !== 'string') continue;
+
+      (mapped[id] ??= []).push(msg);
+    }
+
+    return Object.keys(mapped).length ? mapped : null;
+  }
+
+  return null;
 }
 
 function tryGetTraceId(err: HttpErrorResponse): string | undefined {
