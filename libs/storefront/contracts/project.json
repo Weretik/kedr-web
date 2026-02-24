@@ -1,0 +1,13 @@
+{
+  "name": "contracts",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/storefront/contracts/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:storefront", "type:contracts"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
