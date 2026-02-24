@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { InStockProducts } from '@storefront/feature/widgets';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
 @Component({
   selector: 'lib-about-company',
-  imports: [PageHeader, InStockProducts],
+  imports: [PageHeader],
   templateUrl: './about-company.html',
   styleUrl: './about-company.css',
 })

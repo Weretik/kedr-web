@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { InStockProducts } from '@storefront/feature/widgets';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
 interface Blog {
@@ -12,7 +11,7 @@ interface Blog {
 
 @Component({
   selector: 'lib-articles',
-  imports: [InStockProducts, PageHeader],
+  imports: [PageHeader],
   templateUrl: './articles.html',
   styleUrl: './articles.css',
 })

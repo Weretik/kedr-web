@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { InStockProducts } from '@storefront/feature/widgets';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
 @Component({
   selector: 'lib-galleria',
-  imports: [InStockProducts, PageHeader],
+  imports: [PageHeader],
   templateUrl: './galleria.html',
   styleUrl: './galleria.css',
 })

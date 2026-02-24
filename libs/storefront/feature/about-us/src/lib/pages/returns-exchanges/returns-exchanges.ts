@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { InStockProducts } from '@storefront/feature/widgets';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'lib-returns-exchanges',
-  imports: [InStockProducts, PageHeader, Tag],
+  imports: [PageHeader, Tag],
   templateUrl: './returns-exchanges.html',
   styleUrl: './returns-exchanges.css',
 })
