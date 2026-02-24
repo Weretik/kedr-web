@@ -1,8 +1,4 @@
-﻿import {
-  CartLine,
-  CheckoutDto,
-  CheckoutLineDto,
-} from '@storefront/data-access';
+﻿import { CartLine, CheckoutDto, CheckoutLineDto } from '@storefront/contracts';
 
 export type CheckoutContactInput = {
   firstName: string;
@@ -18,6 +14,7 @@ export function mapToCheckoutDto(
     title: x.snapshot.title,
     unitPrice: x.snapshot.unitPrice,
     quantity: x.quantity,
+    slug: x.snapshot.slug,
   }));
 
   return {

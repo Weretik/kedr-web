@@ -1,15 +1,16 @@
 ﻿import { Injectable, inject } from '@angular/core';
-
-import { CatalogApiService } from '../catalog-api.service';
-import { RETAIL_PRICE_TYPE_ID } from '../constances/catalog.constants';
 import {
   GetProductListQuery,
+  ProductListRowDto,
   ProductSort,
-} from '../models/get-product-list.query';
-import { ProductListRowDto } from '../models/product-list-row.dto';
+} from '@storefront/contracts';
+
+import { CatalogApiService } from '../api/catalog-api.service';
+import { RETAIL_PRICE_TYPE_ID } from '../config/catalog.constants';
 
 import type { PagedResult } from '@shared/data-access';
 import type { Observable } from 'rxjs';
+
 
 export type ProductListScenarioOptions = {
   priceTypeId?: number;

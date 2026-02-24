@@ -1,9 +1,9 @@
-﻿import { GetProductListQuery, ProductSort } from '@storefront/data-access';
-
-import {
+﻿import {
+  GetProductListQuery,
   ProductListQuery,
   ProductListSortUi,
-} from './product-list-query.model';
+  ProductSort,
+} from '@storefront/contracts';
 
 export function mapProductListQueryToApi(
   query: ProductListQuery,

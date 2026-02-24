@@ -1,8 +1,8 @@
 ﻿import { effect, inject, Injectable } from '@angular/core';
 import { BrowserStorageService } from '@shared/util';
+import { CartLine } from '@storefront/contracts';
 
 import { CartStore } from './cart.store';
-import { CartLine } from './cart.types';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {

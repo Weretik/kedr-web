@@ -1,10 +1,9 @@
 ﻿import { Injectable, computed, effect, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { ProductListQuery, ProductListSortUi } from '@storefront/contracts';
 import { linkedQueryParam } from 'ngxtension/linked-query-param';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-
-import type { ProductListQuery, ProductListSortUi } from '@storefront/util';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListQueryState {

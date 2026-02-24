@@ -2,13 +2,11 @@
 import { tapResponse } from '@ngrx/operators';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ApiError } from '@shared/util';
-import {
-  CheckoutDto,
-  OrderCreatedDto,
-  OrdersApi,
-} from '@storefront/data-access';
+import { CheckoutDto, OrderCreatedDto } from '@storefront/contracts';
 import { pipe } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+
+import { OrdersApi } from '../api/orders.api';
 
 @Injectable({ providedIn: 'root' })
 export class CheckoutFacade {

@@ -1,8 +1,10 @@
 ﻿import { Injectable, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { ProductBySlugDto, ProductRepository } from '@storefront/data-access';
+import { ProductBySlugDto } from '@storefront/contracts';
 import { map } from 'rxjs';
+
+import { ProductRepository } from '../../repositories/product.repository';
 
 @Injectable()
 export class ProductFacade {

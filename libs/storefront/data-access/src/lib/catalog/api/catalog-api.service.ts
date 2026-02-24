@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { PagedResult } from '@shared/data-access';
+import {
+  GetProductListQuery,
+  ProductBySlugDto,
+  ProductListRowDto,
+} from '@storefront/contracts';
 import { Observable } from 'rxjs';
-
-import type { GetProductListQuery } from './models/get-product-list.query';
-import type { ProductBySlugDto } from './models/product-by-slug.dto';
-import type { ProductListRowDto } from './models/product-list-row.dto';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogApiService {

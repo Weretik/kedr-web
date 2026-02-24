@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ProductListFacade } from '@storefront/data-access';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
@@ -21,7 +22,6 @@ import {
   findCategoryLabel,
 } from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
-import { ProductListFacade } from '../../state/product-list/product-list.facade';
 import { ProductList } from '../product-list/product-list';
 
 @Component({

@@ -1,17 +1,15 @@
 ﻿import { Injectable, computed, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import {
-  type GetProductListQuery,
-  ProductListRepository,
-  type ProductListRowDto,
-} from '@storefront/data-access';
-import { mapProductListQueryToApi } from '@storefront/util';
+import { GetProductListQuery, ProductListRowDto } from '@storefront/contracts';
 import { map } from 'rxjs';
 
 import { ProductListQueryState } from './product-list.query-state';
+import { mapProductListQueryToApi } from '../../mappers/product-list-query.mapper';
+import { ProductListRepository } from '../../repositories/product-list.repository';
 
 import type { PagedResult } from '@shared/data-access';
+
 
 @Injectable()
 export class ProductListFacade {

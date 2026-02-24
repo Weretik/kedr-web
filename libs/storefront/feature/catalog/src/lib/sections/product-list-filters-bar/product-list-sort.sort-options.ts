@@ -1,4 +1,5 @@
-﻿import type { ProductListSortUi } from '@storefront/util';
+﻿import { ProductListSortUi } from '@storefront/contracts';
+
 import type { MenuItem } from 'primeng/api';
 
 export function buildSortMenu(deps: {

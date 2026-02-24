@@ -1,9 +1,7 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { CheckoutDto, OrderCreatedDto } from '@storefront/contracts';
 import { Observable } from 'rxjs';
-
-import { CheckoutDto } from './models/orders.requests';
-import { OrderCreatedDto } from './models/orders.responses';
 
 @Injectable({ providedIn: 'root' })
 export class OrdersApi {

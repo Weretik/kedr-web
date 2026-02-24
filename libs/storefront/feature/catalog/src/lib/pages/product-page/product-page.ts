@@ -1,9 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ProductBySlugDto } from '@storefront/contracts';
 import {
   CartFacade,
   cartLineFromBySlug,
-  ProductBySlugDto,
+  ProductFacade,
 } from '@storefront/data-access';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
@@ -12,8 +13,6 @@ import { Image } from 'primeng/image';
 import { InputNumber } from 'primeng/inputnumber';
 import { Message } from 'primeng/message';
 import { Skeleton } from 'primeng/skeleton';
-
-import { ProductFacade } from '../../state/product/product.facade';
 
 @Component({
   selector: 'lib-product-page',

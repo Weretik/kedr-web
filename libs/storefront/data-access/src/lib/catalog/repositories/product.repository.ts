@@ -1,7 +1,7 @@
 ﻿import { inject, Injectable } from '@angular/core';
 
-import { CatalogApiService } from '../catalog-api.service';
-import { RETAIL_PRICE_TYPE_ID } from '../constances/catalog.constants';
+import { CatalogApiService } from '../api/catalog-api.service';
+import { RETAIL_PRICE_TYPE_ID } from '../config/catalog.constants';
 
 @Injectable({ providedIn: 'root' })
 export class ProductRepository {

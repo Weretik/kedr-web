@@ -2,10 +2,11 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ProductListRowDto } from '@storefront/contracts';
 import {
   CartFacade,
   cartLineFromListRow,
-  ProductListRowDto,
+  ProductListFacade,
 } from '@storefront/data-access';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
@@ -14,8 +15,6 @@ import { Paginator } from 'primeng/paginator';
 import { SelectButton } from 'primeng/selectbutton';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
-
-import { ProductListFacade } from '../../state/product-list/product-list.facade';
 
 @Component({
   selector: 'lib-product-list',

@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
+import { ProductListFacade } from '@storefront/data-access';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
 import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/product-list-filters-bar';
-import { ProductListFacade } from '../../state/product-list/product-list.facade';
 
 @Component({
   selector: 'lib-product-list-page',

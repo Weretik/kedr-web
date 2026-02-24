@@ -1,6 +1,5 @@
 ﻿import { Injectable, computed, signal } from '@angular/core';
-
-import { CartLine, CartState, VariantId } from './cart.types';
+import { CartLine, CartState, VariantId } from '@storefront/contracts';
 
 @Injectable({ providedIn: 'root' })
 export class CartStore {

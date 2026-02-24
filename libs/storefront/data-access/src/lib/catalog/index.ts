@@ -1,8 +1,3 @@
-export * from './catalog-api.service';
-
-export * from './models/product-list-row.dto';
-export * from './models/product-by-slug.dto';
-export * from './models/get-product-list.query';
-
-export * from './repositories/product-list.repository';
-export * from './repositories/product.repository';
+export * from './state/product/product.facade';
+export * from './state/product-list/product-list.facade';
+export * from './mappers/product-list-query.mapper';
