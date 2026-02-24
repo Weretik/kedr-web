@@ -1,9 +1,4 @@
-﻿export enum ProductSort {
-  NameAsc = 0,
-  NameDesc = 1,
-  PriceAsc = 2,
-  PriceDesc = 3,
-}
+﻿import { ProductSort } from './product-sort.enum';
 
 export type GetProductListQuery = {
   SearchTerm?: string;

@@ -5,6 +5,7 @@ export interface CartLineSnapshot {
   imageUrl?: string;
   unitPrice: number;
   currency: 'UAH';
+  slug: string;
 }
 
 export interface CartLine {
