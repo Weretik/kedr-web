@@ -157,8 +157,9 @@
       <div class="flex flex-col w-full">
         @for (product of items; track product.id; let isFirst = $first) {
         <div
-          class="flex flex-col sm:flex-row sm:items-center p-6 gap-4 w-full"
+          class="flex flex-col sm:flex-row sm:items-center p-6 gap-4 w-full border border-transparent rounded cursor-pointer hover:border-primary transition-colors"
           [ngClass]="{ 'border-t border-surface-200 dark:border-surface-700': !isFirst }"
+          [routerLink]="['/catalog','product', product.productSlug]"
         >
           <div class="mb-4">
             <div class="relative mx-auto">
@@ -213,18 +214,9 @@
               <div class="flex flex-row-reverse md:flex-row gap-2">
                 <button
                   pButton
-                  [outlined]="true"
-                  severity="contrast"
-                  [routerLink]="['/catalog','product', product.productSlug]"
-                >
-                  <i pButtonIcon class="pi pi-reply"></i>
-                  <span pButtonLabel>Детальніше</span>
-                </button>
-                <button
-                  pButton
                   [disabled]="!product.inStock"
                   class="flex-auto md:flex-initial whitespace-nowrap"
-                  (click)="addToCart(product)"
+                  (click)="addToCart(product); $event.stopPropagation()"
                 >
                   <i pButtonIcon class="pi pi-shopping-cart"></i>
                   <span pButtonLabel>У кошик</span>
@@ -242,7 +234,8 @@
         @for (product of items; track product.id) {
         <div class="col-span-12 sm:col-span-6 md:col-span-6 xl:col-span-4 p-2">
           <div
-            class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
+            class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col cursor-pointer hover:border-primary transition-colors"
+            [routerLink]="['/catalog','product', product.productSlug]"
           >
             <div class="mb-4">
               <div class="relative mx-auto">
@@ -302,19 +295,10 @@
                     pButton
                     [disabled]="!product.inStock"
                     class="flex-auto whitespace-nowrap"
-                    (click)="addToCart(product)"
+                    (click)="addToCart(product); $event.stopPropagation()"
                   >
                     <i pButtonIcon class="pi pi-shopping-cart"></i>
                     <span pButtonLabel>У кошик</span>
-                  </button>
-                  <button
-                    pButton
-                    outlined
-                    severity="contrast"
-                    [routerLink]="['/catalog','product', product.productSlug]"
-                  >
-                    <i pButtonIcon class="pi pi-reply"></i>
-                    <span pButtonLabel>Детальніше</span>
                   </button>
                 </div>
               </div>

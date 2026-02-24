@@ -16,6 +16,7 @@ export function cartLineFromListRow(dto: ProductListRowDto, qty = 1): CartLine {
       imageUrl: dto.photo,
       unitPrice: requirePrice(dto.price),
       currency,
+      slug: dto.productSlug,
     },
   };
 }
@@ -32,6 +33,7 @@ export function cartLineFromBySlug(
       imageUrl: dto.photo,
       unitPrice: requirePrice(dto.price),
       currency,
+      slug: '',
     },
   };
 }

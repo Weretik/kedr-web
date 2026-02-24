@@ -25,7 +25,9 @@
       <ul class="list-none p-0 m-0">
         @for (item of cart.lines(); track item.variantId; let index = $index) {
         <li
-          class="flex items-center gap-4 pb-6 mb-6 border-b border-surface-200 dark:border-surface-700 last:border-none last:mb-0 last:pb-0"
+          class="flex items-center gap-4 pb-6 mb-6 border-b border-surface-200 dark:border-surface-700 last:border-none last:mb-0 last:pb-0 cursor-pointer hover:border-primary transition-colors"
+          [routerLink]="['/catalog', 'product', item.snapshot.slug]"
+          (click)="cartUi.close()"
         >
           <img
             [src]="item.snapshot.imageUrl"
@@ -55,12 +57,13 @@
                 inputStyleClass="w-12 text-center py-2 px-1 border-transparent"
                 incrementButtonIcon="pi pi-plus"
                 decrementButtonIcon="pi pi-minus"
+                (click)="$event.stopPropagation()"
               ></p-inputnumber>
               <button
                 pButton
                 severity="secondary"
                 [text]="true"
-                (click)="cart.remove(item.variantId)"
+                (click)="cart.remove(item.variantId); $event.stopPropagation()"
               >
                 <i pButtonIcon class="pi pi-trash"></i>
               </button>

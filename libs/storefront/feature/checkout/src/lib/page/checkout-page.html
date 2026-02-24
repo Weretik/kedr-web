@@ -78,7 +78,10 @@
 
       <div class="flex flex-col gap-12">
         @for (item of cart.lines(); track item.variantId; let index = $index) {
-        <div class="flex gap-4">
+        <div
+          class="flex gap-4 cursor-pointer hover:border-primary transition-colors border border-transparent rounded"
+          [routerLink]="['/catalog','product', item.snapshot.slug]"
+        >
           <img
             class="w-25 h-25 rounded-lg object-cover shrink-0"
             [src]="item.snapshot.imageUrl"
@@ -117,6 +120,7 @@
                 [inputStyleClass]="'w-10!'"
                 class="w-12!"
                 size="small"
+                (click)="$event.stopPropagation()"
               >
                 <ng-template #incrementbuttonicon>
                   <span class="pi pi-plus"></span>
@@ -132,7 +136,7 @@
                 [rounded]="true"
                 size="small"
                 class="text-surface-500 dark:text-surface-400 hover:text-red-500"
-                (click)="cart.remove(item.variantId)"
+                (click)="cart.remove(item.variantId); $event.stopPropagation()"
               >
                 <i pButtonIcon class="pi pi-trash"></i>
               </button>
