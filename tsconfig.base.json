@@ -53,7 +53,8 @@
       "@storefront/feature/checkout": [
         "libs/storefront/feature/checkout/src/index.ts"
       ],
-      "@storefront/feature/cart": ["libs/storefront/feature/cart/src/index.ts"]
+      "@storefront/feature/cart": ["libs/storefront/feature/cart/src/index.ts"],
+      "@storefront/contracts": ["libs/storefront/contracts/src/index.ts"]
     }
   }
 }

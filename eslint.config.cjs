@@ -153,6 +153,7 @@ module.exports = [
                 'type:util',
                 'type:feature',
                 'type:data-access',
+                'type:contracts',
                 'scope:shared',
               ],
             },
@@ -163,6 +164,7 @@ module.exports = [
               onlyDependOnLibsWithTags: [
                 'type:data-access',
                 'type:util',
+                'type:contracts',
                 'scope:shared',
               ],
             },
@@ -175,6 +177,17 @@ module.exports = [
                 'type:ui',
                 'type:util',
                 'type:data-access',
+                'type:contracts',
+                'scope:shared',
+              ],
+            },
+
+            // contracts should only depend on utils and shared
+            {
+              sourceTag: 'type:contracts',
+              onlyDependOnLibsWithTags: [
+                'type:contracts',
+                'type:util',
                 'scope:shared',
               ],
             },
