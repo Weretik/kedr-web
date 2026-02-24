@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CartFacade, CartUiFacade } from '@storefront/data-access';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -15,6 +15,7 @@ import { StyleClassModule } from 'primeng/styleclass';
     ButtonModule,
     StyleClassModule,
     InputNumberModule,
+    RouterLink,
   ],
   templateUrl: './cart.html',
   styleUrl: './cart.css',

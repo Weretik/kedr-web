@@ -6,9 +6,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { applyServerErrors, controlErrorText } from '@shared/forms';
 import { NotificationService } from '@shared/ui';
-import { CartFacade } from '@storefront/data-access';
+import {
+  CartFacade,
+  CheckoutFacade,
+  mapToCheckoutDto,
+} from '@storefront/data-access';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Dialog } from 'primeng/dialog';
@@ -19,9 +24,6 @@ import { InputMaskModule, InputMask } from 'primeng/inputmask';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { RadioButtonModule } from 'primeng/radiobutton';
-
-import { mapToCheckoutDto } from '../mappers/checkout.mapper';
-import { CheckoutFacade } from '../state/checkout.facade';
 
 @Component({
   selector: 'lib-checkout-page',
@@ -40,6 +42,7 @@ import { CheckoutFacade } from '../state/checkout.facade';
     FloatLabel,
     InputMask,
     Dialog,
+    RouterLink,
   ],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.css',
