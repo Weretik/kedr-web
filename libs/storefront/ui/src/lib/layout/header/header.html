@@ -1,32 +1,171 @@
 <div
-  class="card fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-500 backdrop-blur border-b border-surface-400 dark:border-surface-600"
+  class="bg-white/95 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 relative"
+>
+  <div
+    class="cart left-0 right-0 z-1001 px-4 lg:px-20 py-4 bg-white/95 dark:bg-neutral-500 flex justify-between items-center gap-2 lg:gap-8"
+    [class.fixed]="isSticky()"
+    [class.top-0]="isSticky()"
+  >
+    <div class="flex items-center gap-6">
+      <div class="flex justify-start items-center gap-4">
+        <a routerLink="/" class="flex items-center gap-2">
+          <img
+            ngSrc="/assets/logo/class-logo.svg"
+            width="50"
+            height="25"
+            alt="Class Logo"
+            class="h-8 w-auto hidden sm:block"
+          />
+          <img
+            ngSrc="/assets/logo/kedr-logo.svg"
+            width="50"
+            height="25"
+            alt="Kedr Logo"
+            class="h-8 w-auto"
+          />
+        </a>
+      </div>
+      <a
+        href="tel:+3800687135049"
+        class="flex items-center transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+      >
+        <i class="pi pi-phone text-lg leading-none mr-4"></i>
+        <span class="text-base font-medium">(068) 713-50-49</span>
+      </a>
+    </div>
+
+    <div
+      class="flex-1 hidden lg:flex flex-col justify-start items-start gap-2 mx-8"
+    >
+      <div class="w-full flex items-stretch">
+        <div
+          class="flex-1 px-3 py-2 bg-surface-0 dark:bg-surface-900 rounded-border shadow-sm border border-surface flex items-center gap-3"
+        >
+          <i
+            class="pi pi-search text-surface-500 dark:text-surface-400 text-base! leading-none!"
+          ></i>
+
+          <input
+            #searchInput
+            type="text"
+            [value]="facade.queryState.draftSearch()"
+            (input)="facade.queryState.setSearchDraft(searchInput.value)"
+            placeholder="Пошук товарів по артикулу або назві"
+            class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
+            (keydown.enter)="onSearch(searchInput.value)"
+          />
+        </div>
+        <button
+          pButton
+          type="button"
+          (click)="onSearch(searchInput.value)"
+          class="shadow-sm"
+          [style.padding]="'0 0.75rem'"
+        >
+          <i class="pi pi-search"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-around items-center">
+      <button
+        pButton
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        (click)="themeService.toggleTheme()"
+        class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+        aria-label="Змінити тему"
+      >
+        <i
+          class="pi"
+          [ngClass]="themeService.isDark() ? 'pi-moon' : 'pi-sun'"
+        ></i>
+      </button>
+      <button
+        pButton
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+        aria-label="Аккаунт"
+      >
+        <i class="pi pi-user"></i>
+      </button>
+      <p-overlaybadge
+        severity="success"
+        [value]="cart.itemsCount()"
+        badgeSize="small"
+        [pt]="{ pcBadge: { root: { class: '-translate-x-2 translate-y-2 scale-80' } } }"
+        [hidden]="cart.itemsCount() === 0"
+      >
+        <button
+          pButton
+          (click)="cartUi.open()"
+          severity="secondary"
+          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+          [text]="true"
+          [rounded]="true"
+        >
+          <i class="pi pi-shopping-cart"></i>
+        </button>
+      </p-overlaybadge>
+      @if (cart.itemsCount() === 0) {
+      <button
+        pButton
+        (click)="cartUi.open()"
+        severity="secondary"
+        class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+        [text]="true"
+        [rounded]="true"
+      >
+        <i class="pi pi-shopping-cart"></i>
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="px-4 pb-4 bg-surface-0 dark:bg-surface-900 block lg:hidden">
+    <div class="w-full flex items-stretch">
+      <div
+        class="flex-1 px-3 py-2 bg-surface-0 dark:bg-surface-900 rounded-border shadow-sm border border-surface flex justify-start items-center gap-3"
+      >
+        <i
+          class="pi pi-search text-surface-500 dark:text-surface-400 text-base! leading-none!"
+        ></i>
+        <input
+          #mobileSearchInput
+          type="text"
+          [value]="facade.queryState.draftSearch()"
+          (input)="facade.queryState.setSearchDraft(mobileSearchInput.value)"
+          placeholder="Пошук товарів по артикулу або назві"
+          class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
+          (keydown.enter)="onSearch(mobileSearchInput.value)"
+        />
+      </div>
+      <button
+        pButton
+        type="button"
+        (click)="onSearch(mobileSearchInput.value)"
+        class="shadow-sm"
+        [style.padding]="'0 0.75rem'"
+      >
+        <i class="pi pi-search"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="card relative z-1000 bg-white/95 dark:bg-neutral-500 backdrop-blur border-b border-surface-400 dark:border-surface-600"
 >
   <p-megaMenu [model]="items" [pt]="megaMenuPt">
-    <ng-template #start>
-      <a routerLink="/" class="flex items-center gap-2">
-        <img
-          ngSrc="/assets/logo/class-logo.svg"
-          width="50"
-          height="25"
-          alt="Class Logo"
-          class="h-8 w-auto"
-        />
-        <img
-          ngSrc="/assets/logo/kedr-logo.svg"
-          width="50"
-          height="25"
-          alt="Kedr Logo"
-          class="h-8 w-auto"
-        />
-      </a>
-    </ng-template>
-
     <ng-template #item let-item>
       @if (item.root) {
       <a
         pRipple
         [routerLink]="item.routerLink"
-        class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-base uppercase"
+        class="flex items-center cursor-pointer px-4 py-1 overflow-hidden relative font-semibold text-base uppercase"
         style="border-radius: 2rem"
       >
         <i [ngClass]="item.icon"></i>
@@ -38,7 +177,7 @@
       </a>
       } @else if (!item.image) {
       <a
-        class="flex items-center px-4 cursor-pointer mb-2 gap-2"
+        class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
         [routerLink]="item.routerLink"
       >
         <span class="inline-flex flex-col gap-1">
@@ -59,65 +198,7 @@
       </div>
       }
     </ng-template>
-
-    <ng-template #end>
-      <div class="flex justify-around items-center">
-        <button
-          pButton
-          severity="secondary"
-          [text]="true"
-          [rounded]="true"
-          (click)="themeService.toggleTheme()"
-          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-          aria-label="Змінити тему"
-        >
-          <i
-            class="pi"
-            [ngClass]="themeService.isDark() ? 'pi-moon' : 'pi-sun'"
-          ></i>
-        </button>
-        <button
-          pButton
-          severity="secondary"
-          [text]="true"
-          [rounded]="true"
-          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-          aria-label="Аккаунт"
-        >
-          <i class="pi pi-user"></i>
-        </button>
-        <p-overlaybadge
-          severity="success"
-          [value]="cart.itemsCount()"
-          badgeSize="small"
-          [pt]="{ pcBadge: { root: { class: '-translate-x-2 translate-y-2 scale-80' } } }"
-          [hidden]="cart.itemsCount() === 0"
-        >
-          <button
-            pButton
-            (click)="cartUi.open()"
-            severity="secondary"
-            class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-            [text]="true"
-            [rounded]="true"
-          >
-            <i class="pi pi-shopping-cart"></i>
-          </button>
-        </p-overlaybadge>
-        @if (cart.itemsCount() === 0) {
-        <button
-          pButton
-          (click)="cartUi.open()"
-          severity="secondary"
-          class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-          [text]="true"
-          [rounded]="true"
-        >
-          <i class="pi pi-shopping-cart"></i>
-        </button>
-        }
-      </div>
-    </ng-template>
   </p-megaMenu>
 </div>
+
 <lib-cart />
