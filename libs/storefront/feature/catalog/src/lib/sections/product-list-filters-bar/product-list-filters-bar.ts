@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal, computed } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  signal,
+  computed,
+  input,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { ProductListFacade } from '@storefront/data-access';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -51,15 +57,10 @@ import { ProductList } from '../product-list/product-list';
 })
 export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
-  private readonly route = inject(ActivatedRoute);
 
-  readonly categorySlug = signal<string | null>(null);
+  readonly categorySlug = input<string | null>(null);
 
-  constructor() {
-    this.route.paramMap.subscribe((params) => {
-      this.categorySlug.set(params.get('categorySlug'));
-    });
-  }
+  constructor() {}
 
   readonly categoryName = computed(() => {
     const slug = this.categorySlug();
@@ -79,8 +80,17 @@ export class ProductListFiltersBar {
     setSort: (sort) => this.facade.queryState.setSort(sort),
   });
 
-  readonly filtersMenu = buildFiltersMenu({
-    goToCategory: (slug) => this.facade.queryState.goToCategory(slug),
+  readonly filtersMenu = computed(() =>
+    buildFiltersMenu(
+      {
+        goToCategory: (slug) => this.facade.queryState.goToCategory(slug),
+      },
+      this.categorySlug(),
+    ),
+  );
+
+  private readonly syncCategorySlug = effect(() => {
+    this.facade.setCategorySlug(this.categorySlug());
   });
 
   private readonly draftSets = effect(() => {

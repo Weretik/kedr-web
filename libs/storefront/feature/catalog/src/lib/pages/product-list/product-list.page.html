@@ -1,6 +1,2 @@
-<lib-page-header
-  [config]="headerConfig"
-  [searchValue]="searchValue"
-  (searchValueChange)="setSearchValue($event)"
-/>
-<lib-product-list-filters-bar />
+<lib-page-header [config]="headerConfig" />
+<lib-product-list-filters-bar [categorySlug]="categorySlug()" />
