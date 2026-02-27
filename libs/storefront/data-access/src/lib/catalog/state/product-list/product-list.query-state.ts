@@ -15,7 +15,7 @@ export class ProductListQueryState {
   readonly pageSize = linkedQueryParam('pageSize', { defaultValue: '20' });
   readonly sort = linkedQueryParam('sort', { defaultValue: 'name-asc' });
 
-  readonly inStock = linkedQueryParam('inStock');
+  readonly inStock = linkedQueryParam('inStock', { defaultValue: 'true' });
   readonly isSale = linkedQueryParam('isSale');
   readonly isNew = linkedQueryParam('isNew');
 
@@ -55,7 +55,7 @@ export class ProductListQueryState {
   }
 
   setInStock(checked: boolean): void {
-    this.inStock.set(checked ? 'true' : null);
+    this.inStock.set(checked ? 'true' : 'false');
     this.setDefaultPage();
   }
 
@@ -90,7 +90,7 @@ export class ProductListQueryState {
   clear(): void {
     this.search.set(null);
 
-    this.inStock.set(null);
+    this.inStock.set('true');
     this.isSale.set(null);
     this.isNew.set(null);
 

@@ -71,7 +71,7 @@ export class ProductListFiltersBar {
   readonly minPrice = 0;
   readonly maxPrice = 50_000;
 
-  readonly draftInStock = signal(false);
+  readonly draftInStock = signal(true);
   readonly draftIsSale = signal(false);
   readonly draftIsNew = signal(false);
   readonly draftPrice = signal<[number | null, number | null]>([null, null]);
