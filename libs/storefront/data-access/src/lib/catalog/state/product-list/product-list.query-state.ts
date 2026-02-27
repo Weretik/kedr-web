@@ -76,9 +76,14 @@ export class ProductListQueryState {
   }
 
   goToCategory(slug: string): void {
+    this.draftSearch.set('');
+
     this.router.navigate(['/catalog', slug, 'products'], {
+      queryParams: {
+        page: 1,
+        search: '',
+      },
       queryParamsHandling: 'merge',
-      queryParams: { page: 1 },
     });
   }
 
@@ -115,11 +120,6 @@ export class ProductListQueryState {
     this.draftSearch.set(this.search() ?? '');
   });
 
-  private readonly commitDebouncedToUrl = effect(() => {
-    // draft (debounced) -> URL
-    this.commitSearch(this.debouncedSearch());
-  });
-
   public setSearchDraft(value: string): void {
     this.draftSearch.set(value ?? '');
   }
@@ -129,7 +129,7 @@ export class ProductListQueryState {
     this.page.set('1');
   }
 
-  private commitSearch(value: string): void {
+  public commitSearch(value: string): void {
     const next = value?.trim() ?? '';
     const current = (this.search() ?? '').trim();
 
@@ -137,6 +137,15 @@ export class ProductListQueryState {
 
     this.search.set(next.length > 0 ? next : null);
     this.setDefaultPage();
+
+    // Завжди переходимо на загальний каталог при пошуку, щоб не бути прив'язаними до категорії
+    this.router.navigate(['/catalog', 'products'], {
+      queryParams: {
+        search: next.length > 0 ? next : null,
+        page: 1,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   private boolParam(value: string | null): 'true' | 'false' | undefined {
