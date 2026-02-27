@@ -15,17 +15,6 @@
       <h1 class="text-5xl font-bold text-surface-900 dark:text-surface-0">
         {{ config().title }}
       </h1>
-      } @if (config().showSearch) {
-      <p-iconfield>
-        <p-inputicon class="pi pi-search"></p-inputicon>
-        <input
-          pInputText
-          type="text"
-          placeholder="Пошук"
-          [ngModel]="searchValue()"
-          (ngModelChange)="onSearchInput($event)"
-        />
-      </p-iconfield>
       }
     </div>
   </div>

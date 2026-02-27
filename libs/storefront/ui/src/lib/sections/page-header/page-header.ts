@@ -1,31 +1,21 @@
-import { Component, computed, inject, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, input } from '@angular/core';
 import { ThemeService } from '@shared/ui';
 import { MenuItem } from 'primeng/api';
 import { Breadcrumb } from 'primeng/breadcrumb';
-import { IconField } from 'primeng/iconfield';
-import { InputIcon } from 'primeng/inputicon';
-import { InputText } from 'primeng/inputtext';
 
 import { PageHeaderConfig } from './page-header.config';
 
 @Component({
   selector: 'lib-page-header',
-  imports: [Breadcrumb, IconField, InputIcon, InputText, FormsModule],
+  imports: [Breadcrumb],
   templateUrl: './page-header.html',
   styleUrl: './page-header.css',
 })
 export class PageHeader {
   public themeService = inject(ThemeService);
   public config = input.required<PageHeaderConfig>();
-  public searchValue = input<string>('');
-  public searchValueChange = output<string>();
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-
-  onSearchInput(inputValue: string) {
-    this.searchValueChange.emit(inputValue);
-  }
 
   public readonly breadcrumbPt = computed(() => ({
     root: {
