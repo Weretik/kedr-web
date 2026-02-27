@@ -14,7 +14,11 @@ import {
   withIncrementalHydration,
   withHttpTransferCacheOptions,
 } from '@angular/platform-browser';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import {
+  provideRouter,
+  withInMemoryScrolling,
+  withComponentInputBinding,
+} from '@angular/router';
 import {
   baseUrlInterceptor,
   errorInterceptor,
@@ -48,6 +52,7 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({
         scrollPositionRestoration: 'top',
       }),
+      withComponentInputBinding(),
     ),
     provideClientHydration(
       withEventReplay(),
