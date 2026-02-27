@@ -309,4 +309,16 @@
       </div>
     </ng-template>
   </p-dataview>
+  @if(products().length > 0) {
+  <div class="flex justify-center mt-4">
+    <p-paginator
+      [first]="first()"
+      [rows]="rows()"
+      [totalRecords]="totalRecords()"
+      [rowsPerPageOptions]="[10, 20, 30, 50]"
+      (onPageChange)="setPageFromPaginator($event)"
+      [pt]="{root: {style: {background: 'transparent', border: 'none', padding: '0'}}}"
+    />
+  </div>
+  }
 </div>
