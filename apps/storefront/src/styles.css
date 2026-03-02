@@ -1,4 +1,5 @@
 @import 'primeicons/primeicons.css';
+@import 'remixicon/fonts/remixicon.css';
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
 @import './styles/generated.tailwind-palette.css';
