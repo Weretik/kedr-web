@@ -50,7 +50,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       appRoutes,
       withInMemoryScrolling({
-        scrollPositionRestoration: 'top',
+        scrollPositionRestoration: 'enabled',
       }),
       withComponentInputBinding(),
     ),
