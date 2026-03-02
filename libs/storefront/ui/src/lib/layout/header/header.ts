@@ -48,6 +48,7 @@ export class Header {
   readonly cartUi = inject(CartUiFacade);
   readonly cart = inject(CartFacade);
   readonly facade = inject(ProductListFacade);
+  //private readonly history = inject(SearchHistoryService);
 
   readonly isSticky = signal(false);
 
