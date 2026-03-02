@@ -3,11 +3,11 @@
 const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
   {
     label: 'Фурнітура',
-    icon: 'pi pi-file',
+    icon: 'ri-key-2-line',
     items: [
       {
         label: 'Завіси',
-        icon: 'pi pi-image',
+        icon: 'ri-arrow-left-right-line',
         items: [
           {
             label: 'Накладні(метелик)',
@@ -27,7 +27,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
       },
       {
         label: 'Замки',
-        icon: 'pi pi-image',
+        icon: 'ri-lock-2-line',
         items: [
           {
             label: 'Навестні та велозамки',
@@ -53,7 +53,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
       },
       {
         label: 'Ручки',
-        icon: 'pi pi-image',
+        icon: 'ri-bar-chart-horizontal-line',
         items: [
           {
             label: 'На розетцi (Kevlar)',
@@ -93,7 +93,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
       },
       {
         label: 'Циліндри',
-        icon: 'pi pi-image',
+        icon: 'ri-key-2-line',
         items: [
           {
             label: 'серія BRASS KEY Латунь',
@@ -127,7 +127,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
       },
       {
         label: 'Міжкімнатні мханізми',
-        icon: 'pi pi-image',
+        icon: 'pi pi-cog',
         items: [
           {
             label: 'з магнітною защіпкою',
@@ -152,7 +152,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
       },
       {
         label: 'Інше',
-        icon: 'pi pi-image',
+        icon: 'pi pi-ellipsis-h',
         items: [
           {
             label: 'Броненакладки на циліндр',
@@ -194,7 +194,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
   },
   {
     label: 'Міжкімнатні двері',
-    icon: 'pi pi-cloud',
+    icon: 'ri-door-open-line',
     items: [
       {
         label: 'Korfad',
@@ -216,7 +216,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
   },
   {
     label: 'Вхідні двері',
-    icon: 'pi pi-cloud',
+    icon: 'ri-shield-keyhole-line',
     items: [
       {
         label: 'Steelguard',
