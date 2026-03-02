@@ -73,9 +73,12 @@ export class ProductList {
 
     if (nextPageSize !== current.pageSize) {
       this.facade.queryState.setPageSize(nextPageSize);
+
+      window.scrollTo({ top: 0, behavior: 'auto' });
       return;
     }
     this.facade.queryState.setPage(page1);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   onRetry(): void {
