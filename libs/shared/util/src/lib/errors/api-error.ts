@@ -6,6 +6,7 @@
   | 'Forbidden'
   | 'NotFound'
   | 'Validation'
+  | 'ChunkLoad'
   | 'Server';
 
 export interface ApiError {

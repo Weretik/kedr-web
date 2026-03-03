@@ -73,8 +73,8 @@ export function mapToApiError(error: unknown): ApiError {
   // Chunk load
   if (isChunkLoadError(error)) {
     return {
-      code: 'Unknown',
-      message: 'Оновлення застосунку. Перезавантажте сторінку.',
+      code: 'ChunkLoad',
+      message: 'Застосунок оновлено. Будь ласка, перезавантажте сторінку.',
     };
   }
 
