@@ -81,4 +81,24 @@ export class SearchHistoryService {
       // ignore
     }
   }
+
+  removeOne(raw: string): void {
+    const value = this.normalize(raw);
+    if (!value) return;
+
+    const next = this._items().filter(
+      (x) => x.toLowerCase() !== value.toLowerCase(),
+    );
+
+    if (next.length === this._items().length) return;
+
+    this._items.set(next);
+
+    if (next.length === 0) {
+      this.remove();
+      return;
+    }
+
+    this.write(next);
+  }
 }
