@@ -87,7 +87,11 @@
       -->
       <div class="self-stretch flex flex-col justify-start items-start">
         <div class="card flex justify-center w-full">
-          <p-panelmenu [model]="filtersMenu()" class="w-full gap-4" />
+          <p-panelmenu
+            [model]="filtersMenu()"
+            class="w-full gap-4"
+            [multiple]="true"
+          />
         </div>
       </div>
 

@@ -444,24 +444,31 @@ const applyCommand = (
     }
 
     if (newItem.items) {
-      newItem.items = applyCommand(
+      const childItems = applyCommand(
         newItem.items as (MenuItem & { categorySlug?: string })[],
         actions,
         activeCategorySlug,
       );
+      newItem.items = childItems;
 
-      // Expand if any child is the active category or if a child is expanded
-      const hasActiveChild = (
-        newItem.items as (MenuItem & {
-          categorySlug?: string;
-          expanded?: boolean;
-        })[]
-      ).some(
-        (child) => child.categorySlug === activeCategorySlug || child.expanded,
-      );
-
-      if (hasActiveChild) {
+      // Logic:
+      // 1. If activeCategorySlug is null (root path), expand everything
+      // 2. If activeCategorySlug is NOT null, expand only if it contains the active slug or an expanded child
+      if (activeCategorySlug === null) {
         newItem.expanded = true;
+      } else {
+        const hasActiveChild = (
+          childItems as (MenuItem & {
+            categorySlug?: string;
+            expanded?: boolean;
+          })[]
+        ).some(
+          (child) =>
+            child.categorySlug === activeCategorySlug || child.expanded,
+        );
+        if (hasActiveChild) {
+          newItem.expanded = true;
+        }
       }
     }
 
