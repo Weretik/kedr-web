@@ -22,6 +22,7 @@ import { MenuModule } from 'primeng/menu';
 import { PanelMenu } from 'primeng/panelmenu';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
+import { ToggleButton } from 'primeng/togglebutton';
 
 import {
   buildFiltersMenu,
@@ -51,6 +52,7 @@ import { ProductList } from '../product-list/product-list';
     ButtonIcon,
     PanelMenu,
     ProductList,
+    ToggleButton,
   ],
   templateUrl: './product-list-filters-bar.html',
   styleUrl: './product-list-filters-bar.css',
@@ -59,8 +61,6 @@ export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
 
   readonly categorySlug = input<string | null>(null);
-
-  constructor() {}
 
   readonly categoryName = computed(() => {
     const slug = this.categorySlug();
@@ -124,6 +124,21 @@ export class ProductListFiltersBar {
 
     const [fromPrice, toPrice] = this.draftPrice();
     this.facade.queryState.setPriceRange(fromPrice, toPrice);
+  }
+
+  public setSaleFilter(value: boolean) {
+    this.draftIsSale.set(value);
+    this.facade.queryState.setIsSale(value);
+  }
+
+  public setNewFilter(value: boolean) {
+    this.draftIsNew.set(value);
+    this.facade.queryState.setIsNew(value);
+  }
+
+  public setInStockFilter(value: boolean) {
+    this.draftInStock.set(value);
+    this.facade.queryState.setInStock(value);
   }
   public clearFilters() {
     this.facade.queryState.clear();
