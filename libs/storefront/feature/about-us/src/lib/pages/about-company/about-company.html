@@ -1,4 +1,12 @@
-<lib-page-header [config]="headerConfig" />
+<lib-main-hero />
+<lib-company-features />
+<lib-company-stats />
+<lib-partners-brands />
+@defer (on idle) {
+<lib-faq />
+} @placeholder {
+<lib-faq />
+}
 
 <div
   class="flex flex-col gap-16 bg-neutral-50 px-6 py-20 md:px-12 lg:px-20 dark:bg-surface-900 overflow-hidden"
