@@ -324,5 +324,17 @@ export function buildMenu(): MegaMenuItem[] {
         ],
       ],
     },
+    {
+      label: 'Про нас',
+      icon: 'pi pi-id-card',
+      root: true,
+      routerLink: ['/about-company'],
+    },
+    {
+      label: 'Співпраця',
+      icon: 'pi pi-briefcase',
+      root: true,
+      routerLink: ['/wholesale'],
+    },
   ];
 }

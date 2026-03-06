@@ -12,7 +12,7 @@ export class ProductListQueryState {
   // --- query params (source of truth) ---
   readonly search = linkedQueryParam('search');
   readonly page = linkedQueryParam('page', { defaultValue: '1' });
-  readonly pageSize = linkedQueryParam('pageSize', { defaultValue: '20' });
+  readonly pageSize = linkedQueryParam('pageSize', { defaultValue: '50' });
   readonly sort = linkedQueryParam('sort', { defaultValue: 'name-asc' });
 
   readonly inStock = linkedQueryParam('inStock', { defaultValue: 'true' });
@@ -36,7 +36,7 @@ export class ProductListQueryState {
     sort: (this.sort() ?? 'name-asc') as ProductListSortUi,
 
     page: this.page() ?? '1',
-    pageSize: this.pageSize() ?? '20',
+    pageSize: this.pageSize() ?? '50',
   }));
 
   // --- commands (domain-ish;) ---

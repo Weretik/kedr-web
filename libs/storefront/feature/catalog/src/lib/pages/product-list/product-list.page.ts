@@ -1,12 +1,12 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { ProductListFacade } from '@storefront/data-access';
-import { PageHeader, PageHeaderConfig } from '@storefront/ui';
+import { PageHeaderConfig } from '@storefront/ui';
 
 import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/product-list-filters-bar';
 
 @Component({
   selector: 'lib-product-list-page',
-  imports: [PageHeader, ProductListFiltersBar],
+  imports: [ProductListFiltersBar],
   templateUrl: './product-list.page.html',
   styleUrl: './product-list.page.css',
 })

@@ -21,7 +21,7 @@ export function mapProductListQueryToApi(
     Sort: mapSortUiToApi(query.sort),
 
     Page: toInt(query.page) ?? 1,
-    PageSize: toInt(query.pageSize) ?? 20,
+    PageSize: toInt(query.pageSize) ?? 50,
   };
 }
 
