@@ -195,7 +195,9 @@
               </div>
               <div class="card flex flex-wrap gap-4 justify-center">
                 @if(product.isSale) {
-                <p-message severity="error" size="small"> Розпродаж </p-message>
+                <p-message severity="error" size="small">
+                  Краща ціна
+                </p-message>
                 } @if(product.isNew) {
                 <p-message severity="info" size="small"> Новинка </p-message>
                 }
