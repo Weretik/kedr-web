@@ -64,7 +64,7 @@ export class ProductListFiltersBar {
 
   readonly categoryName = computed(() => {
     const slug = this.categorySlug();
-    if (!slug) return 'Категорія: Всі';
+    if (!slug) return 'Всі товари';
     return findCategoryLabel(slug) ?? 'Категорія: Невідома';
   });
 

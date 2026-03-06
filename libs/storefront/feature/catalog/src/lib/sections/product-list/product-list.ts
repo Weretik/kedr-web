@@ -37,7 +37,7 @@ import { Tag } from 'primeng/tag';
   styleUrl: './product-list.css',
 })
 export class ProductList {
-  layout: 'list' | 'grid' = 'list';
+  layout: 'list' | 'grid' = 'grid';
   options: string[] = ['list', 'grid'];
 
   readonly skeletonCount = 6;
