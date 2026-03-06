@@ -6,6 +6,7 @@ import {
   signal,
   computed,
   input,
+  HostListener,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProductListFacade } from '@storefront/data-access';
@@ -20,6 +21,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { PanelMenu } from 'primeng/panelmenu';
+import { Popover } from 'primeng/popover';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { ToggleButton } from 'primeng/togglebutton';
@@ -53,6 +55,7 @@ import { ProductList } from '../product-list/product-list';
     PanelMenu,
     ProductList,
     ToggleButton,
+    Popover,
   ],
   templateUrl: './product-list-filters-bar.html',
   styleUrl: './product-list-filters-bar.css',
@@ -61,6 +64,13 @@ export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
 
   readonly categorySlug = input<string | null>(null);
+
+  readonly isSticky = signal(false);
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isSticky.set(window.scrollY > 200);
+  }
 
   readonly categoryName = computed(() => {
     const slug = this.categorySlug();

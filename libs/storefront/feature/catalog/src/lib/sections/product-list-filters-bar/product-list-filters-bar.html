@@ -1,6 +1,18 @@
 <div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20 pt-12">
-  <div class="flex flex-col lg:flex-row justify-start items-center gap-4 mb-6">
-    <div class="flex-1 flex flex-col justify-start items-start gap-2">
+  @if (isSticky()) {
+  <div class="h-20 mb-6"></div>
+  }
+  <div
+    [class.mb-6]="!isSticky()"
+    class="flex flex-col sm:flex-row justify-center items-center sm:items-center gap-4"
+    [ngClass]="{
+    'fixed top-18 left-0 right-0 z-1000 bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20 py-4 shadow-md': isSticky()
+    }"
+  >
+    <div
+      class="w-full sm:flex-1 flex flex-col justify-start items-center sm:items-start gap-2"
+      [class.hidden]="isSticky()"
+    >
       <div
         class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight"
       >
@@ -8,37 +20,86 @@
       </div>
     </div>
 
-    <div class="flex flex-wrap flex-col sm:flex-row gap-4 items-center">
-      <p-toggleButton
-        [ngModel]="draftIsSale()"
-        (ngModelChange)="setSaleFilter($event)"
-        onLabel="Краща ціна"
-        offLabel="Краща ціна"
-        onIcon="pi pi-check"
-        offIcon="pi pi-times"
-        class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink-0"
-      ></p-toggleButton>
-      <p-toggleButton
-        [ngModel]="draftIsNew()"
-        (ngModelChange)="setNewFilter($event)"
-        onLabel="Новинки"
-        offLabel="Новинки"
-        onIcon="pi pi-check"
-        offIcon="pi pi-times"
-        class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink-0"
-      ></p-toggleButton>
-      <p-toggleButton
-        [ngModel]="draftInStock()"
-        (ngModelChange)="setInStockFilter($event)"
-        onLabel="В наявноті"
-        offLabel="Всі"
-        onIcon="pi pi-check"
-        offIcon="pi pi-times"
-        class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink-0"
-      ></p-toggleButton>
+    <div
+      class="flex flex-row flex-nowrap gap-1 sm:gap-4 justify-center sm:justify-start items-center w-full sm:w-auto"
+    >
+      <div class="hidden lg:flex flex-row gap-4 items-center">
+        <p-toggleButton
+          [ngModel]="draftIsSale()"
+          (ngModelChange)="setSaleFilter($event)"
+          onLabel="Краща ціна"
+          offLabel="Краща ціна"
+          onIcon="pi pi-check"
+          offIcon="pi pi-times"
+          class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
+        ></p-toggleButton>
+        <p-toggleButton
+          [ngModel]="draftIsNew()"
+          (ngModelChange)="setNewFilter($event)"
+          onLabel="Новинки"
+          offLabel="Новинки"
+          onIcon="pi pi-check"
+          offIcon="pi pi-times"
+          class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
+        ></p-toggleButton>
+        <p-toggleButton
+          [ngModel]="draftInStock()"
+          (ngModelChange)="setInStockFilter($event)"
+          onLabel="В наявноті"
+          offLabel="Всі"
+          onIcon="pi pi-check"
+          offIcon="pi pi-times"
+          class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
+        ></p-toggleButton>
+      </div>
+
+      <div
+        class="flex lg:hidden flex-1 justify-center sm:justify-start items-center"
+      >
+        <button
+          pButton
+          severity="secondary"
+          [outlined]="true"
+          (click)="paramsPopover.toggle($event)"
+        >
+          <span pButtonLabel>Параметри</span>
+          <i pButtonIcon class="pi pi-chevron-down"></i>
+        </button>
+        <p-popover #paramsPopover>
+          <div class="flex flex-col gap-3 p-1">
+            <p-toggleButton
+              [ngModel]="draftIsSale()"
+              (ngModelChange)="setSaleFilter($event)"
+              onLabel="Краща ціна"
+              offLabel="Краща ціна"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
+            ></p-toggleButton>
+            <p-toggleButton
+              [ngModel]="draftIsNew()"
+              (ngModelChange)="setNewFilter($event)"
+              onLabel="Новинки"
+              offLabel="Новинки"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
+            ></p-toggleButton>
+            <p-toggleButton
+              [ngModel]="draftInStock()"
+              (ngModelChange)="setInStockFilter($event)"
+              onLabel="В наявноті"
+              offLabel="Всі"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
+            ></p-toggleButton>
+          </div>
+        </p-popover>
+      </div>
     </div>
 
-    <div class="flex flex-col justify-start items-start">
+    <div class="flex flex-col justify-start items-center sm:items-start">
       <p-menu
         #sortMenu
         [model]="sortOptions"
