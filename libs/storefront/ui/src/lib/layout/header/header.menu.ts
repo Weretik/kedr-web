@@ -1,6 +1,29 @@
-﻿import { MegaMenuItem } from 'primeng/api';
+﻿import { MegaMenuItem, MenuItem } from 'primeng/api';
 
 const catalogLink = (slug: string) => ['/catalog', slug, 'products'] as const;
+const catalogSectionImages = {
+  hinges: '/assets/images/home-page/hero.png',
+  locks: '/assets/images/home-page/hero.png',
+  handles: '/assets/images/home-page/hero.png',
+  cylinders: '/assets/images/home-page/hero.png',
+  interiorMechanisms: '/assets/images/home-page/hero.png',
+  other: '/assets/images/home-page/hero.png',
+} as const;
+
+const catalogSection = (
+  label: string,
+  image: string,
+  items: MenuItem[],
+): MenuItem => ({
+  items: [
+    {
+      label,
+      image,
+      sectionHeader: true,
+    } as MenuItem,
+    ...items,
+  ],
+});
 
 export function buildMenu(): MegaMenuItem[] {
   return [
@@ -10,149 +33,138 @@ export function buildMenu(): MegaMenuItem[] {
       root: true,
       items: [
         [
-          {
-            label: 'Завіси',
-            items: [
-              {
-                label: 'Накладні(метелик)',
-                routerLink: catalogLink(
-                  'kedr-zavisi-nakladni-meteliki-dlia-mizhkimnatnikh-dverei-1707',
-                ),
-              },
-              {
-                label: 'Ввертні та приварні',
-                routerLink: catalogLink(
-                  'kedr-zavisi-vvertni-ta-kovpachki-do-nikh-privarni-zavisi-4457',
-                ),
-              },
-              {
-                label: 'Врізні',
-                routerLink: catalogLink(
-                  'kedr-zavisi-vrizni-dlia-mizhkimnatnikh-dverei-6139',
-                ),
-              },
-            ],
-          },
-          {
-            label: 'Замки',
-            items: [
-              {
-                label: 'Навестні та велозамки',
-                routerLink: catalogLink('kedr-zamki-navisni-ta-velozamki-1304'),
-              },
-              {
-                label: 'Комплекти з ручками',
-                routerLink: catalogLink('kedr-komplekti-zamki-z-ruchkami-2716'),
-              },
-              {
-                label: 'Накладні',
-                routerLink: catalogLink('kedr-zamki-nakladni-2722'),
-              },
-              {
-                label: 'Сувальдні та з хрестообр. ключем',
-                routerLink: catalogLink(
-                  'kedr-zamki-suvaldni-ta-z-khrestoobr.-kliuchem-2775',
-                ),
-              },
-              {
-                label: 'Врiзні під циліндр',
-                routerLink: catalogLink('kedr-zamki-vrizni-pid-tsilindr-5851'),
-              },
-            ],
-          },
+          catalogSection('Завіси', catalogSectionImages.hinges, [
+            {
+              label: 'Накладні(метелик)',
+              routerLink: catalogLink(
+                'kedr-zavisi-nakladni-meteliki-dlia-mizhkimnatnikh-dverei-1707',
+              ),
+            },
+            {
+              label: 'Ввертні та приварні',
+              routerLink: catalogLink(
+                'kedr-zavisi-vvertni-ta-kovpachki-do-nikh-privarni-zavisi-4457',
+              ),
+            },
+            {
+              label: 'Врізні',
+              routerLink: catalogLink(
+                'kedr-zavisi-vrizni-dlia-mizhkimnatnikh-dverei-6139',
+              ),
+            },
+          ]),
+          catalogSection('Замки', catalogSectionImages.locks, [
+            {
+              label: 'Навестні та велозамки',
+              routerLink: catalogLink('kedr-zamki-navisni-ta-velozamki-1304'),
+            },
+            {
+              label: 'Комплекти з ручками',
+              routerLink: catalogLink('kedr-komplekti-zamki-z-ruchkami-2716'),
+            },
+            {
+              label: 'Накладні',
+              routerLink: catalogLink('kedr-zamki-nakladni-2722'),
+            },
+            {
+              label: 'Сувальдні та з хрестообр. ключем',
+              routerLink: catalogLink(
+                'kedr-zamki-suvaldni-ta-z-khrestoobr.-kliuchem-2775',
+              ),
+            },
+            {
+              label: 'Врiзні під циліндр',
+              routerLink: catalogLink('kedr-zamki-vrizni-pid-tsilindr-5851'),
+            },
+          ]),
         ],
         [
-          {
-            label: 'Ручки',
-            items: [
-              {
-                label: 'На розетцi (Kevlar)',
-                routerLink: catalogLink(
-                  'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
-                ),
-              },
-              {
-                label: 'На планці',
-                routerLink: catalogLink(
-                  'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
-                ),
-              },
-              {
-                label: 'На розетцi (R-08/R-10)',
-                routerLink: catalogLink(
-                  'kedr-ruchki-na-rozettsi-seriia-standart-r-08-r-10-5915',
-                ),
-              },
-              {
-                label: 'На розетцi (HRoz)',
-                routerLink: catalogLink(
-                  'kedr-ruchki-na-rozettsi-seriia-ekonom-hroz-06-hroz-07-5854',
-                ),
-              },
-              {
-                label: 'На розетцi (Genrich)',
-                routerLink: catalogLink(
-                  'kedr-ruchki-na-rozettsi-seriia-premium-genrich-5904',
-                ),
-              },
-              {
-                label: 'На розетцi (Ultara)',
-                routerLink: catalogLink(
-                  'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
-                ),
-              },
-              {
-                label: 'З нержавiйки',
-                routerLink: catalogLink('kedr-ruchki-z-nerzhaviiki-5999'),
-              },
-              {
-                label: 'Ручки-кноби',
-                routerLink: catalogLink('kedr-ruchki-knobi-6488'),
-              },
-            ],
-          },
-          {
-            label: 'Циліндри',
-            items: [
-              {
-                label: 'серії BRASS KEY Латунь',
-                routerLink: catalogLink(
-                  'kedr-tsilindri-seriyi-brass-key-latun-2680',
-                ),
-              },
-              {
-                label: 'серії SMART',
-                routerLink: catalogLink('kedr-tsilindri-seriyi-smart-26929'),
-              },
-              {
-                label: 'серії GWK',
-                routerLink: catalogLink('kedr-tsilindri-seriyi-gwk-26930'),
-              },
-              {
-                label: 'серії ZINK під шток',
-                routerLink: catalogLink(
-                  'kedr-tsilindri-seriyi-zink-pid-shtok-27124',
-                ),
-              },
-              {
-                label: 'серії ZINK',
-                routerLink: catalogLink('kedr-tsilindri-seriyi-zink-5852'),
-              },
-              {
-                label: 'серії ZINK PLK',
-                routerLink: catalogLink('kedr-tsilindri-seriyi-zink-plk-4555'),
-              },
-              {
-                label: 'серії ALU',
-                routerLink: catalogLink('kedr-tsilindri-seriyi-alu-6560'),
-              },
-            ],
-          },
+          catalogSection('Ручки', catalogSectionImages.handles, [
+            {
+              label: 'На розетцi (Kevlar)',
+              routerLink: catalogLink(
+                'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
+              ),
+            },
+            {
+              label: 'На планці',
+              routerLink: catalogLink(
+                'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
+              ),
+            },
+            {
+              label: 'На розетцi (R-08/R-10)',
+              routerLink: catalogLink(
+                'kedr-ruchki-na-rozettsi-seriia-standart-r-08-r-10-5915',
+              ),
+            },
+            {
+              label: 'На розетцi (HRoz)',
+              routerLink: catalogLink(
+                'kedr-ruchki-na-rozettsi-seriia-ekonom-hroz-06-hroz-07-5854',
+              ),
+            },
+            {
+              label: 'На розетцi (Genrich)',
+              routerLink: catalogLink(
+                'kedr-ruchki-na-rozettsi-seriia-premium-genrich-5904',
+              ),
+            },
+            {
+              label: 'На розетцi (Ultara)',
+              routerLink: catalogLink(
+                'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
+              ),
+            },
+            {
+              label: 'З нержавiйки',
+              routerLink: catalogLink('kedr-ruchki-z-nerzhaviiki-5999'),
+            },
+            {
+              label: 'Ручки-кноби',
+              routerLink: catalogLink('kedr-ruchki-knobi-6488'),
+            },
+          ]),
+          catalogSection('Циліндри', catalogSectionImages.cylinders, [
+            {
+              label: 'серії BRASS KEY Латунь',
+              routerLink: catalogLink(
+                'kedr-tsilindri-seriyi-brass-key-latun-2680',
+              ),
+            },
+            {
+              label: 'серії SMART',
+              routerLink: catalogLink('kedr-tsilindri-seriyi-smart-26929'),
+            },
+            {
+              label: 'серії GWK',
+              routerLink: catalogLink('kedr-tsilindri-seriyi-gwk-26930'),
+            },
+            {
+              label: 'серії ZINK під шток',
+              routerLink: catalogLink(
+                'kedr-tsilindri-seriyi-zink-pid-shtok-27124',
+              ),
+            },
+            {
+              label: 'серії ZINK',
+              routerLink: catalogLink('kedr-tsilindri-seriyi-zink-5852'),
+            },
+            {
+              label: 'серії ZINK PLK',
+              routerLink: catalogLink('kedr-tsilindri-seriyi-zink-plk-4555'),
+            },
+            {
+              label: 'серії ALU',
+              routerLink: catalogLink('kedr-tsilindri-seriyi-alu-6560'),
+            },
+          ]),
         ],
         [
-          {
-            label: 'Міжкімнатні механізми',
-            items: [
+          catalogSection(
+            'Міжкімнатні механізми',
+            catalogSectionImages.interiorMechanisms,
+            [
               {
                 label: ' з магнітною защіпкою',
                 routerLink: catalogLink(
@@ -178,48 +190,45 @@ export function buildMenu(): MegaMenuItem[] {
                 ),
               },
             ],
-          },
-          {
-            label: 'Інше',
-            items: [
-              {
-                label: 'Броненакладки на циліндр',
-                routerLink: catalogLink(
-                  'kedr-bronenakladki-na-tsilindr-ta-nakladki-na-suvaldni-zamki-1230',
-                ),
-              },
-              {
-                label: 'Ущільнювач',
-                routerLink: catalogLink('kedr-ushchilniuvach-1440'),
-              },
-              {
-                label: 'Відбійники',
-                routerLink: catalogLink('kedr-vidbiiniki-3783'),
-              },
-              {
-                label: 'Комплектуючі',
-                routerLink: catalogLink('kedr-komplektuiuchi-5625'),
-              },
-              {
-                label: 'Засувки і шпінгалети',
-                routerLink: catalogLink(
-                  'kedr-zasuvki-i-shpingaleti-dlia-vkhidnikh-ta-mizhkimnatnikh-dverei-5912',
-                ),
-              },
-              {
-                label: 'Розсувнi системи',
-                routerLink: catalogLink('kedr-rozsuvni-sistemi-6295'),
-              },
-              {
-                label: 'Дотягувачі',
-                routerLink: catalogLink('kedr-dotiaguvachi-5962'),
-              },
-              {
-                label: 'Вiчка двернi',
-                routerLink: catalogLink('kedr-vichka-dverni-5957'),
-              },
-            ],
-          },
+          ),
+          catalogSection('Інше', catalogSectionImages.other, [
+            {
+              label: 'Броненакладки на циліндр',
+              routerLink: catalogLink(
+                'kedr-bronenakladki-na-tsilindr-ta-nakladki-na-suvaldni-zamki-1230',
+              ),
+            },
+            {
+              label: 'Ущільнювач',
+              routerLink: catalogLink('kedr-ushchilniuvach-1440'),
+            },
+            {
+              label: 'Відбійники',
+              routerLink: catalogLink('kedr-vidbiiniki-3783'),
+            },
+            {
+              label: 'Комплектуючі',
+              routerLink: catalogLink('kedr-komplektuiuchi-5625'),
+            },
+            {
+              label: 'Засувки і шпінгалети',
+              routerLink: catalogLink(
+                'kedr-zasuvki-i-shpingaleti-dlia-vkhidnikh-ta-mizhkimnatnikh-dverei-5912',
+              ),
+            },
+            {
+              label: 'Розсувнi системи',
+              routerLink: catalogLink('kedr-rozsuvni-sistemi-6295'),
+            },
+            {
+              label: 'Дотягувачі',
+              routerLink: catalogLink('kedr-dotiaguvachi-5962'),
+            },
+            {
+              label: 'Вiчка двернi',
+              routerLink: catalogLink('kedr-vichka-dverni-5957'),
+            },
+          ]),
         ],
       ],
     },
