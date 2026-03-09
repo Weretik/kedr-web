@@ -175,6 +175,21 @@
         <i class="pi pi-angle-down ml-2" aria-hidden="true"></i>
         }
       </a>
+      } @else if (item.sectionHeader) {
+      <div
+        class="flex flex-col items-start px-4 mb-2 gap-2 cursor-default pointer-events-none select-none w-full min-h-40 !opacity-100"
+      >
+        <img
+          [src]="item.image"
+          [alt]="item.label"
+          class="w-full h-40 object-cover rounded-md"
+        />
+        <span
+          class="text-base !text-primary dark:!text-primary !opacity-100 font-semibold overflow-hidden"
+        >
+          {{ item.label }}
+        </span>
+      </div>
       } @else if (!item.image) {
       <a
         class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
