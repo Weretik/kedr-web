@@ -57,6 +57,7 @@
         class="flex lg:hidden flex-1 justify-center sm:justify-start items-center"
       >
         <button
+          type="button"
           pButton
           severity="secondary"
           [outlined]="true"
@@ -100,6 +101,7 @@
     </div>
 
     <div class="flex flex-col justify-start items-center sm:items-start">
+      @defer (on immediate) {
       <p-menu
         #sortMenu
         [model]="sortOptions"
@@ -107,6 +109,7 @@
         [appendTo]="'body'"
       ></p-menu>
       <button
+        type="button"
         pButton
         severity="secondary"
         [outlined]="true"
@@ -115,6 +118,7 @@
         <i pButtonIcon class="pi pi-sort-alt"></i>
         <span pButtonLabel>Сортувати</span>
       </button>
+      }
     </div>
   </div>
 
@@ -148,11 +152,13 @@
       -->
       <div class="self-stretch flex flex-col justify-start items-start">
         <div class="card flex justify-center w-full">
+          @defer (on immediate) {
           <p-panelmenu
             [model]="filtersMenu()"
             class="w-full gap-4"
             [multiple]="true"
           />
+          }
         </div>
       </div>
 
