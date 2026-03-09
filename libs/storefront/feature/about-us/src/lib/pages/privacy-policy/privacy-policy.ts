@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-privacy-policy',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './privacy-policy.html',
   styleUrl: './privacy-policy.css',
 })
