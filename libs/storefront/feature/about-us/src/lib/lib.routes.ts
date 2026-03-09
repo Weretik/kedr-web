@@ -32,4 +32,23 @@ export const aboutUsRoutes: Route[] = [
         (page) => page.ReturnsExchanges,
       ),
   },
+  {
+    path: 'requisites',
+    loadComponent: () =>
+      import('./pages/requisites/requisites').then((page) => page.Requisites),
+  },
+  {
+    path: 'privacy-policy',
+    loadComponent: () =>
+      import('./pages/privacy-policy/privacy-policy').then(
+        (page) => page.PrivacyPolicy,
+      ),
+  },
+  {
+    path: 'public-offer',
+    loadComponent: () =>
+      import('./pages/public-offer/public-offer').then(
+        (page) => page.PublicOffer,
+      ),
+  },
 ];

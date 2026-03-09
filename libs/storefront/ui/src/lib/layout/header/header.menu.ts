@@ -281,10 +281,12 @@ export function buildMenu(): MegaMenuItem[] {
           {
             label: 'Юридична інформація',
             items: [
-              { label: 'Угода користувача' },
-              { label: 'Політика конфіденційності' },
-              { label: 'Юридична інформація' },
-              { label: 'Договір публічної оферти' },
+              { label: 'Публічна оферта', routerLink: ['/public-offer'] },
+              {
+                label: 'Політика конфіденційності',
+                routerLink: ['/privacy-policy'],
+              },
+              { label: 'Реквізити', routerLink: ['/requisites'] },
             ],
           },
         ],
