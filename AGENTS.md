@@ -50,6 +50,8 @@
 ## Styling Rules
 
 - Follow the styling approach already used in the repo (`SCSS`, `CSS`, Tailwind, PrimeNG patterns, etc.).
+- For PrimeNG UI changes, use only Tailwind classes in templates or PrimeNG `pt` configurations.
+- Do not edit component/global CSS files for PrimeNG UI tasks unless explicitly requested.
 - Do not replace the styling strategy unless explicitly requested.
 - Avoid changing unrelated layout/styling while solving functional tasks.
 - Keep styling changes local to the feature whenever possible.
