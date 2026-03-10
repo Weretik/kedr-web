@@ -270,7 +270,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
     icon: 'ri-lock-2-line',
     items: [
       {
-        label: 'Навестні та велозамки',
+        label: 'Навісні та велозамки',
         categorySlug: 'kedr-zamki-navisni-ta-velozamki-1304',
       },
       {
@@ -365,7 +365,7 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
     ],
   },
   {
-    label: 'Міжкімнатні мханізми',
+    label: 'Міжкімнатні механізми',
     icon: 'pi pi-cog',
     items: [
       {
@@ -434,7 +434,6 @@ const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
 const applyCommand = (
   items: (MenuItem & { categorySlug?: string })[],
   actions: { goToCategory: (slug: string) => void },
-  activeCategorySlug: string | null,
 ): (MenuItem & { categorySlug?: string; expanded?: boolean })[] => {
   return items.map((item) => {
     const newItem = { ...item };
@@ -447,29 +446,9 @@ const applyCommand = (
       const childItems = applyCommand(
         newItem.items as (MenuItem & { categorySlug?: string })[],
         actions,
-        activeCategorySlug,
       );
       newItem.items = childItems;
-
-      // Logic:
-      // 1. If activeCategorySlug is null (root path), expand everything
-      // 2. If activeCategorySlug is NOT null, expand only if it contains the active slug or an expanded child
-      if (activeCategorySlug === null) {
-        newItem.expanded = true;
-      } else {
-        const hasActiveChild = (
-          childItems as (MenuItem & {
-            categorySlug?: string;
-            expanded?: boolean;
-          })[]
-        ).some(
-          (child) =>
-            child.categorySlug === activeCategorySlug || child.expanded,
-        );
-        if (hasActiveChild) {
-          newItem.expanded = true;
-        }
-      }
+      newItem.expanded = true;
     }
 
     return newItem;
@@ -482,7 +461,8 @@ export function buildFiltersMenu(
   },
   activeCategorySlug: string | null = null,
 ): (MenuItem & { categorySlug?: string })[] {
-  return applyCommand(FILTERS_MENU_STRUCTURE, actions, activeCategorySlug);
+  void activeCategorySlug;
+  return applyCommand(FILTERS_MENU_STRUCTURE, actions);
 }
 
 export function findCategoryLabel(

@@ -55,7 +55,7 @@ export function buildMenu(): MegaMenuItem[] {
           ]),
           catalogSection('Замки', catalogSectionImages.locks, [
             {
-              label: 'Навестні та велозамки',
+              label: 'Навісні та велозамки',
               routerLink: catalogLink('kedr-zamki-navisni-ta-velozamki-1304'),
             },
             {
