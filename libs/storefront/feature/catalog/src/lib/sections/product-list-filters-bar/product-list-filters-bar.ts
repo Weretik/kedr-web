@@ -9,6 +9,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ProductListFacade } from '@storefront/data-access';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -62,6 +63,7 @@ import { ProductList } from '../product-list/product-list';
 })
 export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
+  readonly router = inject(Router);
 
   readonly categorySlug = input<string | null>(null);
 
@@ -149,6 +151,10 @@ export class ProductListFiltersBar {
   }
   public clearFilters() {
     this.facade.queryState.clear();
+  }
+
+  public goToAllProducts() {
+    void this.router.navigate(['/']);
   }
 
   private toNum(value: string | null): number | null {

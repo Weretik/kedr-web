@@ -449,6 +449,9 @@ const applyCommand = (
       );
       newItem.items = childItems;
       newItem.expanded = true;
+      newItem.styleClass = newItem.styleClass
+        ? `${newItem.styleClass} uppercase text-base font-semibold tracking-wide`
+        : 'uppercase text-base font-semibold tracking-wide';
     }
 
     return newItem;
@@ -478,7 +481,7 @@ export function findCategoryLabel(
       if (item.label) {
         labels.push(item.label);
       }
-      return labels.join(': ');
+      return labels.join(' ➜ ');
     }
     if (item.items) {
       const currentLabels = item.label

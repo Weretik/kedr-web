@@ -16,7 +16,16 @@
       <div
         class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight"
       >
-        {{ categoryName() }}
+        <button
+          type="button"
+          class="cursor-pointer text-primary hover:text-primary-emphasis underline underline-offset-4 decoration-primary/60 hover:decoration-primary transition-colors"
+          (click)="goToAllProducts()"
+        >
+          Всі товари
+        </button>
+        @if (categorySlug()) {
+        <span> ➜ {{ categoryName() }}</span>
+        }
       </div>
     </div>
 
