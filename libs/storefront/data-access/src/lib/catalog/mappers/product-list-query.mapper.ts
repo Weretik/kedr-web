@@ -31,6 +31,10 @@ export function mapSortUiToApi(
   if (!sort) return undefined;
 
   switch (sort) {
+    case 'id-asc':
+      return ProductSort.IdAsc;
+    case 'id-desc':
+      return ProductSort.IdDesc;
     case 'name-asc':
       return ProductSort.NameAsc;
     case 'name-desc':

@@ -78,9 +78,6 @@ export class ProductListFiltersBar {
     return findCategoryLabel(slug) ?? 'Категорія: Невідома';
   });
 
-  readonly minPrice = 0;
-  readonly maxPrice = 50_000;
-
   readonly draftInStock = signal(true);
   readonly draftIsSale = signal(false);
   readonly draftIsNew = signal(false);

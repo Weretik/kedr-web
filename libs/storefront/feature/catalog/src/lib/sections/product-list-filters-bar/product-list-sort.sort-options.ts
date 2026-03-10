@@ -7,6 +7,16 @@ export function buildSortMenu(deps: {
 }): MenuItem[] {
   return [
     {
+      label: 'Артикул (min → max)',
+      icon: 'pi pi-sort-amount-up',
+      command: () => deps.setSort('id-asc'),
+    },
+    {
+      label: 'Артикул (max → min)',
+      icon: 'pi pi-sort-amount-down',
+      command: () => deps.setSort('id-desc'),
+    },
+    {
       label: 'Назва (а → я)',
       icon: 'pi pi-sort-amount-up',
       command: () => deps.setSort('name-asc'),

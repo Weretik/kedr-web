@@ -16,6 +16,8 @@
 };
 
 export type ProductListSortUi =
+  | 'id-asc'
+  | 'id-desc'
   | 'name-asc'
   | 'name-desc'
   | 'price-asc'
