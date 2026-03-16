@@ -39,13 +39,17 @@ export class ProductPage {
 
   readonly headerConfig = computed<PageHeaderConfig>(() => {
     const product = this.productResource.value();
+    const categoryBreadcrumbs =
+      product?.breadcrumbs?.map((breadcrumb) => ({
+        label: breadcrumb.name,
+        routerLink: ['/catalog', breadcrumb.slug, 'products'],
+      })) ?? [];
+
     return {
       title: product?.name ?? '...',
       breadcrumbs: [
-        {
-          label: 'Каталог',
-          routerLink: ['/catalog', product?.categorySlug, 'products'],
-        },
+        { label: 'Каталог', routerLink: ['/catalog/products'] },
+        ...categoryBreadcrumbs,
         { label: product?.name ?? '...' },
       ],
       showSearch: false,
