@@ -184,12 +184,9 @@
     }
 
     <div class="flex justify-end mt-3">
-      <button
-        pButton
-        type="button"
-        label="Закрити"
-        (click)="closeSuccessDialog()"
-      ></button>
+      <button pButton type="button" (click)="closeSuccessDialog()">
+        <span pButtonLabel>Закрити</span>
+      </button>
     </div>
   </div>
 </p-dialog>

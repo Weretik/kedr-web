@@ -26,8 +26,11 @@
         @for (item of cart.lines(); track item.variantId; let index = $index) {
         <li
           class="flex items-center gap-4 pb-6 mb-6 border-b border-surface-200 dark:border-surface-700 last:border-none last:mb-0 last:pb-0 cursor-pointer hover:border-primary transition-colors"
+          role="link"
+          tabindex="0"
           [routerLink]="['/catalog', 'product', item.snapshot.slug]"
           (click)="cartUi.close()"
+          (keydown.enter)="cartUi.close()"
         >
           <img
             [src]="item.snapshot.imageUrl"
