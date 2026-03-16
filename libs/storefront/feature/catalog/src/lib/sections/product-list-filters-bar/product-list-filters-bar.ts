@@ -29,10 +29,18 @@ import { ToggleButton } from 'primeng/togglebutton';
 
 import {
   buildFiltersMenu,
-  findCategoryLabel,
+  findCategoryPath,
 } from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
 import { ProductList } from '../product-list/product-list';
+
+import type { MenuItem } from 'primeng/api';
+
+type PanelMenuItemLabelPtOptions = {
+  context?: {
+    item?: MenuItem;
+  };
+};
 
 @Component({
   selector: 'lib-product-list-filters-bar',
@@ -74,11 +82,26 @@ export class ProductListFiltersBar {
     this.isSticky.set(window.scrollY > 200);
   }
 
-  readonly categoryName = computed(() => {
-    const slug = this.categorySlug();
-    if (!slug) return 'Всі товари';
-    return findCategoryLabel(slug) ?? 'Категорія: Невідома';
-  });
+  readonly categoryPath = computed(
+    () => findCategoryPath(this.categorySlug()) ?? [],
+  );
+  readonly panelMenuPt = {
+    itemContent: (options: PanelMenuItemLabelPtOptions) => ({
+      class: this.isActiveCategory(options.context?.item)
+        ? 'bg-primary/10 rounded-md'
+        : undefined,
+    }),
+    itemLabel: (options: PanelMenuItemLabelPtOptions) => ({
+      class: this.isActiveCategory(options.context?.item)
+        ? 'text-primary font-semibold'
+        : undefined,
+      onClick: (event: Event) =>
+        this.onPanelMenuLabelClick(
+          event,
+          options.context?.item as MenuItem | undefined,
+        ),
+    }),
+  };
 
   readonly draftInStock = signal(true);
   readonly draftIsSale = signal(false);
@@ -155,6 +178,31 @@ export class ProductListFiltersBar {
 
   public goToAllProducts() {
     void this.router.navigate(['/']);
+  }
+
+  public goToCategoryBySlug(slug: string) {
+    this.facade.queryState.goToCategory(slug);
+  }
+
+  public onPanelMenuLabelClick(event: Event, item?: MenuItem) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const slug = this.getItemSlug(item);
+    if (!slug) return;
+
+    this.facade.queryState.goToCategory(slug);
+  }
+
+  private getItemSlug(item?: MenuItem): string | null {
+    return (
+      (item as { categorySlug?: string } | undefined)?.categorySlug ?? null
+    );
+  }
+
+  private isActiveCategory(item?: MenuItem): boolean {
+    const itemSlug = this.getItemSlug(item);
+    return !!itemSlug && itemSlug === this.categorySlug();
   }
 
   private toNum(value: string | null): number | null {

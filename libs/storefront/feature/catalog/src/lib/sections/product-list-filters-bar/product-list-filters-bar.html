@@ -18,14 +18,27 @@
       >
         <button
           type="button"
-          class="cursor-pointer text-primary hover:text-primary-emphasis underline underline-offset-4 decoration-primary/60 hover:decoration-primary transition-colors"
+          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors"
           (click)="goToAllProducts()"
         >
           Всі товари
         </button>
-        @if (categorySlug()) {
-        <span> ➜ {{ categoryName() }}</span>
-        }
+        @if (categoryPath().length) { @for (crumb of categoryPath(); track
+        crumb.slug; let isLast = $last) {
+        <span class="mx-1 text-surface-500 dark:text-surface-400">&rarr;</span>
+        @if (isLast) {
+        <span class="text-surface-900 dark:text-surface-0">
+          {{ crumb.label }}
+        </span>
+        } @else {
+        <button
+          type="button"
+          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors"
+          (click)="goToCategoryBySlug(crumb.slug)"
+        >
+          {{ crumb.label }}
+        </button>
+        } } }
       </div>
     </div>
 
@@ -164,7 +177,8 @@
           @defer (on immediate) {
           <p-panelmenu
             [model]="filtersMenu()"
-            class="w-full gap-4"
+            [pt]="panelMenuPt"
+            class="w-full gap-4 [&_.p-menuitem-link]:py-2"
             [multiple]="true"
           />
           }
