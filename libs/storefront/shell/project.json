@@ -1,5 +1,5 @@
 {
-  "name": "shell",
+  "name": "storefront-shell",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/storefront/shell/src",
   "prefix": "lib",
