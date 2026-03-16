@@ -1,4 +1,4 @@
-﻿import { ProductListSortUi } from '@storefront/contracts';
+import { ProductListSortUi } from '@storefront/data-access';
 
 import type { MenuItem } from 'primeng/api';
 

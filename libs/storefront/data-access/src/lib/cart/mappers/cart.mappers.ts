@@ -1,8 +1,6 @@
-﻿import {
-  ProductListRowDto,
-  ProductBySlugDto,
-  CartLine,
-} from '@storefront/contracts';
+﻿import { ProductListRowDto, ProductBySlugDto } from '@storefront/contracts';
+
+import { CartLine } from '../models/cart.types';
 
 const currency = 'UAH' as const;
 

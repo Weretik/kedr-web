@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Footer, Header } from '@storefront/ui';
+import { Footer, Header } from '@storefront/shell';
 import { Toast } from 'primeng/toast';
 
 @Component({

@@ -1,4 +1,6 @@
-﻿import { CartLine, CheckoutDto, CheckoutLineDto } from '@storefront/contracts';
+import { CheckoutDto, CheckoutLineDto } from '@storefront/contracts';
+
+import { CartLine } from '../../cart/models/cart.types';
 
 export type CheckoutContactInput = {
   firstName: string;
