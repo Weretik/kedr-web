@@ -1,460 +1,109 @@
-﻿import type { MenuItem } from 'primeng/api';
+import {
+  CATALOG_DOOR_ORDER,
+  CATALOG_DOOR_SECTIONS,
+  CATALOG_HARDWARE_ORDER,
+  CATALOG_HARDWARE_SECTIONS,
+  CATALOG_ROOT_CATEGORIES,
+} from '@storefront/data-access';
 
-/*
-const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
-  {
-    label: 'Фурнітура',
-    icon: 'ri-key-2-line',
-    items: [
-      {
-        label: 'Завіси',
-        icon: 'ri-arrow-left-right-line',
-        items: [
-          {
-            label: 'Накладні(метелик)',
-            categorySlug:
-              'kedr-zavisi-nakladni-meteliki-dlia-mizhkimnatnikh-dverei-1707',
-          },
-          {
-            label: 'Ввертні та приварні',
-            categorySlug:
-              'kedr-zavisi-vvertni-ta-kovpachki-do-nikh-privarni-zavisi-4457',
-          },
-          {
-            label: 'Врізні',
-            categorySlug: 'kedr-zavisi-vrizni-dlia-mizhkimnatnikh-dverei-6139',
-          },
-        ],
-      },
-      {
-        label: 'Замки',
-        icon: 'ri-lock-2-line',
-        items: [
-          {
-            label: 'Навестні та велозамки',
-            categorySlug: 'kedr-zamki-navisni-ta-velozamki-1304',
-          },
-          {
-            label: 'Комплекти з ручками',
-            categorySlug: 'kedr-komplekti-zamki-z-ruchkami-2716',
-          },
-          {
-            label: 'Накладні',
-            categorySlug: 'kedr-zamki-nakladni-2722',
-          },
-          {
-            label: 'Сувальдні та з хрестообр. ключем',
-            categorySlug: 'kedr-zamki-suvaldni-ta-z-khrestoobr.-kliuchem-2775',
-          },
-          {
-            label: 'Врiзні под циліндр',
-            categorySlug: 'kedr-zamki-vrizni-pid-tsilindr-5851',
-          },
-        ],
-      },
-      {
-        label: 'Ручки',
-        icon: 'ri-bar-chart-horizontal-line',
-        items: [
-          {
-            label: 'На розетцi (Kevlar)',
-            categorySlug: 'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
-          },
-          {
-            label: 'На планці',
-            categorySlug: 'kedr-ruchki-na-plantsi-5853',
-          },
-          {
-            label: 'На розетцi (R-08/R-10)',
-            categorySlug:
-              'kedr-ruchki-na-rozettsi-seriia-standart-r-08-r-10-5915',
-          },
-          {
-            label: 'На розетцi (HRoz)',
-            categorySlug:
-              'kedr-ruchki-na-rozettsi-seriia-ekonom-hroz-06-hroz-07-5854',
-          },
-          {
-            label: 'На розетцi (Genrich)',
-            categorySlug: 'kedr-ruchki-na-rozettsi-seriia-premium-genrich-5904',
-          },
-          {
-            label: 'На розетцi (Ultara)',
-            categorySlug: 'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
-          },
-          {
-            label: 'З нержавiйки',
-            categorySlug: 'kedr-ruchki-z-nerzhaviiki-5999',
-          },
-          {
-            label: 'Ручки-кноби',
-            categorySlug: 'kedr-ruchki-knobi-6488',
-          },
-        ],
-      },
-      {
-        label: 'Циліндри',
-        icon: 'ri-key-2-line',
-        items: [
-          {
-            label: 'серія BRASS KEY Латунь',
-            categorySlug: 'kedr-tsilindri-seriyi-brass-key-latun-2680',
-          },
-          {
-            label: 'серія SMART',
-            categorySlug: 'kedr-tsilindri-seriyi-smart-26929',
-          },
-          {
-            label: 'серія GWK',
-            categorySlug: 'kedr-tsilindri-seriyi-gwk-26930',
-          },
-          {
-            label: 'серія ZINK під шток',
-            categorySlug: 'kedr-tsilindri-seriyi-zink-pid-shtok-27124',
-          },
-          {
-            label: 'серія ZINK',
-            categorySlug: 'kedr-tsilindri-seriyi-zink-5852',
-          },
-          {
-            label: 'серія ZINK PLK',
-            categorySlug: 'kedr-tsilindri-seriyi-zink-plk-4555',
-          },
-          {
-            label: 'серія ALU',
-            categorySlug: 'kedr-tsilindri-seriyi-alu-6560',
-          },
-        ],
-      },
-      {
-        label: 'Міжкімнатні мханізми',
-        icon: 'pi pi-cog',
-        items: [
-          {
-            label: 'з магнітною защіпкою',
-            categorySlug:
-              'kedr-mizhkimnatni-mekhanizmi-z-magnitnoiu-zashchipkoiu-2197',
-          },
-          {
-            label: 'заскочки / засувки',
-            categorySlug: 'kedr-mizhkimnatni-zaskochki-zasuvki-2321',
-          },
-          {
-            label: 'з металевою защіпкою',
-            categorySlug:
-              'kedr-mizhkimnatni-mekhanizmi-z-metalevoiu-zashchipkoiu-5273',
-          },
-          {
-            label: 'з кевларовою защіпкою',
-            categorySlug:
-              'kedr-mizhkimnatni-mekhanizmi-z-kevlarovoiu-zashchipkoiu-6108',
-          },
-        ],
-      },
-      {
-        label: 'Інше',
-        icon: 'pi pi-ellipsis-h',
-        items: [
-          {
-            label: 'Броненакладки на циліндр',
-            categorySlug:
-              'kedr-bronenakladki-na-tsilindr-ta-nakladki-na-suvaldni-zamki-1230',
-          },
-          {
-            label: 'Ущільнювач',
-            categorySlug: 'kedr-ushchilniuvach-1440',
-          },
-          {
-            label: 'Відбійники',
-            categorySlug: 'kedr-vidbiiniki-3783',
-          },
-          {
-            label: 'Комплектуючі',
-            categorySlug: 'kedr-komplektuiuchi-5625',
-          },
-          {
-            label: 'Засувки і шпінгалети',
-            categorySlug:
-              'kedr-zasuvki-i-shpingaleti-dlia-vkhidnikh-ta-mizhkimnatnikh-dverei-5912',
-          },
-          {
-            label: 'Розсувнi системи',
-            categorySlug: 'kedr-rozsuvni-sistemi-6295',
-          },
-          {
-            label: 'Дотягувачі',
-            categorySlug: 'kedr-dotiaguvachi-5962',
-          },
-          {
-            label: 'Вiчка двернi',
-            categorySlug: 'kedr-vichka-dverni-5957',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Міжкімнатні двері',
-    icon: 'ri-door-open-line',
-    items: [
-      {
-        label: 'Korfad',
-        categorySlug: 'm_korfad-8349',
-      },
-      {
-        label: 'Leador',
-        categorySlug: 'm_leador-8344',
-      },
-      {
-        label: 'Darumi',
-        categorySlug: 'm_darumi-19424',
-      },
-      {
-        label: 'Syndicate',
-        categorySlug: 'dveri-sindikat-26971',
-      },
-    ],
-  },
-  {
-    label: 'Вхідні двері',
-    icon: 'ri-shield-keyhole-line',
-    items: [
-      {
-        label: 'Steelguard',
-        categorySlug: 'dveri-steelguard-7258',
-      },
-      {
-        label: 'Lacosta',
-        categorySlug: 'dveri-lacosta-7259',
-      },
-      {
-        label: 'Sova',
-        categorySlug: 'dveri-sova-19425',
-      },
-      {
-        label: 'MSM',
-        categorySlug: 'dveri-msm-27083',
-      },
-      {
-        label: 'Maximum',
-        categorySlug: 'dveri-tsdkh-8209',
-      },
-    ],
-  },
-];
-*/
+import type { MenuItem } from 'primeng/api';
 
-const FILTERS_MENU_STRUCTURE: (MenuItem & { categorySlug?: string })[] = [
-  {
-    label: 'Завіси',
-    icon: 'ri-arrow-left-right-line',
-    items: [
-      {
-        label: 'Накладні(метелик)',
-        categorySlug:
-          'kedr-zavisi-nakladni-meteliki-dlia-mizhkimnatnikh-dverei-1707',
-      },
-      {
-        label: 'Ввертні та приварні',
-        categorySlug:
-          'kedr-zavisi-vvertni-ta-kovpachki-do-nikh-privarni-zavisi-4457',
-      },
-      {
-        label: 'Врізні',
-        categorySlug: 'kedr-zavisi-vrizni-dlia-mizhkimnatnikh-dverei-6139',
-      },
-    ],
+type FilterMenuItem = MenuItem & { categorySlug?: string; expanded?: boolean };
+export type CategoryPathItem = { label: string; slug: string };
+
+const SHOW_DOORS_CATEGORY = false;
+
+const hardwareItems: FilterMenuItem[] = CATALOG_HARDWARE_ORDER.map(
+  (sectionKey) => {
+    const section = CATALOG_HARDWARE_SECTIONS[sectionKey];
+    return {
+      label: section.label,
+      categorySlug: section.slug,
+      items: section.items.map((item) => ({
+        label: item.label,
+        categorySlug: item.slug,
+      })),
+    };
   },
+);
+
+const doorItems: FilterMenuItem[] = CATALOG_DOOR_ORDER.map((sectionKey) => {
+  const section = CATALOG_DOOR_SECTIONS[sectionKey];
+  return {
+    label: section.label,
+    categorySlug: section.slug,
+    items: section.items.map((item) => ({
+      label: item.label,
+      categorySlug: item.slug,
+    })),
+  };
+});
+
+const FILTERS_MENU_STRUCTURE: FilterMenuItem[] = [
   {
-    label: 'Замки',
-    icon: 'ri-lock-2-line',
-    items: [
-      {
-        label: 'Навісні та велозамки',
-        categorySlug: 'kedr-zamki-navisni-ta-velozamki-1304',
-      },
-      {
-        label: 'Комплекти з ручками',
-        categorySlug: 'kedr-komplekti-zamki-z-ruchkami-2716',
-      },
-      {
-        label: 'Накладні',
-        categorySlug: 'kedr-zamki-nakladni-2722',
-      },
-      {
-        label: 'Сувальдні та з хрестообр. ключем',
-        categorySlug: 'kedr-zamki-suvaldni-ta-z-khrestoobr.-kliuchem-2775',
-      },
-      {
-        label: 'Врiзні под циліндр',
-        categorySlug: 'kedr-zamki-vrizni-pid-tsilindr-5851',
-      },
-    ],
+    label: CATALOG_ROOT_CATEGORIES.hardware.label,
+    categorySlug: CATALOG_ROOT_CATEGORIES.hardware.slug,
+    items: hardwareItems,
   },
-  {
-    label: 'Ручки',
-    icon: 'ri-bar-chart-horizontal-line',
-    items: [
-      {
-        label: 'На розетцi (Kevlar)',
-        categorySlug: 'kedr-ruchki-na-rozettsi-seriia-kevlar-26949',
-      },
-      {
-        label: 'На планці',
-        categorySlug: 'kedr-ruchki-na-plantsi-5853',
-      },
-      {
-        label: 'На розетцi (R-08/R-10)',
-        categorySlug: 'kedr-ruchki-na-rozettsi-seriia-standart-r-08-r-10-5915',
-      },
-      {
-        label: 'На розетцi (HRoz)',
-        categorySlug:
-          'kedr-ruchki-na-rozettsi-seriia-ekonom-hroz-06-hroz-07-5854',
-      },
-      {
-        label: 'На розетцi (Genrich)',
-        categorySlug: 'kedr-ruchki-na-rozettsi-seriia-premium-genrich-5904',
-      },
-      {
-        label: 'На розетцi (Ultara)',
-        categorySlug: 'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
-      },
-      {
-        label: 'З нержавiйки',
-        categorySlug: 'kedr-ruchki-z-nerzhaviiki-5999',
-      },
-      {
-        label: 'Ручки-кноби',
-        categorySlug: 'kedr-ruchki-knobi-6488',
-      },
-    ],
-  },
-  {
-    label: 'Циліндри',
-    icon: 'ri-key-2-line',
-    items: [
-      {
-        label: 'серія BRASS KEY Латунь',
-        categorySlug: 'kedr-tsilindri-seriyi-brass-key-latun-2680',
-      },
-      {
-        label: 'серія SMART',
-        categorySlug: 'kedr-tsilindri-seriyi-smart-26929',
-      },
-      {
-        label: 'серія GWK',
-        categorySlug: 'kedr-tsilindri-seriyi-gwk-26930',
-      },
-      {
-        label: 'серія ZINK під шток',
-        categorySlug: 'kedr-tsilindri-seriyi-zink-pid-shtok-27124',
-      },
-      {
-        label: 'серія ZINK',
-        categorySlug: 'kedr-tsilindri-seriyi-zink-5852',
-      },
-      {
-        label: 'серія ZINK PLK',
-        categorySlug: 'kedr-tsilindri-seriyi-zink-plk-4555',
-      },
-      {
-        label: 'серія ALU',
-        categorySlug: 'kedr-tsilindri-seriyi-alu-6560',
-      },
-    ],
-  },
-  {
-    label: 'Міжкімнатні механізми',
-    icon: 'pi pi-cog',
-    items: [
-      {
-        label: 'з магнітною защіпкою',
-        categorySlug:
-          'kedr-mizhkimnatni-mekhanizmi-z-magnitnoiu-zashchipkoiu-2197',
-      },
-      {
-        label: 'заскочки / засувки',
-        categorySlug: 'kedr-mizhkimnatni-zaskochki-zasuvki-2321',
-      },
-      {
-        label: 'з металевою защіпкою',
-        categorySlug:
-          'kedr-mizhkimnatni-mekhanizmi-z-metalevoiu-zashchipkoiu-5273',
-      },
-      {
-        label: 'з кевларовою защіпкою',
-        categorySlug:
-          'kedr-mizhkimnatni-mekhanizmi-z-kevlarovoiu-zashchipkoiu-6108',
-      },
-    ],
-  },
-  {
-    label: 'Інше',
-    icon: 'pi pi-ellipsis-h',
-    items: [
-      {
-        label: 'Броненакладки на циліндр',
-        categorySlug:
-          'kedr-bronenakladki-na-tsilindr-ta-nakladki-na-suvaldni-zamki-1230',
-      },
-      {
-        label: 'Ущільнювач',
-        categorySlug: 'kedr-ushchilniuvach-1440',
-      },
-      {
-        label: 'Відбійники',
-        categorySlug: 'kedr-vidbiiniki-3783',
-      },
-      {
-        label: 'Комплектуючі',
-        categorySlug: 'kedr-komplektuiuchi-5625',
-      },
-      {
-        label: 'Засувки і шпінгалети',
-        categorySlug:
-          'kedr-zasuvki-i-shpingaleti-dlia-vkhidnikh-ta-mizhkimnatnikh-dverei-5912',
-      },
-      {
-        label: 'Розсувнi системи',
-        categorySlug: 'kedr-rozsuvni-sistemi-6295',
-      },
-      {
-        label: 'Дотягувачі',
-        categorySlug: 'kedr-dotiaguvachi-5962',
-      },
-      {
-        label: 'Вiчка двернi',
-        categorySlug: 'kedr-vichka-dverni-5957',
-      },
-    ],
-  },
+  ...(SHOW_DOORS_CATEGORY
+    ? [
+        {
+          label: CATALOG_ROOT_CATEGORIES.doors.label,
+          categorySlug: CATALOG_ROOT_CATEGORIES.doors.slug,
+          items: doorItems,
+        } satisfies FilterMenuItem,
+      ]
+    : []),
 ];
+
+const withStyleClass = (
+  item: FilterMenuItem,
+  className: string,
+): FilterMenuItem => ({
+  ...item,
+  styleClass: item.styleClass ? `${item.styleClass} ${className}` : className,
+});
 
 const applyCommand = (
-  items: (MenuItem & { categorySlug?: string })[],
+  items: FilterMenuItem[],
   actions: { goToCategory: (slug: string) => void },
-): (MenuItem & { categorySlug?: string; expanded?: boolean })[] => {
+  depth = 0,
+): FilterMenuItem[] => {
   return items.map((item) => {
     const newItem = { ...item };
-    if (newItem.categorySlug && !newItem.command) {
+    const hasChildren =
+      Array.isArray(newItem.items) && newItem.items.length > 0;
+
+    if (newItem.categorySlug && !newItem.command && !hasChildren) {
       const slug = newItem.categorySlug;
       newItem.command = () => actions.goToCategory(slug);
     }
 
-    if (newItem.items) {
+    if (hasChildren) {
       const childItems = applyCommand(
-        newItem.items as (MenuItem & { categorySlug?: string })[],
+        newItem.items as FilterMenuItem[],
         actions,
+        depth + 1,
       );
       newItem.items = childItems;
       newItem.expanded = true;
-      newItem.styleClass = newItem.styleClass
-        ? `${newItem.styleClass} uppercase text-base font-semibold tracking-wide`
-        : 'uppercase text-base font-semibold tracking-wide';
+      if (depth === 0) {
+        return withStyleClass(
+          newItem,
+          'uppercase text-base font-bold tracking-wide text-green-600',
+        );
+      }
+
+      return withStyleClass(
+        newItem,
+        'uppercase text-sm font-semibold tracking-wide text-surface-900 dark:text-surface-0',
+      );
     }
 
-    return newItem;
+    return withStyleClass(
+      newItem,
+      'normal-case text-xs font-normal tracking-normal text-surface-700 dark:text-surface-300',
+    );
   });
 };
 
@@ -463,37 +112,46 @@ export function buildFiltersMenu(
     goToCategory: (slug: string) => void;
   },
   activeCategorySlug: string | null = null,
-): (MenuItem & { categorySlug?: string })[] {
+): FilterMenuItem[] {
   void activeCategorySlug;
   return applyCommand(FILTERS_MENU_STRUCTURE, actions);
 }
 
-export function findCategoryLabel(
+export function findCategoryPath(
   slug: string | null,
-  items: (MenuItem & { categorySlug?: string })[] = FILTERS_MENU_STRUCTURE,
-  parentLabels: string[] = [],
-): string | null {
+  items: FilterMenuItem[] = FILTERS_MENU_STRUCTURE,
+  parents: CategoryPathItem[] = [],
+): CategoryPathItem[] | null {
   if (!slug) return null;
 
   for (const item of items) {
+    const currentPath =
+      item.label && item.categorySlug
+        ? [...parents, { label: item.label, slug: item.categorySlug }]
+        : parents;
+
     if (item.categorySlug === slug) {
-      const labels = [...parentLabels];
-      if (item.label) {
-        labels.push(item.label);
-      }
-      return labels.join(' ➜ ');
+      return currentPath;
     }
+
     if (item.items) {
-      const currentLabels = item.label
-        ? [...parentLabels, item.label]
-        : parentLabels;
-      const found = findCategoryLabel(
+      const found = findCategoryPath(
         slug,
-        item.items as (MenuItem & { categorySlug?: string })[],
-        currentLabels,
+        item.items as FilterMenuItem[],
+        currentPath,
       );
       if (found) return found;
     }
   }
+
   return null;
+}
+
+export function findCategoryLabel(
+  slug: string | null,
+  items: FilterMenuItem[] = FILTERS_MENU_STRUCTURE,
+): string | null {
+  const path = findCategoryPath(slug, items);
+  if (!path) return null;
+  return path.map((item) => item.label).join(' ➜ ');
 }
