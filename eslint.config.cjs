@@ -145,14 +145,12 @@ module.exports = [
               onlyDependOnLibsWithTags: ['scope:shared'],
             },
 
-            // UI libraries should not pull data access
+            // UI libraries should stay presentational
             {
               sourceTag: 'type:ui',
               onlyDependOnLibsWithTags: [
                 'type:ui',
                 'type:util',
-                'type:feature',
-                'type:data-access',
                 'type:contracts',
                 'scope:shared',
               ],
@@ -173,6 +171,20 @@ module.exports = [
             {
               sourceTag: 'type:feature',
               onlyDependOnLibsWithTags: [
+                'type:feature',
+                'type:ui',
+                'type:util',
+                'type:data-access',
+                'type:contracts',
+                'scope:shared',
+              ],
+            },
+
+            // shell composes feature/ui/data-access for app layout
+            {
+              sourceTag: 'type:shell',
+              onlyDependOnLibsWithTags: [
+                'type:shell',
                 'type:feature',
                 'type:ui',
                 'type:util',
