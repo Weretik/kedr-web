@@ -19,19 +19,19 @@ export class PageHeader {
 
   public readonly breadcrumbPt = computed(() => ({
     root: {
+      class: 'px-0 !overflow-x-visible',
       style: {
-        paddingLeft: '0',
-        paddingRight: '0',
         '--p-breadcrumb-background': this.themeService.isDark()
           ? 'var(--p-surface-900)'
           : 'var(--p-neutral-0)',
       },
     },
     list: {
-      style: {
-        paddingLeft: '0',
-        marginLeft: '0',
-      },
+      class: 'pl-0 ml-0 flex !flex-wrap items-center gap-y-1',
+    },
+    itemLabel: {
+      class:
+        'inline-block max-w-[8rem] sm:max-w-[12rem] md:max-w-[18rem] lg:max-w-[25rem] xl:max-w-[30rem] truncate align-bottom',
     },
   }));
 }

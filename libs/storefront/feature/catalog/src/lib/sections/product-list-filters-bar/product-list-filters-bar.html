@@ -14,26 +14,32 @@
       [class.hidden]="isSticky()"
     >
       <div
-        class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight"
+        class="flex flex-wrap items-center gap-x-1 gap-y-1 text-surface-900 dark:text-surface-0 text-lg sm:text-xl lg:text-2xl font-semibold leading-tight"
       >
         <button
           type="button"
-          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors"
+          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors whitespace-nowrap"
           (click)="goToAllProducts()"
         >
           Всі товари
         </button>
         @if (categoryPath().length) { @for (crumb of categoryPath(); track
         crumb.slug; let isLast = $last) {
-        <span class="mx-1 text-surface-500 dark:text-surface-400">&rarr;</span>
+        <span class="mx-0.5 sm:mx-1 text-surface-500 dark:text-surface-400"
+          >&rarr;</span
+        >
         @if (isLast) {
-        <span class="text-surface-900 dark:text-surface-0">
+        <span
+          class="text-surface-900 dark:text-surface-0"
+          [title]="crumb.label"
+        >
           {{ crumb.label }}
         </span>
         } @else {
         <button
           type="button"
-          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors"
+          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors max-w-44 sm:max-w-64 lg:max-w-88 truncate"
+          [title]="crumb.label"
           (click)="goToCategoryBySlug(crumb.slug)"
         >
           {{ crumb.label }}
