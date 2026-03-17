@@ -1,5 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ProductBySlugDto } from '@storefront/contracts';
 import {
   CartFacade,
@@ -33,9 +35,11 @@ import { Skeleton } from 'primeng/skeleton';
   providers: [ProductFacade],
 })
 export class ProductPage {
-  readonly cart = inject(CartFacade);
-  readonly facade = inject(ProductFacade);
-  readonly productResource = this.facade.productResource;
+  private readonly location = inject(Location);
+  private readonly cart = inject(CartFacade);
+  public readonly facade = inject(ProductFacade);
+  private readonly productResource = this.facade.productResource;
+  private readonly router = inject(Router);
 
   readonly headerConfig = computed<PageHeaderConfig>(() => {
     const product = this.productResource.value();
@@ -48,7 +52,17 @@ export class ProductPage {
     return {
       title: product?.name ?? '...',
       breadcrumbs: [
-        { label: 'Каталог', routerLink: ['/catalog/products'] },
+        {
+          label: 'Каталог',
+          linkClass: 'cursor-pointer',
+          command: () => {
+            if (window.history.length > 1) {
+              this.location.back();
+            } else {
+              void this.router.navigate(['/']);
+            }
+          },
+        },
         ...categoryBreadcrumbs,
         { label: product?.name ?? '...' },
       ],
