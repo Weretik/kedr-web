@@ -17,16 +17,6 @@ export function buildSortMenu(deps: {
       command: () => deps.setSort('id-desc'),
     },
     {
-      label: 'Назва (а → я)',
-      icon: 'pi pi-sort-amount-up',
-      command: () => deps.setSort('name-asc'),
-    },
-    {
-      label: 'Назва (я → а)',
-      icon: 'pi pi-sort-amount-down',
-      command: () => deps.setSort('name-desc'),
-    },
-    {
       label: 'Ціна (min → max)',
       icon: 'pi pi-sort-amount-up',
       command: () => deps.setSort('price-asc'),
