@@ -1,0 +1,54 @@
+<div
+  class="bg-neutral-50 px-6 py-20 md:px-12 lg:px-20 dark:bg-surface-900 overflow-hidden"
+>
+  <h2
+    class="text-surface-900 font-semibold text-center text-5xl leading-tight mb-4 dark:text-surface-0"
+  >
+    {{ heading }}
+  </h2>
+  <p
+    class="text-xl leading-normal text-surface-600 dark:text-surface-400 text-center max-w-[96%] lg:max-w-240 mx-auto mb-14"
+  >
+    {{ wholesaleFeaturesSectionData.subheading }}
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    @for (item of wholesaleFeaturesSectionData.items; track item.title) {
+    <div
+      class="p-6 bg-surface-50 dark:bg-surface-800 rounded-xl border border-surface-100 dark:border-surface-700"
+    >
+      <span
+        class="w-12 h-12 bg-surface-900 dark:bg-surface-0 flex items-center justify-center rounded-md mb-6"
+      >
+        <svg
+          class="w-[1.8rem] h-[1.8rem]"
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+        >
+          <path
+            class="stroke-surface-0 dark:stroke-surface-900"
+            d="M21.25 7.44772L12.5 2.39453L3.75002 7.44772M21.25 7.44772L12.5 12.5009M21.25 7.44772L21.25 9.30942L17.7037 11.3574M12.5 22.6073L21.25 17.5541L21.25 13.4888M12.5 22.6073L3.75002 17.5541V13.4888M12.5 22.6073V18.5419M3.75002 7.44772L12.5 12.5009M3.75002 7.44772L3.75 9.30942L7.29625 11.3574M12.5 12.5009L12.5 14.3626M12.5 14.3626L15.965 12.4045M12.5 14.3626L9.05253 12.4045M12.5 18.5419L21.25 13.4888M12.5 18.5419L3.75002 13.4888M21.25 13.4888L17.7037 11.3574M3.75002 13.4888L7.29625 11.3574M7.29625 11.3574L9.05253 12.4045M17.7037 11.3574L15.965 12.4045M15.965 12.4045L17.7037 13.4888L12.5 16.4903L7.29625 13.4888L9.05253 12.4045"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+
+      <h5
+        class="text-surface-900 dark:text-surface-0 text-lg font-semibold leading-tight mb-3"
+      >
+        {{ item.title }}
+      </h5>
+      <p
+        class="text-surface-600 dark:text-surface-400 text-base leading-normal"
+      >
+        {{ item.text }}
+      </p>
+    </div>
+    }
+  </div>
+</div>
