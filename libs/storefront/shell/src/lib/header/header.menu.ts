@@ -83,20 +83,98 @@ export function buildMenu(): MegaMenuItem[] {
           {
             label: 'Регіони',
             items: [
-              { label: 'Харків' },
-              { label: 'Київ' },
-              { label: 'Дніпро' },
-              { label: 'Запоріжжя' },
-              { label: 'Миколаїв' },
-              { label: 'Одеса' },
-              { label: 'Полтава' },
-              { label: 'Кривий ріг' },
-              { label: 'Миколаїв' },
-              { label: 'Вінниця' },
-              { label: 'Житомир' },
-              { label: 'Біла церква' },
-              { label: 'Суми' },
-              { label: 'Чернігів' },
+              {
+                label: 'Вінницька область',
+                routerLink: ['/region', 'vinnytska-oblast'],
+              },
+              {
+                label: 'Волинська область',
+                routerLink: ['/region', 'volynska-oblast'],
+              },
+              {
+                label: 'Дніпропетровська область',
+                routerLink: ['/region', 'dnipropetrovska-oblast'],
+              },
+              {
+                label: 'Житомирська область',
+                routerLink: ['/region', 'zhytomyrska-oblast'],
+              },
+              {
+                label: 'Закарпатська область',
+                routerLink: ['/region', 'zakarpatska-oblast'],
+              },
+              {
+                label: 'Запорізька область',
+                routerLink: ['/region', 'zaporizka-oblast'],
+              },
+              {
+                label: 'Івано-Франківська область',
+                routerLink: ['/region', 'ivano-frankivska-oblast'],
+              },
+              {
+                label: 'Київська область',
+                routerLink: ['/region', 'kyivska-oblast'],
+              },
+              {
+                label: 'Кіровоградська область',
+                routerLink: ['/region', 'kirovohradska-oblast'],
+              },
+              {
+                label: 'Львівська область',
+                routerLink: ['/region', 'lvivska-oblast'],
+              },
+              {
+                label: 'Миколаївська область',
+                routerLink: ['/region', 'mykolaivska-oblast'],
+              },
+              {
+                label: 'Одеська область',
+                routerLink: ['/region', 'odeska-oblast'],
+              },
+              {
+                label: 'Полтавська область',
+                routerLink: ['/region', 'poltavska-oblast'],
+              },
+              {
+                label: 'Рівненська область',
+                routerLink: ['/region', 'rivnenska-oblast'],
+              },
+              {
+                label: 'Сумська область',
+                routerLink: ['/region', 'sumska-oblast'],
+              },
+              {
+                label: 'Тернопільська область',
+                routerLink: ['/region', 'ternopilska-oblast'],
+              },
+              {
+                label: 'Харківська область',
+                routerLink: ['/region', 'kharkivska-oblast'],
+              },
+              {
+                label: 'Херсонська область',
+                routerLink: ['/region', 'khersonska-oblast'],
+              },
+              {
+                label: 'Хмельницька область',
+                routerLink: ['/region', 'khmelnytska-oblast'],
+              },
+              {
+                label: 'Черкаська область',
+                routerLink: ['/region', 'cherkaska-oblast'],
+              },
+              {
+                label: 'Чернігівська область',
+                routerLink: ['/region', 'chernihivska-oblast'],
+              },
+              {
+                label: 'Чернівецька область',
+                routerLink: ['/region', 'chernivetska-oblast'],
+              },
+              {
+                label: 'Київ',
+                routerLink: ['/region', 'kyiv'],
+              },
             ],
           },
         ],
