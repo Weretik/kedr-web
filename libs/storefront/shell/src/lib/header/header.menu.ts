@@ -70,7 +70,7 @@ export function buildMenu(): MegaMenuItem[] {
                 routerLink: ['/delivery-and-payment'],
               },
               {
-                label: 'Повернення та обмім',
+                label: 'Повернення та обмін',
                 routerLink: ['/returns-exchanges'],
               },
               { label: 'Галерея та відео', routerLink: ['/galleria'] },
