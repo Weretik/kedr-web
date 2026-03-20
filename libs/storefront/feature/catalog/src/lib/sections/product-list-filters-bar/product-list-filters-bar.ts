@@ -32,6 +32,7 @@ import {
   findCategoryPath,
 } from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
+import { ProductListPageState } from '../../pages/product-list/product-list.page-state';
 import { ProductList } from '../product-list/product-list';
 
 import type { MenuItem } from 'primeng/api';
@@ -71,6 +72,7 @@ type PanelMenuItemLabelPtOptions = {
 })
 export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
+  readonly pageState = inject(ProductListPageState);
   readonly router = inject(Router);
 
   readonly categorySlug = input<string | null>(null);
@@ -109,13 +111,13 @@ export class ProductListFiltersBar {
   readonly draftPrice = signal<[number | null, number | null]>([null, null]);
 
   readonly sortOptions = buildSortMenu({
-    setSort: (sort) => this.facade.queryState.setSort(sort),
+    setSort: (sort) => this.pageState.setSort(sort),
   });
 
   readonly filtersMenu = computed(() =>
     buildFiltersMenu(
       {
-        goToCategory: (slug) => this.facade.queryState.goToCategory(slug),
+        goToCategory: (slug) => this.pageState.goToCategory(slug),
       },
       this.categorySlug(),
     ),
@@ -126,12 +128,12 @@ export class ProductListFiltersBar {
   });
 
   private readonly draftSets = effect(() => {
-    this.draftInStock.set(this.facade.queryState.inStock() === 'true');
-    this.draftIsSale.set(this.facade.queryState.isSale() === 'true');
-    this.draftIsNew.set(this.facade.queryState.isNew() === 'true');
+    this.draftInStock.set(this.pageState.inStock() === 'true');
+    this.draftIsSale.set(this.pageState.isSale() === 'true');
+    this.draftIsNew.set(this.pageState.isNew() === 'true');
 
-    const fromPrice = this.toNum(this.facade.queryState.priceFrom()) ?? null;
-    const toPrice = this.toNum(this.facade.queryState.priceTo()) ?? null;
+    const fromPrice = this.toNum(this.pageState.priceFrom()) ?? null;
+    const toPrice = this.toNum(this.pageState.priceTo()) ?? null;
     this.draftPrice.set([fromPrice, toPrice]);
   });
 
@@ -150,30 +152,30 @@ export class ProductListFiltersBar {
   }
 
   public applyFilters() {
-    this.facade.queryState.setInStock(this.draftInStock());
-    this.facade.queryState.setIsSale(this.draftIsSale());
-    this.facade.queryState.setIsNew(this.draftIsNew());
+    this.pageState.setInStock(this.draftInStock());
+    this.pageState.setIsSale(this.draftIsSale());
+    this.pageState.setIsNew(this.draftIsNew());
 
     const [fromPrice, toPrice] = this.draftPrice();
-    this.facade.queryState.setPriceRange(fromPrice, toPrice);
+    this.pageState.setPriceRange(fromPrice, toPrice);
   }
 
   public setSaleFilter(value: boolean) {
     this.draftIsSale.set(value);
-    this.facade.queryState.setIsSale(value);
+    this.pageState.setIsSale(value);
   }
 
   public setNewFilter(value: boolean) {
     this.draftIsNew.set(value);
-    this.facade.queryState.setIsNew(value);
+    this.pageState.setIsNew(value);
   }
 
   public setInStockFilter(value: boolean) {
     this.draftInStock.set(value);
-    this.facade.queryState.setInStock(value);
+    this.pageState.setInStock(value);
   }
   public clearFilters() {
-    this.facade.queryState.clear();
+    this.pageState.clear();
   }
 
   public goToAllProducts() {
@@ -181,7 +183,7 @@ export class ProductListFiltersBar {
   }
 
   public goToCategoryBySlug(slug: string) {
-    this.facade.queryState.goToCategory(slug);
+    this.pageState.goToCategory(slug);
   }
 
   public onPanelMenuLabelClick(event: Event, item?: MenuItem) {
@@ -191,7 +193,7 @@ export class ProductListFiltersBar {
     const slug = this.getItemSlug(item);
     if (!slug) return;
 
-    this.facade.queryState.goToCategory(slug);
+    this.pageState.goToCategory(slug);
   }
 
   private getItemSlug(item?: MenuItem): string | null {

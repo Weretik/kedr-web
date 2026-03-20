@@ -48,8 +48,8 @@
           <input
             #searchInput
             type="text"
-            [value]="facade.queryState.draftSearch()"
-            (input)="facade.queryState.setSearchDraft(searchInput.value)"
+            [value]="pageState.draftSearch()"
+            (input)="pageState.setSearchDraft(searchInput.value)"
             placeholder="Пошук товарів по артикулу або назві"
             class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
             (keydown.enter)="onSearch(searchInput.value)"
@@ -136,8 +136,8 @@
         <input
           #mobileSearchInput
           type="text"
-          [value]="facade.queryState.draftSearch()"
-          (input)="facade.queryState.setSearchDraft(mobileSearchInput.value)"
+          [value]="pageState.draftSearch()"
+          (input)="pageState.setSearchDraft(mobileSearchInput.value)"
           placeholder="Пошук товарів по артикулу або назві"
           class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
           (keydown.enter)="onSearch(mobileSearchInput.value)"

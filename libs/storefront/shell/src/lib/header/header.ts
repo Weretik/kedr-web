@@ -14,6 +14,7 @@ import {
   ProductListFacade,
 } from '@storefront/data-access';
 import { Cart } from '@storefront/feature/cart';
+import { ProductListPageState } from '@storefront/feature/catalog';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -48,6 +49,7 @@ export class Header {
   readonly cartUi = inject(CartUiFacade);
   readonly cart = inject(CartFacade);
   readonly facade = inject(ProductListFacade);
+  readonly pageState = inject(ProductListPageState);
   //private readonly history = inject(SearchHistoryService);
 
   readonly isSticky = signal(false);
@@ -61,7 +63,7 @@ export class Header {
 
   onSearch(value: string) {
     const search = value?.trim();
-    this.facade.queryState.commitSearch(search);
+    this.pageState.commitSearch(search);
 
     if (this.router.url.includes('/products')) {
       return;

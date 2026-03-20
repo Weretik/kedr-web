@@ -1,7 +1,8 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { ProductListFacade } from '@storefront/data-access';
 import { PageHeaderConfig } from '@storefront/ui';
 
+import { ProductListPageState } from './product-list.page-state';
 import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/product-list-filters-bar';
 
 @Component({
@@ -22,9 +23,9 @@ export class ProductListPage {
   };
 
   readonly facade = inject(ProductListFacade);
-  readonly productsResource = this.facade.productsResource;
+  readonly pageState = inject(ProductListPageState);
 
-  readonly products = computed(
-    () => this.productsResource.value()?.value ?? [],
-  );
+  private readonly syncFacadeQuery = effect(() => {
+    this.facade.setQuery(this.pageState.query());
+  });
 }

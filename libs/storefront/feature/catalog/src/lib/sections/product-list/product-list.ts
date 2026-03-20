@@ -16,6 +16,8 @@ import { SelectButton } from 'primeng/selectbutton';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
 
+import { ProductListPageState } from '../../pages/product-list/product-list.page-state';
+
 @Component({
   selector: 'lib-product-list',
   imports: [
@@ -45,15 +47,15 @@ export class ProductList {
 
   readonly cart = inject(CartFacade);
   readonly facade = inject(ProductListFacade);
-  readonly productsResource = this.facade.productsResource;
+  readonly pageState = inject(ProductListPageState);
 
   readonly products = computed(() => {
-    if (this.productsResource.error()) return [];
-    return this.productsResource.value()?.value ?? [];
+    if (this.facade.error()) return [];
+    return this.facade.products()?.value ?? [];
   });
   readonly pagedInfo = computed(() => {
-    if (this.productsResource.error()) return undefined;
-    return this.productsResource.value()?.pagedInfo;
+    if (this.facade.error()) return undefined;
+    return this.facade.products()?.pagedInfo;
   });
 
   readonly first = computed(() => {
@@ -72,12 +74,12 @@ export class ProductList {
     const page1 = page0 + 1;
 
     if (nextPageSize !== current.pageSize) {
-      this.facade.queryState.setPageSize(nextPageSize);
+      this.pageState.setPageSize(nextPageSize);
 
       window.scrollTo({ top: 0, behavior: 'auto' });
       return;
     }
-    this.facade.queryState.setPage(page1);
+    this.pageState.setPage(page1);
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
@@ -85,7 +87,7 @@ export class ProductList {
     this.facade.refresh();
   }
   onResetFilters(): void {
-    this.facade.queryState.clear();
+    this.pageState.clear();
   }
 
   public addToCart(product: ProductListRowDto) {

@@ -1,4 +1,4 @@
-@if (productsResource.isLoading()) {
+@if (facade.isLoading()) {
 <div class="card w-full">
   <div class="flex items-center justify-between w-full mb-4">
     <p-skeleton width="14rem" height="2.25rem" />
@@ -88,7 +88,7 @@
   </div>
   }
 </div>
-} @if (productsResource.error()) {
+} @if (facade.error()) {
 <div class="card w-full mb-4">
   <p-message severity="error" variant="outlined">
     <div class="flex flex-col gap-3">
