@@ -1,213 +1,147 @@
 <lib-page-header [config]="headerConfig" />
 
-<!-- payment -->
 <div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20 py-20">
-  <div class="flex flex-col lg:flex-row items-center gap-20">
-    <div class="w-full lg:w-1/2">
-      <img
-        src="https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/feature/featureImage.jpg"
-        alt="Image"
-        class="w-full rounded-3xl object-cover"
-      />
-    </div>
-    <div class="w-full lg:w-1/2 flex flex-col gap-8">
-      <div class="flex flex-col gap-4">
-        <div
-          class="px-4 py-2 bg-primary-50 dark:bg-primary-400/30 rounded-full border border-primary-100 dark:border-primary-400 flex items-center gap-2 w-fit"
-        >
-          <i
-            class="pi pi-star-fill text-primary-700 dark:text-primary-200 text-base!"
-          ></i>
-          <span
-            class="text-primary-700 dark:text-primary-200 font-medium leading-normal"
-            >Open Source API</span
-          >
-        </div>
-        <h2
-          class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
-        >
-          Оплата
-        </h2>
-        <p
-          class="text-lg text-surface-500 dark:text-surface-400 leading-normal"
-        >
-          Способи оплати: Оплата за нашу продукцію здійснюється виключно в
-          національній валюті на розрахунковий рахунок компанії. При купівлі
-          через наш сайт ви також маєте можливість розрахуватися за допомогою
-          банківських карт.
-        </p>
-      </div>
+  <div class="max-w-5xl mx-auto flex flex-col gap-8">
+    <section
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h2 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+        Доставка, оплата та повернення
+      </h2>
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+        Кожне замовлення індивідуальне, тому система роботи побудована на
+        прямому зв’язку з Клієнтом. Це дозволяє гарантувати наявність товару та
+        актуальність ціни безпосередньо перед моментом оплати.
+      </p>
+    </section>
 
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-4 p-2">
-          <i
-            class="pi pi-check-circle text-primary-500 dark:text-primary-400 text-xl!"
-          ></i>
-          <div class="flex flex-col gap-1">
-            <h3
-              class="text-base text-surface-900 dark:text-surface-0 font-medium leading-normal"
-            >
-              IBAN
-            </h3>
-            <p
-              class="text-base text-surface-500 dark:text-surface-400 leading-normal"
-            >
-              UA00 000000 00000 00000000000000
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-4 p-2">
-          <i
-            class="pi pi-check-circle text-primary-500 dark:text-primary-400 text-xl!"
-          ></i>
-          <div class="flex flex-col gap-1">
-            <h3
-              class="text-base text-surface-900 dark:text-surface-0 font-medium leading-normal"
-            >
-              Банк
-            </h3>
-            <p
-              class="text-base text-surface-500 dark:text-surface-400 leading-normal"
-            >
-              АТ КБ «ПРИВАТБАНК»
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-4 p-2">
-          <i
-            class="pi pi-check-circle text-primary-500 dark:text-primary-400 text-xl!"
-          ></i>
-          <div class="flex flex-col gap-1">
-            <h3
-              class="text-base text-surface-900 dark:text-surface-0 font-medium leading-normal"
-            >
-              код ЄДРПОУ
-            </h3>
-            <p
-              class="text-base text-surface-500 dark:text-surface-400 leading-normal"
-            >
-              35521636
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-4 p-2">
-          <i
-            class="pi pi-check-circle text-primary-500 dark:text-primary-400 text-xl!"
-          ></i>
-          <div class="flex flex-col gap-1">
-            <h3
-              class="text-base text-surface-900 dark:text-surface-0 font-medium leading-normal"
-            >
-              Компанія
-            </h3>
-            <p
-              class="text-base text-surface-500 dark:text-surface-400 leading-normal"
-            >
-              Приватне підприємство “”
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- delivery -->
-<div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 xl:px-20 py-20">
-  <div class="flex flex-col-reverse md:flex-row gap-20 items-start">
-    <div class="flex-1 flex flex-col gap-8">
-      <div class="flex flex-col gap-4">
-        <h2
-          class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-tight"
-        >
-          Доставка
-        </h2>
-        <p class="text-surface-600 dark:text-surface-0/70 leading-tight">
-          Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna.
-        </p>
-      </div>
+    <section
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
+      >
+        Як зробити замовлення?
+      </h3>
+      <ul
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
+      >
+        <li>Кошик: Виберіть необхідні товари та додайте їх до кошика.</li>
+        <li>
+          Контакти: Вкажіть ваш номер телефону та натисніть кнопку «Оформити
+          замовлення».
+        </li>
+        <li>
+          Зв'язок: Протягом короткого часу Продавець зв’яжеться з вами у
+          зручному месенджері (Telegram або Viber) або за допомогою телефонного
+          дзвінка.
+        </li>
+        <li>
+          Уточнення: У процесі оформлення замовлення підтверджуємо наявність
+          позицій на складі, перевіряємо актуальність ціни та узгоджуємо деталі
+          доставки.
+        </li>
+      </ul>
+    </section>
 
-      <div class="flex flex-col">
-        <div class="flex gap-4 relative h-25">
-          <div class="flex flex-col items-center h-full">
-            <div
-              class="w-10 h-10 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-full flex items-center justify-center"
-            >
-              <i
-                class="pi pi-image text-surface-600 dark:text-surface-0/70 text-xl!"
-              ></i>
-            </div>
-            <div class="flex-1 w-px bg-surface-200 dark:bg-surface-700"></div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <div
-              class="font-medium text-surface-900 dark:text-surface-0 leading-tight"
-            >
-              Create a wireframe
-            </div>
-            <span class="leading-normal text-surface-500 dark:text-surface-400">
-              Доставка здійснюється через Нову Пошту та САТ. Максимальний термін
-              відправки замовлення – 3 робочі дні з моменту готовності
-              замовлення та його повної оплати
-            </span>
-          </div>
-        </div>
+    <section
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
+      >
+        Оплата
+      </h3>
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-4">
+        Оплата здійснюється за безготівковим розрахунком, що гарантує безпеку
+        операції для обох сторін.
+      </p>
+      <ul
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
+      >
+        <li>
+          Оплата за реквізитами: Після підтвердження замовлення Продавець
+          надішле вам офіційні реквізити (рахунок IBAN ФОП) у месенджер.
+        </li>
+        <li>
+          Підтвердження: Оплата вважається здійсненою в момент зарахування
+          коштів на рахунок Продавця.
+        </li>
+        <li>
+          Післяплата (накладений платіж): Можлива при отриманні товару у
+          відділенні перевізника (деталі уточнюйте у Продавця під час
+          підтвердження замовлення).
+        </li>
+      </ul>
+    </section>
 
-        <div class="flex gap-4 relative h-30">
-          <div class="flex flex-col items-center h-full">
-            <div
-              class="w-10 h-10 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-full flex items-center justify-center"
-            >
-              <i
-                class="pi pi-microchip-ai text-surface-600 dark:text-surface-0/70 text-xl!"
-              ></i>
-            </div>
-            <div class="flex-1 w-px bg-surface-200 dark:bg-surface-700"></div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <div
-              class="font-medium text-surface-900 dark:text-surface-0 leading-tight"
-            >
-              Artificial Intelligence
-            </div>
-            <span class="leading-normal text-surface-500 dark:text-surface-400">
-              Вартість доставки: до поштового відділення від 70 грн, адресна
-              доставка від 70 грн. Вартість доставки замовлення залежить від
-              ваги та об’єму вантажу, а також від відстані до пункту призначення
-              та тарифів обраної транспортної компанії.
-            </span>
-          </div>
-        </div>
+    <section
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
+      >
+        Доставка
+      </h3>
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-4">
+        Відвантаження товарів по території України:
+      </p>
+      <ul
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
+      >
+        <li>Служба доставки: Переважно сервіс «Нова Пошта».</li>
+        <li>
+          Терміни: Відвантаження здійснюється протягом 1-3 робочих днів після
+          підтвердження замовлення або отримання оплати.
+        </li>
+        <li>
+          Вартість: Доставка оплачується Покупцем згідно з тарифами перевізника,
+          якщо інше не обумовлено при підтвердженні замовлення.
+        </li>
+        <li>
+          Перехід ризиків: Ризик випадкового пошкодження або втрати товару
+          переходить до Покупця в момент передачі замовлення представнику
+          транспортної компанії.
+        </li>
+        <li>
+          Повернення: Ви можете повернути або обміняти товар протягом 14 днів,
+          якщо він не був у використанні, збережено його товарний вигляд та
+          упаковку.
+        </li>
+      </ul>
+    </section>
 
-        <div class="flex gap-4 relative h-25">
-          <div class="flex flex-col items-center">
-            <div
-              class="w-10 h-10 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-full flex items-center justify-center"
-            >
-              <i
-                class="pi pi-globe text-surface-600 dark:text-surface-0/70 text-xl!"
-              ></i>
-            </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <div
-              class="font-medium text-surface-900 dark:text-surface-0 leading-tight"
-            >
-              Deploy to Production
-            </div>
-            <span class="leading-normal text-surface-500 dark:text-surface-400">
-              Інші варіанти доставки: Самовивіз зі складу в м. Харків –
-              безкоштовно. Доставка кур’єром по м. Харкову – 250 грн.
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex-1">
-      <img
-        src="https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/feature/featureImage-2.jpg"
-        alt="Image"
-        class="w-full rounded-xl object-cover dark:brightness-[0.76] dark:hue-rotate-35 dark:saturate-[1.8] dark:contrast-[1.4]"
-      />
-    </div>
+    <section
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
+      >
+        Важливо знати
+      </h3>
+      <ul
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
+      >
+        <li>
+          Ціни: Ціни на сайті носять інформаційний характер та можуть бути
+          змінені. Остаточна ціна фіксується у момент надання реквізитів
+          Продавцем.
+        </li>
+        <li>
+          Юридична сила: Листування в месенджерах (за номером, вказаним у
+          замовленні) визнається офіційною комунікацією та має юридичну силу в
+          межах виконання угоди.
+        </li>
+      </ul>
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mt-4">
+        «Ці умови є частиною
+        <a
+          [routerLink]="['/public-offer']"
+          class="text-primary-600 dark:text-primary-400 hover:underline"
+          >ПУБЛІЧНОЇ ОФЕРТИ ТА ПРАВИЛ КОРИСТУВАННЯ САЙТОМ</a
+        >. Здійснюючи замовлення, ви погоджуєтесь із зазначеним порядком
+        взаємодії.»
+      </p>
+    </section>
   </div>
 </div>
