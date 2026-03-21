@@ -2,13 +2,21 @@ import { Component } from '@angular/core';
 import { PageHeaderConfig, PartnersBrands } from '@storefront/ui';
 
 import { CompanyFeatures } from '../../sections/company-features/company-features';
+import { CompanyOverview } from '../../sections/company-overview/company-overview';
 import { CompanyStats } from '../../sections/company-stats/company-stats';
 import { Faq } from '../../sections/faq/faq';
 import { MainHero } from '../../sections/main-hero/main-hero';
 
 @Component({
   selector: 'lib-about-company',
-  imports: [MainHero, CompanyFeatures, CompanyStats, PartnersBrands, Faq],
+  imports: [
+    MainHero,
+    CompanyFeatures,
+    CompanyStats,
+    PartnersBrands,
+    Faq,
+    CompanyOverview,
+  ],
   templateUrl: './about-company.html',
   styleUrl: './about-company.css',
 })
