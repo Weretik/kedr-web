@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
-import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'lib-returns-exchanges',
-  imports: [PageHeader, Tag],
+  imports: [PageHeader],
   templateUrl: './returns-exchanges.html',
   styleUrl: './returns-exchanges.css',
 })
