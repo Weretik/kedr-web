@@ -4,6 +4,10 @@ import { REGION_CITY_SLUGS } from './route-params/region-city-slugs';
 
 export const serverRoutes: ServerRoute[] = [
   {
+    path: '',
+    renderMode: RenderMode.Prerender,
+  },
+  {
     path: 'region/:city',
     renderMode: RenderMode.Prerender,
     async getPrerenderParams() {
