@@ -55,7 +55,10 @@
       ],
       "@storefront/feature/cart": ["libs/storefront/feature/cart/src/index.ts"],
       "@storefront/contracts": ["libs/storefront/contracts/src/index.ts"],
-      "@storefront/shell": ["libs/storefront/shell/src/index.ts"]
+      "@storefront/shell": ["libs/storefront/shell/src/index.ts"],
+      "@storefront/feature/articles": [
+        "libs/storefront/feature/articles/src/index.ts"
+      ]
     }
   }
 }

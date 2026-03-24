@@ -2,11 +2,6 @@ import { Route } from '@angular/router';
 
 export const aboutUsRoutes: Route[] = [
   {
-    path: 'articles',
-    loadComponent: () =>
-      import('./pages/articles/articles').then((page) => page.Articles),
-  },
-  {
     path: 'about-company',
     loadComponent: () =>
       import('./pages/about-company/about-company').then(

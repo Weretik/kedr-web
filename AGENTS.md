@@ -46,6 +46,8 @@
 - Prefer readable code over clever code.
 - Keep imports clean and remove unused code after changes.
 - Preserve backward compatibility for public-facing contracts where possible.
+- Always preserve correct text encoding (`UTF-8`) when reading/writing files and verify no mojibake/corrupted Cyrillic characters are introduced.
+- For user-facing strings, use normal readable UTF-8 text directly; do not use Unicode escape sequences (`\uXXXX`) unless explicitly requested.
 
 ## Styling Rules
 
@@ -67,8 +69,8 @@ Before завершением задачи, Codex should run what is available a
 
 2. Static checks:
 
-- `npx nx lint storefron`
-- `npx nx lint admin`
+- `npx nx lint storefron` or `npx nx lint admin`
+- Always run relevant lint targets for changed projects after edits and before running build.
 
 3. Unit tests:
 
@@ -76,9 +78,7 @@ Before завершением задачи, Codex should run what is available a
 
 4. Build:
 
-- `npx nx build <app>`
-- `npx nx build storefron`
-- `npx nx build admin`
+- `npx nx build <app>` (`npx nx build storefron` or `npx nx build admin`)
 
 If a command does not exist or fails, explicitly report:
 
