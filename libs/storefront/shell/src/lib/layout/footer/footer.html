@@ -33,25 +33,33 @@
 
         <ul class="list-none p-0 m-0 text-surface-700 dark:text-white">
           <li>
-            <a
-              href="tel:+3800687135049"
-              class="flex items-center transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+            <div
+              class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+              role="button"
+              tabindex="0"
+              (click)="copyToClipboard('+3800687135049')"
+              (keydown.enter)="copyToClipboard('+3800687135049')"
+              (keydown.space)="copyToClipboard('+3800687135049'); $event.preventDefault()"
             >
               <i class="pi pi-phone text-lg leading-none mr-4"></i>
               <span class="text-base font-medium">(068) 713-50-49</span>
-            </a>
+            </div>
           </li>
 
           <li>
-            <a
-              href="mailto:kedr.class19@gmail.com"
-              class="flex items-center transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+            <div
+              class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+              role="button"
+              tabindex="0"
+              (click)="copyToClipboard('kedr.class19@gmail.com')"
+              (keydown.enter)="copyToClipboard('kedr.class19@gmail.com')"
+              (keydown.space)="copyToClipboard('kedr.class19@gmail.com'); $event.preventDefault()"
             >
               <i class="pi pi-envelope text-lg leading-none mr-4"></i>
               <span class="text-base font-medium"
                 >kedr.class19&#64;gmail.com</span
               >
-            </a>
+            </div>
           </li>
         </ul>
       </div>

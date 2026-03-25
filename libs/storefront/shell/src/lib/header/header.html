@@ -18,13 +18,17 @@
           />
         </a>
       </div>
-      <a
-        href="tel:+3800687135049"
-        class="flex items-center transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+      <div
+        class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+        role="button"
+        tabindex="0"
+        (click)="copyToClipboard('+3800687135049')"
+        (keydown.enter)="copyToClipboard('+3800687135049')"
+        (keydown.space)="copyToClipboard('+3800687135049'); $event.preventDefault()"
       >
         <i class="pi pi-phone text-lg leading-none mr-4"></i>
         <span class="text-base font-medium">(068) 713-50-49</span>
-      </a>
+      </div>
     </div>
 
     <div
