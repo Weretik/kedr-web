@@ -1,19 +1,22 @@
 import { Route } from '@angular/router';
 
+const loadProductList = () =>
+  import('./pages/product-list/product-list.page').then(
+    (page) => page.ProductListPage,
+  );
+
 export const catalogRoutes: Route[] = [
   {
     path: '',
-    loadComponent: () =>
-      import('./pages/product-list/product-list.page').then(
-        (page) => page.ProductListPage,
-      ),
+    loadComponent: loadProductList,
+  },
+  {
+    path: 'catalog/products',
+    loadComponent: loadProductList,
   },
   {
     path: 'catalog/:categorySlug/products',
-    loadComponent: () =>
-      import('./pages/product-list/product-list.page').then(
-        (page) => page.ProductListPage,
-      ),
+    loadComponent: loadProductList,
   },
   {
     path: 'catalog/product/:productSlug',
