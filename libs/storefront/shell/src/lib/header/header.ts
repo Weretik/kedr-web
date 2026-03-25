@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { ThemeService } from '@shared/ui';
+import { ClipboardService, ThemeService } from '@shared/ui';
 import {
   CartFacade,
   CartUiFacade,
@@ -45,6 +45,7 @@ import { buildMenu } from './header.menu';
 })
 export class Header {
   private readonly router = inject(Router);
+  private readonly clipboard = inject(ClipboardService);
   public readonly themeService = inject(ThemeService);
   readonly cartUi = inject(CartUiFacade);
   readonly cart = inject(CartFacade);
@@ -75,6 +76,10 @@ export class Header {
         page: 1,
       },
     });
+  }
+
+  copyToClipboard(value: string): void {
+    void this.clipboard.copy(value);
   }
 
   public readonly megaMenuPt = {

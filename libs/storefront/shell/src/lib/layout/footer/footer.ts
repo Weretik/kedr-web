@@ -1,6 +1,7 @@
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ClipboardService } from '@shared/ui';
 
 type FooterLink = {
   label: string;
@@ -14,6 +15,8 @@ type FooterLink = {
   styleUrl: './footer.css',
 })
 export class Footer {
+  private readonly clipboard = inject(ClipboardService);
+
   readonly companyLinks: FooterLink[] = [
     { label: 'Про компанію', routerLink: ['/about-company'] },
     { label: 'Доставка та оплата', routerLink: ['/delivery-and-payment'] },
@@ -31,4 +34,7 @@ export class Footer {
     { label: 'Публічна оферта', routerLink: ['/public-offer'] },
     { label: 'Політика конфіденційності', routerLink: ['/privacy-policy'] },
   ];
+  copyToClipboard(value: string): void {
+    void this.clipboard.copy(value);
+  }
 }
