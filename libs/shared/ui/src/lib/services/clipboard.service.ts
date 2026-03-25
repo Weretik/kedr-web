@@ -14,11 +14,10 @@ export class ClipboardService {
 
     try {
       const clipboard = globalThis.navigator?.clipboard;
-      if (clipboard?.writeText) {
-        await clipboard.writeText(text);
-      } else if (!this.copyUsingExecCommand(text)) {
+      if (!clipboard?.writeText) {
         throw new Error('Clipboard is unavailable');
       }
+      await clipboard.writeText(text);
 
       this.notification.success(successMessage);
       return true;
@@ -26,25 +25,5 @@ export class ClipboardService {
       this.notification.warn('Не вдалося скопіювати');
       return false;
     }
-  }
-
-  private copyUsingExecCommand(value: string): boolean {
-    const doc = globalThis.document;
-    if (!doc) {
-      return false;
-    }
-
-    const textarea = doc.createElement('textarea');
-    textarea.value = value;
-    textarea.style.position = 'fixed';
-    textarea.style.left = '-9999px';
-
-    doc.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-
-    const copied = doc.execCommand('copy');
-    doc.body.removeChild(textarea);
-    return copied;
   }
 }
