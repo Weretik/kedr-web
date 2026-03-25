@@ -30,6 +30,5 @@ export class Footer {
   readonly legalLinks: FooterLink[] = [
     { label: 'Публічна оферта', routerLink: ['/public-offer'] },
     { label: 'Політика конфіденційності', routerLink: ['/privacy-policy'] },
-    { label: 'Реквізити', routerLink: ['/requisites'] },
   ];
 }

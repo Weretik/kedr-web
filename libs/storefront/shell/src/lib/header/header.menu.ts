@@ -187,7 +187,6 @@ export function buildMenu(): MegaMenuItem[] {
                 label: 'Політика конфіденційності',
                 routerLink: ['/privacy-policy'],
               },
-              { label: 'Реквізити', routerLink: ['/requisites'] },
             ],
           },
         ],
