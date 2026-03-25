@@ -13,14 +13,15 @@ export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     tap({
       error: (error) => {
-        if (enableLogs) {
-          logger.logError({
+        logger.logError(
+          {
             method: req.method,
             url: req.url,
             durationMs: performance.now() - started,
             error,
-          });
-        }
+          },
+          enableLogs,
+        );
       },
     }),
     finalize(() => {
@@ -31,11 +32,14 @@ export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
       const duration = performance.now() - started;
 
       if (duration > 1500) {
-        logger.logHttp({
-          method: req.method,
-          url: req.url,
-          durationMs: duration,
-        });
+        logger.logHttp(
+          {
+            method: req.method,
+            url: req.url,
+            durationMs: duration,
+          },
+          enableLogs,
+        );
       }
     }),
   );
