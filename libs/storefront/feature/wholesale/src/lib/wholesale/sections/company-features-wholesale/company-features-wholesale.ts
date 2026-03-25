@@ -19,7 +19,7 @@ type WholesaleFeaturesSectionData = {
 })
 export class CompanyFeaturesWholesale {
   readonly wholesaleFeaturesSectionData: WholesaleFeaturesSectionData = {
-    heading: 'Гуртові постачання від Сlass Cedr',
+    heading: 'Гуртові постачання від Сlass Kedr',
     subheading:
       'Організація постачань будь-якого обсягу базується на глибокій інтеграції у професійне середовище та партнерстві з виробничими лініями. Це дає можливість забезпечувати гуртові ціни та серійність продукції без залучення зайвих посередників.',
     items: [
