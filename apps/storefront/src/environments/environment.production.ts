@@ -17,7 +17,8 @@
     catalog: true,
   },
   logging: {
-    enabled: true,
-    level: 'debug',
+    enabled: false,
+    endpoint: '/api/client-logs',
+    sampleRate: 1,
   },
 };

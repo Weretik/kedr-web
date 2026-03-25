@@ -26,6 +26,7 @@ import {
   API_BASE_URL,
   ENABLE_HTTP_LOGS,
 } from '@shared/http';
+import { APP_LOGGING_CONFIG } from '@shared/logging';
 import { KedrStorePreset } from '@shared/theme';
 import { GlobalErrorHandler } from '@shared/ui';
 import { MessageService } from 'primeng/api';
@@ -38,6 +39,17 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: API_BASE_URL, useValue: environment.api.baseUrl },
     { provide: ENABLE_HTTP_LOGS, useValue: environment.enableHttpLogs },
+    {
+      provide: APP_LOGGING_CONFIG,
+      useValue: {
+        enabled: environment.logging.enabled,
+        endpoint: environment.logging.endpoint,
+        environment: environment.production ? 'production' : 'development',
+        appName: environment.app.name,
+        appVersion: environment.app.version,
+        sampleRate: environment.logging.sampleRate,
+      },
+    },
     provideHttpClient(
       withFetch(),
       withInterceptors([
