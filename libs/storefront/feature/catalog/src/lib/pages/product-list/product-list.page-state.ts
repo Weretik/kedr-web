@@ -110,14 +110,32 @@ export class ProductListPageState {
 
   goToCategory(slug: string): void {
     this.draftSearch.set('');
+    const currentScrollY =
+      typeof window !== 'undefined' ? window.scrollY : undefined;
 
-    void this.router.navigate(['/catalog', slug, 'products'], {
-      queryParams: {
-        page: 1,
-        search: '',
-      },
-      queryParamsHandling: 'merge',
-    });
+    void this.router
+      .navigate(['/catalog', slug, 'products'], {
+        queryParams: {
+          page: 1,
+          search: '',
+        },
+        queryParamsHandling: 'merge',
+      })
+      .then((navigated) => {
+        if (
+          !navigated ||
+          currentScrollY == null ||
+          typeof window === 'undefined'
+        ) {
+          return;
+        }
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.scrollTo({ top: currentScrollY, behavior: 'auto' });
+          });
+        });
+      });
   }
 
   clear(): void {

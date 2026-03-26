@@ -10,6 +10,7 @@ import type { MenuItem } from 'primeng/api';
 
 type FilterMenuItem = MenuItem & { categorySlug?: string; expanded?: boolean };
 export type CategoryPathItem = { label: string; slug: string };
+type ExpandedState = Record<string, boolean>;
 
 const SHOW_DOORS_CATEGORY = false;
 
@@ -67,6 +68,7 @@ const withStyleClass = (
 const applyCommand = (
   items: FilterMenuItem[],
   actions: { goToCategory: (slug: string) => void },
+  expandedState: ExpandedState,
   depth = 0,
 ): FilterMenuItem[] => {
   return items.map((item) => {
@@ -83,10 +85,12 @@ const applyCommand = (
       const childItems = applyCommand(
         newItem.items as FilterMenuItem[],
         actions,
+        expandedState,
         depth + 1,
       );
       newItem.items = childItems;
-      newItem.expanded = true;
+      const slug = newItem.categorySlug;
+      newItem.expanded = slug ? (expandedState[slug] ?? true) : true;
       if (depth === 0) {
         return withStyleClass(
           newItem,
@@ -112,9 +116,10 @@ export function buildFiltersMenu(
     goToCategory: (slug: string) => void;
   },
   activeCategorySlug: string | null = null,
+  expandedState: ExpandedState = {},
 ): FilterMenuItem[] {
   void activeCategorySlug;
-  return applyCommand(FILTERS_MENU_STRUCTURE, actions);
+  return applyCommand(FILTERS_MENU_STRUCTURE, actions, expandedState);
 }
 
 export function findCategoryPath(

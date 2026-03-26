@@ -7,6 +7,7 @@ import {
   computed,
   input,
   HostListener,
+  untracked,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -114,14 +115,31 @@ export class ProductListFiltersBar {
     setSort: (sort) => this.pageState.setSort(sort),
   });
 
-  readonly filtersMenu = computed(() =>
+  readonly filtersMenu = signal<MenuItem[]>(
     buildFiltersMenu(
       {
         goToCategory: (slug) => this.pageState.goToCategory(slug),
       },
       this.categorySlug(),
+      {},
     ),
   );
+
+  private readonly syncFiltersMenu = effect(() => {
+    const slug = this.categorySlug();
+    const expandedState = this.collectExpandedState(
+      untracked(() => this.filtersMenu()),
+    );
+    this.filtersMenu.set(
+      buildFiltersMenu(
+        {
+          goToCategory: (nextSlug) => this.pageState.goToCategory(nextSlug),
+        },
+        slug,
+        expandedState,
+      ),
+    );
+  });
 
   private readonly syncCategorySlug = effect(() => {
     this.facade.setCategorySlug(this.categorySlug());
@@ -205,6 +223,27 @@ export class ProductListFiltersBar {
   private isActiveCategory(item?: MenuItem): boolean {
     const itemSlug = this.getItemSlug(item);
     return !!itemSlug && itemSlug === this.categorySlug();
+  }
+
+  private collectExpandedState(
+    items: MenuItem[],
+    state: Record<string, boolean> = {},
+  ): Record<string, boolean> {
+    for (const item of items) {
+      const typedItem = item as MenuItem & {
+        categorySlug?: string;
+        expanded?: boolean;
+      };
+      const children = typedItem.items ?? [];
+      if (children.length > 0 && typedItem.categorySlug) {
+        state[typedItem.categorySlug] = typedItem.expanded !== false;
+      }
+      if (children.length > 0) {
+        this.collectExpandedState(children, state);
+      }
+    }
+
+    return state;
   }
 
   private toNum(value: string | null): number | null {
