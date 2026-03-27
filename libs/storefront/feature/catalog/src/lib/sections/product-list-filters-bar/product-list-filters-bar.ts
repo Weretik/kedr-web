@@ -91,7 +91,7 @@ export class ProductListFiltersBar {
   readonly panelMenuPt = {
     itemContent: (options: PanelMenuItemLabelPtOptions) => ({
       class: this.isActiveCategory(options.context?.item)
-        ? 'bg-primary/10 rounded-md'
+        ? 'bg-primary-100 rounded-md'
         : undefined,
     }),
     itemLabel: (options: PanelMenuItemLabelPtOptions) => ({
