@@ -20,6 +20,7 @@ import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { Popover } from 'primeng/popover';
 import { Ripple } from 'primeng/ripple';
 
 import { buildMenu } from './header.menu';
@@ -37,6 +38,7 @@ import { buildMenu } from './header.menu';
     Cart,
     BadgeModule,
     OverlayBadgeModule,
+    Popover,
   ],
   templateUrl: './header.html',
   styleUrl: './header.css',
