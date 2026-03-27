@@ -23,6 +23,8 @@
           class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
           role="button"
           tabindex="0"
+          title="Скопіювати"
+          aria-label="Скопіювати номер телефону"
           (click)="copyToClipboard('+3800687135049')"
           (keydown.enter)="copyToClipboard('+3800687135049')"
           (keydown.space)="copyToClipboard('+3800687135049'); $event.preventDefault()"
@@ -127,6 +129,8 @@
             <button
               type="button"
               class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+              title="Скопіювати номер телефону"
+              aria-label="Скопіювати номер телефону"
               (click)="copyToClipboard('+3800687135049')"
             >
               <i class="pi pi-phone text-lg leading-none mr-3"></i>
