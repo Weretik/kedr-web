@@ -15,6 +15,7 @@ import {
 } from '@storefront/data-access';
 import { Cart } from '@storefront/feature/cart';
 import { ProductListPageState } from '@storefront/feature/catalog';
+import { SearchHistoryService } from '@storefront/util';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -53,9 +54,10 @@ export class Header {
   readonly cart = inject(CartFacade);
   readonly facade = inject(ProductListFacade);
   readonly pageState = inject(ProductListPageState);
-  //private readonly history = inject(SearchHistoryService);
+  readonly history = inject(SearchHistoryService);
 
   readonly isSticky = signal(false);
+  readonly hasHistory = this.history.items;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -64,8 +66,13 @@ export class Header {
 
   readonly items = buildMenu();
 
-  onSearch(value: string) {
+  onSearch(value: string, popover?: Popover) {
     const search = value?.trim();
+    if (search) {
+      this.history.add(search);
+    }
+
+    popover?.hide();
     this.pageState.commitSearch(search);
 
     if (this.router.url.includes('/products')) {
@@ -78,6 +85,38 @@ export class Header {
         page: 1,
       },
     });
+  }
+
+  onSearchDraftChange(value: string, popover: Popover, event: Event): void {
+    this.pageState.setSearchDraft(value);
+    this.showSearchHistory(popover, event);
+  }
+
+  showSearchHistory(popover: Popover, event: Event): void {
+    if (!this.hasHistory().length) {
+      popover.hide();
+      return;
+    }
+
+    popover.show(event);
+  }
+
+  useHistoryItem(value: string, popover: Popover): void {
+    this.pageState.setSearchDraft(value);
+    this.onSearch(value, popover);
+  }
+
+  removeHistoryItem(value: string, popover: Popover): void {
+    this.history.removeOne(value);
+
+    if (!this.hasHistory().length) {
+      popover.hide();
+    }
+  }
+
+  clearHistory(popover: Popover): void {
+    this.history.clear();
+    popover.hide();
   }
 
   copyToClipboard(value: string): void {

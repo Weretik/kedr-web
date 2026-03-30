@@ -92,22 +92,78 @@
             #searchInput
             type="text"
             [value]="pageState.draftSearch()"
-            (input)="pageState.setSearchDraft(searchInput.value)"
+            (focus)="showSearchHistory(desktopSearchHistoryPopover, $event)"
+            (click)="showSearchHistory(desktopSearchHistoryPopover, $event)"
+            (input)="onSearchDraftChange(searchInput.value, desktopSearchHistoryPopover, $event)"
             placeholder="Пошук товарів по артикулу або назві"
             class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
-            (keydown.enter)="onSearch(searchInput.value)"
+            (keydown.enter)="onSearch(searchInput.value, desktopSearchHistoryPopover)"
           />
         </div>
         <button
           pButton
           type="button"
-          (click)="onSearch(searchInput.value)"
+          (click)="onSearch(searchInput.value, desktopSearchHistoryPopover)"
           class="shadow-sm"
           [style.padding]="'0 0.75rem'"
         >
           <i class="pi pi-search"></i>
         </button>
       </div>
+      <p-popover #desktopSearchHistoryPopover [dismissable]="true">
+        @if (hasHistory().length) {
+        <div class="w-lg max-w-[calc(100vw-2rem)]">
+          <div class="flex items-center justify-between gap-3 mb-2 px-1">
+            <div
+              class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
+            >
+              <span class="text-sm font-semibold">Історія пошуку</span>
+            </div>
+            <button
+              pButton
+              type="button"
+              size="small"
+              severity="secondary"
+              [text]="true"
+              (click)="clearHistory(desktopSearchHistoryPopover)"
+            >
+              Очистити все
+            </button>
+          </div>
+          <div class="flex flex-col">
+            @for (item of hasHistory(); track item) {
+            <div
+              class="flex items-center gap-2 px-1 py-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-800"
+            >
+              <button
+                type="button"
+                class="flex-1 min-w-0 text-left flex items-center gap-2 py-1"
+                (click)="useHistoryItem(item, desktopSearchHistoryPopover)"
+              >
+                <i class="pi pi-history text-xs text-surface-500"></i>
+                <span
+                  class="truncate text-sm text-surface-700 dark:text-surface-200"
+                >
+                  {{ item }}
+                </span>
+              </button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-times"
+                size="small"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                aria-label="Видалити запит з історії"
+                (click)="removeHistoryItem(item, desktopSearchHistoryPopover)"
+              ></button>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </p-popover>
     </div>
 
     <div class="flex justify-around items-center">
@@ -250,22 +306,79 @@
           #mobileSearchInput
           type="text"
           [value]="pageState.draftSearch()"
-          (input)="pageState.setSearchDraft(mobileSearchInput.value)"
+          (focus)="showSearchHistory(mobileSearchHistoryPopover, $event)"
+          (click)="showSearchHistory(mobileSearchHistoryPopover, $event)"
+          (input)="onSearchDraftChange(mobileSearchInput.value, mobileSearchHistoryPopover, $event)"
           placeholder="Пошук товарів по артикулу або назві"
           class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
-          (keydown.enter)="onSearch(mobileSearchInput.value)"
+          (keydown.enter)="onSearch(mobileSearchInput.value, mobileSearchHistoryPopover)"
         />
       </div>
       <button
         pButton
         type="button"
-        (click)="onSearch(mobileSearchInput.value)"
+        (click)="onSearch(mobileSearchInput.value, mobileSearchHistoryPopover)"
         class="shadow-sm"
         [style.padding]="'0 0.75rem'"
       >
         <i class="pi pi-search"></i>
       </button>
     </div>
+    <p-popover #mobileSearchHistoryPopover [dismissable]="true">
+      @if (hasHistory().length) {
+      <div class="w-[min(32rem,calc(100vw-2.5rem))]">
+        <div class="flex items-center justify-between gap-3 mb-2 px-1">
+          <div
+            class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
+          >
+            <i class="pi pi-history text-sm"></i>
+            <span class="text-sm font-semibold">Історія пошуку</span>
+          </div>
+          <button
+            pButton
+            type="button"
+            size="small"
+            severity="secondary"
+            [text]="true"
+            (click)="clearHistory(mobileSearchHistoryPopover)"
+          >
+            Очистити все
+          </button>
+        </div>
+        <div class="flex flex-col">
+          @for (item of hasHistory(); track item) {
+          <div
+            class="flex items-center gap-2 px-1 py-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-800"
+          >
+            <button
+              type="button"
+              class="flex-1 min-w-0 text-left flex items-center gap-2 py-1"
+              (click)="useHistoryItem(item, mobileSearchHistoryPopover)"
+            >
+              <i class="pi pi-history text-xs text-surface-500"></i>
+              <span
+                class="truncate text-sm text-surface-700 dark:text-surface-200"
+              >
+                {{ item }}
+              </span>
+            </button>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-times"
+              size="small"
+              [rounded]="true"
+              [text]="true"
+              severity="secondary"
+              aria-label="Видалити запит з історії"
+              (click)="removeHistoryItem(item, mobileSearchHistoryPopover)"
+            ></button>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </p-popover>
   </div>
 </div>
 

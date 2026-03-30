@@ -32,14 +32,7 @@ export class SearchHistoryService {
 
   clear(): void {
     this._items.set([]);
-    this.remove();
-  }
-
-  suggest(query: string): string[] {
-    const q = this.normalize(query).toLowerCase();
-    if (!q) return this._items();
-
-    return this._items().filter((x) => x.toLowerCase().includes(q));
+    this.write([]);
   }
 
   private normalize(value: string): string {
@@ -66,17 +59,12 @@ export class SearchHistoryService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     try {
+      if (items.length === 0) {
+        sessionStorage.removeItem(this.storageKey);
+        return;
+      }
+
       sessionStorage.setItem(this.storageKey, JSON.stringify(items));
-    } catch {
-      // ignore
-    }
-  }
-
-  private remove(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    try {
-      sessionStorage.removeItem(this.storageKey);
     } catch {
       // ignore
     }
@@ -93,12 +81,6 @@ export class SearchHistoryService {
     if (next.length === this._items().length) return;
 
     this._items.set(next);
-
-    if (next.length === 0) {
-      this.remove();
-      return;
-    }
-
     this.write(next);
   }
 }
