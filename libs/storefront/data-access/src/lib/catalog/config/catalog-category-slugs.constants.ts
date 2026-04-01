@@ -88,15 +88,15 @@ export const CATALOG_HARDWARE_SECTIONS = {
         slug: 'kedr-ruchki-na-rozettsi-seriia-standart-r-08-r-10-5915',
       },
       {
-        label: 'На розетцi (HRoz)',
+        label: 'На розетцi (HRoz-06/HRoz-07)',
         slug: 'kedr-ruchki-na-rozettsi-seriia-ekonom-hroz-06-hroz-07-5854',
       },
       {
-        label: 'На розетцi (Genrich)',
+        label: 'На розетцi преміум (Genrich)',
         slug: 'kedr-ruchki-na-rozettsi-seriia-premium-genrich-5904',
       },
       {
-        label: 'На розетцi (Ultara)',
+        label: 'На розетцi (Ultra)',
         slug: 'kedr-ruchki-na-rozettsi-seriia-ultra-6982',
       },
       {
