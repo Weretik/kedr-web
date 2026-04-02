@@ -120,8 +120,12 @@
         class="flex flex-col items-center justify-center p-8 text-surface-500"
       >
         <i class="pi pi-search text-4xl mb-4"></i>
-        <p class="text-xl font-medium">Товари не знайдено</p>
-        <p>Спробуйте змінити фільтри або пошуковий запит.</p>
+        <p class="text-xl font-medium" i18n="@@catalog.productList.empty.title">
+          Товари не знайдено
+        </p>
+        <p i18n="@@catalog.productList.empty.description">
+          Спробуйте змінити фільтри або пошуковий запит.
+        </p>
       </div>
     </ng-template>
 
@@ -195,17 +199,35 @@
               </div>
               <div class="card flex flex-wrap gap-4 justify-center">
                 @if(product.isSale) {
-                <p-message severity="error" size="small">
+                <p-message
+                  severity="error"
+                  size="small"
+                  i18n="@@catalog.productList.badge.sale"
+                >
                   Краща ціна
                 </p-message>
                 } @if(product.isNew) {
-                <p-message severity="info" size="small"> Новинка </p-message>
+                <p-message
+                  severity="info"
+                  size="small"
+                  i18n="@@catalog.productList.badge.new"
+                >
+                  Новинка
+                </p-message>
                 }
                 <p-message
                   [severity]="product.inStock ? 'success' : 'warn'"
                   size="small"
                 >
-                  @if(product.inStock){ В наявності } @else{ Під замовлення }
+                  @if(product.inStock){
+                  <ng-container i18n="@@catalog.productList.stock.inStock"
+                    >В наявності</ng-container
+                  >
+                  } @else{
+                  <ng-container i18n="@@catalog.productList.stock.preOrder"
+                    >Під замовлення</ng-container
+                  >
+                  }
                 </p-message>
               </div>
             </div>
@@ -221,7 +243,9 @@
                   (click)="addToCart(product); $event.stopPropagation()"
                 >
                   <i pButtonIcon class="pi pi-shopping-cart"></i>
-                  <span pButtonLabel>У кошик</span>
+                  <span pButtonLabel i18n="@@catalog.productList.addToCart"
+                    >У кошик</span
+                  >
                 </button>
               </div>
             </div>
@@ -271,22 +295,33 @@
               <div class="mb-4 flex flex-wrap gap-2">
                 @if(product.isSale) {
                 <p-tag
+                  i18n-value="@@catalog.productList.badge.sale"
                   value="Краща ціна"
                   severity="warn"
                   class="text-[10px] px-2 py-0.5 leading-none [&_.p-tag-label]:text-[10px] [&_.p-tag-label]:leading-none"
                 />
                 } @if(product.isNew) {
                 <p-tag
+                  i18n-value="@@catalog.productList.badge.new"
                   value="Новинка"
                   severity="info"
                   class="text-[10px] px-2 py-0.5 leading-none [&_.p-tag-label]:text-[10px] [&_.p-tag-label]:leading-none"
                 />
-                }
+                } @if(product.inStock) {
                 <p-tag
-                  [value]="product.inStock ? 'В наявності' : 'Під замовлення'"
-                  [severity]="product.inStock ? 'success' : 'danger'"
+                  i18n-value="@@catalog.productList.stock.inStock"
+                  value="В наявності"
+                  severity="success"
                   class="text-[10px] px-2 py-0.5 leading-none [&_.p-tag-label]:text-[10px] [&_.p-tag-label]:leading-none"
                 />
+                } @else {
+                <p-tag
+                  i18n-value="@@catalog.productList.stock.preOrder"
+                  value="Під замовлення"
+                  severity="danger"
+                  class="text-[10px] px-2 py-0.5 leading-none [&_.p-tag-label]:text-[10px] [&_.p-tag-label]:leading-none"
+                />
+                }
               </div>
               <div class="flex flex-col gap-6">
                 <span class="text-2xl font-semibold"
@@ -300,7 +335,9 @@
                     (click)="addToCart(product); $event.stopPropagation()"
                   >
                     <i pButtonIcon class="pi pi-shopping-cart"></i>
-                    <span pButtonLabel>У кошик</span>
+                    <span pButtonLabel i18n="@@catalog.productList.addToCart"
+                      >У кошик</span
+                    >
                   </button>
                 </div>
               </div>
