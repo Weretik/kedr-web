@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import {
   Component,
   HostListener,
@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ClipboardService, ThemeService } from '@shared/ui';
+import { BrowserStorageService } from '@shared/util';
 import {
   CartFacade,
   CartUiFacade,
@@ -24,7 +25,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { Popover } from 'primeng/popover';
 import { Ripple } from 'primeng/ripple';
 
-import { buildMenu } from './header.menu';
+import { buildMenu, type HeaderLocale } from './header.menu';
 
 @Component({
   selector: 'lib-header',
@@ -47,7 +48,10 @@ import { buildMenu } from './header.menu';
   encapsulation: ViewEncapsulation.None,
 })
 export class Header {
+  private readonly localeStorageKey = 'storefront.locale';
   private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
+  private readonly storage = inject(BrowserStorageService);
   private readonly clipboard = inject(ClipboardService);
   public readonly themeService = inject(ThemeService);
   readonly cartUi = inject(CartUiFacade);
@@ -58,13 +62,18 @@ export class Header {
 
   readonly isSticky = signal(false);
   readonly hasHistory = this.history.items;
+  readonly currentLocale = signal<HeaderLocale>(this.detectLocale());
+
+  constructor() {
+    this.storage.setItem(this.localeStorageKey, this.currentLocale());
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isSticky.set(window.scrollY > 120);
   }
 
-  readonly items = buildMenu();
+  readonly items = buildMenu(this.currentLocale());
 
   onSearch(value: string, popover?: Popover) {
     const search = value?.trim();
@@ -121,6 +130,39 @@ export class Header {
 
   copyToClipboard(value: string): void {
     void this.clipboard.copy(value);
+  }
+
+  switchLocale(locale: HeaderLocale): void {
+    this.storage.setItem(this.localeStorageKey, locale);
+    if (locale === this.currentLocale()) return;
+
+    const location = this.document.location;
+    if (!location) return;
+
+    const path = location.pathname || '/';
+    const withoutLocale = path.replace(/^\/(uk|ru)(?=\/|$)/, '') || '/';
+    const normalizedPath = withoutLocale.startsWith('/')
+      ? withoutLocale
+      : `/${withoutLocale}`;
+    const query = location.search || '';
+    const hash = location.hash || '';
+
+    location.assign(`/${locale}${normalizedPath}${query}${hash}`);
+  }
+
+  private detectLocale(): HeaderLocale {
+    const path = this.document.location?.pathname || '';
+    const match = path.match(/^\/(uk|ru)(?=\/|$)/);
+    if (match?.[1] === 'uk' || match?.[1] === 'ru') {
+      return match[1];
+    }
+
+    const savedLocale = this.storage.getItem(this.localeStorageKey);
+    if (savedLocale === 'uk' || savedLocale === 'ru') {
+      return savedLocale;
+    }
+
+    return 'uk';
   }
 
   public readonly megaMenuPt = {
