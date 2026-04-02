@@ -18,6 +18,7 @@
       >
         <button
           type="button"
+          i18n="@@catalog.filters.allProducts"
           class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors whitespace-nowrap"
           (click)="goToAllProducts()"
         >
@@ -55,7 +56,9 @@
         <p-toggleButton
           [ngModel]="draftIsSale()"
           (ngModelChange)="setSaleFilter($event)"
+          i18n-onLabel="@@catalog.filters.sale"
           onLabel="Краща ціна"
+          i18n-offLabel="@@catalog.filters.sale"
           offLabel="Краща ціна"
           onIcon="pi pi-check"
           offIcon="pi pi-times"
@@ -64,7 +67,9 @@
         <p-toggleButton
           [ngModel]="draftIsNew()"
           (ngModelChange)="setNewFilter($event)"
+          i18n-onLabel="@@catalog.filters.new"
           onLabel="Новинки"
+          i18n-offLabel="@@catalog.filters.new"
           offLabel="Новинки"
           onIcon="pi pi-check"
           offIcon="pi pi-times"
@@ -73,7 +78,9 @@
         <p-toggleButton
           [ngModel]="draftInStock()"
           (ngModelChange)="setInStockFilter($event)"
+          i18n-onLabel="@@catalog.filters.inStock"
           onLabel="В наявноті"
+          i18n-offLabel="@@catalog.filters.all"
           offLabel="Всі"
           onIcon="pi pi-check"
           offIcon="pi pi-times"
@@ -91,7 +98,9 @@
           [outlined]="true"
           (click)="paramsPopover.toggle($event)"
         >
-          <span pButtonLabel>Параметри</span>
+          <span pButtonLabel i18n="@@catalog.filters.parameters"
+            >Параметри</span
+          >
           <i pButtonIcon class="pi pi-chevron-down"></i>
         </button>
         <p-popover #paramsPopover>
@@ -99,7 +108,9 @@
             <p-toggleButton
               [ngModel]="draftIsSale()"
               (ngModelChange)="setSaleFilter($event)"
+              i18n-onLabel="@@catalog.filters.sale"
               onLabel="Краща ціна"
+              i18n-offLabel="@@catalog.filters.sale"
               offLabel="Краща ціна"
               onIcon="pi pi-check"
               offIcon="pi pi-times"
@@ -108,7 +119,9 @@
             <p-toggleButton
               [ngModel]="draftIsNew()"
               (ngModelChange)="setNewFilter($event)"
+              i18n-onLabel="@@catalog.filters.new"
               onLabel="Новинки"
+              i18n-offLabel="@@catalog.filters.new"
               offLabel="Новинки"
               onIcon="pi pi-check"
               offIcon="pi pi-times"
@@ -117,7 +130,9 @@
             <p-toggleButton
               [ngModel]="draftInStock()"
               (ngModelChange)="setInStockFilter($event)"
+              i18n-onLabel="@@catalog.filters.inStock"
               onLabel="В наявноті"
+              i18n-offLabel="@@catalog.filters.all"
               offLabel="Всі"
               onIcon="pi pi-check"
               offIcon="pi pi-times"
@@ -144,7 +159,7 @@
         (click)="sortMenu.toggle($event)"
       >
         <i pButtonIcon class="pi pi-sort-alt"></i>
-        <span pButtonLabel>Сортувати</span>
+        <span pButtonLabel i18n="@@catalog.filters.sort">Сортувати</span>
       </button>
       }
     </div>
