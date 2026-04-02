@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="uk" target-language="ru" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="footer.logoAlt" datatype="html">
+        <source>Class Kedr Logo</source>
+        <target>Логотип Class Kedr</target>
+      </trans-unit>
+      <trans-unit id="footer.address" datatype="html">
+        <source>Україна, м.Харків &lt;br/&gt;</source>
+        <target>Украина, г. Харьков &lt;br/&gt;</target>
+      </trans-unit>
+      <trans-unit id="footer.contacts.title" datatype="html">
+        <source>Контакти</source>
+        <target>Контакты</target>
+      </trans-unit>
+      <trans-unit id="footer.copyright" datatype="html">
+        <source>© 2026, Class kedr. Всі права захищені.</source>
+        <target>© 2026, Class kedr. Все права защищены.</target>
+      </trans-unit>
+      <trans-unit id="footer.company.title" datatype="html">
+        <source>Компанія</source>
+        <target>Компания</target>
+      </trans-unit>
+      <trans-unit id="footer.information.title" datatype="html">
+        <source>Інформація</source>
+        <target>Информация</target>
+      </trans-unit>
+      <trans-unit id="footer.link.aboutCompany" datatype="html">
+        <source>Про компанію</source>
+        <target>О компании</target>
+      </trans-unit>
+      <trans-unit id="footer.link.deliveryAndPayment" datatype="html">
+        <source>Доставка та оплата</source>
+        <target>Доставка и оплата</target>
+      </trans-unit>
+      <trans-unit id="footer.link.returnsExchanges" datatype="html">
+        <source>Повернення та обмін</source>
+        <target>Возврат и обмен</target>
+      </trans-unit>
+      <trans-unit id="footer.link.contacts" datatype="html">
+        <source>Контакти</source>
+        <target>Контакты</target>
+      </trans-unit>
+      <trans-unit id="footer.link.gallery" datatype="html">
+        <source>Галерея та відео</source>
+        <target>Галерея и видео</target>
+      </trans-unit>
+      <trans-unit id="footer.link.articles" datatype="html">
+        <source>Статті</source>
+        <target>Статьи</target>
+      </trans-unit>
+      <trans-unit id="footer.link.wholesale" datatype="html">
+        <source>Співпраця</source>
+        <target>Сотрудничество</target>
+      </trans-unit>
+      <trans-unit id="footer.link.publicOffer" datatype="html">
+        <source>Публічна оферта</source>
+        <target>Публичная оферта</target>
+      </trans-unit>
+      <trans-unit id="footer.link.privacyPolicy" datatype="html">
+        <source>Політика конфіденційності</source>
+        <target>Политика конфиденциальности</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
