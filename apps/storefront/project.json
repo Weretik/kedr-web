@@ -7,7 +7,14 @@
   "i18n": {
     "sourceLocale": "uk",
     "locales": {
-      "ru": "apps/storefront/src/locale/messages.ru.xlf"
+      "ru": {
+        "translation": [
+          "apps/storefront/src/locale/messages.ru.xlf",
+          "apps/storefront/src/locale/messages.ru.catalog.xlf",
+          "apps/storefront/src/locale/messages.ru.footer.xlf",
+          "apps/storefront/src/locale/messages.ru.about-company.xlf"
+        ]
+      }
     }
   },
   "tags": ["scope:storefront"],
