@@ -6,6 +6,7 @@ import {
   CATALOG_ROOT_CATEGORIES,
   getCatalogDoorSectionLabel,
   getCatalogHardwareSectionLabel,
+  getCatalogItemLabel,
   getCatalogRootLabel,
 } from '@storefront/data-access';
 
@@ -24,7 +25,7 @@ const hardwareItems: FilterMenuItem[] = CATALOG_HARDWARE_ORDER.map(
       label: getCatalogHardwareSectionLabel(sectionKey),
       categorySlug: section.slug,
       items: section.items.map((item) => ({
-        label: item.label,
+        label: getCatalogItemLabel(item.slug, item.label),
         categorySlug: item.slug,
       })),
     };
@@ -37,7 +38,7 @@ const doorItems: FilterMenuItem[] = CATALOG_DOOR_ORDER.map((sectionKey) => {
     label: getCatalogDoorSectionLabel(sectionKey),
     categorySlug: section.slug,
     items: section.items.map((item) => ({
-      label: item.label,
+      label: getCatalogItemLabel(item.slug, item.label),
       categorySlug: item.slug,
     })),
   };

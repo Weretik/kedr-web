@@ -1,5 +1,6 @@
 import {
   getCatalogHardwareSectionLabel,
+  getCatalogItemLabel,
   CATALOG_HARDWARE_SECTIONS,
   CATALOG_HEADER_LAYOUT,
 } from '@storefront/data-access';
@@ -162,7 +163,7 @@ const buildCatalogColumns = (): MenuItem[][] =>
         getCatalogHardwareSectionLabel(sectionKey),
         catalogSectionImages[sectionKey],
         section.items.map((item) => ({
-          label: item.label,
+          label: getCatalogItemLabel(item.slug, item.label),
           routerLink: catalogLink(item.slug),
         })),
       );
