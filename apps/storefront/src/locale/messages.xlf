@@ -558,6 +558,111 @@
           <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="catalog.item.hinges.butterfly" datatype="html">
+        <source>Накладні (метелик)</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.hinges.welded" datatype="html">
+        <source>Ввертні та приварні</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.hinges.mortise" datatype="html">
+        <source>Врізні</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.locks.padlocks" datatype="html">
+        <source>Навісні та велозамки</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.locks.sets" datatype="html">
+        <source>Комплекти з ручками</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.locks.rim" datatype="html">
+        <source>Накладні</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.locks.lever" datatype="html">
+        <source>Сувальдні та з хрестоподібним ключем</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.locks.cylinder" datatype="html">
+        <source>Врізні під циліндр</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.kevlar" datatype="html">
+        <source>На розетці (Kevlar)</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.plate" datatype="html">
+        <source>На планці</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.standard" datatype="html">
+        <source>На розетці (R-08/R-10)</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.econom" datatype="html">
+        <source>На розетці (HRoz-06/HRoz-07)</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.premium" datatype="html">
+        <source>На розетці преміум (Genrich)</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.ultra" datatype="html">
+        <source>На розетці (Ultra)</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.stainless" datatype="html">
+        <source>З нержавійки</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.handles.knobs" datatype="html">
+        <source>Ручки-кноби</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.brass" datatype="html">
+        <source>Серії BRASS KEY Латунь</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.smart" datatype="html">
+        <source>Серії SMART</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.gwk" datatype="html">
+        <source>Серії GWK</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.zinkStem" datatype="html">
+        <source>Серії ZINK під шток</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.zink" datatype="html">
+        <source>Серії ZINK</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.zinkPlk" datatype="html">
+        <source>Серії ZINK PLK</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.cylinders.alu" datatype="html">
+        <source>Серії ALU</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.mechanisms.magnetic" datatype="html">
+        <source>З магнітною защіпкою</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.mechanisms.latches" datatype="html">
+        <source>Заскочки / засувки</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.mechanisms.metal" datatype="html">
+        <source>З металевою защіпкою</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.mechanisms.kevlar" datatype="html">
+        <source>З кевларовою защіпкою</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.armor" datatype="html">
+        <source>Броненакладки на циліндр</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.seal" datatype="html">
+        <source>Ущільнювач</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.stoppers" datatype="html">
+        <source>Відбійники</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.components" datatype="html">
+        <source>Комплектуючі</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.bolts" datatype="html">
+        <source>Засувки і шпінгалети</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.sliding" datatype="html">
+        <source>Розсувні системи</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.closers" datatype="html">
+        <source>Дотягувачі</source>
+      </trans-unit>
+      <trans-unit id="catalog.item.other.eye" datatype="html">
+        <source>Вічка дверні</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
