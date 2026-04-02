@@ -17,7 +17,13 @@ const $localize: LocalizeFn =
     : (
         messageParts: TemplateStringsArray,
         ...expressions: readonly unknown[]
-      ) => String.raw({ raw: messageParts }, ...expressions);
+      ) => {
+        const raw = String.raw({ raw: messageParts }, ...expressions);
+        if (!raw.startsWith(':')) return raw;
+
+        const metadataEnd = raw.indexOf(':', 1);
+        return metadataEnd === -1 ? raw : raw.slice(metadataEnd + 1);
+      };
 
 const ROOT_LABELS: Record<keyof typeof CATALOG_ROOT_CATEGORIES, string> = {
   hardware: $localize`:@@catalog.root.hardware:Фурнітура`,
