@@ -22,7 +22,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
-import { PanelMenu } from 'primeng/panelmenu';
+import { PanelMenuModule } from 'primeng/panelmenu';
 import { Popover } from 'primeng/popover';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
@@ -63,7 +63,7 @@ type PanelMenuItemLabelPtOptions = {
     ButtonLabel,
     MenuModule,
     ButtonIcon,
-    PanelMenu,
+    PanelMenuModule,
     ProductList,
     ToggleButton,
     Popover,
