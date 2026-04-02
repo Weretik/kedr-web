@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="uk" target-language="ru" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="header.logoAlt" datatype="html">
+        <source>Kedr Logo</source>
+        <target>Логотип Kedr</target>
+      </trans-unit>
+      <trans-unit id="header.copyPhoneTitle" datatype="html">
+        <source>Скопіювати</source>
+        <target>Скопировать</target>
+      </trans-unit>
+      <trans-unit id="header.copyPhoneAria" datatype="html">
+        <source>Скопіювати номер телефону</source>
+        <target>Скопировать номер телефона</target>
+      </trans-unit>
+      <trans-unit id="header.telegramTitle" datatype="html">
+        <source>Telegram</source>
+        <target>Telegram</target>
+      </trans-unit>
+      <trans-unit id="header.telegramAria" datatype="html">
+        <source>Написати в Telegram</source>
+        <target>Написать в Telegram</target>
+      </trans-unit>
+      <trans-unit id="header.telegramAlt" datatype="html">
+        <source>Telegram</source>
+        <target>Telegram</target>
+      </trans-unit>
+      <trans-unit id="header.viberTitle" datatype="html">
+        <source>Viber</source>
+        <target>Viber</target>
+      </trans-unit>
+      <trans-unit id="header.viberAria" datatype="html">
+        <source>Написати в Viber</source>
+        <target>Написать в Viber</target>
+      </trans-unit>
+      <trans-unit id="header.viberAlt" datatype="html">
+        <source>Viber</source>
+        <target>Viber</target>
+      </trans-unit>
+      <trans-unit id="header.mapTitle" datatype="html">
+        <source>Карта</source>
+        <target>Карта</target>
+      </trans-unit>
+      <trans-unit id="header.mapAria" datatype="html">
+        <source>Відкрити карту</source>
+        <target>Открыть карту</target>
+      </trans-unit>
+      <trans-unit id="header.searchPlaceholder" datatype="html">
+        <source>Пошук товарів по артикулу або назві</source>
+        <target>Поиск товаров по артикулу или названию</target>
+      </trans-unit>
+      <trans-unit id="header.searchHistoryTitle" datatype="html">
+        <source>Історія пошуку</source>
+        <target>История поиска</target>
+      </trans-unit>
+      <trans-unit id="header.clearHistory" datatype="html">
+        <source> Очистити все </source>
+        <target> Очистить всё </target>
+      </trans-unit>
+      <trans-unit id="header.removeHistoryItemAria" datatype="html">
+        <source>Видалити запит з історії</source>
+        <target>Удалить запрос из истории</target>
+      </trans-unit>
+      <trans-unit id="header.contactsTitle" datatype="html">
+        <source>Контакти</source>
+        <target>Контакты</target>
+      </trans-unit>
+      <trans-unit id="header.contactsAria" datatype="html">
+        <source>Контакти</source>
+        <target>Контакты</target>
+      </trans-unit>
+      <trans-unit id="header.copyPhoneNumberTitle" datatype="html">
+        <source>Скопіювати номер телефону</source>
+        <target>Скопировать номер телефона</target>
+      </trans-unit>
+      <trans-unit id="header.languageSwitcherAria" datatype="html">
+        <source>Перемикання мови</source>
+        <target>Переключение языка</target>
+      </trans-unit>
+      <trans-unit id="header.langUkAria" datatype="html">
+        <source>Українська</source>
+        <target>Украинский</target>
+      </trans-unit>
+      <trans-unit id="header.langRuAria" datatype="html">
+        <source>Русский</source>
+        <target>Русский</target>
+      </trans-unit>
+      <trans-unit id="header.toggleThemeAria" datatype="html">
+        <source>Змінити тему</source>
+        <target>Сменить тему</target>
+      </trans-unit>
+      <trans-unit id="header.accountAria" datatype="html">
+        <source>Аккаунт</source>
+        <target>Аккаунт</target>
+      </trans-unit>
+      <trans-unit id="header.wholesaleLogoAlt" datatype="html">
+        <source>wholesale-logo</source>
+        <target>Логотип опта</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
