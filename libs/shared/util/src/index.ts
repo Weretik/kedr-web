@@ -1,4 +1,5 @@
 export * from './lib/services/browser-storage-service';
+export * from './lib/services/browser-session-storage-service';
 
 export * from './lib/errors/api-error';
 export * from './lib/errors/validation-errors';
