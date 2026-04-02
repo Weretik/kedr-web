@@ -17,15 +17,22 @@
 <div class="card w-full">
   <p-message severity="error" variant="outlined">
     <div class="flex flex-col gap-3">
-      <div class="font-medium">Не вдалося завантажити товар</div>
-      <div class="text-sm text-surface-600 dark:text-surface-300">
+      <div class="font-medium" i18n="@@catalog.product.error.title">
+        Не вдалося завантажити товар
+      </div>
+      <div
+        class="text-sm text-surface-600 dark:text-surface-300"
+        i18n="@@catalog.product.error.description"
+      >
         Перевірте інтернет або спробуйте ще раз.
       </div>
 
       <div class="flex gap-2">
         <button pButton (click)="onRetry()">
           <i pButtonIcon class="pi pi-refresh"></i>
-          <span pButtonLabel>Спробувати ще раз</span>
+          <span pButtonLabel i18n="@@catalog.product.error.retry"
+            >Спробувати ще раз</span
+          >
         </button>
       </div>
     </div>
@@ -70,6 +77,7 @@
             class="w-full h-full object-contain"
             [preview]="true"
             imageClass="w-full h-full object-contain"
+            i18n-alt="@@catalog.product.image.mainAlt"
             alt="Product main image"
           />
         </div>
@@ -93,6 +101,7 @@
             <img
               [src]="image"
               class="w-full h-full object-contain"
+              i18n-alt="@@catalog.product.image.thumbAlt"
               alt="Product thumbnail"
             />
           </div>
@@ -123,6 +132,7 @@
         <div class="flex flex-row gap-4">
           <div
             class="text-surface-900 dark:text-surface-0 text-sm font-semibold leading-tight"
+            i18n="@@catalog.product.category.label"
           >
             Категорія:
           </div>
@@ -137,6 +147,7 @@
         <div class="flex flex-row gap-4">
           <div
             class="text-surface-900 dark:text-surface-0 text-sm font-semibold leading-tight"
+            i18n="@@catalog.product.quantityInPack.label"
           >
             Кількість в упаковці:
           </div>
@@ -153,6 +164,7 @@
         <div class="flex flex-col gap-4">
           <div
             class="text-surface-900 dark:text-surface-0 text-sm font-semibold leading-tight"
+            i18n="@@catalog.product.quantity.label"
           >
             Кількість:
           </div>
@@ -176,7 +188,9 @@
             class="flex-1 py-2! px-4! bg-surface-900! dark:bg-surface-0! text-surface-0! dark:text-surface-900! border-surface-900! dark:border-surface-0! rounded-md! font-medium! text-sm!"
             (click)="addToCart(product)"
           >
-            <span pButtonLabel>Додати до кошику</span>
+            <span pButtonLabel i18n="@@catalog.product.addToCart"
+              >Додати до кошику</span
+            >
           </button>
         </div>
       </div>
