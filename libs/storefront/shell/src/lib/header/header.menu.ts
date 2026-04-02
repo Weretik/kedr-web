@@ -5,10 +5,20 @@ import {
 } from '@storefront/data-access';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 
-declare const $localize: (
+type LocalizeFn = (
   messageParts: TemplateStringsArray,
   ...expressions: readonly unknown[]
 ) => string;
+
+const $localize: LocalizeFn =
+  typeof globalThis !== 'undefined' &&
+  typeof (globalThis as { $localize?: unknown }).$localize === 'function'
+    ? ((globalThis as unknown as { $localize: LocalizeFn })
+        .$localize as LocalizeFn)
+    : (
+        messageParts: TemplateStringsArray,
+        ...expressions: readonly unknown[]
+      ) => String.raw({ raw: messageParts }, ...expressions);
 
 export type HeaderLocale = 'uk' | 'ru';
 

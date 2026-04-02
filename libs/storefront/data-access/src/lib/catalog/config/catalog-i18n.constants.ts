@@ -4,10 +4,20 @@ import {
   CATALOG_ROOT_CATEGORIES,
 } from './catalog-category-slugs.constants';
 
-declare const $localize: (
+type LocalizeFn = (
   messageParts: TemplateStringsArray,
   ...expressions: readonly unknown[]
 ) => string;
+
+const $localize: LocalizeFn =
+  typeof globalThis !== 'undefined' &&
+  typeof (globalThis as { $localize?: unknown }).$localize === 'function'
+    ? ((globalThis as unknown as { $localize: LocalizeFn })
+        .$localize as LocalizeFn)
+    : (
+        messageParts: TemplateStringsArray,
+        ...expressions: readonly unknown[]
+      ) => String.raw({ raw: messageParts }, ...expressions);
 
 const ROOT_LABELS: Record<keyof typeof CATALOG_ROOT_CATEGORIES, string> = {
   hardware: $localize`:@@catalog.root.hardware:Фурнітура`,
