@@ -73,7 +73,7 @@ export class Header {
     this.isSticky.set(window.scrollY > 120);
   }
 
-  readonly items = buildMenu(this.currentLocale());
+  readonly items = buildMenu();
 
   onSearch(value: string, popover?: Popover) {
     const search = value?.trim();

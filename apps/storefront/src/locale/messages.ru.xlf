@@ -98,6 +98,198 @@
         <source>wholesale-logo</source>
         <target>Логотип опта</target>
       </trans-unit>
+      <trans-unit id="header.menu.catalog" datatype="html">
+        <source>Каталог</source>
+        <target>Каталог</target>
+      </trans-unit>
+      <trans-unit id="header.menu.information" datatype="html">
+        <source>Інформація</source>
+        <target>Информация</target>
+      </trans-unit>
+      <trans-unit id="header.menu.about" datatype="html">
+        <source>Про нас</source>
+        <target>О нас</target>
+      </trans-unit>
+      <trans-unit id="header.menu.aboutCompany" datatype="html">
+        <source>Про компанію</source>
+        <target>О компании</target>
+      </trans-unit>
+      <trans-unit id="header.menu.deliveryAndPayment" datatype="html">
+        <source>Доставка та оплата</source>
+        <target>Доставка и оплата</target>
+      </trans-unit>
+      <trans-unit id="header.menu.returnsExchanges" datatype="html">
+        <source>Повернення та обмін</source>
+        <target>Возврат и обмен</target>
+      </trans-unit>
+      <trans-unit id="header.menu.gallery" datatype="html">
+        <source>Галерея та відео</source>
+        <target>Галерея и видео</target>
+      </trans-unit>
+      <trans-unit id="header.menu.articles" datatype="html">
+        <source>Статті</source>
+        <target>Статьи</target>
+      </trans-unit>
+      <trans-unit id="header.menu.contacts" datatype="html">
+        <source>Контакти</source>
+        <target>Контакты</target>
+      </trans-unit>
+      <trans-unit id="header.menu.regions" datatype="html">
+        <source>Регіони</source>
+        <target>Регионы</target>
+      </trans-unit>
+      <trans-unit id="header.menu.legal" datatype="html">
+        <source>Юридична інформація</source>
+        <target>Юридическая информация</target>
+      </trans-unit>
+      <trans-unit id="header.menu.publicOffer" datatype="html">
+        <source>Публічна оферта</source>
+        <target>Публичная оферта</target>
+      </trans-unit>
+      <trans-unit id="header.menu.privacyPolicy" datatype="html">
+        <source>Політика конфіденційності</source>
+        <target>Политика конфиденциальности</target>
+      </trans-unit>
+      <trans-unit id="header.menu.wholesale" datatype="html">
+        <source>Співпраця</source>
+        <target>Сотрудничество</target>
+      </trans-unit>
+      <trans-unit id="header.menu.wholesaleSubtext" datatype="html">
+        <source>Умови співпраці для оптових партнерів</source>
+        <target>Условия сотрудничества для оптовых партнеров</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.vinnytska" datatype="html">
+        <source>Вінницька область</source>
+        <target>Винницкая область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.volynska" datatype="html">
+        <source>Волинська область</source>
+        <target>Волынская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.dnipropetrovska" datatype="html">
+        <source>Дніпропетровська область</source>
+        <target>Днепропетровская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.zhytomyrska" datatype="html">
+        <source>Житомирська область</source>
+        <target>Житомирская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.zakarpatska" datatype="html">
+        <source>Закарпатська область</source>
+        <target>Закарпатская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.zaporizka" datatype="html">
+        <source>Запорізька область</source>
+        <target>Запорожская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.ivanoFrankivska" datatype="html">
+        <source>Івано-Франківська область</source>
+        <target>Ивано-Франковская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.kyivska" datatype="html">
+        <source>Київська область</source>
+        <target>Киевская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.kirovohradska" datatype="html">
+        <source>Кіровоградська область</source>
+        <target>Кировоградская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.lvivska" datatype="html">
+        <source>Львівська область</source>
+        <target>Львовская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.mykolaivska" datatype="html">
+        <source>Миколаївська область</source>
+        <target>Николаевская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.odeska" datatype="html">
+        <source>Одеська область</source>
+        <target>Одесская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.poltavska" datatype="html">
+        <source>Полтавська область</source>
+        <target>Полтавская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.rivnenska" datatype="html">
+        <source>Рівненська область</source>
+        <target>Ровенская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.sumska" datatype="html">
+        <source>Сумська область</source>
+        <target>Сумская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.ternopilska" datatype="html">
+        <source>Тернопільська область</source>
+        <target>Тернопольская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.kharkivska" datatype="html">
+        <source>Харківська область</source>
+        <target>Харьковская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.khersonska" datatype="html">
+        <source>Херсонська область</source>
+        <target>Херсонская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.khmelnytska" datatype="html">
+        <source>Хмельницька область</source>
+        <target>Хмельницкая область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.cherkaska" datatype="html">
+        <source>Черкаська область</source>
+        <target>Черкасская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.chernihivska" datatype="html">
+        <source>Чернігівська область</source>
+        <target>Черниговская область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.chernivetska" datatype="html">
+        <source>Чернівецька область</source>
+        <target>Черновицкая область</target>
+      </trans-unit>
+      <trans-unit id="header.menu.region.kyiv" datatype="html">
+        <source>Київ</source>
+        <target>Киев</target>
+      </trans-unit>
+      <trans-unit id="catalog.root.hardware" datatype="html">
+        <source>Фурнітура</source>
+        <target>Фурнитура</target>
+      </trans-unit>
+      <trans-unit id="catalog.root.doors" datatype="html">
+        <source>Двері</source>
+        <target>Двери</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.hinges" datatype="html">
+        <source>Завіси</source>
+        <target>Петли</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.locks" datatype="html">
+        <source>Замки</source>
+        <target>Замки</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.handles" datatype="html">
+        <source>Ручки</source>
+        <target>Ручки</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.cylinders" datatype="html">
+        <source>Циліндри</source>
+        <target>Цилиндры</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.interiorMechanisms" datatype="html">
+        <source>Міжкімнатні механізми</source>
+        <target>Межкомнатные механизмы</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.other" datatype="html">
+        <source>Інше</source>
+        <target>Прочее</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.entranceDoors" datatype="html">
+        <source>Вхідні двері</source>
+        <target>Входные двери</target>
+      </trans-unit>
+      <trans-unit id="catalog.section.interiorDoors" datatype="html">
+        <source>Міжкімнатні двері</source>
+        <target>Межкомнатные двери</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

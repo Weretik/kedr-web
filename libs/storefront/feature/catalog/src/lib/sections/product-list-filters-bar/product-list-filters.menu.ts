@@ -4,6 +4,9 @@ import {
   CATALOG_HARDWARE_ORDER,
   CATALOG_HARDWARE_SECTIONS,
   CATALOG_ROOT_CATEGORIES,
+  getCatalogDoorSectionLabel,
+  getCatalogHardwareSectionLabel,
+  getCatalogRootLabel,
 } from '@storefront/data-access';
 
 import type { MenuItem } from 'primeng/api';
@@ -18,7 +21,7 @@ const hardwareItems: FilterMenuItem[] = CATALOG_HARDWARE_ORDER.map(
   (sectionKey) => {
     const section = CATALOG_HARDWARE_SECTIONS[sectionKey];
     return {
-      label: section.label,
+      label: getCatalogHardwareSectionLabel(sectionKey),
       categorySlug: section.slug,
       items: section.items.map((item) => ({
         label: item.label,
@@ -31,7 +34,7 @@ const hardwareItems: FilterMenuItem[] = CATALOG_HARDWARE_ORDER.map(
 const doorItems: FilterMenuItem[] = CATALOG_DOOR_ORDER.map((sectionKey) => {
   const section = CATALOG_DOOR_SECTIONS[sectionKey];
   return {
-    label: section.label,
+    label: getCatalogDoorSectionLabel(sectionKey),
     categorySlug: section.slug,
     items: section.items.map((item) => ({
       label: item.label,
@@ -42,14 +45,14 @@ const doorItems: FilterMenuItem[] = CATALOG_DOOR_ORDER.map((sectionKey) => {
 
 const FILTERS_MENU_STRUCTURE: FilterMenuItem[] = [
   {
-    label: CATALOG_ROOT_CATEGORIES.hardware.label,
+    label: getCatalogRootLabel('hardware'),
     categorySlug: CATALOG_ROOT_CATEGORIES.hardware.slug,
     items: hardwareItems,
   },
   ...(SHOW_DOORS_CATEGORY
     ? [
         {
-          label: CATALOG_ROOT_CATEGORIES.doors.label,
+          label: getCatalogRootLabel('doors'),
           categorySlug: CATALOG_ROOT_CATEGORIES.doors.slug,
           items: doorItems,
         } satisfies FilterMenuItem,
