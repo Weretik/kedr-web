@@ -1,15 +1,9 @@
-﻿import { isPlatformBrowser } from '@angular/common';
-import {
-  Injectable,
-  PLATFORM_ID,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { BrowserStorageService } from '@shared/util';
 
 @Injectable({ providedIn: 'root' })
 export class SearchHistoryService {
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly storage = inject(BrowserStorageService);
 
   private readonly storageKey = 'kedr.search.history.v1';
   private readonly maxItems = 10;
@@ -40,10 +34,8 @@ export class SearchHistoryService {
   }
 
   private read(): string[] {
-    if (!isPlatformBrowser(this.platformId)) return [];
-
     try {
-      const raw = sessionStorage.getItem(this.storageKey);
+      const raw = this.storage.getItem(this.storageKey);
       if (!raw) return [];
 
       const parsed = JSON.parse(raw);
@@ -56,15 +48,13 @@ export class SearchHistoryService {
   }
 
   private write(items: string[]): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
     try {
       if (items.length === 0) {
-        sessionStorage.removeItem(this.storageKey);
+        this.storage.removeItem(this.storageKey);
         return;
       }
 
-      sessionStorage.setItem(this.storageKey, JSON.stringify(items));
+      this.storage.setItem(this.storageKey, JSON.stringify(items));
     } catch {
       // ignore
     }
