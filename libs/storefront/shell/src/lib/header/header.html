@@ -10,10 +10,11 @@
       <div class="flex justify-start items-center gap-4">
         <a routerLink="/" class="flex items-center">
           <img
-            ngSrc="/assets/logo/main-logo.svg"
+            ngSrc="assets/logo/main-logo.svg"
             width="100"
             height="50"
             alt="Kedr Logo"
+            i18n-alt="@@header.logoAlt"
             class="h-10 sm:h-14 w-auto"
           />
         </a>
@@ -24,7 +25,9 @@
           role="button"
           tabindex="0"
           title="Скопіювати"
+          i18n-title="@@header.copyPhoneTitle"
           aria-label="Скопіювати номер телефону"
+          i18n-aria-label="@@header.copyPhoneAria"
           (click)="copyToClipboard('+3800687135049')"
           (keydown.enter)="copyToClipboard('+3800687135049')"
           (keydown.space)="copyToClipboard('+3800687135049'); $event.preventDefault()"
@@ -38,7 +41,9 @@
           target="_blank"
           rel="noopener noreferrer"
           title="Telegram"
+          i18n-title="@@header.telegramTitle"
           aria-label="Написати в Telegram"
+          i18n-aria-label="@@header.telegramAria"
           class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
         >
           <img
@@ -46,6 +51,7 @@
             width="16"
             height="16"
             alt="Telegram"
+            i18n-alt="@@header.telegramAlt"
           />
         </a>
 
@@ -54,7 +60,9 @@
           target="_blank"
           rel="noopener noreferrer"
           title="Viber"
+          i18n-title="@@header.viberTitle"
           aria-label="Написати в Viber"
+          i18n-aria-label="@@header.viberAria"
           class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
         >
           <img
@@ -62,6 +70,7 @@
             width="16"
             height="16"
             alt="Viber"
+            i18n-alt="@@header.viberAlt"
           />
         </a>
         <a
@@ -69,7 +78,9 @@
           target="_blank"
           rel="noopener noreferrer"
           title="Карта"
+          i18n-title="@@header.mapTitle"
           aria-label="Відкрити карту"
+          i18n-aria-label="@@header.mapAria"
           class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
         >
           <i class="pi pi-map-marker text-sm leading-none"></i>
@@ -95,6 +106,7 @@
             (focus)="showSearchHistory(desktopSearchHistoryPopover, $event)"
             (click)="showSearchHistory(desktopSearchHistoryPopover, $event)"
             (input)="onSearchDraftChange(searchInput.value, desktopSearchHistoryPopover, $event)"
+            i18n-placeholder="@@header.searchPlaceholder"
             placeholder="Пошук товарів по артикулу або назві"
             class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
             (keydown.enter)="onSearch(searchInput.value, desktopSearchHistoryPopover)"
@@ -117,7 +129,11 @@
             <div
               class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
             >
-              <span class="text-sm font-semibold">Історія пошуку</span>
+              <span
+                class="text-sm font-semibold"
+                i18n="@@header.searchHistoryTitle"
+                >Історія пошуку</span
+              >
             </div>
             <button
               pButton
@@ -126,6 +142,7 @@
               severity="secondary"
               [text]="true"
               (click)="clearHistory(desktopSearchHistoryPopover)"
+              i18n="@@header.clearHistory"
             >
               Очистити все
             </button>
@@ -156,6 +173,7 @@
                 [text]="true"
                 severity="secondary"
                 aria-label="Видалити запит з історії"
+                i18n-aria-label="@@header.removeHistoryItemAria"
                 (click)="removeHistoryItem(item, desktopSearchHistoryPopover)"
               ></button>
             </div>
@@ -175,7 +193,9 @@
           [rounded]="true"
           class="w-10 h-10 text-surface-500! dark:text-surface-400!"
           title="Контакти"
+          i18n-title="@@header.contactsTitle"
           aria-label="Контакти"
+          i18n-aria-label="@@header.contactsAria"
           (click)="phonePopover.toggle($event)"
         >
           <i class="pi pi-phone"></i>
@@ -186,7 +206,9 @@
               type="button"
               class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
               title="Скопіювати номер телефону"
+              i18n-title="@@header.copyPhoneNumberTitle"
               aria-label="Скопіювати номер телефону"
+              i18n-aria-label="@@header.copyPhoneAria"
               (click)="copyToClipboard('+3800687135049')"
             >
               <i class="pi pi-phone text-lg leading-none mr-3"></i>
@@ -198,7 +220,9 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Telegram"
+                i18n-title="@@header.telegramTitle"
                 aria-label="Написати в Telegram"
+                i18n-aria-label="@@header.telegramAria"
                 class="w-9 h-9 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
               >
                 <img
@@ -206,6 +230,7 @@
                   width="18"
                   height="18"
                   alt="Telegram"
+                  i18n-alt="@@header.telegramAlt"
                 />
               </a>
               <a
@@ -213,7 +238,9 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Viber"
+                i18n-title="@@header.viberTitle"
                 aria-label="Написати в Viber"
+                i18n-aria-label="@@header.viberAria"
                 class="w-9 h-9 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
               >
                 <img
@@ -221,6 +248,7 @@
                   width="18"
                   height="18"
                   alt="Viber"
+                  i18n-alt="@@header.viberAlt"
                 />
               </a>
               <a
@@ -228,7 +256,9 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Карта"
+                i18n-title="@@header.mapTitle"
                 aria-label="Відкрити карту"
+                i18n-aria-label="@@header.mapAria"
                 class="w-9 h-9 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
               >
                 <i class="pi pi-map-marker text-base leading-none"></i>
@@ -274,6 +304,7 @@
       </div>
       <button
         pButton
+        i18n-aria-label="@@header.toggleThemeAria"
         severity="secondary"
         [text]="true"
         [rounded]="true"
@@ -288,6 +319,7 @@
       </button>
       <button
         pButton
+        i18n-aria-label="@@header.accountAria"
         severity="secondary"
         [text]="true"
         [rounded]="true"
@@ -339,6 +371,7 @@
         ></i>
         <input
           #mobileSearchInput
+          i18n-placeholder="@@header.searchPlaceholder"
           type="text"
           [value]="pageState.draftSearch()"
           (focus)="showSearchHistory(mobileSearchHistoryPopover, $event)"
@@ -367,10 +400,15 @@
             class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
           >
             <i class="pi pi-history text-sm"></i>
-            <span class="text-sm font-semibold">Історія пошуку</span>
+            <span
+              class="text-sm font-semibold"
+              i18n="@@header.searchHistoryTitle"
+              >Історія пошуку</span
+            >
           </div>
           <button
             pButton
+            i18n="@@header.clearHistory"
             type="button"
             size="small"
             severity="secondary"
@@ -401,6 +439,7 @@
               pButton
               type="button"
               icon="pi pi-times"
+              i18n-aria-label="@@header.removeHistoryItemAria"
               size="small"
               [rounded]="true"
               [text]="true"
@@ -464,7 +503,12 @@
       </a>
       } @else {
       <div class="flex flex-col items-start gap-4">
-        <img [src]="item.image" alt="wholesale-logo" class="w-full" />
+        <img
+          [src]="item.image"
+          alt="wholesale-logo"
+          i18n-alt="@@header.wholesaleLogoAlt"
+          class="w-full"
+        />
         <span>{{ item.subtext }}</span>
         <p-button
           [label]="item.label"
