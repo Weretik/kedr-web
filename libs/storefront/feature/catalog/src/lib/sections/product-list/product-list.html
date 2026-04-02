@@ -92,20 +92,29 @@
 <div class="card w-full mb-4">
   <p-message severity="error" variant="outlined">
     <div class="flex flex-col gap-3">
-      <div class="font-medium">Не вдалося завантажити товари</div>
-      <div class="text-sm text-surface-600 dark:text-surface-300">
+      <div class="font-medium" i18n="@@catalog.productList.error.title">
+        Не вдалося завантажити товари
+      </div>
+      <div
+        class="text-sm text-surface-600 dark:text-surface-300"
+        i18n="@@catalog.productList.error.description"
+      >
         Перевірте інтернет або спробуйте ще раз.
       </div>
 
       <div class="flex gap-2">
         <button pButton (click)="onRetry()">
           <i pButtonIcon class="pi pi-refresh"></i>
-          <span pButtonLabel>Спробувати ще раз</span>
+          <span pButtonLabel i18n="@@catalog.productList.error.retry"
+            >Спробувати ще раз</span
+          >
         </button>
 
         <button pButton outlined (click)="onResetFilters()">
           <i pButtonIcon class="pi pi-filter-slash"></i>
-          <span pButtonLabel>Скинути фільтри</span>
+          <span pButtonLabel i18n="@@catalog.productList.error.resetFilters"
+            >Скинути фільтри</span
+          >
         </button>
       </div>
     </div>
