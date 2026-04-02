@@ -7,6 +7,11 @@ import { CompanyStats } from '../../sections/company-stats/company-stats';
 import { Faq } from '../../sections/faq/faq';
 import { MainHero } from '../../sections/main-hero/main-hero';
 
+declare const $localize: (
+  messageParts: TemplateStringsArray,
+  ...expressions: readonly unknown[]
+) => string;
+
 @Component({
   selector: 'lib-about-company',
   imports: [
@@ -22,8 +27,11 @@ import { MainHero } from '../../sections/main-hero/main-hero';
 })
 export class AboutCompany {
   headerConfig: PageHeaderConfig = {
-    title: 'Про компанію',
-    breadcrumbs: [{ label: 'Про нас' }, { label: 'Про компанію' }],
+    title: $localize`:@@about.page.title:Про компанію`,
+    breadcrumbs: [
+      { label: $localize`:@@about.page.breadcrumb.about:Про нас` },
+      { label: $localize`:@@about.page.breadcrumb.company:Про компанію` },
+    ],
     showSearch: false,
   };
 }
