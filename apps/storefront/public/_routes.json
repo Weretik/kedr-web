@@ -1,6 +1,0 @@
-{
-  "version": 1,
-  "description": "Bypass Pages Functions for localized storefront SPA routes",
-  "include": ["/*"],
-  "exclude": ["/", "/uk/*", "/ru/*"]
-}
