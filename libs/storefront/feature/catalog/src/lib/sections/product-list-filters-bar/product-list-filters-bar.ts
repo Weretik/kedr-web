@@ -205,13 +205,22 @@ export class ProductListFiltersBar {
   }
 
   public onPanelMenuLabelClick(event: Event, item?: MenuItem) {
+    const slug = this.getItemSlug(item);
+    if (slug) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.pageState.goToCategory(slug);
+      return;
+    }
+
+    const command = item?.command as
+      | ((args: { originalEvent: Event; item: MenuItem | undefined }) => void)
+      | undefined;
+    if (!command) return;
+
     event.preventDefault();
     event.stopPropagation();
-
-    const slug = this.getItemSlug(item);
-    if (!slug) return;
-
-    this.pageState.goToCategory(slug);
+    command({ originalEvent: event, item });
   }
 
   private getItemSlug(item?: MenuItem): string | null {
