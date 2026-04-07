@@ -7,8 +7,8 @@
         <target>Логотип Class Kedr</target>
       </trans-unit>
       <trans-unit id="footer.address" datatype="html">
-        <source>Україна, м.Харків &lt;br/&gt;</source>
-        <target>Украина, г. Харьков &lt;br/&gt;</target>
+        <source>Україна, м.Харків <x id="LINE_BREAK" ctype="lb"/></source>
+        <target>Украина, г. Харьков <x id="LINE_BREAK" ctype="lb"/></target>
       </trans-unit>
       <trans-unit id="footer.contacts.title" datatype="html">
         <source>Контакти</source>
