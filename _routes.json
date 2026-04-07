@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Exclude localized storefront routes from Pages Functions catch-all",
+  "include": ["/*"],
+  "exclude": ["/", "/uk/*", "/ru/*"]
+}
