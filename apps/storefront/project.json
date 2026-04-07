@@ -111,8 +111,7 @@
       "options": {
         "commands": [
           "npx nx build storefront --outputMode=static",
-          "node -e \"require('fs').copyFileSync('apps/storefront/public/_redirects','dist/apps/storefront/browser/_redirects')\"",
-          "node -e \"require('fs').copyFileSync('_routes.json','dist/apps/storefront/browser/_routes.json')\""
+          "node -e \"require('fs').copyFileSync('apps/storefront/public/_redirects','dist/apps/storefront/browser/_redirects')\""
         ],
         "parallel": false
       }
