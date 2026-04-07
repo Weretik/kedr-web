@@ -155,20 +155,20 @@
         <target>Ключевые компетенции и сервисы</target>
       </trans-unit>
       <trans-unit id="about.overview.competencies.item1" datatype="html">
-        <source>&lt;strong&gt;Складська програма:&lt;/strong&gt; Організація та підтримка наявності асортименту, необхідного для стабільного серійного виробництва дверей.</source>
-        <target>&lt;strong&gt;Складская программа:&lt;/strong&gt; Организация и поддержка наличия ассортимента, необходимого для стабильного серийного производства дверей.</target>
+        <source><x id="START_TAG_STRONG" ctype="x-strong"/>Складська програма:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Організація та підтримка наявності асортименту, необхідного для стабільного серійного виробництва дверей.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong"/>Складская программа:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Организация и поддержка наличия ассортимента, необходимого для стабильного серийного производства дверей.</target>
       </trans-unit>
       <trans-unit id="about.overview.competencies.item2" datatype="html">
-        <source>&lt;strong&gt;Технічна експертиза:&lt;/strong&gt; Професійний підбір фурнітури згідно з технічними завданнями та кресленнями замовника для проектів будь-якої складності.</source>
-        <target>&lt;strong&gt;Техническая экспертиза:&lt;/strong&gt; Профессиональный подбор фурнитуры согласно техническим заданиям и чертежам заказчика для проектов любой сложности.</target>
+        <source><x id="START_TAG_STRONG" ctype="x-strong"/>Технічна експертиза:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Професійний підбір фурнітури згідно з технічними завданнями та кресленнями замовника для проектів будь-якої складності.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong"/>Техническая экспертиза:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Профессиональный подбор фурнитуры согласно техническим заданиям и чертежам заказчика для проектов любой сложности.</target>
       </trans-unit>
       <trans-unit id="about.overview.competencies.item3" datatype="html">
-        <source>&lt;strong&gt;Реновація та заміна:&lt;/strong&gt; Точна ідентифікація та підбір аналогів для фурнітури, що вийшла з ладу, з урахуванням існуючих посадкових місць та технічних параметрів.</source>
-        <target>&lt;strong&gt;Реновация и замена:&lt;/strong&gt; Точная идентификация и подбор аналогов для фурнитуры, вышедшей из строя, с учетом существующих посадочных мест и технических параметров.</target>
+        <source><x id="START_TAG_STRONG" ctype="x-strong"/>Реновація та заміна:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Точна ідентифікація та підбір аналогів для фурнітури, що вийшла з ладу, з урахуванням існуючих посадкових місць та технічних параметрів.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong"/>Реновация и замена:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Точная идентификация и подбор аналогов для фурнитуры, вышедшей из строя, с учетом существующих посадочных мест и технических параметров.</target>
       </trans-unit>
       <trans-unit id="about.overview.competencies.item4" datatype="html">
-        <source>&lt;strong&gt;Супровід та відповідальність:&lt;/strong&gt; Персональна залученість сторони, що реалізує товар, у кожну специфікацію та кожне відвантаження для досягнення бездоганного результату.</source>
-        <target>&lt;strong&gt;Сопровождение и ответственность:&lt;/strong&gt; Персональная вовлеченность стороны, реализующей товар, в каждую спецификацию и каждую отгрузку для достижения безупречного результата.</target>
+        <source><x id="START_TAG_STRONG" ctype="x-strong"/>Супровід та відповідальність:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Персональна залученість сторони, що реалізує товар, у кожну специфікацію та кожне відвантаження для досягнення бездоганного результату.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong"/>Сопровождение и ответственность:<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Персональная вовлеченность стороны, реализующей товар, в каждую спецификацию и каждую отгрузку для достижения безупречного результата.</target>
       </trans-unit>
       <trans-unit id="about.faq.heading" datatype="html">
         <source>Часті запитання</source>
