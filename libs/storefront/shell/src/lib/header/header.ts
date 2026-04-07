@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ClipboardService, ThemeService } from '@shared/ui';
-import { BrowserStorageService } from '@shared/util';
+import { BrowserSessionStorageService } from '@shared/util';
 import {
   CartFacade,
   CartUiFacade,
@@ -16,9 +16,10 @@ import {
 } from '@storefront/data-access';
 import { Cart } from '@storefront/feature/cart';
 import { ProductListPageState } from '@storefront/feature/catalog';
-import { SearchHistoryService } from '@storefront/util';
-import { AvatarModule } from 'primeng/avatar';
-import { BadgeModule } from 'primeng/badge';
+import {
+  LocaleNavigationService,
+  SearchHistoryService,
+} from '@storefront/util';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -48,10 +49,11 @@ import { buildMenu, type HeaderLocale } from './header.menu';
   encapsulation: ViewEncapsulation.None,
 })
 export class Header {
-  private readonly localeStorageKey = 'storefront.locale';
+  private readonly localeScrollYKey = 'storefront.locale.scrollY';
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
-  private readonly storage = inject(BrowserStorageService);
+  private readonly localeNavigation = inject(LocaleNavigationService);
+  private readonly sessionStorage = inject(BrowserSessionStorageService);
   private readonly clipboard = inject(ClipboardService);
   public readonly themeService = inject(ThemeService);
   readonly cartUi = inject(CartUiFacade);
@@ -62,10 +64,13 @@ export class Header {
 
   readonly isSticky = signal(false);
   readonly hasHistory = this.history.items;
-  readonly currentLocale = signal<HeaderLocale>(this.detectLocale());
+  readonly currentLocale = signal<HeaderLocale>(
+    this.localeNavigation.getCurrentLocale(),
+  );
 
   constructor() {
-    this.storage.setItem(this.localeStorageKey, this.currentLocale());
+    this.localeNavigation.saveLocale(this.currentLocale());
+    this.restoreScrollAfterLocaleSwitch();
   }
 
   @HostListener('window:scroll', [])
@@ -88,12 +93,15 @@ export class Header {
       return;
     }
 
-    this.router.navigate(['/catalog', 'products'], {
-      queryParams: {
-        search: search || null,
-        page: 1,
+    this.router.navigate(
+      this.localeNavigation.localizedSegments('catalog', 'products'),
+      {
+        queryParams: {
+          search: search || null,
+          page: 1,
+        },
       },
-    });
+    );
   }
 
   onSearchDraftChange(value: string, popover: Popover, event: Event): void {
@@ -133,36 +141,34 @@ export class Header {
   }
 
   switchLocale(locale: HeaderLocale): void {
-    this.storage.setItem(this.localeStorageKey, locale);
+    this.localeNavigation.saveLocale(locale);
     if (locale === this.currentLocale()) return;
 
     const location = this.document.location;
     if (!location) return;
 
     const path = location.pathname || '/';
-    const withoutLocale = path.replace(/^\/(uk|ru)(?=\/|$)/, '') || '/';
-    const normalizedPath = withoutLocale.startsWith('/')
-      ? withoutLocale
-      : `/${withoutLocale}`;
+    const normalizedPath = this.localeNavigation.stripLocalePrefix(path);
     const query = location.search || '';
     const hash = location.hash || '';
 
+    this.sessionStorage.setItem(this.localeScrollYKey, String(window.scrollY));
     location.assign(`/${locale}${normalizedPath}${query}${hash}`);
   }
 
-  private detectLocale(): HeaderLocale {
-    const path = this.document.location?.pathname || '';
-    const match = path.match(/^\/(uk|ru)(?=\/|$)/);
-    if (match?.[1] === 'uk' || match?.[1] === 'ru') {
-      return match[1];
-    }
+  private restoreScrollAfterLocaleSwitch(): void {
+    const rawScrollY = this.sessionStorage.getItem(this.localeScrollYKey);
+    if (!rawScrollY) return;
 
-    const savedLocale = this.storage.getItem(this.localeStorageKey);
-    if (savedLocale === 'uk' || savedLocale === 'ru') {
-      return savedLocale;
-    }
+    this.sessionStorage.removeItem(this.localeScrollYKey);
+    const scrollY = Number(rawScrollY);
+    if (!Number.isFinite(scrollY) || scrollY < 0) return;
 
-    return 'uk';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: scrollY, behavior: 'auto' });
+      });
+    });
   }
 
   public readonly megaMenuPt = {
