@@ -22,10 +22,12 @@ import {
 } from '@storefront/util';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
-import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { Popover } from 'primeng/popover';
 import { Ripple } from 'primeng/ripple';
 
+import { HeaderActionsComponent } from './components/header-actions/header-actions';
+import { HeaderContactsComponent } from './components/header-contacts/header-contacts';
+import { HeaderSearchComponent } from './components/header-search/header-search';
 import { buildMenu, type HeaderLocale } from './header.menu';
 
 @Component({
@@ -34,14 +36,13 @@ import { buildMenu, type HeaderLocale } from './header.menu';
     MegaMenu,
     ButtonModule,
     CommonModule,
-    AvatarModule,
     NgOptimizedImage,
     RouterLink,
     Ripple,
     Cart,
-    BadgeModule,
-    OverlayBadgeModule,
-    Popover,
+    HeaderContactsComponent,
+    HeaderSearchComponent,
+    HeaderActionsComponent,
   ],
   templateUrl: './header.html',
   styleUrl: './header.css',
