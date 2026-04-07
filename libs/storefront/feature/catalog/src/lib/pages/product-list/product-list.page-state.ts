@@ -2,12 +2,14 @@ import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { ProductListQuery, ProductListSortUi } from '@storefront/data-access';
+import { LocaleNavigationService } from '@storefront/util';
 import { linkedQueryParam } from 'ngxtension/linked-query-param';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListPageState {
   private readonly router = inject(Router);
+  private readonly localeNavigation = inject(LocaleNavigationService);
 
   readonly search = linkedQueryParam('search');
   readonly page = linkedQueryParam('page', { defaultValue: '1' });
@@ -99,13 +101,16 @@ export class ProductListPageState {
     this.search.set(next.length > 0 ? next : null);
     this.setDefaultPage();
 
-    void this.router.navigate(['/catalog', 'products'], {
-      queryParams: {
-        search: next.length > 0 ? next : null,
-        page: 1,
+    void this.router.navigate(
+      this.localeNavigation.localizedSegments('catalog', 'products'),
+      {
+        queryParams: {
+          search: next.length > 0 ? next : null,
+          page: 1,
+        },
+        queryParamsHandling: 'merge',
       },
-      queryParamsHandling: 'merge',
-    });
+    );
   }
 
   goToCategory(slug: string): void {
@@ -114,13 +119,16 @@ export class ProductListPageState {
       typeof window !== 'undefined' ? window.scrollY : undefined;
 
     void this.router
-      .navigate(['/catalog', slug, 'products'], {
-        queryParams: {
-          page: 1,
-          search: '',
+      .navigate(
+        this.localeNavigation.localizedSegments('catalog', slug, 'products'),
+        {
+          queryParams: {
+            page: 1,
+            search: '',
+          },
+          queryParamsHandling: 'merge',
         },
-        queryParamsHandling: 'merge',
-      })
+      )
       .then((navigated) => {
         if (
           !navigated ||
@@ -152,7 +160,13 @@ export class ProductListPageState {
     this.page.set('1');
     this.pageSize.set('20');
 
-    void this.router.navigate(['/catalog', 'products']);
+    void this.router.navigate(
+      this.localeNavigation.localizedSegments('catalog', 'products'),
+    );
+  }
+
+  goToLocaleHome(): void {
+    void this.router.navigate(this.localeNavigation.localizedSegments());
   }
 
   private setDefaultPage(): void {

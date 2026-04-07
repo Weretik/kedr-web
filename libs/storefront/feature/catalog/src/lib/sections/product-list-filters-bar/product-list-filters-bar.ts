@@ -197,7 +197,7 @@ export class ProductListFiltersBar {
   }
 
   public goToAllProducts() {
-    void this.router.navigate(['/']);
+    this.pageState.goToLocaleHome();
   }
 
   public goToCategoryBySlug(slug: string) {
@@ -251,5 +251,6 @@ export class ProductListFiltersBar {
     const number = Number(value);
     return Number.isFinite(number) ? number : null;
   }
+
   protected readonly String = String;
 }
