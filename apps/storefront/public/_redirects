@@ -1,3 +1,9 @@
 / /uk/ 302
-/uk/catalog/* /uk/index.html 200
-/ru/catalog/* /ru/index.html 200
+/uk/catalog/:categorySlug/products /uk/ 200
+/uk/catalog/:categorySlug/products/ /uk/ 200
+/uk/catalog/product/:productSlug /uk/ 200
+/uk/catalog/product/:productSlug/ /uk/ 200
+/ru/catalog/:categorySlug/products /ru/ 200
+/ru/catalog/:categorySlug/products/ /ru/ 200
+/ru/catalog/product/:productSlug /ru/ 200
+/ru/catalog/product/:productSlug/ /ru/ 200
