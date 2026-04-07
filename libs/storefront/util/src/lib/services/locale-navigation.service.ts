@@ -30,11 +30,7 @@ export class LocaleNavigationService {
   }
 
   localizedSegments(...segments: string[]): string[] {
-    return [
-      '/',
-      this.getCurrentLocale(),
-      ...segments.map(this.normalizeSegment),
-    ];
+    return ['/', ...segments.map(this.normalizeSegment)];
   }
 
   localizedPath(path: string): string[] {
