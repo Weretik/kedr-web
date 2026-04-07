@@ -111,7 +111,7 @@
       "options": {
         "commands": [
           "npx nx build storefront",
-          "copy /Y apps\\storefront\\public\\_redirects dist\\apps\\storefront\\browser\\_redirects"
+          "node -e \"require('fs').copyFileSync('apps/storefront/public/_redirects','dist/apps/storefront/browser/_redirects')\""
         ],
         "parallel": false
       }
