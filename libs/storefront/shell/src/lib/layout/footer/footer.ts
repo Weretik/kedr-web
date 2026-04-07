@@ -2,6 +2,7 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ClipboardService } from '@shared/ui';
+import { LocaleNavigationService } from '@storefront/util';
 
 declare const $localize: (
   messageParts: TemplateStringsArray,
@@ -33,26 +34,51 @@ const footerText = {
 })
 export class Footer {
   private readonly clipboard = inject(ClipboardService);
+  private readonly localeNavigation = inject(LocaleNavigationService);
 
   readonly companyLinks: FooterLink[] = [
-    { label: footerText.companyAbout, routerLink: ['/about-company'] },
+    {
+      label: footerText.companyAbout,
+      routerLink: this.localeNavigation.localizedPath('/about-company'),
+    },
     {
       label: footerText.companyDelivery,
-      routerLink: ['/delivery-and-payment'],
+      routerLink: this.localeNavigation.localizedPath('/delivery-and-payment'),
     },
-    { label: footerText.companyReturns, routerLink: ['/returns-exchanges'] },
-    { label: footerText.companyContacts, routerLink: ['/contacts'] },
+    {
+      label: footerText.companyReturns,
+      routerLink: this.localeNavigation.localizedPath('/returns-exchanges'),
+    },
+    {
+      label: footerText.companyContacts,
+      routerLink: this.localeNavigation.localizedPath('/contacts'),
+    },
   ];
 
   readonly accountLinks: FooterLink[] = [
-    { label: footerText.infoGallery, routerLink: ['/galleria'] },
-    { label: footerText.infoArticles, routerLink: ['/articles'] },
-    { label: footerText.infoWholesale, routerLink: ['/wholesale'] },
+    {
+      label: footerText.infoGallery,
+      routerLink: this.localeNavigation.localizedPath('/galleria'),
+    },
+    {
+      label: footerText.infoArticles,
+      routerLink: this.localeNavigation.localizedPath('/articles'),
+    },
+    {
+      label: footerText.infoWholesale,
+      routerLink: this.localeNavigation.localizedPath('/wholesale'),
+    },
   ];
 
   readonly legalLinks: FooterLink[] = [
-    { label: footerText.legalOffer, routerLink: ['/public-offer'] },
-    { label: footerText.legalPrivacy, routerLink: ['/privacy-policy'] },
+    {
+      label: footerText.legalOffer,
+      routerLink: this.localeNavigation.localizedPath('/public-offer'),
+    },
+    {
+      label: footerText.legalPrivacy,
+      routerLink: this.localeNavigation.localizedPath('/privacy-policy'),
+    },
   ];
 
   copyToClipboard(value: string): void {
