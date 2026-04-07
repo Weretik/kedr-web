@@ -1,0 +1,88 @@
+<div
+  class="flex items-center gap-1 mr-2 order-first"
+  role="group"
+  aria-label="Перемикання мови"
+  i18n-aria-label="@@header.languageSwitcherAria"
+>
+  <button
+    type="button"
+    class="px-2 py-1 rounded text-xs font-semibold border transition-colors cursor-pointer"
+    [ngClass]="
+      currentLocale === 'uk'
+        ? 'bg-primary-500 text-white border-primary-500'
+        : 'text-surface-700 dark:text-surface-200 border-surface-300 dark:border-surface-600 hover:bg-surface-100 dark:hover:bg-surface-800'
+    "
+    (click)="onLocaleChange('uk')"
+    aria-label="Українська"
+    i18n-aria-label="@@header.langUkAria"
+  >
+    UK
+  </button>
+  <button
+    type="button"
+    class="px-2 py-1 rounded text-xs font-semibold border transition-colors cursor-pointer"
+    [ngClass]="
+      currentLocale === 'ru'
+        ? 'bg-primary-500 text-white border-primary-500'
+        : 'text-surface-700 dark:text-surface-200 border-surface-300 dark:border-surface-600 hover:bg-surface-100 dark:hover:bg-surface-800'
+    "
+    (click)="onLocaleChange('ru')"
+    aria-label="Русский"
+    i18n-aria-label="@@header.langRuAria"
+  >
+    RU
+  </button>
+</div>
+<button
+  pButton
+  i18n-aria-label="@@header.toggleThemeAria"
+  severity="secondary"
+  [text]="true"
+  [rounded]="true"
+  (click)="onToggleTheme()"
+  class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+  aria-label="Змінити тему"
+>
+  <i class="pi" [ngClass]="isDark ? 'pi-moon' : 'pi-sun'"></i>
+</button>
+<button
+  pButton
+  i18n-aria-label="@@header.accountAria"
+  severity="secondary"
+  [text]="true"
+  [rounded]="true"
+  class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+  aria-label="Акаунт"
+>
+  <i class="pi pi-user"></i>
+</button>
+<p-overlaybadge
+  severity="success"
+  [value]="cartItemsCount"
+  badgeSize="small"
+  [pt]="{ pcBadge: { root: { class: '-translate-x-2 translate-y-2 scale-80' } } }"
+  [hidden]="cartItemsCount === 0"
+>
+  <button
+    pButton
+    (click)="onOpenCart()"
+    severity="secondary"
+    class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+    [text]="true"
+    [rounded]="true"
+  >
+    <i class="pi pi-shopping-cart"></i>
+  </button>
+</p-overlaybadge>
+@if (cartItemsCount === 0) {
+<button
+  pButton
+  (click)="onOpenCart()"
+  severity="secondary"
+  class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+  [text]="true"
+  [rounded]="true"
+>
+  <i class="pi pi-shopping-cart"></i>
+</button>
+}

@@ -1,0 +1,150 @@
+@if (mobile) {
+<button
+  pButton
+  severity="secondary"
+  [text]="true"
+  [rounded]="true"
+  class="w-10 h-10 text-surface-500! dark:text-surface-400!"
+  title="Контакти"
+  i18n-title="@@header.contactsTitle"
+  aria-label="Контакти"
+  i18n-aria-label="@@header.contactsAria"
+  (click)="phonePopover.toggle($event)"
+>
+  <i class="pi pi-phone"></i>
+</button>
+<p-popover #phonePopover>
+  <div class="flex flex-col gap-3 min-w-56">
+    <button
+      type="button"
+      class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+      title="Скопіювати номер телефону"
+      i18n-title="@@header.copyPhoneNumberTitle"
+      aria-label="Скопіювати номер телефону"
+      i18n-aria-label="@@header.copyPhoneAria"
+      (click)="onCopyPhone()"
+    >
+      <i class="pi pi-phone text-lg leading-none mr-3"></i>
+      <span class="text-base font-medium">(068) 713-50-49</span>
+    </button>
+    <div class="flex items-center gap-3">
+      <a
+        href="https://t.me/+380687135049"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Telegram"
+        i18n-title="@@header.telegramTitle"
+        aria-label="Написати в Telegram"
+        i18n-aria-label="@@header.telegramAria"
+        class="w-9 h-9 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
+      >
+        <img
+          src="https://cdn.simpleicons.org/telegram"
+          width="18"
+          height="18"
+          alt="Telegram"
+          i18n-alt="@@header.telegramAlt"
+        />
+      </a>
+      <a
+        href="viber://chat?number=%2B380687135049"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Viber"
+        i18n-title="@@header.viberTitle"
+        aria-label="Написати в Viber"
+        i18n-aria-label="@@header.viberAria"
+        class="w-9 h-9 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
+      >
+        <img
+          src="https://cdn.simpleicons.org/viber"
+          width="18"
+          height="18"
+          alt="Viber"
+          i18n-alt="@@header.viberAlt"
+        />
+      </a>
+      <a
+        href="https://maps.app.goo.gl/D2rH3HcaxLfxik5H6"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Карта"
+        i18n-title="@@header.mapTitle"
+        aria-label="Відкрити карту"
+        i18n-aria-label="@@header.mapAria"
+        class="w-9 h-9 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
+      >
+        <i class="pi pi-map-marker text-base leading-none"></i>
+      </a>
+    </div>
+  </div>
+</p-popover>
+} @else {
+<div class="flex items-center gap-3">
+  <div
+    class="flex items-center cursor-pointer transition-transform ease-out duration-200 hover:text-primary-500 hover:translate-x-1"
+    role="button"
+    tabindex="0"
+    title="Скопіювати"
+    i18n-title="@@header.copyPhoneTitle"
+    aria-label="Скопіювати номер телефону"
+    i18n-aria-label="@@header.copyPhoneAria"
+    (click)="onCopyPhone()"
+    (keydown.enter)="onCopyPhone()"
+    (keydown.space)="onCopyPhone(); $event.preventDefault()"
+  >
+    <i class="pi pi-phone text-lg leading-none mr-4"></i>
+    <span class="text-base font-medium">(068) 713-50-49</span>
+  </div>
+
+  <a
+    href="https://t.me/+380687135049"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="Telegram"
+    i18n-title="@@header.telegramTitle"
+    aria-label="Написати в Telegram"
+    i18n-aria-label="@@header.telegramAria"
+    class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
+  >
+    <img
+      src="https://cdn.simpleicons.org/telegram"
+      width="16"
+      height="16"
+      alt="Telegram"
+      i18n-alt="@@header.telegramAlt"
+    />
+  </a>
+
+  <a
+    href="viber://chat?number=%2B380687135049"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="Viber"
+    i18n-title="@@header.viberTitle"
+    aria-label="Написати в Viber"
+    i18n-aria-label="@@header.viberAria"
+    class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
+  >
+    <img
+      src="https://cdn.simpleicons.org/viber"
+      width="16"
+      height="16"
+      alt="Viber"
+      i18n-alt="@@header.viberAlt"
+    />
+  </a>
+  <a
+    href="https://maps.app.goo.gl/D2rH3HcaxLfxik5H6"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="Карта"
+    i18n-title="@@header.mapTitle"
+    aria-label="Відкрити карту"
+    i18n-aria-label="@@header.mapAria"
+    class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 hover:border-primary-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 transition-all duration-200 flex items-center justify-center"
+  >
+    <i class="pi pi-map-marker text-sm leading-none"></i>
+  </a>
+</div>
+}

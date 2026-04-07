@@ -1,0 +1,177 @@
+@if (mobile) {
+<div class="w-full flex items-stretch">
+  <div
+    class="flex-1 px-3 py-2 bg-surface-0 dark:bg-surface-900 rounded-border shadow-sm border border-surface flex justify-start items-center gap-3"
+  >
+    <i
+      class="pi pi-search text-surface-500 dark:text-surface-400 text-base! leading-none!"
+    ></i>
+    <input
+      #mobileSearchInput
+      i18n-placeholder="@@header.searchPlaceholder"
+      type="text"
+      [value]="draftSearch"
+      (focus)="onShowHistory(mobileSearchHistoryPopover, $event)"
+      (click)="onShowHistory(mobileSearchHistoryPopover, $event)"
+      (input)="onDraftChange(mobileSearchInput.value, mobileSearchHistoryPopover, $event)"
+      placeholder="Пошук товарів по артикулу або назві"
+      class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
+      (keydown.enter)="onSearch(mobileSearchInput.value, mobileSearchHistoryPopover)"
+    />
+  </div>
+  <button
+    pButton
+    type="button"
+    (click)="onSearch(mobileSearchInput.value, mobileSearchHistoryPopover)"
+    class="shadow-sm"
+    [style.padding]="'0 0.75rem'"
+  >
+    <i class="pi pi-search"></i>
+  </button>
+</div>
+<p-popover #mobileSearchHistoryPopover [dismissable]="true">
+  @if (historyItems.length) {
+  <div class="w-[min(32rem,calc(100vw-2.5rem))]">
+    <div class="flex items-center justify-between gap-3 mb-2 px-1">
+      <div
+        class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
+      >
+        <i class="pi pi-history text-sm"></i>
+        <span class="text-sm font-semibold" i18n="@@header.searchHistoryTitle"
+          >Історія пошуку</span
+        >
+      </div>
+      <button
+        pButton
+        i18n="@@header.clearHistory"
+        type="button"
+        size="small"
+        severity="secondary"
+        [text]="true"
+        (click)="onClearHistory(mobileSearchHistoryPopover)"
+      >
+        Очистити все
+      </button>
+    </div>
+    <div class="flex flex-col">
+      @for (item of historyItems; track item) {
+      <div
+        class="flex items-center gap-2 px-1 py-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-800"
+      >
+        <button
+          type="button"
+          class="flex-1 min-w-0 text-left flex items-center gap-2 py-1"
+          (click)="onUseHistoryItem(item, mobileSearchHistoryPopover)"
+        >
+          <i class="pi pi-history text-xs text-surface-500"></i>
+          <span class="truncate text-sm text-surface-700 dark:text-surface-200">
+            {{ item }}
+          </span>
+        </button>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-times"
+          i18n-aria-label="@@header.removeHistoryItemAria"
+          size="small"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
+          aria-label="Видалити запит з історії"
+          (click)="onRemoveHistoryItem(item, mobileSearchHistoryPopover)"
+        ></button>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</p-popover>
+} @else {
+<div class="w-full flex items-stretch">
+  <div
+    class="flex-1 px-3 py-2 bg-surface-0 dark:bg-surface-900 rounded-border shadow-sm border border-surface flex items-center gap-3"
+  >
+    <i
+      class="pi pi-search text-surface-500 dark:text-surface-400 text-base! leading-none!"
+    ></i>
+
+    <input
+      #searchInput
+      type="text"
+      [value]="draftSearch"
+      (focus)="onShowHistory(desktopSearchHistoryPopover, $event)"
+      (click)="onShowHistory(desktopSearchHistoryPopover, $event)"
+      (input)="onDraftChange(searchInput.value, desktopSearchHistoryPopover, $event)"
+      i18n-placeholder="@@header.searchPlaceholder"
+      placeholder="Пошук товарів по артикулу або назві"
+      class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
+      (keydown.enter)="onSearch(searchInput.value, desktopSearchHistoryPopover)"
+    />
+  </div>
+  <button
+    pButton
+    type="button"
+    (click)="onSearch(searchInput.value, desktopSearchHistoryPopover)"
+    class="shadow-sm"
+    [style.padding]="'0 0.75rem'"
+  >
+    <i class="pi pi-search"></i>
+  </button>
+</div>
+<p-popover #desktopSearchHistoryPopover [dismissable]="true">
+  @if (historyItems.length) {
+  <div class="w-lg max-w-[calc(100vw-2rem)]">
+    <div class="flex items-center justify-between gap-3 mb-2 px-1">
+      <div
+        class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
+      >
+        <span class="text-sm font-semibold" i18n="@@header.searchHistoryTitle"
+          >Історія пошуку</span
+        >
+      </div>
+      <button
+        pButton
+        type="button"
+        size="small"
+        severity="secondary"
+        [text]="true"
+        (click)="onClearHistory(desktopSearchHistoryPopover)"
+        i18n="@@header.clearHistory"
+      >
+        Очистити все
+      </button>
+    </div>
+    <div class="flex flex-col">
+      @for (item of historyItems; track item) {
+      <div
+        class="flex items-center gap-2 px-1 py-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-800"
+      >
+        <button
+          type="button"
+          class="flex-1 min-w-0 text-left flex items-center gap-2 py-1"
+          (click)="onUseHistoryItem(item, desktopSearchHistoryPopover)"
+        >
+          <i class="pi pi-history text-xs text-surface-500"></i>
+          <span class="truncate text-sm text-surface-700 dark:text-surface-200">
+            {{ item }}
+          </span>
+        </button>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-times"
+          size="small"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
+          aria-label="Видалити запит з історії"
+          i18n-aria-label="@@header.removeHistoryItemAria"
+          (click)="onRemoveHistoryItem(item, desktopSearchHistoryPopover)"
+        ></button>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</p-popover>
+}
