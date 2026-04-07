@@ -105,6 +105,16 @@
         "staticFilePath": "dist/apps/storefront/browser",
         "spa": false
       }
+    },
+    "build-cloudflare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx build storefront",
+          "copy /Y apps\\storefront\\public\\_redirects dist\\apps\\storefront\\browser\\_redirects"
+        ],
+        "parallel": false
+      }
     }
   }
 }
