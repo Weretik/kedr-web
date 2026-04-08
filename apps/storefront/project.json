@@ -4,19 +4,6 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/storefront/src",
-  "i18n": {
-    "sourceLocale": "uk",
-    "locales": {
-      "ru": {
-        "translation": [
-          "apps/storefront/src/locale/messages.ru.xlf",
-          "apps/storefront/src/locale/messages.ru.catalog.xlf",
-          "apps/storefront/src/locale/messages.ru.footer.xlf",
-          "apps/storefront/src/locale/messages.ru.about-company.xlf"
-        ]
-      }
-    }
-  },
   "tags": ["scope:storefront"],
   "targets": {
     "build": {
@@ -25,7 +12,7 @@
       "options": {
         "outputPath": "dist/apps/storefront",
         "browser": "apps/storefront/src/main.ts",
-        "polyfills": ["zone.js", "@angular/localize/init"],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/storefront/tsconfig.app.json",
         "assets": [
           {
@@ -42,7 +29,7 @@
       },
       "configurations": {
         "production": {
-          "localize": ["uk", "ru"],
+          "localize": false,
           "fileReplacements": [
             {
               "replace": "apps/storefront/src/environments/environment.ts",
@@ -64,7 +51,7 @@
           "outputHashing": "all"
         },
         "development": {
-          "localize": ["uk", "ru"],
+          "localize": false,
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
@@ -88,15 +75,6 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
-    "extract-i18n": {
-      "executor": "@angular/build:extract-i18n",
-      "options": {
-        "buildTarget": "storefront:build",
-        "format": "xlf",
-        "outputPath": "apps/storefront/src/locale",
-        "outFile": "messages.xlf"
-      }
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
@@ -109,10 +87,7 @@
     "build-cloudflare": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npx nx build storefront --outputMode=static",
-          "node -e \"require('fs').copyFileSync('apps/storefront/public/_redirects','dist/apps/storefront/browser/_redirects')\""
-        ],
+        "commands": ["npx nx build storefront --outputMode=static"],
         "parallel": false
       }
     }
