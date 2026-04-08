@@ -1,65 +1,20 @@
 import {
-  CATALOG_DOOR_ORDER,
-  CATALOG_DOOR_SECTIONS,
-  CATALOG_HARDWARE_ORDER,
-  CATALOG_HARDWARE_SECTIONS,
-  CATALOG_ROOT_CATEGORIES,
-  getCatalogDoorSectionLabel,
-  getCatalogHardwareSectionLabel,
-  getCatalogItemLabel,
-  getCatalogRootLabel,
-} from '@storefront/data-access';
+  buildCatalogFiltersMenuStructure,
+  type FilterMenuItem,
+  type TranslateFn,
+} from './product-list-filters-catalog.builder';
 
 import type { MenuItem } from 'primeng/api';
 
-type FilterMenuItem = MenuItem & { categorySlug?: string; expanded?: boolean };
 export type CategoryPathItem = { label: string; slug: string };
-type ExpandedState = Record<string, boolean>;
+export type ExpandedState = Record<string, boolean>;
 
-const SHOW_DOORS_CATEGORY = false;
-
-const hardwareItems: FilterMenuItem[] = CATALOG_HARDWARE_ORDER.map(
-  (sectionKey) => {
-    const section = CATALOG_HARDWARE_SECTIONS[sectionKey];
-    return {
-      label: getCatalogHardwareSectionLabel(sectionKey),
-      categorySlug: section.slug,
-      items: section.items.map((item) => ({
-        label: getCatalogItemLabel(item.slug, item.label),
-        categorySlug: item.slug,
-      })),
-    };
-  },
-);
-
-const doorItems: FilterMenuItem[] = CATALOG_DOOR_ORDER.map((sectionKey) => {
-  const section = CATALOG_DOOR_SECTIONS[sectionKey];
-  return {
-    label: getCatalogDoorSectionLabel(sectionKey),
-    categorySlug: section.slug,
-    items: section.items.map((item) => ({
-      label: getCatalogItemLabel(item.slug, item.label),
-      categorySlug: item.slug,
-    })),
-  };
-});
-
-const FILTERS_MENU_STRUCTURE: FilterMenuItem[] = [
-  {
-    label: getCatalogRootLabel('hardware'),
-    categorySlug: CATALOG_ROOT_CATEGORIES.hardware.slug,
-    items: hardwareItems,
-  },
-  ...(SHOW_DOORS_CATEGORY
-    ? [
-        {
-          label: getCatalogRootLabel('doors'),
-          categorySlug: CATALOG_ROOT_CATEGORIES.doors.slug,
-          items: doorItems,
-        } satisfies FilterMenuItem,
-      ]
-    : []),
-];
+const ROOT_STYLE_CLASS =
+  'uppercase text-base font-bold tracking-wide text-green-600';
+const GROUP_STYLE_CLASS =
+  'uppercase text-sm font-semibold tracking-wide text-surface-900 dark:text-surface-0';
+const LEAF_STYLE_CLASS =
+  'normal-case text-xs font-normal tracking-normal text-surface-700 dark:text-surface-300';
 
 const withStyleClass = (
   item: FilterMenuItem,
@@ -69,7 +24,10 @@ const withStyleClass = (
   styleClass: item.styleClass ? `${item.styleClass} ${className}` : className,
 });
 
-const applyCommand = (
+const hasChildren = (item: FilterMenuItem): boolean =>
+  Array.isArray(item.items) && item.items.length > 0;
+
+const decorateMenuTree = (
   items: FilterMenuItem[],
   actions: { goToCategory: (slug: string) => void },
   expandedState: ExpandedState,
@@ -77,16 +35,15 @@ const applyCommand = (
 ): FilterMenuItem[] => {
   return items.map((item) => {
     const newItem = { ...item };
-    const hasChildren =
-      Array.isArray(newItem.items) && newItem.items.length > 0;
+    const isGroup = hasChildren(newItem);
 
-    if (newItem.categorySlug && !newItem.command && !hasChildren) {
+    if (!isGroup && newItem.categorySlug && !newItem.command) {
       const slug = newItem.categorySlug;
       newItem.command = () => actions.goToCategory(slug);
     }
 
-    if (hasChildren) {
-      const childItems = applyCommand(
+    if (isGroup) {
+      const childItems = decorateMenuTree(
         newItem.items as FilterMenuItem[],
         actions,
         expandedState,
@@ -95,23 +52,13 @@ const applyCommand = (
       newItem.items = childItems;
       const slug = newItem.categorySlug;
       newItem.expanded = slug ? (expandedState[slug] ?? true) : true;
-      if (depth === 0) {
-        return withStyleClass(
-          newItem,
-          'uppercase text-base font-bold tracking-wide text-green-600',
-        );
-      }
-
       return withStyleClass(
         newItem,
-        'uppercase text-sm font-semibold tracking-wide text-surface-900 dark:text-surface-0',
+        depth === 0 ? ROOT_STYLE_CLASS : GROUP_STYLE_CLASS,
       );
     }
 
-    return withStyleClass(
-      newItem,
-      'normal-case text-xs font-normal tracking-normal text-surface-700 dark:text-surface-300',
-    );
+    return withStyleClass(newItem, LEAF_STYLE_CLASS);
   });
 };
 
@@ -119,16 +66,37 @@ export function buildFiltersMenu(
   actions: {
     goToCategory: (slug: string) => void;
   },
-  activeCategorySlug: string | null = null,
+  translate: TranslateFn,
   expandedState: ExpandedState = {},
 ): FilterMenuItem[] {
-  void activeCategorySlug;
-  return applyCommand(FILTERS_MENU_STRUCTURE, actions, expandedState);
+  return decorateMenuTree(
+    buildCatalogFiltersMenuStructure(translate),
+    actions,
+    expandedState,
+  );
+}
+
+export function collectExpandedState(
+  items: MenuItem[],
+  state: ExpandedState = {},
+): ExpandedState {
+  for (const item of items) {
+    const typedItem = item as FilterMenuItem;
+    const children = typedItem.items ?? [];
+    if (children.length > 0 && typedItem.categorySlug) {
+      state[typedItem.categorySlug] = typedItem.expanded !== false;
+    }
+    if (children.length > 0) {
+      collectExpandedState(children, state);
+    }
+  }
+
+  return state;
 }
 
 export function findCategoryPath(
   slug: string | null,
-  items: FilterMenuItem[] = FILTERS_MENU_STRUCTURE,
+  items: FilterMenuItem[] = [],
   parents: CategoryPathItem[] = [],
 ): CategoryPathItem[] | null {
   if (!slug) return null;
@@ -154,13 +122,4 @@ export function findCategoryPath(
   }
 
   return null;
-}
-
-export function findCategoryLabel(
-  slug: string | null,
-  items: FilterMenuItem[] = FILTERS_MENU_STRUCTURE,
-): string | null {
-  const path = findCategoryPath(slug, items);
-  if (!path) return null;
-  return path.map((item) => item.label).join(' ➜ ');
 }

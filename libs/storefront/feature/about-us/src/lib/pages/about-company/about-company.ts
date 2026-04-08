@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoService } from '@jsverse/transloco';
 import { PageHeaderConfig, PartnersBrands } from '@storefront/ui';
 
 import { CompanyFeatures } from '../../sections/company-features/company-features';
@@ -6,11 +8,6 @@ import { CompanyOverview } from '../../sections/company-overview/company-overvie
 import { CompanyStats } from '../../sections/company-stats/company-stats';
 import { Faq } from '../../sections/faq/faq';
 import { MainHero } from '../../sections/main-hero/main-hero';
-
-declare const $localize: (
-  messageParts: TemplateStringsArray,
-  ...expressions: readonly unknown[]
-) => string;
 
 @Component({
   selector: 'lib-about-company',
@@ -26,12 +23,29 @@ declare const $localize: (
   styleUrl: './about-company.css',
 })
 export class AboutCompany {
-  headerConfig: PageHeaderConfig = {
-    title: $localize`:@@about.page.title:Про компанію`,
-    breadcrumbs: [
-      { label: $localize`:@@about.page.breadcrumb.about:Про нас` },
-      { label: $localize`:@@about.page.breadcrumb.company:Про компанію` },
-    ],
-    showSearch: false,
-  };
+  private readonly translocoService = inject(TranslocoService);
+  private readonly activeLanguage = toSignal(
+    this.translocoService.langChanges$,
+    {
+      initialValue: this.translocoService.getActiveLang(),
+    },
+  );
+
+  readonly headerConfig = computed<PageHeaderConfig>(() => {
+    this.activeLanguage();
+    return {
+      title: this.translocoService.translate('about.page.title'),
+      breadcrumbs: [
+        {
+          label: this.translocoService.translate('about.page.breadcrumb.about'),
+        },
+        {
+          label: this.translocoService.translate(
+            'about.page.breadcrumb.company',
+          ),
+        },
+      ],
+      showSearch: false,
+    };
+  });
 }

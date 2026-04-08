@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonDirective, ButtonLabel } from 'primeng/button';
 
 @Component({
   selector: 'lib-main-hero',
-  imports: [ButtonLabel, ButtonDirective],
+  imports: [ButtonLabel, ButtonDirective, TranslocoPipe],
   templateUrl: './main-hero.html',
   styleUrl: './main-hero.css',
 })

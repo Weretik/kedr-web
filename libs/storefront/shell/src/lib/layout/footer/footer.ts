@@ -1,34 +1,18 @@
 import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { ClipboardService } from '@shared/ui';
 import { LocaleNavigationService } from '@storefront/util';
 
-declare const $localize: (
-  messageParts: TemplateStringsArray,
-  ...expressions: readonly unknown[]
-) => string;
-
 type FooterLink = {
-  label: string;
+  labelKey: string;
   routerLink: string[];
 };
 
-const footerText = {
-  companyAbout: $localize`:@@footer.link.aboutCompany:Про компанію`,
-  companyDelivery: $localize`:@@footer.link.deliveryAndPayment:Доставка та оплата`,
-  companyReturns: $localize`:@@footer.link.returnsExchanges:Повернення та обмін`,
-  companyContacts: $localize`:@@footer.link.contacts:Контакти`,
-  infoGallery: $localize`:@@footer.link.gallery:Галерея та відео`,
-  infoArticles: $localize`:@@footer.link.articles:Статті`,
-  infoWholesale: $localize`:@@footer.link.wholesale:Співпраця`,
-  legalOffer: $localize`:@@footer.link.publicOffer:Публічна оферта`,
-  legalPrivacy: $localize`:@@footer.link.privacyPolicy:Політика конфіденційності`,
-} as const;
-
 @Component({
   selector: 'lib-footer',
-  imports: [NgClass, NgOptimizedImage, RouterLink],
+  imports: [NgClass, NgOptimizedImage, RouterLink, TranslocoPipe],
   templateUrl: './footer.html',
   styleUrl: './footer.css',
 })
@@ -38,45 +22,45 @@ export class Footer {
 
   readonly companyLinks: FooterLink[] = [
     {
-      label: footerText.companyAbout,
+      labelKey: 'footer.link.aboutCompany',
       routerLink: this.localeNavigation.localizedPath('/about-company'),
     },
     {
-      label: footerText.companyDelivery,
+      labelKey: 'footer.link.deliveryAndPayment',
       routerLink: this.localeNavigation.localizedPath('/delivery-and-payment'),
     },
     {
-      label: footerText.companyReturns,
+      labelKey: 'footer.link.returnsExchanges',
       routerLink: this.localeNavigation.localizedPath('/returns-exchanges'),
     },
     {
-      label: footerText.companyContacts,
+      labelKey: 'footer.link.contacts',
       routerLink: this.localeNavigation.localizedPath('/contacts'),
     },
   ];
 
   readonly accountLinks: FooterLink[] = [
     {
-      label: footerText.infoGallery,
+      labelKey: 'footer.link.gallery',
       routerLink: this.localeNavigation.localizedPath('/galleria'),
     },
     {
-      label: footerText.infoArticles,
+      labelKey: 'footer.link.articles',
       routerLink: this.localeNavigation.localizedPath('/articles'),
     },
     {
-      label: footerText.infoWholesale,
+      labelKey: 'footer.link.wholesale',
       routerLink: this.localeNavigation.localizedPath('/wholesale'),
     },
   ];
 
   readonly legalLinks: FooterLink[] = [
     {
-      label: footerText.legalOffer,
+      labelKey: 'footer.link.publicOffer',
       routerLink: this.localeNavigation.localizedPath('/public-offer'),
     },
     {
-      label: footerText.legalPrivacy,
+      labelKey: 'footer.link.privacyPolicy',
       routerLink: this.localeNavigation.localizedPath('/privacy-policy'),
     },
   ];

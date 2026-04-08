@@ -9,8 +9,9 @@ import {
   HostListener,
   untracked,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { ProductListFacade } from '@storefront/data-access';
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -30,6 +31,7 @@ import { ToggleButton } from 'primeng/togglebutton';
 
 import {
   buildFiltersMenu,
+  collectExpandedState,
   findCategoryPath,
 } from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
@@ -67,6 +69,7 @@ type PanelMenuItemLabelPtOptions = {
     ProductList,
     ToggleButton,
     Popover,
+    TranslocoPipe,
   ],
   templateUrl: './product-list-filters-bar.html',
   styleUrl: './product-list-filters-bar.css',
@@ -74,9 +77,12 @@ type PanelMenuItemLabelPtOptions = {
 export class ProductListFiltersBar {
   readonly facade = inject(ProductListFacade);
   readonly pageState = inject(ProductListPageState);
-  readonly router = inject(Router);
+  readonly transloco = inject(TranslocoService);
 
   readonly categorySlug = input<string | null>(null);
+  private readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
 
   readonly isSticky = signal(false);
 
@@ -85,9 +91,9 @@ export class ProductListFiltersBar {
     this.isSticky.set(window.scrollY > 200);
   }
 
-  readonly categoryPath = computed(
-    () => findCategoryPath(this.categorySlug()) ?? [],
-  );
+  readonly categoryPath = computed(() => {
+    return findCategoryPath(this.categorySlug(), this.filtersMenu()) ?? [];
+  });
   readonly panelMenuPt = {
     itemContent: (options: PanelMenuItemLabelPtOptions) => ({
       class: this.isActiveCategory(options.context?.item)
@@ -111,8 +117,12 @@ export class ProductListFiltersBar {
   readonly draftIsNew = signal(false);
   readonly draftPrice = signal<[number | null, number | null]>([null, null]);
 
-  readonly sortOptions = buildSortMenu({
-    setSort: (sort) => this.pageState.setSort(sort),
+  readonly sortOptions = computed(() => {
+    this.activeLang();
+    return buildSortMenu({
+      setSort: (sort) => this.pageState.setSort(sort),
+      translate: (key) => this.transloco.translate(key),
+    });
   });
 
   readonly filtersMenu = signal<MenuItem[]>(
@@ -120,14 +130,15 @@ export class ProductListFiltersBar {
       {
         goToCategory: (slug) => this.pageState.goToCategory(slug),
       },
-      this.categorySlug(),
+      (key) => this.transloco.translate(key),
       {},
     ),
   );
 
   private readonly syncFiltersMenu = effect(() => {
-    const slug = this.categorySlug();
-    const expandedState = this.collectExpandedState(
+    this.activeLang();
+    this.categorySlug();
+    const expandedState = collectExpandedState(
       untracked(() => this.filtersMenu()),
     );
     this.filtersMenu.set(
@@ -135,7 +146,7 @@ export class ProductListFiltersBar {
         {
           goToCategory: (nextSlug) => this.pageState.goToCategory(nextSlug),
         },
-        slug,
+        (key) => this.transloco.translate(key),
         expandedState,
       ),
     );
@@ -234,32 +245,9 @@ export class ProductListFiltersBar {
     return !!itemSlug && itemSlug === this.categorySlug();
   }
 
-  private collectExpandedState(
-    items: MenuItem[],
-    state: Record<string, boolean> = {},
-  ): Record<string, boolean> {
-    for (const item of items) {
-      const typedItem = item as MenuItem & {
-        categorySlug?: string;
-        expanded?: boolean;
-      };
-      const children = typedItem.items ?? [];
-      if (children.length > 0 && typedItem.categorySlug) {
-        state[typedItem.categorySlug] = typedItem.expanded !== false;
-      }
-      if (children.length > 0) {
-        this.collectExpandedState(children, state);
-      }
-    }
-
-    return state;
-  }
-
   private toNum(value: string | null): number | null {
     if (!value) return null;
     const number = Number(value);
     return Number.isFinite(number) ? number : null;
   }
-
-  protected readonly String = String;
 }

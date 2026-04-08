@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { Popover } from 'primeng/popover';
 
@@ -16,7 +17,7 @@ type SearchDraftPayload = {
 
 @Component({
   selector: 'lib-header-search',
-  imports: [CommonModule, ButtonModule, Popover],
+  imports: [CommonModule, ButtonModule, Popover, TranslocoPipe],
   templateUrl: './header-search.html',
   styleUrl: './header-search.css',
 })

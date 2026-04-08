@@ -1,10 +1,7 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
-
-declare const $localize: (
-  messageParts: TemplateStringsArray,
-  ...expressions: readonly unknown[]
-) => string;
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoService } from '@jsverse/transloco';
 
 interface CompanyStat {
   icon: string;
@@ -20,33 +17,51 @@ interface CompanyStat {
   styleUrl: './company-stats.css',
 })
 export class CompanyStats {
-  readonly sectionTitle = $localize`:@@about.stats.heading:Досвід та результати ClassKedr.`;
-  readonly sectionDescription = $localize`:@@about.stats.subheading:Фундамент щоденної професійної діяльності, що базується на експертних знаннях та перевірених рішеннях.`;
+  private readonly translocoService = inject(TranslocoService);
+  private readonly activeLanguage = toSignal(
+    this.translocoService.langChanges$,
+    {
+      initialValue: this.translocoService.getActiveLang(),
+    },
+  );
 
-  readonly stats: CompanyStat[] = [
-    {
-      icon: 'pi pi-calendar',
-      value: '15+',
-      title: $localize`:@@about.stats.item1.title:років стабільності`,
-      description: $localize`:@@about.stats.item1.text:Тривала присутність на ринку дверної фурнітури забезпечує глибоке розуміння технічних стандартів та еволюції механізмів. Це дозволяє здійснювати професійний підбір рішень будь-якої складності.`,
-    },
-    {
-      icon: 'pi pi-box',
-      value: '15 000+',
-      title: $localize`:@@about.stats.item2.title:одиниць продукції`,
-      description: $localize`:@@about.stats.item2.text:Здійснюється постійне керування розширеною складською програмою. Асортимент сформований для повного задоволення запитів як на серійне виробництво дверей, так і на індивідуальну заміну фурнітури.`,
-    },
-    {
-      icon: 'pi pi-users',
-      value: '50 000+',
-      title: $localize`:@@about.stats.item3.title:укомплектованих об'єктів`,
-      description: $localize`:@@about.stats.item3.text:Така кількість успішних рішень свідчить про високий рівень довіри фахівців та власників нерухомості по всій Україні. Кожне замовлення супроводжується персональною відповідальністю за результат.`,
-    },
-    {
-      icon: 'pi pi-truck',
-      value: '1 000+',
-      title: $localize`:@@about.stats.item4.title:проектних відвантажень щороку`,
-      description: $localize`:@@about.stats.item4.text:Системна організація гуртових поставок для виробничих ліній. Налагоджена логістика та прямі комерційні зв'язки гарантують дотримання термінів і стабільну якість кожної партії.`,
-    },
-  ];
+  readonly sectionTitle = computed(() => {
+    this.activeLanguage();
+    return this.translocoService.translate('about.stats.heading');
+  });
+
+  readonly sectionDescription = computed(() => {
+    this.activeLanguage();
+    return this.translocoService.translate('about.stats.subheading');
+  });
+
+  readonly stats = computed<CompanyStat[]>(() => {
+    this.activeLanguage();
+    return [
+      {
+        icon: 'pi pi-calendar',
+        value: '15+',
+        title: this.translocoService.translate('about.stats.item1.title'),
+        description: this.translocoService.translate('about.stats.item1.text'),
+      },
+      {
+        icon: 'pi pi-box',
+        value: '15 000+',
+        title: this.translocoService.translate('about.stats.item2.title'),
+        description: this.translocoService.translate('about.stats.item2.text'),
+      },
+      {
+        icon: 'pi pi-users',
+        value: '50 000+',
+        title: this.translocoService.translate('about.stats.item3.title'),
+        description: this.translocoService.translate('about.stats.item3.text'),
+      },
+      {
+        icon: 'pi pi-truck',
+        value: '1 000+',
+        title: this.translocoService.translate('about.stats.item4.title'),
+        description: this.translocoService.translate('about.stats.item4.text'),
+      },
+    ];
+  });
 }

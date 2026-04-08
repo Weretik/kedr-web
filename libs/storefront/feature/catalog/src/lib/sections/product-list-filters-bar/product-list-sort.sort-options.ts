@@ -2,29 +2,55 @@ import { ProductListSortUi } from '@storefront/data-access';
 
 import type { MenuItem } from 'primeng/api';
 
-export function buildSortMenu(deps: {
+const translateWithFallback = (
+  translate: (key: string) => string,
+  key: string,
+  fallback: string,
+): string => {
+  const translated = translate(key);
+  return translated === key ? fallback : translated;
+};
+
+export function buildSortMenu(params: {
   setSort: (sort: ProductListSortUi) => void;
+  translate: (key: string) => string;
 }): MenuItem[] {
   return [
     {
-      label: 'Артикул (min → max)',
+      label: translateWithFallback(
+        params.translate,
+        'catalog.sort.idAsc',
+        'Артикул (min -> max)',
+      ),
       icon: 'pi pi-sort-amount-up',
-      command: () => deps.setSort('id-asc'),
+      command: () => params.setSort('id-asc'),
     },
     {
-      label: 'Артикул (max → min)',
+      label: translateWithFallback(
+        params.translate,
+        'catalog.sort.idDesc',
+        'Артикул (max -> min)',
+      ),
       icon: 'pi pi-sort-amount-down',
-      command: () => deps.setSort('id-desc'),
+      command: () => params.setSort('id-desc'),
     },
     {
-      label: 'Ціна (min → max)',
+      label: translateWithFallback(
+        params.translate,
+        'catalog.sort.priceAsc',
+        'Ціна (min -> max)',
+      ),
       icon: 'pi pi-sort-amount-up',
-      command: () => deps.setSort('price-asc'),
+      command: () => params.setSort('price-asc'),
     },
     {
-      label: 'Ціна (max → min)',
+      label: translateWithFallback(
+        params.translate,
+        'catalog.sort.priceDesc',
+        'Ціна (max -> min)',
+      ),
       icon: 'pi pi-sort-amount-down',
-      command: () => deps.setSort('price-desc'),
+      command: () => params.setSort('price-desc'),
     },
   ];
 }

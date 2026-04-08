@@ -2,6 +2,7 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { Component, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { ProductListRowDto } from '@storefront/contracts';
 import {
   CartFacade,
@@ -34,6 +35,7 @@ import { ProductListPageState } from '../../pages/product-list/product-list.page
     ButtonLabel,
     NgOptimizedImage,
     RouterLink,
+    TranslocoPipe,
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',

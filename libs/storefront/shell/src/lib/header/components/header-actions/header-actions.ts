@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
@@ -7,7 +8,7 @@ type HeaderLocale = 'uk' | 'ru';
 
 @Component({
   selector: 'lib-header-actions',
-  imports: [CommonModule, ButtonModule, OverlayBadgeModule],
+  imports: [CommonModule, ButtonModule, OverlayBadgeModule, TranslocoPipe],
   templateUrl: './header-actions.html',
   styleUrl: './header-actions.css',
 })

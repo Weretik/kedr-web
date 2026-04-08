@@ -1,6 +1,5 @@
 import { Component, effect, inject, input } from '@angular/core';
 import { ProductListFacade } from '@storefront/data-access';
-import { PageHeaderConfig } from '@storefront/ui';
 
 import { ProductListPageState } from './product-list.page-state';
 import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/product-list-filters-bar';
@@ -13,14 +12,6 @@ import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/p
 })
 export class ProductListPage {
   readonly categorySlug = input<string | null>(null);
-
-  headerConfig: PageHeaderConfig = {
-    title: 'Каталог',
-    breadcrumbs: [
-      { label: 'Каталог', routerLink: '/catalog/products' },
-      { label: 'Товари' },
-    ],
-  };
 
   readonly facade = inject(ProductListFacade);
   readonly pageState = inject(ProductListPageState);

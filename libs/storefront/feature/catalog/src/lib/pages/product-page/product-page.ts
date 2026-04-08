@@ -1,7 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { ProductBySlugDto } from '@storefront/contracts';
 import {
   CartFacade,
@@ -29,6 +31,7 @@ import { Skeleton } from 'primeng/skeleton';
     FormsModule,
     InputNumber,
     Image,
+    TranslocoPipe,
   ],
   templateUrl: './product-page.html',
   styleUrl: './product-page.css',
@@ -40,8 +43,13 @@ export class ProductPage {
   public readonly facade = inject(ProductFacade);
   private readonly productResource = this.facade.productResource;
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
+  private readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
 
   readonly headerConfig = computed<PageHeaderConfig>(() => {
+    this.activeLang();
     const product = this.productResource.value();
     const categoryBreadcrumbs =
       product?.breadcrumbs?.map((breadcrumb) => ({
@@ -53,7 +61,7 @@ export class ProductPage {
       title: product?.name ?? '...',
       breadcrumbs: [
         {
-          label: 'Каталог',
+          label: this.transloco.translate('catalog.breadcrumb.catalog'),
           linkClass: 'cursor-pointer',
           command: () => {
             if (window.history.length > 1) {

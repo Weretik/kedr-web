@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'lib-company-overview',
-  imports: [],
+  imports: [TranslocoPipe],
   templateUrl: './company-overview.html',
   styleUrl: './company-overview.css',
 })

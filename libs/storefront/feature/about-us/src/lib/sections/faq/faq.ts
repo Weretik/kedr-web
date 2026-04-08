@@ -1,50 +1,64 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AccordionModule } from 'primeng/accordion';
 
-declare const $localize: (
-  messageParts: TemplateStringsArray,
-  ...expressions: readonly unknown[]
-) => string;
+type FaqTab = {
+  value: number;
+  title: string;
+  content: string;
+};
 
 @Component({
   selector: 'lib-faq',
   standalone: true,
-  imports: [AccordionModule, CommonModule],
+  imports: [AccordionModule, CommonModule, TranslocoPipe],
   templateUrl: './faq.html',
   styleUrl: './faq.css',
 })
 export class Faq {
-  tabs = [
+  private readonly translocoService = inject(TranslocoService);
+  private readonly activeLanguage = toSignal(
+    this.translocoService.langChanges$,
     {
-      value: 0,
-      title: $localize`:@@about.faq.q1.title:Як вибрати замок для вхідних дверей?`,
-      content: $localize`:@@about.faq.q1.content:Для вхідних дверей краще обирати надійні моделі з підвищеним захистом. Часто використовують комбінацію циліндрового і сувальдного механізмів, щоб підвищити стійкість до злому. Важливо враховувати матеріал корпусу, сумісність із дверима та якість монтажу.`,
+      initialValue: this.translocoService.getActiveLang(),
     },
-    {
-      value: 1,
-      title: $localize`:@@about.faq.q2.title:Чим відрізняються ручки для міжкімнатних та вхідних дверей?`,
-      content: $localize`:@@about.faq.q2.content:Міжкімнатні ручки зазвичай орієнтовані на комфорт і дизайн, тоді як вхідні мають бути міцнішими та сумісними з замковими механізмами. Для вхідних дверей важливі стійкі матеріали, надійне кріплення і правильний підбір під товщину полотна.`,
-    },
-    {
-      value: 2,
-      title: $localize`:@@about.faq.q3.title:Які петлі краще обрати для дверей?`,
-      content: $localize`:@@about.faq.q3.content:Вибір залежить від типу і ваги дверей. Для легких міжкімнатних підходять стандартні накладні або врізні петлі. Для важких і вхідних дверей краще використовувати посилені моделі, зокрема з підшипником. Важливо враховувати сторону відкривання та якість монтажу.`,
-    },
-    {
-      value: 3,
-      title: $localize`:@@about.faq.q4.title:Навіщо потрібен дотягувач на двері?`,
-      content: $localize`:@@about.faq.q4.content:Дотягувач автоматично і плавно зачиняє двері після відкривання. Це підвищує безпеку, зменшує зношування фурнітури та допомагає уникати ударного закривання. Для вуличних дверей слід обирати моделі з урахуванням температурного режиму.`,
-    },
-    {
-      value: 4,
-      title: $localize`:@@about.faq.q5.title:Що таке дверний обмежувач і чи варто його ставити?`,
-      content: $localize`:@@about.faq.q5.content:Дверний обмежувач обмежує кут відкривання і захищає стіни, меблі та саме полотно від ударів. Це просте і недороге рішення, яке допомагає уникнути пошкоджень у щоденному користуванні.`,
-    },
-    {
-      value: 5,
-      title: $localize`:@@about.faq.q6.title:Чи можна самостійно встановити дверну фурнітуру?`,
-      content: $localize`:@@about.faq.q6.content:Прості елементи, як-от ручки чи засувки, можна встановити самостійно за інструкцією. Складні роботи, зокрема врізання замків, дотягувачів або прихованих петель, краще довірити майстру, щоб уникнути перекосів і передчасного зносу.`,
-    },
-  ];
+  );
+
+  readonly tabs = computed<FaqTab[]>(() => {
+    this.activeLanguage();
+    return [
+      {
+        value: 0,
+        title: this.translocoService.translate('about.faq.q1.title'),
+        content: this.translocoService.translate('about.faq.q1.content'),
+      },
+      {
+        value: 1,
+        title: this.translocoService.translate('about.faq.q2.title'),
+        content: this.translocoService.translate('about.faq.q2.content'),
+      },
+      {
+        value: 2,
+        title: this.translocoService.translate('about.faq.q3.title'),
+        content: this.translocoService.translate('about.faq.q3.content'),
+      },
+      {
+        value: 3,
+        title: this.translocoService.translate('about.faq.q4.title'),
+        content: this.translocoService.translate('about.faq.q4.content'),
+      },
+      {
+        value: 4,
+        title: this.translocoService.translate('about.faq.q5.title'),
+        content: this.translocoService.translate('about.faq.q5.content'),
+      },
+      {
+        value: 5,
+        title: this.translocoService.translate('about.faq.q6.title'),
+        content: this.translocoService.translate('about.faq.q6.content'),
+      },
+    ];
+  });
 }

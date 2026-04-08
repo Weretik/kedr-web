@@ -1,14 +1,16 @@
-import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   Component,
+  computed,
   HostListener,
   inject,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { ClipboardService, ThemeService } from '@shared/ui';
-import { BrowserSessionStorageService } from '@shared/util';
 import {
   CartFacade,
   CartUiFacade,
@@ -20,6 +22,7 @@ import {
   LocaleNavigationService,
   SearchHistoryService,
 } from '@storefront/util';
+import { MegaMenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
 import { Popover } from 'primeng/popover';
@@ -28,6 +31,7 @@ import { Ripple } from 'primeng/ripple';
 import { HeaderActionsComponent } from './components/header-actions/header-actions';
 import { HeaderContactsComponent } from './components/header-contacts/header-contacts';
 import { HeaderSearchComponent } from './components/header-search/header-search';
+import { HEADER_MEGA_MENU_PT } from './header.mega-menu.pt';
 import { buildMenu, type HeaderLocale } from './header.menu';
 
 @Component({
@@ -38,6 +42,7 @@ import { buildMenu, type HeaderLocale } from './header.menu';
     CommonModule,
     NgOptimizedImage,
     RouterLink,
+    TranslocoPipe,
     Ripple,
     Cart,
     HeaderContactsComponent,
@@ -50,11 +55,9 @@ import { buildMenu, type HeaderLocale } from './header.menu';
   encapsulation: ViewEncapsulation.None,
 })
 export class Header {
-  private readonly localeScrollYKey = 'storefront.locale.scrollY';
   private readonly router = inject(Router);
-  private readonly document = inject(DOCUMENT);
   private readonly localeNavigation = inject(LocaleNavigationService);
-  private readonly sessionStorage = inject(BrowserSessionStorageService);
+  private readonly transloco = inject(TranslocoService);
   private readonly clipboard = inject(ClipboardService);
   public readonly themeService = inject(ThemeService);
   readonly cartUi = inject(CartUiFacade);
@@ -62,6 +65,10 @@ export class Header {
   readonly facade = inject(ProductListFacade);
   readonly pageState = inject(ProductListPageState);
   readonly history = inject(SearchHistoryService);
+
+  private readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
 
   readonly isSticky = signal(false);
   readonly hasHistory = this.history.items;
@@ -71,7 +78,6 @@ export class Header {
 
   constructor() {
     this.localeNavigation.saveLocale(this.currentLocale());
-    this.restoreScrollAfterLocaleSwitch();
   }
 
   @HostListener('window:scroll', [])
@@ -79,7 +85,10 @@ export class Header {
     this.isSticky.set(window.scrollY > 120);
   }
 
-  readonly items = buildMenu();
+  readonly items = computed<MegaMenuItem[]>(() => {
+    this.activeLang();
+    return this.buildMenuItems();
+  });
 
   onSearch(value: string, popover?: Popover) {
     const search = value?.trim();
@@ -142,34 +151,23 @@ export class Header {
   }
 
   switchLocale(locale: HeaderLocale): void {
-    this.localeNavigation.saveLocale(locale);
     if (locale === this.currentLocale()) return;
 
-    const location = this.document.location;
-    if (!location) return;
-
-    const path = location.pathname || '/';
-    const normalizedPath = this.localeNavigation.stripLocalePrefix(path);
-    const query = location.search || '';
-    const hash = location.hash || '';
-
-    this.sessionStorage.setItem(this.localeScrollYKey, String(window.scrollY));
-    location.assign(`/${locale}${normalizedPath}${query}${hash}`);
+    this.currentLocale.set(locale);
+    this.transloco.setActiveLang(locale);
+    this.localeNavigation.saveLocale(locale);
+    const localizedUrl = this.localeNavigation.localizedUrlForLocale(
+      this.router.url,
+      locale,
+    );
+    void this.router.navigateByUrl(localizedUrl);
   }
 
-  private restoreScrollAfterLocaleSwitch(): void {
-    const rawScrollY = this.sessionStorage.getItem(this.localeScrollYKey);
-    if (!rawScrollY) return;
-
-    this.sessionStorage.removeItem(this.localeScrollYKey);
-    const scrollY = Number(rawScrollY);
-    if (!Number.isFinite(scrollY) || scrollY < 0) return;
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: scrollY, behavior: 'auto' });
-      });
-    });
+  private buildMenuItems(): MegaMenuItem[] {
+    return buildMenu(
+      (translationKey) => this.transloco.translate(translationKey),
+      this.currentLocale(),
+    );
   }
 
   public readonly megaMenuPt = HEADER_MEGA_MENU_PT;
