@@ -1,6 +1,7 @@
-﻿export const environment = {
+export const environment = {
   production: true,
   enableHttpLogs: false,
+  publicSiteUrl: 'https://classkedr.com.ua',
 
   app: {
     name: 'Kedr Store',

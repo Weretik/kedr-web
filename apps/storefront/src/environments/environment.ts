@@ -1,6 +1,7 @@
-﻿export const environment = {
+export const environment = {
   production: false,
   enableHttpLogs: true,
+  publicSiteUrl: 'http://localhost:4200',
 
   app: {
     name: 'Kedr Admin',
