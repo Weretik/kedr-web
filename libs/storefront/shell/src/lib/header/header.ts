@@ -172,42 +172,5 @@ export class Header {
     });
   }
 
-  public readonly megaMenuPt = {
-    root: {
-      style: {
-        '--p-megamenu-submenu-label-color': 'var(--p-primary-500)',
-        padding: '0.25rem 1.25rem',
-        'z-index': '1000',
-      },
-    },
-    submenu: {
-      style: {
-        'z-index': '1000',
-      },
-    },
-    rootList: {
-      style: {
-        flexGrow: '1',
-        justifyContent: 'center',
-      },
-    },
-    button: {
-      style: {
-        flexGrow: '1',
-        justifyContent: 'center',
-      },
-    },
-    submenuLabel: {
-      style: {
-        flexGrow: '1',
-        justifyContent: 'center',
-      },
-    },
-    buttonIcon: {
-      style: {
-        width: '1.5rem',
-        height: '1.5rem',
-      },
-    },
-  };
+  public readonly megaMenuPt = HEADER_MEGA_MENU_PT;
 }
