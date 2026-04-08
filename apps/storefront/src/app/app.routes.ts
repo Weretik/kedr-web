@@ -7,7 +7,7 @@ import { contactsRoutes } from '@storefront/feature/contacts';
 import { regionsRoutes } from '@storefront/feature/regions';
 import { wholesaleRoutes } from '@storefront/feature/wholesale';
 
-export const appRoutes: Route[] = [
+const localizedRoutes: Route[] = [
   ...contactsRoutes,
   ...wholesaleRoutes,
   ...aboutUsRoutes,
@@ -15,4 +15,28 @@ export const appRoutes: Route[] = [
   ...checkoutRoutes,
   ...regionsRoutes,
   ...storefrontFeatureArticlesRoutes,
+  {
+    path: '**',
+    redirectTo: '',
+  },
+];
+
+export const appRoutes: Route[] = [
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'uk',
+  },
+  {
+    path: 'uk',
+    children: localizedRoutes,
+  },
+  {
+    path: 'ru',
+    children: localizedRoutes,
+  },
+  {
+    path: '**',
+    redirectTo: 'uk',
+  },
 ];

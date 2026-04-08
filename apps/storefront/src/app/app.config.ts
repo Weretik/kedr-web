@@ -33,6 +33,7 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { appRoutes } from './app.routes';
+import { TRANSLOCO_PROVIDERS } from './i18n/transloco.providers';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -75,6 +76,7 @@ export const appConfig: ApplicationConfig = {
     ),
     MessageService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    ...TRANSLOCO_PROVIDERS,
     providePrimeNG({
       translation: {
         emptyMessage: 'Товари не знайдено',
