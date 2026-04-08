@@ -44,6 +44,9 @@
 - Do not perform broad refactoring while solving a local task.
 - Do not rename public component/service APIs unless explicitly requested.
 - Prefer readable code over clever code.
+- Use professional, descriptive naming for all variables, parameters, functions, and types.
+- Choose names by intent and domain meaning, not by brevity; names must be understandable without extra context.
+- Avoid one-letter or vague names (`t`, `x`, `tmp`, `data`, `obj`, `deps`, `cfg`) unless they are standard short loop indices (`i`, `j`) in very local scope.
 - Keep imports clean and remove unused code after changes.
 - Preserve backward compatibility for public-facing contracts where possible.
 - Always preserve correct text encoding (`UTF-8`) when reading/writing files and verify no mojibake/corrupted Cyrillic characters are introduced.
