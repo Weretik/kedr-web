@@ -13,8 +13,7 @@
             ngSrc="assets/logo/main-logo.svg"
             width="100"
             height="50"
-            alt="Kedr Logo"
-            i18n-alt="@@header.logoAlt"
+            [attr.alt]="'header.logoAlt' | transloco"
             class="h-10 sm:h-14 w-auto"
           />
         </a>
@@ -81,7 +80,7 @@
 <div
   class="card relative z-1000 bg-white/95 dark:bg-neutral-500 backdrop-blur border-b border-surface-400 dark:border-surface-600"
 >
-  <p-megaMenu [model]="items" [pt]="megaMenuPt">
+  <p-megaMenu [model]="items()" [pt]="megaMenuPt">
     <ng-template #item let-item>
       @if (item.root) {
       <a
@@ -127,8 +126,7 @@
       <div class="flex flex-col items-start gap-4">
         <img
           [src]="item.image"
-          alt="wholesale-logo"
-          i18n-alt="@@header.wholesaleLogoAlt"
+          [attr.alt]="'header.wholesaleLogoAlt' | transloco"
           class="w-full"
         />
         <span>{{ item.subtext }}</span>

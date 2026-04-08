@@ -4,16 +4,16 @@
   <h2
     class="text-surface-900 font-semibold text-center text-5xl leading-tight mb-4 dark:text-surface-0"
   >
-    {{ companyFeaturesSectionData.heading }}
+    {{ companyFeaturesSectionData().heading }}
   </h2>
   <p
     class="text-xl leading-normal text-surface-600 dark:text-surface-400 text-center max-w-[96%] lg:max-w-240 mx-auto mb-14"
   >
-    {{ companyFeaturesSectionData.subheading }}
+    {{ companyFeaturesSectionData().subheading }}
   </p>
 
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-    @for (item of companyFeaturesSectionData.items; track item.title) {
+    @for (item of companyFeaturesSectionData().items; track item.title) {
     <div
       class="p-6 bg-surface-50 dark:bg-surface-800 rounded-xl border border-surface-100 dark:border-surface-700"
     >

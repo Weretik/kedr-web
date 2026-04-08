@@ -1,8 +1,7 @@
 <div
   class="flex items-center gap-1 mr-2 order-first"
   role="group"
-  aria-label="Перемикання мови"
-  i18n-aria-label="@@header.languageSwitcherAria"
+  [attr.aria-label]="'header.languageSwitcherAria' | transloco"
 >
   <button
     type="button"
@@ -13,8 +12,7 @@
         : 'text-surface-700 dark:text-surface-200 border-surface-300 dark:border-surface-600 hover:bg-surface-100 dark:hover:bg-surface-800'
     "
     (click)="onLocaleChange('uk')"
-    aria-label="Українська"
-    i18n-aria-label="@@header.langUkAria"
+    [attr.aria-label]="'header.langUkAria' | transloco"
   >
     UK
   </button>
@@ -27,32 +25,29 @@
         : 'text-surface-700 dark:text-surface-200 border-surface-300 dark:border-surface-600 hover:bg-surface-100 dark:hover:bg-surface-800'
     "
     (click)="onLocaleChange('ru')"
-    aria-label="Русский"
-    i18n-aria-label="@@header.langRuAria"
+    [attr.aria-label]="'header.langRuAria' | transloco"
   >
     RU
   </button>
 </div>
 <button
   pButton
-  i18n-aria-label="@@header.toggleThemeAria"
+  [attr.aria-label]="'header.toggleThemeAria' | transloco"
   severity="secondary"
   [text]="true"
   [rounded]="true"
   (click)="onToggleTheme()"
   class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-  aria-label="Змінити тему"
 >
   <i class="pi" [ngClass]="isDark ? 'pi-moon' : 'pi-sun'"></i>
 </button>
 <button
   pButton
-  i18n-aria-label="@@header.accountAria"
+  [attr.aria-label]="'header.accountAria' | transloco"
   severity="secondary"
   [text]="true"
   [rounded]="true"
   class="w-10 h-10 text-surface-500! dark:text-surface-400!"
-  aria-label="Акаунт"
 >
   <i class="pi pi-user"></i>
 </button>

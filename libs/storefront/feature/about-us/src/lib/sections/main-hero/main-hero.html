@@ -13,30 +13,28 @@
             class="text-4xl xl:text-5xl font-bold text-surface-0 lg:text-surface-900 dark:text-surface-0 mb-6 leading-tight!"
           >
             <span class="block">Class Kedr</span>
-            <span class="block text-primary" i18n="@@about.hero.subtitle">
-              замовити фурнітуру та двері</span
-            >
+            <span class="block text-primary">
+              {{ 'about.hero.subtitle' | transloco }}
+            </span>
           </h1>
 
           <ul
             class="text-surface-0/90 lg:text-surface-700 dark:text-surface-200 text-xl leading-normal mb-8 space-y-2 max-w-xl lg:max-w-none"
           >
-            <li i18n="@@about.hero.bullet.available">✓ Завжди на складі</li>
-            <li i18n="@@about.hero.bullet.wholesaleRetail">
-              ✓ Оптом і в роздріб
-            </li>
+            <li>{{ 'about.hero.bullet.available' | transloco }}</li>
+            <li>{{ 'about.hero.bullet.wholesaleRetail' | transloco }}</li>
           </ul>
 
           <div class="flex items-center gap-4 justify-center lg:justify-start">
             <button pButton type="button" (click)="goToCatalog()">
-              <span pButtonLabel i18n="@@about.hero.cta.catalog">
-                Перейти до каталогу
-              </span>
+              <span pButtonLabel
+                >{{ 'about.hero.cta.catalog' | transloco }}</span
+              >
             </button>
             <button pButton type="button" outlined (click)="goToWholesale()">
-              <span pButtonLabel i18n="@@about.hero.cta.wholesale">
-                Замовити оптом
-              </span>
+              <span pButtonLabel
+                >{{ 'about.hero.cta.wholesale' | transloco }}</span
+              >
             </button>
           </div>
         </div>
@@ -49,8 +47,7 @@
       ></div>
       <img
         src="assets/images/home-page/hero.png"
-        i18n-alt="@@about.hero.imageAlt"
-        alt="hero-home"
+        [alt]="'about.hero.imageAlt' | transloco"
         class="h-full w-full object-cover xl:[clip-path:polygon(12%_0,100%_0%,100%_100%,0_100%)]"
       />
     </div>

@@ -3,21 +3,18 @@
     <div class="flex flex-col items-center gap-4">
       <h1
         class="text-5xl font-bold text-surface-900 dark:text-surface-0 leading-tight"
-        i18n="@@about.faq.heading"
       >
-        Часті запитання
+        {{ 'about.faq.heading' | transloco }}
       </h1>
       <p
         class="text-xl text-surface-700 dark:text-surface-0/70 leading-normal text-center mb-6"
-        i18n="@@about.faq.subheading"
       >
-        Корисна інформація для тих, хто обирає дверну фурнітуру: від замків і
-        ручок до петель та дотягувачів.
+        {{ 'about.faq.subheading' | transloco }}
       </p>
     </div>
     <div class="card">
       <p-accordion [value]="0">
-        @for (tab of tabs; track tab.title) {
+        @for (tab of tabs(); track tab.title) {
         <p-accordion-panel [value]="tab.value">
           <p-accordion-header>{{ tab.title }}</p-accordion-header>
           <p-accordion-content>

@@ -5,30 +5,15 @@
     <div class="w-full">
       <h3
         class="block text-center text-surface-900 dark:text-surface-0 text-3xl md:text-5xl font-bold mb-6 leading-tight"
-        i18n="@@about.overview.about.heading"
       >
-        Про компанію ClassKedr
+        {{ 'about.overview.about.heading' | transloco }}
       </h3>
       <div
         class="flex flex-col gap-4 text-surface-600 dark:text-surface-300 text-lg leading-relaxed"
       >
-        <p i18n="@@about.overview.about.p1">
-          Метою та місією діяльності ClassKedr є статус ключового партнера у
-          сфері комплектації дверних конструкцій через експертний супровід та
-          організацію безперебійних поставок.
-        </p>
-        <p i18n="@@about.overview.about.p2">
-          Завдяки налагодженій мережі прямих комерційних зв’язків забезпечується
-          реалізація гнучкої складської програми. Це дозволяє партнерам
-          планувати роботу на довгу дистанцію, отримуючи необхідні обсяги
-          фурнітури точно в термін без необхідності утримання власних
-          надлишкових запасів.
-        </p>
-        <p i18n="@@about.overview.about.p3">
-          ClassKedr стає надійним технологічним тилом для бізнесу, надаючи не
-          просто комплектуючі, а пряму професійну допомогу від сторони, яка
-          здійснює продаж, консультування та супровід.
-        </p>
+        <p>{{ 'about.overview.about.p1' | transloco }}</p>
+        <p>{{ 'about.overview.about.p2' | transloco }}</p>
+        <p>{{ 'about.overview.about.p3' | transloco }}</p>
       </div>
     </div>
   </section>
@@ -37,9 +22,8 @@
     <div class="w-full">
       <h3
         class="block text-center text-surface-900 dark:text-surface-0 text-3xl md:text-5xl font-bold mb-6 leading-tight"
-        i18n="@@about.overview.competencies.heading"
       >
-        Ключові компетенції та сервіси
+        {{ 'about.overview.competencies.heading' | transloco }}
       </h3>
       <div class="h-px bg-surface-200 dark:bg-surface-800 w-full my-6"></div>
       <div class="flex flex-col gap-4">
@@ -53,11 +37,12 @@
           </span>
           <p
             class="text-surface-600 dark:text-surface-300 leading-relaxed text-lg"
-            i18n="@@about.overview.competencies.item1"
           >
-            <strong>Складська програма:</strong> Організація та підтримка
-            наявності асортименту, необхідного для стабільного серійного
-            виробництва дверей.
+            <strong
+              >{{ 'about.overview.competencies.item1.title' | transloco
+              }}</strong
+            >
+            {{ 'about.overview.competencies.item1.text' | transloco }}
           </p>
         </div>
         <div class="flex items-start gap-3">
@@ -70,11 +55,12 @@
           </span>
           <p
             class="text-surface-600 dark:text-surface-300 leading-relaxed text-lg"
-            i18n="@@about.overview.competencies.item2"
           >
-            <strong>Технічна експертиза:</strong> Професійний підбір фурнітури
-            згідно з технічними завданнями та кресленнями замовника для проектів
-            будь-якої складності.
+            <strong
+              >{{ 'about.overview.competencies.item2.title' | transloco
+              }}</strong
+            >
+            {{ 'about.overview.competencies.item2.text' | transloco }}
           </p>
         </div>
         <div class="flex items-start gap-3">
@@ -87,11 +73,12 @@
           </span>
           <p
             class="text-surface-600 dark:text-surface-300 leading-relaxed text-lg"
-            i18n="@@about.overview.competencies.item3"
           >
-            <strong>Реновація та заміна:</strong> Точна ідентифікація та підбір
-            аналогів для фурнітури, що вийшла з ладу, з урахуванням існуючих
-            посадкових місць та технічних параметрів.
+            <strong
+              >{{ 'about.overview.competencies.item3.title' | transloco
+              }}</strong
+            >
+            {{ 'about.overview.competencies.item3.text' | transloco }}
           </p>
         </div>
         <div class="flex items-start gap-3">
@@ -104,11 +91,12 @@
           </span>
           <p
             class="text-surface-600 dark:text-surface-300 leading-relaxed text-lg"
-            i18n="@@about.overview.competencies.item4"
           >
-            <strong>Супровід та відповідальність:</strong> Персональна
-            залученість сторони, що реалізує товар, у кожну специфікацію та
-            кожне відвантаження для досягнення бездоганного результату.
+            <strong
+              >{{ 'about.overview.competencies.item4.title' | transloco
+              }}</strong
+            >
+            {{ 'about.overview.competencies.item4.text' | transloco }}
           </p>
         </div>
       </div>

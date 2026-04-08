@@ -8,13 +8,12 @@
     ></i>
     <input
       #mobileSearchInput
-      i18n-placeholder="@@header.searchPlaceholder"
       type="text"
       [value]="draftSearch"
       (focus)="onShowHistory(mobileSearchHistoryPopover, $event)"
       (click)="onShowHistory(mobileSearchHistoryPopover, $event)"
       (input)="onDraftChange(mobileSearchInput.value, mobileSearchHistoryPopover, $event)"
-      placeholder="Пошук товарів по артикулу або назві"
+      [placeholder]="'header.searchPlaceholder' | transloco"
       class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
       (keydown.enter)="onSearch(mobileSearchInput.value, mobileSearchHistoryPopover)"
     />
@@ -37,20 +36,19 @@
         class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
       >
         <i class="pi pi-history text-sm"></i>
-        <span class="text-sm font-semibold" i18n="@@header.searchHistoryTitle"
-          >Історія пошуку</span
+        <span class="text-sm font-semibold"
+          >{{ 'header.searchHistoryTitle' | transloco }}</span
         >
       </div>
       <button
         pButton
-        i18n="@@header.clearHistory"
         type="button"
         size="small"
         severity="secondary"
         [text]="true"
         (click)="onClearHistory(mobileSearchHistoryPopover)"
       >
-        Очистити все
+        {{ 'header.clearHistory' | transloco }}
       </button>
     </div>
     <div class="flex flex-col">
@@ -72,12 +70,11 @@
           pButton
           type="button"
           icon="pi pi-times"
-          i18n-aria-label="@@header.removeHistoryItemAria"
           size="small"
           [rounded]="true"
           [text]="true"
           severity="secondary"
-          aria-label="Видалити запит з історії"
+          [attr.aria-label]="'header.removeHistoryItemAria' | transloco"
           (click)="onRemoveHistoryItem(item, mobileSearchHistoryPopover)"
         ></button>
       </div>
@@ -102,8 +99,7 @@
       (focus)="onShowHistory(desktopSearchHistoryPopover, $event)"
       (click)="onShowHistory(desktopSearchHistoryPopover, $event)"
       (input)="onDraftChange(searchInput.value, desktopSearchHistoryPopover, $event)"
-      i18n-placeholder="@@header.searchPlaceholder"
-      placeholder="Пошук товарів по артикулу або назві"
+      [placeholder]="'header.searchPlaceholder' | transloco"
       class="flex-1 bg-transparent border-0 outline-0 text-surface-500 dark:text-surface-400 text-base font-normal"
       (keydown.enter)="onSearch(searchInput.value, desktopSearchHistoryPopover)"
     />
@@ -125,8 +121,8 @@
       <div
         class="flex items-center gap-2 text-surface-700 dark:text-surface-200"
       >
-        <span class="text-sm font-semibold" i18n="@@header.searchHistoryTitle"
-          >Історія пошуку</span
+        <span class="text-sm font-semibold"
+          >{{ 'header.searchHistoryTitle' | transloco }}</span
         >
       </div>
       <button
@@ -136,9 +132,8 @@
         severity="secondary"
         [text]="true"
         (click)="onClearHistory(desktopSearchHistoryPopover)"
-        i18n="@@header.clearHistory"
       >
-        Очистити все
+        {{ 'header.clearHistory' | transloco }}
       </button>
     </div>
     <div class="flex flex-col">
@@ -164,8 +159,7 @@
           [rounded]="true"
           [text]="true"
           severity="secondary"
-          aria-label="Видалити запит з історії"
-          i18n-aria-label="@@header.removeHistoryItemAria"
+          [attr.aria-label]="'header.removeHistoryItemAria' | transloco"
           (click)="onRemoveHistoryItem(item, desktopSearchHistoryPopover)"
         ></button>
       </div>

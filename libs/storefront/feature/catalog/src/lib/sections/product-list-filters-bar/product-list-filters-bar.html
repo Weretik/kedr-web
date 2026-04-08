@@ -18,11 +18,10 @@
       >
         <button
           type="button"
-          i18n="@@catalog.filters.allProducts"
           class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors whitespace-nowrap"
           (click)="goToAllProducts()"
         >
-          Всі товари
+          {{ 'catalog.filters.allProducts' | transloco }}
         </button>
         @if (categoryPath().length) { @for (crumb of categoryPath(); track
         crumb.slug; let isLast = $last) {
@@ -56,10 +55,8 @@
         <p-toggleButton
           [ngModel]="draftIsSale()"
           (ngModelChange)="setSaleFilter($event)"
-          i18n-onLabel="@@catalog.filters.sale"
-          onLabel="Краща ціна"
-          i18n-offLabel="@@catalog.filters.sale"
-          offLabel="Краща ціна"
+          [onLabel]="'catalog.filters.sale' | transloco"
+          [offLabel]="'catalog.filters.sale' | transloco"
           onIcon="pi pi-check"
           offIcon="pi pi-times"
           class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
@@ -67,10 +64,8 @@
         <p-toggleButton
           [ngModel]="draftIsNew()"
           (ngModelChange)="setNewFilter($event)"
-          i18n-onLabel="@@catalog.filters.new"
-          onLabel="Новинки"
-          i18n-offLabel="@@catalog.filters.new"
-          offLabel="Новинки"
+          [onLabel]="'catalog.filters.new' | transloco"
+          [offLabel]="'catalog.filters.new' | transloco"
           onIcon="pi pi-check"
           offIcon="pi pi-times"
           class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
@@ -78,10 +73,8 @@
         <p-toggleButton
           [ngModel]="draftInStock()"
           (ngModelChange)="setInStockFilter($event)"
-          i18n-onLabel="@@catalog.filters.inStock"
-          onLabel="В наявноті"
-          i18n-offLabel="@@catalog.filters.all"
-          offLabel="Всі"
+          [onLabel]="'catalog.filters.inStock' | transloco"
+          [offLabel]="'catalog.filters.all' | transloco"
           onIcon="pi pi-check"
           offIcon="pi pi-times"
           class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
@@ -98,8 +91,8 @@
           [outlined]="true"
           (click)="paramsPopover.toggle($event)"
         >
-          <span pButtonLabel i18n="@@catalog.filters.parameters"
-            >Параметри</span
+          <span pButtonLabel
+            >{{ 'catalog.filters.parameters' | transloco }}</span
           >
           <i pButtonIcon class="pi pi-chevron-down"></i>
         </button>
@@ -108,10 +101,8 @@
             <p-toggleButton
               [ngModel]="draftIsSale()"
               (ngModelChange)="setSaleFilter($event)"
-              i18n-onLabel="@@catalog.filters.sale"
-              onLabel="Краща ціна"
-              i18n-offLabel="@@catalog.filters.sale"
-              offLabel="Краща ціна"
+              [onLabel]="'catalog.filters.sale' | transloco"
+              [offLabel]="'catalog.filters.sale' | transloco"
               onIcon="pi pi-check"
               offIcon="pi pi-times"
               class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
@@ -119,10 +110,8 @@
             <p-toggleButton
               [ngModel]="draftIsNew()"
               (ngModelChange)="setNewFilter($event)"
-              i18n-onLabel="@@catalog.filters.new"
-              onLabel="Новинки"
-              i18n-offLabel="@@catalog.filters.new"
-              offLabel="Новинки"
+              [onLabel]="'catalog.filters.new' | transloco"
+              [offLabel]="'catalog.filters.new' | transloco"
               onIcon="pi pi-check"
               offIcon="pi pi-times"
               class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
@@ -130,10 +119,8 @@
             <p-toggleButton
               [ngModel]="draftInStock()"
               (ngModelChange)="setInStockFilter($event)"
-              i18n-onLabel="@@catalog.filters.inStock"
-              onLabel="В наявноті"
-              i18n-offLabel="@@catalog.filters.all"
-              offLabel="Всі"
+              [onLabel]="'catalog.filters.inStock' | transloco"
+              [offLabel]="'catalog.filters.all' | transloco"
               onIcon="pi pi-check"
               offIcon="pi pi-times"
               class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
@@ -147,7 +134,7 @@
       @defer (on immediate) {
       <p-menu
         #sortMenu
-        [model]="sortOptions"
+        [model]="sortOptions()"
         [popup]="true"
         [appendTo]="'body'"
       ></p-menu>
@@ -159,7 +146,7 @@
         (click)="sortMenu.toggle($event)"
       >
         <i pButtonIcon class="pi pi-sort-alt"></i>
-        <span pButtonLabel i18n="@@catalog.filters.sort">Сортувати</span>
+        <span pButtonLabel>{{ 'catalog.filters.sort' | transloco }}</span>
       </button>
       }
     </div>
@@ -169,30 +156,6 @@
 
   <div class="flex flex-col lg:flex-row gap-8">
     <div class="w-full lg:w-60 flex flex-col justify-start items-start">
-      <!--
-      <div
-        class="self-stretch pb-4 border-b border-surface-200 dark:border-surface-700 flex flex-col justify-center items-start gap-4"
-      >
-        <div class="self-stretch flex justify-between items-center gap-2">
-          <div
-            class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
-          >
-            Фільтри
-          </div>
-
-          <button
-            pButton
-            severity="secondary"
-            [text]="true"
-            class="py-1! px-2! text-base! font-normal!"
-            (click)="clearFilters()"
-          >
-            <span pButtonLabel>Очистити</span>
-          </button>
-
-        </div>
-      </div>
-      -->
       <div class="self-stretch flex flex-col justify-start items-start">
         <div class="card flex justify-center w-full">
           @defer (on immediate) {
@@ -205,80 +168,7 @@
           }
         </div>
       </div>
-
       <p-divider class="w-full m-0"></p-divider>
-      <!--
-      <p-accordion
-        [multiple]="true"
-        [value]="['price', 'parameters']"
-        class="w-full border-0! shadow-none!"
-      >
-        <p-accordion-panel
-          value="price"
-          class="border-0! border-b! border-surface-200! dark:border-surface-700!"
-        >
-          <p-accordion-header
-            class="bg-transparent! border-0! p-0! py-4! shadow-none!"
-          >
-            <span
-              class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
-              >Ціновий діапазон</span
-            >
-          </p-accordion-header>
-          <p-accordion-content>
-            <div class="flex flex-col gap-6 pt-2.5">
-              <p-slider
-                [ngModel]="draftPrice()"
-                (ngModelChange)="onPriceRangeChange($event)"
-                [min]="minPrice"
-                [max]="maxPrice"
-                [range]="true"
-                class="w-full"
-              >
-              </p-slider>
-              <div class="flex gap-2">
-                <p-inputNumber
-                  [ngModel]="draftPrice()[0]"
-                  (ngModelChange)="onPriceFromChange($event)"
-                  mode="currency"
-                  currency="UAH"
-                  [minFractionDigits]="0"
-                  [maxFractionDigits]="0"
-                  placeholder="мін."
-                  inputStyleClass="w-full"
-                >
-                </p-inputNumber>
-                <p-inputNumber
-                  [ngModel]="draftPrice()[1]"
-                  (ngModelChange)="onPriceToChange($event)"
-                  mode="currency"
-                  currency="UAH"
-                  [minFractionDigits]="0"
-                  [maxFractionDigits]="0"
-                  placeholder="макс."
-                  inputStyleClass="w-full"
-                >
-                </p-inputNumber>
-              </div>
-            </div>
-          </p-accordion-content>
-        </p-accordion-panel>
-      </p-accordion>
--->
-      <!--
-      <div
-        class="self-stretch py-6 flex flex-col justify-start items-start gap-2"
-      >
-        <button
-          pButton
-          class="w-full"
-          severity="contrast"
-          (click)="applyFilters()"
-        >
-          <span pButtonLabel>Застосувати</span>
-        </button>
-      </div>
-      -->
     </div>
 
     <div class="flex-1">
