@@ -7,6 +7,7 @@ import { NotificationService } from '../services/notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalErrorHandler implements ErrorHandler {
+  private readonly chunkRecoveryAttemptedKey = 'app.chunk-recovery-attempted';
   private readonly notify = inject(NotificationService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly logger = inject(AppLogger);
@@ -25,14 +26,15 @@ export class GlobalErrorHandler implements ErrorHandler {
         error?.toString() ||
         ''
       ).toLowerCase();
+      const errorName = (error as { name?: string } | null)?.name ?? '';
       const isChunkError =
+        errorName === 'ChunkLoadError' ||
         errorStr.includes('loading chunk') ||
         errorStr.includes('failed to load module script') ||
         errorStr.includes('failed to fetch dynamically imported module');
 
       if (isChunkError) {
-        console.warn('Chunk loading error detected. Reloading page...', error);
-        window.location.reload();
+        void this.recoverFromChunkLoadingError(error);
         return;
       }
     }
@@ -80,5 +82,39 @@ export class GlobalErrorHandler implements ErrorHandler {
       candidateTexts.includes('resizeobserver loop limit exceeded') ||
       candidateTexts.includes('non-error promise rejection captured')
     );
+  }
+
+  private async recoverFromChunkLoadingError(error: unknown): Promise<void> {
+    const attempted =
+      window.sessionStorage.getItem(this.chunkRecoveryAttemptedKey) === '1';
+    if (attempted) {
+      console.warn(
+        'Chunk loading error detected after recovery attempt. Skipping reload.',
+        error,
+      );
+      return;
+    }
+
+    window.sessionStorage.setItem(this.chunkRecoveryAttemptedKey, '1');
+    console.warn(
+      'Chunk loading error detected. Clearing caches and reloading page...',
+      error,
+    );
+
+    try {
+      if ('caches' in window) {
+        const cacheNames = await window.caches.keys();
+        await Promise.all(cacheNames.map((name) => window.caches.delete(name)));
+      }
+
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(
+          registrations.map((registration) => registration.unregister()),
+        );
+      }
+    } finally {
+      window.location.reload();
+    }
   }
 }
