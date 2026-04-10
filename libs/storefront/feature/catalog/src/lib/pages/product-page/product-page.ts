@@ -10,8 +10,8 @@ import {
   cartLineFromBySlug,
   ProductFacade,
 } from '@storefront/data-access';
-import { LocaleNavigationService } from '@storefront/util';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
+import { LocaleNavigationService } from '@storefront/util';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { GalleriaModule } from 'primeng/galleria';
 import { Image } from 'primeng/image';
@@ -73,7 +73,9 @@ export class ProductPage {
             if (window.history.length > 1) {
               this.location.back();
             } else {
-              void this.router.navigate(this.localeNavigation.localizedSegments());
+              void this.router.navigate(
+                this.localeNavigation.localizedSegments(),
+              );
             }
           },
         },

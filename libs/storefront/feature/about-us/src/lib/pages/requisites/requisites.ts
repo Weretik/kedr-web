@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LocaleNavigationService } from '@storefront/util';
@@ -10,7 +10,7 @@ import { LocaleNavigationService } from '@storefront/util';
   styleUrl: './requisites.css',
 })
 export class Requisites {
-  constructor(private readonly localeNavigation: LocaleNavigationService) {}
+  private readonly localeNavigation = inject(LocaleNavigationService);
 
   protected privacyPolicyLink(): string[] {
     return this.localeNavigation.localizedSegments('privacy-policy');

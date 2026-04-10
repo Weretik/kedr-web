@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LocaleNavigationService } from '@storefront/util';
@@ -10,7 +10,7 @@ import { LocaleNavigationService } from '@storefront/util';
   styleUrl: './privacy-policy.css',
 })
 export class PrivacyPolicy {
-  constructor(private readonly localeNavigation: LocaleNavigationService) {}
+  private readonly localeNavigation = inject(LocaleNavigationService);
 
   protected publicOfferLink(): string[] {
     return this.localeNavigation.localizedSegments('public-offer');

@@ -3,8 +3,8 @@ import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { LocaleNavigationService } from '@storefront/util';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
+import { LocaleNavigationService } from '@storefront/util';
 
 import { Blog, buildBlogs } from './article-list.data';
 
@@ -27,7 +27,9 @@ export class ArticleListPage {
       title: this.transloco.translate('articles.page.title'),
       breadcrumbs: [
         { label: this.transloco.translate('articles.page.breadcrumb.about') },
-        { label: this.transloco.translate('articles.page.breadcrumb.articles') },
+        {
+          label: this.transloco.translate('articles.page.breadcrumb.articles'),
+        },
       ],
       showSearch: false,
     };
