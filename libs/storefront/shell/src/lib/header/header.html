@@ -97,20 +97,25 @@
         }
       </a>
       } @else if (item.sectionHeader) {
-      <div
-        class="flex flex-col items-start px-4 mb-2 gap-2 cursor-default pointer-events-none select-none w-full min-h-40 !opacity-100"
+      <a
+        [routerLink]="item.routerLink"
+        class="flex flex-col items-start px-4 mb-2 gap-2 cursor-pointer select-none w-full min-h-40 !opacity-100 transition-opacity hover:opacity-90"
       >
-        <img
-          [src]="item.image"
-          [alt]="item.label"
-          class="w-full h-40 object-cover rounded-md"
-        />
+        <div
+          class="w-full h-40 rounded-md overflow-hidden flex items-center justify-start"
+        >
+          <img
+            [src]="item.image"
+            [alt]="item.label"
+            class="w-auto h-full object-contain object-left"
+          />
+        </div>
         <span
           class="text-base !text-primary dark:!text-primary !opacity-100 font-semibold overflow-hidden"
         >
           {{ item.label }}
         </span>
-      </div>
+      </a>
       } @else if (!item.image) {
       <a
         class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"

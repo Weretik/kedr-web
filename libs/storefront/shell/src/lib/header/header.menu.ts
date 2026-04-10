@@ -65,23 +65,25 @@ const menuRegions = [
 ] as const;
 
 const catalogSectionImages: Record<HardwareSectionKey, string> = {
-  hinges: 'assets/images/home-page/hero.png',
-  locks: 'assets/images/home-page/hero.png',
-  handles: 'assets/images/home-page/hero.png',
-  cylinders: 'assets/images/home-page/hero.png',
-  interiorMechanisms: 'assets/images/home-page/hero.png',
-  other: 'assets/images/home-page/hero.png',
+  hinges: 'assets/images/categories/hinges.jpg',
+  locks: 'assets/images/categories/locks.jpg',
+  handles: 'assets/images/categories/handles.jpg',
+  cylinders: 'assets/images/categories/cylinders.jpg',
+  interiorMechanisms: 'assets/images/categories/interior-mechanisms.jpg',
+  other: 'assets/images/categories/other.jpg',
 };
 
 const catalogSection = (
   label: string,
   image: string,
+  routerLink: readonly string[],
   items: MenuItem[],
 ): MenuItem => ({
   items: [
     {
       label,
       image,
+      routerLink,
       sectionHeader: true,
     } as MenuItem,
     ...items,
@@ -97,6 +99,7 @@ const buildCatalogColumns = (locale: HeaderLocale): MenuItem[][] =>
       return catalogSection(
         sectionKeyTranslation,
         catalogSectionImages[sectionKey],
+        catalogLink(locale, section.slug),
         section.items.map((item) => ({
           label: CATALOG_ITEM_TRANSLATION_KEYS_BY_SLUG[item.slug] ?? item.label,
           routerLink: catalogLink(locale, item.slug),
