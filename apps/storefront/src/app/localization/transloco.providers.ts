@@ -6,6 +6,7 @@ import {
 } from '@jsverse/transloco';
 import { LocaleNavigationService, StorefrontLocale } from '@storefront/util';
 import { PrimeNG } from 'primeng/config';
+import { firstValueFrom } from 'rxjs';
 
 import { TranslocoHttpLoader } from './transloco.loader';
 import { environment } from '../../environments/environment';
@@ -16,14 +17,17 @@ function initializeTransloco(
   translocoService: TranslocoService,
   localeNavigation: LocaleNavigationService,
   primeNg: PrimeNG,
-): () => void {
-  return () => {
+): () => Promise<void> {
+  return async () => {
     const locale = localeNavigation.getCurrentLocale();
+    await firstValueFrom(translocoService.load(locale));
     translocoService.setActiveLang(locale);
 
     const applyPrimeNgTranslations = () => {
       primeNg.setTranslation({
-        emptyMessage: translocoService.translate('catalog.productList.empty.title'),
+        emptyMessage: translocoService.translate(
+          'catalog.productList.empty.title',
+        ),
       });
     };
 
