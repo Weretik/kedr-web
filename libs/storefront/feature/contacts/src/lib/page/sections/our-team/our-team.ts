@@ -1,15 +1,16 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 interface TeamMember {
   name: string;
-  role: string;
+  roleKey: string;
   image: string;
   socials: string[];
 }
 @Component({
   selector: 'lib-our-team',
-  imports: [NgClass],
+  imports: [NgClass, TranslocoPipe],
   templateUrl: './our-team.html',
   styleUrl: './our-team.css',
 })
@@ -17,28 +18,28 @@ export class OurTeam {
   teamMembers: TeamMember[] = [
     {
       name: 'Ольга Богуш',
-      role: 'Торговим представником',
+      roleKey: 'contacts.team.role.salesRepresentative',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-9.png',
       socials: ['discord', 'linkedin', 'twitter'],
     },
     {
       name: 'Роман',
-      role: 'Супервайзер',
+      roleKey: 'contacts.team.role.supervisor',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-21.jpg',
       socials: ['discord', 'linkedin', 'twitter'],
     },
     {
       name: 'Антон Іваха',
-      role: 'Менеджер дверного напрямку',
+      roleKey: 'contacts.team.role.doorDirectionManager',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-10.png',
       socials: ['discord', 'linkedin', 'twitter'],
     },
     {
       name: 'Jane Cooper',
-      role: 'Team Leader',
+      roleKey: 'contacts.team.role.teamLeader',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-12.png',
       socials: ['discord', 'linkedin', 'twitter'],
@@ -46,28 +47,28 @@ export class OurTeam {
 
     {
       name: 'Albert Flores',
-      role: 'Web Designer',
+      roleKey: 'contacts.team.role.webDesigner',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-13.png',
       socials: ['discord', 'linkedin', 'twitter'],
     },
     {
       name: 'Leona Gunn',
-      role: 'Software Developer',
+      roleKey: 'contacts.team.role.softwareDeveloper',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-14.png',
       socials: ['discord', 'linkedin', 'twitter'],
     },
     {
       name: 'Aleena Jones',
-      role: 'Software Tester',
+      roleKey: 'contacts.team.role.softwareTester',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-16.png',
       socials: ['discord', 'linkedin', 'twitter'],
     },
     {
       name: 'Aleena Jones',
-      role: 'Software Tester',
+      roleKey: 'contacts.team.role.softwareTester',
       image:
         'https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/team/team-22.jpg',
       socials: ['discord', 'linkedin', 'twitter'],

@@ -4,16 +4,16 @@
   <h2
     class="text-surface-900 font-semibold text-center text-5xl leading-tight mb-4 dark:text-surface-0"
   >
-    {{ heading }}
+    {{ heading() }}
   </h2>
   <p
     class="text-xl leading-normal text-surface-600 dark:text-surface-400 text-center max-w-[96%] lg:max-w-240 mx-auto mb-14"
   >
-    {{ wholesaleFeaturesSectionData.subheading }}
+    {{ wholesaleFeaturesSectionData.subheadingKey | transloco }}
   </p>
 
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-    @for (item of wholesaleFeaturesSectionData.items; track item.title) {
+    @for (item of wholesaleFeaturesSectionData.items; track item.titleKey) {
     <div
       class="p-6 bg-surface-50 dark:bg-surface-800 rounded-xl border border-surface-100 dark:border-surface-700"
     >
@@ -41,12 +41,12 @@
       <h5
         class="text-surface-900 dark:text-surface-0 text-lg font-semibold leading-tight mb-3"
       >
-        {{ item.title }}
+        {{ item.titleKey | transloco }}
       </h5>
       <p
         class="text-surface-600 dark:text-surface-400 text-base leading-normal"
       >
-        {{ item.text }}
+        {{ item.textKey | transloco }}
       </p>
     </div>
     }

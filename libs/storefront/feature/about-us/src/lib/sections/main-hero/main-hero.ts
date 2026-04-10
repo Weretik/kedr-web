@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { LocaleNavigationService } from '@storefront/util';
 import { ButtonDirective, ButtonLabel } from 'primeng/button';
 
 @Component({
@@ -11,12 +12,15 @@ import { ButtonDirective, ButtonLabel } from 'primeng/button';
 })
 export class MainHero {
   readonly router = inject(Router);
+  private readonly localeNavigation = inject(LocaleNavigationService);
 
   public goToCatalog() {
-    this.router.navigate(['/catalog', 'products']);
+    this.router.navigate(
+      this.localeNavigation.localizedSegments('catalog', 'products'),
+    );
   }
 
   public goToWholesale() {
-    this.router.navigate(['/wholesale']);
+    this.router.navigate(this.localeNavigation.localizedSegments('wholesale'));
   }
 }

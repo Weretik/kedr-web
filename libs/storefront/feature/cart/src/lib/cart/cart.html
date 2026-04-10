@@ -9,7 +9,7 @@
     >
       <span
         class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight"
-        >Ваш кошик</span
+        >{{ 'cart.drawer.title' | transloco }}</span
       >
       <button
         pButton
@@ -28,7 +28,7 @@
           class="flex items-center gap-4 pb-6 mb-6 border-b border-surface-200 dark:border-surface-700 last:border-none last:mb-0 last:pb-0 cursor-pointer hover:border-primary transition-colors"
           role="link"
           tabindex="0"
-          [routerLink]="['/catalog', 'product', item.snapshot.slug]"
+          [routerLink]="productLink(item.snapshot.slug)"
           (click)="cartUi.close()"
           (keydown.enter)="cartUi.close()"
         >
@@ -79,9 +79,10 @@
     <div class="border-t border-surface p-8">
       <div class="flex items-center justify-between mb-4">
         <span class="text-surface-900 dark:text-surface-0 font-medium">
-          Загальна сума
+          {{ 'cart.summary.total' | transloco }}
           <span class="text-surface-900 dark:text-surface-0 font-bold">
-            {{ cart.subtotal().toFixed(2) }} грн.
+            {{ cart.subtotal().toFixed(2) }}
+            {{ 'cart.summary.currency' | transloco }}
           </span>
         </span>
       </div>
@@ -91,7 +92,7 @@
         severity="contrast"
         (click)="goToCheckout()"
       >
-        <span pButtonLabel> Оформити замовлення </span>
+        <span pButtonLabel> {{ 'cart.actions.checkout' | transloco }} </span>
       </button>
       <button
         pButton
@@ -100,7 +101,9 @@
         [outlined]="true"
         (click)="cartUi.close()"
       >
-        <span pButtonLabel> Продовжити закупки </span>
+        <span pButtonLabel>
+          {{ 'cart.actions.continueShopping' | transloco }}
+        </span>
       </button>
     </div>
   </div>

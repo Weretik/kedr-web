@@ -4,18 +4,17 @@
       <h2
         class="text-4xl font-bold text-surface-900 dark:text-surface-0 leading-tight"
       >
-        Наша команда
+        {{ 'contacts.team.title' | transloco }}
       </h2>
       <p
         class="max-w-168 text-xl text-surface-600 dark:text-surface-300 leading-normal text-center"
       >
-        Команда професіоналів, об’єднаних спільною метою — результат для
-        клієнта.
+        {{ 'contacts.team.description' | transloco }}
       </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-      @for (member of teamMembers; track member.name) {
+      @for (member of teamMembers; track member.image) {
       <div
         class="group relative w-full md:w-[19.35714rem] h-100 cursor-pointer overflow-hidden rounded-xl"
       >
@@ -47,7 +46,9 @@
           <h4 class="text-xl font-semibold text-white leading-tight">
             {{ member.name }}
           </h4>
-          <span class="text-white/70 leading-tight">{{ member.role }}</span>
+          <span class="text-white/70 leading-tight">{{
+            member.roleKey | transloco
+          }}</span>
         </div>
       </div>
       }

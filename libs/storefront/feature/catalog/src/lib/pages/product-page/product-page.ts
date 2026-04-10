@@ -10,6 +10,7 @@ import {
   cartLineFromBySlug,
   ProductFacade,
 } from '@storefront/data-access';
+import { LocaleNavigationService } from '@storefront/util';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { GalleriaModule } from 'primeng/galleria';
@@ -43,6 +44,7 @@ export class ProductPage {
   public readonly facade = inject(ProductFacade);
   private readonly productResource = this.facade.productResource;
   private readonly router = inject(Router);
+  private readonly localeNavigation = inject(LocaleNavigationService);
   private readonly transloco = inject(TranslocoService);
   private readonly activeLang = toSignal(this.transloco.langChanges$, {
     initialValue: this.transloco.getActiveLang(),
@@ -54,7 +56,11 @@ export class ProductPage {
     const categoryBreadcrumbs =
       product?.breadcrumbs?.map((breadcrumb) => ({
         label: breadcrumb.name,
-        routerLink: ['/catalog', breadcrumb.slug, 'products'],
+        routerLink: this.localeNavigation.localizedSegments(
+          'catalog',
+          breadcrumb.slug,
+          'products',
+        ),
       })) ?? [];
 
     return {
@@ -67,7 +73,7 @@ export class ProductPage {
             if (window.history.length > 1) {
               this.location.back();
             } else {
-              void this.router.navigate(['/']);
+              void this.router.navigate(this.localeNavigation.localizedSegments());
             }
           },
         },

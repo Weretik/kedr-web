@@ -9,6 +9,7 @@ import {
   cartLineFromListRow,
   ProductListFacade,
 } from '@storefront/data-access';
+import { LocaleNavigationService } from '@storefront/util';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Message } from 'primeng/message';
@@ -48,6 +49,7 @@ export class ProductList {
   readonly skeletonArray = Array.from({ length: this.skeletonCount });
 
   readonly cart = inject(CartFacade);
+  private readonly localeNavigation = inject(LocaleNavigationService);
   readonly facade = inject(ProductListFacade);
   readonly pageState = inject(ProductListPageState);
 
@@ -91,5 +93,9 @@ export class ProductList {
 
   public addToCart(product: ProductListRowDto) {
     this.cart.addToCart(cartLineFromListRow(product, 1));
+  }
+
+  protected productLink(slug: string): string[] {
+    return this.localeNavigation.localizedSegments('catalog', 'product', slug);
   }
 }

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoService } from '@jsverse/transloco';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 
 @Component({
@@ -8,9 +10,20 @@ import { PageHeader, PageHeaderConfig } from '@storefront/ui';
   styleUrl: './galleria.css',
 })
 export class Galleria {
-  headerConfig: PageHeaderConfig = {
-    title: 'Галерея',
-    breadcrumbs: [{ label: 'Про нас' }, { label: 'Галерея' }],
-    showSearch: false,
-  };
+  private readonly transloco = inject(TranslocoService);
+  private readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
+
+  readonly headerConfig = computed<PageHeaderConfig>(() => {
+    this.activeLang();
+    return {
+      title: this.transloco.translate('galleria.page.title'),
+      breadcrumbs: [
+        { label: this.transloco.translate('galleria.page.breadcrumb.about') },
+        { label: this.transloco.translate('galleria.page.breadcrumb.current') },
+      ],
+      showSearch: false,
+    };
+  });
 }

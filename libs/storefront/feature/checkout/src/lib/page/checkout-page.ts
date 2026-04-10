@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { applyServerErrors, controlErrorText } from '@shared/forms';
 import { NotificationService } from '@shared/ui';
 import {
@@ -14,6 +15,7 @@ import {
   CheckoutFacade,
   mapToCheckoutDto,
 } from '@storefront/data-access';
+import { LocaleNavigationService } from '@storefront/util';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Dialog } from 'primeng/dialog';
@@ -43,6 +45,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     InputMask,
     Dialog,
     RouterLink,
+    TranslocoPipe,
   ],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.css',
@@ -50,9 +53,11 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 })
 export class CheckoutPage implements OnDestroy {
   readonly cart = inject(CartFacade);
+  private readonly localeNavigation = inject(LocaleNavigationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly facade = inject(CheckoutFacade);
   private readonly notify = inject(NotificationService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly successDialogVisible = signal(false);
 
@@ -86,7 +91,11 @@ export class CheckoutPage implements OnDestroy {
       const message = this.error();
       if (!message) return;
 
-      this.notify.error('Виникла помилка', message, { lifeMs: 3500 });
+      this.notify.error(
+        this.transloco.translate('checkout.notify.errorTitle'),
+        message,
+        { lifeMs: 3500 },
+      );
     });
 
     effect(() => {
@@ -100,10 +109,14 @@ export class CheckoutPage implements OnDestroy {
         .join('. ');
 
       const detail = fieldErrors
-        ? `Помилки: ${fieldErrors}`
-        : 'Будь ласка, перевірте введені дані';
+        ? `${this.transloco.translate('checkout.notify.validationPrefix')} ${fieldErrors}`
+        : this.transloco.translate('checkout.notify.validationFallback');
 
-      this.notify.error('Помилка валідації', detail, { lifeMs: 5000 });
+      this.notify.error(
+        this.transloco.translate('checkout.notify.validationTitle'),
+        detail,
+        { lifeMs: 5000 },
+      );
     });
   }
 
@@ -112,8 +125,8 @@ export class CheckoutPage implements OnDestroy {
 
     if (this.form.invalid) {
       this.notify.warn(
-        'Перевірте поля',
-        "Будь ласка, заповніть обов'язкові поля",
+        this.transloco.translate('checkout.notify.checkFieldsTitle'),
+        this.transloco.translate('checkout.notify.checkFieldsDetail'),
         { lifeMs: 3500 },
       );
       return;
@@ -136,6 +149,10 @@ export class CheckoutPage implements OnDestroy {
   closeSuccessDialog() {
     this.successDialogVisible.set(false);
     this.facade.reset();
+  }
+
+  protected productLink(slug: string): string[] {
+    return this.localeNavigation.localizedSegments('catalog', 'product', slug);
   }
 
   ngOnDestroy() {

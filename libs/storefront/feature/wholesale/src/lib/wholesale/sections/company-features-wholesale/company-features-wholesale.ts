@@ -1,51 +1,51 @@
 import { Component } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 type WholesaleFeatureItem = {
-  title: string;
-  text: string;
+  titleKey: string;
+  textKey: string;
 };
 
 type WholesaleFeaturesSectionData = {
-  heading: string;
-  subheading: string;
+  headingKey: string;
+  subheadingKey: string;
   items: WholesaleFeatureItem[];
 };
 
 @Component({
   selector: 'lib-company-features-wholesale',
-  imports: [],
+  imports: [TranslocoPipe],
   templateUrl: './company-features-wholesale.html',
   styleUrl: './company-features-wholesale.css',
 })
 export class CompanyFeaturesWholesale {
   readonly wholesaleFeaturesSectionData: WholesaleFeaturesSectionData = {
-    heading: 'Гуртові постачання від Сlass Kedr',
-    subheading:
-      'Організація постачань будь-якого обсягу базується на глибокій інтеграції у професійне середовище та партнерстві з виробничими лініями. Це дає можливість забезпечувати гуртові ціни та серійність продукції без залучення зайвих посередників.',
+    headingKey: 'wholesale.company.heading',
+    subheadingKey: 'wholesale.company.subheading',
     items: [
       {
-        title: 'Організація обсягів під запит',
-        text: 'Забезпечується виконання замовлень від дрібної гуртової партії до повної комплектації великих виробників.',
+        titleKey: 'wholesale.company.items.requestVolume.title',
+        textKey: 'wholesale.company.items.requestVolume.text',
       },
       {
-        title: 'Експертний підбір та реновація',
-        text: 'Професійна ідентифікація фурнітури та підбір аналогів під існуючі посадкові місця, що критично важливо для виробників дверей.',
+        titleKey: 'wholesale.company.items.expertRenovation.title',
+        textKey: 'wholesale.company.items.expertRenovation.text',
       },
       {
-        title: 'Гнучке ціноутворення',
-        text: 'Формування вигідних умов за рахунок прямих домовленостей та відсутності витрат на утримання масштабних логістичних надбудов.',
+        titleKey: 'wholesale.company.items.flexPricing.title',
+        textKey: 'wholesale.company.items.flexPricing.text',
       },
       {
-        title: 'Офіційний супровід',
-        text: 'Робота ведеться через банківські рахунки з наданням повного пакета документів (в тому числі з ПДВ), що гарантує юридичну чистоту кожної угоди.',
+        titleKey: 'wholesale.company.items.officialSupport.title',
+        textKey: 'wholesale.company.items.officialSupport.text',
       },
       {
-        title: 'Пряма координація',
-        text: 'Персональна залученість сторони, що реалізує товар, дозволяє оперативно керувати відвантаженнями та гарантувати стабільну якість кожної партії.',
+        titleKey: 'wholesale.company.items.directCoordination.title',
+        textKey: 'wholesale.company.items.directCoordination.text',
       },
       {
-        title: 'Складська готовність і резерв',
-        text: 'Підтримується оперативний запас ходових позицій та попереднє резервування номенклатури під виробничі графіки партнерів.',
+        titleKey: 'wholesale.company.items.stockReserve.title',
+        textKey: 'wholesale.company.items.stockReserve.text',
       },
     ],
   };

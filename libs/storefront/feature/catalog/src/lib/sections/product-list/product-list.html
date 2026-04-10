@@ -167,7 +167,7 @@
         <div
           class="flex flex-col sm:flex-row sm:items-center p-6 gap-4 w-full border border-transparent rounded cursor-pointer hover:border-primary transition-colors"
           [ngClass]="{ 'border-t border-surface-200 dark:border-surface-700': !isFirst }"
-          [routerLink]="['/catalog','product', product.productSlug]"
+          [routerLink]="productLink(product.productSlug)"
         >
           <div class="mb-4">
             <div class="relative mx-auto">
@@ -250,7 +250,7 @@
         <div class="col-span-12 sm:col-span-6 md:col-span-6 xl:col-span-4 p-2">
           <div
             class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col cursor-pointer hover:border-primary transition-colors"
-            [routerLink]="['/catalog','product', product.productSlug]"
+            [routerLink]="productLink(product.productSlug)"
           >
             <div class="mb-4">
               <div class="relative mx-auto">

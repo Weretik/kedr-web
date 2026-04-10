@@ -1,4 +1,4 @@
-<lib-page-header [config]="headerConfig" />
+<lib-page-header [config]="headerConfig()" />
 
 <div class="bg-neutral-50 dark:bg-surface-900 px-6 py-20 md:px-12 lg:px-20">
   <div class="max-w-5xl mx-auto flex flex-col gap-8">
@@ -8,64 +8,46 @@
       <h2
         class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
       >
-        1. Загальні положення
+        {{ 'returns.s1.title' | transloco }}
       </h2>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        Вступ
+        {{ 'returns.s1.introTitle' | transloco }}
       </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Ми прагнемо забезпечити високу якість обслуговування та прозорі умови
-        взаємодії з Клієнтом. Повернення та обмін товарів здійснюються
-        відповідно до законодавства України та внутрішніх правил магазину.
+        {{ 'returns.s1.introText' | transloco }}
       </p>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        Обмін та повернення товару
+        {{ 'returns.s1.exchangeTitle' | transloco }}
       </h3>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>
-          Повернення або обмін можливі протягом 14 календарних днів з моменту
-          отримання товару.
-        </li>
-        <li>
-          Право на повернення/обмін реалізується за умови дотримання вимог до
-          стану товару та наявності підтвердження покупки.
-        </li>
+        <li>{{ 'returns.s1.exchangeItem1' | transloco }}</li>
+        <li>{{ 'returns.s1.exchangeItem2' | transloco }}</li>
       </ul>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        Умови для повернення/обміну
+        {{ 'returns.s1.conditionsTitle' | transloco }}
       </h3>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>
-          Товар не був у використанні, збережено товарний вигляд, комплектацію,
-          ярлики та упаковку.
-        </li>
-        <li>
-          Наявний документ, що підтверджує покупку (чек, накладна або інше
-          підтвердження замовлення).
-        </li>
+        <li>{{ 'returns.s1.conditionsItem1' | transloco }}</li>
+        <li>{{ 'returns.s1.conditionsItem2' | transloco }}</li>
       </ul>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        Винятки з правил
+        {{ 'returns.s1.exceptionsTitle' | transloco }}
       </h3>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>
-          Індивідуально виготовлені товари або позиції з персоналізованими
-          характеристиками можуть не підлягати поверненню чи обміну.
-        </li>
+        <li>{{ 'returns.s1.exceptionsItem1' | transloco }}</li>
       </ul>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Ми цінуємо кожного Клієнта та прагнемо, щоб процес повернення й обміну
-        був максимально зрозумілим, швидким і передбачуваним.
+        {{ 'returns.s1.summary' | transloco }}
       </p>
     </section>
 
@@ -75,70 +57,48 @@
       <h2
         class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
       >
-        2. Умови обміну та повернення товару
+        {{ 'returns.s2.title' | transloco }}
       </h2>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        2.1. Основні вимоги
+        {{ 'returns.s2.baseTitle' | transloco }}
       </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Для розгляду запиту на повернення або обмін товар має відповідати
-        базовим вимогам щодо стану та комплектності.
+        {{ 'returns.s2.baseText' | transloco }}
       </p>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>
-          Стан товару: без ознак експлуатації, пошкоджень і втрати споживчих
-          властивостей.
-        </li>
-        <li>
-          Повна комплектація: упаковка, ярлики, інструкції та інші елементи, що
-          були надані разом із товаром.
-        </li>
-        <li>
-          Підтвердження покупки: документ або дані замовлення, що дають змогу
-          ідентифікувати придбання.
-        </li>
+        <li>{{ 'returns.s2.baseItem1' | transloco }}</li>
+        <li>{{ 'returns.s2.baseItem2' | transloco }}</li>
+        <li>{{ 'returns.s2.baseItem3' | transloco }}</li>
       </ul>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        2.2. Випадки браку або помилки продавця
+        {{ 'returns.s2.defectTitle' | transloco }}
       </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Якщо виявлено виробничий дефект, комплектування з помилкою або товар не
-        відповідає підтвердженому замовленню, питання вирішується за рахунок
-        Продавця.
+        {{ 'returns.s2.defectText' | transloco }}
       </p>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>
-          Обмін на аналогічний товар або іншу позицію за погодженням із
-          Клієнтом.
-        </li>
-        <li>Повернення коштів, якщо обмін неможливий.</li>
-        <li>
-          Компенсація витрат на зворотну доставку у випадках, коли помилка
-          сталася з боку Продавця.
-        </li>
+        <li>{{ 'returns.s2.defectItem1' | transloco }}</li>
+        <li>{{ 'returns.s2.defectItem2' | transloco }}</li>
+        <li>{{ 'returns.s2.defectItem3' | transloco }}</li>
       </ul>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        2.3. Повернення за ініціативою Клієнта
+        {{ 'returns.s2.clientTitle' | transloco }}
       </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Якщо товар не підійшов з причин, не пов’язаних із браком або помилкою
-        продавця, повернення можливе за дотримання стандартних умов.
+        {{ 'returns.s2.clientText' | transloco }}
       </p>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>Організація та оплата зворотної доставки здійснюються Клієнтом.</li>
-        <li>
-          Повернення коштів або обмін проводяться після отримання та перевірки
-          товару.
-        </li>
+        <li>{{ 'returns.s2.clientItem1' | transloco }}</li>
+        <li>{{ 'returns.s2.clientItem2' | transloco }}</li>
       </ul>
     </section>
 
@@ -148,56 +108,42 @@
       <h2
         class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
       >
-        3. Інструкція щодо обміну товару
+        {{ 'returns.s3.title' | transloco }}
       </h2>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Щоб процес обміну проходив швидко та без зайвих затримок, дотримуйтесь
-        наступного порядку дій.
+        {{ 'returns.s3.text' | transloco }}
       </p>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        3.1. Звернення до менеджера
+        {{ 'returns.s3.step1Title' | transloco }}
       </h3>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>Повідомте номер замовлення та причину звернення.</li>
-        <li>
-          Узгодьте з менеджером формат вирішення: обмін або повернення коштів.
-        </li>
+        <li>{{ 'returns.s3.step1Item1' | transloco }}</li>
+        <li>{{ 'returns.s3.step1Item2' | transloco }}</li>
       </ul>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        3.2. Підготовка та відправка товару
+        {{ 'returns.s3.step2Title' | transloco }}
       </h3>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>Надійно запакуйте товар в оригінальну або безпечну упаковку.</li>
-        <li>Додайте документ, що підтверджує покупку.</li>
-        <li>
-          Передайте товар службою доставки за реквізитами, узгодженими з
-          менеджером.
-        </li>
+        <li>{{ 'returns.s3.step2Item1' | transloco }}</li>
+        <li>{{ 'returns.s3.step2Item2' | transloco }}</li>
+        <li>{{ 'returns.s3.step2Item3' | transloco }}</li>
       </ul>
 
       <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        3.3. Завершення процесу
+        {{ 'returns.s3.step3Title' | transloco }}
       </h3>
       <ul
         class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
       >
-        <li>
-          Після отримання товару ми проводимо перевірку його стану та
-          комплектності.
-        </li>
-        <li>
-          За результатом перевірки виконуємо обмін або повернення коштів у
-          погоджені строки.
-        </li>
-        <li>
-          Клієнт отримує повідомлення про статус на кожному ключовому етапі.
-        </li>
+        <li>{{ 'returns.s3.step3Item1' | transloco }}</li>
+        <li>{{ 'returns.s3.step3Item2' | transloco }}</li>
+        <li>{{ 'returns.s3.step3Item3' | transloco }}</li>
       </ul>
     </section>
   </div>

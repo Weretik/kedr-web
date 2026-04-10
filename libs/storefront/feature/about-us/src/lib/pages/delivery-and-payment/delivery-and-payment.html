@@ -1,4 +1,4 @@
-<lib-page-header [config]="headerConfig" />
+<lib-page-header [config]="headerConfig()" />
 
 <div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20 py-20">
   <div class="max-w-5xl mx-auto flex flex-col gap-8">
@@ -6,12 +6,10 @@
       class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
     >
       <h2 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-        Доставка, оплата та повернення
+        {{ 'delivery.section.intro.title' | transloco }}
       </h2>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        Кожне замовлення індивідуальне, тому система роботи побудована на
-        прямому зв’язку з Клієнтом. Це дозволяє гарантувати наявність товару та
-        актуальність ціни безпосередньо перед моментом оплати.
+        {{ 'delivery.section.intro.text' | transloco }}
       </p>
     </section>
 
@@ -21,26 +19,15 @@
       <h3
         class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
       >
-        Як зробити замовлення?
+        {{ 'delivery.section.order.title' | transloco }}
       </h3>
       <ul
         class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
       >
-        <li>Кошик: Виберіть необхідні товари та додайте їх до кошика.</li>
-        <li>
-          Контакти: Вкажіть ваш номер телефону та натисніть кнопку «Оформити
-          замовлення».
-        </li>
-        <li>
-          Зв'язок: Протягом короткого часу Продавець зв’яжеться з вами у
-          зручному месенджері (Telegram або Viber) або за допомогою телефонного
-          дзвінка.
-        </li>
-        <li>
-          Уточнення: У процесі оформлення замовлення підтверджуємо наявність
-          позицій на складі, перевіряємо актуальність ціни та узгоджуємо деталі
-          доставки.
-        </li>
+        <li>{{ 'delivery.section.order.item1' | transloco }}</li>
+        <li>{{ 'delivery.section.order.item2' | transloco }}</li>
+        <li>{{ 'delivery.section.order.item3' | transloco }}</li>
+        <li>{{ 'delivery.section.order.item4' | transloco }}</li>
       </ul>
     </section>
 
@@ -50,28 +37,17 @@
       <h3
         class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
       >
-        Оплата
+        {{ 'delivery.section.payment.title' | transloco }}
       </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-4">
-        Оплата здійснюється за безготівковим розрахунком, що гарантує безпеку
-        операції для обох сторін.
+        {{ 'delivery.section.payment.text' | transloco }}
       </p>
       <ul
         class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
       >
-        <li>
-          Оплата за реквізитами: Після підтвердження замовлення Продавець
-          надішле вам офіційні реквізити (рахунок IBAN ФОП) у месенджер.
-        </li>
-        <li>
-          Підтвердження: Оплата вважається здійсненою в момент зарахування
-          коштів на рахунок Продавця.
-        </li>
-        <li>
-          Післяплата (накладений платіж): Можлива при отриманні товару у
-          відділенні перевізника (деталі уточнюйте у Продавця під час
-          підтвердження замовлення).
-        </li>
+        <li>{{ 'delivery.section.payment.item1' | transloco }}</li>
+        <li>{{ 'delivery.section.payment.item2' | transloco }}</li>
+        <li>{{ 'delivery.section.payment.item3' | transloco }}</li>
       </ul>
     </section>
 
@@ -81,33 +57,19 @@
       <h3
         class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
       >
-        Доставка
+        {{ 'delivery.section.shipping.title' | transloco }}
       </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-4">
-        Відвантаження товарів по території України:
+        {{ 'delivery.section.shipping.text' | transloco }}
       </p>
       <ul
         class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
       >
-        <li>Служба доставки: Переважно сервіс «Нова Пошта».</li>
-        <li>
-          Терміни: Відвантаження здійснюється протягом 1-3 робочих днів після
-          підтвердження замовлення або отримання оплати.
-        </li>
-        <li>
-          Вартість: Доставка оплачується Покупцем згідно з тарифами перевізника,
-          якщо інше не обумовлено при підтвердженні замовлення.
-        </li>
-        <li>
-          Перехід ризиків: Ризик випадкового пошкодження або втрати товару
-          переходить до Покупця в момент передачі замовлення представнику
-          транспортної компанії.
-        </li>
-        <li>
-          Повернення: Ви можете повернути або обміняти товар протягом 14 днів,
-          якщо він не був у використанні, збережено його товарний вигляд та
-          упаковку.
-        </li>
+        <li>{{ 'delivery.section.shipping.item1' | transloco }}</li>
+        <li>{{ 'delivery.section.shipping.item2' | transloco }}</li>
+        <li>{{ 'delivery.section.shipping.item3' | transloco }}</li>
+        <li>{{ 'delivery.section.shipping.item4' | transloco }}</li>
+        <li>{{ 'delivery.section.shipping.item5' | transloco }}</li>
       </ul>
     </section>
 
@@ -117,30 +79,21 @@
       <h3
         class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
       >
-        Важливо знати
+        {{ 'delivery.section.important.title' | transloco }}
       </h3>
       <ul
         class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300"
       >
-        <li>
-          Ціни: Ціни на сайті носять інформаційний характер та можуть бути
-          змінені. Остаточна ціна фіксується у момент надання реквізитів
-          Продавцем.
-        </li>
-        <li>
-          Юридична сила: Листування в месенджерах (за номером, вказаним у
-          замовленні) визнається офіційною комунікацією та має юридичну силу в
-          межах виконання угоди.
-        </li>
+        <li>{{ 'delivery.section.important.item1' | transloco }}</li>
+        <li>{{ 'delivery.section.important.item2' | transloco }}</li>
       </ul>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed mt-4">
-        «Ці умови є частиною
+        {{ 'delivery.section.important.quote.prefix' | transloco }}
         <a
-          [routerLink]="['/public-offer']"
+          [routerLink]="publicOfferLink()"
           class="text-primary-600 dark:text-primary-400 hover:underline"
-          >ПУБЛІЧНОЇ ОФЕРТИ ТА ПРАВИЛ КОРИСТУВАННЯ САЙТОМ</a
-        >. Здійснюючи замовлення, ви погоджуєтесь із зазначеним порядком
-        взаємодії.»
+          >{{ 'delivery.section.important.quote.link' | transloco }}</a
+        >{{ 'delivery.section.important.quote.suffix' | transloco }}
       </p>
     </section>
   </div>

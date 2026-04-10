@@ -1,58 +1,64 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 type FeatureItem = {
-  title: string;
-  text: string;
+  titleKey: string;
+  textKey: string;
 };
 
 type FeaturesSectionData = {
-  heading: string;
-  subheading: string;
+  subheadingKey: string;
   items: FeatureItem[];
 };
 
 @Component({
   selector: 'lib-company-features',
-  imports: [],
+  imports: [TranslocoPipe],
   templateUrl: './company-features.html',
   styleUrl: './company-features.css',
 })
 export class CompanyFeatures {
-  @Input() locationText = 'в Україні';
+  @Input() locationText = '';
+  private readonly transloco = inject(TranslocoService);
+  private readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
 
   readonly wholesaleFeaturesSectionData: FeaturesSectionData = {
-    heading: '',
-    subheading:
-      'Організація постачань будь-якого обсягу базується на глибокій інтеграції у професійне середовище та партнерстві з виробничими лініями. Це дає можливість забезпечувати гуртові ціни та серійність продукції без залучення зайвих посередників.',
+    subheadingKey: 'regions.company.subheading',
     items: [
       {
-        title: 'Організація обсягів під запит',
-        text: 'Забезпечується виконання замовлень від дрібної гуртової партії до повної комплектації великих виробників.',
+        titleKey: 'regions.company.items.requestVolume.title',
+        textKey: 'regions.company.items.requestVolume.text',
       },
       {
-        title: 'Експертний підбір та реновація',
-        text: 'Професійна ідентифікація фурнітури та підбір аналогів під існуючі посадкові місця, що критично важливо для виробників дверей.',
+        titleKey: 'regions.company.items.expertRenovation.title',
+        textKey: 'regions.company.items.expertRenovation.text',
       },
       {
-        title: 'Гнучке ціноутворення',
-        text: 'Формування вигідних умов за рахунок прямих домовленостей та відсутності витрат на утримання масштабних логістичних надбудов.',
+        titleKey: 'regions.company.items.flexPricing.title',
+        textKey: 'regions.company.items.flexPricing.text',
       },
       {
-        title: 'Офіційний супровід',
-        text: 'Робота ведеться через банківські рахунки з наданням повного пакета документів (в тому числі з ПДВ), що гарантує юридичну чистоту кожної угоди.',
+        titleKey: 'regions.company.items.officialSupport.title',
+        textKey: 'regions.company.items.officialSupport.text',
       },
       {
-        title: 'Пряма координація',
-        text: 'Персональна залученість сторони, що реалізує товар, дозволяє оперативно керувати відвантаженнями та гарантувати стабільну якість кожної партії.',
+        titleKey: 'regions.company.items.directCoordination.title',
+        textKey: 'regions.company.items.directCoordination.text',
       },
       {
-        title: 'Складська готовність і резерв',
-        text: 'Підтримується оперативний запас ходових позицій та попереднє резервування номенклатури під виробничі графіки партнерів.',
+        titleKey: 'regions.company.items.stockReserve.title',
+        textKey: 'regions.company.items.stockReserve.text',
       },
     ],
   };
 
-  get heading(): string {
-    return `Гуртові постачання ${this.locationText}`;
-  }
+  readonly heading = computed(() => {
+    this.activeLang();
+    return this.transloco.translate('regions.company.heading', {
+      location: this.locationText,
+    });
+  });
 }

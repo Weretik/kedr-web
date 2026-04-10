@@ -13,7 +13,7 @@
 
         <div class="col-span-12 lg:col-span-8 py-4 lg:py-8 flex flex-col gap-4">
           <h1 class="text-3xl lg:text-5xl font-bold text-white leading-tight">
-            Офіційні реквізити Адміністрації
+            {{ 'requisites.page.title' | transloco }}
           </h1>
         </div>
       </div>
@@ -32,16 +32,16 @@
             <h2
               class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
             >
-              Офіційні реквізити Адміністрації:
+              {{ 'requisites.card.title' | transloco }}
             </h2>
             <div
               class="text-base text-surface-800 dark:text-surface-200 leading-7"
             >
-              <p>ФОП Овчинников Максим Володимирович</p>
-              <p>ЄДРПОУ 2689400771</p>
-              <p>IBAN UA303052990000026007025905216</p>
-              <p>МФО 305299 в ПАТКБ "ПРИВАТБАНК"</p>
-              <p>ІНП 2689400771, виписка з ЄДР № 24800170000032534</p>
+              <p>{{ 'requisites.card.line1' | transloco }}</p>
+              <p>{{ 'requisites.card.line2' | transloco }}</p>
+              <p>{{ 'requisites.card.line3' | transloco }}</p>
+              <p>{{ 'requisites.card.line4' | transloco }}</p>
+              <p>{{ 'requisites.card.line5' | transloco }}</p>
             </div>
           </div>
         </div>
@@ -53,12 +53,12 @@
         <div class="p-4">
           <span
             class="text-surface-900 dark:text-surface-0 font-medium text-xl block mb-4"
-            >Інша інформація</span
+            >{{ 'requisites.sidebar.title' | transloco }}</span
           >
 
           <div class="flex flex-col gap-4">
             <a
-              [routerLink]="['/privacy-policy']"
+              [routerLink]="privacyPolicyLink()"
               class="w-full h-full p-4 rounded-border block hover:opacity-90 transition-opacity"
               style="
                 background:
@@ -66,15 +66,15 @@
                   url('https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/content/content-8.png');
               "
             >
-              <span class="text-white font-medium mb-4"
-                >Політика конфіденційності</span
-              >
-              <span class="text-white/70 block leading-normal"
-                >Політика конфіденційності та захисту персональних даних.</span
-              >
+              <span class="text-white font-medium mb-4">{{
+                'requisites.sidebar.privacy.title' | transloco
+              }}</span>
+              <span class="text-white/70 block leading-normal">{{
+                'requisites.sidebar.privacy.subtitle' | transloco
+              }}</span>
             </a>
             <a
-              [routerLink]="['/public-offer']"
+              [routerLink]="publicOfferLink()"
               class="w-full h-full p-4 rounded-border block hover:opacity-90 transition-opacity"
               style="
                 background:
@@ -82,11 +82,12 @@
                   url('https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/content/content-9.png');
               "
             >
-              <span class="text-white font-medium mb-4">Публічна оферта</span>
-              <span class="text-white/70 block leading-normal"
-                >Публічна оферта та правила користування сайтом (змішаний
-                договір).</span
-              >
+              <span class="text-white font-medium mb-4">{{
+                'requisites.sidebar.offer.title' | transloco
+              }}</span>
+              <span class="text-white/70 block leading-normal">{{
+                'requisites.sidebar.offer.subtitle' | transloco
+              }}</span>
             </a>
           </div>
         </div>

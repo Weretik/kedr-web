@@ -12,25 +12,31 @@
           <h1
             class="text-4xl xl:text-5xl font-bold text-surface-0 lg:text-surface-900 dark:text-surface-0 mb-6 leading-tight!"
           >
-            <span class="block">Class Kedr</span>
+            <span class="block">{{ 'regions.hero.brand' | transloco }}</span>
             <span class="block text-primary">
-              замовити оптом фурнітуру та двері {{ locationText }}
+              {{
+                'regions.hero.title' | transloco: { location: locationText }
+              }}
             </span>
           </h1>
 
           <ul
             class="text-surface-0/90 lg:text-surface-700 dark:text-surface-200 text-xl leading-normal mb-8 space-y-2 max-w-xl lg:max-w-none"
           >
-            <li>✓ Завжди на складі</li>
-            <li>✓ Оптом і в роздріб</li>
+            <li>{{ 'regions.hero.feature.inStock' | transloco }}</li>
+            <li>{{ 'regions.hero.feature.wholesaleRetail' | transloco }}</li>
           </ul>
 
           <div class="flex items-center gap-4 justify-center lg:justify-start">
             <button pButton type="button">
-              <span pButtonLabel>Learn More</span>
+              <span pButtonLabel>{{
+                'regions.hero.action.learnMore' | transloco
+              }}</span>
             </button>
             <button pButton type="button" outlined>
-              <span pButtonLabel>Live Demo</span>
+              <span pButtonLabel>{{
+                'regions.hero.action.liveDemo' | transloco
+              }}</span>
             </button>
           </div>
         </div>

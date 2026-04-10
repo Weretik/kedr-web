@@ -1,4 +1,5 @@
 import { Component, inject, computed } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import {
   CartFacade,
   cartLineFromListRow,
@@ -13,7 +14,7 @@ import { InStockFacade } from './in-stock.facade';
 
 @Component({
   selector: 'lib-in-stock-products',
-  imports: [ButtonModule, CarouselModule, TagModule, Skeleton],
+  imports: [ButtonModule, CarouselModule, TagModule, Skeleton, TranslocoPipe],
   templateUrl: './in-stock-products.html',
   styleUrl: './in-stock-products.css',
 })

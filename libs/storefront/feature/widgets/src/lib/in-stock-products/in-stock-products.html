@@ -4,13 +4,12 @@
       <div
         class="text-surface-900 dark:text-surface-0 text-5xl font-semibold leading-tight"
       >
-        Асортимент дверної фурнітури
+        {{ 'widgets.inStock.title' | transloco }}
       </div>
       <div
         class="text-surface-600 dark:text-surface-200 text-xl font-normal leading-tight"
       >
-        широкий вибір товарів завжди у наявності на складі для швидкої
-        комплектації та відвантаження
+        {{ 'widgets.inStock.subtitle' | transloco }}
       </div>
     </div>
 
@@ -36,7 +35,7 @@
       >
         <i class="pi pi-exclamation-circle text-red-500 text-4xl mb-4"></i>
         <p class="text-surface-600 dark:text-surface-200 text-xl">
-          Не вдалося завантажити товари. Будь ласка, спробуйте пізніше.
+          {{ 'widgets.inStock.error' | transloco }}
         </p>
       </div>
       } @else {
@@ -64,12 +63,16 @@
                 </div>
                 <div class="absolute left-3 top-3 flex flex-col gap-1">
                   <p-tag
-                    [value]="product?.inStock ? 'В наявності' : 'Немає'"
+                    [value]="
+                      product?.inStock
+                        ? ('widgets.inStock.status.inStock' | transloco)
+                        : ('widgets.inStock.status.outOfStock' | transloco)
+                    "
                     [severity]="product?.inStock ? 'success' : 'danger'"
                     class="text-xs! text-white! [&_.p-tag-label]:text-white!"
                   />
                   <p-tag
-                    value="Хіт"
+                    [value]="'widgets.inStock.badge.hit' | transloco"
                     [severity]="'warn'"
                     class="text-xs! text-white! [&_.p-tag-label]:text-white!"
                   />
@@ -82,7 +85,7 @@
             </p>
             <div class="flex justify-between items-center">
               <div class="mt-0 font-semibold text-xl">
-                {{ (product?.price ?? 0) + ' грн.' }}
+                {{ (product?.price ?? 0) + ' ' + ('catalog.currency' | transloco) }}
               </div>
               <span>
                 <p-button
