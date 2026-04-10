@@ -1,11 +1,19 @@
-import { Route } from '@angular/router';
+import { inject } from '@angular/core';
+import { RedirectFunction, Route } from '@angular/router';
 import { aboutUsRoutes } from '@storefront/feature/about-us';
 import { storefrontFeatureArticlesRoutes } from '@storefront/feature/articles';
 import { catalogRoutes } from '@storefront/feature/catalog';
 import { checkoutRoutes } from '@storefront/feature/checkout';
 import { contactsRoutes } from '@storefront/feature/contacts';
+import { notFoundRoutes } from '@storefront/feature/not-found';
 import { regionsRoutes } from '@storefront/feature/regions';
 import { wholesaleRoutes } from '@storefront/feature/wholesale';
+import { LocaleNavigationService } from '@storefront/util';
+
+const redirectToLocalizedNotFound: RedirectFunction = () => {
+  const localeNavigation = inject(LocaleNavigationService);
+  return `/${localeNavigation.getCurrentLocale()}/404`;
+};
 
 const localizedRoutes: Route[] = [
   ...contactsRoutes,
@@ -15,9 +23,10 @@ const localizedRoutes: Route[] = [
   ...checkoutRoutes,
   ...regionsRoutes,
   ...storefrontFeatureArticlesRoutes,
+  ...notFoundRoutes,
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: '404',
   },
 ];
 
@@ -37,6 +46,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: '**',
-    redirectTo: 'uk',
+    redirectTo: redirectToLocalizedNotFound,
   },
 ];

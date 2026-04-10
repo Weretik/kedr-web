@@ -29,7 +29,6 @@
       },
       "configurations": {
         "production": {
-          "localize": false,
           "fileReplacements": [
             {
               "replace": "apps/storefront/src/environments/environment.ts",
@@ -51,7 +50,6 @@
           "outputHashing": "all"
         },
         "development": {
-          "localize": false,
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true

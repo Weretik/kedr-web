@@ -58,6 +58,9 @@
       "@storefront/shell": ["libs/storefront/shell/src/index.ts"],
       "@storefront/feature/articles": [
         "libs/storefront/feature/articles/src/index.ts"
+      ],
+      "@storefront/feature/not-found": [
+        "libs/storefront/feature/not-found/src/index.ts"
       ]
     }
   }

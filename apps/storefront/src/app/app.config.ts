@@ -33,7 +33,7 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { appRoutes } from './app.routes';
-import { TRANSLOCO_PROVIDERS } from './i18n/transloco.providers';
+import { TRANSLOCO_PROVIDERS } from './localization/transloco.providers';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -78,9 +78,6 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     ...TRANSLOCO_PROVIDERS,
     providePrimeNG({
-      translation: {
-        emptyMessage: 'Товари не знайдено',
-      },
       theme: {
         preset: KedrStorePreset,
         options: {
