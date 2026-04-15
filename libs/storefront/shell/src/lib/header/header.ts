@@ -170,5 +170,22 @@ export class Header {
     );
   }
 
+  menuItemHref(routerLink?: unknown): string | null {
+    if (!Array.isArray(routerLink) || !routerLink.length) {
+      return null;
+    }
+
+    return this.router.serializeUrl(this.router.createUrlTree(routerLink));
+  }
+
+  navigateMenuItem(event: Event, routerLink?: unknown): void {
+    if (!Array.isArray(routerLink) || !routerLink.length) {
+      return;
+    }
+
+    event.preventDefault();
+    void this.router.navigate(routerLink);
+  }
+
   public readonly megaMenuPt = HEADER_MEGA_MENU_PT;
 }

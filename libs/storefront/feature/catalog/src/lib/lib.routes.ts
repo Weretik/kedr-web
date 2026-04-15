@@ -7,10 +7,6 @@ const loadProductList = () =>
 
 export const catalogRoutes: Route[] = [
   {
-    path: '',
-    loadComponent: loadProductList,
-  },
-  {
     path: 'catalog/products',
     loadComponent: loadProductList,
   },

@@ -1,0 +1,54 @@
+<div
+  class="bg-neutral-50 dark:bg-surface-900 px-6 py-10 md:px-12 lg:px-20 lg:py-14"
+>
+  <div class="mx-auto max-w-7xl">
+    <h1
+      class="text-surface-900 dark:text-surface-0 text-3xl md:text-4xl font-semibold text-center mb-8"
+    >
+      {{ title }}
+    </h1>
+
+    <div class="flex flex-wrap justify-center gap-3 mb-8 md:mb-10">
+      @for (tab of parentTabs; track tab.id) {
+      <p-button
+        [label]="tab.labelKey | transloco"
+        [text]="activeParent() !== tab.id"
+        [outlined]="activeParent() !== tab.id"
+        [disabled]="tab.id === 'doors'"
+        [styleClass]="
+          activeParent() === tab.id
+            ? 'px-5 py-2.5 rounded-full border text-sm md:text-base font-semibold bg-primary text-primary-contrast border-primary'
+            : 'px-5 py-2.5 rounded-full border text-sm md:text-base font-semibold bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 border-surface-200 dark:border-surface-700'
+        "
+        (onClick)="setParent(tab.id)"
+      />
+      }
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (card of cards(); track card.slug) {
+      <a
+        [routerLink]="cardLink(card.slug)"
+        class="group bg-surface-0 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-xl overflow-hidden hover:border-primary transition-colors shadow-sm"
+      >
+        <div class="aspect-[4/3] bg-surface-100 dark:bg-surface-800">
+          <img
+            [src]="card.image"
+            [alt]="card.labelKey | transloco"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <div class="p-5 flex items-center justify-between gap-4">
+          <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">
+            {{ card.labelKey | transloco }}
+          </div>
+          <span
+            class="pi pi-arrow-right text-surface-500 group-hover:text-primary transition-colors"
+            aria-hidden="true"
+          ></span>
+        </div>
+      </a>
+      }
+    </div>
+  </div>
+</div>

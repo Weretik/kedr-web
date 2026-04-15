@@ -1,0 +1,1437 @@
+{
+  "graph": {
+    "nodes": {
+      "storefront-feature-categories": {
+        "name": "storefront-feature-categories",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/categories",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-categories",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/categories/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-not-found": {
+        "name": "storefront-feature-not-found",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/not-found",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-not-found",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/not-found/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-wholesale": {
+        "name": "storefront-feature-wholesale",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/wholesale",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-wholesale",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/wholesale/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "checkout": {
+        "name": "checkout",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/checkout",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "checkout",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/checkout/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-about-us": {
+        "name": "storefront-feature-about-us",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/about-us",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-about-us",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/about-us/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-articles": {
+        "name": "storefront-feature-articles",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/articles",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-articles",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/articles/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-contacts": {
+        "name": "storefront-feature-contacts",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/contacts",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-contacts",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/contacts/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-catalog": {
+        "name": "storefront-feature-catalog",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/catalog",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-catalog",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/catalog/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-regions": {
+        "name": "storefront-feature-regions",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/regions",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-regions",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/regions/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "widgets": {
+        "name": "widgets",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/widgets",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "widgets",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/widgets/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "cart": {
+        "name": "cart",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/cart",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "cart",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/cart/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-feature-home": {
+        "name": "storefront-feature-home",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/feature/home",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-feature-home",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/feature/home/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:feature"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-data-access": {
+        "name": "storefront-data-access",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/data-access",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-data-access",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/data-access/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:data-access"],
+          "implicitDependencies": []
+        }
+      },
+      "contracts": {
+        "name": "contracts",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/contracts",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "contracts",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/contracts/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:contracts"],
+          "implicitDependencies": []
+        }
+      },
+      "data-access": {
+        "name": "data-access",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/data-access",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "data-access",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/data-access/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:data-access"],
+          "implicitDependencies": []
+        }
+      },
+      "admin-data-access": {
+        "name": "admin-data-access",
+        "type": "lib",
+        "data": {
+          "root": "libs/admin/data-access",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "admin-data-access",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/admin/data-access/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:admin", "type:data-access"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-shell": {
+        "name": "storefront-shell",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/shell",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-shell",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/shell/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:shell"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-util": {
+        "name": "storefront-util",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/util",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-util",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/util/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:util"],
+          "implicitDependencies": []
+        }
+      },
+      "logging": {
+        "name": "logging",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/logging",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "logging",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/logging/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:util"],
+          "implicitDependencies": []
+        }
+      },
+      "config": {
+        "name": "config",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/config",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "config",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/config/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:config"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront-ui": {
+        "name": "storefront-ui",
+        "type": "lib",
+        "data": {
+          "root": "libs/storefront/ui",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "storefront-ui",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/storefront/ui/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:storefront", "type:ui"],
+          "implicitDependencies": []
+        }
+      },
+      "forms": {
+        "name": "forms",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/forms",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "forms",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/forms/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:util"],
+          "implicitDependencies": []
+        }
+      },
+      "theme": {
+        "name": "theme",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/theme",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "theme",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/theme/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:util"],
+          "implicitDependencies": []
+        }
+      },
+      "auth": {
+        "name": "auth",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/auth",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "auth",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/auth/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:auth"],
+          "implicitDependencies": []
+        }
+      },
+      "http": {
+        "name": "http",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/http",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "http",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/http/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:data-access"],
+          "implicitDependencies": []
+        }
+      },
+      "util": {
+        "name": "util",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/util",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "util",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/util/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:util"],
+          "implicitDependencies": []
+        }
+      },
+      "admin-util": {
+        "name": "admin-util",
+        "type": "lib",
+        "data": {
+          "root": "libs/admin/util",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "admin-util",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/admin/util/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:admin", "type:util"],
+          "implicitDependencies": []
+        }
+      },
+      "storefront": {
+        "name": "storefront",
+        "type": "app",
+        "data": {
+          "root": "apps/storefront",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            },
+            "build": {
+              "executor": "@angular/build:application",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/apps/storefront",
+                "browser": "apps/storefront/src/main.ts",
+                "polyfills": ["zone.js"],
+                "tsConfig": "apps/storefront/tsconfig.app.json",
+                "assets": [
+                  {
+                    "glob": "**/*",
+                    "input": "apps/storefront/public"
+                  }
+                ],
+                "styles": ["apps/storefront/src/styles.css"],
+                "server": "apps/storefront/src/main.server.ts",
+                "ssr": {
+                  "entry": "apps/storefront/src/server.ts"
+                },
+                "outputMode": "server"
+              },
+              "configurations": {
+                "production": {
+                  "fileReplacements": [
+                    {
+                      "replace": "apps/storefront/src/environments/environment.ts",
+                      "with": "apps/storefront/src/environments/environment.production.ts"
+                    }
+                  ],
+                  "budgets": [
+                    {
+                      "type": "initial",
+                      "maximumWarning": "900kb",
+                      "maximumError": "2mb"
+                    },
+                    {
+                      "type": "anyComponentStyle",
+                      "maximumWarning": "4kb",
+                      "maximumError": "8kb"
+                    }
+                  ],
+                  "outputHashing": "all"
+                },
+                "development": {
+                  "optimization": false,
+                  "extractLicenses": false,
+                  "sourceMap": true
+                }
+              },
+              "defaultConfiguration": "production",
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": ["^build"],
+              "inputs": ["production", "^production"]
+            },
+            "serve": {
+              "continuous": true,
+              "executor": "@angular/build:dev-server",
+              "configurations": {
+                "production": {
+                  "buildTarget": "storefront:build:production"
+                },
+                "development": {
+                  "buildTarget": "storefront:build:development"
+                }
+              },
+              "defaultConfiguration": "development",
+              "options": {},
+              "parallelism": true
+            },
+            "serve-static": {
+              "continuous": true,
+              "executor": "@nx/web:file-server",
+              "options": {
+                "buildTarget": "storefront:build",
+                "staticFilePath": "dist/apps/storefront/browser",
+                "spa": false
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build-cloudflare": {
+              "executor": "nx:run-commands",
+              "options": {
+                "commands": ["npx nx build storefront --outputMode=static"],
+                "parallel": false
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "name": "storefront",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "prefix": "app",
+          "sourceRoot": "apps/storefront/src",
+          "tags": ["scope:storefront"],
+          "implicitDependencies": []
+        }
+      },
+      "ui": {
+        "name": "ui",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/ui",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "ui",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/ui/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:shared", "type:ui"],
+          "implicitDependencies": []
+        }
+      },
+      "admin-ui": {
+        "name": "admin-ui",
+        "type": "lib",
+        "data": {
+          "root": "libs/admin/ui",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            }
+          },
+          "name": "admin-ui",
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/admin/ui/src",
+          "prefix": "lib",
+          "projectType": "library",
+          "tags": ["scope:admin", "type:ui"],
+          "implicitDependencies": []
+        }
+      },
+      "admin": {
+        "name": "admin",
+        "type": "app",
+        "data": {
+          "root": "apps/admin",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.mjs"
+              ]
+            },
+            "build": {
+              "executor": "@angular/build:application",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/apps/admin",
+                "browser": "apps/admin/src/main.ts",
+                "tsConfig": "apps/admin/tsconfig.app.json",
+                "assets": [
+                  {
+                    "glob": "**/*",
+                    "input": "apps/admin/public"
+                  }
+                ],
+                "styles": ["apps/admin/src/styles.css"]
+              },
+              "configurations": {
+                "production": {
+                  "fileReplacements": [
+                    {
+                      "replace": "apps/admin/src/environments/environment.ts",
+                      "with": "apps/admin/src/environments/environment.production.ts"
+                    }
+                  ],
+                  "budgets": [
+                    {
+                      "type": "initial",
+                      "maximumWarning": "500kb",
+                      "maximumError": "1mb"
+                    },
+                    {
+                      "type": "anyComponentStyle",
+                      "maximumWarning": "4kb",
+                      "maximumError": "8kb"
+                    }
+                  ],
+                  "outputHashing": "all"
+                },
+                "development": {
+                  "optimization": false,
+                  "extractLicenses": false,
+                  "sourceMap": true
+                }
+              },
+              "defaultConfiguration": "production",
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": ["^build"],
+              "inputs": ["production", "^production"]
+            },
+            "serve": {
+              "continuous": true,
+              "executor": "@angular/build:dev-server",
+              "configurations": {
+                "production": {
+                  "buildTarget": "admin:build:production"
+                },
+                "development": {
+                  "buildTarget": "admin:build:development"
+                }
+              },
+              "defaultConfiguration": "development",
+              "options": {},
+              "parallelism": true
+            },
+            "serve-static": {
+              "continuous": true,
+              "executor": "@nx/web:file-server",
+              "options": {
+                "buildTarget": "admin:build",
+                "port": 4200,
+                "staticFilePath": "dist/apps/admin/browser",
+                "spa": true
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "name": "admin",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "prefix": "app",
+          "sourceRoot": "apps/admin/src",
+          "tags": ["scope:admin"],
+          "implicitDependencies": []
+        }
+      },
+      "kedr-web": {
+        "name": "kedr-web",
+        "type": "app",
+        "data": {
+          "root": ".",
+          "name": "kedr-web",
+          "tags": ["npm:private"],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": ["prepare", "tokens:gen", "storefront:start"]
+            },
+            "js": {
+              "packageName": "kedr-web",
+              "packageVersion": "0.0.0",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "prepare": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "prepare"
+              },
+              "metadata": {
+                "scriptContent": "husky",
+                "runCommand": "npm run prepare"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "tokens:gen": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "tokens:gen"
+              },
+              "metadata": {
+                "scriptContent": "node tools/tokens/generate-tailwind-palette.mjs",
+                "runCommand": "npm run tokens:gen"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "storefront:start": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "storefront:start"
+              },
+              "metadata": {
+                "scriptContent": "node dist/apps/storefront/server/server.mjs",
+                "runCommand": "npm run storefront:start"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "storefront-feature-categories": [],
+      "storefront-feature-not-found": [
+        {
+          "source": "storefront-feature-not-found",
+          "target": "storefront-util",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-wholesale": [
+        {
+          "source": "storefront-feature-wholesale",
+          "target": "storefront-ui",
+          "type": "static"
+        }
+      ],
+      "checkout": [
+        {
+          "source": "checkout",
+          "target": "forms",
+          "type": "static"
+        },
+        {
+          "source": "checkout",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "checkout",
+          "target": "storefront-data-access",
+          "type": "static"
+        },
+        {
+          "source": "checkout",
+          "target": "storefront-util",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-about-us": [
+        {
+          "source": "storefront-feature-about-us",
+          "target": "storefront-ui",
+          "type": "static"
+        },
+        {
+          "source": "storefront-feature-about-us",
+          "target": "storefront-util",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-articles": [
+        {
+          "source": "storefront-feature-articles",
+          "target": "storefront-util",
+          "type": "static"
+        },
+        {
+          "source": "storefront-feature-articles",
+          "target": "storefront-ui",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-contacts": [
+        {
+          "source": "storefront-feature-contacts",
+          "target": "storefront-ui",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-catalog": [
+        {
+          "source": "storefront-feature-catalog",
+          "target": "storefront-data-access",
+          "type": "static"
+        },
+        {
+          "source": "storefront-feature-catalog",
+          "target": "storefront-util",
+          "type": "static"
+        },
+        {
+          "source": "storefront-feature-catalog",
+          "target": "contracts",
+          "type": "static"
+        },
+        {
+          "source": "storefront-feature-catalog",
+          "target": "storefront-ui",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-regions": [
+        {
+          "source": "storefront-feature-regions",
+          "target": "storefront-ui",
+          "type": "static"
+        }
+      ],
+      "widgets": [
+        {
+          "source": "widgets",
+          "target": "storefront-data-access",
+          "type": "static"
+        },
+        {
+          "source": "widgets",
+          "target": "data-access",
+          "type": "static"
+        }
+      ],
+      "cart": [
+        {
+          "source": "cart",
+          "target": "storefront-data-access",
+          "type": "static"
+        },
+        {
+          "source": "cart",
+          "target": "storefront-util",
+          "type": "static"
+        }
+      ],
+      "storefront-feature-home": [],
+      "storefront-data-access": [
+        {
+          "source": "storefront-data-access",
+          "target": "contracts",
+          "type": "static"
+        },
+        {
+          "source": "storefront-data-access",
+          "target": "util",
+          "type": "static"
+        },
+        {
+          "source": "storefront-data-access",
+          "target": "data-access",
+          "type": "static"
+        }
+      ],
+      "contracts": [],
+      "data-access": [],
+      "admin-data-access": [],
+      "storefront-shell": [
+        {
+          "source": "storefront-shell",
+          "target": "storefront-data-access",
+          "type": "static"
+        },
+        {
+          "source": "storefront-shell",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "storefront-shell",
+          "target": "cart",
+          "type": "static"
+        },
+        {
+          "source": "storefront-shell",
+          "target": "storefront-feature-catalog",
+          "type": "static"
+        },
+        {
+          "source": "storefront-shell",
+          "target": "storefront-util",
+          "type": "static"
+        }
+      ],
+      "storefront-util": [
+        {
+          "source": "storefront-util",
+          "target": "util",
+          "type": "static"
+        }
+      ],
+      "logging": [],
+      "config": [],
+      "storefront-ui": [
+        {
+          "source": "storefront-ui",
+          "target": "ui",
+          "type": "static"
+        }
+      ],
+      "forms": [
+        {
+          "source": "forms",
+          "target": "util",
+          "type": "static"
+        }
+      ],
+      "theme": [],
+      "auth": [
+        {
+          "source": "auth",
+          "target": "util",
+          "type": "static"
+        }
+      ],
+      "http": [
+        {
+          "source": "http",
+          "target": "util",
+          "type": "static"
+        },
+        {
+          "source": "http",
+          "target": "logging",
+          "type": "static"
+        }
+      ],
+      "util": [],
+      "admin-util": [],
+      "storefront": [
+        {
+          "source": "storefront",
+          "target": "http",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "logging",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "theme",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-about-us",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-articles",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-catalog",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-categories",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "checkout",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-contacts",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-not-found",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-regions",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-feature-wholesale",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-util",
+          "type": "static"
+        },
+        {
+          "source": "storefront",
+          "target": "storefront-shell",
+          "type": "static"
+        }
+      ],
+      "ui": [
+        {
+          "source": "ui",
+          "target": "logging",
+          "type": "static"
+        },
+        {
+          "source": "ui",
+          "target": "util",
+          "type": "static"
+        }
+      ],
+      "admin-ui": [],
+      "admin": [],
+      "kedr-web": []
+    }
+  }
+}

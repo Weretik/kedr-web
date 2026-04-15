@@ -97,8 +97,11 @@
         }
       </a>
       } @else if (item.sectionHeader) {
+      <!-- Legacy section header with image (kept for quick rollback)
       <a
+        [attr.href]="menuItemHref(item.routerLink)"
         [routerLink]="item.routerLink"
+        (click)="navigateMenuItem($event, item.routerLink)"
         class="flex flex-col items-start px-4 mb-2 gap-2 cursor-pointer select-none w-full min-h-40 !opacity-100 transition-opacity hover:opacity-90"
       >
         <div
@@ -115,6 +118,30 @@
         >
           {{ item.label }}
         </span>
+      </a>
+      -->
+      <a
+        class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
+        [routerLink]="item.routerLink"
+      >
+        <span class="inline-flex flex-col gap-1">
+          <span class="text-base text-surface-900 dark:text-surface-0">
+            {{ item.label }}
+          </span>
+        </span>
+      </a>
+      } @else if (item.catalogEntry) {
+      <a
+        class="flex items-center justify-between px-3 py-2.5 cursor-pointer mb-1 rounded-lg transition-colors hover:bg-surface-100 dark:hover:bg-surface-800"
+        [class.font-semibold]="item.catalogAll"
+        [attr.href]="menuItemHref(item.routerLink)"
+        [routerLink]="item.routerLink"
+        (click)="navigateMenuItem($event, item.routerLink)"
+      >
+        <span class="text-base leading-6 text-surface-900 dark:text-surface-0">
+          {{ item.label }}
+        </span>
+        <i class="pi pi-angle-right text-sm text-surface-500"></i>
       </a>
       } @else if (!item.image) {
       <a

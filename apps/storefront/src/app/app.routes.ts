@@ -3,6 +3,7 @@ import { RedirectFunction, Route } from '@angular/router';
 import { aboutUsRoutes } from '@storefront/feature/about-us';
 import { storefrontFeatureArticlesRoutes } from '@storefront/feature/articles';
 import { catalogRoutes } from '@storefront/feature/catalog';
+import { categoriesRoutes } from '@storefront/feature/categories';
 import { checkoutRoutes } from '@storefront/feature/checkout';
 import { contactsRoutes } from '@storefront/feature/contacts';
 import { notFoundRoutes } from '@storefront/feature/not-found';
@@ -17,6 +18,7 @@ const redirectToLocalizedNotFound: RedirectFunction = () => {
 
 const localizedRoutes: Route[] = [
   ...contactsRoutes,
+  ...categoriesRoutes,
   ...wholesaleRoutes,
   ...aboutUsRoutes,
   ...catalogRoutes,

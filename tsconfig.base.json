@@ -61,6 +61,9 @@
       ],
       "@storefront/feature/not-found": [
         "libs/storefront/feature/not-found/src/index.ts"
+      ],
+      "@storefront/feature/categories": [
+        "libs/storefront/feature/categories/src/index.ts"
       ]
     }
   }

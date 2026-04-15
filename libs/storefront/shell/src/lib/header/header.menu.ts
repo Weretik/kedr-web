@@ -1,8 +1,7 @@
 import {
-  CATALOG_ITEM_TRANSLATION_KEYS_BY_SLUG,
+  CATALOG_HARDWARE_ORDER,
   CATALOG_HARDWARE_SECTION_TRANSLATION_KEYS,
   CATALOG_HARDWARE_SECTIONS,
-  CATALOG_HEADER_LAYOUT,
 } from '@storefront/data-access';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 
@@ -31,6 +30,7 @@ const menuText = {
   legal: 'header.menu.legal',
   publicOffer: 'header.menu.publicOffer',
   privacyPolicy: 'header.menu.privacyPolicy',
+  allCategories: 'header.menu.allCategories',
   wholesale: 'header.menu.wholesale',
   wholesaleSubtext: 'header.menu.wholesaleSubtext',
 } as const;
@@ -64,6 +64,7 @@ const menuRegions = [
   { slug: 'kyiv', key: 'header.menu.region.kyiv' },
 ] as const;
 
+/* Legacy catalog mega-menu with image cards and subcategories.
 const catalogSectionImages: Record<HardwareSectionKey, string> = {
   hinges: 'assets/images/categories/hinges.jpg',
   locks: 'assets/images/categories/locks.jpg',
@@ -107,6 +108,48 @@ const buildCatalogColumns = (locale: HeaderLocale): MenuItem[][] =>
       );
     }),
   );
+*/
+
+const buildCatalogColumns = (
+  translate: TranslateFn,
+  locale: HeaderLocale,
+): MenuItem[][] => {
+  const parentSections: MenuItem[] = CATALOG_HARDWARE_ORDER.map(
+    (sectionKey: HardwareSectionKey) => {
+      const section = CATALOG_HARDWARE_SECTIONS[sectionKey];
+      return {
+        label: CATALOG_HARDWARE_SECTION_TRANSLATION_KEYS[sectionKey],
+        routerLink: catalogLink(locale, section.slug),
+        catalogEntry: true,
+      };
+    },
+  );
+
+  const pairedColumns: MenuItem[][] = [];
+  for (let index = 0; index < parentSections.length; index += 2) {
+    pairedColumns.push(parentSections.slice(index, index + 2));
+  }
+
+  return [
+    [
+      {
+        items: [
+          {
+            label: translate(menuText.allCategories),
+            routerLink: localizedLink(locale, 'categories'),
+            catalogEntry: true,
+            catalogAll: true,
+          },
+        ],
+      },
+    ],
+    ...pairedColumns.map((columnItems) => [
+      {
+        items: columnItems,
+      },
+    ]),
+  ];
+};
 
 const buildInfoItems = (
   translate: TranslateFn,
@@ -195,9 +238,12 @@ export function buildMenu(
       label: translate(menuText.catalog),
       icon: 'pi pi-bookmark-fill',
       root: true,
-      items: buildCatalogColumns(locale).map((column) =>
+      items: buildCatalogColumns(translate, locale).map((column) =>
         column.map((section) => ({
           ...section,
+          label: section.label
+            ? translateWithFallback(section.label)
+            : section.label,
           items: section.items?.map((item) => ({
             ...item,
             label: item.label ? translateWithFallback(item.label) : item.label,
