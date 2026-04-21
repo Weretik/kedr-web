@@ -54,7 +54,7 @@ export class ProductListPageState {
   });
 
   setPage(page: number): void {
-    this.page.set(String(page));
+    this.page.set(page <= 1 ? null : String(page));
   }
 
   setPageSize(size: number): void {
@@ -106,7 +106,7 @@ export class ProductListPageState {
       {
         queryParams: {
           search: next.length > 0 ? next : null,
-          page: 1,
+          page: null,
         },
         queryParamsHandling: 'merge',
       },
@@ -123,8 +123,8 @@ export class ProductListPageState {
         this.localeNavigation.localizedSegments('catalog', slug, 'products'),
         {
           queryParams: {
-            page: 1,
-            search: '',
+            page: null,
+            search: null,
           },
           queryParamsHandling: 'merge',
         },
@@ -157,7 +157,7 @@ export class ProductListPageState {
     this.priceTo.set(null);
 
     this.sort.set('id-asc');
-    this.page.set('1');
+    this.page.set(null);
     this.pageSize.set('20');
 
     void this.router.navigate(
@@ -170,7 +170,7 @@ export class ProductListPageState {
   }
 
   private setDefaultPage(): void {
-    this.page.set('1');
+    this.page.set(null);
   }
 
   private boolParam(value: string | null): 'true' | 'false' | undefined {

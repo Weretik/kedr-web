@@ -137,7 +137,6 @@ export class ProductListFiltersBar {
 
   private readonly syncFiltersMenu = effect(() => {
     this.activeLang();
-    this.categorySlug();
     const expandedState = collectExpandedState(
       untracked(() => this.filtersMenu()),
     );
