@@ -1,150 +1,184 @@
 <lib-page-header [config]="headerConfig()" />
 
-<div class="bg-neutral-50 dark:bg-surface-900 px-6 py-20 md:px-12 lg:px-20">
-  <div class="max-w-5xl mx-auto flex flex-col gap-8">
+<div class="bg-neutral-50 dark:bg-surface-900 px-6 py-10 md:px-12 lg:px-20">
+  <div class="max-w-6xl mx-auto flex flex-col gap-8">
     <section
-      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8 flex flex-col gap-6"
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
     >
-      <h2
-        class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
-      >
-        {{ 'returns.s1.title' | transloco }}
-      </h2>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s1.introTitle' | transloco }}
-      </h3>
       <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        {{ 'returns.s1.introText' | transloco }}
-      </p>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s1.exchangeTitle' | transloco }}
-      </h3>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s1.exchangeItem1' | transloco }}</li>
-        <li>{{ 'returns.s1.exchangeItem2' | transloco }}</li>
-      </ul>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s1.conditionsTitle' | transloco }}
-      </h3>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s1.conditionsItem1' | transloco }}</li>
-        <li>{{ 'returns.s1.conditionsItem2' | transloco }}</li>
-      </ul>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s1.exceptionsTitle' | transloco }}
-      </h3>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s1.exceptionsItem1' | transloco }}</li>
-      </ul>
-      <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        {{ 'returns.s1.summary' | transloco }}
+        {{ 'returns.page.lead' | transloco }}
       </p>
     </section>
 
     <section
-      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8 flex flex-col gap-6"
+      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
     >
       <h2
-        class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-4"
       >
+        {{ 'returns.quick.title' | transloco }}
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a
+          [routerLink]="[]"
+          fragment="general"
+          class="w-full text-left rounded-xl border border-surface-200 dark:border-surface-700 px-4 py-3 text-surface-700 dark:text-surface-200 hover:border-primary-500 transition-colors"
+        >
+          {{ 'returns.quick.general' | transloco }}
+        </a>
+        <a
+          [routerLink]="[]"
+          fragment="warranty"
+          class="w-full text-left rounded-xl border border-surface-200 dark:border-surface-700 px-4 py-3 text-surface-700 dark:text-surface-200 hover:border-primary-500 transition-colors"
+        >
+          {{ 'returns.quick.warranty' | transloco }}
+        </a>
+        <a
+          [routerLink]="[]"
+          fragment="logistics"
+          class="w-full text-left rounded-xl border border-surface-200 dark:border-surface-700 px-4 py-3 text-surface-700 dark:text-surface-200 hover:border-primary-500 transition-colors"
+        >
+          {{ 'returns.quick.logistics' | transloco }}
+        </a>
+        <a
+          [routerLink]="[]"
+          fragment="steps"
+          class="w-full text-left rounded-xl border border-surface-200 dark:border-surface-700 px-4 py-3 text-surface-700 dark:text-surface-200 hover:border-primary-500 transition-colors"
+        >
+          {{ 'returns.quick.steps' | transloco }}
+        </a>
+      </div>
+    </section>
+
+    <section
+      id="general"
+      class="scroll-mt-28 rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h2 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+        {{ 'returns.s1.title' | transloco }}
+      </h2>
+      <ul
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300 leading-relaxed"
+      >
+        <li>{{ 'returns.s1.term' | transloco }}</li>
+        <li>{{ 'returns.s1.conditions' | transloco }}</li>
+        <li>{{ 'returns.s1.documents' | transloco }}</li>
+        <li>{{ 'returns.s1.restrictions' | transloco }}</li>
+      </ul>
+    </section>
+
+    <section
+      id="warranty"
+      class="scroll-mt-28 rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h2 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-6">
         {{ 'returns.s2.title' | transloco }}
       </h2>
 
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s2.baseTitle' | transloco }}
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-3"
+      >
+        {{ 'returns.s2.sellerTitle' | transloco }}
       </h3>
-      <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        {{ 'returns.s2.baseText' | transloco }}
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-3">
+        {{ 'returns.s2.sellerLead' | transloco }}
       </p>
       <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300 leading-relaxed mb-6"
       >
-        <li>{{ 'returns.s2.baseItem1' | transloco }}</li>
-        <li>{{ 'returns.s2.baseItem2' | transloco }}</li>
-        <li>{{ 'returns.s2.baseItem3' | transloco }}</li>
+        <li>{{ 'returns.s2.sellerItem1' | transloco }}</li>
+        <li>{{ 'returns.s2.sellerItem2' | transloco }}</li>
       </ul>
 
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s2.defectTitle' | transloco }}
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-3"
+      >
+        {{ 'returns.s2.visualTitle' | transloco }}
       </h3>
-      <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        {{ 'returns.s2.defectText' | transloco }}
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-3">
+        {{ 'returns.s2.visualLead' | transloco }}
       </p>
       <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300 leading-relaxed"
       >
-        <li>{{ 'returns.s2.defectItem1' | transloco }}</li>
-        <li>{{ 'returns.s2.defectItem2' | transloco }}</li>
-        <li>{{ 'returns.s2.defectItem3' | transloco }}</li>
-      </ul>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s2.clientTitle' | transloco }}
-      </h3>
-      <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        {{ 'returns.s2.clientText' | transloco }}
-      </p>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s2.clientItem1' | transloco }}</li>
-        <li>{{ 'returns.s2.clientItem2' | transloco }}</li>
+        <li>{{ 'returns.s2.visualItem1' | transloco }}</li>
+        <li>{{ 'returns.s2.visualItem2' | transloco }}</li>
+        <li>{{ 'returns.s2.visualItem3' | transloco }}</li>
       </ul>
     </section>
 
     <section
-      class="rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8 flex flex-col gap-6"
+      id="logistics"
+      class="scroll-mt-28 rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
     >
-      <h2
-        class="text-2xl font-bold text-surface-900 dark:text-surface-0 leading-normal"
-      >
+      <h2 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-4">
         {{ 'returns.s3.title' | transloco }}
       </h2>
-      <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-        {{ 'returns.s3.text' | transloco }}
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-4">
+        {{ 'returns.s3.transport' | transloco }}
+      </p>
+      <h3
+        class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-3"
+      >
+        {{ 'returns.s3.deliveryTitle' | transloco }}
+      </h3>
+      <ul
+        class="list-disc pl-6 space-y-3 text-surface-600 dark:text-surface-300 leading-relaxed"
+      >
+        <li>{{ 'returns.s3.deliveryItem1' | transloco }}</li>
+        <li>{{ 'returns.s3.deliveryItem2' | transloco }}</li>
+      </ul>
+    </section>
+
+    <section
+      id="steps"
+      class="scroll-mt-28 rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-800 p-6 md:p-8"
+    >
+      <h2 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+        {{ 'returns.s4.title' | transloco }}
+      </h2>
+      <p class="text-surface-600 dark:text-surface-300 leading-relaxed mb-5">
+        {{ 'returns.s4.lead' | transloco }}
       </p>
 
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s3.step1Title' | transloco }}
-      </h3>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s3.step1Item1' | transloco }}</li>
-        <li>{{ 'returns.s3.step1Item2' | transloco }}</li>
-      </ul>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s3.step2Title' | transloco }}
-      </h3>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s3.step2Item1' | transloco }}</li>
-        <li>{{ 'returns.s3.step2Item2' | transloco }}</li>
-        <li>{{ 'returns.s3.step2Item3' | transloco }}</li>
-      </ul>
-
-      <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
-        {{ 'returns.s3.step3Title' | transloco }}
-      </h3>
-      <ul
-        class="text-surface-600 dark:text-surface-300 leading-relaxed list-disc space-y-2 pl-6"
-      >
-        <li>{{ 'returns.s3.step3Item1' | transloco }}</li>
-        <li>{{ 'returns.s3.step3Item2' | transloco }}</li>
-        <li>{{ 'returns.s3.step3Item3' | transloco }}</li>
-      </ul>
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <li
+          class="rounded-xl border border-surface-200 dark:border-surface-700 p-4"
+        >
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-0 mb-2"
+          >
+            {{ 'returns.s4.step1Title' | transloco }}
+          </h3>
+          <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+            {{ 'returns.s4.step1Text' | transloco }}
+          </p>
+        </li>
+        <li
+          class="rounded-xl border border-surface-200 dark:border-surface-700 p-4"
+        >
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-0 mb-2"
+          >
+            {{ 'returns.s4.step2Title' | transloco }}
+          </h3>
+          <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+            {{ 'returns.s4.step2Text' | transloco }}
+          </p>
+        </li>
+        <li
+          class="rounded-xl border border-surface-200 dark:border-surface-700 p-4"
+        >
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-0 mb-2"
+          >
+            {{ 'returns.s4.step3Title' | transloco }}
+          </h3>
+          <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+            {{ 'returns.s4.step3Text' | transloco }}
+          </p>
+        </li>
+      </ol>
     </section>
   </div>
 </div>
