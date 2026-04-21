@@ -1,4 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  PLATFORM_ID,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import {
@@ -9,6 +16,7 @@ import {
   CATALOG_HARDWARE_SECTION_TRANSLATION_KEYS,
   CATALOG_HARDWARE_SECTIONS,
   CATALOG_ROOT_TRANSLATION_KEYS,
+  ProductListWarmupService,
 } from '@storefront/data-access';
 import { LocaleNavigationService } from '@storefront/util';
 import { ButtonModule } from 'primeng/button';
@@ -76,6 +84,8 @@ const doorCards: CategoryCard[] = CATALOG_DOOR_ORDER.map((sectionKey) => ({
 })
 export class Categories {
   private readonly localeNavigation = inject(LocaleNavigationService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly catalogWarmup = inject(ProductListWarmupService);
 
   readonly parentTabs = parentTabs;
   readonly activeParent = signal<ParentCategory>('hardware');
@@ -86,6 +96,11 @@ export class Categories {
   readonly cards = computed<CategoryCard[]>(() =>
     this.activeParent() === 'hardware' ? hardwareCards : doorCards,
   );
+
+  constructor() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    setTimeout(() => this.catalogWarmup.warmUpCatalogList(), 300);
+  }
 
   setParent(parent: ParentCategory): void {
     this.activeParent.set(parent);

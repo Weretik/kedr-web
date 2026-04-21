@@ -15,9 +15,11 @@ import {
   withHttpTransferCacheOptions,
 } from '@angular/platform-browser';
 import {
+  PreloadAllModules,
   provideRouter,
   withInMemoryScrolling,
   withComponentInputBinding,
+  withPreloading,
 } from '@angular/router';
 import {
   baseUrlInterceptor,
@@ -66,6 +68,7 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'enabled',
       }),
       withComponentInputBinding(),
+      withPreloading(PreloadAllModules),
     ),
     provideClientHydration(
       withEventReplay(),
