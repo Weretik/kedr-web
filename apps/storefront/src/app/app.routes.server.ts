@@ -1,6 +1,7 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
 import { ARTICLE_IDS } from './route-params/article-ids';
+import { CATALOG_CATEGORY_SLUGS } from './route-params/catalog-category-slugs';
 import { REGION_CITY_SLUGS } from './route-params/region-city-slugs';
 
 export const serverRoutes: ServerRoute[] = [
@@ -42,11 +43,17 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'uk/catalog/:categorySlug/products',
-    renderMode: RenderMode.Client,
+    renderMode: RenderMode.Prerender,
+    async getPrerenderParams() {
+      return CATALOG_CATEGORY_SLUGS.map((categorySlug) => ({ categorySlug }));
+    },
   },
   {
     path: 'ru/catalog/:categorySlug/products',
-    renderMode: RenderMode.Client,
+    renderMode: RenderMode.Prerender,
+    async getPrerenderParams() {
+      return CATALOG_CATEGORY_SLUGS.map((categorySlug) => ({ categorySlug }));
+    },
   },
   {
     path: 'uk/catalog/product/:productSlug',
