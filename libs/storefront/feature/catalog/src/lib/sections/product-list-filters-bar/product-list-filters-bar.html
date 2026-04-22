@@ -1,12 +1,12 @@
 <div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20 pt-12">
   @if (isSticky()) {
-  <div class="h-20 mb-6"></div>
+  <div class="h-16 md:h-20 mb-6"></div>
   }
   <div
     [class.mb-6]="!isSticky()"
     class="flex flex-col sm:flex-row justify-center items-center sm:items-center gap-4"
     [ngClass]="{
-    'fixed top-22 left-0 right-0 z-1000 bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-18 py-2 shadow-md': isSticky()
+    'fixed top-16 md:top-22 left-0 right-0 z-1000 bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-18 py-2 shadow-md': isSticky()
     }"
   >
     <div
@@ -81,22 +81,45 @@
         ></p-toggleButton>
       </div>
 
-      <div
-        class="flex lg:hidden flex-1 justify-center sm:justify-start items-center"
-      >
+      <div class="grid lg:hidden grid-cols-3 gap-2 w-full">
         <button
           type="button"
           pButton
           severity="secondary"
           [outlined]="true"
+          styleClass="w-full text-[11px] sm:text-xs px-1.5 sm:px-2 py-2"
+          (click)="categoriesPopover.toggle($event)"
+        >
+          <span pButtonLabel
+            >{{ 'catalog.filters.categories' | transloco }}</span
+          >
+          <i pButtonIcon class="pi pi-list"></i>
+        </button>
+        <p-popover #categoriesPopover class="hidden">
+          <div class="w-72 max-h-[70vh] overflow-auto p-1">
+            <p-panelmenu
+              [model]="filtersMenu()"
+              [pt]="panelMenuPt"
+              class="w-full gap-2 [&_.p-menuitem-link]:py-2"
+              [multiple]="true"
+            />
+          </div>
+        </p-popover>
+
+        <button
+          type="button"
+          pButton
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full text-[11px] sm:text-xs px-1.5 sm:px-2 py-2"
           (click)="paramsPopover.toggle($event)"
         >
           <span pButtonLabel
             >{{ 'catalog.filters.parameters' | transloco }}</span
           >
-          <i pButtonIcon class="pi pi-chevron-down"></i>
+          <i pButtonIcon class="pi pi-sliders-h"></i>
         </button>
-        <p-popover #paramsPopover>
+        <p-popover #paramsPopover class="hidden">
           <div class="flex flex-col gap-3 p-1">
             <p-toggleButton
               [ngModel]="draftIsSale()"
@@ -127,13 +150,34 @@
             ></p-toggleButton>
           </div>
         </p-popover>
+
+        <button
+          type="button"
+          pButton
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full text-[11px] sm:text-xs px-1.5 sm:px-2 py-2"
+          (click)="sortMenuMobile.toggle($event)"
+        >
+          <span pButtonLabel>{{ 'catalog.filters.sort' | transloco }}</span>
+          <i pButtonIcon class="pi pi-sort-alt"></i>
+        </button>
+        <p-menu
+          #sortMenuMobile
+          class="hidden"
+          [model]="sortOptions()"
+          [popup]="true"
+          [appendTo]="'body'"
+        ></p-menu>
       </div>
     </div>
 
-    <div class="flex flex-col justify-start items-center sm:items-start">
+    <div
+      class="hidden lg:flex flex-col justify-start items-center sm:items-start"
+    >
       @defer (on immediate) {
       <p-menu
-        #sortMenu
+        #sortMenuDesktop
         [model]="sortOptions()"
         [popup]="true"
         [appendTo]="'body'"
@@ -143,7 +187,7 @@
         pButton
         severity="secondary"
         [outlined]="true"
-        (click)="sortMenu.toggle($event)"
+        (click)="sortMenuDesktop.toggle($event)"
       >
         <i pButtonIcon class="pi pi-sort-alt"></i>
         <span pButtonLabel>{{ 'catalog.filters.sort' | transloco }}</span>
@@ -154,8 +198,10 @@
 
   <p-divider class="w-full mb-6!"></p-divider>
 
+  <ng-content select=".category-navigation-slot" />
+
   <div class="flex flex-col lg:flex-row gap-8">
-    <div class="w-full lg:w-60 flex flex-col justify-start items-start">
+    <div class="hidden lg:flex lg:w-60 flex-col justify-start items-start">
       <div class="self-stretch flex flex-col justify-start items-start">
         <div class="card flex justify-center w-full">
           <p-panelmenu
@@ -170,7 +216,7 @@
     </div>
 
     <div class="flex-1">
-      <lib-product-list />
+      <ng-content select=".product-list-slot" />
     </div>
   </div>
 </div>

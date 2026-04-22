@@ -36,7 +36,6 @@ import {
 } from './product-list-filters.menu';
 import { buildSortMenu } from './product-list-sort.sort-options';
 import { ProductListPageState } from '../../pages/product-list/product-list.page-state';
-import { ProductList } from '../product-list/product-list';
 
 import type { MenuItem } from 'primeng/api';
 
@@ -66,7 +65,6 @@ type PanelMenuItemLabelPtOptions = {
     MenuModule,
     ButtonIcon,
     PanelMenuModule,
-    ProductList,
     ToggleButton,
     Popover,
     TranslocoPipe,
