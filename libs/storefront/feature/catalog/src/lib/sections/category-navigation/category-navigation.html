@@ -1,0 +1,35 @@
+@if (cards().length > 1) {
+<div class="mb-8">
+  <div class="flex flex-wrap gap-4">
+    @for (card of cards(); track card.slug) {
+    <button
+      type="button"
+      class="group w-[180px] border rounded-xl overflow-hidden transition-colors bg-surface-0 dark:bg-surface-900 border-surface-200 dark:border-surface-700 hover:border-primary text-left"
+      [class.border-primary]="card.slug === categorySlug()"
+      (click)="goToCategory(card.slug)"
+    >
+      <div>
+        <img
+          [src]="card.image"
+          [alt]="card.label"
+          class="block w-full h-auto"
+          loading="lazy"
+        />
+      </div>
+      <div class="p-2.5">
+        @if (card.parentLabel) {
+        <div class="text-xs text-surface-500 dark:text-surface-400 truncate">
+          {{ card.parentLabel }}
+        </div>
+        }
+        <div
+          class="text-sm font-medium text-surface-900 dark:text-surface-0 leading-5 line-clamp-2 h-10"
+        >
+          {{ card.label }}
+        </div>
+      </div>
+    </button>
+    }
+  </div>
+</div>
+}
