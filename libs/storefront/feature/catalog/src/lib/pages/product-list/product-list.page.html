@@ -1,1 +1,7 @@
-<lib-product-list-filters-bar [categorySlug]="categorySlug()" />
+<lib-product-list-filters-bar [categorySlug]="categorySlug()">
+  <lib-category-navigation
+    class="category-navigation-slot"
+    [categorySlug]="categorySlug()"
+  ></lib-category-navigation>
+  <lib-product-list class="product-list-slot"></lib-product-list>
+</lib-product-list-filters-bar>
