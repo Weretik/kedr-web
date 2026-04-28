@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -49,6 +49,7 @@ export class ProductPage {
   private readonly activeLang = toSignal(this.transloco.langChanges$, {
     initialValue: this.transloco.getActiveLang(),
   });
+  private hasInitializedLocaleRefresh = false;
 
   readonly headerConfig = computed<PageHeaderConfig>(() => {
     this.activeLang();
@@ -105,6 +106,17 @@ export class ProductPage {
   public onRetry(): void {
     this.facade.refresh();
   }
+
+  private readonly refreshOnLocaleChange = effect(() => {
+    this.activeLang();
+
+    if (!this.hasInitializedLocaleRefresh) {
+      this.hasInitializedLocaleRefresh = true;
+      return;
+    }
+
+    this.facade.refresh();
+  });
 
   addToCart(product: ProductBySlugDto, qty: number = this.quantity()) {
     this.cart.addToCart(cartLineFromBySlug(product, qty));

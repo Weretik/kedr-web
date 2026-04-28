@@ -160,7 +160,15 @@ export class Header {
       this.router.url,
       locale,
     );
-    void this.router.navigateByUrl(localizedUrl);
+    void this.router.navigateByUrl(localizedUrl).then((navigated) => {
+      if (!navigated) {
+        return;
+      }
+
+      if (localizedUrl.includes('/products')) {
+        this.facade.refresh();
+      }
+    });
   }
 
   private buildMenuItems(): MegaMenuItem[] {

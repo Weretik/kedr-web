@@ -1,4 +1,6 @@
 import { Component, effect, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoService } from '@jsverse/transloco';
 import { ProductListFacade } from '@storefront/data-access';
 
 import { ProductListPageState } from './product-list.page-state';
@@ -17,8 +19,24 @@ export class ProductListPage {
 
   readonly facade = inject(ProductListFacade);
   readonly pageState = inject(ProductListPageState);
+  private readonly transloco = inject(TranslocoService);
+  private readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
+  private hasInitializedLocaleRefresh = false;
 
   private readonly syncFacadeQuery = effect(() => {
     this.facade.setQuery(this.pageState.query());
+  });
+
+  private readonly refreshOnLocaleChange = effect(() => {
+    this.activeLang();
+
+    if (!this.hasInitializedLocaleRefresh) {
+      this.hasInitializedLocaleRefresh = true;
+      return;
+    }
+
+    this.facade.refresh();
   });
 }
