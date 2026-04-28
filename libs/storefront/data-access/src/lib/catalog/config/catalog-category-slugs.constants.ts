@@ -1,12 +1,16 @@
+import { CATALOG_CATEGORY_IMAGES } from './catalog-images.config';
+
 type CatalogMenuLink = {
   label: string;
   slug: string;
+  image?: string;
 };
 
 type CatalogMenuSection = {
   label: string;
   slug: string;
   icon: string;
+  image?: string;
   items: readonly CatalogMenuLink[];
 };
 
@@ -28,6 +32,7 @@ export const CATALOG_HARDWARE_SECTIONS = {
     label: 'Завіси',
     slug: 'zavisi-900001',
     icon: 'ri-arrow-left-right-line',
+    image: CATALOG_CATEGORY_IMAGES.hinges,
     items: [
       {
         label: 'Накладні(метелик)',
@@ -47,6 +52,7 @@ export const CATALOG_HARDWARE_SECTIONS = {
     label: 'Замки',
     slug: 'zamki-900002',
     icon: 'ri-lock-2-line',
+    image: CATALOG_CATEGORY_IMAGES.locks,
     items: [
       {
         label: 'Навісні та велозамки',
@@ -74,6 +80,7 @@ export const CATALOG_HARDWARE_SECTIONS = {
     label: 'Ручки',
     slug: 'ruchki-900003',
     icon: 'ri-bar-chart-horizontal-line',
+    image: CATALOG_CATEGORY_IMAGES.handles,
     items: [
       {
         label: 'На розетцi (Kevlar)',
@@ -113,6 +120,7 @@ export const CATALOG_HARDWARE_SECTIONS = {
     label: 'Циліндри',
     slug: 'tsilindri-900004',
     icon: 'ri-key-2-line',
+    image: CATALOG_CATEGORY_IMAGES.cylinders,
     items: [
       {
         label: 'серії BRASS KEY Латунь',
@@ -148,6 +156,7 @@ export const CATALOG_HARDWARE_SECTIONS = {
     label: 'Міжкімнатні механізми',
     slug: 'mizhkimnatni-mekhanizmi-900005',
     icon: 'pi pi-cog',
+    image: CATALOG_CATEGORY_IMAGES.interiorMechanisms,
     items: [
       {
         label: 'з магнітною защіпкою',
@@ -171,6 +180,7 @@ export const CATALOG_HARDWARE_SECTIONS = {
     label: 'Інше',
     slug: 'inshe-900006',
     icon: 'pi pi-ellipsis-h',
+    image: CATALOG_CATEGORY_IMAGES.other,
     items: [
       {
         label: 'Броненакладки на циліндр',
@@ -208,21 +218,6 @@ export const CATALOG_HARDWARE_SECTIONS = {
   },
 } as const satisfies Record<string, CatalogMenuSection>;
 
-export const CATALOG_HARDWARE_ORDER = [
-  'hinges',
-  'locks',
-  'handles',
-  'cylinders',
-  'interiorMechanisms',
-  'other',
-] as const satisfies readonly (keyof typeof CATALOG_HARDWARE_SECTIONS)[];
-
-export const CATALOG_HEADER_LAYOUT = [
-  ['hinges', 'locks'],
-  ['handles', 'cylinders'],
-  ['interiorMechanisms', 'other'],
-] as const satisfies readonly (readonly (keyof typeof CATALOG_HARDWARE_SECTIONS)[])[];
-
 export const CATALOG_DOOR_SECTIONS = {
   entranceDoors: {
     label: 'Вхідні двері',
@@ -248,8 +243,3 @@ export const CATALOG_DOOR_SECTIONS = {
     ],
   },
 } as const;
-
-export const CATALOG_DOOR_ORDER = [
-  'entranceDoors',
-  'interiorDoors',
-] as const satisfies readonly (keyof typeof CATALOG_DOOR_SECTIONS)[];

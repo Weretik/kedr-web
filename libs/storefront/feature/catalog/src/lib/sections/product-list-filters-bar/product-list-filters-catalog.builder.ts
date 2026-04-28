@@ -14,6 +14,7 @@ import type { MenuItem } from 'primeng/api';
 
 export type FilterMenuItem = MenuItem & {
   categorySlug?: string;
+  image?: string;
   expanded?: boolean;
 };
 
@@ -43,6 +44,7 @@ export const buildCatalogFiltersMenuStructure = (
           section.label,
         ),
         categorySlug: section.slug,
+        image: section.image,
         items: section.items.map((item) => ({
           label: CATALOG_ITEM_TRANSLATION_KEYS_BY_SLUG[item.slug]
             ? translateWithFallback(
@@ -52,6 +54,7 @@ export const buildCatalogFiltersMenuStructure = (
               )
             : item.label,
           categorySlug: item.slug,
+          image: section.image,
         })),
       };
     },
