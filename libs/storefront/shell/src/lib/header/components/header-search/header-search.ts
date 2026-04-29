@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { Popover } from 'primeng/popover';
@@ -22,6 +31,8 @@ type SearchDraftPayload = {
   styleUrl: './header-search.css',
 })
 export class HeaderSearchComponent {
+  private readonly hostElement = inject(ElementRef<HTMLElement>);
+
   @Input() draftSearch = '';
   @Input() historyItems: readonly string[] = [];
   @Input() mobile = false;
@@ -35,6 +46,12 @@ export class HeaderSearchComponent {
   @Output() useHistoryItem = new EventEmitter<SearchValuePayload>();
   @Output() removeHistoryItem = new EventEmitter<SearchValuePayload>();
   @Output() clearHistoryRequest = new EventEmitter<Popover>();
+
+  @ViewChild('desktopSearchHistoryPopover')
+  private desktopPopover?: Popover;
+
+  @ViewChild('mobileSearchHistoryPopover')
+  private mobilePopover?: Popover;
 
   onSearch(value: string, popover: Popover): void {
     this.searchRequest.emit({ value, popover });
@@ -58,5 +75,21 @@ export class HeaderSearchComponent {
 
   onClearHistory(popover: Popover): void {
     this.clearHistoryRequest.emit(popover);
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+
+    const clickedInsideSearch = this.hostElement.nativeElement.contains(target);
+    const clickedInsidePopover = !!target.closest('.p-popover');
+
+    if (clickedInsideSearch || clickedInsidePopover) {
+      return;
+    }
+
+    this.desktopPopover?.hide();
+    this.mobilePopover?.hide();
   }
 }

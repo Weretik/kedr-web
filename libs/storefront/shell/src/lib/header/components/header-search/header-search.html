@@ -28,7 +28,12 @@
     <i class="pi pi-search"></i>
   </button>
 </div>
-<p-popover #mobileSearchHistoryPopover [dismissable]="true" [baseZIndex]="2100">
+<p-popover
+  #mobileSearchHistoryPopover
+  [dismissable]="true"
+  [appendTo]="'body'"
+  [baseZIndex]="4000"
+>
   @if (historyItems.length) {
   <div class="w-[min(32rem,calc(100vw-2.5rem))]">
     <div class="flex items-center justify-between gap-3 mb-2 px-1">
@@ -117,7 +122,8 @@
 <p-popover
   #desktopSearchHistoryPopover
   [dismissable]="true"
-  [baseZIndex]="2100"
+  [appendTo]="'body'"
+  [baseZIndex]="4000"
 >
   @if (historyItems.length) {
   <div class="w-lg max-w-[calc(100vw-2rem)]">
