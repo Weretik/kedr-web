@@ -1,5 +1,5 @@
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ClipboardService } from '@shared/ui';
@@ -17,6 +17,8 @@ type FooterLink = {
   styleUrl: './footer.css',
 })
 export class Footer {
+  readonly showTopSpacer = input(true);
+
   private readonly clipboard = inject(ClipboardService);
   private readonly localeNavigation = inject(LocaleNavigationService);
 

@@ -64,6 +64,9 @@
       ],
       "@storefront/feature/categories": [
         "libs/storefront/feature/categories/src/index.ts"
+      ],
+      "@storefront/feature/cabinet": [
+        "libs/storefront/feature/cabinet/src/index.ts"
       ]
     }
   }

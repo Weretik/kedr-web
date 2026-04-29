@@ -150,6 +150,12 @@ export class Header {
     void this.clipboard.copy(value);
   }
 
+  openAccount(): void {
+    void this.router.navigate(
+      this.localeNavigation.localizedSegments('cabinet', 'dashboard'),
+    );
+  }
+
   switchLocale(locale: HeaderLocale): void {
     if (locale === this.currentLocale()) return;
 

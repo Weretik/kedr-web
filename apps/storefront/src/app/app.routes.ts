@@ -1,14 +1,15 @@
 import { inject } from '@angular/core';
 import { RedirectFunction, Route } from '@angular/router';
-import { aboutUsRoutes } from '@storefront/feature/about-us';
-import { storefrontFeatureArticlesRoutes } from '@storefront/feature/articles';
-import { catalogRoutes } from '@storefront/feature/catalog';
-import { categoriesRoutes } from '@storefront/feature/categories';
-import { checkoutRoutes } from '@storefront/feature/checkout';
-import { contactsRoutes } from '@storefront/feature/contacts';
-import { notFoundRoutes } from '@storefront/feature/not-found';
-import { regionsRoutes } from '@storefront/feature/regions';
-import { wholesaleRoutes } from '@storefront/feature/wholesale';
+import { aboutUsRoutes as aboutUsFeatureRoutes } from '@storefront/feature/about-us';
+import { storefrontFeatureArticlesRoutes as articlesFeatureRoutes } from '@storefront/feature/articles';
+import { storefrontFeatureCabinetRoutes as cabinetFeatureRoutes } from '@storefront/feature/cabinet';
+import { catalogRoutes as catalogFeatureRoutes } from '@storefront/feature/catalog';
+import { categoriesRoutes as categoriesFeatureRoutes } from '@storefront/feature/categories';
+import { checkoutRoutes as checkoutFeatureRoutes } from '@storefront/feature/checkout';
+import { contactsRoutes as contactsFeatureRoutes } from '@storefront/feature/contacts';
+import { notFoundRoutes as notFoundFeatureRoutes } from '@storefront/feature/not-found';
+import { regionsRoutes as regionsFeatureRoutes } from '@storefront/feature/regions';
+import { wholesaleRoutes as wholesaleFeatureRoutes } from '@storefront/feature/wholesale';
 import { LocaleNavigationService } from '@storefront/util';
 
 const redirectToLocalizedNotFound: RedirectFunction = () => {
@@ -17,15 +18,16 @@ const redirectToLocalizedNotFound: RedirectFunction = () => {
 };
 
 const localizedRoutes: Route[] = [
-  ...contactsRoutes,
-  ...categoriesRoutes,
-  ...wholesaleRoutes,
-  ...aboutUsRoutes,
-  ...catalogRoutes,
-  ...checkoutRoutes,
-  ...regionsRoutes,
-  ...storefrontFeatureArticlesRoutes,
-  ...notFoundRoutes,
+  ...contactsFeatureRoutes,
+  ...categoriesFeatureRoutes,
+  ...wholesaleFeatureRoutes,
+  ...aboutUsFeatureRoutes,
+  ...catalogFeatureRoutes,
+  ...checkoutFeatureRoutes,
+  ...regionsFeatureRoutes,
+  ...cabinetFeatureRoutes,
+  ...articlesFeatureRoutes,
+  ...notFoundFeatureRoutes,
   {
     path: '**',
     redirectTo: '404',

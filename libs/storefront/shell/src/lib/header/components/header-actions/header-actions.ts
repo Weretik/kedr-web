@@ -20,6 +20,7 @@ export class HeaderActionsComponent {
   @Output() localeChange = new EventEmitter<HeaderLocale>();
   @Output() toggleTheme = new EventEmitter<void>();
   @Output() openCart = new EventEmitter<void>();
+  @Output() openAccount = new EventEmitter<void>();
 
   onLocaleChange(locale: HeaderLocale): void {
     this.localeChange.emit(locale);
@@ -31,5 +32,9 @@ export class HeaderActionsComponent {
 
   onOpenCart(): void {
     this.openCart.emit();
+  }
+
+  onOpenAccount(): void {
+    this.openAccount.emit();
   }
 }

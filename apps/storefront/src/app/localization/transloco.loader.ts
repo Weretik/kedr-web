@@ -11,6 +11,10 @@ import {
   ukArticlesTranslation,
 } from './translations/articles.translation';
 import {
+  ruCabinetTranslation,
+  ukCabinetTranslation,
+} from './translations/cabinet.translation';
+import {
   ruCartTranslation,
   ukCartTranslation,
 } from './translations/cart.translation';
@@ -85,6 +89,7 @@ const TRANSLATIONS: Record<string, Translation> = {
     ...ukFooterTranslation,
     ...ukCatalogTranslation,
     ...ukCartTranslation,
+    ...ukCabinetTranslation,
     ...ukAboutTranslation,
     ...ukArticlesTranslation,
     ...ukCheckoutTranslation,
@@ -106,6 +111,7 @@ const TRANSLATIONS: Record<string, Translation> = {
     ...ruFooterTranslation,
     ...ruCatalogTranslation,
     ...ruCartTranslation,
+    ...ruCabinetTranslation,
     ...ruAboutTranslation,
     ...ruArticlesTranslation,
     ...ruCheckoutTranslation,
