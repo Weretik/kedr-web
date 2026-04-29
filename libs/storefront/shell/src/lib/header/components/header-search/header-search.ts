@@ -92,4 +92,10 @@ export class HeaderSearchComponent {
     this.desktopPopover?.hide();
     this.mobilePopover?.hide();
   }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.desktopPopover?.hide();
+    this.mobilePopover?.hide();
+  }
 }
