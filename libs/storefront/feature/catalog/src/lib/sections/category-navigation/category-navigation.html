@@ -4,7 +4,7 @@
     @for (card of cards(); track card.slug) {
     <button
       type="button"
-      class="group w-[180px] border rounded-xl overflow-hidden transition-colors bg-surface-0 dark:bg-surface-900 border-surface-200 dark:border-surface-700 hover:border-primary text-left disabled:cursor-not-allowed disabled:opacity-60"
+      class="group w-45 border rounded-xl overflow-hidden transition-colors bg-surface-0 dark:bg-surface-900 border-surface-200 dark:border-surface-700 hover:border-primary text-left disabled:cursor-not-allowed disabled:opacity-60"
       [disabled]="card.isDisabled"
       [class.border-primary]="card.isSelected"
       [class.ring-2]="card.isSelected"
