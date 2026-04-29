@@ -1,0 +1,80 @@
+<div class="flex flex-col gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <p-card header="Быстрые действия">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        @for (action of quickActions; track action.label) {
+        <p-button
+          [label]="action.label"
+          [icon]="action.icon"
+          severity="secondary"
+          styleClass="w-full justify-start"
+        ></p-button>
+        }
+      </div>
+    </p-card>
+
+    <p-card header="Сводка клиента">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        @for (item of summary; track item.title) {
+        <div
+          class="rounded-lg border border-surface-200 dark:border-surface-700 p-3 bg-surface-0 dark:bg-surface-900"
+        >
+          <div class="text-sm text-surface-500 dark:text-surface-400">
+            {{ item.title }}
+          </div>
+          <div
+            class="text-base font-semibold text-surface-900 dark:text-surface-0 mt-1"
+          >
+            {{ item.value }}
+          </div>
+        </div>
+        }
+      </div>
+    </p-card>
+  </div>
+
+  <p-card header="Последние заказы">
+    <p-table [value]="orders" [tableStyle]="{ 'min-width': '48rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>№ заказа</th>
+          <th>Дата</th>
+          <th>Сумма</th>
+          <th>Статус</th>
+          <th>Доставка</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="font-medium">{{ row.number }}</td>
+          <td>{{ row.date }}</td>
+          <td>{{ row.amount }}</td>
+          <td>
+            <p-tag
+              [value]="statusLabel(row.status)"
+              [severity]="statusSeverity(row.status)"
+            ></p-tag>
+          </td>
+          <td>{{ row.delivery }}</td>
+          <td class="text-right">
+            <p-button label="Открыть" size="small" [text]="true"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <p-card header="Уведомления">
+    <p-timeline [value]="notifications" align="left">
+      <ng-template pTemplate="content" let-item>
+        <div class="font-medium text-surface-900 dark:text-surface-0">
+          {{ item.title }}
+        </div>
+        <div class="text-sm text-surface-500 dark:text-surface-400">
+          {{ item.date }}
+        </div>
+      </ng-template>
+    </p-timeline>
+  </p-card>
+</div>
