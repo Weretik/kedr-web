@@ -65,10 +65,10 @@ npx nx lint storefront
 npx nx lint admin
 ```
 
-Run all major checks:
+Run major checks for affected projects:
 
 ```bash
-npx nx run-many -t lint test build typecheck e2e
+npx nx affected -t lint test build --base=origin/main --head=HEAD
 ```
 
 ## Storefront SSR Runtime
@@ -91,4 +91,4 @@ Main CI steps:
 
 1. `npm ci`
 2. `npx playwright install --only-shell`
-3. `npx nx run-many -t lint test build typecheck e2e`
+3. `npx nx affected -t lint test build --base=origin/main --head=HEAD`
