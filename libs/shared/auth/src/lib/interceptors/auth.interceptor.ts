@@ -1,11 +1,15 @@
-﻿import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 
-import { TokenProvider } from '../tokens/token.provider';
+import { SessionStore } from '../state/session.store';
+
+const SESSION_AUTH_PATH = '/api/auth/session/';
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
-  const tokenProvider = inject(TokenProvider);
-  const token = tokenProvider.getAccessToken();
+  if (request.url.includes(SESSION_AUTH_PATH)) return next(request);
+
+  const session = inject(SessionStore);
+  const token = session.session().accessToken;
 
   if (!token) return next(request);
 
