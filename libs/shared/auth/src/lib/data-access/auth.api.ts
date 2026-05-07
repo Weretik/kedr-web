@@ -16,10 +16,24 @@ export class AuthApi {
   private readonly http = inject(HttpClient);
 
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/auth/login', request);
+    return this.http.post<LoginResponse>('/api/auth/session/login', request, {
+      withCredentials: true,
+    });
+  }
+
+  refresh(): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      '/api/auth/session/refresh',
+      {},
+      { withCredentials: true },
+    );
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>('/auth/logout', {});
+    return this.http.post<void>(
+      '/api/auth/session/logout',
+      {},
+      { withCredentials: true },
+    );
   }
 }

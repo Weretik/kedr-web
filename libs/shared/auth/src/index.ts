@@ -8,6 +8,8 @@ export * from './lib/guards/admin-auth.guard';
 
 export * from './lib/interceptors/unauthorized.interceptor';
 export * from './lib/interceptors/auth.interceptor';
+export * from './lib/interceptors/credentials.interceptor';
+export * from './lib/interceptors/csrf.interceptor';
 
 export * from './lib/tokens/noop-token.provider';
 export * from './lib/tokens/session-token.provider';
