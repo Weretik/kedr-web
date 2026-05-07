@@ -1,0 +1,9 @@
+.login-page {
+  background-color: #475569;
+  background-image:
+    linear-gradient(0deg, rgb(0 0 0 / 30%) 0%, rgb(0 0 0 / 30%) 100%),
+    url('https://fqjltiegiezfetthbags.supabase.co/storage/v1/object/public/block.images/blocks/signin/signin-feature.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
