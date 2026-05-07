@@ -1,4 +1,4 @@
-import { APP_INITIALIZER } from '@angular/core';
+import { inject, provideAppInitializer } from '@angular/core';
 import {
   provideTransloco,
   translocoConfig,
@@ -36,6 +36,14 @@ function initializeTransloco(
   };
 }
 
+function initializeTranslocoApp(): Promise<void> {
+  return initializeTransloco(
+    inject(TranslocoService),
+    inject(LocaleNavigationService),
+    inject(PrimeNG),
+  )();
+}
+
 export const TRANSLOCO_PROVIDERS = [
   provideTransloco({
     config: translocoConfig({
@@ -47,10 +55,5 @@ export const TRANSLOCO_PROVIDERS = [
     }),
     loader: TranslocoHttpLoader,
   }),
-  {
-    provide: APP_INITIALIZER,
-    multi: true,
-    deps: [TranslocoService, LocaleNavigationService, PrimeNG],
-    useFactory: initializeTransloco,
-  },
+  provideAppInitializer(initializeTranslocoApp),
 ];
