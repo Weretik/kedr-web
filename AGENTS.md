@@ -46,6 +46,7 @@
 - For new components or pages, prefer consistency with existing UI patterns over personal preference.
 - Prefer typed reactive forms where forms are already reactive in the feature.
 - Ensure subscriptions are lifecycle-safe (`async` pipe, `takeUntilDestroyed`, signals interop, or existing project pattern).
+- Do not use `subscribe` in components for action flows; prefer `firstValueFrom`/`lastValueFrom` with `async/await` (or existing equivalent pattern) and keep `subscribe` out of component code unless explicitly required by task constraints.
 - Keep change detection strategy and rendering approach consistent with the local feature architecture.
 
 ## Project-Specific Rules

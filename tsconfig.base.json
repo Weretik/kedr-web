@@ -67,7 +67,8 @@
       ],
       "@storefront/feature/cabinet": [
         "libs/storefront/feature/cabinet/src/index.ts"
-      ]
+      ],
+      "@storefront/feature/auth": ["libs/storefront/feature/auth/src/index.ts"]
     }
   }
 }

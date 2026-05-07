@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { RedirectFunction, Route } from '@angular/router';
 import { aboutUsRoutes as aboutUsFeatureRoutes } from '@storefront/feature/about-us';
 import { storefrontFeatureArticlesRoutes as articlesFeatureRoutes } from '@storefront/feature/articles';
+import { authRoutes as authFeatureRoutes } from '@storefront/feature/auth';
 import { storefrontFeatureCabinetRoutes as cabinetFeatureRoutes } from '@storefront/feature/cabinet';
 import { catalogRoutes as catalogFeatureRoutes } from '@storefront/feature/catalog';
 import { categoriesRoutes as categoriesFeatureRoutes } from '@storefront/feature/categories';
@@ -25,6 +26,7 @@ const localizedRoutes: Route[] = [
   ...catalogFeatureRoutes,
   ...checkoutFeatureRoutes,
   ...regionsFeatureRoutes,
+  ...authFeatureRoutes,
   ...cabinetFeatureRoutes,
   ...articlesFeatureRoutes,
   ...notFoundFeatureRoutes,

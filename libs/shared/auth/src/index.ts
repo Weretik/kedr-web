@@ -4,8 +4,6 @@ export * from './lib/services/auth.service';
 
 export * from './lib/state/session.store';
 
-export * from './lib/guards/admin-auth.guard';
-
 export * from './lib/interceptors/unauthorized.interceptor';
 export * from './lib/interceptors/auth.interceptor';
 export * from './lib/interceptors/credentials.interceptor';

@@ -21,6 +21,7 @@ export class HeaderActionsComponent {
   @Output() toggleTheme = new EventEmitter<void>();
   @Output() openCart = new EventEmitter<void>();
   @Output() openAccount = new EventEmitter<void>();
+  @Output() logout = new EventEmitter<void>();
 
   onLocaleChange(locale: HeaderLocale): void {
     this.localeChange.emit(locale);
@@ -36,5 +37,9 @@ export class HeaderActionsComponent {
 
   onOpenAccount(): void {
     this.openAccount.emit();
+  }
+
+  onLogout(): void {
+    this.logout.emit();
   }
 }

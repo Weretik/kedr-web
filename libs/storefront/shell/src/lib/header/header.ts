@@ -10,6 +10,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { AuthService } from '@shared/auth';
 import { ClipboardService, ThemeService } from '@shared/ui';
 import {
   CartFacade,
@@ -27,6 +28,7 @@ import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
 import { Popover } from 'primeng/popover';
 import { Ripple } from 'primeng/ripple';
+import { firstValueFrom } from 'rxjs';
 
 import { HeaderActionsComponent } from './components/header-actions/header-actions';
 import { HeaderContactsComponent } from './components/header-contacts/header-contacts';
@@ -58,6 +60,7 @@ export class Header {
   private readonly router = inject(Router);
   private readonly localeNavigation = inject(LocaleNavigationService);
   private readonly transloco = inject(TranslocoService);
+  private readonly authService = inject(AuthService);
   private readonly clipboard = inject(ClipboardService);
   public readonly themeService = inject(ThemeService);
   readonly cartUi = inject(CartUiFacade);
@@ -153,6 +156,20 @@ export class Header {
   openAccount(): void {
     void this.router.navigate(
       this.localeNavigation.localizedSegments('cabinet', 'dashboard'),
+    );
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await firstValueFrom(this.authService.logout());
+    } catch {
+      // Ignore network/logout endpoint issues.
+    } finally {
+      // Always clear in-memory access token on client to avoid accidental re-entry.
+      this.authService.forceLogout();
+    }
+    await this.router.navigate(
+      this.localeNavigation.localizedSegments('login'),
     );
   }
 

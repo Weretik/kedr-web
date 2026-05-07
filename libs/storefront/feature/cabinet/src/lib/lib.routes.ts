@@ -1,10 +1,11 @@
 import { Route } from '@angular/router';
-import { adminAuthGuard } from '@shared/auth';
+
+import { cabinetAuthGuard } from './guards/cabinet-auth.guard';
 
 export const storefrontFeatureCabinetRoutes: Route[] = [
   {
     path: 'cabinet',
-    canMatch: [adminAuthGuard],
+    canMatch: [cabinetAuthGuard],
     loadComponent: () =>
       import('./layouts/cabinet-sidebar/cabinet-sidebar').then(
         (m) => m.CabinetSidebar,
