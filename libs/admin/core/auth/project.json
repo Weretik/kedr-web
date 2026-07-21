@@ -1,0 +1,13 @@
+{
+  "name": "admin-core-auth",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/core/auth/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:core", "type:core", "type:auth"],
+  "// targets": "to see all targets run: nx show project admin-core-auth --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "admin-shared-api-client",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/shared/api-client/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "scope:admin-shared", "type:api-client"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
