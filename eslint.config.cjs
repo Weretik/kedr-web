@@ -136,7 +136,52 @@ module.exports = [
             // admin can only depend on shared and admin
             {
               sourceTag: 'scope:admin',
-              onlyDependOnLibsWithTags: ['scope:admin', 'scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:admin'],
+            },
+
+            // Admin composition root may only use its core, feature, and admin-shared libraries.
+            {
+              sourceTag: 'type:app',
+              onlyDependOnLibsWithTags: [
+                'type:core',
+                'type:feature',
+                'scope:admin-shared',
+              ],
+            },
+
+            // Admin core is cross-domain infrastructure and must not depend on domain libraries.
+            {
+              sourceTag: 'type:core',
+              onlyDependOnLibsWithTags: ['scope:admin-shared'],
+            },
+
+            // Admin feature layers compose their domain's data, model, UI, and shared libraries.
+            {
+              allSourceTags: ['scope:admin', 'type:feature'],
+              onlyDependOnLibsWithTags: [
+                'type:data-access',
+                'type:model',
+                'type:ui',
+                'scope:admin-shared',
+              ],
+            },
+
+            // Admin data access may depend only on models and shared transport/utilities.
+            {
+              allSourceTags: ['scope:admin', 'type:data-access'],
+              onlyDependOnLibsWithTags: ['type:model', 'scope:admin-shared'],
+            },
+
+            // Admin domain UI remains presentational and can use models plus shared UI/utilities.
+            {
+              allSourceTags: ['scope:admin', 'type:ui'],
+              onlyDependOnLibsWithTags: ['type:model', 'scope:admin-shared'],
+            },
+
+            // Admin models remain framework-independent and may only use shared contracts/utilities.
+            {
+              allSourceTags: ['scope:admin', 'type:model'],
+              onlyDependOnLibsWithTags: ['scope:admin-shared'],
             },
 
             // shared — from no one (except shared)
@@ -153,6 +198,7 @@ module.exports = [
                 'type:util',
                 'type:contracts',
                 'scope:shared',
+                'scope:admin-shared',
               ],
             },
 
@@ -164,6 +210,7 @@ module.exports = [
                 'type:util',
                 'type:contracts',
                 'scope:shared',
+                'scope:admin-shared',
               ],
             },
 
@@ -177,6 +224,7 @@ module.exports = [
                 'type:data-access',
                 'type:contracts',
                 'scope:shared',
+                'scope:admin-shared',
               ],
             },
 
@@ -191,6 +239,7 @@ module.exports = [
                 'type:data-access',
                 'type:contracts',
                 'scope:shared',
+                'scope:admin-shared',
               ],
             },
 

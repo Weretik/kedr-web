@@ -4,7 +4,7 @@
   "root": "apps/admin",
   "projectType": "application",
   "sourceRoot": "apps/admin/src",
-  "tags": ["scope:admin"],
+  "tags": ["scope:admin", "type:app"],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",

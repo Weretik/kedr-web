@@ -1,0 +1,13 @@
+{
+  "name": "admin-core-permissions",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/core/permissions/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:core", "type:core", "type:permissions"],
+  "// targets": "to see all targets run: nx show project admin-core-permissions --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "admin-products-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/products/model/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:products", "type:model"],
+  "// targets": "to see all targets run: nx show project admin-products-model --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

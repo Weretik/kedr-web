@@ -66,7 +66,20 @@
         "libs/storefront/feature/cabinet/src/index.ts"
       ],
       "@storefront/feature/auth": ["libs/storefront/feature/auth/src/index.ts"],
-      "@admin/products/ui": ["libs/admin/products/ui/src/index.ts"]
+      "@admin/products/ui": ["libs/admin/products/ui/src/index.ts"],
+      "@admin/products/feature": ["libs/admin/products/feature/src/index.ts"],
+      "@admin/products/model": ["libs/admin/products/model/src/index.ts"],
+      "@admin/products/data-access": [
+        "libs/admin/products/data-access/src/index.ts"
+      ],
+      "@admin/core/shell": ["libs/admin/core/shell/src/index.ts"],
+      "@admin/core/permissions": ["libs/admin/core/permissions/src/index.ts"],
+      "@admin/core/auth": ["libs/admin/core/auth/src/index.ts"],
+      "@admin/shared/config": ["libs/admin/shared/config/src/index.ts"],
+      "@admin/shared/api-client": [
+        "libs/admin/shared/api-client/src/index.ts"
+      ],
+      "@admin/dashboard/feature": ["libs/admin/dashboard/feature/src/index.ts"]
     }
   }
 }

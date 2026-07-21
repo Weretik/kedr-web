@@ -1,16 +1,13 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-
-import { DashboardPage } from '../../pages/dashboard/dashboard-page';
-import { AdminLayout } from '../../widgets/layouts/admin-layout';
+import { AdminLayout } from '@admin/core/shell';
+import { dashboardRoutes } from '@admin/dashboard/feature';
+import { Navigate, useRoutes } from 'react-router-dom';
 
 export function AppRouter() {
-  return (
-    <Routes>
-      <Route element={<AdminLayout />}>
-        <Route index element={<DashboardPage />} />
-        <Route path="dashboard" element={<DashboardPage />} />
-      </Route>
-      <Route path="*" element={<Navigate replace to="/" />} />
-    </Routes>
-  );
+  return useRoutes([
+    {
+      element: <AdminLayout />,
+      children: dashboardRoutes,
+    },
+    { path: '*', element: <Navigate replace to="/" /> },
+  ]);
 }

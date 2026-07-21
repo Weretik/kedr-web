@@ -1,0 +1,13 @@
+{
+  "name": "admin-products-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/products/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:products", "type:data-access"],
+  "// targets": "to see all targets run: nx show project admin-products-data-access --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

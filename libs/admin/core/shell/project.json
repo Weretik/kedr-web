@@ -1,0 +1,13 @@
+{
+  "name": "admin-core-shell",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/core/shell/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:core", "type:core", "type:shell"],
+  "// targets": "to see all targets run: nx show project admin-core-shell --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

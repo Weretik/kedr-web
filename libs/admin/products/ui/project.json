@@ -1,0 +1,13 @@
+{
+  "name": "admin-products-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/products/ui/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:products", "type:ui"],
+  "// targets": "to see all targets run: nx show project admin-products-ui --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
