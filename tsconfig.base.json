@@ -16,9 +16,6 @@
     "baseUrl": ".",
     "paths": {
       "@tokens/*": ["tools/tokens/*"],
-      "@admin/util": ["libs/admin/util/src/index.ts"],
-      "@admin/ui": ["libs/admin/ui/src/index.ts"],
-      "@admin/data-access": ["libs/admin/data-access/src/index.ts"],
       "@storefront/data-access": ["libs/storefront/data-access/src/index.ts"],
       "@storefront/ui": ["libs/storefront/ui/src/index.ts"],
       "@storefront/util": ["libs/storefront/util/src/index.ts"],
@@ -68,7 +65,8 @@
       "@storefront/feature/cabinet": [
         "libs/storefront/feature/cabinet/src/index.ts"
       ],
-      "@storefront/feature/auth": ["libs/storefront/feature/auth/src/index.ts"]
+      "@storefront/feature/auth": ["libs/storefront/feature/auth/src/index.ts"],
+      "@admin/products/ui": ["libs/admin/products/ui/src/index.ts"]
     }
   }
 }
