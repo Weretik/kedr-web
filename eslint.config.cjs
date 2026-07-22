@@ -3,7 +3,10 @@ const nx = require('@nx/eslint-plugin');
 const angular = require('angular-eslint');
 const prettierConfig = require('eslint-config-prettier');
 const importPlugin = require('eslint-plugin-import');
+const jsxA11y = require('eslint-plugin-jsx-a11y');
 const globals = require('globals');
+const react = require('eslint-plugin-react');
+const reactHooks = require('eslint-plugin-react-hooks');
 const tseslint = require('typescript-eslint');
 
 const only = (configs, files) =>
@@ -39,10 +42,33 @@ module.exports = [
 
   ...only(tseslint.configs.recommended, ['**/*.{ts,tsx,mts,cts}']),
   ...only(angular.configs.tsRecommended, ['apps/**/*.ts', 'libs/**/*.ts']),
-  ...only(angular.configs.templateRecommended, [
-    'apps/**/*.html',
-    'libs/**/*.html',
-  ]),
+  ...only(angular.configs.templateRecommended, ['apps/**/*.html', 'libs/**/*.html']),
+
+  {
+    files: ['apps/admin/**/*.tsx', 'libs/admin/**/*.tsx'],
+    ...react.configs.flat.recommended,
+    languageOptions: {
+      ...react.configs.flat.recommended.languageOptions,
+      globals: globals.browser,
+    },
+    plugins: {
+      ...react.configs.flat.recommended.plugins,
+      ...jsxA11y.flatConfigs.recommended.plugins,
+      'react-hooks': reactHooks,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+    rules: {
+      ...react.configs.flat.recommended.rules,
+      ...react.configs.flat['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+      ...jsxA11y.flatConfigs.recommended.rules,
+      'react/prop-types': 'off',
+    },
+  },
 
   {
     files: ['apps/**/*.html', 'libs/**/*.html'],
@@ -51,12 +77,7 @@ module.exports = [
     },
   },
   {
-    files: [
-      '**/*.spec.ts',
-      '**/*.test.ts',
-      '**/vitest.setup.ts',
-      '**/test/**/*.ts',
-    ],
+    files: ['**/*.spec.ts', '**/*.test.ts', '**/vitest.setup.ts', '**/test/**/*.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
@@ -64,11 +85,7 @@ module.exports = [
   },
 
   {
-    files: [
-      '**/*.config.{js,ts,mjs,cjs}',
-      'tools/**/*.{js,ts}',
-      'scripts/**/*.{js,ts}',
-    ],
+    files: ['**/*.config.{js,ts,mjs,cjs}', 'tools/**/*.{js,ts}', 'scripts/**/*.{js,ts}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -142,11 +159,7 @@ module.exports = [
             // Admin composition root may only use its core, feature, and admin-shared libraries.
             {
               sourceTag: 'type:app',
-              onlyDependOnLibsWithTags: [
-                'type:core',
-                'type:feature',
-                'scope:admin-shared',
-              ],
+              onlyDependOnLibsWithTags: ['type:core', 'type:feature', 'scope:admin-shared'],
             },
 
             // Admin core is cross-domain infrastructure and must not depend on domain libraries.
@@ -246,11 +259,7 @@ module.exports = [
             // contracts should only depend on utils and shared
             {
               sourceTag: 'type:contracts',
-              onlyDependOnLibsWithTags: [
-                'type:contracts',
-                'type:util',
-                'scope:shared',
-              ],
+              onlyDependOnLibsWithTags: ['type:contracts', 'type:util', 'scope:shared'],
             },
           ],
         },
