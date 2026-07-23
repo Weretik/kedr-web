@@ -1,72 +1,42 @@
-import { appConfig } from '@admin/shared/config';
-import { Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import { Grid } from '@mui/material';
 
-const dashboardCards = [
-  {
-    title: 'Catalog',
-    description: 'Product and taxonomy management stays isolated inside the admin domain.',
-    enabled: appConfig.features.catalog,
-  },
-  {
-    title: 'Orders',
-    description: 'A dedicated workflow surface can be added without coupling it to the storefront.',
-    enabled: true,
-  },
-  {
-    title: 'Operations',
-    description: 'Shared utilities remain in shared libs, while admin-specific flows stay under admin scope.',
-    enabled: true,
-  },
+import { DashboardLatestOrders } from '../components/dashboard-latest-orders';
+import { DashboardLatestProducts } from '../components/dashboard-latest-products';
+import { DashboardSalesChart } from '../components/dashboard-sales-chart';
+import { DashboardTrafficChart } from '../components/dashboard-traffic-chart';
+import { StatisticCard } from '../components/statistic-card';
+
+const statistics = [
+  { icon: <AccountBalanceWalletOutlinedIcon />, title: 'Бюджет', trend: { direction: 'up' as const, label: '+12% за місяць' }, value: '₴ 84 200' },
+  { icon: <PeopleAltOutlinedIcon />, title: 'Клієнти', trend: { direction: 'up' as const, label: '+16% за місяць' }, value: '1 248' },
+  { icon: <ChecklistOutlinedIcon />, progress: 75.5, title: 'Виконання завдань', value: '75,5%' },
+  { icon: <CategoryOutlinedIcon />, title: 'Прибуток', value: '₴ 56 400' },
 ] as const;
 
 export function DashboardPage() {
   return (
-    <Stack component="main" spacing={3}>
-      <Card component="section">
-        <CardContent>
-          <Stack spacing={1}>
-            <Typography color="primary" variant="overline">
-              Admin workspace
-            </Typography>
-            <Typography variant="h4">{appConfig.name}</Typography>
-            <Typography color="text.secondary">
-              React admin is isolated from the Angular storefront and prepared for feature-based growth.
-            </Typography>
-            <Stack direction={{ sm: 'row' }} spacing={1}>
-              <Chip label={`Version: ${appConfig.version}`} />
-              <Chip label={`API: ${appConfig.apiBaseUrl || 'Not configured'}`} />
-              <Chip
-                color={appConfig.enableHttpLogs ? 'success' : 'default'}
-                label={`Logs: ${appConfig.enableHttpLogs ? 'Enabled' : 'Disabled'}`}
-              />
-            </Stack>
-          </Stack>
-        </CardContent>
-      </Card>
-
-      <Box component="section" aria-labelledby="admin-modules-title">
-        <Typography id="admin-modules-title" variant="h5">
-          Feature-oriented entry points
-        </Typography>
-        <Stack direction={{ md: 'row' }} spacing={2} sx={{ mt: 2 }}>
-          {dashboardCards.map((card) => (
-            <Card component="article" key={card.title} sx={{ flex: 1 }}>
-              <CardContent>
-                <Stack spacing={1}>
-                  <Chip
-                    color={card.enabled ? 'success' : 'default'}
-                    label={card.enabled ? 'Ready' : 'Disabled'}
-                    size="small"
-                    sx={{ alignSelf: 'flex-start' }}
-                  />
-                  <Typography variant="h6">{card.title}</Typography>
-                  <Typography color="text.secondary">{card.description}</Typography>
-                </Stack>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
-      </Box>
-    </Stack>
+    <Grid component="section" container spacing={3}>
+        {statistics.map((statistic) => (
+          <Grid key={statistic.title} size={{ lg: 3, sm: 6, xs: 12 }}>
+            <StatisticCard {...statistic} />
+          </Grid>
+        ))}
+        <Grid size={{ lg: 8, xs: 12 }}>
+          <DashboardSalesChart />
+        </Grid>
+        <Grid size={{ lg: 4, md: 6, xs: 12 }}>
+          <DashboardTrafficChart />
+        </Grid>
+        <Grid size={{ lg: 4, md: 6, xs: 12 }}>
+          <DashboardLatestProducts />
+        </Grid>
+        <Grid size={{ lg: 8, md: 12, xs: 12 }}>
+          <DashboardLatestOrders />
+        </Grid>
+    </Grid>
   );
 }
