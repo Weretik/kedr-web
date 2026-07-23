@@ -1,124 +1,91 @@
-import {
-  AppBar,
-  Box,
-  Drawer,
-  FormControl,
-  InputLabel,
-  List,
-  ListItemButton,
-  ListItemText,
-  MenuItem,
-  Select,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import { useColorScheme } from '@mui/material/styles';
-import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
+import { Box, Container, Divider, Drawer } from '@mui/material';
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
-import type { SelectChangeEvent } from '@mui/material';
+import { AdminBreadcrumbs } from './components/admin-breadcrumbs';
+import { AdminNavigation, adminDrawerWidth } from './components/admin-navigation';
+import { AdminTopBar } from './components/admin-top-bar';
 
-const drawerWidth = 256;
-const navigationItems = [
-  { label: 'Dashboard', to: '/' },
-  { label: 'Catalog', to: '/dashboard' },
-] as const;
+export function AdminLayout() {
+  const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
 
-function ColorSchemeSelect() {
-  const { mode, setMode } = useColorScheme();
-
-  const handleModeChange = (event: SelectChangeEvent) => {
-    setMode(event.target.value as 'dark' | 'light' | 'system');
+  const closeMobileNavigation = () => {
+    setIsMobileNavigationOpen(false);
   };
 
   return (
-    <FormControl
-      size="small"
-      sx={{
-        minWidth: 132,
-        '& .MuiInputLabel-root': {
-          color: 'secondary.contrastText',
-        },
-        '& .MuiInputLabel-root.Mui-focused': {
-          color: 'secondary.contrastText',
-        },
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: 'secondary.contrastText',
-        },
-        '& .MuiOutlinedInput-root': {
-          color: 'secondary.contrastText',
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline, &:hover .MuiOutlinedInput-notchedOutline':
-            {
-              borderColor: 'secondary.contrastText',
-            },
-        },
-        '& .MuiSelect-icon': {
-          color: 'secondary.contrastText',
-        },
-      }}
-    >
-      <InputLabel id="color-scheme-label">Theme</InputLabel>
-      <Select
-        id="color-scheme"
-        label="Theme"
-        labelId="color-scheme-label"
-        onChange={handleModeChange}
-        value={mode ?? 'system'}
-      >
-        <MenuItem value="system">System</MenuItem>
-        <MenuItem value="light">Light</MenuItem>
-        <MenuItem value="dark">Dark</MenuItem>
-      </Select>
-    </FormControl>
-  );
-}
-
-export function AdminLayout() {
-  const location = useLocation();
-
-  return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <AppBar
-        color="secondary"
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-          <Typography component="span" sx={{ flexGrow: 1 }} variant="h6">
-            Kedr Admin
-          </Typography>
-          <ColorSchemeSelect />
-        </Toolbar>
-      </AppBar>
-
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       <Drawer
-        sx={{
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: drawerWidth,
+        slotProps={{
+          paper: {
+            sx: {
+              bgcolor: 'secondary.main',
+              boxSizing: 'border-box',
+              color: 'secondary.contrastText',
+              width: adminDrawerWidth,
+            },
           },
-          flexShrink: 0,
-          width: drawerWidth,
         }}
+        sx={{ display: { xs: 'none', lg: 'block' }, width: adminDrawerWidth }}
         variant="permanent"
       >
-        <Toolbar />
-        <List aria-label="Admin navigation">
-          {navigationItems.map(({ label, to }) => (
-            <ListItemButton
-              component={RouterLink}
-              key={to}
-              selected={location.pathname === to}
-              to={to}
-            >
-              <ListItemText primary={label} />
-            </ListItemButton>
-          ))}
-        </List>
+        <Box sx={{ alignItems: 'center', display: 'flex', height: 112, px: 3 }}>
+          <Box
+            alt="Логотип Class Kedr"
+            component="img"
+            src="/assets/logo/main-logo.svg"
+            sx={{
+              maxHeight: 92,
+              objectFit: 'contain',
+              width: 180,
+            }}
+          />
+        </Box>
+        <Divider sx={{ borderColor: 'secondary.light', mx: 3, opacity: 0.6 }} />
+        <AdminNavigation />
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <Outlet />
+      <Drawer
+        ModalProps={{ keepMounted: true }}
+        onClose={closeMobileNavigation}
+        open={isMobileNavigationOpen}
+        slotProps={{
+          paper: {
+            sx: {
+              bgcolor: 'secondary.main',
+              boxSizing: 'border-box',
+              color: 'secondary.contrastText',
+              width: adminDrawerWidth,
+            },
+          },
+        }}
+        sx={{ display: { lg: 'none' } }}
+        variant="temporary"
+      >
+        <Box sx={{ alignItems: 'center', display: 'flex', height: 112, px: 3 }}>
+          <Box
+            alt="Логотип Class Kedr"
+            component="img"
+            src="/assets/logo/main-logo.svg"
+            sx={{
+              maxHeight: 92,
+              objectFit: 'contain',
+              width: 180,
+            }}
+          />
+        </Box>
+        <Divider sx={{ borderColor: 'secondary.light', mx: 3, opacity: 0.6 }} />
+        <AdminNavigation onNavigate={closeMobileNavigation} />
+      </Drawer>
+
+      <Box sx={{ marginLeft: { lg: `${adminDrawerWidth}px` }, minWidth: 0 }}>
+        <AdminTopBar onOpenNavigation={() => setIsMobileNavigationOpen(true)} />
+        <Box component="main">
+          <Container maxWidth="xl" sx={{ py: { xs: 4, lg: 8 } }}>
+            <AdminBreadcrumbs />
+            <Outlet />
+          </Container>
+        </Box>
       </Box>
     </Box>
   );
