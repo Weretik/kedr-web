@@ -1,17 +1,15 @@
 {
   "name": "admin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "root": "apps/admin",
   "projectType": "application",
   "sourceRoot": "apps/admin/src",
   "tags": ["scope:admin", "type:app"],
   "targets": {
     "build": {
-      "executor": "@nx/vite:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": ["{projectRoot}/{options.outDir}", "{workspaceRoot}/dist/apps/admin"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/admin"
+        "outDir": "../../dist/apps/admin"
       },
       "configurations": {
         "development": {
@@ -23,25 +21,22 @@
       }
     },
     "serve": {
-      "continuous": true,
-      "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "admin:build"
-      },
       "configurations": {
-        "development": {
-          "buildTarget": "admin:build:development",
-          "hmr": true
-        },
-        "production": {
-          "buildTarget": "admin:build:production",
-          "hmr": false
-        }
+        "development": {},
+        "production": {}
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
     },
     "serve-static": {
       "continuous": true,

@@ -1,4 +1,4 @@
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import babel from '@rolldown/plugin-babel';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 
@@ -9,14 +9,13 @@ export default defineConfig(({ mode }) => {
     root: __dirname,
     cacheDir: '../../node_modules/.vite/apps/admin',
     base: env['VITE_ASSET_BASE'] || '/',
+    resolve: {
+      tsconfigPaths: true,
+    },
     plugins: [
-      nxViteTsPaths(),
-      react({
-        babel: {
-          plugins: [
-            ['babel-plugin-react-compiler', { panicThreshold: 'none' }],
-          ],
-        },
+      react(),
+      babel({
+        plugins: [['babel-plugin-react-compiler', { panicThreshold: 'none' }]],
       }),
     ],
     server: {
