@@ -1,10 +1,11 @@
 import { Box, Container, Divider, Drawer } from '@mui/material';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { AdminBreadcrumbs } from './components/admin-breadcrumbs';
 import { AdminNavigation, adminDrawerWidth } from './components/admin-navigation';
 import { AdminTopBar } from './components/admin-top-bar';
+import { RouteLoadingFallback } from './components/route-loading-fallback';
 
 export function AdminLayout() {
   const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
@@ -83,7 +84,9 @@ export function AdminLayout() {
         <Box component="main">
           <Container maxWidth="xl" sx={{ py: { xs: 4, lg: 8 } }}>
             <AdminBreadcrumbs />
-            <Outlet />
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <Outlet />
+            </Suspense>
           </Container>
         </Box>
       </Box>

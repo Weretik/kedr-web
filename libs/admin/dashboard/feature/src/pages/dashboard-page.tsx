@@ -41,3 +41,5 @@ export function DashboardPage() {
     </Grid>
   );
 }
+
+export default DashboardPage;
