@@ -25,3 +25,17 @@ import { ordersRoutes } from '@admin/orders/feature';
 
 `AdminLayout` залишається елементом маршруту з `Outlet`. Розташування файла
 router може змінюватися без зміни цього правила.
+
+## Lazy loading route features
+
+- Feature pages that are route entries export a default page component and load
+  through the short form `lazy(() => import('./pages/<page>'))` from their
+  `<domain>.routes.tsx` module. Named-export adapters with `.then(...)` are not
+  used for route pages.
+- `AdminLayout` owns the single `Suspense` fallback around `Outlet`; pages and
+  features do not duplicate route-loading spinners.
+- Shell, route configuration and minimal route metadata may remain in the
+  initial chunk. Page implementation, heavy domain UI and optional MUI X
+  packages must remain behind the relevant route boundary.
+- Manual chunk configuration is introduced only after bundle analysis shows a
+  cross-route dependency that route-level lazy loading cannot split.

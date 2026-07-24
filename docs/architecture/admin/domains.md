@@ -21,6 +21,33 @@ libs/admin/
 автентифікацію; `permissions` — перевірку прав. `core` не містить правил
 конкретних доменів.
 
+Новий код `core` групується за відповідальністю; корінь `src` не є місцем для
+внутрішніх реалізацій. Цільові структури для нового або суттєво зміненого коду:
+
+```text
+libs/admin/core/
+├── shell/src/
+│   ├── index.ts
+│   ├── layout/             # layout composition і content area
+│   ├── navigation/         # nav config, sidebar, mobile drawer
+│   ├── components/         # top bar, breadcrumbs, menus
+│   └── hooks/              # shell-specific React hooks
+├── auth/src/
+│   ├── index.ts
+│   ├── api/                # auth transport / RTK Query, якщо він з'явиться
+│   ├── session/            # session model, provider, lifecycle
+│   └── hooks/              # useAuth / useSession та інші public hooks
+└── permissions/src/
+    ├── index.ts
+    ├── policies/           # permission rules і pure predicates
+    ├── guards/             # route/action guards
+    └── hooks/              # usePermission та похідні hooks
+```
+
+Папка створюється лише за наявності її відповідальності. Наявний плоский код не
+переміщується масово: його розділення виконується разом зі зміною відповідної
+функціональності або окремою задачею.
+
 ## Бізнес-домени
 
 Домен ізольований і розкриває публічний API лише через кореневий `src/index.ts`.
@@ -36,6 +63,48 @@ Deep imports до внутрішніх модулів іншого домену 
 `model` створюється лише за наявності спільної логіки або типів. Невеликий домен
 може почати з `feature`; додаткові шари виділяються за появи нової
 відповідальності чи повторного використання.
+
+## Внутрішня структура domain library
+
+`src/index.ts` у кожній library — лише публічний API. Внутрішній код не
+розміщується поруч з ним «тимчасово» і не накопичується у великому файлі.
+Застосовуються такі папки, якщо відповідна роль існує:
+
+```text
+libs/admin/<domain>/
+├── data-access/src/
+│   ├── index.ts
+│   ├── api/                # injectEndpoints, hooks, endpoint definitions
+│   ├── contracts/          # private transport DTO/request-response shapes
+│   ├── mappers/            # DTO <-> domain/query transformations
+│   ├── models/             # data-access-owned query/cache result types
+│   └── validators/         # response/query validation at the API boundary
+├── model/src/
+│   ├── index.ts
+│   ├── entities/           # domain entities and value types
+│   ├── queries/            # domain query types/defaults/invariants
+│   ├── mappers/            # pure domain transformations
+│   └── validators/         # pure domain validation where needed
+├── ui/src/
+│   ├── index.ts
+│   ├── components/         # reusable presentational components
+│   ├── tables/             # table shells, columns and cells
+│   ├── forms/              # presentational forms and fields
+│   └── states/             # loading/empty/error presentational states
+└── feature/src/
+    ├── index.ts
+    ├── <domain>.routes.tsx
+    ├── pages/              # route/page composition
+    ├── components/         # feature-only composition controls
+    ├── hooks/              # feature orchestration hooks
+    └── state/              # local reducer/actions or durable client state
+```
+
+Це не вимога створити всі папки наперед. Це вимога не змішувати ролі: endpoint
+не містить DTO parser, mapper не містить React-компонент, а таблиця не містить
+server-state або маршрутизацію. Коли Nx boundary забороняє залежність
+`data-access -> model`, data-access-owned типи залишаються в `data-access/models`;
+глобальні module-boundary правила не послаблюються для локальної задачі.
 
 ## Внутрішня структура feature
 
