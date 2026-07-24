@@ -6,7 +6,7 @@ import { App } from './app';
 import { AppProviders } from './providers/app-providers';
 import { reportApiError, reportCriticalError } from './services/error-reporting-service';
 
-export const bootstrapAdminApp = () => {
+export const bootstrapAdminApp = (authInitialization: Promise<void>) => {
   configureApiErrorNotifier(reportApiError);
 
   createRoot(document.getElementById('root')!, {
@@ -16,7 +16,7 @@ export const bootstrapAdminApp = () => {
   }).render(
     <StrictMode>
       <AppProviders>
-        <App />
+        <App authInitialization={authInitialization} />
       </AppProviders>
     </StrictMode>,
   );
