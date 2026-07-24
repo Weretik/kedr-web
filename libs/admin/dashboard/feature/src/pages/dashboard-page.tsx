@@ -20,23 +20,24 @@ const statistics = [
 export function DashboardPage() {
   return (
     <Grid component="section" container spacing={3}>
-        {statistics.map((statistic) => (
-          <Grid key={statistic.title} size={{ lg: 3, sm: 6, xs: 12 }}>
-            <StatisticCard {...statistic} />
-          </Grid>
-        ))}
-        <Grid size={{ lg: 8, xs: 12 }}>
-          <DashboardSalesChart />
-        </Grid>
-        <Grid size={{ lg: 4, md: 6, xs: 12 }}>
-          <DashboardTrafficChart />
-        </Grid>
+
         <Grid size={{ lg: 4, md: 6, xs: 12 }}>
           <DashboardLatestProducts />
         </Grid>
         <Grid size={{ lg: 8, md: 12, xs: 12 }}>
           <DashboardLatestOrders />
         </Grid>
+      {statistics.map((statistic) => (
+        <Grid key={statistic.title} size={{ lg: 3, sm: 6, xs: 12 }}>
+          <StatisticCard {...statistic} />
+        </Grid>
+      ))}
+      <Grid size={{ lg: 8, xs: 12 }}>
+        <DashboardSalesChart />
+      </Grid>
+      <Grid size={{ lg: 4, md: 6, xs: 12 }}>
+        <DashboardTrafficChart />
+      </Grid>
     </Grid>
   );
 }
