@@ -1,6 +1,6 @@
-export { baseApi } from './lib/base-api';
-export { configureApiClient, configureApiErrorNotifier } from './lib/axios-client';
-export { toApiError } from './lib/api-error';
+export { baseApi } from './rtk-query/base-api';
+export { toApiError } from './errors/api-error';
+export { configureApiClient, configureApiErrorNotifier } from './runtime/api-client-runtime';
 
 export type {
   ApiClientOptions,
@@ -9,4 +9,4 @@ export type {
   ApiErrorCode,
   ApiRequest,
   AuthSessionAdapter,
-} from './lib/api-client.types';
+} from './contracts/api-client.types';
