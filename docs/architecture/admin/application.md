@@ -33,9 +33,13 @@ router може змінюватися без зміни цього правил
   `<domain>.routes.tsx` module. Named-export adapters with `.then(...)` are not
   used for route pages.
 - `AdminLayout` owns the single `Suspense` fallback around `Outlet`; pages and
-  features do not duplicate route-loading spinners.
+  features do not duplicate route-loading spinners. Fallback показує лише стан
+  завантаження route chunk; він не виконує server request і не дублює loading
+  state конкретної сторінки.
 - Shell, route configuration and minimal route metadata may remain in the
   initial chunk. Page implementation, heavy domain UI and optional MUI X
   packages must remain behind the relevant route boundary.
 - Manual chunk configuration is introduced only after bundle analysis shows a
   cross-route dependency that route-level lazy loading cannot split.
+- Зміна route boundaries перевіряється lint для shell і змінених feature, а
+  також `npx nx build admin`; build output має містити окремі page chunks.
