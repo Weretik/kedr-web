@@ -1,12 +1,12 @@
 import { Stack, Typography } from '@mui/material';
 
-import type { ReactNode } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 
-interface ProductsPageToolbarProps {
+interface ProductsPageToolbarProps extends PropsWithChildren {
   actions?: ReactNode;
 }
 
-export function ProductsPageToolbar({ actions }: ProductsPageToolbarProps) {
+export function ProductsPageToolbar({ actions, children }: ProductsPageToolbarProps) {
   return (
     <Stack component="section" spacing={2}>
       <Stack
@@ -17,6 +17,7 @@ export function ProductsPageToolbar({ actions }: ProductsPageToolbarProps) {
         <Typography variant="h4">Каталог товарів</Typography>
         {actions}
       </Stack>
+      {children}
     </Stack>
   );
 }
