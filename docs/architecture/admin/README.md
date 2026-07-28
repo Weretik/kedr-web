@@ -20,6 +20,10 @@
 
 Пов’язані стандарти:
 
+- [Індекс frontend rules](../../standards/README.md)
 - [Організація коду Admin](../../standards/admin-code-organization.md)
 - [Інтерфейс Admin](../../standards/admin-ui.md)
+- [API та data rules](../../standards/api-data-rules.md)
+- [Testing rules](../../standards/testing-rules.md)
+- [Delivery rules](../../standards/delivery-rules.md)
 - [ADR Admin](adr/)

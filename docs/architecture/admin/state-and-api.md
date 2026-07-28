@@ -6,6 +6,8 @@
 - Кореневий Redux store розміщений у `apps/admin/src/app/store.ts`.
 - Спільний API розміщений у `@admin/shared/api-client`; transport-деталі задані в
   [ADR-0001](adr/0001-admin-axios-transport.md).
+- Спільні з Mobile backend error shapes і правила transport задокументовані в
+  [API-архітектурі Admin і Mobile](../api/README.md).
 - `admin/core/auth` передає API-клієнту `AuthSessionAdapter`; API-клієнт не
   зберігає токени й не знає endpoint оновлення сесії.
 - Кожен домен оголошує endpoints у власній `data-access`-бібліотеці через

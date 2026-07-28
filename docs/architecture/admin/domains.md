@@ -77,7 +77,7 @@ libs/admin/<domain>/
 │   ├── api/                # injectEndpoints, hooks, endpoint definitions
 │   ├── contracts/          # private transport DTO/request-response shapes
 │   ├── mappers/            # DTO <-> domain/query transformations
-│   ├── models/             # data-access-owned query/cache result types
+│   ├── models/             # data-access-owned technical query/cache types
 │   └── validators/         # response/query validation at the API boundary
 ├── model/src/
 │   ├── index.ts
@@ -105,6 +105,23 @@ libs/admin/<domain>/
 server-state або маршрутизацію. Коли Nx boundary забороняє залежність
 `data-access -> model`, data-access-owned типи залишаються в `data-access/models`;
 глобальні module-boundary правила не послаблюються для локальної задачі.
+
+### Приклад: products
+
+`Домен products` зберігає модель товару, типи, інваріанти query та paginated result списку в `products/model`; `products/data-access` володіє endpoint, API DTO та mapper'ами.
+
+```text
+libs/admin/products/
+├── model/src/
+│   ├── entities/admin-product-list-item.ts
+│   └── queries/
+│       ├── products-list-page.ts
+│       └── products-list-query.ts
+└── data-access/src/
+    ├── api/admin-products.api.ts
+    ├── contracts/admin-products-list.contract.ts
+    └── mappers/
+```
 
 ## Внутрішня структура feature
 
