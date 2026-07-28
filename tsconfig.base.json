@@ -54,7 +54,13 @@
       "@admin/core/auth": ["libs/admin/core/auth/src/index.ts"],
       "@admin/shared/config": ["libs/admin/shared/config/src/index.ts"],
       "@admin/shared/api-client": ["libs/admin/shared/api-client/src/index.ts"],
-      "@admin/dashboard/feature": ["libs/admin/dashboard/feature/src/index.ts"]
+      "@admin/dashboard/feature": ["libs/admin/dashboard/feature/src/index.ts"],
+      "@mobile/shared/api-client": ["./libs/mobile/shared/api-client/src/index.ts"],
+      "@mobile/shared/config": ["./libs/mobile/shared/config/src/index.ts"],
+      "@mobile/shared/ui": ["./libs/mobile/shared/ui/src/index.ts"],
+      "@mobile/shared/util": ["./libs/mobile/shared/util/src/index.ts"],
+      "@mobile/core/connectivity": ["./libs/mobile/core/connectivity/src/index.ts"],
+      "@mobile/core/shell": ["./libs/mobile/core/shell/src/index.ts"]
     }
   }
 }

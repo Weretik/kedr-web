@@ -4,9 +4,9 @@ const angular = require('angular-eslint');
 const prettierConfig = require('eslint-config-prettier');
 const importPlugin = require('eslint-plugin-import');
 const jsxA11y = require('eslint-plugin-jsx-a11y');
-const globals = require('globals');
 const react = require('eslint-plugin-react');
 const reactHooks = require('eslint-plugin-react-hooks');
+const globals = require('globals');
 const tseslint = require('typescript-eslint');
 
 const only = (configs, files) =>
@@ -138,7 +138,7 @@ module.exports = [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: [],
+          allow: ['expo-router'],
 
           // Important: we prohibit “deep” imports into src/lib/*
           // We only allow public entry points (index.ts) via importPath aliases.
@@ -155,17 +155,38 @@ module.exports = [
               sourceTag: 'scope:admin',
               onlyDependOnLibsWithTags: ['scope:admin'],
             },
+            // Mobile applications and core libraries stay within Mobile boundaries.
+            {
+              sourceTag: 'scope:mobile',
+              onlyDependOnLibsWithTags: ['scope:mobile', 'scope:mobile-shared'],
+            },
+            // Mobile shared infrastructure cannot pull domain or app code.
+            {
+              sourceTag: 'scope:mobile-shared',
+              onlyDependOnLibsWithTags: ['scope:mobile-shared'],
+            },
 
             // Admin composition root may only use its core, feature, and admin-shared libraries.
             {
               sourceTag: 'type:app',
-              onlyDependOnLibsWithTags: ['type:core', 'type:feature', 'scope:admin-shared'],
+              onlyDependOnLibsWithTags: [
+                'type:core',
+                'type:feature',
+                'scope:admin-shared',
+                'scope:mobile-shared',
+              ],
             },
 
             // Admin core is cross-domain infrastructure and must not depend on domain libraries.
             {
-              sourceTag: 'type:core',
-              onlyDependOnLibsWithTags: ['scope:admin-shared'],
+              allSourceTags: ['scope:admin', 'type:core'],
+              onlyDependOnLibsWithTags: ['scope:admin-shared', 'scope:mobile-shared'],
+            },
+
+            // Mobile core composes shell-level infrastructure and connectivity.
+            {
+              allSourceTags: ['scope:mobile', 'type:core'],
+              onlyDependOnLibsWithTags: ['scope:mobile', 'scope:mobile-shared'],
             },
 
             // Admin feature layers compose their domain's data, model, UI, and shared libraries.
@@ -209,9 +230,11 @@ module.exports = [
               onlyDependOnLibsWithTags: [
                 'type:ui',
                 'type:util',
+                'type:model',
                 'type:contracts',
                 'scope:shared',
                 'scope:admin-shared',
+                'scope:mobile-shared',
               ],
             },
 
@@ -220,10 +243,12 @@ module.exports = [
               sourceTag: 'type:data-access',
               onlyDependOnLibsWithTags: [
                 'type:data-access',
+                'type:model',
                 'type:util',
                 'type:contracts',
                 'scope:shared',
                 'scope:admin-shared',
+                'scope:mobile-shared',
               ],
             },
 
@@ -234,10 +259,12 @@ module.exports = [
                 'type:feature',
                 'type:ui',
                 'type:util',
+                'type:model',
                 'type:data-access',
                 'type:contracts',
                 'scope:shared',
                 'scope:admin-shared',
+                'scope:mobile-shared',
               ],
             },
 
