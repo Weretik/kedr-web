@@ -1,63 +1,25 @@
-# Стандарт організації коду Admin
+# Admin code rules
 
-**Область:** React-застосунок `apps/admin` і бібліотеки `libs/admin`  
-**Статус:** чинний
+## Libraries and dependencies
 
-## Декомпозиція файлів і компонентів
+- Розміщуйте domain-код у `libs/admin/<domain>/{model,data-access,ui,feature}`.
+- `model` містить pure TypeScript types, query, defaults та інваріанти; він не залежить від React, HTTP або browser API.
+- `data-access` володіє private DTO, mapper та RTK Query hooks; він не містить JSX, router або feature-local state.
+- `ui` містить presentational components, forms, tables і states; він не викликає API або router.
+- `feature` оркеструє page, hooks і локальний UI-state; він передає domain data та callbacks у `ui`.
+- Між libraries імпортуйте тільки через alias і public `src/index.ts`; deep imports заборонені.
 
-Файл або компонент розділяється, коли в ньому з’явилися дві чи більше незалежні
-відповідальності, які можуть розвиватися, тестуватися або повторно
-використовуватися окремо. Нові модулі групуються за призначенням, а не за
-технічним типом; публічний entry point лишається точкою композиції та зберігає
-наявний API.
+## Structure and state
 
-Не варто дробити невеликий зв’язний код лише заради кількості файлів. Поки логіка
-належить одному сценарію і змінюється разом, вона лишається поруч. Під час
-виділення нового модуля контракти споживачів не змінюються без окремого рішення.
+- Один файл, компонент і каталог має одну цілісну відповідальність.
+- Групуйте внутрішній код за роллю: `components`, `pages`, `hooks`, `state`, `forms`, `tables`, `mappers`, `contracts`.
+- Не створюйте звалищні каталоги або назви: `common`, `misc`, `helpers`, `utils`, `types` без доменного призначення.
+- Server data, loading і API errors належать RTK Query; не дублюйте їх у reducer.
+- Простий feature-local state зберігайте в component state; reducer створюйте лише для пов'язаних переходів або shared feature state.
+- Не виконуйте HTTP і не ховайте business rules у JSX.
 
-### Обов’язкові межі відповідальності
+## Pages and routes
 
-Один файл не поєднує незалежні ролі. Зокрема, заборонено залишати в одному
-модулі endpoint, transport DTO, runtime parser відповіді, mapper query і React
-UI; сторінку, великий toolbar та Data Grid columns/cells; layout, navigation
-config та profile menu; session transport, session state та permission rules.
-Такі ролі розділяються до того, як файл стане важким для читання й review.
-
-Компонент розділяється, коли його частини мають окремий стан, API, життєвий цикл
-або можуть змінюватися незалежно. Наприклад, page лишається оркестратором,
-toolbar відповідає за input/actions, таблиця — за відображення даних, а cell
-renderer — за окрему складну комірку. Компонент не виконує HTTP і не приховує
-business rules у JSX.
-
-Не використовуються файли-«комбайни» або каталоги-«звалища»: `common`, `misc`,
-`helpers`, `utils`, `types` без доменного призначення. Допустимі назви папок
-відображають роль: `api`, `contracts`, `mappers`, `models`, `validators`,
-`pages`, `components`, `hooks`, `state`, `tables`, `forms`, `layout`,
-`navigation`, `policies`, `guards`.
-
-## Організація каталогів
-
-Корінь `src` бібліотеки або feature містить лише публічний entry point, route
-entry, layout composition та інші справді кореневі модулі. Внутрішні реалізації
-не складаються в один каталог: вони групуються в логічні папки за призначенням,
-наприклад `components/`, `providers/`, `pages/`, `hooks/`, `state/`,
-`data-access/` або `util/`.
-
-Назва папки відображає відповідальність коду, а не є формальним контейнером. Не
-можна створювати звалищні каталоги з непов’язаними файлами або використовувати
-розмиті назви на кшталт `misc`, `common` і `helpers`. Невеликий зв’язний сценарій
-допускається тримати поруч, але за появи кількох файлів із різними
-відповідальностями вони одразу розкладаються за відповідними папками.
-
-## Документація та SDD
-
-Документація підпорядковується тим самим правилам декомпозиції. Одна велика SDD
-не накопичує несумісні рішення, історію кількох поставок або деталі незалежних
-етапів. Головна специфікація містить контекст, межі, посилання й загальні
-критерії; кожна незалежно reviewable фаза має власний Markdown-файл у
-`docs/specs/admin/<domain>/phases/`.
-
-Кожен SDD-файл має описувати одну мету, межі, контракт, критерії приймання й
-перевірку цієї фази. Рішення, які змінюють структуру файлів, фіксуються у
-відповідній фазі до реалізації. Посилання між головною SDD і фазами мають бути
-відносними Markdown-посиланнями.
+- Page є оркестратором; toolbar, table, complex cell і feature-only dialog розділяйте за незалежною відповідальністю.
+- Reusable dialog/form належить `ui` і отримує values, errors та callbacks через props.
+- Route, guards, global store і theme не змінюйте без явного scope feature.
