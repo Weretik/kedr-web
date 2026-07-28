@@ -11,8 +11,9 @@ Query та надати feature типізований hook без transport-д�
 
 ## Межі
 
-- У межах: query/response типи, нормалізація параметрів, endpoint у `baseApi`,
-  перетворення DTO в доменну модель, публічний export hook.
+- У межах: endpoint у `baseApi`, transport DTO, перетворення DTO в доменну модель
+  та публічний export hook. Query/response типи, значення за замовчуванням і
+  нормалізація належать `@admin/products/model`.
 - Поза межами: JSX, MUI, фільтри, Data Grid, Redux slice, зміни `baseApi` або
   глобального store.
 
@@ -20,15 +21,17 @@ Query та надати feature типізований hook без transport-д�
 
 - Endpoint оголошується через `baseApi.injectEndpoints` у
   `@admin/products/data-access`.
-- Query, row і page типи залишаються у `data-access` та експортуються з його
-  public API: чинне Nx boundary правило забороняє `type:data-access` залежати
-  від `@admin/products/model`. Глобальні правила не змінюються лише заради цієї
-  feature.
-- Hook приймає нормалізований `ProductsListQuery`; Axios отримує його як
-  `params` для `GET /api/admin/products`.
-- RTK Query cache key формується з повного застосованого query.
-- `isSuccess: false` envelope-відповідь та некоректні дані перетворюються на
-  типізовану помилку на межі data-access.
+- `AdminProductListItem`, `ProductsListQuery`, `ProductsListPage`, значення за
+  замовчуванням і pure-нормалізація розміщені в `@admin/products/model`.
+  `@admin/products/data-access` залежить від model через публічний alias, що
+  дозволено Nx dependency boundaries.
+- Hook приймає `ProductsListQuery`, нормалізує його перед mapping у transport
+  params і виконує `GET /api/admin/products`.
+- RTK Query cache key формується з початкового аргументу hook. Семантично
+  однакові, але по-різному ненормалізовані аргументи можуть створити окремі
+  cache entries.
+- Некоректна структура відповіді відхиляється mapper'ом на межі data-access і
+  не передається до feature як доменна модель.
 
 ## Сценарії
 
@@ -42,7 +45,8 @@ Query та надати feature типізований hook без transport-д�
 
 - [ ] У `ProductsPage` немає Axios або прямого HTTP.
 - [ ] DTO не виходить за межі `data-access`.
-- [ ] Публічний API бібліотеки містить лише потрібні hook і доменні типи.
+- [ ] Канонічні доменні типи імпортуються з `@admin/products/model`; public API
+  `data-access` містить hook і сумісні re-export'и.
 - [ ] Дотримані Nx dependency boundaries.
 
 ## Перевірка
@@ -57,14 +61,17 @@ Query та надати feature типізований hook без transport-д�
 - Query нормалізується та мапиться на `SearchTerm`, `InStock`, `IsSale`,
   `IsNew`, `PriceFrom`, `PriceTo`, `Sort`, `Page`, `PageSize`.
 - Відповідь API перевіряється на межі data-access і мапиться у типізовану page
-  модель; DTO не потрапляє у feature.
+  модель з `@admin/products/model`; DTO не потрапляє у feature.
 - `npx nx lint admin-products-data-access` і
   `npx nx lint admin-products-model` завершилися успішно.
-- Прямий `tsc -p ... --noEmit` не є валідною перевіркою цієї бібліотеки: він
-  падає на наявних типах `import.meta.env` у `@admin/shared/config`, які Vite
-  додає під час app build. Помилка не пов’язана з цією фазою.
+- `npx tsc --noEmit --project libs/admin/products/model/tsconfig.lib.json` і
+  `npx tsc --noEmit --project libs/admin/products/data-access/tsconfig.lib.json`
+  завершилися успішно.
 
 ## Історія змін
 
 - 2026-07-24: фазу реалізовано й прийнято; автоматизовані тести не додавалися
   за погодженим scope.
+- 2026-07-25: доменні query/result-моделі перенесено до
+  `@admin/products/model`; документацію синхронізовано з чинними Nx boundaries
+  та поведінкою RTK Query cache key.

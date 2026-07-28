@@ -1,6 +1,6 @@
 # Фаза 4: MUI Data Grid для товарів
 
-**Статус:** draft  
+**Статус:** implemented — ручна перевірка очікується
 **Залежить від:** [фаза 3](03-list-state-and-toolbar.md)  
 **Блокує:** фазу 5
 
@@ -37,13 +37,37 @@
 
 ## Критерії приймання
 
-- [ ] Використано `@mui/x-data-grid` community package без нових UI-бібліотек.
-- [ ] Рядки, `rowCount`, loading, empty та error правильно обробляються.
-- [ ] Ціна `null`, фото без URL та відсутні ознаки не ламають таблицю.
-- [ ] На ширині 320 px таблиця лишається доступною через внутрішню горизонтальну
+- [x] Використано `@mui/x-data-grid` community package без нових UI-бібліотек.
+- [x] Рядки, `rowCount`, loading, empty та error правильно обробляються.
+- [x] Ціна `null`, фото без URL та відсутні ознаки не ламають таблицю.
+- [x] На ширині 320 px таблиця лишається доступною через внутрішню горизонтальну
       прокрутку й keyboard navigation.
 
 ## Перевірка
 
 - `npx nx lint admin-products-ui`.
+- `npx nx lint admin-products-feature`.
+- `npx tsc --noEmit --project libs/admin/products/ui/tsconfig.lib.json`.
+- `npx tsc --noEmit --project libs/admin/products/feature/tsconfig.lib.json`.
+- `npx nx typecheck admin`.
+- `npx nx build admin`.
 - Ручно перевірити всі стани, pagination, sort, 320/768/1200 px і light/dark.
+
+## Результат реалізації
+
+- Додано `@mui/x-data-grid` 9.10.1, сумісний з поточними MUI 9 і React 19.
+- `ProductsDataGrid` у `@admin/products/ui` відображає фото, ID, назви,
+  ціну, наявність та ознаки; фото без URL, `null` ціна й порожні ознаки мають
+  безпечні fallback-стани.
+- `ProductsPage` викликає `useGetProductsListQuery` з applied query та передає
+  дані, loading/error/retry і `rowCount` у grid.
+- Grid використовує `paginationMode="server"` і `sortingMode="server"`;
+  pagination і клік по заголовку оновлюють feature reducer. Сортування прибрано
+  з toolbar, щоб не дублювати Data Grid.
+- Type-check UI/feature, lint UI/feature, type-check app і production build
+  завершилися успішно.
+
+## Історія змін
+
+- 2026-07-25: реалізовано server-side Data Grid; ручна перевірка в браузері
+  лишається перед прийняттям фази.

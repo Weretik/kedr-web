@@ -1,6 +1,6 @@
 # Фаза 3: стан списку та toolbar фільтрів
 
-**Статус:** draft  
+**Статус:** implemented — ручна перевірка очікується
 **Залежить від:** [фаза 2](02-react-data-access.md)  
 **Блокує:** фази 4–5
 
@@ -18,12 +18,14 @@ toolbar для пошуку й фільтрів.
 
 ## Стан
 
-Початковий застосований query: `InStock=true`, `Sort=id asc`, `Page=1`,
-`PageSize=20`. Він зберігається тільки локально в feature через `useReducer`.
+Початковий застосований domain query: `inStock=false`, `sort='id-asc'`, `page=1`,
+`pageSize=20`. Він зберігається тільки локально в feature через `useReducer`.
+Transport-параметри `InStock`, `Sort`, `Page` і `PageSize` створює лише mapper
+в `data-access`.
 
 - Search draft застосовується лише за Enter або кнопкою «Пошук».
 - Ціновий draft застосовується лише кнопкою «Застосувати» або Enter у полі.
-- Коли змінюється search, будь-який фільтр, ціна або sort, reducer встановлює
+- Коли змінюється search, будь-який фільтр або ціна, reducer встановлює
   `Page=1`.
 - Reset повертає всі значення за замовчуванням, але не змінює `PageSize`.
 - `PriceFrom > PriceTo` блокує застосування та відображає доступну помилку.
@@ -39,12 +41,34 @@ toolbar для пошуку й фільтрів.
 
 ## Критерії приймання
 
-- [ ] Локальний стан не дублюється в Redux чи URL.
-- [ ] Усі контролі мають українські label і видимий keyboard focus.
-- [ ] Search не виконує запит на кожне натискання клавіші.
-- [ ] Ціна не застосовується до явної дії користувача.
+- [x] Локальний стан не дублюється в Redux чи URL.
+- [x] Усі контролі мають українські label і використовують MUI-контроли з
+  видимим keyboard focus.
+- [x] Search не виконує запит на кожне натискання клавіші.
+- [x] Ціна не застосовується до явної дії користувача.
 
 ## Перевірка
 
 - `npx nx lint admin-products-feature`.
+- `npx tsc --noEmit --project libs/admin/products/feature/tsconfig.lib.json`.
+- `npx nx typecheck admin`.
+- `npx nx build admin`.
 - Ручно перевірити search, Enter, reset, кожен boolean-фільтр і validation ціни.
+
+## Результат реалізації
+
+- Додано `useProductsListState` з локальним `useReducer`, applied query та
+  draft-значеннями пошуку й діапазону цін.
+- Додано `ProductsListFilters` з пошуком, фільтрами наявності/акції/новинки,
+  сортуванням, діапазоном цін і reset.
+- `ProductsPage` поєднує feature state з toolbar; API hook ще не викликається,
+  тому server state не дублюється й належить наступній фазі.
+- `npx nx lint admin-products-feature`, type-check feature і app та production
+  build Admin завершилися успішно.
+
+## Історія змін
+
+- 2026-07-25: реалізовано локальний стан списку та toolbar фільтрів; ручна
+  перевірка в браузері лишається перед прийняттям фази.
+- 2026-07-25: керування сортуванням перенесено до Data Grid у фазі 4; toolbar
+  лишається панеллю server-side пошуку та фільтрів.
