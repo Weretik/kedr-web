@@ -1,0 +1,9 @@
+{
+  "name": "mobile-shared-config",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/shared/config/src",
+  "projectType": "library",
+  "tags": ["scope:mobile-shared", "type:config"],
+  "// targets": "to see all targets run: nx show project mobile-shared-config --web",
+  "targets": {}
+}
