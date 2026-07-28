@@ -1,8 +1,5 @@
-import type {
-  AdminProductsListResponse,
-  AdminProductsPagedInfo,
-} from '../contracts/admin-products-list.contract';
-import type { AdminProductListItem, ProductsListPage } from '../models/products-list.types';
+import type { AdminProductsListResponse, AdminProductsPagedInfo } from '../contracts/admin-products-list.contract';
+import type { AdminProductListItem, ProductsListPage } from '@admin/products/model';
 
 export function mapAdminProductsListResponse(response: unknown): ProductsListPage {
   if (!isRecord(response) || !Array.isArray(response['value'])) {

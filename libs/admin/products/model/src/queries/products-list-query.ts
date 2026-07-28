@@ -1,6 +1,29 @@
-import { DEFAULT_PRODUCTS_LIST_QUERY } from './products-list.types';
+export type ProductsListSort =
+  | 'id-asc'
+  | 'id-desc'
+  | 'name-asc'
+  | 'name-desc'
+  | 'price-asc'
+  | 'price-desc';
 
-import type { ProductsListQuery, ProductsListSort } from './products-list.types';
+export interface ProductsListQuery {
+  searchTerm?: string;
+  inStock?: boolean;
+  isSale?: boolean;
+  isNew?: boolean;
+  priceFrom?: number;
+  priceTo?: number;
+  sort: ProductsListSort;
+  page: number;
+  pageSize: number;
+}
+
+export const DEFAULT_PRODUCTS_LIST_QUERY: ProductsListQuery = {
+  inStock: false,
+  page: 1,
+  pageSize: 20,
+  sort: 'id-asc',
+};
 
 const MAX_PAGE_SIZE = 100;
 

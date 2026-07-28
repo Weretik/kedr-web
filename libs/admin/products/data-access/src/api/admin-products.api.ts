@@ -1,10 +1,10 @@
+import { normalizeProductsListQuery } from '@admin/products/model';
 import { baseApi } from '@admin/shared/api-client';
 
 import { mapAdminProductsListResponse } from '../mappers/admin-products-list.mapper';
 import { mapProductsListQueryToApi } from '../mappers/products-list-query.mapper';
-import { normalizeProductsListQuery } from '../models/products-list-query';
 
-import type { ProductsListPage, ProductsListQuery } from '../models/products-list.types';
+import type { ProductsListPage, ProductsListQuery } from '@admin/products/model';
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
