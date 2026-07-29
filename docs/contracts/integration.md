@@ -85,16 +85,16 @@ Backend може повернути одну з двох форм. Обидві 
 
 ### Мапінг transport і HTTP-помилок
 
-| Джерело | Нормалізований `ApiError` | Поведінка feature/UI |
-| --- | --- | --- |
-| Немає response | `Network`, `status: 0` | Показати offline/network state і доступний retry. |
-| `ECONNABORTED` або `ETIMEDOUT` | `Timeout` | Показати timeout state і доступний retry. |
-| `401` | `Unauthorized` | Передати у чинний session/auth flow; не показувати validation UI. |
-| `403` | `Forbidden` | Показати state відсутнього доступу без retry тієї самої дії. |
-| `404` | `NotFound` | Показати not-found state або feature-specific fallback. |
-| `4xx` з `fieldErrors` | `Validation`, `fieldErrors`, можливий `traceId` | Зіставити errors з полями форми; для query/filter показати зрозуміле локальне повідомлення. |
-| `5xx` | `Server`, можливий `traceId` | Зберегти наявні дані, показати error state і retry. |
-| Інша client/HTTP помилка | `Unknown` | Показати безпечний generic error; не показувати raw response. |
+| Джерело                        | Нормалізований `ApiError`                       | Поведінка feature/UI                                                                        |
+| ------------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Немає response                 | `Network`, `status: 0`                          | Показати offline/network state і доступний retry.                                           |
+| `ECONNABORTED` або `ETIMEDOUT` | `Timeout`                                       | Показати timeout state і доступний retry.                                                   |
+| `401`                          | `Unauthorized`                                  | Передати у чинний session/auth flow; не показувати validation UI.                           |
+| `403`                          | `Forbidden`                                     | Показати state відсутнього доступу без retry тієї самої дії.                                |
+| `404`                          | `NotFound`                                      | Показати not-found state або feature-specific fallback.                                     |
+| `4xx` з `fieldErrors`          | `Validation`, `fieldErrors`, можливий `traceId` | Зіставити errors з полями форми; для query/filter показати зрозуміле локальне повідомлення. |
+| `5xx`                          | `Server`, можливий `traceId`                    | Зберегти наявні дані, показати error state і retry.                                         |
+| Інша client/HTTP помилка       | `Unknown`                                       | Показати безпечний generic error; не показувати raw response.                               |
 
 ### Правила відображення та діагностики
 

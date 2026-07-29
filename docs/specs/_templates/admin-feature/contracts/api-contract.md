@@ -8,9 +8,9 @@
 операції ще немає, спочатку додайте її до `docs/contracts/<backend-module>/`;
 не дублюйте тут OpenAPI YAML або private DTO.
 
-| Операція | Endpoint | Request | Response | Errors / access |
-| --- | --- | --- | --- | --- |
-| <назва> | `<METHOD /path>` | <query/body> | <domain model> | <стани та permission> |
+| Операція | Endpoint         | Request      | Response       | Errors / access       |
+| -------- | ---------------- | ------------ | -------------- | --------------------- |
+| <назва>  | `<METHOD /path>` | <query/body> | <domain model> | <стани та permission> |
 
 Посилайтеся на погоджений versioned OpenAPI або backend contract. DTO, mapper і
 transport errors лишаються private у `data-access`; `feature` та `ui` працюють

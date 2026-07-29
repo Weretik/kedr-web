@@ -5,8 +5,8 @@
 
 ## API
 
-| Операція | Endpoint | Запит | Відповідь | Помилки |
-| --- | --- | --- | --- | --- |
+| Операція                         | Endpoint                  | Запит                                                                                                                       | Відповідь                                 | Помилки                                                    |
+| -------------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------- |
 | Перша/наступна сторінка каталогу | `GET /api/admin/products` | `searchTerm`, `categorySlug`/`categoryId`, `inStock`, `isSale`, `isNew`, `priceFrom`, `priceTo`, `sort`, `page`, `pageSize` | `AdminProductPage` (`pagedInfo`, `value`) | Нормалізований `ApiError`; backend `400` validation errors |
 
 `page` починається з `1`; `pageSize` обмежений `1..100` і за замовчуванням
@@ -27,8 +27,8 @@ DTO, mappers і transport details залишаються у `data-access`.
 
 ## Навігація
 
-| Route | Route file | Feature public API | Parameters | Back/deep-link behavior |
-| --- | --- | --- | --- | --- |
+| Route             | Route file                               | Feature public API                          | Parameters | Back/deep-link behavior   |
+| ----------------- | ---------------------------------------- | ------------------------------------------- | ---------- | ------------------------- |
 | `/(tabs)/catalog` | `apps/mobile/src/app/(tabs)/catalog.tsx` | `@mobile/catalog/feature` → `CatalogScreen` | Немає у P1 | Root tab; tab bar visible |
 
 Product detail route, cart, favorites, route-persisted filters, deep links і
