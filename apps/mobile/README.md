@@ -58,6 +58,16 @@ machine over the same local network.
 
 1. Run `npx expo start` from `apps/mobile` and scan the displayed QR code.
 2. Open the QR code in Expo Go on Android.
+
+## Development Build
+
+Expo Go — стандартний workflow, доки застосунок не потребує native library або
+зміни native configuration. Проєкт уже має EAS `development` profile в
+`eas.json`. Перед встановленням `expo-dev-client` або створенням EAS build
+прочитайте repository guide:
+
+- [Expo Go та Development Build](../../docs/architecture/mobile/development-build.md)
+
 3. Confirm that the `KEDR Mobile` root screen opens without console errors.
 4. Switch the system light/dark setting and check theme and safe area.
 5. Disable the network and confirm the offline message is visible and the app

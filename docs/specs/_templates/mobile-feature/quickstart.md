@@ -43,3 +43,7 @@ npx expo export --platform web
 Зміна native dependency, Expo config або config plugin потребує development
 build; не використовуйте Expo Go для такої перевірки. Зафіксуйте окремо спосіб
 створення development build і погоджену платформу.
+
+Порядок переходу, EAS cloud build, повторна збірка native binary та щоденний
+запуск через `--dev-client` описані в
+[Expo Go та Development Build](../../../architecture/mobile/development-build.md).

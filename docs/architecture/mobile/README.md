@@ -52,6 +52,7 @@ libs/mobile/
 - [Стан, API та форми](state-and-api.md)
 - [Online-first та майбутній офлайн](offline-strategy.md)
 - [Стратегія тестування](testing.md)
+- [Expo Go та Development Build](development-build.md)
 - [SDD-процес](sdd-process.md)
 - [ADR Mobile](adr/)
 
