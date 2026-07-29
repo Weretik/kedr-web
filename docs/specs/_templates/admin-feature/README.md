@@ -24,6 +24,29 @@ Admin feature використовує `libs/admin/<domain>/{model,data-access,u
 router; `feature` збирає page і локальний UI-state. Усі міжбібліотечні імпорти
 йдуть через публічний `src/index.ts`.
 
+## Робота з API-контрактом
+
+Якщо feature читає або змінює дані через HTTP, до створення `plan.md`:
+
+1. Прочитайте [frontend-реєстр API-контрактів](../../../contracts/README.md) і
+   [правила інтеграції](../../../contracts/integration.md).
+2. Звірте точний OpenAPI-контракт у `KedrStore/docs/sdd/contracts/`: method,
+   path, security, parameters, response, errors, pagination та idempotency.
+3. Для вже описаної операції використайте її сторінку в
+   `docs/contracts/<backend-module>/`. Для нової операції додайте там
+   frontend-проекцію з source OpenAPI path, consumer, mapping, обмеженнями й
+   compatibility notes, канонічним HTTP-запитом і канонічною формою
+   JSON-відповіді; додайте посилання в `docs/contracts/README.md`.
+4. У feature-local `contracts/api-contract.md` посилайтеся на реєстр і source
+   OpenAPI; фіксуйте лише feature-specific рішення.
+5. Для неуспішної відповіді використовуйте
+   [спільні правила нормалізації помилок](../../../contracts/integration.md#нормалізація-та-обробка-помилок).
+   Не парсьте raw HTTP error у feature або UI.
+
+Не копіюйте OpenAPI YAML або transport DTO у feature-документи. Якщо contract
+неповний, зафіксуйте blocker у `contracts/api-contract.md` і tasks, а не
+вигадуйте endpoint, fields, enum, security або pagination semantics.
+
 `tasks/` групує задачі за user story, а не за шарами. Кожна задача містить
 стабільний ID, `[US#]`, за потреби `[P]`, точний шлях і перевірюваний результат.
 

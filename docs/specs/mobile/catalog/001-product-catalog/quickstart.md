@@ -32,3 +32,7 @@ npx expo export --platform web
 P1 не додає native dependency або config plugin; Expo Go достатній. Якщо після
 profiling погоджено FlashList або іншу native capability, перевірити її Expo Go
 сумісність і за потреби створити development build.
+
+Порядок переходу, EAS cloud build, повторна збірка native binary та щоденний
+запуск через `--dev-client` описані в
+[Expo Go та Development Build](../../../../architecture/mobile/development-build.md).

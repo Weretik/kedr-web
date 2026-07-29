@@ -3,6 +3,10 @@
 **Spec:** [spec.md](spec.md)  
 **Дата:** 2026-07-28
 
+**API-контракт:** [GET /api/admin/products](contracts/api-contract.md)
+зафіксований для цієї feature. Він використовує page-based pagination і замінює
+попередній contract gate.
+
 ## Summary
 
 Створити domain-first catalog feature. `CatalogScreen` оркеструє server query і

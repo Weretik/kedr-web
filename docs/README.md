@@ -14,6 +14,7 @@
 - [Mobile](architecture/mobile/README.md) — архітектура мобільного застосунку на React Native та Expo.
 - [Storefront](architecture/storefront/README.md) — архітектура storefront-застосунку.
 - [API](architecture/api/README.md) — API-контракти та інтеграційні домовленості.
+- [Frontend API contracts](contracts/README.md) — реєстр операцій і frontend-проекцій backend OpenAPI-контрактів.
 
 ## Принцип розміщення
 

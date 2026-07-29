@@ -27,6 +27,17 @@ feature](./_templates/mobile-feature/) у порядку `spec.md → plan.md �
 `research.md`, `data-model.md` і `contracts/` створюються лише коли вони
 потрібні feature.
 
+Для feature з HTTP-інтеграцією перед плануванням прочитайте
+[frontend-реєстр API-контрактів](../contracts/README.md). Шаблон Mobile feature
+визначає, як пов'язати source OpenAPI, спільний реєстр і feature-local contract
+без дублювання DTO.
+
+Для поетапного запуску реалізації через AI використовуйте
+[регламент поетапного виконання задач AI](./_templates/ai-task-workflow/).
+Його `README.md` містить короткий запит, а детальні правила розділені за етапами
+роботи. Регламент обмежує AI однією фазою та вимагає явної команди перед
+переходом далі.
+
 ```text
 <NNN>-<feature-slug>/
 ├── spec.md                   # user stories, requirements, acceptance scenarios

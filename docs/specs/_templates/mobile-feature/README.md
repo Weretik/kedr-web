@@ -24,6 +24,34 @@ Route-файли в `apps/mobile/src/app` лишаються тонкими Expo
 вони імпортують public screen із `feature` і не викликають API, storage або
 business logic. `@mobile/core/shell` володіє providers, theme, store і shell.
 
+## Робота з API-контрактом
+
+Якщо feature читає або змінює дані через HTTP, до створення `plan.md` виконайте
+такі кроки:
+
+1. Прочитайте [frontend-реєстр API-контрактів](../../../contracts/README.md) і
+   [правила інтеграції](../../../contracts/integration.md).
+2. Знайдіть точний машиночитаний контракт у `KedrStore/docs/sdd/contracts/`
+   та перевірте method, path, security, parameters, response, errors і
+   pagination semantics.
+3. Якщо сторінка операції вже є в `docs/contracts/<backend-module>/`, оновіть
+   її лише за потреби. Якщо її немає, додайте туди frontend-проекцію з точним
+   source OpenAPI path, consumer, mapping, обмеженнями та compatibility notes;
+   обов'язково додайте канонічний HTTP-запит і канонічну форму JSON-відповіді;
+   додайте посилання в `docs/contracts/README.md`.
+4. У `contracts/api-contract.md` нової feature додайте посилання на сторінку
+   реєстру й source OpenAPI, а також лише feature-specific рішення: domain
+   mapping, navigation, pagination/reset і відомі обмеження.
+5. Не копіюйте OpenAPI YAML і transport DTO у feature-документи. Private DTO,
+   serialization та mapping залишаються в `data-access`.
+6. Для неуспішної відповіді використовуйте
+   [спільні правила нормалізації помилок](../../../contracts/integration.md#нормалізація-та-обробка-помилок).
+   Не парсьте raw HTTP error у feature або UI.
+
+Якщо contract відсутній або не визначає потрібну поведінку, зафіксуйте blocker
+у `contracts/api-contract.md` і tasks. Не вигадуйте endpoint, fields, enum,
+security або pagination semantics.
+
 `tasks/` групує задачі за user story, а не за шарами. Кожна задача містить
 стабільний ID, `[US#]`, за потреби `[P]`, точний шлях і перевірюваний результат.
 

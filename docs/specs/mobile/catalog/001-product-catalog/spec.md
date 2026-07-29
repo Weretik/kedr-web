@@ -1,7 +1,7 @@
 # Feature specification: Mobile product catalog
 
 **Створено:** 2026-07-28  
-**Статус:** draft — API contract required before implementation  
+**Статус:** draft — API-контракт зафіксований
 **Домен:** `catalog`  
 **Вхід:** мобільний каталог товарів із фото, пошуком, фільтрами, сортуванням і server-side pagination.
 
@@ -21,13 +21,13 @@
 
 ### User story 2 — Пошук товарів (Priority: P2)
 
-Як покупець, я хочу шукати товари за назвою або артикулом, щоб швидко знайти потрібну позицію.
+Як покупець, я хочу шукати товари за пошуковим запитом, щоб швидко знайти потрібну позицію.
 
 **Independent test:** ввести запит у Searchbar, дочекатися debounce і перевірити, що показано лише server-side результат; очистити запит і перевірити перший список.
 
 **Acceptance scenarios:**
 
-1. Given каталог відкрито, when користувач вводить щонайменше погоджену кількість символів, then після debounce надсилається новий query і список починається з першої сторінки.
+1. Given каталог відкрито, when користувач вводить пошуковий запит, then після debounce надсилається новий query і список починається з першої сторінки.
 2. Given пошук не має збігів, when запит завершено, then показується empty state із дією «Очистити пошук».
 
 ### User story 3 — Фільтрація і сортування (Priority: P3)
@@ -38,7 +38,7 @@
 
 **Acceptance scenarios:**
 
-1. Given доступні filter facets, when користувач застосовує значення, then список оновлюється server-side з першої сторінки, а активні фільтри показані Chip controls.
+1. Given доступні параметри фільтрації контракту, when користувач застосовує значення, then список оновлюється server-side з першої сторінки, а активні фільтри показані Chip controls.
 2. Given є активні фільтри або пошук, when користувач натискає «Скинути», then filters, search і pagination повертаються до default state.
 3. Given користувач змінює sort, when вибір підтверджено, then список перезавантажується з першої сторінки та показує активне сортування.
 
@@ -49,12 +49,12 @@
 - Новий search/filter/sort query скасовує або ігнорує застарілу відповідь і скидає pagination.
 - Дублікати товарів між сторінками дедуплікуються за `product.id`.
 - Відсутнє фото показує погоджений fallback image; URL з API не обходить React Native image security patterns.
-- Без API contract feature не реалізується: endpoint, facets, sort values і pagination cursor/page semantics мають бути погоджені.
+- Feature використовує зафіксований [API-контракт](contracts/api-contract.md): `GET /api/admin/products`, page-based pagination і documented filter/sort parameters.
 
 ## Requirements
 
 - **FR-001**: Каталог використовує React Native `FlatList` і `ProductCard`, а не desktop table або Data Grid.
-- **FR-002**: Картка показує лише погоджені domain fields: фото, назву, ціну, одиницю/формат ціни за наявності та availability state.
+- **FR-002**: Картка показує лише погоджені domain fields: фото, назву, nullable ціну та availability state. Валюта й одиниця ціни не показуються, доки їх не надає контракт.
 - **FR-003**: Search, filters, sort і pagination виконуються server-side; client не завантажує весь каталог для локальної фільтрації.
 - **FR-004**: Searchbar, filter modal, active filter chips і sort menu використовують React Native Paper; icon-only controls мають українські accessible names.
 - **FR-005**: Перший список і кожен змінений query завантажуються з початку; наступна сторінка додається до вже видимих карток без дублювання.
@@ -71,5 +71,5 @@
 ## Assumptions and dependencies
 
 - `@mobile/core/shell` уже надає theme, store, connectivity, notification і tab route `/(tabs)/catalog`.
-- Реальні API endpoint, filters, sort values, image fields, permissions і pagination semantics ще не надані — див. [API contract](contracts/api-contract.md).
+- Data source — `GET /api/admin/products`; його parameters, DTO boundary і відомі обмеження описані в [API-контракті](contracts/api-contract.md). Поточний contract не має filter-facets endpoint і не надає currency/price unit або search-field semantics.
 - Detail product, cart, favorites, prices by customer group і analytics не входять у цю feature.

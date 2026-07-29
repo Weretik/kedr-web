@@ -1,27 +1,35 @@
 # Mobile product catalog — API і навігація
 
+**Frontend-контракт:** [Admin products](../../../../../contracts/admin/products.md)
+**Машиночитане джерело:** `KedrStore/docs/sdd/contracts/catalog/products.openapi.yaml` (`getAdminProducts`)
+
 ## API
 
-| Операція | Endpoint | Request | Response | Errors |
+| Операція | Endpoint | Запит | Відповідь | Помилки |
 | --- | --- | --- | --- | --- |
-| Перша/наступна сторінка каталогу | `[NEEDS CLARIFICATION]` | search, filters, sort, cursor/page, limit | `CatalogPage` DTO | normalized API error |
-| Filter facets | `[NEEDS CLARIFICATION]` | catalog context за потреби | filter groups/options | normalized API error |
+| Перша/наступна сторінка каталогу | `GET /api/admin/products` | `searchTerm`, `categorySlug`/`categoryId`, `inStock`, `isSale`, `isNew`, `priceFrom`, `priceTo`, `sort`, `page`, `pageSize` | `AdminProductPage` (`pagedInfo`, `value`) | Нормалізований `ApiError`; backend `400` validation errors |
 
-Потрібний backend/OpenAPI contract до реалізації:
+`page` починається з `1`; `pageSize` обмежений `1..100` і за замовчуванням
+дорівнює `20`. Наступна сторінка існує, коли
+`pagedInfo.pageNumber < pagedInfo.totalPages`; contract є page-based, а не
+cursor-based. Зміна search, filters або sort скидає `page` до `1`.
 
-1. endpoint і HTTP method;
-2. cursor або offset/page pagination semantics, `limit` та total/hasNext fields;
-3. доступні search fields і мінімальна довжина запиту;
-4. filter facets, multiple selection і allowed sort values;
-5. product id, image URL, price, currency, article та availability DTO fields;
-6. authorization/region/price-group rules і standard error shape.
+Поточний contract не має filter-facets endpoint. P3 може показувати лише
+documented parameters; category choices потребують чинного окремого data source.
+Contract також не визначає поля пошуку `searchTerm` і не надає currency або
+price unit, тому UI не повинен обіцяти ці деталі.
 
-DTO, mapper і transport details лишаються в `data-access`.
+Controller зараз anonymous, але source contract позначає його як internal/admin
+surface. Mobile client не повинен вважати це гарантією public access або додавати
+authorization bypass.
+
+DTO, mappers і transport details залишаються у `data-access`.
 
 ## Навігація
 
-| Route | Route file | Feature public API | Параметри | Back/deep-link behavior |
+| Route | Route file | Feature public API | Parameters | Back/deep-link behavior |
 | --- | --- | --- | --- | --- |
-| `/(tabs)/catalog` | `apps/mobile/src/app/(tabs)/catalog.tsx` | `@mobile/catalog/feature` → `CatalogScreen` | немає в P1 | root tab; tab bar visible |
+| `/(tabs)/catalog` | `apps/mobile/src/app/(tabs)/catalog.tsx` | `@mobile/catalog/feature` → `CatalogScreen` | Немає у P1 | Root tab; tab bar visible |
 
-Product detail route, cart, favorites, route-persisted filters, deep links і guards не застосовуються в цій feature.
+Product detail route, cart, favorites, route-persisted filters, deep links і
+guards не застосовуються в цій feature.
