@@ -1,7 +1,7 @@
 # Контракт admin products
 
 **Споживач:** Mobile product catalog (`001-product-catalog`)  
-**Джерело OpenAPI:** `KedrStore/docs/sdd/contracts/catalog/products.openapi.yaml`  
+**Backend-довідка (за наявності):** `KedrStore/docs/sdd/contracts/catalog/products.openapi.yaml`
 **Операція:** `getAdminProducts`
 
 ## Операція

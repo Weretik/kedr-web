@@ -1,9 +1,10 @@
 # Правила frontend-інтеграції
 
-**Джерело:** `KedrStore/docs/sdd/contracts/frontend-integration.md`
+**Backend-довідка (за наявності):** `KedrStore/docs/sdd/contracts/frontend-integration.md`
 
-Ця сторінка є frontend-проекцією спільних backend-конвенцій. Source OpenAPI та
-frontend API-architecture залишаються authoritative для transport implementation.
+Ця сторінка є frontend-проекцією спільних backend-конвенцій і authoritative для
+frontend transport implementation. Backend OpenAPI є довідкою, коли доступний;
+його пошук, доступність і актуалізація не належать frontend-власникам.
 
 ## Межа контракту
 
@@ -11,7 +12,8 @@ frontend API-architecture залишаються authoritative для transport 
   мапінгом у domain model.
 - `feature`, UI-компоненти й routes споживають domain model і нормалізований
   `ApiError`; вони не залежать від OpenAPI DTO names або raw HTTP responses.
-- Feature посилається на сторінку цього реєстру та точний source OpenAPI file.
+- Feature посилається на сторінку цього реєстру; за наявності може вказати
+  backend OpenAPI file як довідку.
 
 ## Спільні HTTP-правила
 

@@ -4,11 +4,11 @@
 операцію може викликати feature, як клієнт використовує результат і де міститься
 машиночитаний source of truth.
 
-Source of truth — versioned OpenAPI-контракт у репозиторії `KedrStore`. Не
-копіюйте сюди OpenAPI YAML або backend DTO: посилайтеся на точний source contract
-і документуйте лише frontend-рішення, обмеження та мапінги. Це docs-as-code
-підхід: OpenAPI залишається машиночитаним контрактом для генерації клієнтів і
-валідації, а коротка документація consumer фіксує правила інтеграції. Див.
+Source of truth для frontend — versioned frontend-проєкція в цьому реєстрі. Не
+копіюйте сюди OpenAPI YAML або backend DTO: документуйте лише frontend-рішення,
+обмеження та мапінги. OpenAPI у репозиторії `KedrStore` можна вказати як
+backend-довідку, коли він доступний, але його пошук, доступність і актуалізація
+належать backend-власникам та не блокують frontend-роботу. Див.
 [OpenAPI Specification](https://spec.openapis.org/oas/latest.html) і
 [OpenAI OpenAPI repository](https://github.com/openai/openai-openapi).
 
@@ -26,6 +26,8 @@ Source of truth — versioned OpenAPI-контракт у репозиторії
   pagination, errors і відповідальності frontend-споживачів.
 - [Admin products](admin/products.md) — контракт, який використовує mobile
   product catalog.
+- [Admin categories](admin/categories.md) — категорії для вибору та
+  фільтрації mobile product catalog.
 
 ## Обов'язково перед роботою з API
 
@@ -33,17 +35,18 @@ AI та розробник, які додають або змінюють HTTP-�
 
 1. Цей реєстр і сторінку потрібної операції.
 2. [Правила інтеграції](integration.md).
-3. Точний OpenAPI-файл у `KedrStore/docs/sdd/contracts/<module>/`.
+3. За наявності — backend OpenAPI-файл у `KedrStore/docs/sdd/contracts/<module>/` як довідку.
 
 Feature-local `contracts/api-contract.md` завжди посилається на сторінку цього
-реєстру та source OpenAPI. Він пояснює застосування контракту в конкретній
-feature, але не є другою копією API-специфікації.
+реєстру. Він пояснює застосування контракту в конкретній feature, але не є
+другою копією API-специфікації.
 
 ## Обов'язковий вміст сторінки операції
 
 Кожна сторінка операції в `docs/contracts/<backend-module>/` має містити:
 
-1. Consumer, точний source OpenAPI path і `operationId`.
+1. Consumer і frontend-назву операції; доступний backend OpenAPI path та
+   `operationId` можна вказати як довідку.
 2. Method, path, security/access, request parameters або body та їх обмеження.
 3. Розділ **«Канонічний HTTP-запит»** з реалістичним прикладом request відносно
    frontend base URL. Приклад не містить tokens, cookies, PII або production
@@ -56,16 +59,15 @@ feature, але не є другою копією API-специфікації.
    [нормалізацію та обробку помилок](integration.md#нормалізація-та-обробка-помилок)
    та додавайте canonical error response лише якщо operation має особливу форму.
 
-Ці приклади пояснюють реалізацію `data-access`, але не замінюють OpenAPI і не
-є test fixtures. Не вигадуйте fields або semantics, яких немає в source
-contract.
+Ці приклади пояснюють реалізацію `data-access` і не є test fixtures. Не
+вигадуйте fields або semantics, яких немає у frontend-проєкції контракту.
 
 ## Супровід
 
-1. Змінюйте OpenAPI-контракт у `KedrStore` першим або в межах тієї самої
-   поставки.
-2. Оновлюйте відповідну сторінку реєстру: точний source path і вплив на client.
-3. Посилайтеся з feature `contracts/api-contract.md` на цю сторінку; feature
+1. Коли backend-власник повідомив про зміну контракту, оновлюйте відповідну
+   сторінку реєстру та фіксуйте вплив на client. Не шукайте й не змінюйте
+   backend/OpenAPI-джерело в межах frontend-роботи.
+2. Посилайтеся з feature `contracts/api-contract.md` на цю сторінку; feature
    spec не дублює transport DTO.
-4. Розглядайте зміну route, parameter, response field або enum як compatibility
+3. Розглядайте зміну route, parameter, response field або enum як compatibility
    change: зафіксуйте migration до використання зміни в client.
