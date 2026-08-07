@@ -39,6 +39,13 @@ const workspaceAliases = {
     'libs/mobile/core/connectivity/src/index.ts',
   ),
   '@mobile/core/shell': path.join(workspaceRoot, 'libs/mobile/core/shell/src/index.ts'),
+  '@mobile/catalog/model': path.join(workspaceRoot, 'libs/mobile/catalog/model/src/index.ts'),
+  '@mobile/catalog/data-access': path.join(
+    workspaceRoot,
+    'libs/mobile/catalog/data-access/src/index.ts',
+  ),
+  '@mobile/catalog/ui': path.join(workspaceRoot, 'libs/mobile/catalog/ui/src/index.ts'),
+  '@mobile/catalog/feature': path.join(workspaceRoot, 'libs/mobile/catalog/feature/src/index.ts'),
 };
 
 const config = mergeConfig(defaultConfig, customConfig);

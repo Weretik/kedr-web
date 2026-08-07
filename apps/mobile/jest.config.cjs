@@ -7,6 +7,7 @@ module.exports = {
     '^@reduxjs/toolkit$': '<rootDir>/../../node_modules/@reduxjs/toolkit/dist/cjs/index.js',
     '^@mobile/core/connectivity$': '<rootDir>/../../libs/mobile/core/connectivity/src/index.ts',
     '^@mobile/core/shell$': '<rootDir>/../../libs/mobile/core/shell/src/index.ts',
+    '^@mobile/catalog/feature$': '<rootDir>/../../libs/mobile/catalog/feature/src/index.ts',
     '^@mobile/shared/api-client$': '<rootDir>/../../libs/mobile/shared/api-client/src/index.ts',
     '^@mobile/shared/config$': '<rootDir>/../../libs/mobile/shared/config/src/index.ts',
     '^@react-native-community/netinfo$':
@@ -20,6 +21,7 @@ module.exports = {
       '<rootDir>/../../libs/mobile/core/shell/src/test-mocks/async-storage.ts',
     '^expo-router/react-navigation$':
       '<rootDir>/../../libs/mobile/core/shell/src/test-mocks/expo-router-react-navigation.tsx',
+    '^expo-blur$': '<rootDir>/src/test-mocks/expo-blur.tsx',
     '^react-redux$': '<rootDir>/../../libs/mobile/core/shell/src/test-mocks/react-redux.tsx',
     '^react$': '<rootDir>/../../node_modules/react/index.js',
     '^react/jsx-runtime$': '<rootDir>/../../node_modules/react/jsx-runtime.js',

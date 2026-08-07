@@ -45,7 +45,12 @@ module.exports = [
   ...only(angular.configs.templateRecommended, ['apps/**/*.html', 'libs/**/*.html']),
 
   {
-    files: ['apps/admin/**/*.tsx', 'libs/admin/**/*.tsx'],
+    files: [
+      'apps/admin/**/*.tsx',
+      'libs/admin/**/*.tsx',
+      'apps/mobile/**/*.tsx',
+      'libs/mobile/**/*.tsx',
+    ],
     ...react.configs.flat.recommended,
     languageOptions: {
       ...react.configs.flat.recommended.languageOptions,

@@ -60,7 +60,11 @@
       "@mobile/shared/ui": ["./libs/mobile/shared/ui/src/index.ts"],
       "@mobile/shared/util": ["./libs/mobile/shared/util/src/index.ts"],
       "@mobile/core/connectivity": ["./libs/mobile/core/connectivity/src/index.ts"],
-      "@mobile/core/shell": ["./libs/mobile/core/shell/src/index.ts"]
+      "@mobile/core/shell": ["./libs/mobile/core/shell/src/index.ts"],
+      "@mobile/catalog/model": ["./libs/mobile/catalog/model/src/index.ts"],
+      "@mobile/catalog/data-access": ["./libs/mobile/catalog/data-access/src/index.ts"],
+      "@mobile/catalog/ui": ["./libs/mobile/catalog/ui/src/index.ts"],
+      "@mobile/catalog/feature": ["./libs/mobile/catalog/feature/src/index.ts"]
     }
   }
 }
