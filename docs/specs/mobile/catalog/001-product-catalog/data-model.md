@@ -29,6 +29,11 @@ CatalogPage
 ├── pageSize: number
 ├── totalPages: number
 └── totalRecords: number
+
+CatalogCategoryOption
+├── id: number
+├── label: string
+└── children: CatalogCategoryOption[]
 ```
 
 ## Межа DTO
@@ -38,6 +43,14 @@ CatalogPage
   normalizes відсутнє image та availability.
 - `catalog-query.mapper.ts` серіалізує `CatalogQuery` у documented query
   parameters `GET /api/admin/products`.
+
+## Локальний query state
+
+`CatalogScreen` зберігає локальний user/query state в окремому
+`feature/src/state/catalog-query-reducer.ts`. Reducer володіє лише чернеткою
+пошуку та `CatalogQuery`; RTK Query лишається джерелом server data, loading і
+error states. Дії search, filters і sort атомарно оновлюють query та скидають
+`page` до `1`, щоб не дублювати цю логіку між UI handlers.
 
 ## Інваріанти й нормалізація
 
@@ -50,3 +63,6 @@ CatalogPage
 - Operation не надає currency, price unit, category options або search-field
   semantics. Mapper зберігає nullable price, а UI не має натякати на ці
   відсутні деталі.
+- `CatalogCategoryOption` — recursive UI/domain shape для майбутнього mapper;
+  він не є припущенням про backend DTO. До появи source selector показує лише
+  empty preparation state.

@@ -50,9 +50,9 @@ libs/mobile/catalog/
 
 ## Constitution check
 
-- [ ] Thin Expo Router route, Nx boundaries і public `src/index.ts` дотримано.
-- [ ] DTO, API errors і pagination transport semantics ізольовано в `data-access`.
-- [ ] `FlatList` і Paper controls покривають P1–P3 без нової list/UI dependency.
+- [x] Thin Expo Router route, Nx boundaries і public `src/index.ts` дотримано.
+- [x] DTO, API errors і pagination transport semantics ізольовано в `data-access`.
+- [x] `FlatList` і Paper controls покривають P1–P3 без нової list/UI dependency.
 
 ## Complexity tracking
 
