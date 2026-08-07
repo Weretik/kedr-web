@@ -13,6 +13,7 @@ module.exports = {
     '^@reduxjs/toolkit$': '<rootDir>/../../../../node_modules/@reduxjs/toolkit/dist/cjs/index.js',
     '^immer$': '<rootDir>/../../../../node_modules/immer/dist/cjs/index.js',
     '^react-native-paper$': '<rootDir>/src/test-mocks/react-native-paper.tsx',
+    '^react-native-actions-sheet$': '<rootDir>/src/test-mocks/react-native-actions-sheet.tsx',
     '^react-native-safe-area-context$':
       '<rootDir>/src/test-mocks/react-native-safe-area-context.tsx',
     '^@react-native-async-storage/async-storage$': '<rootDir>/src/test-mocks/async-storage.ts',
