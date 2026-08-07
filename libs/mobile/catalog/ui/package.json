@@ -1,0 +1,10 @@
+{
+  "name": "@mobile/catalog/ui",
+  "private": true,
+  "dependencies": {
+    "@react-native-assets/slider": "^11.0.12",
+    "@shopify/flash-list": "2.0.2",
+    "react-native-actions-sheet": "^0.9.7",
+    "react-native-tree-multi-select": "^3.0.2"
+  }
+}
