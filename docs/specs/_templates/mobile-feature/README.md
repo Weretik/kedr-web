@@ -24,6 +24,8 @@ Route-файли в `apps/mobile/src/app` лишаються тонкими Expo
 вони імпортують public screen із `feature` і не викликають API, storage або
 business logic. `@mobile/core/shell` володіє providers, theme, store і shell.
 
+Для server-driven screen плануйте thin `screens/*` adapter, controller hook для RTK Query/debounce/pagination, pure reducer у `feature/src/state/`, а query controls і results/state views — окремими feature components. Не зберігайте effects, query hooks або умовний рендеринг loading/error/list у screen-файлі.
+
 ## Робота з API-контрактом
 
 Якщо feature читає або змінює дані через HTTP, до створення `plan.md` виконайте

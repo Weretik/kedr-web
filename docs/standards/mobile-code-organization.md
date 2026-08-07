@@ -13,6 +13,7 @@
 
 - Один файл, screen і компонент має одну цілісну відповідальність.
 - Screen оркеструє feature; список, card, toolbar і complex `renderItem` розділяйте за незалежною відповідальністю.
+- Для screen із server query розділяйте: thin `screens/*` adapter, `hooks/use-*-controller.ts` для RTK Query/debounce/pagination, pure reducer у `state/`, `components/*-query-controls.tsx` для controls і `components/*-results.tsx` для loading/error/empty/list. Screen не містить effects, reducer, transport hooks або state conditionals.
 - Не створюйте `common`, `misc`, `helpers`, `utils` або `types` без доменного призначення.
 - Server data, loading і API errors належать RTK Query; не дублюйте їх у reducer.
 - Ізолюйте platform APIs: NetInfo — у connectivity adapter, SecureStore — у відповідному storage/auth adapter.

@@ -5,7 +5,7 @@
 - Видимі рядки, accessible names і feature specs пишіть українською.
 - Використовуйте React Native Paper для складних controls і стандартні React Native components для простого layout.
 - Theme, colors, typography та spacing належать централізованій Paper theme; feature не створює локальні design tokens або providers.
-- Для списків використовуйте `FlatList` і mobile cards; не переносіть desktop Admin tables на mobile screen.
+- Перед вибором готового UI-компонента, списку, жесту або device API звіртеся з [каталогом UI та platform-можливостей](../architecture/mobile/ui-capabilities.md). Для нових довгих списків використовуйте `@shopify/flash-list`; не переносіть desktop Admin tables на mobile screen.
 
 ## States and accessibility
 

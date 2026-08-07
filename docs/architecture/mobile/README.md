@@ -45,6 +45,7 @@ libs/mobile/
 ## Карта документів
 
 - [Технологічний стек і межі відповідальності](technology-stack.md)
+- [Каталог UI та platform-можливостей](ui-capabilities.md)
 - [Застосунок і маршрутизація](application.md)
 - [Домени та структура бібліотек](domains.md)
 - [Правила залежностей](dependencies.md)
