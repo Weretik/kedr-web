@@ -5,6 +5,21 @@ import CatalogRoute from '../app/(tabs)/catalog';
 import StartRoute from '../app/(tabs)/index';
 import ProfileRoute from '../app/(tabs)/profile';
 
+jest.mock('@mobile/catalog/feature', () => ({
+  CatalogScreen: () => {
+    const { Text: MockText } = jest.requireActual('react-native');
+
+    return <MockText accessibilityRole="header">Каталог</MockText>;
+  },
+}));
+
+jest.mock('expo-router', () => {
+  const Tabs = () => null;
+  Tabs.Screen = () => null;
+
+  return { Tabs };
+});
+
 describe('StartRoute', () => {
   it('renders the home tab placeholder', async () => {
     const { getByRole, getByText } = render(
