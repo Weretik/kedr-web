@@ -10,7 +10,9 @@
 ## Technical context
 
 - **Stack:** Expo, React Native, Expo Router, React Native Paper, RTK Query, Nx.
-- **Testing:** <точні Jest / RNTL / device targets або n/a з причиною>.
+- **Test targets:** <точні `npx nx lint mobile`, `npx nx test mobile`, library test/export/device commands; кожен відсутній target = `n/a` + readiness task>.
+- **E2E decision:** <конкретний Maestro scenario + target; або `n/a` з причиною; або readiness blocker, owner і delivery condition>.
+- **Security/access context:** <review level, current public/auth state, route/action access, 401/403, PII/XSS/files/export/destructive scope або `n/a` з причиною>.
 - **Target platforms:** Android | iOS | web.
 - **Constraints:** <offline, safe area, performance, deep-link або n/a>.
 
@@ -36,6 +38,6 @@ libs/mobile/<domain>/
 
 ## Complexity tracking
 
-| Відхилення | Чому потрібне | Чому простіший варіант не підходить |
-| --- | --- | --- |
-| <за потреби> | <причина> | <причина> |
+| Відхилення   | Чому потрібне | Чому простіший варіант не підходить |
+| ------------ | ------------- | ----------------------------------- |
+| <за потреби> | <причина>     | <причина>                           |

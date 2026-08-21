@@ -10,7 +10,9 @@
 ## Technical context
 
 - **Stack:** React, TypeScript, RTK Query, MUI, Nx.
-- **Testing:** <точні Jest / RTL / e2e targets або n/a з причиною>.
+- **Test targets:** <точні `npx nx lint ...`, `vite:test`, `typecheck`, `build` commands; кожен відсутній target = `n/a` + readiness task>.
+- **E2E decision:** <конкретний Playwright scenario + target; або `n/a` з причиною; або readiness blocker, owner і delivery condition>.
+- **Security/access context:** <review level, session/roles, route/action access, 401/403, PII/XSS/files/export/destructive scope або `n/a` з причиною>.
 - **Performance / constraints:** <pagination, rendering, permissions або n/a>.
 
 ## Architecture and source paths
@@ -34,6 +36,6 @@ libs/admin/<domain>/
 
 ## Complexity tracking
 
-| Відхилення | Чому потрібне | Чому простіший варіант не підходить |
-| --- | --- | --- |
-| <за потреби> | <причина> | <причина> |
+| Відхилення   | Чому потрібне | Чому простіший варіант не підходить |
+| ------------ | ------------- | ----------------------------------- |
+| <за потреби> | <причина>     | <причина>                           |

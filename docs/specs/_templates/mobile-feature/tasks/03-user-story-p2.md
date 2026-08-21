@@ -9,6 +9,8 @@
 
 - [ ] TXXX [P] [US2] <незалежна задача з точним шляхом>.
 - [ ] TXXX [US2] <задача, що залежить від попередньої>.
+- [ ] TXXX [US2] Додати конкретний test із `spec.md` у `<точний test path>` або виконати задокументоване `n/a` з обґрунтуванням.
+- [ ] TXXX [US2] Перевірити застосовні security/access scenarios у `<точний test path або device/manual evidence>`.
 
 ## Checkpoint
 

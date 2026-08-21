@@ -9,7 +9,8 @@
 - [ ] T010 [US1] Додати presentational UI у `libs/mobile/<domain>/ui/src/...`.
 - [ ] T011 [US1] Скомпонувати screen у `libs/mobile/<domain>/feature/src/...`.
 - [ ] T012 [US1] Додати thin route adapter у `apps/mobile/src/app/...`.
-- [ ] T013 [US1] Додати test у `<точний test path>`, якщо він потрібен у spec.
+- [ ] T013 [US1] Додати конкретний test із `spec.md` у `<точний test path>` або виконати задокументоване `n/a` з обґрунтуванням.
+- [ ] T014 [US1] Перевірити security/access scenarios із `spec.md` (route/action access, 401/403 і застосовні PII/files/export/destructive cases) у `<точний test path або device/manual evidence>`.
 
 ## Checkpoint
 

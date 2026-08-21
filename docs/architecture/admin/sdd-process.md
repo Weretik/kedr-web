@@ -11,6 +11,10 @@
 [шаблон Admin feature](../../specs/_templates/admin-feature/README.md). Головна
 специфікація описує користувацький результат і план фаз, а кожна фаза має
 окремий файл у `docs/specs/admin/<domain>/<NNN>-<feature-slug>/tasks/`.
+Перед плануванням застосуйте [Testing rules](../../standards/testing-rules.md) і
+[Security rules](../../standards/security-rules.md): у spec не допускається
+«test якщо потрібен» — для кожного рівня має бути конкретний target/test або
+`n/a` з обґрунтуванням, а рішення щодо e2e є обов'язковим.
 
 ```md
 # <Назва можливості>
@@ -34,6 +38,17 @@
 - Endpoint / вхідні та вихідні моделі:
 - Права доступу:
 - Стани: loading, empty, error, success:
+
+## Security and access
+
+- Security review: n/a | basic | elevated; обґрунтування:
+- Authentication, roles/permissions, route і action access:
+- 401/403, session expiry, PII/files/export/destructive operation:
+
+## Test strategy
+
+- Unit / integration / component-feature: конкретний test і Nx target або `n/a` з причиною:
+- E2E: конкретний сценарій і target, або `n/a` з причиною / readiness blocker:
 
 ## Структура реалізації
 
@@ -71,6 +86,7 @@
   накопичується в корені `src` або одному файлі-«комбайні»;
 - код розміщений у коректних межах і проходить Nx module boundaries;
 - додано або оновлено релевантні тести;
+- рішення щодо e2e й security/access scenarios зафіксовано та виконано;
 - запущено відповідні lint, test і build цілі;
 - у специфікації зазначено ручні перевірки та ризики, що залишилися.
 

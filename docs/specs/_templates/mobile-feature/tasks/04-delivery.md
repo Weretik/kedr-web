@@ -3,6 +3,8 @@
 - [ ] TXXX Оновити документацію, navigation contract і public exports.
 - [ ] TXXX Виконати команди з `quickstart.md` і записати результат.
 - [ ] TXXX Перевірити всі user stories, edge cases, accessibility та device acceptance criteria.
+- [ ] TXXX Виконати рішення щодо e2e: запустити `<точний target>` або закрити зафіксоване `n/a` / readiness blocker evidence.
+- [ ] TXXX Зафіксувати результат security review і всі security/access scenarios, включно з residual risk та backend/infra dependencies для elevated review.
 
 ## Checkpoint
 
