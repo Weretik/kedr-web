@@ -2,12 +2,15 @@ import { AxiosError } from 'axios';
 
 import { toApiError } from './api-error';
 
+import type { InternalAxiosRequestConfig } from 'axios';
+
 function createAxiosError(status?: number, data?: unknown, code?: string): AxiosError {
-  const error = new AxiosError('Request failed', code);
+  const config = { headers: {} } as InternalAxiosRequestConfig;
+  const error = new AxiosError('Request failed', code, config);
 
   if (status) {
     error.response = {
-      config: error.config,
+      config,
       data,
       headers: {},
       status,

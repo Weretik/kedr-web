@@ -19,7 +19,7 @@ const createNetInfoState = (
     isInternetReachable: true,
     type: 'wifi',
     ...overrides,
-  }) as NetInfoState;
+  }) as unknown as NetInfoState;
 
 describe('toConnectivityState', () => {
   it('treats a connected network with reachable internet as online', () => {

@@ -20,6 +20,13 @@
         "command": "jest --config jest.config.cjs",
         "cwd": "apps/mobile"
       }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p tsconfig.app.json",
+        "cwd": "apps/mobile"
+      }
     }
   }
 }

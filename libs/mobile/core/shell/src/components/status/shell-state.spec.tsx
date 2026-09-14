@@ -1,7 +1,7 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
-import { AppProviders } from '../../providers/app-providers';
 import { ShellState } from './shell-state';
+import { AppProviders } from '../../providers/app-providers';
 
 describe('ShellState', () => {
   it('renders an accessible empty state', async () => {

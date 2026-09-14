@@ -20,7 +20,7 @@ export function CatalogCategorySelector({
 }: Readonly<CatalogCategorySelectorProps>) {
   const theme = useTheme();
   const [path, setPath] = useState<readonly CatalogCategoryOption[]>([]);
-  const currentCategories = path.at(-1)?.children ?? categories;
+  const currentCategories = path[path.length - 1]?.children ?? categories;
   const selectedPath = useMemo(
     () => findCategoryPath(categories, selectedCategoryId),
     [categories, selectedCategoryId],
@@ -52,7 +52,7 @@ export function CatalogCategorySelector({
           </Pressable>
         </View>
       ) : null}
-      <FlashList
+      <FlashList<CatalogCategoryOption>
         data={currentCategories}
         keyExtractor={(category) => String(category.id)}
         nestedScrollEnabled

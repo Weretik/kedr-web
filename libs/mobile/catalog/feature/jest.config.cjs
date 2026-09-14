@@ -13,7 +13,8 @@ module.exports = {
     '^@mobile/core/shell$': '<rootDir>/../../core/shell/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/../ui/src/test-mocks/flash-list.tsx',
     '^react-native-actions-sheet$': '<rootDir>/../ui/src/test-mocks/react-native-actions-sheet.tsx',
-    '^react-native-tree-multi-select$': '<rootDir>/../ui/src/test-mocks/react-native-tree-multi-select.tsx',
+    '^react-native-tree-multi-select$':
+      '<rootDir>/../ui/src/test-mocks/react-native-tree-multi-select.tsx',
     '^@react-native-async-storage/async-storage$':
       '<rootDir>/../../core/shell/src/test-mocks/async-storage.ts',
     '^react-native-paper$': '<rootDir>/../../core/shell/src/test-mocks/react-native-paper.tsx',

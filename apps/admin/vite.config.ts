@@ -30,5 +30,18 @@ export default defineConfig(({ mode }) => {
       outDir: '../../dist/apps/admin',
       emptyOutDir: true,
     },
+    test: {
+      name: 'admin',
+      watch: false,
+      globals: true,
+      environment: 'jsdom',
+      include: ['src/**/*.{test,spec}.{ts,tsx}'],
+      setupFiles: ['./src/test-setup.ts'],
+      coverage: {
+        provider: 'v8' as const,
+        reportsDirectory: '../../coverage/apps/admin',
+        reporter: ['text', 'html', 'lcov'],
+      },
+    },
   };
 });

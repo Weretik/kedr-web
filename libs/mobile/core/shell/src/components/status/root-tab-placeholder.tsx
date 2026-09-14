@@ -1,5 +1,5 @@
-import { AppScreen } from '../layout/app-screen';
 import { ShellState } from './shell-state';
+import { AppScreen } from '../layout/app-screen';
 
 export interface RootTabPlaceholderProps {
   description: string;

@@ -1,5 +1,7 @@
 import { catalogQueryReducer, initialCatalogQueryState } from './catalog-query-reducer';
 
+import type { CatalogQueryState } from './catalog-query-reducer';
+
 describe('catalogQueryReducer', () => {
   it('resets pagination atomically when filters or sort change', () => {
     const pageThree = {
@@ -17,7 +19,7 @@ describe('catalogQueryReducer', () => {
   });
 
   it('keeps search and category when global filter reset removes only filter fields', () => {
-    const state = {
+    const state: CatalogQueryState = {
       ...initialCatalogQueryState,
       query: {
         filters: { categoryId: 3, inStock: true, priceFrom: 10 },
@@ -55,7 +57,7 @@ describe('catalogQueryReducer', () => {
   });
 
   it('applies a category draft and removes only the chosen query values', () => {
-    const initial = {
+    const initial: CatalogQueryState = {
       ...initialCatalogQueryState,
       query: {
         filters: {

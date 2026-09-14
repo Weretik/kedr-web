@@ -1,3 +1,4 @@
+import { ThemeProvider } from 'expo-router/react-navigation';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
@@ -6,17 +7,16 @@ import {
   useColorScheme,
   type ColorSchemeName,
 } from 'react-native';
-import { ThemeProvider } from 'expo-router/react-navigation';
 import { PaperProvider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { themePreferenceStorage, type ThemePreference } from '../storage/theme-preference-storage';
+import { type AppDispatch, type AppState } from '../state/app-store';
 import {
   selectResolvedTheme,
   selectThemePreference,
   setThemePreference,
 } from '../state/theme-preference-state';
-import { type AppDispatch, type AppState } from '../state/app-store';
+import { themePreferenceStorage, type ThemePreference } from '../storage/theme-preference-storage';
 import { createMobileNavigationTheme, mobileDarkTheme, mobileLightTheme } from '../theme/app-theme';
 
 export interface ThemePreferenceValue {

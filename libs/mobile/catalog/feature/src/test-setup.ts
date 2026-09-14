@@ -6,7 +6,7 @@ jest.mock('expo/src/winter/ImportMetaRegistry', () => ({
   },
 }));
 
-const defineGlobal = (name, value) => {
+const defineGlobal = (name: string, value: unknown) => {
   try {
     Object.defineProperty(global, name, {
       configurable: true,

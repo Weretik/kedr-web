@@ -3,6 +3,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import TabsLayout from '../app/(tabs)/_layout';
 
+import type { ReactNode } from 'react';
+
 const mockEmit = jest.fn(() => ({ defaultPrevented: false }));
 const mockNavigate = jest.fn();
 
@@ -26,8 +28,20 @@ jest.mock('expo-router', () => {
     ],
   };
 
-  function Tabs({ tabBar }) {
-    return <View>{tabBar({ descriptors, navigation: { emit: mockEmit, navigate: mockNavigate }, state })}</View>;
+  function Tabs({
+    tabBar,
+  }: {
+    tabBar: (props: {
+      descriptors: typeof descriptors;
+      navigation: { emit: typeof mockEmit; navigate: typeof mockNavigate };
+      state: typeof state;
+    }) => ReactNode;
+  }) {
+    return (
+      <View>
+        {tabBar({ descriptors, navigation: { emit: mockEmit, navigate: mockNavigate }, state })}
+      </View>
+    );
   }
 
   Tabs.Screen = () => null;
