@@ -1,58 +1,18 @@
-# Frontend SDD-специфікації
+# Індекс frontend feature-специфікацій
 
-Специфікація описує одну нетривіальну frontend-feature до початку реалізації.
-Вона фіксує користувацький результат, UI-стани, API-контракти, межі бібліотек і
-перевірки. Код, контракти й специфікація оновлюються в одному change set.
+## Admin React
 
-## Розміщення
+- [Міграція Admin template](admin/migration/template-migration.md)
+- [Список товарів Admin](admin/products/product-list-data-grid.md)
 
-Створюйте нову специфікацію у домені відповідного клієнта:
+## Mobile React Native
 
-```text
-docs/specs/
-├── admin/<domain>/<NNN>-<feature-slug>/
-├── mobile/<domain>/<NNN>-<feature-slug>/
-└── storefront/<domain>/<NNN>-<feature-slug>/
-```
+- [Foundation](mobile/foundation/mobile-application-foundation.md)
+- [Catalog specifications](mobile/catalog/README.md)
+- [Shell specifications](mobile/shell/README.md)
 
-`<NNN>` — послідовний номер у домені, наприклад `001-product-catalog`. Для
-невеликої зміни достатньо одного Markdown-файлу; папкова специфікація потрібна,
-коли feature має кілька незалежно reviewable фаз, UI-сценарії або зовнішній
-контракт.
+## Storefront Angular
 
-## Шаблон feature
+Feature-специфікацій у цьому каталозі ще немає.
 
-Заповнюйте [шаблон Admin feature](./_templates/admin-feature/) або [шаблон Mobile
-feature](./_templates/mobile-feature/) у порядку `spec.md → plan.md → tasks.md`.
-`research.md`, `data-model.md` і `contracts/` створюються лише коли вони
-потрібні feature.
-
-Для feature з HTTP-інтеграцією перед плануванням прочитайте
-[frontend-реєстр API-контрактів](../contracts/README.md). Шаблон Mobile feature
-визначає, як пов'язати source OpenAPI, спільний реєстр і feature-local contract
-без дублювання DTO.
-
-Для поетапного запуску реалізації через AI використовуйте
-[регламент поетапного виконання задач AI](./_templates/ai-task-workflow/).
-Його `README.md` містить короткий запит, а детальні правила розділені за етапами
-роботи. Регламент обмежує AI однією фазою та вимагає явної команди перед
-переходом далі.
-
-```text
-<NNN>-<feature-slug>/
-├── spec.md                   # user stories, requirements, acceptance scenarios
-├── plan.md                   # technical context і реальні source paths
-├── research.md               # рішення відкритих технічних питань
-├── data-model.md             # domain/view models, DTO boundary та інваріанти
-├── quickstart.md             # команди перевірки та ручні сценарії
-├── contracts/                # API і navigation contracts
-├── tasks/                    # dependency-ordered phases by user story
-└── checklists/               # requirements і delivery checklists
-```
-
-Для Mobile route-файли в `apps/mobile/src/app` залишаються тонкими адаптерами
-Expo Router. Domain-код розміщується в `libs/mobile/<domain>/` за межами
-`model`, `data-access`, `ui` і `feature`.
-
-`_templates/git/git-commit-batching.md` — окремий шаблон для планування комітів;
-він не належить до специфікації feature.
+Нову специфікацію створюйте за [канонічними шаблонами](./_templates/README.md).

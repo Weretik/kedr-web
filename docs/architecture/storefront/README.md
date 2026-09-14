@@ -16,4 +16,4 @@
 - [Зафіксовані рішення](decisions.md)
 - [SDD-процес Storefront](sdd-process.md)
 
-Повна карта фронтенд-архітектури: [README](../README.md).
+Повна карта фронтенд-архітектури: [README](../../README.md).

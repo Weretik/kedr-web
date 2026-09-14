@@ -1,19 +1,18 @@
-# SDD-процес Mobile
+# SDD process for Mobile React Native
 
-Для нетривіальної Mobile feature спочатку створюється специфікація в
-`docs/specs/mobile/<domain>/<NNN>-<feature-slug>/` за [шаблоном Mobile
-feature](../../specs/_templates/mobile-feature/README.md). Для невеликої зміни допустимий один
-Markdown-файл у папці домену.
+Створюй нову feature у `docs/specs/mobile/<domain>/<NNN>-<feature-slug>/` за
+[канонічним scenario-first template](../../specs/_templates/README.md).
+Використовуй
+[React Native variant](../../specs/_templates/feature/variants/react-native/README.md);
+visual/interaction документи входять у цей самий варіант.
 
-Специфікація містить: мету, межі, маршрути Expo Router, API-контракт, стани
-`loading`/`empty`/`error`/`offline`, зміни бібліотек, критерії приймання, команди
-перевірки та ручний тест на пристрої. Route-файли у `apps/mobile/src/app`
-лишаються тонкими адаптерами до public API `libs/mobile/<domain>/feature`.
+Mobile-specific planning має назвати реальні Nx projects у `apps/mobile` і
+`libs/mobile`, тонкі Expo Router routes, межі `feature/ui/data-access/model`,
+safe area/keyboard/device risks, deep links, permissions, storage, native
+adapters та Expo Go/development-build constraint. Сценарії залишаються мовою
+observable behavior; ці технічні деталі належать у design і task-файли.
 
-Реалізація починається після погодження мети, меж і критеріїв приймання. Зміну
-погоджених меж фіксують у розділі «Історія змін» специфікації.
-
-Перед плануванням застосуйте [Testing rules](../../standards/testing-rules.md) і
-[Security rules](../../standards/security-rules.md). Spec містить конкретний
-test/target або `n/a` з обґрунтуванням для кожного рівня, обов'язкове рішення
-щодо e2e та security/access context; формулювання «test якщо потрібен» заборонене.
+Test level та команди обирай за
+[testing rules](../../standards/testing-rules.md), а device-specific перевірки
+узгоджуй зі [стратегією Mobile testing](testing.md). Існуючі Mobile
+специфікації мігруй поступово без зміни завершених ID чи evidence.

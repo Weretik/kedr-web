@@ -1,98 +1,18 @@
-# SDD-процес Admin
+# SDD process for Admin React
 
-## Процес
+Створюй нову feature у `docs/specs/admin/<domain>/<NNN>-<feature-slug>/` за
+[канонічним scenario-first template](../../specs/_templates/README.md).
+Використовуй
+[React variant](../../specs/_templates/feature/variants/react/README.md).
 
-Для кожної задачі створюється Markdown-специфікація в `docs/specs/admin/...`.
-Реалізація починається після погодження розділів «Мета», «Межі» та «Критерії
-приймання». Зміну специфікації після початку розробки фіксують унизу документа з
-датою та причиною.
+Admin-specific planning має назвати реальні Nx projects у `apps/admin` і
+`libs/admin`, межі `feature/ui/data-access/model`, route impact, RTK Query
+boundary, browser behavior та MUI/accessibility risks. Сценарії описують
+поведінку користувача без цих технічних назв; технічні деталі належать у design
+і `TS-*`/`EN-*`.
 
-Для великої feature з кількома залежними implementation-фазами використовується
-[шаблон Admin feature](../../specs/_templates/admin-feature/README.md). Головна
-специфікація описує користувацький результат і план фаз, а кожна фаза має
-окремий файл у `docs/specs/admin/<domain>/<NNN>-<feature-slug>/tasks/`.
-Перед плануванням застосуйте [Testing rules](../../standards/testing-rules.md) і
-[Security rules](../../standards/security-rules.md): у spec не допускається
-«test якщо потрібен» — для кожного рівня має бути конкретний target/test або
-`n/a` з обґрунтуванням, а рішення щодо e2e є обов'язковим.
-
-```md
-# <Назва можливості>
-
-## Мета
-
-Як <роль>, я хочу <дію>, щоб <результат>.
-
-## Межі
-
-- У межах задачі:
-- Поза межами задачі:
-- Задіяні бібліотеки:
-
-## Сценарії
-
-1. Given ... When ... Then ...
-
-## Контракти й дані
-
-- Endpoint / вхідні та вихідні моделі:
-- Права доступу:
-- Стани: loading, empty, error, success:
-
-## Security and access
-
-- Security review: n/a | basic | elevated; обґрунтування:
-- Authentication, roles/permissions, route і action access:
-- 401/403, session expiry, PII/files/export/destructive operation:
-
-## Test strategy
-
-- Unit / integration / component-feature: конкретний test і Nx target або `n/a` з причиною:
-- E2E: конкретний сценарій і target, або `n/a` з причиною / readiness blocker:
-
-## Структура реалізації
-
-- Задіяні libraries і їхні відповідальності:
-- Нові/змінені папки та файли, згруповані за роллю:
-- Public API / `src/index.ts` exports:
-- Чому файл або компонент лишається цілісним чи розділяється:
-
-## UI та маршрутизація
-
-- Route:
-- Компоненти:
-
-## Критерії приймання
-
-- [ ]
-
-## Перевірка
-
-- Unit:
-- Integration / e2e:
-- Ручна перевірка:
-
-## Відкриті питання
-
-- [ ]
-```
-
-## Критерії готовності
-
-Задача завершена, коли:
-
-- специфікація містить перевірювані критерії приймання;
-- структура реалізації описує межі відповідальностей; внутрішній код не
-  накопичується в корені `src` або одному файлі-«комбайні»;
-- код розміщений у коректних межах і проходить Nx module boundaries;
-- додано або оновлено релевантні тести;
-- рішення щодо e2e й security/access scenarios зафіксовано та виконано;
-- запущено відповідні lint, test і build цілі;
-- у специфікації зазначено ручні перевірки та ризики, що залишилися.
-
-## Відкриті архітектурні рішення
-
-1. Бібліотека форм і схема валідації.
-2. Єдиний формат помилок API та сповіщень.
-3. Стратегія прав доступу на рівні маршрутів і дій.
-4. Правила i18n для Admin.
+Test level та команди обирай за
+[testing rules](../../standards/testing-rules.md), readiness і completion — за
+[delivery rules](../../standards/delivery-rules.md). Існуючі Admin
+специфікації мігруй поступово без перенумерації завершених фаз чи переписування
+evidence.

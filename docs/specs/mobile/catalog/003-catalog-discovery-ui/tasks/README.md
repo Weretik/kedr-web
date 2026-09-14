@@ -20,4 +20,7 @@
 | [15 — Search sheet and chip polish](15-search-sheet-and-chip-polish.md) | Android keyboard-safe search and themed aligned Paper chips | planned |
 | [16 — Delivery](16-delivery.md)                                         | Єдиний final evidence після всіх коригувань                 | planned |
 
-Наступна фаза запускається лише окремою командою користувача за регламентом `ai-task-workflow`.
+Для нового дозволеного scope застосовується
+[`ai-feature-workflow`](../../../../_templates/ai-feature-workflow/README.md):
+AI сам переходить між усіма ready task-файлами в межах дозволеної feature,
+фази або набору сценаріїв.

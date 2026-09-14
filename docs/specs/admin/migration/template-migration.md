@@ -124,12 +124,12 @@
 
 ### Детализация фаз
 
-- [Фаза 0 — фиксация референса](template-migration-phase-0.md)
-- [Фаза 1 — основа темы](template-migration-phase-1.md)
-- [Фаза 1a — структура темы](template-migration-phase-1a-theme-structure.md)
-- [Фаза 2 — shell и навигация](template-migration-phase-2.md)
-- [Фаза 3 — візуальні примітиви сторінок](template-migration-phase-3.md)
-- [Фаза 4 — dashboard](template-migration-phase-4.md)
+- [Фаза 0 — фиксация референса](phases/template-migration-phase-0.md)
+- [Фаза 1 — основа темы](phases/template-migration-phase-1.md)
+- [Фаза 1a — структура темы](phases/template-migration-phase-1a-theme-structure.md)
+- [Фаза 2 — shell и навигация](phases/template-migration-phase-2.md)
+- [Фаза 3 — візуальні примітиви сторінок](phases/template-migration-phase-3.md)
+- [Фаза 4 — dashboard](phases/template-migration-phase-4.md)
 - Для фаз 5–6 отдельные спецификации создаются перед началом реализации.
 
 ### Фаза 0 — фиксация референса
