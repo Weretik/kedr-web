@@ -1,90 +1,92 @@
 # Testing rules
 
-Ці правила застосовуються до Admin, Mobile і Storefront. Точні проєкти та
-targets визначаються `project.json`/`npx nx show project <project>`, а не
-припущенням за назвою папки.
+Це єдине джерело стабільних правил вибору frontend-тестів і TDD. Feature та
+task-файли посилаються на нього й містять лише конкретний test level, команди
+та evidence.
 
-## Наявний стек і межі
+## Фактичний tooling репозиторію
 
-| Scope      | Наявні інструменти та targets                                                                                                                                                                                                                          |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Admin      | React, React Testing Library, Vitest. Admin libraries з `tsconfig.spec.json` мають Nx target `vite:test` (наприклад, `admin-products-feature`); сам `admin` має `lint`, `typecheck` і `build`, але не має test target.                                 |
-| Mobile     | Expo/React Native, Jest (`jest-expo`) і React Native Testing Library. Є app target `mobile:test` та Jest targets для частини libraries (наприклад, `mobile-catalog-feature`).                                                                          |
-| Storefront | Angular; lint і build targets існують для `storefront`. У поточній конфігурації окремого Storefront test target не виявлено.                                                                                                                           |
-| E2E        | `@playwright/test` і Nx Playwright plugin встановлені, але e2e project, Playwright config і запущена інфраструктура відсутні. Для Mobile в архітектурі визначено Maestro після першого критичного наскрізного сценарію, але Maestro ще не підключений. |
+| Scope               | Tooling і доступні targets                                                                                                                                                                                                                                                         |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Admin React         | Vitest 4, React Testing Library, `user-event`, jsdom і `@testing-library/jest-dom`. `admin:vite:test` перевіряє component/browser integration harness; `admin-shared-api-client:vite:test` виконує unit tests. `admin-e2e:e2e` запускає окремий Playwright Chromium project.       |
+| Mobile React Native | Jest 29, `jest-expo` 56 і React Native Testing Library 13. `npm run test:mobile` послідовно запускає дев'ять Nx targets для app та libraries. Наявні unit, focused integration, storage/native boundary і component tests; app suite є infrastructure smoke для Expo Router/RN UI. |
+| Storefront Angular  | `storefront:lint` і `storefront:build`; test target і тестові файли не виявлені.                                                                                                                                                                                                   |
+| E2E                 | Web: Playwright 1.63, project `admin-e2e`, лише Chromium. Mobile: Detox, Maestro та Appium відсутні; mobile E2E потребує окремого `EN-*`, вибору device/build strategy і доступного Android/iOS середовища.                                                                        |
 
-Деталі Mobile доповнює [стратегія тестування Mobile](../architecture/mobile/testing.md).
+Package manager — npm, зафіксований `package-lock.json`. Репозиторій вимагає
+Node 24.20.x через `.nvmrc`, `.node-version` та `engines`. Точні targets завжди перевіряй через
+`npx nx show project <project> --json`.
 
-## Вибір рівня за ризиком
+Відсутній інструмент можна рекомендувати в `EN-*`. Не додавай його до
+dependencies і не створюй конфігурацію без потреби конкретних сценаріїв та
+дозволеного scope.
 
-- **Unit** — чисті domain rules, Zod validation, DTO mapper, normalizer помилок,
-  reducer, storage adapter. Це базовий рівень для детермінованої логіки.
-- **Integration** — RTK Query endpoint разом з Axios base query/transport,
-  interceptor, auth refresh, API error mapping, router guard або взаємодія
-  кількох library boundaries. Використовуйте контрольований mock transport, а
-  не мережу.
-- **Component/feature** — користувацька дія, accessibility role/name,
-  navigation adapter, форма та `loading`/`empty`/`error`/`offline`/`forbidden`
-  states. Для Admin це RTL + Vitest; для Mobile — RNTL + Jest.
-- **E2E** — критичний шлях через запущений застосунок, реальний router і
-  інтегроване середовище. Не замінюйте ним unit або component тести.
+## Вибір test level за ризиком
 
-Обирайте найнижчий рівень, який достовірно ловить ризик. Підвищуйте рівень, коли
-зміна перетинає transport, providers, route/access control, залежні бібліотеки
-або незворотну дію. Один сценарій може мати unit тест для правила і feature/e2e
-перевірку для інтеграції.
+- **Unit** — pure functions, validation, mapper-и, normalizers, reducers та
+  детерміновані бізнес-правила.
+- **Focused integration** — hooks, stores, providers, кешування, data fetching,
+  transport/error mapping і взаємодія кількох модулів із контрольованою
+  зовнішньою межею.
+- **Component** — React/React Native UI, user interactions, accessibility та
+  видимі `loading`/`empty`/`error`/`offline`/`forbidden` стани.
+- **Integration** — navigation, deep links, permissions, storage, native і
+  browser adapters, API-контракт на межі клієнта.
+- **E2E** — лише критичні user journeys через запущений застосунок та
+  інтегроване середовище.
 
-## Якість тестів, моків і даних
+Обирай найнижчий рівень, що доводить конкретний ризик. Не перетворюй кожен
+`SC-*` на E2E і не повторюй повний сценарій на всіх рівнях. Кілька focused
+тестів можуть підтримувати один сценарій, якщо кожен ловить окремий ризик.
 
-- Тест перевіряє observable behavior, а не приватну реалізацію; назва описує
-  ризик або сценарій.
-- Дані є мінімальними, читабельними і детермінованими. Не використовуйте
-  production PII, токени, cookies, паролі або повні відповіді API з логів.
-- Mock має лишатися на зовнішній межі (Axios/HTTP, native module, clock), бути
-  типізованим і відтворювати лише потрібний контракт. Не мокуйте модуль, який
-  є предметом тесту; не приховуйте його error path.
-- Для API перевіряйте request shape, нормалізацію 400/401/403/5xx та безпечний
-  user-facing state там, де це змінюється. Snapshot не є заміною поведінкового
-  тесту.
-- Кожен тест очищує стан, таймери й mocks; він не залежить від порядку запуску,
-  зовнішньої мережі або локальних секретів.
+## Red → Green → Refactor → Regression
 
-## Коли E2E обов'язковий
+Для кожної нової або зміненої тестованої поведінки:
 
-E2E потрібен для нового або істотно зміненого критичного бізнес-шляху, що
-поєднує route і API/auth: login/session renewal, доступ до захищеного ресурсу,
-checkout/payment, створення або підтвердження замовлення, фінансові зміни,
-масовий чи destructive workflow. Він також обов'язковий після зміни shared
-auth/route guard/transport, якщо ця зміна впливає на критичний шлях.
+1. **Red** — додай найменший поведінковий тест, запусти його й зафіксуй
+   очікуваний failure через відсутню або неправильну поведінку.
+2. **Green** — реалізуй найменшу повну зміну, яка робить focused test зеленим.
+3. **Refactor** — покращ структуру в межах задачі й повторно запусти focused
+   test.
+4. **Regression** — запусти affected suite/targets і запиши результат.
 
-Якщо E2E target або середовище ще не існує, до **першої** такої функціональної
-feature створюється readiness-задача: обрати Playwright (web) або Maestro
-(Mobile згідно з `docs/architecture/mobile/testing.md`), створити Nx e2e
-project/config, стабільні test identities і безпечні test data, спосіб запуску
-app/API та одну smoke-перевірку. До виконання readiness-задачі feature не може
-позначати e2e як виконаний; у spec фіксується blocker і owner. Для feature поза
-цими умовами допускається `E2E: n/a` лише з конкретним обґрунтуванням ризику.
+Compilation error, broken fixture, неправильний mock, missing dependency,
+помилка test setup або unrelated failure не є валідним Red. Спочатку віднови
+працездатний test harness, за потреби окремим `EN-*`, а потім отримай
+behavioral failure.
 
-## Обов'язкові команди та evidence
+## Exceptions для EN-* і documentation work
 
-У `plan.md` і `quickstart.md` наведіть точні проєкти/targets. Запускайте лише
-релевантні змінам команди, але не пропускайте залежний app build або test.
+Red-first може бути непридатним для documentation-only змін, генераторів,
+налаштування test harness або platform prerequisite, до появи якого поведінку
+неможливо спостерігати. Запиши причину, enabled `SC-*`, replacement check і
+результат. Виняток не скасовує фінальну verification.
 
-- Admin: `npx nx lint <admin-project>`, `npx nx vite:test <admin-library>`
-  для library з цим target, `npx nx typecheck <admin-project>` і для app-зміни
-  `npx nx build admin`. Якщо test target відсутній, зафіксуйте `n/a` та
-  readiness-задачу на його додавання до першої feature у цьому scope.
-- Mobile: `npx nx lint mobile`, `npx nx test mobile`; для зміненої library —
-  її `npx nx test <mobile-library>` за наявності target. Для змін, що входять у
-  web deliverable, запускайте `npx nx export mobile`; для native behavior
-  документуйте ручну перевірку на погодженому Android/iOS пристрої. За потреби
-  використовуйте `npx expo-doctor`.
-- Storefront: `npx nx lint storefront` і `npx nx build storefront`; test target
-  наразі `n/a` з readiness-задачею перед першою функціональною Storefront feature.
-- E2E: команда може бути вказана лише після створення відповідного target;
-  сьогодні універсальної команди e2e в репозиторії немає.
+## Evidence
 
-У handoff зазначайте виконані команди й результат. Для невиконаної або failed
-перевірки вкажіть дослівну команду, failing test/step, ключове повідомлення,
-чи failure pre-existing (із доказом) та наступний крок/owner. Не маскуйте
-непов'язані failures і не позначайте їх як passed.
+У `TS-*` зафіксуй назву/шлях тесту, Red failure, Green result, refactor note і
+regression command/result. У `EN-*` — причину винятку та replacement check.
+`traceability.md` містить тільки посилання на ці докази.
+
+Команди залежать від project target:
+
+- Admin unit/component: `npm run test:web`; окремо `npm run test:web:unit` і
+  `npm run test:web:component`;
+- Admin E2E: `npm run test:web:e2e`; Playwright сам запускає `admin:serve`;
+- Admin coverage: `npm run test:web:coverage`; production regression —
+  `npx nx lint admin`, `npx nx typecheck admin`, `npx nx build admin --configuration=production`;
+- Mobile suites: `npm run test:mobile`; coverage — `npm run test:mobile:coverage`;
+- test TypeScript: `npm run typecheck:tests` або platform-specific
+  `typecheck:tests:web` / `typecheck:tests:mobile`;
+- Mobile production regression: `npx nx lint mobile`, `npx nx typecheck mobile`,
+  `npx nx export mobile`; native Android/iOS checks виконуються лише у доступному SDK;
+- Storefront: `npx nx lint storefront`, `npx nx build storefront`; тестове
+  покриття потребує окремого `EN-*`;
+- Mobile E2E: не вказуй executable evidence, доки окремий target фактично не створено.
+
+Infrastructure smoke доводить працездатність runner/setup, але не покриває
+`R-*` або `SC-*`. Acceptance Given/When/Then є вимогою; executable test і його
+результат вказуються окремо у traceability.
+
+Failed або невиконану перевірку записуй з точною командою, failure point,
+впливом поточних змін і наступним кроком. Не позначай її як passed.
