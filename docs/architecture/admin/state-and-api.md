@@ -2,6 +2,13 @@
 
 ## Серверний стан і API
 
+- Transport request/response types походять з generated
+  `@shared/api-contracts`, який будується з versioned OpenAPI snapshot у
+  `docs/contracts/openapi/`.
+- Generated types використовуються лише у session adapter та domain
+  `data-access`; mapper і runtime validation відокремлюють їх від Admin models.
+- Feature та UI не імпортують `@shared/api-contracts`.
+
 - Серверний стан реалізується RTK Query і належить `data-access`.
 - Кореневий Redux store розміщений у `apps/admin/src/app/store.ts`.
 - Спільний API розміщений у `@admin/shared/api-client`; transport-деталі задані в

@@ -2,6 +2,12 @@
 
 ## Серверні дані та HTTP
 
+- API service використовує generated transport types з
+  `@shared/api-contracts`, створеного з versioned OpenAPI snapshot.
+- Generated request/response не стають Storefront contract або domain model:
+  repository mapper повертає типи з `@storefront/contracts` до feature.
+- Feature та UI не імпортують `@shared/api-contracts`.
+
 - HTTP-запити виконуються лише в `data-access` через Angular `HttpClient`.
 - `provideStorefrontHttp` налаштовує `fetch` і ланцюжок interceptor-ів: base URL,
   credentials, CSRF, авторизація, обробка неавторизованої відповіді, логування та

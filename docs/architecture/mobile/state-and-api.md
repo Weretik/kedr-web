@@ -2,6 +2,11 @@
 
 ## Серверний стан і API
 
+- Domain `data-access` може імпортувати generated request/response types з
+  `@shared/api-contracts`, створеного з versioned OpenAPI snapshot.
+- Generated DTO лишаються private у `data-access`; mapper повертає Mobile model,
+  тому feature та UI не залежать від backend schema напряму.
+
 - RTK Query є єдиним owner серверного стану, cache, loading/error-станів та
   інвалідації.
 - Кореневий Redux store розміщується у `@mobile/core/shell`.

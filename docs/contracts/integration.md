@@ -1,12 +1,45 @@
 # Правила frontend-інтеграції
 
-**Backend-довідка (за наявності):** `KedrStore/docs/sdd/contracts/frontend-integration.md`
+**Machine source:** [`openapi/openapi.yaml`](openapi/openapi.yaml), provenance у
+[`openapi/SOURCE.md`](openapi/SOURCE.md)
+
+## Contract pipeline
+
+```text
+KedrStore docs/sdd/contracts
+  -> npm run contracts:sync
+  -> docs/contracts/openapi (versioned snapshot)
+  -> npm run contracts:generate
+  -> @shared/api-contracts
+  -> app data-access mapper
+  -> application/domain model
+```
+
+OpenAPI snapshot є authoritative provider contract у frontend repository.
+`@shared/api-contracts` є machine-generated compile-time representation цього
+snapshot. Сторінки у `docs/contracts/<module>/` описують лише consumer mapping,
+behavior і відомі compatibility constraints; вони не дублюють schemas.
+
+YAML snapshot і generated TypeScript не редагуються вручну. Для оновлення:
+
+1. зафіксувати backend contract у чистому checkout;
+2. виконати `npm run contracts:sync -- <path-to-KedrStore>`;
+3. виконати `npm run contracts:generate` і переглянути semantic diff;
+4. оновити affected mappers, consumer pages і tests;
+5. виконати `npm run contracts:check`.
 
 Ця сторінка є frontend-проекцією спільних backend-конвенцій і authoritative для
 frontend transport implementation. Backend OpenAPI є довідкою, коли доступний;
 його пошук, доступність і актуалізація не належать frontend-власникам.
 
 ## Межа контракту
+
+- Generated request/response types імпортуються лише в transport,
+  session/auth adapters або domain `data-access`.
+- Generated types не експортуються як application/domain models і не
+  імпортуються у feature чи UI.
+- Runtime validation залишається на boundaries, де response приходить як
+  external/unknown data; code generation її не замінює.
 
 - `data-access` володіє private DTO, query serialization, runtime parsing і
   мапінгом у domain model.

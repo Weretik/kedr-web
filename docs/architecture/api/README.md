@@ -33,12 +33,18 @@ feature error state              runtime notifier (network/timeout/5xx)
 
 ## Межі відповідальності
 
-| Шар                  | Відповідальність                                                                                                |
-| -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `shared/api-client`  | Axios instance, interceptors, `axiosBaseQuery`, `baseApi`, API contracts, error normalization, runtime notifier |
-| Domain `data-access` | DTO, runtime validation, mapper і endpoints через `baseApi.injectEndpoints`                                     |
-| `feature`            | Generated RTK Query hooks, loading/error states і ручний `refetch`                                              |
-| `ui` / route         | Не викликають HTTP і не імпортують transport                                                                    |
+`@shared/api-contracts` містить лише CLI-generated OpenAPI types і є спільним
+machine contract для Admin, Mobile та Storefront. Він не містить HTTP client,
+state, runtime validation чи domain models. Кожен client імпортує його тільки на
+transport boundary і виконує власний mapping у domain `data-access`.
+
+| Шар                    | Відповідальність                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------ |
+| `shared/api-contracts` | Generated OpenAPI request, response and schema types                                             |
+| `shared/api-client`    | Axios instance, interceptors, `axiosBaseQuery`, `baseApi`, error normalization, runtime notifier |
+| Domain `data-access`   | DTO, runtime validation, mapper і endpoints через `baseApi.injectEndpoints`                      |
+| `feature`              | Generated RTK Query hooks, loading/error states і ручний `refetch`                               |
+| `ui` / route           | Не викликають HTTP і не імпортують transport                                                     |
 
 Кожен domain endpoint оголошується виключно через public `baseApi.injectEndpoints`.
 Не можна створювати окремий Axios instance, робити deep import у `api-client` або
