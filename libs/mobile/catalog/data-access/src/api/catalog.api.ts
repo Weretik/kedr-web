@@ -1,12 +1,20 @@
 import { baseApi } from '@mobile/shared/api-client';
 
 import { mapAdminCategories } from '../mappers/catalog-categories.mapper';
+import { mapPublicProductDetails } from '../mappers/catalog-product-details.mapper';
 import { mapAdminProductPage } from '../mappers/catalog-products.mapper';
 import { toCatalogProductsParams } from '../queries/catalog-query.mapper';
+import { toProductDetailsRequest } from '../queries/product-details-query.mapper';
 
 import type { AdminCategoryDto } from '../contracts/admin-categories.dto';
 import type { AdminProductPageDto } from '../contracts/admin-products.dto';
-import type { CatalogCategoryOption, CatalogPage, CatalogQuery } from '@mobile/catalog/model';
+import type { PublicProductDetailsDto } from '../contracts/public-product-details.dto';
+import type {
+  CatalogCategoryOption,
+  CatalogPage,
+  CatalogProductDetails,
+  CatalogQuery,
+} from '@mobile/catalog/model';
 
 export const catalogApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -25,7 +33,15 @@ export const catalogApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: AdminProductPageDto) => mapAdminProductPage(response),
     }),
+    getCatalogProductDetails: build.query<CatalogProductDetails, string>({
+      query: toProductDetailsRequest,
+      transformResponse: (response: PublicProductDetailsDto) => mapPublicProductDetails(response),
+    }),
   }),
 });
 
-export const { useGetCatalogCategoriesQuery, useGetCatalogProductsQuery } = catalogApi;
+export const {
+  useGetCatalogCategoriesQuery,
+  useGetCatalogProductDetailsQuery,
+  useGetCatalogProductsQuery,
+} = catalogApi;
