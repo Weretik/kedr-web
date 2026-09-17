@@ -14,8 +14,10 @@ jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require('react-native');
   const descriptors = {
+    'cart-key': { options: { tabBarAccessibilityLabel: 'Кошик', title: 'Кошик' } },
     'catalog-key': { options: { tabBarAccessibilityLabel: 'Каталог', title: 'Каталог' } },
     'index-key': { options: { tabBarAccessibilityLabel: 'Головна', title: 'Головна' } },
+    'orders-key': { options: { tabBarAccessibilityLabel: 'Замовлення', title: 'Замовлення' } },
     'profile-key': { options: { tabBarAccessibilityLabel: 'Профіль', title: 'Профіль' } },
   };
   const state = {
@@ -24,6 +26,8 @@ jest.mock('expo-router', () => {
     routes: [
       { key: 'index-key', name: 'index' },
       { key: 'catalog-key', name: 'catalog' },
+      { key: 'cart-key', name: 'cart' },
+      { key: 'orders-key', name: 'orders' },
       { key: 'profile-key', name: 'profile' },
     ],
   };
@@ -44,7 +48,9 @@ jest.mock('expo-router', () => {
     );
   }
 
-  Tabs.Screen = () => null;
+  Tabs.Screen = function TabsScreen() {
+    return null;
+  };
 
   return { Tabs };
 });
@@ -74,5 +80,10 @@ describe('TabsLayout', () => {
       type: 'tabPress',
     });
     expect(mockNavigate).toHaveBeenCalledWith('catalog');
+
+    fireEvent.press(getByLabelText('Кошик'));
+    expect(mockNavigate).toHaveBeenCalledWith('cart');
+    fireEvent.press(getByLabelText('Замовлення'));
+    expect(mockNavigate).toHaveBeenCalledWith('orders');
   });
 });

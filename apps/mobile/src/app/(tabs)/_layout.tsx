@@ -9,6 +9,11 @@ type Tab = {
 };
 
 const tabs: Record<string, Tab> = {
+  cart: {
+    focusedIcon: 'cart',
+    options: { tabBarAccessibilityLabel: 'Кошик', title: 'Кошик' },
+    unfocusedIcon: 'cart-outline',
+  },
   catalog: {
     focusedIcon: 'view-grid',
     options: { tabBarAccessibilityLabel: 'Каталог', title: 'Каталог' },
@@ -18,6 +23,11 @@ const tabs: Record<string, Tab> = {
     focusedIcon: 'home',
     options: { tabBarAccessibilityLabel: 'Головна', title: 'Головна' },
     unfocusedIcon: 'home-outline',
+  },
+  orders: {
+    focusedIcon: 'receipt-text',
+    options: { tabBarAccessibilityLabel: 'Замовлення', title: 'Замовлення' },
+    unfocusedIcon: 'receipt-text-outline',
   },
   profile: {
     focusedIcon: 'account',
@@ -89,6 +99,8 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" options={tabs.index.options} />
       <Tabs.Screen name="catalog" options={tabs.catalog.options} />
+      <Tabs.Screen name="cart" options={tabs.cart.options} />
+      <Tabs.Screen name="orders" options={tabs.orders.options} />
       <Tabs.Screen name="profile" options={tabs.profile.options} />
     </Tabs>
   );

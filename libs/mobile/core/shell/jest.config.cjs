@@ -9,6 +9,7 @@ module.exports = {
     '^@mobile/core/connectivity$': '<rootDir>/../connectivity/src/index.ts',
     '^@mobile/shared/api-client$': '<rootDir>/../../shared/api-client/src/index.ts',
     '^@mobile/shared/config$': '<rootDir>/../../shared/config/src/index.ts',
+    '^@mobile/orders/model$': '<rootDir>/../../orders/model/src/index.ts',
     '^@react-native-community/netinfo$': '<rootDir>/src/test-mocks/netinfo.ts',
     '^@reduxjs/toolkit$': '<rootDir>/../../../../node_modules/@reduxjs/toolkit/dist/cjs/index.js',
     '^immer$': '<rootDir>/../../../../node_modules/immer/dist/cjs/index.js',
