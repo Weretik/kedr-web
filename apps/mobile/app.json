@@ -15,7 +15,7 @@
     "web": {
       "bundler": "metro"
     },
-    "plugins": ["expo-router", "expo-status-bar", "expo-secure-store", "expo-font"],
+    "plugins": ["expo-router", "expo-status-bar", "expo-secure-store", "expo-font", "expo-image"],
     "extra": {
       "router": {},
       "eas": {

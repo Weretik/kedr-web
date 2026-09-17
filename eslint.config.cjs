@@ -158,12 +158,12 @@ module.exports = [
             // admin can only depend on shared and admin
             {
               sourceTag: 'scope:admin',
-              onlyDependOnLibsWithTags: ['scope:admin'],
+              onlyDependOnLibsWithTags: ['scope:admin', 'scope:shared'],
             },
             // Mobile applications and core libraries stay within Mobile boundaries.
             {
               sourceTag: 'scope:mobile',
-              onlyDependOnLibsWithTags: ['scope:mobile', 'scope:mobile-shared'],
+              onlyDependOnLibsWithTags: ['scope:mobile', 'scope:mobile-shared', 'scope:shared'],
             },
             // Mobile shared infrastructure cannot pull domain or app code.
             {
@@ -185,7 +185,11 @@ module.exports = [
             // Admin core is cross-domain infrastructure and must not depend on domain libraries.
             {
               allSourceTags: ['scope:admin', 'type:core'],
-              onlyDependOnLibsWithTags: ['scope:admin-shared', 'scope:mobile-shared'],
+              onlyDependOnLibsWithTags: [
+                'scope:admin-shared',
+                'scope:mobile-shared',
+                'scope:shared',
+              ],
             },
 
             // Mobile core composes shell-level infrastructure and connectivity.
@@ -208,7 +212,11 @@ module.exports = [
             // Admin data access may depend only on models and shared transport/utilities.
             {
               allSourceTags: ['scope:admin', 'type:data-access'],
-              onlyDependOnLibsWithTags: ['type:model', 'scope:admin-shared'],
+              onlyDependOnLibsWithTags: [
+                'type:model',
+                'type:contracts',
+                'scope:admin-shared',
+              ],
             },
 
             // Admin domain UI remains presentational and can use models plus shared UI/utilities.

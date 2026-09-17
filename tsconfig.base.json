@@ -64,7 +64,19 @@
       "@mobile/catalog/model": ["./libs/mobile/catalog/model/src/index.ts"],
       "@mobile/catalog/data-access": ["./libs/mobile/catalog/data-access/src/index.ts"],
       "@mobile/catalog/ui": ["./libs/mobile/catalog/ui/src/index.ts"],
-      "@mobile/catalog/feature": ["./libs/mobile/catalog/feature/src/index.ts"]
+      "@mobile/catalog/feature": ["./libs/mobile/catalog/feature/src/index.ts"],
+      "@shared/api-contracts": ["./libs/shared/api-contracts/src/index.ts"],
+      "@mobile/cart/model": ["./libs/mobile/cart/model/src/index.ts"],
+      "@mobile/cart/data-access": ["./libs/mobile/cart/data-access/src/index.ts"],
+      "@mobile/cart/feature": ["./libs/mobile/cart/feature/src/index.ts"],
+      "@mobile/cart/ui": ["./libs/mobile/cart/ui/src/index.ts"],
+      "@mobile/orders/model": ["./libs/mobile/orders/model/src/index.ts"],
+      "@mobile/orders/data-access": ["./libs/mobile/orders/data-access/src/index.ts"],
+      "@mobile/orders/ui": ["./libs/mobile/orders/ui/src/index.ts"],
+      "@mobile/orders/feature": ["./libs/mobile/orders/feature/src/index.ts"],
+      "@mobile/customers/model": ["./libs/mobile/customers/model/src/index.ts"],
+      "@mobile/customers/data-access": ["./libs/mobile/customers/data-access/src/index.ts"],
+      "@mobile/customers/ui": ["./libs/mobile/customers/ui/src/index.ts"]
     }
   }
 }
