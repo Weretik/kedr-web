@@ -1,0 +1,9 @@
+{
+  "name": "mobile-cart-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/cart/feature/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:cart", "type:feature"],
+  "// targets": "to see all targets run: nx show project mobile-cart-feature --web",
+  "targets": {}
+}
