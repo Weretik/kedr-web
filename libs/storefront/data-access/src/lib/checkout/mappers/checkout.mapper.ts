@@ -16,7 +16,6 @@ export function mapToCheckoutDto(
     title: x.snapshot.title,
     unitPrice: x.snapshot.unitPrice,
     quantity: x.quantity,
-    slug: x.snapshot.slug,
   }));
 
   return {

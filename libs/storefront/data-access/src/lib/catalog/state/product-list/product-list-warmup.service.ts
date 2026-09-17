@@ -15,11 +15,11 @@ export class ProductListWarmupService {
     this.isWarmedUp = true;
 
     const query: GetProductListQuery = {
-      PriceTypeId: RETAIL_PRICE_TYPE_ID,
-      Page: 1,
-      PageSize: 4,
-      InStock: true,
-      Sort: ProductSort.IdAsc,
+      priceTypeId: RETAIL_PRICE_TYPE_ID,
+      page: 1,
+      pageSize: 4,
+      inStock: true,
+      sort: ProductSort.IdAsc,
     };
 
     void firstValueFrom(

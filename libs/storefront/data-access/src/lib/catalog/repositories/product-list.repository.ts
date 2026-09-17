@@ -1,16 +1,11 @@
 ﻿import { Injectable, inject } from '@angular/core';
-import {
-  GetProductListQuery,
-  ProductListRowDto,
-  ProductSort,
-} from '@storefront/contracts';
+import { GetProductListQuery, ProductListRowDto, ProductSort } from '@storefront/contracts';
 
 import { CatalogApiService } from '../api/catalog-api.service';
 import { RETAIL_PRICE_TYPE_ID } from '../config/catalog.constants';
 
 import type { PagedResult } from '@shared/data-access';
 import type { Observable } from 'rxjs';
-
 
 export type ProductListScenarioOptions = {
   priceTypeId?: number;
@@ -32,12 +27,12 @@ export class ProductListRepository {
     const priceTypeId = options.priceTypeId ?? RETAIL_PRICE_TYPE_ID;
 
     const query: GetProductListQuery = {
-      PriceTypeId: priceTypeId,
-      Page: 1,
-      PageSize: 10,
-      InStock: true,
-      IsSale: true,
-      Sort: ProductSort.PriceDesc,
+      priceTypeId,
+      page: 1,
+      pageSize: 10,
+      inStock: true,
+      isSale: true,
+      sort: ProductSort.PriceDesc,
     };
 
     return this.api.getProductList(query, options.categorySlug ?? null);
@@ -47,11 +42,11 @@ export class ProductListRepository {
     const priceTypeId = options.priceTypeId ?? RETAIL_PRICE_TYPE_ID;
 
     const query: GetProductListQuery = {
-      PriceTypeId: priceTypeId,
-      Page: 1,
-      PageSize: 10,
-      InStock: true,
-      Sort: ProductSort.NameAsc,
+      priceTypeId,
+      page: 1,
+      pageSize: 10,
+      inStock: true,
+      sort: ProductSort.NameAsc,
     };
     return this.api.getProductList(query, options.categorySlug ?? null);
   }
@@ -60,11 +55,11 @@ export class ProductListRepository {
     const priceTypeId = options.priceTypeId ?? RETAIL_PRICE_TYPE_ID;
 
     const query: GetProductListQuery = {
-      PriceTypeId: priceTypeId,
-      Page: 1,
-      PageSize: 10,
-      IsNew: true,
-      Sort: ProductSort.PriceAsc,
+      priceTypeId,
+      page: 1,
+      pageSize: 10,
+      isNew: true,
+      sort: ProductSort.PriceAsc,
     };
 
     return this.api.getProductList(query, options.categorySlug ?? null);

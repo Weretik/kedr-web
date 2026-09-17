@@ -1,13 +1,4 @@
-interface AdminCategoryDto {
-  id: number;
-  level: number;
-  name: string;
-  parentId: number | null;
-  productTypeIdOneC: string;
-  shortNameRu: string;
-  shortNameUk: string;
-  slug: string;
-  sortOrder: number;
-}
+import type { operations } from '@shared/api-contracts';
 
-export type { AdminCategoryDto };
+export type AdminCategoryDto =
+  operations['getAdminCategories']['responses'][200]['content']['application/json'][number];

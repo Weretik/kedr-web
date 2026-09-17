@@ -2,14 +2,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
+import type { operations } from '@shared/api-contracts';
 
-export interface LoginResponse {
-  accessToken: string;
-}
+export type LoginRequest = operations['loginSession']['requestBody']['content']['application/json'];
+
+export type LoginResponse =
+  operations['loginSession']['responses'][200]['content']['application/json'];
+type RefreshResponse =
+  operations['refreshSession']['responses'][200]['content']['application/json'];
 
 @Injectable({ providedIn: 'root' })
 export class AuthApi {
@@ -21,8 +21,8 @@ export class AuthApi {
     });
   }
 
-  refresh(): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
+  refresh(): Observable<RefreshResponse> {
+    return this.http.post<RefreshResponse>(
       '/api/auth/session/refresh',
       {},
       { withCredentials: true },
@@ -30,10 +30,6 @@ export class AuthApi {
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(
-      '/api/auth/session/logout',
-      {},
-      { withCredentials: true },
-    );
+    return this.http.post<void>('/api/auth/session/logout', {}, { withCredentials: true });
   }
 }

@@ -17,7 +17,7 @@ function mapAdminProduct(dto: AdminProductPageDto['value'][number]): CatalogProd
     id: String(dto.id),
     imageUrl: dto.photo || null,
     name: dto.nameUk || dto.nameRu,
-    price: dto.price,
+    price: dto.price ?? null,
     productSlug: dto.productSlug,
   };
 }

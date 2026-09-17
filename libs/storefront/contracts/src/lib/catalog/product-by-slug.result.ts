@@ -13,6 +13,6 @@ export interface ProductBySlugDto {
   categoryName: string;
   categorySlug: string;
   quantityInPack: number;
-  price: number;
+  price: number | null;
   breadcrumbs: ProductBreadcrumbDto[];
 }

@@ -1,33 +1,26 @@
 ﻿import { GetProductListQuery, ProductSort } from '@storefront/contracts';
 
-import {
-  ProductListQuery,
-  ProductListSortUi,
-} from '../models/product-list-query.model';
+import { ProductListQuery, ProductListSortUi } from '../models/product-list-query.model';
 
-export function mapProductListQueryToApi(
-  query: ProductListQuery,
-): GetProductListQuery {
+export function mapProductListQueryToApi(query: ProductListQuery): GetProductListQuery {
   return {
-    SearchTerm: query.search?.trim() || undefined,
+    searchTerm: query.search?.trim() || undefined,
 
-    InStock: toBool(query.inStock),
-    IsSale: toBool(query.isSale),
-    IsNew: toBool(query.isNew),
+    inStock: toBool(query.inStock),
+    isSale: toBool(query.isSale),
+    isNew: toBool(query.isNew),
 
-    PriceFrom: toDecimal(query.priceFrom),
-    PriceTo: toDecimal(query.priceTo),
+    priceFrom: toDecimal(query.priceFrom),
+    priceTo: toDecimal(query.priceTo),
 
-    Sort: mapSortUiToApi(query.sort),
+    sort: mapSortUiToApi(query.sort),
 
-    Page: toInt(query.page) ?? 1,
-    PageSize: toInt(query.pageSize) ?? 50,
+    page: toInt(query.page) ?? 1,
+    pageSize: toInt(query.pageSize) ?? 50,
   };
 }
 
-export function mapSortUiToApi(
-  sort: ProductListSortUi | undefined,
-): ProductSort | undefined {
+export function mapSortUiToApi(sort: ProductListSortUi | undefined): ProductSort | undefined {
   if (!sort) return undefined;
 
   switch (sort) {

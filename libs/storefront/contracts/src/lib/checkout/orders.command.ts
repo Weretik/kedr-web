@@ -3,7 +3,6 @@
   title: string;
   unitPrice: number;
   quantity: number;
-  slug: string;
 };
 
 export type CheckoutDto = {

@@ -1,23 +1,8 @@
-export interface AdminProductsListResponse {
-  pagedInfo: AdminProductsPagedInfo;
-  value: unknown[];
-}
+import type { components, operations } from '@shared/api-contracts';
 
-export interface AdminProductsPagedInfo {
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  totalRecords: number;
-}
+type GetAdminProducts = operations['getAdminProducts'];
 
-export interface AdminProductsListParams {
-  SearchTerm?: string;
-  InStock?: boolean;
-  IsSale?: boolean;
-  IsNew?: boolean;
-  PriceFrom?: number;
-  PriceTo?: number;
-  Sort: number;
-  Page: number;
-  PageSize: number;
-}
+export type AdminProductsListResponse =
+  GetAdminProducts['responses'][200]['content']['application/json'];
+export type AdminProductsPagedInfo = components['schemas']['PagedInfo'];
+export type AdminProductsListParams = NonNullable<GetAdminProducts['parameters']['query']>;

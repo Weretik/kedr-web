@@ -1,18 +1,18 @@
 ﻿import { ProductSort } from './product-sort.enum';
 
 export type GetProductListQuery = {
-  SearchTerm?: string;
+  searchTerm?: string;
 
-  InStock?: boolean;
-  IsSale?: boolean;
-  IsNew?: boolean;
+  inStock?: boolean;
+  isSale?: boolean;
+  isNew?: boolean;
 
-  PriceTypeId?: number;
-  PriceFrom?: number;
-  PriceTo?: number;
+  priceTypeId?: number;
+  priceFrom?: number;
+  priceTo?: number;
 
-  Sort?: ProductSort;
+  sort?: ProductSort;
 
-  Page?: number;
-  PageSize?: number;
+  page?: number;
+  pageSize?: number;
 };
