@@ -4,7 +4,7 @@
 
 Screen отримує лише domain models із `@mobile/catalog/data-access`. Private DTO
 маплять `AdminProductPage` contract, описаний у
-[Admin products](../../../../contracts/admin/products.md).
+[Admin products](../../../../contracts/catalog/admin-products.md).
 
 ## Domain / view model
 

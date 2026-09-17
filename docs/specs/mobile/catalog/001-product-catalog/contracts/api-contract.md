@@ -1,6 +1,6 @@
 # Mobile product catalog — API і навігація
 
-**Frontend-контракт:** [Admin products](../../../../../contracts/admin/products.md)
+**Frontend-контракт:** [Admin products](../../../../../contracts/catalog/admin-products.md)
 **Backend-довідка (за наявності):** `KedrStore/docs/sdd/contracts/catalog/products.openapi.yaml` (`getAdminProducts`)
 
 Цей frontend-контракт є джерелом істини для mobile. Доступність, пошук і актуалізація backend/OpenAPI довідки належать backend-власникам і не блокують mobile-реалізацію.
@@ -18,7 +18,7 @@ cursor-based. Зміна search, filters або sort скидає `page` до `1
 
 Поточний contract не має filter-facets endpoint. P3 показує лише documented
 parameters; category choices надходять через окремий
-[Admin categories contract](../../../../../contracts/admin/categories.md) і
+[Admin categories contract](../../../../../contracts/catalog/admin-categories.md) і
 реалізацію `002-category-filter`. Contract також не визначає поля пошуку
 `searchTerm` і не надає currency або price unit, тому UI не повинен обіцяти ці
 деталі.

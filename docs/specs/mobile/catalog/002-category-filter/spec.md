@@ -46,7 +46,7 @@ products з її `categoryId`, active chip і першу сторінку рез
 
 ## Requirements
 
-- **FR-001**: Система повинна отримувати category rows тільки через `GET /api/categories` із зафіксованого [frontend-контракту](../../../../contracts/admin/categories.md).
+- **FR-001**: Система повинна отримувати category rows тільки через `GET /api/categories` із зафіксованого [frontend-контракту](../../../../contracts/catalog/admin-categories.md).
 - **FR-002**: `data-access` повинен перетворювати private DTO у `CatalogCategoryOption[]` і впорядковувати sibling categories за `sortOrder`, потім `id`.
 - **FR-003**: Selector має показувати локалізовану short name у згортаному tree до трьох рівнів у прокручуваному filters modal, loading, empty і normalized error/retry states; статичний список категорій заборонений.
 - **FR-004**: Після Apply обрана category передається в наявний `GET /api/admin/products` тільки як valid `categoryId`; зміна або очищення category скидає products page до `1`.

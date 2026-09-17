@@ -1,6 +1,6 @@
 # Фаза 04 — Delivery
 
-- [x] T015 Оновити contracts, public exports і `quickstart.md` з фактичними результатами у `docs/contracts/admin/categories.md` та `docs/specs/mobile/catalog/002-category-filter/`.
+- [x] T015 Оновити contracts, public exports і `quickstart.md` з фактичними результатами у `docs/contracts/catalog/admin-categories.md` та `docs/specs/mobile/catalog/002-category-filter/`.
 - [x] T016 Виконати automated commands з `quickstart.md` і зафіксувати результати або scoped blockers.
 - [ ] T017 Виконати Android Expo Go та web manual acceptance: tree, apply/reset, loading/empty/error/retry, accessibility і pagination reset.
 - [ ] T018 Підтвердити з backend-власником access policy `GET /api/categories` для mobile production traffic; якщо не підтверджено, не випускати feature поза internal/admin surface.
