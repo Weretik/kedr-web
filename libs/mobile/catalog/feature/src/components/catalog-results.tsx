@@ -1,19 +1,23 @@
 import { CatalogList, CatalogListFooter, CatalogPageState } from '@mobile/catalog/ui';
 
 import type { useCatalogController } from '../hooks/use-catalog-controller';
+import type { CatalogProduct } from '@mobile/catalog/model';
 
-type CatalogController = ReturnType<typeof useCatalogController>;
+type CatalogController = ReturnType<typeof useCatalogController> & {
+  onProductPress: (product: CatalogProduct) => void;
+};
 
 export function CatalogResults({
   clearSearch,
   items,
   loadNextPage,
+  onProductPress,
   queryResult,
   refresh,
   state,
 }: Pick<
   CatalogController,
-  'clearSearch' | 'items' | 'loadNextPage' | 'queryResult' | 'refresh' | 'state'
+  'clearSearch' | 'items' | 'loadNextPage' | 'onProductPress' | 'queryResult' | 'refresh' | 'state'
 >) {
   const { currentData, isError, isFetching, isLoading, refetch } = queryResult;
   const retry = () => void refetch();
@@ -45,6 +49,7 @@ export function CatalogResults({
     <CatalogList
       footer={footer}
       items={visibleItems}
+      onProductPress={onProductPress}
       onRefresh={refresh}
       refreshing={isFetching && state.query.page === 1}
     />

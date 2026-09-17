@@ -1,6 +1,6 @@
 import { CatalogScreen } from '@mobile/catalog/feature';
 import { ThemePreferenceHeaderControl } from '@mobile/core/shell';
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Appbar } from 'react-native-paper';
 
@@ -17,12 +17,26 @@ export default function CatalogRoute() {
           headerRight: () => (
             <>
               <ThemePreferenceHeaderControl />
-              {openSearch ? <Appbar.Action accessibilityLabel="Пошук товарів" icon="magnify" onPress={openSearch} /> : null}
+              {openSearch ? (
+                <Appbar.Action
+                  accessibilityLabel="Пошук товарів"
+                  icon="magnify"
+                  onPress={openSearch}
+                />
+              ) : null}
             </>
           ),
         }}
       />
-      <CatalogScreen onSearchActionChange={handleSearchActionChange} />
+      <CatalogScreen
+        onProductPress={(product) =>
+          router.push({
+            pathname: '/product/[productSlug]',
+            params: { productSlug: product.productSlug },
+          })
+        }
+        onSearchActionChange={handleSearchActionChange}
+      />
     </>
   );
 }

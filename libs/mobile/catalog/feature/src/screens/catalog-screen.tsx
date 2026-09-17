@@ -3,7 +3,17 @@ import { useEffect } from 'react';
 import { CatalogScreenContent } from '../components/catalog-screen-content';
 import { useCatalogController } from '../hooks/use-catalog-controller';
 
-export function CatalogScreen({ onSearchActionChange }: Readonly<{ onSearchActionChange?: (action: (() => void) | undefined) => void }>) {
+import type { CatalogProduct } from '@mobile/catalog/model';
+
+export interface CatalogScreenProps {
+  onProductPress: (product: CatalogProduct) => void;
+  onSearchActionChange?: (action: (() => void) | undefined) => void;
+}
+
+export function CatalogScreen({
+  onProductPress,
+  onSearchActionChange,
+}: Readonly<CatalogScreenProps>) {
   const controller = useCatalogController();
 
   useEffect(() => {
@@ -11,5 +21,5 @@ export function CatalogScreen({ onSearchActionChange }: Readonly<{ onSearchActio
     return () => onSearchActionChange?.(undefined);
   }, [controller.dispatch, onSearchActionChange]);
 
-  return <CatalogScreenContent {...controller} />;
+  return <CatalogScreenContent {...controller} onProductPress={onProductPress} />;
 }

@@ -9,12 +9,21 @@ import type { ReactElement } from 'react';
 export interface CatalogListProps {
   footer?: ReactElement | null;
   items: readonly CatalogProduct[];
+  onProductPress: (product: CatalogProduct) => void;
   onRefresh: () => void;
   refreshing: boolean;
 }
 
-export function CatalogList({ footer, items, onRefresh, refreshing }: Readonly<CatalogListProps>) {
-  const renderItem: ListRenderItem<CatalogProduct> = ({ item }) => <ProductCard product={item} />;
+export function CatalogList({
+  footer,
+  items,
+  onProductPress,
+  onRefresh,
+  refreshing,
+}: Readonly<CatalogListProps>) {
+  const renderItem: ListRenderItem<CatalogProduct> = ({ item }) => (
+    <ProductCard onPress={onProductPress} product={item} />
+  );
 
   return (
     <FlashList

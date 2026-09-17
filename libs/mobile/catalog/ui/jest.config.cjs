@@ -9,6 +9,9 @@ module.exports = {
   moduleNameMapper: {
     '^@mobile/catalog/model$': '<rootDir>/../model/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/src/test-mocks/flash-list.tsx',
+    '^expo-image$': '<rootDir>/src/test-mocks/expo-image.tsx',
+    '^react-native-reanimated-carousel$': '<rootDir>/src/test-mocks/reanimated-carousel.tsx',
+    '^react-native-reanimated$': '<rootDir>/src/test-mocks/react-native-reanimated.ts',
     '^@react-native-assets/slider$': '<rootDir>/src/test-mocks/react-native-assets-slider.tsx',
     '^react-native-actions-sheet$': '<rootDir>/src/test-mocks/react-native-actions-sheet.tsx',
     '^react-native-tree-multi-select$':

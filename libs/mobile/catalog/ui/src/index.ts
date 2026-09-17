@@ -1,6 +1,8 @@
 export * from './components/products/catalog-list';
 export * from './components/products/catalog-list-footer';
 export * from './components/products/product-card';
+export * from './components/product-details/product-details-view';
+export * from './components/product-details/product-image-gallery';
 export * from './components/category/catalog-category-selector';
 export * from './components/category/catalog-category-sheet';
 export * from './components/query/catalog-active-filters';
@@ -11,3 +13,4 @@ export * from './components/query/catalog-query-action-row';
 export * from './components/query/catalog-action-sheet';
 export * from './states/catalog-page-state';
 export * from './states/catalog-state';
+export * from './states/product-details-state';

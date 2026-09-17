@@ -135,6 +135,21 @@ describe('CatalogScreen', () => {
     );
   });
 
+  it('forwards the selected product to navigation', async () => {
+    mockUseGetCatalogProductsQuery.mockReturnValue({
+      currentData: catalogPage,
+      isError: false,
+      isFetching: false,
+      isLoading: false,
+      refetch: jest.fn(),
+    });
+    const onProductPress = jest.fn();
+    const { getByLabelText } = renderScreen(testTheme, undefined, onProductPress);
+
+    await waitFor(() => fireEvent.press(getByLabelText(/Товар Кабель/)));
+    expect(onProductPress).toHaveBeenCalledWith(catalogPage.items[0]);
+  });
+
   it('preserves the current empty state', () => {
     mockUseGetCatalogProductsQuery.mockReturnValue({
       currentData: { ...catalogPage, items: [], totalRecords: 0 },
@@ -169,10 +184,11 @@ describe('CatalogScreen', () => {
 function renderScreen(
   theme = testTheme,
   onSearchActionChange?: (action: (() => void) | undefined) => void,
+  onProductPress = jest.fn(),
 ) {
   return render(
     <PaperProvider theme={theme}>
-      <CatalogScreen onSearchActionChange={onSearchActionChange} />
+      <CatalogScreen onProductPress={onProductPress} onSearchActionChange={onSearchActionChange} />
     </PaperProvider>,
   );
 }
