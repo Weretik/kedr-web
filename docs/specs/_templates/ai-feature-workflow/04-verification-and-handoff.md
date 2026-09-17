@@ -9,6 +9,8 @@
    `traceability.md`.
 4. Для full-feature scope виконай delivery checklist.
 5. Переглянь git diff і переконайся, що сторонні зміни збережено.
+6. Якщо scope перетинає API boundary, виконай `npm run contracts:check` і
+   перевір, що generated types не мають незакоміченого drift.
 
 Platform baseline для delivery:
 

@@ -16,7 +16,11 @@
 4. Перевір package manager, Nx projects/targets, installed dependencies,
    configs і наявні tests без припущень про tooling.
 5. Перевір git diff і збережи сторонні зміни.
-6. Для React Web перевір `admin:vite:test` і `admin-e2e:e2e`; для React Native
+6. Для API scope знайди operation у `docs/contracts/openapi/openapi.yaml`,
+   consumer projection у `docs/contracts/` і generated type у
+   `@shared/api-contracts`. Якщо operation відсутня, спочатку синхронізуй
+   versioned snapshot із чистого backend checkout через CLI.
+7. Для React Web перевір `admin:vite:test` і `admin-e2e:e2e`; для React Native
    перевір фактичні Jest targets через `npx nx show projects --with-target test`.
    Відсутній mobile E2E оформлюй як `EN-*`, не встановлюй важкий runner автоматично.
 

@@ -12,6 +12,31 @@ Scope: уся прийнята feature.
 Виконай усі ready tasks за залежностями до delivery checkpoint.
 ```
 
+### _Повний приклад для конкретної feature_
+
+```text
+Працюй за `docs/specs/_templates/ai-feature-workflow/`.
+
+Feature:
+`docs/specs/mobile/catalog/004-product-details/`.
+
+Scope: уся прийнята feature.
+
+Виконай усі ready `EN-*` і `TS-*` за залежностями до delivery checkpoint.
+Реалізуй перехід із поточної картки товару на сторінку деталей, API integration,
+gallery, усі стани, повернення зі збереженням catalog state та додавання до
+кошика.
+
+Для libraries, dependencies і scaffolding використовуй Nx, Expo та npm CLI там,
+де це передбачено специфікацією. Для стандартних UI-задач використовуй обрані
+готові packages і чинні React Native Paper components; не створюй власні
+аналоги carousel, image cache, action sheet або Snackbar.
+
+Виконай required lint, typecheck, Jest/RNTL, contract, Expo export і доступні
+device/visual checks. Онови task evidence, traceability та delivery checklists.
+Не виконуй push і не створюй PR.
+```
+
 ## Продовження
 
 ```text

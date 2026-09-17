@@ -23,6 +23,12 @@ test-first exception, replacement check та enabled tasks/scenarios.
 
 Не додавай incidental refactors, upgrades або інші сценарії.
 
+Для API-змін не створюй handwritten transport DTO, якщо schema вже є в
+snapshot. Запусти `npm run contracts:generate`, імпортуй operation/component
+type лише в transport або data-access і додай mapper до domain model. Онови
+consumer projection у `docs/contracts/<module>/`; YAML snapshot змінюй тільки
+через `npm run contracts:sync -- <path-to-KedrStore>`.
+
 Для поточного repository використовуй перевірені entrypoints:
 
 - React Web: `npm run test:web:unit`, `npm run test:web:component`, за потреби

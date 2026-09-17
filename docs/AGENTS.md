@@ -12,7 +12,11 @@
    Angular.
 4. Для реалізації прийнятої специфікації дотримуйся
    [AI feature workflow](specs/_templates/ai-feature-workflow/README.md).
-5. Для HTTP-змін звірся з [frontend API contracts](contracts/README.md).
+5. Для HTTP-змін звірся з [frontend API contracts](contracts/README.md), знайди
+   stable `operationId` у versioned snapshot і використовуй generated types з
+   `@shared/api-contracts` лише на transport/data-access boundary. YAML та
+   generated TypeScript не редагуй вручну; синхронізуй і генеруй CLI-командами,
+   описаними в contracts README.
 
 Визначай Nx targets із `project.json` або `npx nx show project <name>`. Не
 встановлюй відсутній test tooling без явної потреби й погодженого `EN-*`.
