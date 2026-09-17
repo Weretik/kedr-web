@@ -20,23 +20,26 @@ function toProblemDetails(value: unknown): ProblemDetails | undefined {
     return undefined;
   }
 
-  const errors = isRecord(value.errors)
-    ? Object.entries(value.errors).reduce<Record<string, string[]>>((mapped, [field, messages]) => {
-        const stringMessages = toStringArray(messages);
+  const errors = isRecord(value['errors'])
+    ? Object.entries(value['errors']).reduce<Record<string, string[]>>(
+        (mapped, [field, messages]) => {
+          const stringMessages = toStringArray(messages);
 
-        if (stringMessages) {
-          mapped[field] = stringMessages;
-        }
+          if (stringMessages) {
+            mapped[field] = stringMessages;
+          }
 
-        return mapped;
-      }, {})
+          return mapped;
+        },
+        {},
+      )
     : undefined;
 
   return {
-    detail: typeof value.detail === 'string' ? value.detail : undefined,
+    detail: typeof value['detail'] === 'string' ? value['detail'] : undefined,
     errors: errors && Object.keys(errors).length > 0 ? errors : undefined,
-    title: typeof value.title === 'string' ? value.title : undefined,
-    traceId: typeof value.traceId === 'string' ? value.traceId : undefined,
+    title: typeof value['title'] === 'string' ? value['title'] : undefined,
+    traceId: typeof value['traceId'] === 'string' ? value['traceId'] : undefined,
   };
 }
 
@@ -50,8 +53,8 @@ function toArdalisFieldErrors(value: unknown): Record<string, string[]> | undefi
       return mapped;
     }
 
-    const identifier = item.identifier ?? item.Identifier;
-    const errorMessage = item.errorMessage ?? item.ErrorMessage;
+    const identifier = item['identifier'] ?? item['Identifier'];
+    const errorMessage = item['errorMessage'] ?? item['ErrorMessage'];
 
     if (typeof identifier === 'string' && typeof errorMessage === 'string') {
       (mapped[identifier] ??= []).push(errorMessage);
@@ -107,7 +110,7 @@ export function toApiError(error: unknown): ApiError {
 export function isUnexpectedApiError(error: unknown): error is ApiError {
   return (
     isRecord(error) &&
-    typeof error.code === 'string' &&
-    ['Network', 'Timeout', 'Server', 'Unknown'].includes(error.code)
+    typeof error['code'] === 'string' &&
+    ['Network', 'Timeout', 'Server', 'Unknown'].includes(error['code'])
   );
 }

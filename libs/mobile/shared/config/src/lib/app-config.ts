@@ -25,7 +25,7 @@ export function parseAppConfig(environment: PublicEnvironment): AppConfig {
     return {
       apiBaseUrl: null,
       enableHttpLogs: environment.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true',
-      isDevelopment: process.env.NODE_ENV !== 'production',
+      isDevelopment: process.env['NODE_ENV'] !== 'production',
     };
   }
 
@@ -40,11 +40,11 @@ export function parseAppConfig(environment: PublicEnvironment): AppConfig {
   return {
     apiBaseUrl: parsedUrl.data,
     enableHttpLogs: environment.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true',
-    isDevelopment: process.env.NODE_ENV !== 'production',
+    isDevelopment: process.env['NODE_ENV'] !== 'production',
   };
 }
 
 export const appConfig = parseAppConfig({
-  EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
-  EXPO_PUBLIC_ENABLE_HTTP_LOGS: process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS,
+  EXPO_PUBLIC_API_BASE_URL: process.env['EXPO_PUBLIC_API_BASE_URL'],
+  EXPO_PUBLIC_ENABLE_HTTP_LOGS: process.env['EXPO_PUBLIC_ENABLE_HTTP_LOGS'],
 });
