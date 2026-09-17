@@ -1,0 +1,9 @@
+{
+  "name": "mobile-orders-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/orders/feature/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:orders", "type:feature"],
+  "// targets": "to see all targets run: nx show project mobile-orders-feature --web",
+  "targets": {}
+}

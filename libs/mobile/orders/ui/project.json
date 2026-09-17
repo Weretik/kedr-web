@@ -1,0 +1,9 @@
+{
+  "name": "mobile-orders-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/orders/ui/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:orders", "type:ui"],
+  "// targets": "to see all targets run: nx show project mobile-orders-ui --web",
+  "targets": {}
+}
