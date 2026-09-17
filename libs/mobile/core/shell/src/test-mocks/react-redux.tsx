@@ -9,9 +9,12 @@ export function useDispatch() {
 }
 
 export function useSelector(
-  selector: (state: { themePreference: { preference: string } }) => unknown,
+  selector: (state: {
+    orderFilterSession: Record<string, never>;
+    themePreference: { preference: string };
+  }) => unknown,
 ) {
-  return selector({ themePreference: { preference: 'system' } });
+  return selector({ orderFilterSession: {}, themePreference: { preference: 'system' } });
 }
 
 export function useStore() {
