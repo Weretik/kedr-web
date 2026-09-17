@@ -1,15 +1,21 @@
 {
   "build": {
+    "base": {
+      "node": "24.20.0"
+    },
     "production": {
+      "extends": "base",
       "android": {
         "buildType": "app-bundle"
       }
     },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
       "ios": {
         "simulator": true
