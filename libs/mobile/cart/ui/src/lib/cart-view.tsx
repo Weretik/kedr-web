@@ -1,4 +1,5 @@
-import { getOrderSyncStatusLabel, type CartLine, type OrderSyncStatus } from '@mobile/cart/model';
+import { type CartLine } from '@mobile/cart/model';
+import { getOrderSyncStatusLabel, type OrderSyncStatus } from '@mobile/shared/model';
 import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Card, Text, useTheme } from 'react-native-paper';

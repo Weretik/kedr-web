@@ -8,6 +8,7 @@ module.exports = {
     '^@reduxjs/toolkit$': '<rootDir>/../../../../node_modules/@reduxjs/toolkit/dist/cjs/index.js',
     '^immer$': '<rootDir>/../../../../node_modules/immer/dist/cjs/index.js',
     '^@mobile/orders/model$': '<rootDir>/../model/src/index.ts',
+    '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/../../catalog/ui/src/test-mocks/flash-list.tsx',
     '^react-native-paper$': '<rootDir>/../../core/shell/src/test-mocks/react-native-paper.tsx',
   },

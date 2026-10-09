@@ -1,0 +1,8 @@
+{
+  "name": "mobile-shared-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/shared/model/src",
+  "projectType": "library",
+  "tags": ["scope:mobile-shared", "type:model"],
+  "targets": {}
+}

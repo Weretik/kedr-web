@@ -2,7 +2,7 @@ import {
   getOrderSyncStatusKind,
   getOrderSyncStatusLabel,
   type OrderSyncStatus,
-} from '@mobile/orders/model';
+} from '@mobile/shared/model';
 import { StyleSheet, View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 

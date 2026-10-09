@@ -19,6 +19,7 @@ module.exports = {
     '^@mobile/customers/ui$': '<rootDir>/../../customers/ui/src/index.ts',
     '^@mobile/shared/api-client$': '<rootDir>/../../shared/api-client/src/index.ts',
     '^@mobile/shared/config$': '<rootDir>/../../shared/config/src/index.ts',
+    '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
     '^@mobile/core/shell$': '<rootDir>/../../core/shell/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/../../catalog/ui/src/test-mocks/flash-list.tsx',
     '^expo-image$': '<rootDir>/../../catalog/ui/src/test-mocks/expo-image.tsx',

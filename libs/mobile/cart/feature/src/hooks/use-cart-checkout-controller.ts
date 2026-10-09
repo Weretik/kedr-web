@@ -4,11 +4,11 @@ import {
   calculateCartTotal,
   createAdminOrderPayload,
   resolveOrderAttempt,
-  type OrderSyncStatus,
   type OrderAttempt,
 } from '@mobile/cart/model';
 import { useGetCustomersQuery } from '@mobile/customers/data-access';
 import { filterCustomersByName, type Customer } from '@mobile/customers/model';
+import { type OrderSyncStatus } from '@mobile/shared/model';
 import { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 

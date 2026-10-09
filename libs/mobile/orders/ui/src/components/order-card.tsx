@@ -2,9 +2,9 @@ import {
   formatOrderAmount,
   formatOrderDateTime,
   formatOrderPositionCount,
-  getOrderSyncStatusLabel,
   type OrderSummary,
 } from '@mobile/orders/model';
+import { getOrderSyncStatusLabel } from '@mobile/shared/model';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 

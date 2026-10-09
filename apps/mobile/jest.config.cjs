@@ -21,6 +21,7 @@ module.exports = {
     '^@mobile/customers/ui$': '<rootDir>/../../libs/mobile/customers/ui/src/index.ts',
     '^@mobile/shared/api-client$': '<rootDir>/../../libs/mobile/shared/api-client/src/index.ts',
     '^@mobile/shared/config$': '<rootDir>/../../libs/mobile/shared/config/src/index.ts',
+    '^@mobile/shared/model$': '<rootDir>/../../libs/mobile/shared/model/src/index.ts',
     '^@react-native-community/netinfo$':
       '<rootDir>/../../libs/mobile/core/shell/src/test-mocks/netinfo.ts',
     '^immer$': '<rootDir>/../../node_modules/immer/dist/cjs/index.js',

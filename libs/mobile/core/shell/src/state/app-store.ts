@@ -1,4 +1,3 @@
-import { orderFilterSessionReducer } from '@mobile/orders/model';
 import { apiErrorNotifierMiddleware, baseApi } from '@mobile/shared/api-client';
 import { configureStore } from '@reduxjs/toolkit';
 
@@ -10,7 +9,6 @@ export function createAppStore() {
       getDefaultMiddleware().concat(baseApi.middleware, apiErrorNotifierMiddleware),
     reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
-      orderFilterSession: orderFilterSessionReducer,
       themePreference: themePreferenceReducer,
     },
   });

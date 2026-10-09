@@ -11,6 +11,7 @@ module.exports = {
     '^immer$': '<rootDir>/../../../../node_modules/immer/dist/cjs/index.js',
     '^@mobile/cart/model$': '<rootDir>/../model/src/index.ts',
     '^@mobile/orders/model$': '<rootDir>/../../orders/model/src/index.ts',
+    '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/../../catalog/ui/src/test-mocks/flash-list.tsx',
     '^expo-image$': '<rootDir>/../../catalog/ui/src/test-mocks/expo-image.tsx',
     '^react-native-actions-sheet$':

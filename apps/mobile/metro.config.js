@@ -32,6 +32,7 @@ const workspaceAliases = {
     'libs/mobile/shared/api-client/src/index.ts',
   ),
   '@mobile/shared/config': path.join(workspaceRoot, 'libs/mobile/shared/config/src/index.ts'),
+  '@mobile/shared/model': path.join(workspaceRoot, 'libs/mobile/shared/model/src/index.ts'),
   '@mobile/shared/ui': path.join(workspaceRoot, 'libs/mobile/shared/ui/src/index.ts'),
   '@mobile/shared/util': path.join(workspaceRoot, 'libs/mobile/shared/util/src/index.ts'),
   '@mobile/core/connectivity': path.join(

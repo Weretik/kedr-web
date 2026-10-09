@@ -1,4 +1,4 @@
-import type { OrderSyncStatus } from './order-sync-status';
+import type { OrderSyncStatus } from '@mobile/shared/model';
 
 export interface OrderSummary {
   counterpartyName: string;
