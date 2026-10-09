@@ -1,13 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { ProductBySlugDto } from '@storefront/contracts';
+import { ProductDetails } from '@storefront/contracts';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { ProductRepository } from '../../repositories/product.repository';
 
 type ProductState = {
-  data: ProductBySlugDto | undefined;
+  data: ProductDetails | undefined;
   loading: boolean;
   error: unknown | null;
 };
@@ -40,13 +40,11 @@ export class ProductFacade {
         if (!slug) return of(initialState);
 
         return this.productRepository.getProductWithRetailPrice(slug).pipe(
-          map(
-            (data): ProductState => ({
-              data,
-              loading: false,
-              error: null,
-            }),
-          ),
+          map((data): ProductState => ({
+            data,
+            loading: false,
+            error: null,
+          })),
           startWith({
             data: undefined,
             loading: true,

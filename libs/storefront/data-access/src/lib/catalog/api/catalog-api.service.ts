@@ -2,16 +2,16 @@ import { PlatformLocation } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { PagedResult } from '@shared/data-access';
-import { GetProductListQuery, ProductBySlugDto, ProductListRowDto } from '@storefront/contracts';
+import { GetProductListQuery, ProductDetails, ProductListItem } from '@storefront/contracts';
 import { Observable, map } from 'rxjs';
+
+import { parseProductDetails, parseProductPage } from '../contracts/catalog-response.schema';
 
 import type { operations } from '@shared/api-contracts';
 
 type PublicProductsQuery = NonNullable<operations['getPublicProducts']['parameters']['query']>;
 type PublicProductPage =
   operations['getPublicProducts']['responses'][200]['content']['application/json'];
-type PublicProductDetails =
-  operations['getPublicProductBySlug']['responses'][200]['content']['application/json'];
 
 @Injectable({ providedIn: 'root' })
 export class CatalogApiService {
@@ -21,7 +21,7 @@ export class CatalogApiService {
   getProductList(
     query: GetProductListQuery = {},
     categorySlug?: string | null,
-  ): Observable<PagedResult<ProductListRowDto>> {
+  ): Observable<PagedResult<ProductListItem>> {
     const lang = this.getCurrentLang();
     const contractQuery: PublicProductsQuery = query;
     let params = new HttpParams();
@@ -34,17 +34,17 @@ export class CatalogApiService {
       ? `/api/catalog/${lang}/${encodeURIComponent(categorySlug)}/products`
       : `/api/catalog/${lang}/products`;
 
-    return this.http.get<PublicProductPage>(url, { params }).pipe(map(mapPublicProductPage));
+    return this.http.get<unknown>(url, { params }).pipe(map(mapPublicProductPage));
   }
 
-  getProductBySlug(priceTypeId: number, productSlug: string): Observable<ProductBySlugDto> {
+  getProductBySlug(priceTypeId: number, productSlug: string): Observable<ProductDetails> {
     const lang = this.getCurrentLang();
     const params = new HttpParams().set('priceTypeId', String(priceTypeId));
     const url = `/api/catalog/${lang}/product/${encodeURIComponent(productSlug)}`;
 
     return this.http
-      .get<PublicProductDetails>(url, { params })
-      .pipe(map((product) => ({ ...product, price: product.price ?? null })));
+      .get<unknown>(url, { params })
+      .pipe(map((response) => parseProductDetails(response)));
   }
 
   private getCurrentLang(): 'uk' | 'ru' {
@@ -54,11 +54,12 @@ export class CatalogApiService {
   }
 }
 
-function mapPublicProductPage(response: PublicProductPage): PagedResult<ProductListRowDto> {
+function mapPublicProductPage(response: unknown): PagedResult<ProductListItem> {
+  const productPage: PublicProductPage = parseProductPage(response);
   return {
     isSuccess: true,
-    pagedInfo: response.pagedInfo,
-    value: response.value.map((product) => ({
+    pagedInfo: productPage.pagedInfo,
+    value: productPage.value.map((product) => ({
       ...product,
       categoryId: product.categoryId ?? null,
       price: product.price ?? null,

@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { GetProductListQuery, ProductListRowDto } from '@storefront/contracts';
+import { GetProductListQuery, ProductListItem } from '@storefront/contracts';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { mapProductListQueryToApi } from '../../mappers/product-list-query.mapper';
@@ -10,7 +10,7 @@ import { ProductListRepository } from '../../repositories/product-list.repositor
 import type { PagedResult } from '@shared/data-access';
 
 type ProductListState = {
-  data: PagedResult<ProductListRowDto> | null;
+  data: PagedResult<ProductListItem> | null;
   loading: boolean;
   error: unknown | null;
 };
@@ -41,9 +41,7 @@ export class ProductListFacade {
 
   readonly categorySlug = this._categorySlug.asReadonly();
 
-  readonly apiQuery = computed<GetProductListQuery>(() =>
-    mapProductListQueryToApi(this._query()),
-  );
+  readonly apiQuery = computed<GetProductListQuery>(() => mapProductListQueryToApi(this._query()));
 
   private readonly requestParams = computed(() => ({
     query: this.apiQuery(),
@@ -55,13 +53,11 @@ export class ProductListFacade {
     toObservable(this.requestParams).pipe(
       switchMap(({ query, categorySlug }) =>
         this.repo.getList(query, categorySlug).pipe(
-          map(
-            (data): ProductListState => ({
-              data,
-              loading: false,
-              error: null,
-            }),
-          ),
+          map((data): ProductListState => ({
+            data,
+            loading: false,
+            error: null,
+          })),
           startWith({
             data: null,
             loading: true,

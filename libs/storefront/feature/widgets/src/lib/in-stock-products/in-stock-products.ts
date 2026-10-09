@@ -1,10 +1,6 @@
 import { Component, inject, computed } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
-import {
-  CartFacade,
-  cartLineFromListRow,
-  ProductListRowDto,
-} from '@storefront/data-access';
+import { CartFacade, cartLineFromListRow, ProductListItem } from '@storefront/data-access';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 import { Skeleton } from 'primeng/skeleton';
@@ -36,7 +32,7 @@ export class InStockProducts {
     { breakpoint: '767px', numVisible: 1, numScroll: 1 },
   ];
 
-  public addToCart(product: ProductListRowDto) {
+  public addToCart(product: ProductListItem) {
     this.cart.addToCart(cartLineFromListRow(product, 1));
   }
 }

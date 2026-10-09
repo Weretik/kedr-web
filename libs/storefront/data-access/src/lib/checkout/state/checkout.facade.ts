@@ -2,7 +2,7 @@
 import { tapResponse } from '@ngrx/operators';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ApiError } from '@shared/util';
-import { CheckoutDto, OrderCreatedDto } from '@storefront/contracts';
+import { CheckoutCommand, OrderCreated } from '@storefront/contracts';
 import { pipe } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
@@ -28,7 +28,7 @@ export class CheckoutFacade {
     this.orderId.set(null);
   }
 
-  readonly placeOrder = rxMethod<CheckoutDto>(
+  readonly placeOrder = rxMethod<CheckoutCommand>(
     pipe(
       tap(() => {
         this.loading.set(true);
@@ -36,10 +36,10 @@ export class CheckoutFacade {
         this.error.set(null);
         this.validationError.set(null);
       }),
-      switchMap((dto) =>
-        this.api.createOrder(dto).pipe(
+      switchMap((command) =>
+        this.api.createOrder(command).pipe(
           tapResponse({
-            next: (result: OrderCreatedDto) => {
+            next: (result: OrderCreated) => {
               this.orderId.set(result.orderId);
               this.success.set(true);
             },

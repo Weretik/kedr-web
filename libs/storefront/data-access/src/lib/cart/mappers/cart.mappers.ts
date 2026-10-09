@@ -1,4 +1,4 @@
-﻿import { ProductListRowDto, ProductBySlugDto } from '@storefront/contracts';
+﻿import { ProductDetails, ProductListItem } from '@storefront/contracts';
 
 import { CartLine } from '../models/cart.types';
 
@@ -8,31 +8,28 @@ function requirePrice(price: number | null): number {
   return price ?? 0;
 }
 
-export function cartLineFromListRow(dto: ProductListRowDto, qty = 1): CartLine {
+export function cartLineFromListRow(product: ProductListItem, qty = 1): CartLine {
   return {
-    variantId: String(dto.id),
+    variantId: String(product.id),
     quantity: Math.max(1, Math.floor(qty)),
     snapshot: {
-      title: dto.name,
-      imageUrl: dto.photo,
-      unitPrice: requirePrice(dto.price),
+      title: product.name,
+      imageUrl: product.photo,
+      unitPrice: requirePrice(product.price),
       currency,
-      slug: dto.productSlug,
+      slug: product.productSlug,
     },
   };
 }
 
-export function cartLineFromBySlug(
-  dto: ProductBySlugDto,
-  qty: number,
-): CartLine {
+export function cartLineFromBySlug(product: ProductDetails, qty: number): CartLine {
   return {
-    variantId: String(dto.id),
+    variantId: String(product.id),
     quantity: Math.max(1, Math.floor(qty)),
     snapshot: {
-      title: dto.name,
-      imageUrl: dto.photo,
-      unitPrice: requirePrice(dto.price),
+      title: product.name,
+      imageUrl: product.photo,
+      unitPrice: requirePrice(product.price),
       currency,
       slug: '',
     },

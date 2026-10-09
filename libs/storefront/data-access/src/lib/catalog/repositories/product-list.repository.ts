@@ -1,5 +1,5 @@
 ﻿import { Injectable, inject } from '@angular/core';
-import { GetProductListQuery, ProductListRowDto, ProductSort } from '@storefront/contracts';
+import { GetProductListQuery, ProductListItem, ProductSort } from '@storefront/contracts';
 
 import { CatalogApiService } from '../api/catalog-api.service';
 import { RETAIL_PRICE_TYPE_ID } from '../config/catalog.constants';
@@ -19,7 +19,7 @@ export class ProductListRepository {
   getList(
     query: GetProductListQuery = {},
     categorySlug?: string | null,
-  ): Observable<PagedResult<ProductListRowDto>> {
+  ): Observable<PagedResult<ProductListItem>> {
     return this.api.getProductList(query, categorySlug);
   }
 

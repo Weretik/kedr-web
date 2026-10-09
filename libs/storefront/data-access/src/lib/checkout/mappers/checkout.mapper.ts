@@ -1,4 +1,4 @@
-import { CheckoutDto, CheckoutLineDto } from '@storefront/contracts';
+import { CheckoutCommand, CheckoutLine } from '@storefront/contracts';
 
 import { CartLine } from '../../cart/models/cart.types';
 
@@ -7,11 +7,11 @@ export type CheckoutContactInput = {
   phone: string;
 };
 
-export function mapToCheckoutDto(
+export function mapToCheckoutCommand(
   contact: CheckoutContactInput,
   cartLines: CartLine[],
-): CheckoutDto {
-  const lines: CheckoutLineDto[] = cartLines.map((x) => ({
+): CheckoutCommand {
+  const lines: CheckoutLine[] = cartLines.map((x) => ({
     productId: x.variantId,
     title: x.snapshot.title,
     unitPrice: x.snapshot.unitPrice,

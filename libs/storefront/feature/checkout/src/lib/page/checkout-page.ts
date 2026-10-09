@@ -1,20 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { applyServerErrors, controlErrorText } from '@shared/forms';
 import { NotificationService } from '@shared/ui';
-import {
-  CartFacade,
-  CheckoutFacade,
-  mapToCheckoutDto,
-} from '@storefront/data-access';
+import { CartFacade, CheckoutFacade, mapToCheckoutCommand } from '@storefront/data-access';
 import { LocaleNavigationService } from '@storefront/util';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -91,11 +82,9 @@ export class CheckoutPage implements OnDestroy {
       const message = this.error();
       if (!message) return;
 
-      this.notify.error(
-        this.transloco.translate('checkout.notify.errorTitle'),
-        message,
-        { lifeMs: 3500 },
-      );
+      this.notify.error(this.transloco.translate('checkout.notify.errorTitle'), message, {
+        lifeMs: 3500,
+      });
     });
 
     effect(() => {
@@ -112,11 +101,9 @@ export class CheckoutPage implements OnDestroy {
         ? `${this.transloco.translate('checkout.notify.validationPrefix')} ${fieldErrors}`
         : this.transloco.translate('checkout.notify.validationFallback');
 
-      this.notify.error(
-        this.transloco.translate('checkout.notify.validationTitle'),
-        detail,
-        { lifeMs: 5000 },
-      );
+      this.notify.error(this.transloco.translate('checkout.notify.validationTitle'), detail, {
+        lifeMs: 5000,
+      });
     });
   }
 
@@ -133,8 +120,8 @@ export class CheckoutPage implements OnDestroy {
     }
 
     const contact = this.form.getRawValue();
-    const dto = mapToCheckoutDto(contact, this.cart.lines());
-    this.facade.placeOrder(dto);
+    const command = mapToCheckoutCommand(contact, this.cart.lines());
+    this.facade.placeOrder(command);
   }
 
   isInvalid(name: keyof typeof this.form.controls) {

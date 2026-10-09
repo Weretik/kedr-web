@@ -1,10 +1,10 @@
-export interface ProductBreadcrumbDto {
+export interface ProductBreadcrumb {
   id: number;
   name: string;
   slug: string;
 }
 
-export interface ProductBySlugDto {
+export interface ProductDetails {
   id: number;
   name: string;
   photo: string;
@@ -14,5 +14,5 @@ export interface ProductBySlugDto {
   categorySlug: string;
   quantityInPack: number;
   price: number | null;
-  breadcrumbs: ProductBreadcrumbDto[];
+  breadcrumbs: ProductBreadcrumb[];
 }

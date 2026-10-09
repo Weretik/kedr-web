@@ -4,12 +4,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { ProductBySlugDto } from '@storefront/contracts';
-import {
-  CartFacade,
-  cartLineFromBySlug,
-  ProductFacade,
-} from '@storefront/data-access';
+import { ProductDetails } from '@storefront/contracts';
+import { CartFacade, cartLineFromBySlug, ProductFacade } from '@storefront/data-access';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
 import { LocaleNavigationService } from '@storefront/util';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
@@ -57,11 +53,7 @@ export class ProductPage {
     const categoryBreadcrumbs =
       product?.breadcrumbs?.map((breadcrumb) => ({
         label: breadcrumb.name,
-        routerLink: this.localeNavigation.localizedSegments(
-          'catalog',
-          breadcrumb.slug,
-          'products',
-        ),
+        routerLink: this.localeNavigation.localizedSegments('catalog', breadcrumb.slug, 'products'),
       })) ?? [];
 
     return {
@@ -74,9 +66,7 @@ export class ProductPage {
             if (window.history.length > 1) {
               this.location.back();
             } else {
-              void this.router.navigate(
-                this.localeNavigation.localizedSegments(),
-              );
+              void this.router.navigate(this.localeNavigation.localizedSegments());
             }
           },
         },
@@ -118,7 +108,7 @@ export class ProductPage {
     this.facade.refresh();
   });
 
-  addToCart(product: ProductBySlugDto, qty: number = this.quantity()) {
+  addToCart(product: ProductDetails, qty: number = this.quantity()) {
     this.cart.addToCart(cartLineFromBySlug(product, qty));
   }
 }

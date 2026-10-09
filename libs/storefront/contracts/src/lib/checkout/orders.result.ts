@@ -1,3 +1,3 @@
-﻿export type OrderCreatedDto = {
+export type OrderCreated = {
   orderId: string;
 };

@@ -3,12 +3,8 @@ import { Component, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { ProductListRowDto } from '@storefront/contracts';
-import {
-  CartFacade,
-  cartLineFromListRow,
-  ProductListFacade,
-} from '@storefront/data-access';
+import { ProductListItem } from '@storefront/contracts';
+import { CartFacade, cartLineFromListRow, ProductListFacade } from '@storefront/data-access';
 import { LocaleNavigationService } from '@storefront/util';
 import { ButtonDirective, ButtonIcon, ButtonLabel } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
@@ -91,7 +87,7 @@ export class ProductList {
     this.pageState.clear();
   }
 
-  public addToCart(product: ProductListRowDto) {
+  public addToCart(product: ProductListItem) {
     this.cart.addToCart(cartLineFromListRow(product, 1));
   }
 
