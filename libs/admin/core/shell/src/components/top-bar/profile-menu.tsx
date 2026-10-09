@@ -2,7 +2,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 
-import { useAdminShellLogout } from '../providers/admin-shell-session-provider';
+import { useAdminShellLogout } from '../../providers/admin-shell-session-provider';
 
 import type { MouseEvent } from 'react';
 

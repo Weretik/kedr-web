@@ -1,9 +1,9 @@
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 
-import { ColorSchemeMenu } from './color-scheme-menu';
 import { NotificationsMenu } from './notifications-menu';
 import { ProfileMenu } from './profile-menu';
+import { ColorSchemeMenu } from '../theme/color-scheme-menu';
 
 interface AdminTopBarProps {
   onOpenNavigation: () => void;
