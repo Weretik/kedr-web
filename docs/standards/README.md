@@ -11,3 +11,9 @@
 - [Testing rules](testing-rules.md) — вибір перевірок та їх фіксація.
 - [Security rules](security-rules.md) — access, sessions, безпечні дані й security review.
 - [Delivery rules](delivery-rules.md) — SDD flow, scope і definition of done.
+
+Фактичні versions, projects і runnable targets не дублюються в цих правилах:
+їхній поточний snapshot містить [frontend inventory](../architecture/frontend-inventory.md).
+Системні розбіжності оформлюються через
+[remediation SDD](../specs/_templates/remediation/README.md), а не залишаються
+необов'язковим residual risk.

@@ -33,9 +33,10 @@
 @mobile/catalog/ui
 ```
 
-Правила `@nx/enforce-module-boundaries` додаються разом зі створенням першої
-Mobile-бібліотеки. До цього контракт є обов'язковим для code review; глобальні
-обмеження Admin не послаблюються.
+Правила `@nx/enforce-module-boundaries` уже діють для Mobile libraries. Їхню
+фактичну повноту та відомі gaps фіксує
+[frontend inventory](../frontend-inventory.md); documented direction додатково
+перевіряється code audit до закриття AF-001.
 
 ## Публічний API бібліотек
 

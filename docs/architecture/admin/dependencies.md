@@ -25,7 +25,9 @@ admin/shared/* -> admin/shared/* без циклов
 
 - Домен не імпортує внутрішні модулі іншого домену.
 - `admin/shared` не залежить від доменних бібліотек.
-- Admin не залежить від бібліотек кореневого `libs/shared`.
+- Admin не залежить від platform/UI бібліотек кореневого `libs/shared`.
+  Єдиний поточний виняток — platform-neutral generated contract
+  `@shared/api-contracts` на session/data-access transport boundary.
 - `model`, `ui` і `data-access` не залежать від `feature`.
 - `ui` не імпортує `data-access`, router або feature.
 - `model` залишається чистим TypeScript без React.

@@ -12,15 +12,15 @@ model -> mobile/shared/util
 mobile/shared/* -> mobile/shared/* без циклів
 ```
 
-| Джерело         | Може залежати від                                               |
-| --------------- | --------------------------------------------------------------- |
-| `app`           | `core`, domain `feature`, `mobile/shared`                       |
-| `core`          | `core`, `mobile/shared`                                         |
-| `feature`       | свого `data-access`, `model`, `ui`, `mobile/shared`             |
-| `data-access`   | свого `model`, `mobile/shared/api-client`, `mobile/shared/util` |
-| domain `ui`     | свого `model`, `mobile/shared/ui`, `mobile/shared/util`         |
-| domain `model`  | `mobile/shared/util`                                            |
-| `mobile/shared` | лише інші `mobile/shared` бібліотеки                            |
+| Джерело         | Може залежати від                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| `app`           | `core`, domain `feature`, `mobile/shared`                                                                  |
+| `core`          | `core`, `mobile/shared`                                                                                    |
+| `feature`       | `data-access`, `model`, `ui`, `mobile/shared`; cross-domain lower layers лише для явно описаного user flow |
+| `data-access`   | свого `model`, `mobile/shared/api-client`, `mobile/shared/util`                                            |
+| domain `ui`     | свого `model`, `mobile/shared/ui`, `mobile/shared/util`                                                    |
+| domain `model`  | `mobile/shared/util`                                                                                       |
+| `mobile/shared` | інші `mobile/shared`; platform-neutral shared contract лише за явною transport потребою                    |
 
 Це той самий напрямок залежностей, що в Admin. Відмінність лише в реалізації
 platform-adapters: Mobile shared використовує Expo та React Native, Admin shared
@@ -28,8 +28,11 @@ platform-adapters: Mobile shared використовує Expo та React Native
 
 ## Обмеження
 
-- Домен не імпортує внутрішні модулі іншого домену.
-- `mobile/shared` не залежить від доменних бібліотек.
+- Домен не імпортує внутрішні модулі іншого домену. Feature може оркеструвати
+  public lower-layer API іншого домену лише коли це записано у feature design;
+  feature-to-feature залежність заборонена.
+- `mobile/shared` не залежить від доменних бібліотек. Generated
+  `@shared/api-contracts` дозволений лише transport/data-access boundary, не UI.
 - `feature`, `data-access`, `ui` і `model` не залежать від Expo Router route-файлів.
 - `ui` не імпортує `data-access`, RTK Query hooks або router.
 - `model` — чистий TypeScript: без React, React Native, Expo, HTTP і storage API.
@@ -38,6 +41,10 @@ platform-adapters: Mobile shared використовує Expo та React Native
   потрібну поведінку через публічні адаптери `core/auth` та `core/connectivity`.
 - Циклічні залежності та deep imports між бібліотеками заборонені.
 - Між бібліотеками використовуються aliases і `src/index.ts`, а не relative imports.
+
+`apps/mobile` є composition root і володіє складанням domain reducers. `core`
+надає shell/provider primitives, але не імпортує domain `model`, `data-access`,
+`ui` або `feature`.
 
 ## Особливість Expo Router
 

@@ -2,18 +2,18 @@
 
 ## Фактичний test stack
 
-Mobile працює на Expo SDK 56, React Native 0.85, Expo Router, Redux Toolkit/RTK
-Query та Axios. Тести використовують Jest 29, `jest-expo` 56 і React Native
+Mobile працює на Expo SDK 57, React Native 0.86, Expo Router, Redux Toolkit/RTK
+Query та Axios. Тести використовують Jest 29, `jest-expo` 57 і React Native
 Testing Library 13. Конфіги app і libraries є окремими `jest.config.cjs`;
 platform mocks живуть лише на реальних межах Expo, storage, network і native UI.
 
-| Рівень              | Target                                                                               | Що перевіряємо                                                   |
-| ------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| Unit                | відповідний `*:test`                                                                 | pure functions, Zod validation, mapper-и, reducers               |
-| Focused integration | відповідний `*:test`                                                                 | state, providers, RTK Query/Axios boundary, connectivity         |
-| Component           | `mobile:test`, `mobile-catalog-ui:test`, `mobile-catalog-feature:test`, `shell:test` | екрани, доступні ролі/назви та дії користувача                   |
-| Integration         | відповідний `*:test`                                                                 | Expo Router boundary, storage, connectivity та native adapters   |
-| Mobile E2E          | відсутній                                                                            | критичний journey на зібраному застосунку після окремого enabler |
+| Рівень              | Target                                       | Що перевіряємо                                                   |
+| ------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
+| Unit                | відповідний `*:test`                         | pure functions, Zod validation, mapper-и, reducers               |
+| Focused integration | відповідний `*:test`                         | state, providers, RTK Query/Axios boundary, connectivity         |
+| Component           | `mobile:test`, domain `*:test`, `shell:test` | екрани, доступні ролі/назви та дії користувача                   |
+| Integration         | відповідний `*:test`                         | Expo Router boundary, storage, connectivity та native adapters   |
+| Mobile E2E          | відсутній                                    | критичний journey на зібраному застосунку після окремого enabler |
 
 Основні команди:
 

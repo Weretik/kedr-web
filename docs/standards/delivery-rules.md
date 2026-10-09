@@ -19,6 +19,9 @@ Feature готова до реалізації, коли:
 - кожна задача має `Covers` або `Enables`, `Depends on`, точні шляхи, test
   level, `Work`, `Evidence` і `Checkpoint`;
 - `traceability.md` пов'язує весь scope без сирітських сценаріїв або задач.
+- architecture baseline порівнює фактичні Nx projects/tags/constraints,
+  dependency graph, aliases/public APIs, approved data stack і test targets із
+  applicable rules; кожна розбіжність має `AF-*` та prerequisite `EN-*`/`RM-*`.
 
 ## Traceability
 
@@ -62,3 +65,10 @@ Scope завершено, коли:
 - `traceability.md` посилається на фактичні tests/evidence;
 - delivery report містить scope, змінені файли, evidence, невиконані перевірки
   та реальні residual risks.
+- повний code audit завершено після останньої implementation-зміни; усі in-scope
+  `AF-*` мають статус `verified`.
+
+`open`, `blocked` або `planned` architecture finding блокує delivery. Статус
+`deferred-approved` допустимий лише з явним погодженням, owner, окремою SDD/task
+і доказом, що finding не є prerequisite поточного dependency chain. `fixed` до
+final regression не є завершеним статусом.

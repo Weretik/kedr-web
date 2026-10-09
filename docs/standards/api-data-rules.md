@@ -22,10 +22,21 @@
 
 ## Requests and state
 
-- Використовуйте чинний RTK Query `baseApi` і typed hooks; не викликайте Axios/HTTP безпосередньо з components.
+- Admin і Mobile використовують чинний RTK Query `baseApi`, injected endpoints
+  і typed hooks. Axios належить відповідному shared API client; raw Axios у
+  `admin/core/auth` дозволений лише для session bootstrap/refresh згідно з
+  `docs/architecture/admin/adr/0001-admin-axios-transport.md`.
+- Storefront використовує Angular `HttpClient` у `data-access`, repository/
+  facade і signals/RxJS. RTK Query до Storefront не застосовується.
+- Components і presentation `ui` жодного клієнта не викликають HTTP/API напряму.
 - Передавайте cancellation signal у transport та зберігайте чинну нормалізацію errors.
 - Визначайте pagination, filtering, sorting, cache/refetch semantics у contract до коду.
-- Не дублюйте RTK Query cache, loading або error state у feature reducer.
+- Не дублюйте RTK Query cache, loading або error state у feature reducer чи
+  component state. Для Storefront не дублюйте resource/observable server state
+  поза його data-access facade.
+- `fetch` у `libs/shared/logging` допустимий лише як best-effort fallback після
+  `sendBeacon`; він не є API/server-state transport і не може використовуватися
+  доменними queries/mutations.
 
 ## Public configuration
 

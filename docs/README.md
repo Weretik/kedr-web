@@ -5,8 +5,12 @@
 ## Frontend SDD
 
 - Архітектура — фактична топологія frontend-застосунків, модулі та межі шарів; оберіть потрібний клієнт нижче.
+- [Фактичний frontend inventory](architecture/frontend-inventory.md) — apps,
+  Nx projects/tags/targets, aliases, test gates і відомі baseline gaps.
 - [Інженерні правила](standards/README.md) — індекс rules для Admin, Mobile, UI, API, testing і delivery.
 - [Специфікації](specs/README.md) — структура feature-специфікацій та SDD-шаблони.
+- [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md)
+  — погоджуваний план усунення підтверджених системних порушень.
 
 ## Застосунки
 
@@ -20,4 +24,4 @@
 
 Сталі правила належать у `architecture/` або `standards/`. Рішення, вимоги, контракти, задачі та докази перевірки конкретної feature належать у її папку в `specs/`.
 
-Перед змінами в Admin або Mobile прочитай [інструкції для AI](AGENTS.md).
+Перед змінами в Admin або Mobile прочитай [інструкції для AI](../AGENTS.md).
