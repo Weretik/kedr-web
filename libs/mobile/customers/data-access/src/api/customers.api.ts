@@ -13,6 +13,10 @@ const runtimeContractError: ApiError = {
 export const customersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getCustomers: build.query<Customer[], void>({
+      providesTags: (result) => [
+        { type: 'Customers', id: 'LIST' },
+        ...(result?.map((customer) => ({ type: 'Customers' as const, id: customer.counterpartyId })) ?? []),
+      ],
       queryFn: async (_arg, _api, _extraOptions, fetchWithBQ) => {
         let requestError: ApiError | undefined;
 

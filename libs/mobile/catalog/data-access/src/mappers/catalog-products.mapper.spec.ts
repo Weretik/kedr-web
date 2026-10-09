@@ -39,4 +39,8 @@ describe('mapAdminProductPage', () => {
       totalRecords: 21,
     });
   });
+
+  it('rejects an invalid successful response through the API error contract', () => {
+    expect(() => mapAdminProductPage({ value: [] })).toThrow();
+  });
 });

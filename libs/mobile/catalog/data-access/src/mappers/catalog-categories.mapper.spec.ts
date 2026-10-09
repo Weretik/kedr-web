@@ -63,4 +63,8 @@ describe('mapAdminCategories', () => {
       ]),
     ).toEqual([{ children: [{ children: [], id: 2, label: 'Валідна' }], id: 1, label: 'Корінь' }]);
   });
+
+  it('rejects a structurally invalid successful response', () => {
+    expect(() => mapAdminCategories([{ id: 'invalid' }])).toThrow();
+  });
 });

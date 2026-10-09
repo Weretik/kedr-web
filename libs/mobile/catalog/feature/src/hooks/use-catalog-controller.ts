@@ -4,7 +4,6 @@ import {
 } from '@mobile/catalog/data-access';
 import { useCallback, useEffect, useReducer, useState } from 'react';
 
-import { mergeCatalogProducts } from '../state/catalog-pagination';
 import { catalogQueryReducer, initialCatalogQueryState } from '../state/catalog-query-reducer';
 import {
   removeCatalogSearchHistoryEntry,
@@ -15,11 +14,8 @@ import {
   saveCatalogSearchHistory,
 } from '../storage/catalog-search-history-storage';
 
-import type { CatalogProduct } from '@mobile/catalog/model';
-
 export function useCatalogController() {
   const [state, dispatch] = useReducer(catalogQueryReducer, initialCatalogQueryState);
-  const [items, setItems] = useState<CatalogProduct[]>([]);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const categoriesQueryResult = useGetCatalogCategoriesQuery();
   const queryResult = useGetCatalogProductsQuery(state.query, { refetchOnMountOrArgChange: true });
@@ -35,17 +31,6 @@ export function useCatalogController() {
       subscribed = false;
     };
   }, []);
-
-  useEffect(() => setItems([]), [state.query.filters, state.query.search, state.query.sort]);
-
-  useEffect(() => {
-    if (currentData)
-      setItems((current) =>
-        state.query.page === 1
-          ? currentData.items
-          : mergeCatalogProducts(current, currentData.items),
-      );
-  }, [currentData, state.query.page]);
 
   const refresh = useCallback(() => {
     if (state.query.page === 1) void refetch();
@@ -104,7 +89,7 @@ export function useCatalogController() {
     categoriesQueryResult,
     clearSearch,
     dispatch,
-    items,
+    items: currentData?.items ?? [],
     loadNextPage,
     queryResult,
     refresh,

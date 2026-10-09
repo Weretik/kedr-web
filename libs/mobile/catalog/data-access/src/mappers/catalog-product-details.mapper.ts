@@ -1,6 +1,5 @@
-import { publicProductDetailsSchema } from '../contracts/public-product-details.schema';
+import { parsePublicProductDetails } from '../contracts/public-product-details.schema';
 
-import type { PublicProductDetailsDto } from '../contracts/public-product-details.dto';
 import type { CatalogProductDetails } from '@mobile/catalog/model';
 
 const optionalUrl = (value: string): string | null => {
@@ -8,8 +7,8 @@ const optionalUrl = (value: string): string | null => {
   return trimmed.length > 0 ? trimmed : null;
 };
 
-export function mapPublicProductDetails(dto: PublicProductDetailsDto): CatalogProductDetails {
-  const parsed = publicProductDetailsSchema.parse(dto);
+export function mapPublicProductDetails(response: unknown): CatalogProductDetails {
+  const parsed = parsePublicProductDetails(response);
 
   return {
     breadcrumbs: parsed.breadcrumbs.map((breadcrumb) => ({

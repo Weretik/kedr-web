@@ -1,9 +1,12 @@
+import { parseAdminCategories } from '../contracts/admin-categories.schema';
+
 import type { AdminCategoryDto } from '../contracts/admin-categories.dto';
 import type { CatalogCategoryOption } from '@mobile/catalog/model';
 
 const maximumCategoryDepth = 2;
 
-export function mapAdminCategories(rows: readonly AdminCategoryDto[]): CatalogCategoryOption[] {
+export function mapAdminCategories(response: unknown): CatalogCategoryOption[] {
+  const rows = parseAdminCategories(response);
   const duplicateIds = findDuplicateIds(rows);
   const categoriesById = new Map(
     rows

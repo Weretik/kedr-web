@@ -1,7 +1,10 @@
+import { parseAdminProductPage } from '../contracts/admin-products.schema';
+
 import type { AdminProductPageDto } from '../contracts/admin-products.dto';
 import type { CatalogPage, CatalogProduct } from '@mobile/catalog/model';
 
-export function mapAdminProductPage(dto: AdminProductPageDto): CatalogPage {
+export function mapAdminProductPage(response: unknown): CatalogPage {
+  const dto = parseAdminProductPage(response);
   return {
     items: dto.value.map(mapAdminProduct),
     pageNumber: dto.pagedInfo.pageNumber,

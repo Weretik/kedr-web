@@ -10,6 +10,10 @@ export const cartApi = baseApi.injectEndpoints({
       CreatedAdminOrder,
       { idempotencyKey: string; payload: CreateAdminOrderPayload }
     >({
+      invalidatesTags: (result) => [
+        { type: 'Orders', id: 'LIST' },
+        ...(result ? [{ type: 'Orders' as const, id: result.orderId }] : []),
+      ],
       query: ({ idempotencyKey, payload }) => ({
         data: toCreateOrderRequest(payload),
         headers: { 'Idempotency-Key': idempotencyKey },

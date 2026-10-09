@@ -1,3 +1,4 @@
+import { toApiError } from '@mobile/shared/api-client';
 import { z } from 'zod';
 
 export const publicProductDetailsSchema = z.object({
@@ -18,3 +19,9 @@ export const publicProductDetailsSchema = z.object({
     }),
   ),
 });
+
+export function parsePublicProductDetails(response: unknown) {
+  const parsed = publicProductDetailsSchema.safeParse(response);
+  if (!parsed.success) throw toApiError(parsed.error);
+  return parsed.data;
+}

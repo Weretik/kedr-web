@@ -1,4 +1,4 @@
-import { ORDER_SYNC_STATUSES } from '@mobile/orders/model';
+import { ORDER_SYNC_STATUSES } from '@mobile/shared/model';
 import { z } from 'zod';
 
 export const orderHistoryPageSchema = z.object({

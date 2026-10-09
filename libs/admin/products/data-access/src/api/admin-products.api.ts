@@ -9,6 +9,10 @@ import type { ProductsListPage, ProductsListQuery } from '@admin/products/model'
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProductsList: build.query<ProductsListPage, ProductsListQuery>({
+      providesTags: (result) => [
+        { type: 'Products', id: 'LIST' },
+        ...(result?.items.map((product) => ({ type: 'Products' as const, id: product.id })) ?? []),
+      ],
       query: (query) => ({
         url: '/api/admin/products',
         method: 'GET',

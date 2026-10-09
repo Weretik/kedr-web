@@ -6,4 +6,5 @@ export const baseApi = createApi({
   baseQuery: axiosBaseQuery,
   endpoints: () => ({}),
   reducerPath: 'mobileApi',
+  tagTypes: ['Catalog', 'Customers', 'Orders'],
 });

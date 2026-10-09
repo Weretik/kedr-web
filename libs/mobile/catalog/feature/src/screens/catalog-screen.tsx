@@ -15,11 +15,12 @@ export function CatalogScreen({
   onSearchActionChange,
 }: Readonly<CatalogScreenProps>) {
   const controller = useCatalogController();
+  const { dispatch } = controller;
 
   useEffect(() => {
-    onSearchActionChange?.(() => controller.dispatch({ type: 'searchOpened' }));
+    onSearchActionChange?.(() => dispatch({ type: 'searchOpened' }));
     return () => onSearchActionChange?.(undefined);
-  }, [controller.dispatch, onSearchActionChange]);
+  }, [dispatch, onSearchActionChange]);
 
   return <CatalogScreenContent {...controller} onProductPress={onProductPress} />;
 }
