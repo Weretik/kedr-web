@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
+import { StyleSheet, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 
 import { ProductCard } from './product-card';
@@ -60,6 +61,24 @@ describe('ProductCard', () => {
     fireEvent.press(getByLabelText(/Товар Кабель мідний/));
     expect(onPress).toHaveBeenCalledWith(product);
   });
+
+  it('uses the Paper theme for the product image frame', () => {
+    const { UNSAFE_getAllByType } = renderCard({
+      availability: 'in_stock',
+      id: '12',
+      imageUrl: null,
+      name: 'Кабель мідний',
+      price: 120.5,
+      productSlug: 'kabel-12',
+    });
+
+    const imageFrame = UNSAFE_getAllByType(View).find(
+      (view) => StyleSheet.flatten(view.props.style)?.width === 96,
+    );
+    expect(StyleSheet.flatten(imageFrame?.props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#f1e2d3' }),
+    );
+  });
 });
 
 function renderCard(product: Parameters<typeof ProductCard>[0]['product']) {
@@ -76,7 +95,7 @@ const testTheme = {
     onSurface: '#000',
     onSurfaceVariant: '#555',
     primary: '#0a0',
-    surface: '#fff',
+    surface: '#f1e2d3',
     surfaceVariant: '#eee',
     tertiary: '#cc0',
   },

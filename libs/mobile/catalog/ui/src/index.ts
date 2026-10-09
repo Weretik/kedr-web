@@ -13,4 +13,5 @@ export * from './components/query/catalog-query-action-row';
 export * from './components/query/catalog-action-sheet';
 export * from './states/catalog-page-state';
 export * from './states/catalog-state';
+export * from './states/missing-photo-products-state';
 export * from './states/product-details-state';

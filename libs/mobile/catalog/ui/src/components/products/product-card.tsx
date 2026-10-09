@@ -33,7 +33,7 @@ export function ProductCard({ onPress, product }: Readonly<ProductCardProps>) {
       style={[styles.card, { backgroundColor: theme.colors.surface }]}
     >
       <Card.Content style={styles.content}>
-        <View style={styles.imageFrame}>
+        <View style={[styles.imageFrame, { backgroundColor: theme.colors.surface }]}>
           {product.imageUrl ? (
             <Image
               accessibilityLabel={`Фото товару ${product.name}`}
@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
   image: { height: '100%', width: '100%' },
   imageFallback: { alignItems: 'center', justifyContent: 'center', padding: 8 },
   imageFrame: {
-    backgroundColor: '#ffffff',
     borderRadius: 8,
     height: 96,
     overflow: 'hidden',

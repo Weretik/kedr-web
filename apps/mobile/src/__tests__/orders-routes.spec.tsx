@@ -9,7 +9,9 @@ let mockOrderId: string | string[] | undefined = '7';
 
 jest.mock('expo-router', () => {
   const Stack = ({ children }: { children?: React.ReactNode }) => children;
-  Stack.Screen = () => null;
+  Stack.Screen = function StackScreen() {
+    return null;
+  };
   return {
     Stack,
     useLocalSearchParams: () => ({ orderId: mockOrderId }),

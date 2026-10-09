@@ -21,6 +21,10 @@ jest.mock('@mobile/catalog/feature', () => ({
 
     return <MockText accessibilityRole="header">Каталог</MockText>;
   },
+  MissingPhotoProductsScreen: () => {
+    const { Text: MockText } = jest.requireActual('react-native');
+    return <MockText accessibilityRole="header">Товари без фотографій</MockText>;
+  },
   ProductDetailsScreen: ({ productSlug }: { productSlug?: string }) => {
     const { Text: MockText } = jest.requireActual('react-native');
     return <MockText>Деталі: {productSlug}</MockText>;
@@ -36,10 +40,14 @@ jest.mock('@mobile/cart/feature', () => ({
 
 jest.mock('expo-router', () => {
   const Tabs = () => null;
-  Tabs.Screen = () => null;
+  Tabs.Screen = function TabsScreen() {
+    return null;
+  };
 
   const Stack = () => null;
-  Stack.Screen = () => null;
+  Stack.Screen = function StackScreen() {
+    return null;
+  };
 
   return {
     router: { push: (...args: unknown[]) => mockPush(...args) },
@@ -73,7 +81,7 @@ describe('StartRoute', () => {
 
     await waitFor(() => {
       expect(getByRole('header', { name: 'Каталог' })).toBeTruthy();
-      expect(getByRole('header', { name: 'Профіль' })).toBeTruthy();
+      expect(getByRole('header', { name: 'Товари без фотографій' })).toBeTruthy();
     });
   });
 
