@@ -1,16 +1,17 @@
+import { spawnSync } from 'node:child_process';
 import { readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { spawnSync } from 'node:child_process';
 
 const workspaceRoot = new URL('../../', import.meta.url).pathname.replace(/^\/(.:\/)/, '$1');
 const scopes = {
   web: ['apps/admin', 'libs/admin'],
+  storefront: ['apps/storefront', 'libs/storefront'],
   mobile: ['apps/mobile', 'libs/mobile'],
 };
 const selectedScope = process.argv[2];
 
 if (!(selectedScope in scopes)) {
-  console.error('Usage: node tools/testing/typecheck-tests.mjs <web|mobile>');
+  console.error('Usage: node tools/testing/typecheck-tests.mjs <web|storefront|mobile>');
   process.exit(2);
 }
 

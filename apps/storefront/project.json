@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/storefront/src",
-  "tags": ["scope:storefront"],
+  "tags": ["scope:storefront", "type:app"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",

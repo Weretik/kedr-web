@@ -171,14 +171,20 @@ module.exports = [
               onlyDependOnLibsWithTags: ['scope:mobile-shared'],
             },
 
-            // Admin composition root may only use its core, feature, and admin-shared libraries.
+            // Application composition roots own providers, routes, and feature assembly.
             {
               sourceTag: 'type:app',
               onlyDependOnLibsWithTags: [
                 'type:core',
+                'type:shell',
                 'type:feature',
+                'type:model',
+                'type:data-access',
+                'type:ui',
+                'type:util',
                 'scope:admin-shared',
                 'scope:mobile-shared',
+                'scope:shared',
               ],
             },
 
@@ -192,10 +198,24 @@ module.exports = [
               ],
             },
 
-            // Mobile core composes shell-level infrastructure and connectivity.
+            // Mobile core is domain-neutral shell/connectivity infrastructure.
             {
               allSourceTags: ['scope:mobile', 'type:core'],
-              onlyDependOnLibsWithTags: ['scope:mobile', 'scope:mobile-shared'],
+              onlyDependOnLibsWithTags: ['type:core', 'scope:mobile-shared', 'scope:shared'],
+            },
+
+            // Models are framework-neutral and may only use models or shared utilities/contracts.
+            // Same-domain ownership is checked by architecture:boundaries.
+            {
+              sourceTag: 'type:model',
+              onlyDependOnLibsWithTags: [
+                'type:model',
+                'type:util',
+                'type:contracts',
+                'scope:admin-shared',
+                'scope:mobile-shared',
+                'scope:shared',
+              ],
             },
 
             // Admin feature layers compose their domain's data, model, UI, and shared libraries.
@@ -265,11 +285,10 @@ module.exports = [
               ],
             },
 
-            // feature can pull ui/util/data-access into its scope
+            // Feature libraries compose lower layers, never another feature library.
             {
               sourceTag: 'type:feature',
               onlyDependOnLibsWithTags: [
-                'type:feature',
                 'type:ui',
                 'type:util',
                 'type:model',
