@@ -163,6 +163,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/products/missing-photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List active products whose latest photo check is unavailable
+         * @description Temporarily anonymous. Reads persisted photo-check state only and does not contact the CDN while handling the request.
+         */
+        get: operations["getAdminProductsWithUnavailablePhotos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/orders": {
         parameters: {
             query?: never;
@@ -517,6 +537,19 @@ export interface components {
         AdminProductPage: {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: components["schemas"]["AdminProduct"][];
+        };
+        MissingProductPhoto: components["schemas"]["AdminProduct"] & {
+            /** @constant */
+            photoAvailable: false;
+            /** @enum {string} */
+            photoStatus: "Missing" | "InvalidContentType" | "CheckFailed";
+            /** Format: date-time */
+            photoCheckedAtUtc: string;
+            photoHttpStatusCode: number | null;
+        };
+        MissingProductPhotoPage: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: components["schemas"]["MissingProductPhoto"][];
         };
         CreateOrderLineRequest: {
             productId: string;
@@ -1085,6 +1118,30 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProduct"][];
                 };
             };
+        };
+    };
+    getAdminProductsWithUnavailablePhotos: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                pageSize?: components["parameters"]["PageSize"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unavailable product-photo page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MissingProductPhotoPage"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
         };
     };
     createQuickOrder: {
