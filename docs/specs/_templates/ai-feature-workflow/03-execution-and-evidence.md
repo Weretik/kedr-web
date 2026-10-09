@@ -20,6 +20,8 @@ test-first exception, replacement check та enabled tasks/scenarios.
 - онови тільки mapping/status відповідного рядка `traceability.md`;
 - познач task status у `tasks/README.md`;
 - продовж наступну ready in-scope задачу.
+- онови `AF-*` evidence лише після перевірки target state; `fixed` не замінює
+  final `verified`.
 
 Не додавай incidental refactors, upgrades або інші сценарії.
 
@@ -39,3 +41,7 @@ consumer projection у `docs/contracts/<module>/`; YAML snapshot змінюй т
 
 Web/RN infrastructure smoke записуй як `EN-*` replacement check. Він не є
 Green/Regression evidence для acceptance behavior.
+
+Після structural/API task повтори affected graph/boundary lint, public/deep
+import, direct transport/manual lifecycle і generated DTO searches. Finding не
+можна залишити planned як residual risk усередині поточного dependency chain.

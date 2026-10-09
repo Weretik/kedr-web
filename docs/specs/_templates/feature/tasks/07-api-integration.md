@@ -14,6 +14,8 @@ error behavior.
 - Separate `TS-*` files for contract projection, request behavior, response
   mapping and user-facing failure behavior when their risks differ.
 - Shared transport or fixture setup belongs in `EN-*`.
+- Перевірити canonical provider/base API, runtime validation, cancellation,
+  normalized errors, cache keys/tags/invalidation і private transport exports.
 
 ## Exit checkpoint
 

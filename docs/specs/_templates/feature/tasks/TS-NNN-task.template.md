@@ -5,6 +5,7 @@
 - **Depends on:** <TS/EN IDs or none>
 - **Exact paths:** <implementation path>; <test path>
 - **Test level:** <unit | focused integration | component | integration | E2E | manual | documentation>
+- **Architecture baseline:** <projects/tags/owner/public API/tool; AF/RM dependency or none>
 
 ## Work
 
@@ -15,6 +16,7 @@
       для зрозумілої підтримки й тестування, розділити його на кілька файлів за
       чинними архітектурними межами; не ділити малий цілісний файл лише через
       його розмір.
+- [ ] Оновити code audit; не закривати task з in-scope open/blocked/planned finding.
 
 ## Evidence
 

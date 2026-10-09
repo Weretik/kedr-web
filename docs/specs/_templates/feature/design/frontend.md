@@ -8,6 +8,18 @@
 - Public API boundaries:
 - Shared behavior reused across clients:
 
+## Architecture baseline
+
+| Area                | Actual evidence                 | Applicable rule        | Required target                       | Finding/prerequisite |
+| ------------------- | ------------------------------- | ---------------------- | ------------------------------------- | -------------------- |
+| Projects/tags/graph | `<project.json/nx graph>`       | `<architecture path>`  | `<direction>`                         | `<AF/RM/EN або —>`   |
+| Layers/owners       | `<exact paths>`                 | `<standard>`           | `<model/data-access/ui/feature/core>` | `<ID>`               |
+| Public API          | `<aliases/index.ts/imports>`    | `<nx contract>`        | `<entry point>`                       | `<ID>`               |
+| Data/test tools     | `<provider/config/target/test>` | `<state/testing rule>` | `<approved path>`                     | `<ID>`               |
+
+Поточна реалізація не є доказом approved architecture. Finding у dependency
+chain feature має completed remediation checkpoint до behavioral task.
+
 ## State and data fetching
 
 - Client/server state ownership:

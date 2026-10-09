@@ -1,25 +1,18 @@
 # Як доручити AI створити коміти
 
-Надішліть AI це повідомлення:
+Для всіх поточних змін:
 
 ```text
-Працюй за регламентом `docs/specs/_templates/git/git-commit-batching.md`.
-Створи логічні коміти лише з таких змін: `<опишіть зміни або вкажіть шляхи>`.
+Працюй за `docs/specs/_templates/git/git-commit-batching.md`.
+Створи atomic commits з усіх поточних незакомічених змін.
 Не виконуй push і не створюй PR.
 ```
 
-Приклад для всіх незакомічених змін:
+Для вибраного scope:
 
 ```text
-Працюй за регламентом `docs/specs/_templates/git/git-commit-batching.md`.
-Створи логічні коміти з усіх моїх поточних незакомічених змін.
+Працюй за `docs/specs/_templates/git/git-commit-batching.md`.
+Scope: <шляхи або опис змін>.
+Створи atomic commits лише для цього scope.
 Не виконуй push і не створюй PR.
-```
-
-Приклад для конкретної частини змін:
-
-```text
-Працюй за регламентом `docs/specs/_templates/git/git-commit-batching.md`.
-Створи коміт лише зі змінами в `apps/mobile` і `docs/specs/mobile/catalog`.
-Не включай інші файли, не виконуй push і не створюй PR.
 ```

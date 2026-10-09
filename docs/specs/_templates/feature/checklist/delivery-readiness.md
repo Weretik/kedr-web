@@ -4,6 +4,8 @@
 - [ ] Усі required `TS-*`/`EN-*` пройшли checkpoint.
 - [ ] Нове testable behavior має Red → Green → Refactor → Regression evidence.
 - [ ] Контракти, документація і реалізація узгоджені.
+- [ ] Повний code audit виконано після останньої зміни; усі in-scope `AF-*`
+      verified, approved deferrals не є prerequisites.
 - [ ] У кожній виконаній задачі перевірено цілісність відповідальності змінених
       implementation-файлів; файли з кількома незалежними відповідальностями
       розділені за чинними архітектурними межами.
@@ -14,4 +16,6 @@
 - [ ] `traceability.md` посилається на фактичні tests та evidence.
 - [ ] Незавершені перевірки мають точну причину й owner.
 - [ ] Residual risks записані.
+- [ ] Graph, aliases/barrels, forbidden transport/DTO/deep-import searches і
+      empty/dead path inspection повторені.
 - [ ] Сторонні зміни робочого дерева збережені.

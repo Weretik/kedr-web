@@ -1,44 +1,52 @@
-# Як доручити AI створити frontend feature-специфікацію
+# Створити frontend feature specification
 
-Цей файл призначений користувачу й не копіюється до створеної feature.
-
-Вкажіть AI:
-
-- тип застосунку: React, React Native або Angular;
-- клієнт: Admin, Mobile, Storefront або інший;
-- точний майбутній каталог feature;
-- observable goal, in-scope та out-of-scope поведінку;
-- відомі API, route/deep-link, permission або platform constraints;
-- файли вимог, дизайну, API-контрактів чи попередньої feature, які треба
-  використати як джерело.
-
-Готовий запит:
+Цей файл призначений користувачу й не копіюється до feature.
 
 ```text
-Використай `docs/specs/_templates/feature/`.
-Тип застосунку: <React | React Native | Angular>.
-Створи scenario-first SDD для:
-`docs/specs/<client>/<domain>/<NNN>-<feature-slug>/`.
+$kedr-feature-spec
 
-Клієнт: <Admin React | Mobile React Native | Storefront Angular | shared>.
-Мета: <спостережуваний результат для користувача>.
+Тип: <React | React Native | Angular>.
+Клієнт: <Admin | Mobile | Storefront | shared>.
+Каталог: `docs/specs/<client>/<domain>/<NNN>-<feature-slug>/`.
+Мета: <результат для користувача>.
 У scope: <поведінка>.
 Поза scope: <поведінка>.
-Джерела: <точні шляхи до вимог, дизайну, контрактів або related feature>.
+Джерела: <шляхи або немає>.
 
-Спочатку проаналізуй фактичну архітектуру, застосуй відповідний варіант із
-`feature/variants/`, перевір Nx targets, package manager, встановлений test
-tooling і наявні тести. Створи `R-*`, Given/When/Then `SC-*`, малі
-`TS-*`/`EN-*` та `traceability.md`. Код застосунку не реалізовуй.
+Створи scenario-first SDD. Код не реалізовуй.
 ```
 
-Якщо тип застосунку не вказано, AI повинен спочатку запитати:
-`React, React Native чи Angular?` і не створювати variant-specific файли до
-відповіді.
+## Пример
 
-Для React Native visual/interaction contract входить у той самий варіант і
-створюється разом із Mobile feature, а не як окрема feature.
+```text
+$kedr-feature-spec
 
-Якщо джерел немає, напишіть `Джерела: немає`. Для зміни існуючої feature
-вкажіть її поточний каталог і попросіть
-[поступову міграцію](../MIGRATION.md), щоб зберегти завершені ID та evidence.
+Тип: React Native.
+Клієнт: Mobile.
+Каталог: `docs/specs/mobile/catalog/004-product-details/`.
+Мета: покупець може переглянути деталі товару та додати його до кошика.
+
+У scope:
+- перехід із каталогу на сторінку товару;
+- назва, ціна, опис, gallery та availability;
+- loading, error і unavailable states;
+- додавання товару до кошика;
+- повернення зі збереженням стану каталогу.
+
+Поза scope:
+- reviews;
+- favorites;
+- product comparison;
+- checkout;
+- зміни backend API.
+
+Джерела:
+- `docs/specs/mobile/catalog/003-product-list/`;
+- `docs/contracts/`;
+- `apps/mobile/`;
+- макет: <посилання>.
+
+Створи scenario-first SDD. Код не реалізовуй.
+```
+
+Для зміни існуючої feature вкажіть її каталог і попросіть поступову міграцію.

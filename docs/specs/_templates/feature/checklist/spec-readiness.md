@@ -8,6 +8,10 @@
 - [ ] Сценарії мають стабільні `SC-*` і Given/When/Then.
 - [ ] Сценарії описують лише observable behavior.
 - [ ] Фактичні projects, targets, tooling і наявні тести перевірені.
+- [ ] Architecture baseline містить graph/tags/constraints, layers/owners,
+      aliases/barrels, approved data stack і source/test gates.
+- [ ] Кожен architecture mismatch має `AF-*` і prerequisite `EN-*`/`RM-*`;
+      prerequisite findings не deferred.
 - [ ] Test levels обрані за ризиком; E2E не дублює нижчі рівні.
 - [ ] Кожен `TS-*` має одну responsibility; shared prerequisite є `EN-*`.
 - [ ] У задач є Covers/Enables, Depends on, exact paths, test level, Work,

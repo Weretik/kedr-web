@@ -14,10 +14,14 @@ Scope: <уся feature | фаза | SC-IDs | TS/EN IDs>.
 task-файлу або фази не потребує додаткової команди.
 
 Перед виконанням AI визначає variant (`react`, `react-native` або `angular`) і
-зчитує фактичні Nx targets. Поточні verified entrypoints для React Web та
+зчитує фактичні Nx targets та architecture baseline. Поточні verified entrypoints для React Web та
 React Native зафіксовані у
 [testing-rules.md](../../../standards/testing-rules.md); команди з task-файлу
 не мають суперечити цьому baseline.
+
+Blocking rule: finding у dependency chain feature спочатку отримує `AF-*` і
+виконаний `EN-*`/`RM-*` checkpoint. Existing implementation, зелений lint або
+planned refactor не дозволяють продовжити поверх порушеної межі.
 
 ## Workflow
 

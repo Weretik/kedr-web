@@ -1,0 +1,6 @@
+interface:
+  display_name: "Kedr Feature Orchestrator"
+  short_description: "Coordinate multi-agent Kedr feature delivery"
+  default_prompt: "Use $kedr-feature-orchestrator to coordinate dependency-aware multi-agent delivery of the accepted Kedr Web feature specification."
+policy:
+  allow_implicit_invocation: true

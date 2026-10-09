@@ -4,6 +4,11 @@
 її виконання. Стабільні правила залишаються у
 [standards](../../standards/README.md).
 
+Для existing code перед readiness використовуйте
+[повний code audit](code-audit/README.md). Системні findings, що охоплюють
+кілька libraries/features, оформлюйте через
+[remediation SDD](remediation/README.md).
+
 ## Як створити специфікацію
 
 1. Створи `docs/specs/<client>/<domain>/<NNN>-<feature-slug>/` зі спільних

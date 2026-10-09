@@ -13,16 +13,22 @@
    `tasks/README.md`, in-scope task-файли та релевантні design/contracts.
 3. Прочитай applicable architecture/standards, особливо
    `testing-rules.md` і `delivery-rules.md`.
-4. Перевір package manager, Nx projects/targets, installed dependencies,
+4. Звір `docs/architecture/frontend-inventory.md`, Nx graph, tags/constraints,
+   aliases/public barrels, approved data stack і source/test gates. Виконай
+   code-audit phases 00–01 до task selection.
+5. Перевір package manager, Nx projects/targets, installed dependencies,
    configs і наявні tests без припущень про tooling.
-5. Перевір git diff і збережи сторонні зміни.
-6. Для API scope знайди operation у `docs/contracts/openapi/openapi.yaml`,
+6. Перевір git diff і збережи сторонні зміни.
+7. Для API scope знайди operation у `docs/contracts/openapi/openapi.yaml`,
    consumer projection у `docs/contracts/` і generated type у
    `@shared/api-contracts`. Якщо operation відсутня, спочатку синхронізуй
    versioned snapshot із чистого backend checkout через CLI.
-7. Для React Web перевір `admin:vite:test` і `admin-e2e:e2e`; для React Native
+8. Для React Web перевір `admin:vite:test` і `admin-e2e:e2e`; для React Native
    перевір фактичні Jest targets через `npx nx show projects --with-target test`.
    Відсутній mobile E2E оформлюй як `EN-*`, не встановлюй важкий runner автоматично.
+
+Architecture mismatch отримує `AF-*`. Якщо він є prerequisite поточної задачі,
+task заблокована до погодженого remediation checkpoint; його не можна deferred.
 
 Невідоме бізнес-правило познач
 `[NEEDS CLARIFICATION: <конкретне питання>]`; не вигадуй поведінку, API fields,

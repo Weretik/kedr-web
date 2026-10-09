@@ -1,0 +1,6 @@
+interface:
+  display_name: "Kedr Remediation Plan"
+  short_description: "Plan systemic Kedr architecture remediation"
+  default_prompt: "Use $kedr-remediation-plan to create a traceable remediation specification for the supplied Kedr architecture findings."
+policy:
+  allow_implicit_invocation: true

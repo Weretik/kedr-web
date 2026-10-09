@@ -11,6 +11,9 @@
 5. Переглянь git diff і переконайся, що сторонні зміни збережено.
 6. Якщо scope перетинає API boundary, виконай `npm run contracts:check` і
    перевір, що generated types не мають незакоміченого drift.
+7. Виконай повний code audit phases 00–06 після останньої зміни; повтори graph,
+   aliases/barrels, forbidden imports/tools і empty/dead checks.
+8. Не став delivery complete, доки in-scope findings не `verified`.
 
 Platform baseline для delivery:
 
@@ -25,6 +28,9 @@ Platform baseline для delivery:
 
 Failure записуй із точною командою, failing test/step, ключовою причиною,
 походженням failure та наступним кроком.
+
+`deferred-approved` приймається лише з recorded user/owner approval, окремою
+task/SDD і доказом, що finding не є prerequisite.
 
 ## Stop conditions
 

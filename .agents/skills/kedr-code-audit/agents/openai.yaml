@@ -1,0 +1,6 @@
+interface:
+  display_name: "Kedr Code Audit"
+  short_description: "Audit Kedr architecture and code with evidence"
+  default_prompt: "Use $kedr-code-audit to perform the requested Kedr Web architecture and code audit with actionable evidence."
+policy:
+  allow_implicit_invocation: true

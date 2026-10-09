@@ -5,6 +5,7 @@
 - **Depends on:** <TS/EN IDs or none>
 - **Exact paths:** <configuration/source/test paths>
 - **Test level:** <focused integration | integration | manual | generated verification | documentation>
+- **Architecture baseline:** <projects/tags/owner/public API/tool; AF/RM dependency or none>
 
 ## Work
 
@@ -15,6 +16,7 @@
       для зрозумілої підтримки й тестування, розділити його на кілька файлів за
       чинними архітектурними межами; не ділити малий цілісний файл лише через
       його розмір.
+- [ ] Оновити code audit; prerequisite checkpoint має бути executable.
 
 ## Evidence
 
