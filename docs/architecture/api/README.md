@@ -2,7 +2,7 @@
 
 **Область:** `apps/admin`, `apps/mobile`  
 **Статус:** чинний  
-**Пов'язані документи:** [ADR Admin Axios transport](../admin/adr/0001-admin-axios-transport.md), [стан і API Admin](../admin/state-and-api.md), [стан і API Mobile](../mobile/state-and-api.md)
+**Пов'язані документи:** [ADR Admin Axios transport](../admin/adr/0001-admin-axios-transport.md), [стан і API Admin](../admin/runtime/state-and-api.md), [стан і API Mobile](../mobile/runtime/state-and-api.md)
 
 ## Призначення
 

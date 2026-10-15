@@ -1,6 +1,0 @@
-interface:
-  display_name: "Kedr Documentation Sync"
-  short_description: "Detect and repair Kedr documentation drift"
-  default_prompt: "Use $kedr-docs-sync to audit and repair confirmed drift in the requested Kedr Web documentation scope."
-policy:
-  allow_implicit_invocation: true

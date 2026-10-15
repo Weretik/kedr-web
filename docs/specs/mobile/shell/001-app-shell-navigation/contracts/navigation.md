@@ -1,8 +1,8 @@
 # Navigation contract: Mobile app shell and navigation
 
-| Route | Entry point | Screen owner | Поведінка |
-| --- | --- | --- | --- |
-| `/(tabs)` | `apps/mobile/src/app/(tabs)/index.tsx` | `@mobile/core/shell` | initial Home tab |
+| Route             | Entry point                              | Screen owner         | Поведінка                     |
+| ----------------- | ---------------------------------------- | -------------------- | ----------------------------- |
+| `/(tabs)`         | `apps/mobile/src/app/(tabs)/index.tsx`   | `@mobile/core/shell` | initial Home tab              |
 | `/(tabs)/catalog` | `apps/mobile/src/app/(tabs)/catalog.tsx` | `@mobile/core/shell` | temporary Catalog placeholder |
 | `/(tabs)/profile` | `apps/mobile/src/app/(tabs)/profile.tsx` | `@mobile/core/shell` | temporary Profile placeholder |
 

@@ -12,7 +12,7 @@
 - **Stack:** Expo SDK 56, React Native, Expo Router, React Native Paper, RTK Query, Nx.
 - **Нові залежності:** у T005 встановлено `@shopify/flash-list@2.0.2` та `react-native-actions-sheet@0.9.7`. Для останнього Expo вимагає прямий peer `react-native-gesture-handler@2.31.2`; він доданий через `expo install`. `0.9.7` обрано замість запланованої `10.1.2`, оскільки `10.1.2` додає несумісний другий `react-native-worklets@0.7.4` поруч з Expo SDK 56 `0.11.3`.
 - **Target:** Android, iOS, web.
-- **Native:** перед install виконати `npx expo-doctor`; за чинною документацією каталог очікує роботу в Expo Go. Якщо resolved package/version змінює native runtime або config, діяти за [Development Build](../../../../architecture/mobile/development-build.md) і зафіксувати це в quickstart.
+- **Native:** перед install виконати `npx expo-doctor`; за чинною документацією каталог очікує роботу в Expo Go. Якщо resolved package/version змінює native runtime або config, діяти за [Development Build](../../../../architecture/mobile/platform/development-build.md) і зафіксувати це в quickstart.
 
 ## Source paths and responsibilities
 

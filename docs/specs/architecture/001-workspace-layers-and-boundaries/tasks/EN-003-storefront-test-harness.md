@@ -4,7 +4,7 @@
 - **Depends on:** RM-000
 - **Owner:** Storefront
 - **Exact paths:** Storefront Nx/test config and focused mapper/repository specs;
-  `package.json`; `docs/standards/testing-rules.md`
+  `package.json`; `docs/standards/shared/testing-rules.md`
 
 ## Work
 

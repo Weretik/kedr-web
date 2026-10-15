@@ -9,10 +9,19 @@
 
 ## Карта документів
 
-- [Застосунок і маршрутизація](application.md)
-- [Домени та бібліотеки](domains.md)
-- [Правила залежностей](dependencies.md)
-- [Стан, API та форми](state-and-api.md)
+### Структура й залежності
+
+- [Наявні модулі та feature-бібліотеки](structure/modules.md)
+- [Домени та бібліотеки](structure/domains.md)
+- [Правила залежностей](structure/dependencies.md)
+
+### Робота застосунку
+
+- [Застосунок і маршрутизація](runtime/application.md)
+- [Стан, API та форми](runtime/state-and-api.md)
+
+### Процес і рішення
+
 - [Зафіксовані рішення](decisions.md)
 - [SDD-процес Storefront](sdd-process.md)
 

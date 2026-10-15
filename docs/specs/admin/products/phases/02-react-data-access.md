@@ -46,7 +46,7 @@ Query та надати feature типізований hook без transport-д�
 - [ ] У `ProductsPage` немає Axios або прямого HTTP.
 - [ ] DTO не виходить за межі `data-access`.
 - [ ] Канонічні доменні типи імпортуються з `@admin/products/model`; public API
-  `data-access` містить hook і сумісні re-export'и.
+      `data-access` містить hook і сумісні re-export'и.
 - [ ] Дотримані Nx dependency boundaries.
 
 ## Перевірка

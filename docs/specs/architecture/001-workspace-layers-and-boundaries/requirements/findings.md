@@ -20,25 +20,25 @@
   `admin/nx-contract.md`, `mobile/nx-contract.md`.
 - **AR-002:** Mobile cross-domain user flow може оркеструвати public lower layers
   лише з explicit design; shared domain concept має neutral owner —
-  `docs/architecture/mobile/dependencies.md`.
+  `docs/architecture/mobile/structure/dependencies.md`.
 - **AR-003:** Admin/Mobile server state належить RTK Query; Storefront — Angular
   data-access facade. Duplicated manual server cache/lifecycle заборонений —
-  `docs/standards/api-data-rules.md`.
+  `docs/standards/shared/api-data-rules.md`.
 - **AR-004:** generated DTO залишаються private transport types; runtime
   validation і mapper повертають domain/application model —
-  `docs/standards/api-data-rules.md`.
+  `docs/standards/shared/api-data-rules.md`.
 - **AR-005:** cache key/tag/invalidation semantics належать approved data layer —
-  `docs/standards/api-data-rules.md`, client `state-and-api.md`.
+  `docs/standards/shared/api-data-rules.md`, client `state-and-api.md`.
 - **AR-006:** cross-library imports використовують exact alias/root `src/index.ts`;
   private DTO, mapper, client, interceptor, parser і storage не exported — client
   `nx-contract.md` та code-audit phase 04.
 - **AR-007:** source і tests мають executable gates; empty suite/package не є
   evidence, structural moves мають characterization —
-  `docs/standards/testing-rules.md`.
+  `docs/standards/shared/testing-rules.md`.
 - **AR-008:** empty/dead projects/folders, duplicate owners і stale docs
   видаляються після consumer check — `docs/standards/*-code-organization.md`.
 - **AR-009:** delivery потребує `verified` для всіх in-scope findings —
-  `docs/standards/delivery-rules.md`.
+  `docs/standards/shared/delivery-rules.md`.
 
 ## Findings
 

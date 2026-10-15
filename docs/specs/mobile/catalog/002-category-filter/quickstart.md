@@ -72,4 +72,4 @@ npx expo export --platform web
 ## Коли Expo Go недостатньо
 
 Не застосовується в поточному scope. Якщо буде додано native dependency або
-змінено Expo config, дійте за [Expo Go та Development Build](../../../../architecture/mobile/development-build.md).
+змінено Expo config, дійте за [Expo Go та Development Build](../../../../architecture/mobile/platform/development-build.md).

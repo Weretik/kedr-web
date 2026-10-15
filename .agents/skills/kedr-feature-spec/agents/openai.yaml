@@ -1,6 +1,0 @@
-interface:
-  display_name: "Kedr Feature Specification"
-  short_description: "Create scenario-first Kedr feature specs"
-  default_prompt: "Use $kedr-feature-spec to create or update the requested Kedr Web feature specification."
-policy:
-  allow_implicit_invocation: true

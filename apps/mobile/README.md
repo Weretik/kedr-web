@@ -66,7 +66,7 @@ Expo Go — стандартний workflow, доки застосунок не 
 `eas.json`. Перед встановленням `expo-dev-client` або створенням EAS build
 прочитайте repository guide:
 
-- [Expo Go та Development Build](../../docs/architecture/mobile/development-build.md)
+- [Expo Go та Development Build](../../docs/architecture/mobile/platform/development-build.md)
 
 3. Confirm that the `KEDR Mobile` root screen opens without console errors.
 4. Switch the system light/dark setting and check theme and safe area.

@@ -1,8 +1,8 @@
 # Запуск implementation після погодження
 
 ```text
-Працюй за `docs/specs/_templates/remediation/` і
-`docs/specs/_templates/code-audit/`.
+Працюй за `$frontend-remediation-plan` і
+`$frontend-code-audit`.
 SDD: `docs/specs/architecture/001-workspace-layers-and-boundaries/`.
 Scope: `<погоджені EN-*/RM-* або вся remediation>`.
 

@@ -8,7 +8,7 @@
   contract required by this flow
 - **Дата:** 2026-10-05
 - **Applicable rules:** `docs/AGENTS.md`, `docs/architecture/frontend-inventory.md`,
-  `docs/architecture/mobile/`, `docs/standards/{mobile-code-organization,mobile-ui,api-data-rules,testing-rules,delivery-rules}.md`
+  `docs/architecture/mobile/`, `docs/standards/mobile/{mobile-code-organization,mobile-ui}.md; docs/standards/shared/{api-data-rules,testing-rules,delivery-rules}.md`
 - **Delivery status:** verified after AF-001–AF-004 remediation; device QA pending
 
 ## 00. Inventory і baseline

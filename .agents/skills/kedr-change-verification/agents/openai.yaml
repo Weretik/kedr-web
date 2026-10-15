@@ -1,6 +1,0 @@
-interface:
-  display_name: "Kedr Change Verification"
-  short_description: "Verify Kedr changes with fresh test evidence"
-  default_prompt: "Use $kedr-change-verification to run risk-appropriate checks for the current Kedr Web changes and report exact evidence."
-policy:
-  allow_implicit_invocation: true

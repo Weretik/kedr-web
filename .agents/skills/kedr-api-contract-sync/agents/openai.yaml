@@ -1,6 +1,0 @@
-interface:
-  display_name: "Kedr API Contract Sync"
-  short_description: "Synchronize Kedr OpenAPI contracts and consumers"
-  default_prompt: "Use $kedr-api-contract-sync to synchronize and verify the requested Kedr Web API contract change."
-policy:
-  allow_implicit_invocation: true

@@ -21,6 +21,6 @@
 | [16 — Delivery](16-delivery.md)                                         | Єдиний final evidence після всіх коригувань                 | planned |
 
 Для нового дозволеного scope застосовується
-[`ai-feature-workflow`](../../../../_templates/ai-feature-workflow/README.md):
+`ai-feature-workflow`:
 AI сам переходить між усіма ready task-файлами в межах дозволеної feature,
 фази або набору сценаріїв.

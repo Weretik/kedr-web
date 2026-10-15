@@ -1,38 +1,27 @@
-# AI routing for Kedr Web
+# AI-навігація: Kedr Web
 
-Перед зміною frontend-коду або feature-специфікації:
+Це коротка точка входу для роботи в цьому frontend-репозиторії. Фактичний стан і правила визначають файли самого проєкту; читай документи, потрібні для конкретної задачі.
 
-1. Звір фактичні apps, projects, targets і test tooling з
-   [frontend inventory](docs/architecture/frontend-inventory.md), потім обери застосунок:
-   [Admin React](docs/architecture/admin/README.md),
-   [Mobile React Native](docs/architecture/mobile/README.md) або
-   [Storefront Angular](docs/architecture/storefront/README.md).
-2. Прочитай відповідні правила з [індексу standards](docs/standards/README.md).
-3. Для нової або зміненої поведінки використовуй `$kedr-feature-spec` і
-   [scenario-first SDD templates](docs/specs/_templates/README.md).
-   Якщо тип не вказано, до створення файлів запитай: React,
-   React Native чи Angular.
-4. Для реалізації прийнятої специфікації використовуй
-   `$kedr-feature-delivery` і
-   [AI feature workflow](docs/specs/_templates/ai-feature-workflow/README.md).
-5. Для реалізації прийнятої специфікації кількома agents використовуй
-   `$kedr-feature-orchestrator`. Він має перевірити readiness, розподілити лише
-   незалежні tasks і координувати integration, verification, audit та handoff.
-   Він не створює feature specification і не обходить approval gate.
-6. Для повного architecture audit використовуй `$kedr-code-audit`.
-   Системні architecture violations маршрутизуй через
-   `$kedr-remediation-plan` і
-   [remediation template](docs/specs/_templates/remediation/README.md).
-7. Для HTTP-змін використовуй `$kedr-api-contract-sync`, звірся з
-   [frontend API contracts](docs/contracts/README.md), знайди stable `operationId` у
-   versioned snapshot і використовуй generated types з `@shared/api-contracts`
-   лише на transport/data-access boundary. YAML та generated TypeScript не
-   редагуй вручну; синхронізуй і генеруй CLI-командами з contracts
-   README.
-8. Після змін runtime-коду, tests або build/test behavior використовуй
-   `$kedr-change-verification`. Перед PR handoff використовуй
-   `$kedr-pr-handoff`; для перевірки drift між code і docs — `$kedr-docs-sync`.
+## Контекст проєкту
 
-Визначай Nx targets із `project.json` або `npx nx show project <name>`. Не
-встановлюй відсутній test tooling без явної потреби й погодженого `EN-*`.
-Зберігай сторонні зміни робочого дерева та історичне evidence.
+- [Frontend inventory](docs/architecture/frontend-inventory.md) — застосунки, інструменти та доступні Nx targets.
+- Архітектура застосунків: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), [Storefront Angular](docs/architecture/storefront/README.md).
+- [Індекс standards](docs/standards/README.md) — сталі правила коду, UI, API, тестування, безпеки та постачання.
+
+Визнач застосунок за запитом і поточним кодом. Якщо вибір між React, React Native та Angular змінює результат і його не можна встановити з контексту, уточни його перед створенням файлів.
+
+## Маршрутизація задач
+
+| Задача                                                   | Навичка                                                  | Документація проєкту                                          |
+| -------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
+| Нова або змінена поведінка: специфікація                 | `$frontend-feature-spec`                                 | [Правила готовності](docs/standards/shared/delivery-rules.md) |
+| Реалізація прийнятої специфікації                        | `$frontend-feature-delivery`                             | [Правила постачання](docs/standards/shared/delivery-rules.md) |
+| Реалізація кількома агентами на прямий запит користувача | `$frontend-feature-orchestrator`                         | [Правила постачання](docs/standards/shared/delivery-rules.md) |
+| Архітектурний аудит / системні порушення                 | `$frontend-code-audit` / `$frontend-remediation-plan`    | [Індекс standards](docs/standards/README.md)                  |
+| HTTP і API-контракти                                     | `$frontend-api-contract-sync`                            | [Frontend API contracts](docs/contracts/README.md)            |
+| Перевірка змін / передача на review                      | `$frontend-change-verification` / `$frontend-pr-handoff` | [Правила тестування](docs/standards/shared/testing-rules.md)  |
+| Розбіжності між кодом і документацією                    | `$frontend-docs-sync`                                    | [Індекс документації](docs/README.md)                         |
+
+## Перевірки
+
+Обирай перевірки за зміненими Nx projects і [правилами тестування](docs/standards/shared/testing-rules.md). Наявні targets визначай із `project.json` або `npx nx show project <name> --json`; inventory є знімком, а поточна конфігурація має пріоритет.

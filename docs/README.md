@@ -7,6 +7,7 @@
 - Архітектура — фактична топологія frontend-застосунків, модулі та межі шарів; оберіть потрібний клієнт нижче.
 - [Фактичний frontend inventory](architecture/frontend-inventory.md) — apps,
   Nx projects/tags/targets, aliases, test gates і відомі baseline gaps.
+- [Технології та прямі npm-пакети](architecture/technology-and-packages.md) — версії, призначення та джерела залежностей.
 - [Інженерні правила](standards/README.md) — індекс rules для Admin, Mobile, UI, API, testing і delivery.
 - [Специфікації](specs/README.md) — структура feature-специфікацій та SDD-шаблони.
 - [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md)

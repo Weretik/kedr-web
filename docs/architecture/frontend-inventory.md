@@ -1,9 +1,12 @@
 # Фактичний frontend inventory
 
-**Знято:** 2026-10-01
+**Знято:** 2026-10-01; test targets перевірено повторно 2026-10-15
 **Джерела:** `package.json`, lockfile, `nx.json`, `eslint.config.cjs`,
 `tsconfig.base.json`, усі `project.json`, `npx nx show projects --json` і
 `npx nx graph --file=<temporary-json>`.
+
+Повний перелік прямих залежностей, їхні ролі та джерела версій дивись у
+[каталозі технологій та npm-пакетів](technology-and-packages.md).
 
 Цей документ фіксує поточний workspace, а не оголошує порушення допустимими.
 Відомі розбіжності мають `AF-*` у
@@ -89,12 +92,12 @@ mobile-orders-feature -> orders lower layers + customers data-access/model/ui
 
 ## Test і typecheck baseline
 
-| Surface        | Runnable gates                                                                                          | Gap                                                                                               |
-| -------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web` | лише app і shared API client мають executable specs; generated empty suites не є characterization |
-| Mobile         | app `typecheck`, Jest `test` targets для 17 listed app/libs, `typecheck:tests:mobile`, export           | mobile E2E target відсутній                                                                       |
-| Storefront     | `storefront:lint`, production `storefront:build`                                                        | test target, test files і test typecheck відсутні                                                 |
-| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                        | contract generation змінює generated source і виконується лише в API scope                        |
+| Surface        | Runnable gates                                                                                                                         | Gap                                                                                               |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                | лише app і shared API client мають executable specs; generated empty suites не є characterization |
+| Mobile         | app `typecheck`, `npm run test:mobile` для 21 Nx project (app, shell, api-client і domain libraries), `typecheck:tests:mobile`, export | mobile E2E target відсутній                                                                       |
+| Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` для `storefront-data-access`, `typecheck:tests:storefront` | focused specs покривають лише data-access, не весь застосунок                                     |
+| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                       | contract generation змінює generated source і виконується лише в API scope                        |
 
 Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` пройшов для
 62 projects; Nx позначив `admin-products-data-access:lint` flaky.

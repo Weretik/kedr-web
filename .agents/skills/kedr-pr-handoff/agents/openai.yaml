@@ -1,6 +1,0 @@
-interface:
-  display_name: "Kedr PR Handoff"
-  short_description: "Prepare review-ready Kedr pull request handoffs"
-  default_prompt: "Use $kedr-pr-handoff to prepare an accurate review-ready handoff for the current Kedr Web changes."
-policy:
-  allow_implicit_invocation: true

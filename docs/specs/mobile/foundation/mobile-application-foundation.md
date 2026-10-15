@@ -3,7 +3,7 @@
 **Статус:** completed  
 **Домен:** `foundation`  
 **Власник:** frontend team  
-**Пов'язані документи:** [архітектура Mobile](../../../architecture/mobile/README.md), [ADR Mobile](../../../architecture/mobile/adr/README.md), [UI-стандарт](../../../standards/mobile-ui.md)
+**Пов'язані документи:** [архітектура Mobile](../../../architecture/mobile/README.md), [ADR Mobile](../../../architecture/mobile/adr/README.md), [UI-стандарт](../../../standards/mobile/mobile-ui.md)
 
 ## Мета та користувацький результат
 
@@ -68,14 +68,14 @@
 
 ## План фаз
 
-| №   | Фаза                                                                              | Залежить від | Результат                                                       | Статус      |
-| --- | --------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------- | ----------- |
-| 01  | [Nx та Expo scaffold](phases/01-nx-expo-scaffold.md)                              | —            | `apps/mobile`, сумісні Expo/Nx залежності, базові targets       | completed   |
-| 02  | [Router, пакети та test harness](phases/02-router-packages-tests.md)              | 01           | Expo Router, усі базові залежності, Jest harness                | completed   |
-| 03  | [Libraries, boundaries та config](phases/03-libraries-boundaries-config.md)       | 02           | generated libraries, aliases, ESLint boundaries, runtime config | completed   |
-| 04  | [Theme, providers та shell](phases/04-theme-providers-shell.md)                   | 03           | Paper corporate theme, AppProviders, layouts і стартовий route  | completed   |
-| 05  | [API, observability та connectivity](phases/05-api-observability-connectivity.md) | 04           | Axios/RTK Query foundation, error/logging, NetInfo              | completed   |
-| 06  | [Acceptance та developer workflow](phases/06-acceptance-developer-workflow.md)    | 05           | перевірений Android flow, команди й onboarding                  | completed   |
+| №   | Фаза                                                                              | Залежить від | Результат                                                       | Статус    |
+| --- | --------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------- | --------- |
+| 01  | [Nx та Expo scaffold](phases/01-nx-expo-scaffold.md)                              | —            | `apps/mobile`, сумісні Expo/Nx залежності, базові targets       | completed |
+| 02  | [Router, пакети та test harness](phases/02-router-packages-tests.md)              | 01           | Expo Router, усі базові залежності, Jest harness                | completed |
+| 03  | [Libraries, boundaries та config](phases/03-libraries-boundaries-config.md)       | 02           | generated libraries, aliases, ESLint boundaries, runtime config | completed |
+| 04  | [Theme, providers та shell](phases/04-theme-providers-shell.md)                   | 03           | Paper corporate theme, AppProviders, layouts і стартовий route  | completed |
+| 05  | [API, observability та connectivity](phases/05-api-observability-connectivity.md) | 04           | Axios/RTK Query foundation, error/logging, NetInfo              | completed |
+| 06  | [Acceptance та developer workflow](phases/06-acceptance-developer-workflow.md)    | 05           | перевірений Android flow, команди й onboarding                  | completed |
 
 ## Загальні критерії приймання
 

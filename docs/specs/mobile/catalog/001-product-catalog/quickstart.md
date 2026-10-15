@@ -94,4 +94,4 @@ profiling погоджено FlashList або іншу native capability, пер
 
 Порядок переходу, EAS cloud build, повторна збірка native binary та щоденний
 запуск через `--dev-client` описані в
-[Expo Go та Development Build](../../../../architecture/mobile/development-build.md).
+[Expo Go та Development Build](../../../../architecture/mobile/platform/development-build.md).
