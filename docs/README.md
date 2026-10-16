@@ -10,6 +10,7 @@
 - [Технології та прямі npm-пакети](architecture/technology-and-packages.md) — версії, призначення та джерела залежностей.
 - [Інженерні правила](standards/README.md) — індекс rules для Admin, Mobile, UI, API, testing і delivery.
 - [Специфікації](specs/README.md) — структура feature-специфікацій та SDD-шаблони.
+- [Каталог реалізованих фіч](features/README.md) — індекс за застосунками та короткі карти архітектури кожної фічі.
 - [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md)
   — погоджуваний план усунення підтверджених системних порушень.
 

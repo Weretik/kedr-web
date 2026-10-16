@@ -53,6 +53,7 @@ Scope завершено, коли:
 - усі required `TS-*`/`EN-*` пройшли checkpoint;
 - для нового testable behavior записано Red → Green → Refactor → Regression;
 - contracts, docs і фактична поведінка узгоджені;
+- нова реалізована фіча має коротку архітектурну сторінку з Mermaid-схемою зв'язків, деревом фактичних каталогів і основних файлів із поясненням ролей та запис у [каталозі фіч](../../features/README.md); істотна зміна маршруту, стану, API або меж модулів оновлює відповідну сторінку, схему, дерево та індекс;
 - релевантні lint, typecheck/build, tests і ручні platform checks пройшли або
   мають точний blocker;
 - для React Web виконані потрібні `test:web`, `typecheck:tests:web`, production
