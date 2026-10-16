@@ -14,6 +14,9 @@
 - [Foundation](mobile/foundation/mobile-application-foundation.md)
 - [Catalog specifications](mobile/catalog/README.md)
 - [Shell specifications](mobile/shell/README.md)
+- [Orders specifications](mobile/orders/README.md)
+- [Cart checkout](mobile/cart/001-manager-cart-checkout/README.md)
+- [Products without photos](mobile/profile/001-products-missing-photos/README.md)
 
 ## Storefront Angular
 

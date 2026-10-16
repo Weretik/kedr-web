@@ -13,7 +13,7 @@
 - Generated read operations: `operations['getAdminOrders']`,
   `operations['getAdminOrderById']`
 - Generated create operation: `operations['createAdminOrder']`
-- Consumers: Mobile manager cart checkout; Mobile order history planned
+- Consumers: Mobile manager cart checkout; Mobile order history
 
 ## Customer selection
 
