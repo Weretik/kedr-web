@@ -1,1 +1,1 @@
-export { useGetProductsListQuery } from './api/admin-products.api';
+export { useGetProductsListQuery, useGetMissingPhotoProductsQuery, useGetAdminProductDetailsQuery, useGetAdminProductCategoriesQuery } from './api/admin-products.api';

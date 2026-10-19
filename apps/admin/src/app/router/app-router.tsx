@@ -1,3 +1,4 @@
+import { clientsRoutes } from '@admin/clients/feature';
 import { logout } from '@admin/core/auth';
 import { AdminLayout, AdminShellSessionProvider } from '@admin/core/shell';
 import { dashboardRoutes } from '@admin/dashboard/feature';
@@ -20,6 +21,7 @@ export function AppRouter() {
         { index: true, element: <Navigate replace to="/dashboard" /> },
         ...dashboardRoutes,
         ...productsRoutes,
+        ...clientsRoutes,
       ],
     },
     { path: '*', element: <Navigate replace to="/dashboard" /> },

@@ -7,6 +7,7 @@
 - [Frontend inventory](docs/architecture/frontend-inventory.md) — застосунки, інструменти та доступні Nx targets.
 - Архітектура застосунків: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), [Storefront Angular](docs/architecture/storefront/README.md).
 - [Індекс standards](docs/standards/README.md) — сталі правила коду, UI, API, тестування, безпеки та постачання.
+- [Єдиний стиль сторінок Admin](docs/standards/admin/list-detail-pages.md) — композиція списків, деталей і повернення до списку.
 - [Каталог фіч](docs/features/README.md) — фактичні сценарії Admin, Mobile і Storefront та точки входу в їхню архітектуру.
 
 Визнач застосунок за запитом і поточним кодом. Якщо вибір між React, React Native та Angular змінює результат і його не можна встановити з контексту, уточни його перед створенням файлів.
@@ -31,4 +32,6 @@
 
 ## Перевірки
 
-Обирай перевірки за зміненими Nx projects і [правилами тестування](docs/standards/shared/testing-rules.md). Наявні targets визначай із `project.json` або `npx nx show project <name> --json`; inventory є знімком, а поточна конфігурація має пріоритет.
+Порядок роботи над фічею: спочатку код, структура файлів і підключення до наявних тем та локалі; потім документація. Після реалізації запускай лише автоматичні тести цієї зміненої фічі. Світлу/темну тему й адаптивність звіряй за кодом теми, компонентів і breakpoints. Не відкривай застосунок у браузері та не запускай браузерні, візуальні, ручні чи E2E-перевірки без окремого прямого дозволу користувача, отриманого після конкретного запитання про таку перевірку.
+
+Обирай лише мінімальні перевірки змінених Nx projects і конкретних ризиків за [правилами тестування](docs/standards/shared/testing-rules.md). Повний прогін проєкту, coverage, production build, E2E та повний аудит запускай лише за прямим запитом користувача. Наявні targets визначай із `project.json` або `npx nx show project <name> --json`; inventory є знімком, а поточна конфігурація має пріоритет.

@@ -5,7 +5,7 @@
 
 ## За застосунком
 
-- **Admin React:** [організація коду](admin/admin-code-organization.md), [UI](admin/admin-ui.md), [архітектура й наявні модулі](../architecture/admin/README.md).
+- **Admin React:** [організація коду](admin/admin-code-organization.md), [UI](admin/admin-ui.md), [єдиний стиль списків і деталей](admin/list-detail-pages.md), [архітектура й наявні модулі](../architecture/admin/README.md).
 - **Mobile React Native:** [організація коду](mobile/mobile-code-organization.md), [UI](mobile/mobile-ui.md), [архітектура й наявні модулі](../architecture/mobile/README.md).
 - **Storefront Angular:** [архітектурні межі](../architecture/storefront/README.md), [модулі](../architecture/storefront/structure/modules.md), [стан та API](../architecture/storefront/runtime/state-and-api.md). Правила React Admin і Mobile не переносяться на Angular автоматично.
 

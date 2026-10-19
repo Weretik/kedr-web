@@ -1,4 +1,6 @@
+import { ukUA as materialUkUA } from '@mui/material/locale';
 import { createTheme } from '@mui/material/styles';
+import { ukUA as dataGridUkUA } from '@mui/x-data-grid/locales';
 
 import { adminComponents } from './components';
 import { darkCorporateColors, lightCorporateColors } from './palette';
@@ -32,4 +34,14 @@ export const adminTheme = createTheme({
   shadows: adminShadows,
   shape: { borderRadius: 8 },
   typography: adminTypography,
+}, materialUkUA, dataGridUkUA, {
+  components: {
+    MuiDataGrid: {
+      defaultProps: {
+        localeText: {
+          columnMenuAriaLabel: (columnName: string) => `Меню стовпця ${columnName}`,
+        },
+      },
+    },
+  },
 });

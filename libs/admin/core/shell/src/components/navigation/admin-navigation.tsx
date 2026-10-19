@@ -1,5 +1,6 @@
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import { Box, Typography } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
@@ -7,7 +8,8 @@ export const adminDrawerWidth = 280;
 
 const navigationItems = [
   { icon: <DashboardOutlinedIcon />, label: 'Огляд', to: '/dashboard' },
-  { icon: <CategoryOutlinedIcon />, label: 'Каталог', to: '/catalog' },
+  { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
+  { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
 ] as const;
 
 interface AdminNavigationProps {
@@ -19,14 +21,18 @@ export function AdminNavigation({ onNavigate }: AdminNavigationProps) {
 
   return (
     <Box component="nav" sx={{ p: '12px' }}>
-      <Box component="ul" sx={{ display: 'flex', flexDirection: 'column', gap: 1, listStyle: 'none', m: 0, p: 0 }}>
+      <Box
+        component="ul"
+        sx={{ display: 'flex', flexDirection: 'column', gap: 1, listStyle: 'none', m: 0, p: 0 }}
+      >
         {navigationItems.map(({ icon, label, to }) => {
-          const isActive = location.pathname === to;
+          const isActive = location.pathname === to || location.pathname.startsWith(`${to}/`);
 
           return (
             <Box component="li" key={to}>
               <Box
                 component={RouterLink}
+                aria-current={isActive ? 'page' : undefined}
                 onClick={onNavigate}
                 sx={{
                   alignItems: 'center',
@@ -53,8 +59,20 @@ export function AdminNavigation({ onNavigate }: AdminNavigationProps) {
                 }}
                 to={to}
               >
-                <Box sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto', opacity: 0.72 }}>{icon}</Box>
-                <Typography component="span" sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 500, lineHeight: '28px' }}>
+                <Box
+                  sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto', opacity: 0.72 }}
+                >
+                  {icon}
+                </Box>
+                <Typography
+                  component="span"
+                  sx={{
+                    color: 'inherit',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    lineHeight: '28px',
+                  }}
+                >
                   {label}
                 </Typography>
               </Box>

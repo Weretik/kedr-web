@@ -8,6 +8,8 @@
 
 - [Міграція Admin template](admin/migration/template-migration.md)
 - [Список товарів Admin](admin/products/product-list-data-grid.md)
+- [Перегляд товарів і режим «Без фото»](admin/products/001-read-only-product-browsing/README.md)
+- [Перегляд клієнтів Admin](admin/clients/001-read-only-customers/README.md)
 
 ## Mobile React Native
 

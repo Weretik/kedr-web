@@ -8,7 +8,7 @@
   `operations['getAdminProductsWithUnavailablePhotos']['responses'][200]['content']['application/json']`
 - Generated query:
   `NonNullable<operations['getAdminProductsWithUnavailablePhotos']['parameters']['query']>`
-- Consumer: Mobile Profile missing-photo products section
+- Consumers: Mobile Profile missing-photo products section, Admin products list
 
 `GET /api/admin/products/missing-photos` is a temporarily anonymous internal
 admin surface. Mobile does not add an authorization bypass; production access
@@ -19,6 +19,13 @@ remains owned by the backend rollout policy.
 The client sends only the generated `page` and `pageSize` query parameters.
 Both are page-based: `page >= 1`, `1 <= pageSize <= 100`; provider defaults are
 `page=1` and `pageSize=20`.
+
+Admin додатково передає `searchTerm`, `inStock`, `isSale`, `isNew`,
+`exportToSite`, `categoryId` і `sort`. Backend застосовує їх до всієї множини товарів без
+доступного фото перед обчисленням `totalRecords` і пагінацією. Для кожної
+булевої ознаки Admin передає `true`, `false` або не передає параметр.
+Frontend snapshot і generated types синхронізовано з backend commit `8fc8729`
+2026-10-19; query mapper звіряє параметри з generated type.
 
 ```http
 GET /api/admin/products/missing-photos?page=1&pageSize=20

@@ -1,6 +1,7 @@
 # Фактичний frontend inventory
 
 **Знято:** 2026-10-01; test targets перевірено повторно 2026-10-15
+**Оновлено для Admin:** 2026-10-19; новий домен `clients`, маршрути товарів/клієнтів і 67 проєктів підтверджено перевіркою `npm run architecture:boundaries`. Решта розділів зберігає дату свого попереднього аудиту.
 **Джерела:** `package.json`, lockfile, `nx.json`, `eslint.config.cjs`,
 `tsconfig.base.json`, усі `project.json`, `npx nx show projects --json` і
 `npx nx graph --file=<temporary-json>`.
@@ -17,7 +18,7 @@
 | Область         | Факт                                                                                |
 | --------------- | ----------------------------------------------------------------------------------- |
 | Package manager | npm 11.6.2, `package-lock.json`, Node 24.20.x                                       |
-| Workspace       | Nx 23.2, 63 projects включно з root npm project                                     |
+| Workspace       | Nx 23.2, 67 projects включно з root npm project (перевірено 2026-10-19)             |
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
 | Mobile          | Expo 57, React Native 0.86, Expo Router, Paper, Redux Toolkit/RTK Query, Axios      |
@@ -28,7 +29,7 @@
 | Application  | Composition root  | Main libraries                                                                                 |
 | ------------ | ----------------- | ---------------------------------------------------------------------------------------------- |
 | `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*` |
-| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/{model,data-access,ui,feature},shared/*}`       |
+| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,clients/*,shared/*}`                          |
 | `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                          |
 
 Усі libraries мають root `src/index.ts`; cross-library imports, знайдені під

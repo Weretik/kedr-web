@@ -5,7 +5,7 @@
 - OpenAPI: [`category-read.openapi.yaml`](../openapi/catalog/category-read.openapi.yaml)
 - Operation: `getAdminCategories`
 - Generated response: `operations['getAdminCategories']['responses'][200]['content']['application/json']`
-- Consumer: Mobile product catalog
+- Consumers: Mobile product catalog, Admin products table
 
 `GET /api/categories` не має параметрів і повертає весь depth-first список без
 pagination. Поточний OpenAPI явно задає `security: []`, але route позначений як
@@ -21,6 +21,8 @@ catalog administration. Перед public rollout політику доступ�
 - будує дерево за `parentId`;
 - сортує siblings за `sortOrder`, потім `id`;
 - не передає transport DTO у feature або UI.
+
+`@admin/products/data-access` перетворює відповідь на опції з ID, українською назвою, глибиною та пошуковим текстом із назв предків за `parentId`. Для категорій публічного каталогу назви звірено з його українськими підписами; для інших використовується `shortNameUk` відповіді. MUI Autocomplete показує вкладеність відступами, дозволяє вибрати будь-який рівень і передає лише ID до спискового API.
 
 ```http
 GET /api/categories

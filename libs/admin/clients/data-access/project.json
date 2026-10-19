@@ -1,0 +1,13 @@
+{
+  "name": "admin-clients-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/clients/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:clients", "type:data-access"],
+  "// targets": "to see all targets run: nx show project admin-clients-data-access --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import type { AdminProductsListResponse, AdminProductsPagedInfo } from '../contracts/admin-products-list.contract';
 import type { AdminProductListItem, ProductsListPage } from '@admin/products/model';
+import { publicCategoryNamesUk } from './public-category-names.uk';
 
 export function mapAdminProductsListResponse(response: unknown): ProductsListPage {
   if (!isRecord(response) || !Array.isArray(response['value'])) {
@@ -50,11 +51,13 @@ function mapAdminProductListItem(value: unknown): AdminProductListItem {
     !isString(value['nameRu']) ||
     !isString(value['productSlug']) ||
     !isString(value['photo']) ||
-    !isNullableNumber(value['categoryId']) ||
+    !isOptionalNullableNumber(value['categoryId']) ||
+    !isString(value['categoryName']) ||
     typeof value['inStock'] !== 'boolean' ||
     typeof value['isSale'] !== 'boolean' ||
     typeof value['isNew'] !== 'boolean' ||
-    !isNullableNumber(value['price']) ||
+    typeof value['exportToSite'] !== 'boolean' ||
+    !isOptionalNullableNumber(value['price']) ||
     !isFiniteNumber(value['stock']) ||
     !isNonNegativeInteger(value['quantityInPack'])
   ) {
@@ -67,11 +70,15 @@ function mapAdminProductListItem(value: unknown): AdminProductListItem {
     nameRu: value['nameRu'],
     productSlug: value['productSlug'],
     photo: value['photo'],
-    categoryId: value['categoryId'],
+    categoryId: value['categoryId'] ?? null,
+    categoryName: value['categoryId'] == null
+      ? value['categoryName']
+      : (publicCategoryNamesUk[value['categoryId']] ?? value['categoryName']),
     inStock: value['inStock'],
     isSale: value['isSale'],
     isNew: value['isNew'],
-    price: value['price'],
+    exportToSite: value['exportToSite'],
+    price: value['price'] ?? null,
     stock: value['stock'],
     quantityInPack: value['quantityInPack'],
   };
@@ -89,8 +96,8 @@ function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
-function isNullableNumber(value: unknown): value is number | null {
-  return value === null || isFiniteNumber(value);
+function isOptionalNullableNumber(value: unknown): value is number | null | undefined {
+  return value === undefined || value === null || isFiniteNumber(value);
 }
 
 function isPositiveInteger(value: unknown): value is number {

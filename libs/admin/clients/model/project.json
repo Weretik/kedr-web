@@ -1,0 +1,13 @@
+{
+  "name": "admin-clients-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/clients/model/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:clients", "type:model"],
+  "// targets": "to see all targets run: nx show project admin-clients-model --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

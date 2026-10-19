@@ -7,4 +7,5 @@ export interface AdminEnvironment {
   readonly VITE_FEATURE_CATALOG?: string;
   readonly VITE_FEATURE_DASHBOARD?: string;
   readonly VITE_ROUTER_BASENAME?: string;
+  readonly VITE_STOREFRONT_BASE_URL?: string;
 }

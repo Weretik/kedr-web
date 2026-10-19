@@ -11,6 +11,7 @@ export function createAppConfig(environment: AdminEnvironment): AppConfig {
     apiBaseUrl: readString(environment.VITE_API_BASE_URL, ''),
     enableHttpLogs: readBoolean(environment.VITE_ENABLE_HTTP_LOGS, false),
     routerBasename: readString(environment.VITE_ROUTER_BASENAME, '/'),
+    storefrontBaseUrl: readString(environment.VITE_STOREFRONT_BASE_URL, 'https://classkedr.com.ua'),
     features: {
       dashboard: readBoolean(environment.VITE_FEATURE_DASHBOARD, true),
       catalog: readBoolean(environment.VITE_FEATURE_CATALOG, true),

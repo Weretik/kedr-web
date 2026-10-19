@@ -10,11 +10,12 @@ API-виклики й доменні компоненти тут не розмі
 доменні маршрути, задає глобальний fallback і не імпортує реалізації сторінок.
 Кожен домен експортує іменовану конфігурацію маршрутів із публічної точки входу.
 Фактичні маршрути в `apps/admin/src/app/router/app-router.tsx` зараз підключають
-dashboard і products; див. [карту наявних модулів](../structure/modules.md).
+dashboard, products і clients; див. [карту наявних модулів](../structure/modules.md).
 
 ```text
 dashboardRoutes ─┐
-productsRoutes  ─┴→ AppRouter
+productsRoutes  ─┼→ AppRouter
+clientsRoutes   ─┘
 ```
 
 Приклад допустимого підключення:
@@ -22,10 +23,14 @@ productsRoutes  ─┴→ AppRouter
 ```ts
 import { productsRoutes } from '@admin/products/feature';
 import { dashboardRoutes } from '@admin/dashboard/feature';
+import { clientsRoutes } from '@admin/clients/feature';
 ```
 
 `AdminLayout` залишається елементом маршруту з `Outlet`. Розташування файла
 router може змінюватися без зміни цього правила.
+
+`AdminLayout` показує бічне меню та верхню панель без breadcrumb на сторінках.
+Локальне повернення з картки товару реалізоване посиланням у самій фічі.
 
 ## Lazy loading route features
 

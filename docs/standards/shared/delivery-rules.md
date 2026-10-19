@@ -54,20 +54,17 @@ Scope завершено, коли:
 - для нового testable behavior записано Red → Green → Refactor → Regression;
 - contracts, docs і фактична поведінка узгоджені;
 - нова реалізована фіча має коротку архітектурну сторінку з Mermaid-схемою зв'язків, деревом фактичних каталогів і основних файлів із поясненням ролей та запис у [каталозі фіч](../../features/README.md); істотна зміна маршруту, стану, API або меж модулів оновлює відповідну сторінку, схему, дерево та індекс;
-- релевантні lint, typecheck/build, tests і ручні platform checks пройшли або
-  мають точний blocker;
-- для React Web виконані потрібні `test:web`, `typecheck:tests:web`, production
-  build і, для критичного journey, `test:web:e2e`;
-- для React Native виконані потрібні `test:mobile`, `typecheck:tests:mobile`,
-  coverage та доступний export/native compile check; iOS evidence не заявляється
-  без macOS/Xcode;
+- мінімальні перевірки змінених частин за [правилами обсягу](testing-rules.md#обсяг-перевірок-під-час-реалізації)
+  пройшли або мають точну перешкоду; повний прогін проєкту, coverage, production
+  build, E2E та повний аудит виконують лише за прямим запитом користувача;
 - infrastructure smoke позначено як перевірку harness, а не як evidence
   бізнес-сценарію;
 - `traceability.md` посилається на фактичні tests/evidence;
 - delivery report містить scope, змінені файли, evidence, невиконані перевірки
   та реальні residual risks.
-- повний code audit завершено після останньої implementation-зміни; усі in-scope
-  `AF-*` мають статус `verified`.
+- зачеплені архітектурні межі переглянуто після останньої implementation-зміни;
+  повний code audit проводять лише за прямим запитом користувача, а підтверджені
+  in-scope `AF-*` мають статус `verified` або явно описану перешкоду.
 
 `open`, `blocked` або `planned` architecture finding блокує delivery. Статус
 `deferred-approved` допустимий лише з явним погодженням, owner, окремою SDD/task

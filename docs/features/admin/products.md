@@ -1,34 +1,51 @@
-# Список товарів Admin
+# Перегляд товарів Admin
 
-**Стан:** реалізований `/catalog`; вимоги й історія — у [SDD](../../specs/admin/products/product-list-data-grid.md).
+**Стан:** реалізовані список `/catalog`, режими «Без фото» і «На сайті» й картка `/catalog/:productSlug` за [SDD перегляду](../../specs/admin/products/001-read-only-product-browsing/README.md). Backend OpenAPI snapshot і generated types синхронізовано. Історія початкової таблиці — в [попередній SDD](../../specs/admin/products/product-list-data-grid.md).
 
-- **Маршрут:** [productsRoutes](../../../libs/admin/products/feature/src/products.routes.tsx) підключає [ProductsPage](../../../libs/admin/products/feature/src/pages/products-page.tsx).
-- **Поведінка:** [useProductsListState](../../../libs/admin/products/feature/src/hooks/use-products-list-state.ts) веде фільтри, сторінку й сортування; сторінка передає запит, помилку й завантаження в [ProductsDataGrid](../../../libs/admin/products/ui/src/index.ts).
-- **Дані:** [admin-products.api](../../../libs/admin/products/data-access/src/api/admin-products.api.ts) виконує RTK Query запит; `data-access` мапить DTO у [модель](../../../libs/admin/products/model/src/entities/admin-product-list-item.ts). Consumer contract: [Admin products](../../contracts/catalog/admin-products.md).
+- **Вхід:** [productsRoutes](../../../libs/admin/products/feature/src/products.routes.tsx) підключає [список](../../../libs/admin/products/feature/src/pages/products-page.tsx) і [картку](../../../libs/admin/products/feature/src/pages/product-details-page.tsx); пункт «Товари» веде на `/catalog`.
+- **Список:** вкладки «Усі товари», «Без фото» і «На сайті» передають пошук, підтримувані фільтри, sort/page/pageSize на сервер. «На сайті» звертається до звичайного endpoint з `exportToSite=true`; у вкладці «Усі товари» цієї умови немає. Наявність, акція й новинка показані окремими колонками; ознаку «На сайті» представляє вкладка. Українська категорія є окремою колонкою із серверним сортуванням та відбором за вибраним піддеревом. Фото має розмір 56 × 56 px, а дія перегляду — іконка ока з підказкою. [URL-модуль](../../../libs/admin/products/feature/src/hooks/products-url-state.ts) зберігає умови й сторінку кожної вкладки для повернення з деталей.
+- **UI списку:** [ProductsDataGrid](../../../libs/admin/products/ui/src/tables/products-data-grid.tsx) містить MUI toolbar із пошуком, колонкові фільтри трьох інших ознак, сортування та пагінацію без edit/delete. Під таблицею немає дубльованого підпису кількості. Таблиця зберігає доступ до всіх колонок на вузькому екрані через власне прокручування. Екрани використовують світлу й темну схеми Admin theme; підписи Data Grid локалізовані українською.
+- **Картка:** [ProductDetailsPage](../../../libs/admin/products/feature/src/pages/product-details-page.tsx) керує маршрутом, API й станами та має текстове посилання зі стрілкою для повернення до активного списку. [Презентаційний вміст](../../../libs/admin/products/ui/src/components/product-details-content.tsx) на широкому екрані показує **фото → основну інформацію → схему справа**, якщо вона доступна; на телефоні й планшеті блоки складаються за breakpoints. Головний блок містить обидві назви, тільки істинні різнокольорові ознаки, таблицю даних і кнопки «Відкрити на сайті» (за `exportToSite`) та «Сховище фото». Натискання безпосередньо на фото відкриває MUI Dialog; окремої кнопки JPG немає. Композиція узгоджена зі [стандартом сторінок Admin](../../standards/admin/list-detail-pages.md). Спільний shell не показує breadcrumbs.
+- **Дані:** [products API](../../../libs/admin/products/data-access/src/api/admin-products.api.ts) використовує RTK Query та [мапери](../../../libs/admin/products/data-access/src/mappers/product-read.mapper.ts). Чинні consumer contracts: [звичайний список і Admin деталі](../../contracts/catalog/admin-products.md), [без фото](../../contracts/catalog/missing-photo-products.md). Backend OpenAPI snapshot і generated types синхронізовано; [SDD-контракт](../../specs/admin/products/001-read-only-product-browsing/contracts/api-contract.md) описує правила запитів.
 
-## Схема будови
+Вбудований [toolbar](../../../libs/admin/products/ui/src/tables/products-grid-toolbar.tsx) містить MUI Autocomplete з ієрархією категорій із `GET /api/categories`: рівні показано відступами, кожен вузол доступний для вибору, а підписи не містять ID чи стрілок. Для відомих категорій [мапер](../../../libs/admin/products/data-access/src/mappers/public-category-names.uk.ts) використовує українські назви публічного каталогу; обраний ID зберігається окремо в кожній вкладці. [SDD категорії](../../specs/admin/products/001-read-only-product-browsing/category-table-2026-10-19.md) визначає вибір, сортування й межі перевірки.
+
+## Зв'язки
 
 ```mermaid
 flowchart LR
-Routes["productsRoutes"] --> Page["ProductsPage"]
-Page --> State["useProductsListState"]
-State --> API["admin-products.api"]
-API --> Model["Product model"]
-Model --> Grid["ProductsDataGrid"]
-State --> Grid
+    Routes[productsRoutes] --> List[ProductsPage]
+    Routes --> Detail[ProductDetailsPage]
+    List --> Url[products-url-state]
+    List --> Filters[products-grid-filters]
+    List --> Api[productsApi]
+    Api --> Categories[getAdminCategories]
+    Detail --> Api
+    Detail --> DetailUi[ProductDetailsContent]
+    DetailUi --> Image[ProductImageCard]
+    DetailUi --> Info[ProductInformationCard]
+    DetailUi --> Preview[ProductImagePreviewDialog]
+    Api --> Mapper[product-read mapper]
+    Mapper --> Model[products model]
+    List --> Grid[ProductsDataGrid]
+    Grid --> Detail
 ```
 
-## Структура в коді
-
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+## Основні файли
 
 ```text
 libs/admin/products/
-├── data-access/src/api/admin-products.api.ts  # запит до API
+├── data-access/src/
+│   ├── api/admin-products.api.ts        # запити звичайного списку, без фото й деталей
+│   └── mappers/product-read.mapper.ts   # перевірка й проєкція нових відповідей
 ├── feature/src/
-│   ├── hooks/use-products-list-state.ts  # стан і дії екрана
-│   ├── pages/products-page.tsx  # сторінка та композиція UI
-│   └── products.routes.tsx  # маршрути фічі
-├── model/src/entities/admin-product-list-item.ts  # доменна модель
-└── ui/src/index.ts  # публічний API бібліотеки
+│   ├── hooks/products-url-state.ts      # режим, умови й сторінки в URL
+│   ├── hooks/products-grid-filters.ts   # MUI filterModel ↔ серверний query
+│   ├── pages/products-page.tsx          # таблиця й верхній перемикач
+│   ├── pages/product-details-page.tsx   # route, API й стани картки
+│   └── products.routes.tsx              # lazy маршрути
+├── model/src/                         # доменні типи списку й деталей
+└── ui/src/
+    ├── components/                     # презентаційні блоки деталей, зображення й Dialog
+    └── tables/products-data-grid.tsx   # таблиця без API й router
 ```

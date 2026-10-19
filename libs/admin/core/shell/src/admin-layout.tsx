@@ -3,7 +3,6 @@ import { Suspense, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { RouteLoadingFallback } from './components/layout/route-loading-fallback';
-import { AdminBreadcrumbs } from './components/navigation/admin-breadcrumbs';
 import { AdminNavigation, adminDrawerWidth } from './components/navigation/admin-navigation';
 import { AdminTopBar } from './components/top-bar/admin-top-bar';
 
@@ -83,7 +82,6 @@ export function AdminLayout() {
         <AdminTopBar onOpenNavigation={() => setIsMobileNavigationOpen(true)} />
         <Box component="main">
           <Container maxWidth="xl" sx={{ py: { xs: 4, lg: 8 } }}>
-            <AdminBreadcrumbs />
             <Suspense fallback={<RouteLoadingFallback />}>
               <Outlet />
             </Suspense>

@@ -8,7 +8,7 @@ task-файли посилаються на нього й містять лиш�
 
 | Scope               | Tooling і доступні targets                                                                                                                                                                                                                                                                                                             |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Admin React         | Vitest 4, React Testing Library, `user-event`, jsdom і `@testing-library/jest-dom`. `admin:vite:test` перевіряє component/browser integration harness; `admin-shared-api-client:vite:test` виконує unit tests. `admin-e2e:e2e` запускає окремий Playwright Chromium project.                                                           |
+| Admin React         | Vitest 4, React Testing Library, `user-event`, jsdom і `@testing-library/jest-dom`. `npm run test:web` запускає Admin app, shared API client та тести доменів products/clients через їхні `vite:test` targets; `admin-e2e:e2e` запускає окремий Playwright Chromium project.                                                           |
 | Mobile React Native | Jest 29, `jest-expo` 57 і React Native Testing Library 13. `npm run test:mobile` послідовно запускає 21 Nx project, перелічений у root `package.json`: app, shell, api-client і domain libraries. Наявні unit, focused integration, storage/native boundary і component tests; app suite є infrastructure smoke для Expo Router/RN UI. |
 | Storefront Angular  | `npm run test:storefront` запускає Vitest для `storefront-data-access`: три spec-файли з focused tests для контрактів і mapper-ів. `npm run typecheck:tests:storefront` перевіряє test TypeScript; `storefront:lint` і `storefront:build` перевіряють код і збірку. Повного покриття застосунку поки немає.                            |
 | E2E                 | Web: Playwright 1.63, project `admin-e2e`, лише Chromium. Mobile: Detox, Maestro та Appium відсутні; mobile E2E потребує окремого `EN-*`, вибору device/build strategy і доступного Android/iOS середовища.                                                                                                                            |
@@ -39,6 +39,33 @@ dependencies і не створюй конфігурацію без потреб
 `SC-*` на E2E і не повторюй повний сценарій на всіх рівнях. Кілька focused
 тестів можуть підтримувати один сценарій, якщо кожен ловить окремий ризик.
 
+## Обсяг перевірок під час реалізації
+
+- Порядок реалізації: код і структура файлів → документація → один вузький
+  автоматичний прогін тестів саме зміненої фічі. Якщо правка лише документаційна,
+  перевір лише її посилання та diff. Не перетворюй доставку коду на окремий
+  загальний тестовий чи візуальний аудит.
+- Світлу/темну тему, локаль та адаптивні breakpoints звіряй за підключеннями і
+  стилями в коді. Браузер не відкривай. Перед будь-якою браузерною, ручною,
+  візуальною чи E2E-перевіркою окремо запитай користувача про дозвіл на конкретну
+  перевірку й дочекайся його прямої відповіді.
+- За замовчуванням запускай один точковий автоматичний тест зміненої фічі.
+  Додатковий тест або вузький lint/typecheck потрібен лише для окремого
+  непокритого ризику в її межах; не запускай усі команди зі списку нижче як пакет.
+- Повний прогін тестів застосунку або репозиторію, coverage, усіх lint/typecheck,
+  production build, E2E, повний архітектурний аудит і комплексну регресію запускай
+  **лише за прямим запитом користувача**. Наявність команди в SDD або checklist
+  сама по собі не є таким запитом.
+- Додаткову перевірку запускай тільки для конкретного ризику, якого не довів
+  попередній результат. Не повторюй ті самі targets після правки документа чи
+  іншої зміни, що не впливає на їхній висновок.
+- Для documentation-only змін перевір лише змінені посилання, формат і diff;
+  runtime-тести не потрібні. Для зміни контракту чи генерації виконай вузьку
+  перевірку саме цієї межі, не всю frontend-регресію.
+- У звіті назви виконані мінімальні перевірки й їхні межі. Не позначай
+  незапущений повний прогін як failure або blocker: він свідомо поза поточним
+  обсягом, доки користувач його не попросив.
+
 ## Red → Green → Refactor → Regression
 
 Для кожної нової або зміненої тестованої поведінки:
@@ -48,7 +75,9 @@ dependencies і не створюй конфігурацію без потреб
 2. **Green** — реалізуй найменшу повну зміну, яка робить focused test зеленим.
 3. **Refactor** — покращ структуру в межах задачі й повторно запусти focused
    test.
-4. **Regression** — запусти affected suite/targets і запиши результат.
+4. **Regression** — після останньої зміни запусти найвужчий affected target,
+   потрібний для ризику, і запиши результат; не дублюй прогін після кожної
+   дрібної правки.
 
 Compilation error, broken fixture, неправильний mock, missing dependency,
 помилка test setup або unrelated failure не є валідним Red. Спочатку віднови
@@ -68,7 +97,9 @@ Red-first може бути непридатним для documentation-only з�
 regression command/result. У `EN-*` — причину винятку та replacement check.
 `traceability.md` містить тільки посилання на ці докази.
 
-Команди залежать від project target:
+Нижче наведено доступні команди, а не обов'язковий пакет для кожної фічі.
+Повні suite/coverage/build/E2E запускай за правилом обсягу вище. Команди
+залежать від project target:
 
 - Admin unit/component: `npm run test:web`; окремо `npm run test:web:unit` і
   `npm run test:web:component`;

@@ -58,6 +58,7 @@ checked-in generated types відповідають snapshot.
   - [Session](identity/session.md)
 - Sales:
   - [Mobile manager order](sales/manager-order.md)
+  - [Admin customers](sales/admin-customers.md)
 
 Детальна consumer projection потрібна лише для operation зі статусом `used`,
 `planned` або `blocked`. Для `not consumed` достатньо OpenAPI і рядка реєстру;
@@ -65,31 +66,32 @@ checked-in generated types відповідають snapshot.
 
 ## Operation registry
 
-| Backend module     | `operationId`                           | Method/path                                                 | Access                            | Consumers           | Status       |
-| ------------------ | --------------------------------------- | ----------------------------------------------------------- | --------------------------------- | ------------------- | ------------ |
-| Catalog categories | `getCategoryTree`                       | `GET /api/catalog/{lang}/categories`                        | anonymous                         | —                   | not consumed |
-| Catalog categories | `getCategoryBySlug`                     | `GET /api/catalog/{lang}/categories/by-slug/{categorySlug}` | anonymous                         | —                   | not consumed |
-| Catalog categories | `getAdminCategories`                    | `GET /api/categories`                                       | temporary anonymous admin surface | Mobile              | used         |
-| Catalog categories | `getAdminCategoryById`                  | `GET /api/categories/{id}`                                  | temporary anonymous admin surface | —                   | not consumed |
-| Catalog products   | `getPublicProducts`                     | `GET /api/catalog/{lang}/products`                          | anonymous                         | Storefront          | used         |
-| Catalog products   | `getPublicProductsByCategorySlug`       | `GET /api/catalog/{lang}/{categorySlug}/products`           | anonymous                         | Storefront          | used         |
-| Catalog products   | `getPublicProductBySlug`                | `GET /api/catalog/{lang}/product/{productSlug}`             | anonymous                         | Storefront, Mobile  | used         |
-| Catalog products   | `getAdminProducts`                      | `GET /api/admin/products`                                   | temporary anonymous admin surface | Admin, Mobile       | used         |
-| Catalog products   | `getAllAdminProducts`                   | `GET /api/admin/products/all`                               | temporary anonymous admin surface | —                   | not consumed |
-| Catalog products   | `getAdminProductsWithUnavailablePhotos` | `GET /api/admin/products/missing-photos`                    | temporary anonymous admin surface | Mobile              | used         |
-| Quick order        | `createQuickOrder`                      | `POST /api/orders`                                          | anonymous                         | Storefront          | used         |
-| Identity           | `loginSession`                          | `POST /api/auth/session/login`                              | anonymous, rate-limited           | Admin, Storefront   | used         |
-| Identity           | `refreshSession`                        | `POST /api/auth/session/refresh`                            | CSRF cookie/header, rate-limited  | Admin, Storefront   | used         |
-| Identity           | `logoutSession`                         | `POST /api/auth/session/logout`                             | bearer                            | Admin, Storefront   | used         |
-| Identity           | `getCurrentSession`                     | `GET /api/auth/session/me`                                  | bearer                            | —                   | not consumed |
-| Sales catalog      | `getSalesCatalogProducts`               | `POST /api/sales/{lang}/catalog/products`                   | bearer                            | —                   | not consumed |
-| Sales customers    | `getAdminCustomers`                     | `GET /api/admin/customers`                                  | current OpenAPI anonymous         | Mobile cart, orders | used         |
-| Sales customers    | `getAdminCustomerById`                  | `GET /api/admin/customers/{counterpartyId}`                 | current OpenAPI anonymous         | —                   | not consumed |
-| Sales orders       | `getAdminOrders`                        | `GET /api/admin/orders`                                     | anonymous                         | Mobile              | used         |
-| Sales orders       | `getAdminOrderById`                     | `GET /api/admin/orders/{orderId}`                           | anonymous                         | Mobile              | used         |
-| Sales order sync   | `createAdminOrder`                      | `POST /api/admin/orders`                                    | temporary anonymous               | Mobile cart         | used         |
-| Sales order sync   | `getAdminOrderSyncStatus`               | `GET /api/admin/orders/{orderId}/sync-status`               | temporary anonymous               | —                   | not consumed |
-| Sales order sync   | `retryAdminOrderSync`                   | `POST /api/admin/orders/{orderId}/sync/retry`               | temporary anonymous               | —                   | not consumed |
+| Backend module     | `operationId`                           | Method/path                                                 | Access                            | Consumers                  | Status       |
+| ------------------ | --------------------------------------- | ----------------------------------------------------------- | --------------------------------- | -------------------------- | ------------ |
+| Catalog categories | `getCategoryTree`                       | `GET /api/catalog/{lang}/categories`                        | anonymous                         | —                          | not consumed |
+| Catalog categories | `getCategoryBySlug`                     | `GET /api/catalog/{lang}/categories/by-slug/{categorySlug}` | anonymous                         | —                          | not consumed |
+| Catalog categories | `getAdminCategories`                    | `GET /api/categories`                                       | temporary anonymous admin surface | Mobile, Admin              | used         |
+| Catalog categories | `getAdminCategoryById`                  | `GET /api/categories/{id}`                                  | temporary anonymous admin surface | —                          | not consumed |
+| Catalog products   | `getPublicProducts`                     | `GET /api/catalog/{lang}/products`                          | anonymous                         | Storefront                 | used         |
+| Catalog products   | `getPublicProductsByCategorySlug`       | `GET /api/catalog/{lang}/{categorySlug}/products`           | anonymous                         | Storefront                 | used         |
+| Catalog products   | `getPublicProductBySlug`                | `GET /api/catalog/{lang}/product/{productSlug}`             | anonymous                         | Storefront, Mobile         | used         |
+| Catalog products   | `getAdminProducts`                      | `GET /api/admin/products`                                   | temporary anonymous admin surface | Admin, Mobile              | used         |
+| Catalog products   | `getAdminProductBySlug`                 | `GET /api/admin/products/by-slug/{productSlug}`             | temporary anonymous admin surface | Admin                      | used         |
+| Catalog products   | `getAllAdminProducts`                   | `GET /api/admin/products/all`                               | temporary anonymous admin surface | —                          | not consumed |
+| Catalog products   | `getAdminProductsWithUnavailablePhotos` | `GET /api/admin/products/missing-photos`                    | temporary anonymous admin surface | Mobile, Admin              | used         |
+| Quick order        | `createQuickOrder`                      | `POST /api/orders`                                          | anonymous                         | Storefront                 | used         |
+| Identity           | `loginSession`                          | `POST /api/auth/session/login`                              | anonymous, rate-limited           | Admin, Storefront          | used         |
+| Identity           | `refreshSession`                        | `POST /api/auth/session/refresh`                            | CSRF cookie/header, rate-limited  | Admin, Storefront          | used         |
+| Identity           | `logoutSession`                         | `POST /api/auth/session/logout`                             | bearer                            | Admin, Storefront          | used         |
+| Identity           | `getCurrentSession`                     | `GET /api/auth/session/me`                                  | bearer                            | —                          | not consumed |
+| Sales catalog      | `getSalesCatalogProducts`               | `POST /api/sales/{lang}/catalog/products`                   | bearer                            | —                          | not consumed |
+| Sales customers    | `getAdminCustomers`                     | `GET /api/admin/customers`                                  | current OpenAPI anonymous         | Mobile cart, orders, Admin | used         |
+| Sales customers    | `getAdminCustomerById`                  | `GET /api/admin/customers/{counterpartyId}`                 | current OpenAPI anonymous         | Admin                      | used         |
+| Sales orders       | `getAdminOrders`                        | `GET /api/admin/orders`                                     | anonymous                         | Mobile                     | used         |
+| Sales orders       | `getAdminOrderById`                     | `GET /api/admin/orders/{orderId}`                           | anonymous                         | Mobile                     | used         |
+| Sales order sync   | `createAdminOrder`                      | `POST /api/admin/orders`                                    | temporary anonymous               | Mobile cart                | used         |
+| Sales order sync   | `getAdminOrderSyncStatus`               | `GET /api/admin/orders/{orderId}/sync-status`               | temporary anonymous               | —                          | not consumed |
+| Sales order sync   | `retryAdminOrderSync`                   | `POST /api/admin/orders/{orderId}/sync/retry`               | temporary anonymous               | —                          | not consumed |
 
 ## Known provider-contract warnings
 

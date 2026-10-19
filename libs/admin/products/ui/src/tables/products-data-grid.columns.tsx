@@ -1,9 +1,10 @@
-import { ProductsDataGridFlagsCell } from './cells/products-data-grid-flags-cell';
+import { ProductsDataGridBooleanCell } from './cells/products-data-grid-boolean-cell';
 import { ProductsDataGridNameCell } from './cells/products-data-grid-name-cell';
 import { ProductsDataGridPhotoCell } from './cells/products-data-grid-photo-cell';
-import { ProductsDataGridStockCell } from './cells/products-data-grid-stock-cell';
 
 import type { AdminProductListItem } from '@admin/products/model';
+import { getGridNumericOperators } from '@mui/x-data-grid';
+
 import type { GridColDef } from '@mui/x-data-grid';
 
 const priceFormatter = new Intl.NumberFormat('uk-UA', {
@@ -19,37 +20,67 @@ export const productsDataGridColumns: readonly GridColDef<AdminProductListItem>[
     headerName: 'Фото',
     renderCell: ProductsDataGridPhotoCell,
     sortable: false,
-    width: 80,
+    width: 88,
   },
-  { field: 'id', headerName: 'ID', width: 84 },
+  { field: 'id', headerName: 'ID', width: 72, filterable: false },
   {
     field: 'name',
     flex: 1,
     headerName: 'Товар',
-    minWidth: 220,
+    minWidth: 180,
     renderCell: ProductsDataGridNameCell,
     valueGetter: (_value, row) => row.nameUk,
+    filterable: false,
+  },
+  {
+    field: 'category',
+    filterable: false,
+    flex: 0.7,
+    headerName: 'Категорія',
+    minWidth: 160,
+    valueGetter: (_value, row) => row.categoryName || 'Назва недоступна',
   },
   {
     align: 'right',
     field: 'price',
+    type: 'number',
     headerAlign: 'right',
     headerName: 'Ціна',
     valueFormatter: (value) => (value == null ? '—' : priceFormatter.format(value)),
-    width: 140,
+    filterOperators: getGridNumericOperators().filter((operator) => operator.value === '>=' || operator.value === '<=' || operator.value === '='),
+    width: 116,
   },
   {
+    align: 'center',
     field: 'inStock',
+    type: 'boolean',
+    filterable: false,
+    headerAlign: 'center',
     headerName: 'Наявність',
-    renderCell: ProductsDataGridStockCell,
+    renderCell: ProductsDataGridBooleanCell,
     sortable: false,
-    width: 128,
+    width: 110,
   },
   {
-    field: 'flags',
-    headerName: 'Ознаки',
-    renderCell: ProductsDataGridFlagsCell,
+    align: 'center',
+    field: 'isSale',
+    type: 'boolean',
+    filterable: false,
+    headerAlign: 'center',
+    headerName: 'Акція',
+    renderCell: ProductsDataGridBooleanCell,
     sortable: false,
-    width: 176,
+    width: 96,
+  },
+  {
+    align: 'center',
+    field: 'isNew',
+    type: 'boolean',
+    filterable: false,
+    headerAlign: 'center',
+    headerName: 'Новинка',
+    renderCell: ProductsDataGridBooleanCell,
+    sortable: false,
+    width: 104,
   },
 ];

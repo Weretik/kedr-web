@@ -8,5 +8,6 @@ export interface AppConfig {
   readonly isDevelopment: boolean;
   readonly name: string;
   readonly routerBasename: string;
+  readonly storefrontBaseUrl: string;
   readonly version: string;
 }

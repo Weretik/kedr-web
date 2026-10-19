@@ -30,7 +30,7 @@ libs/admin/core/
 │   ├── index.ts
 │   ├── layout/             # layout composition і content area
 │   ├── navigation/         # nav config, sidebar, mobile drawer
-│   ├── components/         # top bar, breadcrumbs, menus
+│   ├── components/         # top bar і меню; breadcrumb прибрано
 │   └── hooks/              # shell-specific React hooks
 ├── auth/src/
 │   ├── index.ts

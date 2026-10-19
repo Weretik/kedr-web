@@ -183,6 +183,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/products/by-slug/{productSlug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get one admin product by slug
+         * @description Current Admin controller explicitly allows anonymous access.
+         */
+        get: operations["getAdminProductBySlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/orders": {
         parameters: {
             query?: never;
@@ -525,6 +545,8 @@ export interface components {
             productSlug: string;
             photo: string;
             categoryId?: number | null;
+            /** @description Ukrainian short category name; empty when the reference is unavailable. */
+            categoryName: string;
             inStock: boolean;
             isSale: boolean;
             isNew: boolean;
@@ -550,6 +572,24 @@ export interface components {
         MissingProductPhotoPage: {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: components["schemas"]["MissingProductPhoto"][];
+        };
+        AdminProductDetails: {
+            id: number;
+            nameUk: string;
+            nameRu: string;
+            productSlug: string;
+            photo: string;
+            /** @description Stored scheme URL; the API does not probe media availability. */
+            scheme: string;
+            categoryId: number;
+            categoryName: string;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            exportToSite: boolean;
+            price: number | null;
+            stock: number;
+            quantityInPack: number;
         };
         CreateOrderLineRequest: {
             productId: string;
@@ -720,7 +760,11 @@ export interface components {
         };
         CustomerCategoryPriceType: {
             categoryId: number;
+            /** @description Name from Catalog ProductCategory; null if unavailable. */
+            categoryName: string | null;
             priceTypeId: number;
+            /** @description Name from Catalog PriceType; null if unavailable. */
+            priceTypeName: string | null;
         };
         CustomerDetail: {
             /** @example 000000000 */
@@ -732,6 +776,8 @@ export interface components {
             /** @example client@example.com */
             email: string;
             defaultPriceTypeId: number;
+            /** @description Name from Catalog PriceType; null if the referenced type is unavailable. */
+            defaultPriceTypeName: string | null;
             categoryPriceTypes: components["schemas"]["CustomerCategoryPriceType"][];
         };
         SessionLoginRequest: {
@@ -847,11 +893,13 @@ export interface components {
         PriceTypeId: number;
         PriceFrom: number;
         PriceTo: number;
-        ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc";
+        ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc";
         Page: number;
         PageSize: number;
         "parameters-CategoryId": number;
         "parameters-CategorySlug": string;
+        AdminInStock: boolean;
+        ExportToSite: boolean;
     };
     requestBodies: never;
     headers: never;
@@ -1073,9 +1121,10 @@ export interface operations {
                 searchTerm?: components["parameters"]["SearchTerm"];
                 categorySlug?: components["parameters"]["parameters-CategorySlug"];
                 categoryId?: components["parameters"]["CategoryId"];
-                inStock?: components["parameters"]["InStock"];
+                inStock?: components["parameters"]["AdminInStock"];
                 isSale?: components["parameters"]["IsSale"];
                 isNew?: components["parameters"]["IsNew"];
+                exportToSite?: components["parameters"]["ExportToSite"];
                 priceFrom?: components["parameters"]["PriceFrom"];
                 priceTo?: components["parameters"]["PriceTo"];
                 sort?: components["parameters"]["ProductSort"];
@@ -1123,6 +1172,13 @@ export interface operations {
     getAdminProductsWithUnavailablePhotos: {
         parameters: {
             query?: {
+                searchTerm?: components["parameters"]["SearchTerm"];
+                categoryId?: components["parameters"]["CategoryId"];
+                inStock?: components["parameters"]["AdminInStock"];
+                isSale?: components["parameters"]["IsSale"];
+                isNew?: components["parameters"]["IsNew"];
+                exportToSite?: components["parameters"]["ExportToSite"];
+                sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
                 pageSize?: components["parameters"]["PageSize"];
             };
@@ -1142,6 +1198,36 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
+        };
+    };
+    getAdminProductBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin product details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductDetails"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Product not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     createQuickOrder: {
@@ -1409,6 +1495,15 @@ export interface operations {
             query?: {
                 page?: number;
                 pageSize?: number;
+                /** @description Case-insensitive substring in counterpartyId, name or phone. */
+                searchTerm?: string;
+                /** @description Case-insensitive ID substring filter. */
+                counterpartyId?: string;
+                /** @description Case-insensitive name substring filter. */
+                name?: string;
+                /** @description Case-insensitive phone substring filter. */
+                phone?: string;
+                sort?: "name" | "-name" | "counterpartyId" | "-counterpartyId" | "phone" | "-phone";
             };
             header?: never;
             path?: never;
@@ -1416,7 +1511,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description A name-ordered page of active Sales customers. */
+            /** @description A filtered, sorted page of active Sales customers; totals are computed before paging. */
             200: {
                 headers: {
                     [name: string]: unknown;

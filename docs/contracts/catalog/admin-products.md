@@ -3,7 +3,7 @@
 ## Machine contract
 
 - OpenAPI: [`products.openapi.yaml`](../openapi/catalog/products.openapi.yaml)
-- Operation: `getAdminProducts`
+- Operations: `getAdminProducts`, `getAdminProductBySlug`
 - Generated response: `operations['getAdminProducts']['responses'][200]['content']['application/json']`
 - Generated query: `NonNullable<operations['getAdminProducts']['parameters']['query']>`
 - Consumers: Admin products list, Mobile product catalog
@@ -14,11 +14,11 @@ access лишається backend blocker до явного рішення вл�
 
 ## Request projection
 
-Frontend передає лише непорожні параметри, визначені generated query type:
+Frontend передає лише визначені generated query type параметри:
 `searchTerm`, `categorySlug`, `categoryId`, `inStock`, `isSale`, `isNew`,
-`priceFrom`, `priceTo`, `sort`, `page`, `pageSize`. Значення `sort` є рядковими
+`priceFrom`, `priceTo`, `exportToSite`, `sort`, `page`, `pageSize`. Значення `sort` є рядковими
 OpenAPI enum (`IdAsc`, `IdDesc`, `NameAsc`, `NameDesc`, `PriceAsc`,
-`PriceDesc`). Зміна search/filter/sort скидає `page` до `1`.
+`PriceDesc`, `CategoryAsc`, `CategoryDesc`). Зміна search/filter/sort скидає `page` до `1`. `categoryId` відбирає вибрану категорію та всіх нащадків; рядок повертає `categoryName` з українського `shortNameUk`.
 
 ```http
 GET /api/admin/products?searchTerm=кабель&inStock=true&sort=NameAsc&page=1&pageSize=20
@@ -36,6 +36,14 @@ Admin валідовує unknown response перед mapping. Mobile викор�
 response type як compile-time contract і mapper, що нормалізує optional/null
 image, stock та localized name. Generated type не експортується з data-access
 public API до feature або UI.
+
+Admin відкриває картку через `GET /api/admin/products/by-slug/{productSlug}` і
+перевіряє відповідь runtime mapper. Ця операція повертає обидві назви, ознаки
+наявності, акції, новинки й публікації, категорію, фото та схему. Посилання на
+конкретний JPG береться лише з поля `photo`; папка сховища доступна окремо.
+Frontend snapshot і generated types синхронізовано з backend commit `8fc8729`
+2026-10-19. Query mapper перевіряє параметри за generated type, а runtime
+mapper перевіряє відповідь перед передачею в UI.
 
 ## Behavior and limitations
 

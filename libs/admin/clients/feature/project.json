@@ -1,0 +1,13 @@
+{
+  "name": "admin-clients-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/clients/feature/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:clients", "type:feature"],
+  "// targets": "to see all targets run: nx show project admin-clients-feature --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

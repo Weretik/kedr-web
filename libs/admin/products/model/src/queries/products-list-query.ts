@@ -4,13 +4,17 @@ export type ProductsListSort =
   | 'name-asc'
   | 'name-desc'
   | 'price-asc'
-  | 'price-desc';
+  | 'price-desc'
+  | 'category-asc'
+  | 'category-desc';
 
 export interface ProductsListQuery {
   searchTerm?: string;
   inStock?: boolean;
   isSale?: boolean;
   isNew?: boolean;
+  exportToSite?: boolean;
+  categoryId?: number;
   priceFrom?: number;
   priceTo?: number;
   sort: ProductsListSort;
@@ -19,7 +23,6 @@ export interface ProductsListQuery {
 }
 
 export const DEFAULT_PRODUCTS_LIST_QUERY: ProductsListQuery = {
-  inStock: false,
   page: 1,
   pageSize: 20,
   sort: 'id-asc',
@@ -34,14 +37,18 @@ const productsListSortValues: readonly ProductsListSort[] = [
   'name-desc',
   'price-asc',
   'price-desc',
+  'category-asc',
+  'category-desc',
 ];
 
 export function normalizeProductsListQuery(query: ProductsListQuery): ProductsListQuery {
   return {
     searchTerm: normalizeSearchTerm(query.searchTerm),
-    inStock: query.inStock ?? DEFAULT_PRODUCTS_LIST_QUERY.inStock,
-    isSale: query.isSale === true ? true : undefined,
-    isNew: query.isNew === true ? true : undefined,
+    inStock: typeof query.inStock === 'boolean' ? query.inStock : undefined,
+    isSale: typeof query.isSale === 'boolean' ? query.isSale : undefined,
+    isNew: typeof query.isNew === 'boolean' ? query.isNew : undefined,
+    exportToSite: typeof query.exportToSite === 'boolean' ? query.exportToSite : undefined,
+    categoryId: Number.isInteger(query.categoryId) && (query.categoryId ?? 0) > 0 ? query.categoryId : undefined,
     priceFrom: normalizePrice(query.priceFrom),
     priceTo: normalizePrice(query.priceTo),
     sort: isProductsListSort(query.sort) ? query.sort : DEFAULT_PRODUCTS_LIST_QUERY.sort,
@@ -60,7 +67,7 @@ export function isProductsListSort(value: unknown): value is ProductsListSort {
 function normalizeSearchTerm(value: string | undefined): string | undefined {
   const normalized = value?.trim();
 
-  return normalized || undefined;
+  return normalized?.slice(0, 100) || undefined;
 }
 
 function normalizePrice(value: number | undefined): number | undefined {
