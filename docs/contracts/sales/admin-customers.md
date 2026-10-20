@@ -12,9 +12,9 @@
 
 ## Проєкція запиту
 
-Оновлений provider OpenAPI приймає `page >= 1`, `pageSize` від 1 до 100, необов'язкові `searchTerm`, `counterpartyId`, `name`, `phone` (кожне текстове значення до 100 символів) і `sort`: `name`, `-name`, `counterpartyId`, `-counterpartyId`, `phone`, `-phone`. Типові значення провайдера: `page=1`, `pageSize=20`, `sort=name`. `searchTerm` шукає серед ID, імені й телефону; сервер обчислює кількість після умов і до пагінації. Поточний Admin UI використовує лише `searchTerm`, `page`, `pageSize`: один пошук у панелі таблиці, без фільтрів колонок і сортування. Інші параметри залишаються можливостями API. При зміні пошуку UI повертається на сторінку 1. Для деталей потрібний непорожній `counterpartyId` у шляху; URL списку зберігає пошук і пагінацію для повернення.
+Оновлений provider OpenAPI приймає `page >= 1`, `pageSize` від 1 до 100, необов'язкові `searchTerm`, `counterpartyId`, `name`, `phone` (кожне текстове значення до 100 символів) і `sort`: `name`, `-name`, `counterpartyId`, `-counterpartyId`, `phone`, `-phone`. Типові значення провайдера: `page=1`, `pageSize=20`, `sort=name`. `searchTerm` шукає серед ID, імені й телефону; сервер обчислює кількість після умов і до пагінації. Admin UI використовує `searchTerm`, `sort`, `page`, `pageSize`: один пошук у панелі таблиці та сортування за ім'ям, телефоном або ID без фільтрів колонок. Інші параметри залишаються можливостями API. При зміні пошуку або сортування UI повертається на сторінку 1. Для деталей потрібний непорожній `counterpartyId` у шляху; URL списку зберігає пошук, сортування й пагінацію для повернення.
 
-**Стан синхронізації 2026-10-19:** frontend snapshot і generated types синхронізовано з backend commit `8fc8729`. Параметри запиту звіряються з `CustomerPageParams` через TypeScript `satisfies`, без assertion. Snapshot та generated types не редагувалися вручну.
+**Стан синхронізації 2026-10-20:** frontend snapshot має provenance backend commit `02429192d02e8e9252d06d6ea984affa0d216aa7` за `SOURCE.md`; він уже містить параметр `sort`. Поточну реалізацію серверного сортування звірено з backend commit `8fc8729`. Параметри запиту звіряються з `CustomerPageParams` через TypeScript `satisfies`, без assertion. Snapshot та generated types не редагувалися вручну.
 
 ## Проєкція відповіді та UI
 

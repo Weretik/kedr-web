@@ -8,13 +8,13 @@ import { CustomerPriceTypesCard } from './customer-price-types-card';
 export function CustomerDetailsContent({ customer }: { customer: CustomerDetail }) {
   return (
     <Box sx={{
-      alignItems: 'start',
       display: 'grid',
       gap: 2,
-      gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(3, minmax(0, 1fr))' },
+      gridAutoRows: { md: '1fr' },
+      gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
       minWidth: 0,
     }}>
-      <Card aria-labelledby="customer-detail-name" component="article" sx={{ minWidth: 0 }} variant="outlined">
+      <Card aria-labelledby="customer-detail-name" component="article" sx={{ gridColumn: '1 / -1', minWidth: 0 }} variant="outlined">
         <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
           <Stack spacing={1.5}>
             <Typography color="text.secondary" component="p" variant="subtitle2">Основна інформація</Typography>

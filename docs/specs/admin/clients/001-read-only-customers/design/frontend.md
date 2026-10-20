@@ -2,26 +2,28 @@
 
 ## Перевірений базис на 2026-10-19
 
-| Область | Факт і джерело                                                                                  | Ціль                                                                                                                                                                              |
-| ------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Модулі  | `libs/admin/clients/{feature,data-access,ui,model}/project.json` уже існують; [правила доменів](../../../../../architecture/admin/structure/domains.md) | розширити чинні модулі без міждоменного імпорту |
-| Router  | `apps/admin/src/app/router/app-router.tsx` підключає clientsRoutes                              | зберегти чинні маршрути й URL-контекст списку |
-| Menu    | `libs/admin/core/shell/src/components/navigation/admin-navigation.tsx`                          | чинний пункт «Клієнти» без зміни |
-| API     | [Admin state/API](../../../../../architecture/admin/runtime/state-and-api.md)                   | `baseApi.injectEndpoints` у clients data-access; runtime validation, mapper, типи за generated OpenAPI                                                                            |
-| UI      | `libs/admin/clients/ui/src/tables/customers-data-grid.tsx`, `package.json`                      | один MUI quick search у toolbar таблиці, без фільтрів колонок і сортування |
-| Тести   | `package.json`, [testing rules](../../../../../standards/shared/testing-rules.md)               | автоматичні тести цієї фічі; browser journey лише за окремим дозволом                                                                                                            |
+| Область | Факт і джерело                                                                                                                                          | Ціль                                                                                                   |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Модулі  | `libs/admin/clients/{feature,data-access,ui,model}/project.json` уже існують; [правила доменів](../../../../../architecture/admin/structure/domains.md) | розширити чинні модулі без міждоменного імпорту                                                        |
+| Router  | `apps/admin/src/app/router/app-router.tsx` підключає clientsRoutes                                                                                      | зберегти чинні маршрути й URL-контекст списку                                                          |
+| Menu    | `libs/admin/core/shell/src/components/navigation/admin-navigation.tsx`                                                                                  | чинний пункт «Клієнти» без зміни                                                                       |
+| API     | [Admin state/API](../../../../../architecture/admin/runtime/state-and-api.md)                                                                           | `baseApi.injectEndpoints` у clients data-access; runtime validation, mapper, типи за generated OpenAPI |
+| UI      | `libs/admin/clients/ui/src/tables/customers-data-grid.tsx`, `package.json`                                                                              | один MUI quick search у toolbar таблиці, без фільтрів колонок і сортування                             |
+| Тести   | `package.json`, [testing rules](../../../../../standards/shared/testing-rules.md)                                                                       | автоматичні тести цієї фічі; browser journey лише за окремим дозволом                                  |
 
-Наявний домен уже має Nx projects і маршрути. `feature` володіє `/customers` та `/customers/:counterpartyId`, пошуком і пагінацією в URL та композицією; `data-access` має RTK Query list/detail, runtime validation та mapping; `ui` — таблицю й read-only поля без HTTP/router. `model` нормалізує query; застарілі параметри фільтрації колонок і сортування не відновлюються з URL. Invalid ID не доходить до HTTP. `404` — not found, інші помилки — retry. Після реалізації звірити фактичну [сторінку фічі](../../../../../features/admin/clients.md) та Admin index.
+Наявний домен уже має Nx projects і маршрути. `feature` володіє `/customers` та `/customers/:counterpartyId`, пошуком і пагінацією в URL та композицією; `data-access` має RTK Query list/detail, runtime validation та mapping; `ui` — таблицю й read-only поля без HTTP/router. `model` нормалізує query; застарілі параметри фільтрації колонок не відновлюються з URL. Invalid ID не доходить до HTTP. `404` — not found, інші помилки — retry. Після реалізації звірити фактичну [сторінку фічі](../../../../../features/admin/clients.md) та Admin index.
+
+**Доповнення 2026-10-20:** таблиця надсилає `sort` до серверного API для імені, телефону й ID в обох напрямках. `feature` зберігає `sort` у URL і скидає сторінку до 1 при зміні; `model` приймає лише значення provider enum. Таблиця використовує `sortingMode="server"`. Наведені вище цілі та рішення про вимкнене сортування описують базис 2026-10-19 і замінені цим доповненням.
 
 Детальна сторінка використовує [спільний формат list/detail](../../../../../standards/admin/list-detail-pages.md): той самий MUI Link з `ArrowBackIcon`, що й деталі товару, та нейтральний заголовок сторінки. `CustomerDetailsContent` компонуватиме три окремі Card: ім'я й ID, контактні дані та типи цін. Дочірні компоненти відповідають кожен за свою картку, а `CustomerDetailField` — за однакове подання підпису й значення. Таблиць у деталях немає; телефонний, планшетний і широкий layout використовують breakpoints і кольори чинної Admin theme без власної палітри.
 
 ## Аудит відповідальностей
 
-| Файл                   | Поточна роль                    | Рішення                                                              |
-| ---------------------- | ------------------------------- | -------------------------------------------------------------------- |
-| `app-router.tsx`       | route composition               | чинні `clientsRoutes` лишаються; JSX сторінок тут немає |
-| `admin-navigation.tsx` | menu configuration/render       | чинний пункт і nested active state лишаються без customer logic |
-| customers Data Grid    | quick search у toolbar | єдиний `searchTerm` і page/pageSize передаються в API; фільтри колонок і сортування вимкнені |
+| Файл                   | Поточна роль              | Рішення                                                                                      |
+| ---------------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
+| `app-router.tsx`       | route composition         | чинні `clientsRoutes` лишаються; JSX сторінок тут немає                                      |
+| `admin-navigation.tsx` | menu configuration/render | чинний пункт і nested active state лишаються без customer logic                              |
+| customers Data Grid    | quick search у toolbar    | єдиний `searchTerm` і page/pageSize передаються в API; фільтри колонок і сортування вимкнені |
 
 Нових пакетів не потрібно: MUI, `@mui/x-data-grid`, RTK Query і React Router уже є в `package.json`/lockfile. Дані клієнтів не переносяться в спільний Redux slice, оскільки RTK Query володіє серверним кешем. Поля контактів не логуються.
 

@@ -3,16 +3,20 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { CustomersDataGrid } from './customers-data-grid';
 
+import type { CustomerSort } from '@admin/clients/model';
+
 function renderGrid(options: {
   error?: boolean;
   loading?: boolean;
   onPageChange?: (page: number) => void;
   onRetry?: () => void;
   onSearchChange?: (searchTerm: string | undefined) => void;
+  onSortChange?: (sort: CustomerSort) => void;
   onView?: (id: string) => void;
   page?: number;
   rowCount?: number;
   searchTerm?: string;
+  sort?: CustomerSort;
 } = {}) {
   return render(
     <CustomersDataGrid
@@ -22,12 +26,14 @@ function renderGrid(options: {
       onPageSizeChange={vi.fn()}
       onRetry={options.onRetry ?? vi.fn()}
       onSearchChange={options.onSearchChange ?? vi.fn()}
+      onSortChange={options.onSortChange ?? vi.fn()}
       onView={options.onView ?? vi.fn()}
       page={options.page ?? 1}
       pageSize={20}
       rowCount={options.rowCount ?? 1}
       rows={options.rowCount === 0 ? [] : [{ counterpartyId: '0002', name: 'Бета', phone: null }]}
       searchTerm={options.searchTerm}
+      sort={options.sort ?? 'name'}
     />,
   );
 }
@@ -56,6 +62,20 @@ describe('CustomersDataGrid', () => {
     await waitFor(() => expect(onSearchChange).toHaveBeenCalledWith('Анна'));
   });
 
+  it('requests server sorting when a sortable column is selected', async () => {
+    const onSortChange = vi.fn();
+    renderGrid({ onSortChange });
+    fireEvent.click(screen.getByRole('columnheader', { name: 'Телефон' }));
+    await waitFor(() => expect(onSortChange).toHaveBeenCalledWith('phone'));
+  });
+
+  it('requests descending server sorting on the second header selection', async () => {
+    const onSortChange = vi.fn();
+    renderGrid({ onSortChange, sort: 'phone' });
+    fireEvent.click(screen.getByRole('columnheader', { name: 'Телефон' }));
+    await waitFor(() => expect(onSortChange).toHaveBeenCalledWith('-phone'));
+  });
+
   it('keeps a deep-linked page while loading', () => {
     const onPageChange = vi.fn();
     renderGrid({ loading: true, page: 3, rowCount: 0, onPageChange });
@@ -81,11 +101,13 @@ describe('CustomersDataGrid', () => {
         onPageSizeChange={vi.fn()}
         onRetry={onRetry}
         onSearchChange={vi.fn()}
+        onSortChange={vi.fn()}
         onView={vi.fn()}
         page={1}
         pageSize={20}
         rowCount={0}
         rows={[]}
+        sort="name"
       />,
     );
     expect(screen.getByText('Не вдалося завантажити клієнтів.')).toBeTruthy();

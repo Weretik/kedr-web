@@ -10,13 +10,16 @@ vi.mock('@admin/clients/ui', () => ({
   CustomersDataGrid: ({
     onSearchChange,
     onPageChange,
+    onSortChange,
   }: {
     onSearchChange: (searchTerm: string | undefined) => void;
     onPageChange: (page: number) => void;
+    onSortChange: (sort: '-phone') => void;
   }) => (
     <>
       <button onClick={() => onSearchChange('Анна')}>Шукати клієнта</button>
       <button onClick={() => onPageChange(2)}>Друга сторінка</button>
+      <button onClick={() => onSortChange('-phone')}>Сортувати телефоном</button>
     </>
   ),
 }));
@@ -54,12 +57,14 @@ describe('CustomersPage server query', () => {
     });
   });
 
-  it('ignores obsolete column filter and sort URL parameters', () => {
+  it('passes provider sorting and resets the page when sorting changes', () => {
     render(
-      <MemoryRouter initialEntries={['/customers?name=Бета&phone=050&sort=-phone&page=3']}>
+      <MemoryRouter initialEntries={['/customers?name=Бета&phone=050&page=3']}>
         <Routes><Route path="customers" element={<CustomersPage />} /></Routes>
       </MemoryRouter>,
     );
     expect(useGetCustomersPageQuery).toHaveBeenLastCalledWith({ page: 3, pageSize: 20 });
+    fireEvent.click(screen.getByRole('button', { name: 'Сортувати телефоном' }));
+    expect(useGetCustomersPageQuery).toHaveBeenLastCalledWith({ page: 1, pageSize: 20, sort: '-phone' });
   });
 });

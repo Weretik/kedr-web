@@ -7,3 +7,5 @@
 - [ ] Production rollout залежить від backend access policy для anonymous Admin operations.
 
 Висновок: SDD і контракт узгоджено з реалізованим клієнтським екраном; production access — окремий release blocker.
+
+**Доповнення 2026-10-20:** твердження вище про відсутність керування сортуванням описує стан 2026-10-19. Новий обсяг і реалізація сортування зафіксовані в [TS-002](../tasks/ui/TS-002-customer-list.md).

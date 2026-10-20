@@ -13,7 +13,7 @@ export function CustomerPriceTypesCard({
   defaultPriceTypeName: string | null;
 }) {
   return (
-    <Card aria-labelledby="customer-prices-title" component="section" sx={{ gridColumn: { md: '1 / -1', lg: 'auto' }, minWidth: 0 }} variant="outlined">
+    <Card aria-labelledby="customer-prices-title" component="section" sx={{ minWidth: 0 }} variant="outlined">
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
         <Stack spacing={1.5}>
           <Typography component="h2" id="customer-prices-title" variant="h6">Типи цін</Typography>

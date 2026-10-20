@@ -19,7 +19,7 @@ describe('customer URL context', () => {
     expect(customerPageSearch({ page: 3, pageSize: 50 })).toBe('?page=3&pageSize=50');
   });
 
-  it('preserves the single server search through details navigation', () => {
+  it('preserves search and server sorting through details navigation', () => {
     const query = parseCustomerPageQuery(
       '?page=3&pageSize=50&searchTerm=%20%D0%9A%D0%B5%D0%B4%D1%80%20&name=%20%D0%90%D0%BD%D0%BD%D0%B0%20&phone=050&counterpartyId=012&sort=-phone',
     );
@@ -27,15 +27,23 @@ describe('customer URL context', () => {
       page: 3,
       pageSize: 50,
       searchTerm: 'Кедр',
+      sort: '-phone',
     });
     expect(parseCustomerPageQuery(customerPageSearch(query))).toEqual(query);
   });
 
-  it('drops obsolete column filters and sorting', () => {
+  it('drops obsolete column filters and invalid sorting', () => {
     expect(parseCustomerPageQuery('?page=2&name=%20%20&sort=unknown')).toEqual({
       page: 2,
       pageSize: 20,
     });
+  });
+
+  it('omits the default name sort and accepts every provider sort option', () => {
+    expect(customerPageSearch({ page: 1, pageSize: 20, sort: 'name' })).toBe('?page=1&pageSize=20');
+    for (const sort of ['-name', 'counterpartyId', '-counterpartyId', 'phone', '-phone'] as const) {
+      expect(parseCustomerPageQuery(`?sort=${sort}`).sort).toBe(sort);
+    }
   });
 
   it('rejects blank and oversized IDs before HTTP', () => {

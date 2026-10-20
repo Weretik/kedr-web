@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-import type { CustomerListItem } from '@admin/clients/model';
+import type { CustomerListItem, CustomerSort } from '@admin/clients/model';
 import type { GridColDef, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
 
 import { CustomerGridViewCell } from './customer-grid-view-cell';
@@ -15,12 +15,14 @@ interface CustomersDataGridProps {
   onPageSizeChange: (pageSize: number) => void;
   onRetry: () => void;
   onSearchChange: (searchTerm: string | undefined) => void;
+  onSortChange: (sort: CustomerSort) => void;
   onView: (counterpartyId: string) => void;
   page: number;
   pageSize: number;
   rowCount: number;
   rows: readonly CustomerListItem[];
   searchTerm?: string;
+  sort: CustomerSort;
 }
 
 export function CustomersDataGrid({
@@ -30,20 +32,22 @@ export function CustomersDataGrid({
   onPageSizeChange,
   onRetry,
   onSearchChange,
+  onSortChange,
   onView,
   page,
   pageSize,
   rowCount,
   rows,
   searchTerm,
+  sort,
 }: CustomersDataGridProps) {
   const columns: GridColDef<CustomerListItem>[] = [
-    { field: 'name', headerName: 'Клієнт', flex: 1, minWidth: 200, sortable: false, filterable: false },
+    { field: 'name', headerName: 'Клієнт', flex: 1, minWidth: 200, filterable: false },
     {
-      field: 'phone', headerName: 'Телефон', flex: 1, minWidth: 160, sortable: false, filterable: false,
+      field: 'phone', headerName: 'Телефон', flex: 1, minWidth: 160, filterable: false,
       valueFormatter: (value: string | null) => value ?? 'Не вказано',
     },
-    { field: 'counterpartyId', headerName: 'ID', minWidth: 130, flex: 1, sortable: false, filterable: false },
+    { field: 'counterpartyId', headerName: 'ID', minWidth: 130, flex: 1, filterable: false },
     {
       align: 'center',
       field: 'view',
@@ -66,7 +70,6 @@ export function CustomersDataGrid({
         autoHeight
         columns={columns}
         disableColumnFilter
-        disableColumnSorting
         disableRowSelectionOnClick
         filterMode="server"
         filterModel={filterModel}
@@ -85,12 +88,21 @@ export function CustomersDataGrid({
           onPageChange(model.page + 1);
         }}
         onRowClick={({ row }) => onView(row.counterpartyId)}
+        onSortModelChange={(model) => {
+          const selected = model[0];
+          if (!selected || (selected.field !== 'name' && selected.field !== 'phone' && selected.field !== 'counterpartyId')) return;
+          const nextSort = `${selected.sort === 'desc' ? '-' : ''}${selected.field}` as CustomerSort;
+          if (nextSort !== sort) onSortChange(nextSort);
+        }}
         pageSizeOptions={[10, 20, 50, 100]}
         pagination
         paginationMode="server"
         paginationModel={{ page: page - 1, pageSize }}
         rowCount={rowCount}
         rows={error ? [] : [...rows]}
+        sortingMode="server"
+        sortModel={[{ field: sort.replace(/^-/, ''), sort: sort.startsWith('-') ? 'desc' : 'asc' }]}
+        sortingOrder={['asc', 'desc']}
         showToolbar
         slots={{
           noRowsOverlay: error ? () => <CustomersGridMessage onRetry={onRetry} /> : () => <CustomersGridMessage />,

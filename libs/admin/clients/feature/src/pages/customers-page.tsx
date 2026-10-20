@@ -5,7 +5,7 @@ import { Card, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import type { CustomerPageQuery } from '@admin/clients/model';
+import type { CustomerPageQuery, CustomerSort } from '@admin/clients/model';
 
 export function CustomersPage() {
   const navigate = useNavigate();
@@ -45,6 +45,7 @@ export function CustomersPage() {
           onPageSizeChange={(pageSize) => setListQuery({ pageSize }, true)}
           onRetry={() => void customersQuery.refetch()}
           onSearchChange={(searchTerm) => setListQuery({ searchTerm }, true)}
+          onSortChange={(sort: CustomerSort) => setListQuery({ sort }, true)}
           onView={(counterpartyId) =>
             navigate(`/customers/${encodeURIComponent(counterpartyId)}${customerPageSearch(query)}`)
           }
@@ -53,6 +54,7 @@ export function CustomersPage() {
           rowCount={rowCountReference.current}
           rows={customersQuery.currentData?.items ?? []}
           searchTerm={query.searchTerm}
+          sort={query.sort ?? 'name'}
         />
       </Card>
     </Stack>
