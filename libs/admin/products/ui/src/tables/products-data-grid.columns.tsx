@@ -38,7 +38,6 @@ export const productsDataGridColumns: readonly GridColDef<AdminProductListItem>[
     flex: 0.7,
     headerName: 'Категорія',
     minWidth: 160,
-    valueGetter: (_value, row) => row.categoryName || 'Назва недоступна',
   },
   {
     align: 'right',

@@ -24,6 +24,10 @@ Admin додатково передає `searchTerm`, `inStock`, `isSale`, `isNe
 `exportToSite`, `categoryId` і `sort`. Backend застосовує їх до всієї множини товарів без
 доступного фото перед обчисленням `totalRecords` і пагінацією. Для кожної
 булевої ознаки Admin передає `true`, `false` або не передає параметр.
+
+У вкладці Admin «Без фото» таблиця використовує той самий український підпис
+товару й шлях категорії з `getAdminCategories`, що й звичайний список.
+
 Frontend snapshot і generated types синхронізовано з backend commit `8fc8729`
 2026-10-19; query mapper звіряє параметри з generated type.
 

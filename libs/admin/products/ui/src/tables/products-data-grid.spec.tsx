@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ProductsDataGrid } from './products-data-grid';
@@ -6,7 +6,7 @@ import { ProductsDataGrid } from './products-data-grid';
 describe('ProductsDataGrid responsive actions', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it('keeps the product view action accessible on a phone', () => {
+  it('keeps the product view action and toolbar controls accessible on a phone', async () => {
     vi.stubGlobal('matchMedia', (query: string) => ({
       matches: query.includes('max-width'),
       media: query,
@@ -14,14 +14,15 @@ describe('ProductsDataGrid responsive actions', () => {
       removeEventListener: vi.fn(),
     }));
     const onViewProduct = vi.fn();
+    const onFilterChange = vi.fn();
     const row = {
       id: 7,
       nameUk: 'Кабель',
-      nameRu: 'Кабель',
+      nameRu: 'Кабель RU',
       productSlug: 'cable',
       photo: '',
-      categoryId: null,
-      categoryName: 'Електрика',
+      categoryId: 3,
+      categoryName: '',
       inStock: true,
       isSale: false,
       isNew: false,
@@ -33,10 +34,15 @@ describe('ProductsDataGrid responsive actions', () => {
 
     render(
       <ProductsDataGrid
+        categories={[
+          { id: 1, parentId: null, nameUk: 'Фурнітура', pathUk: 'Фурнітура', depth: 0, hasChildren: true },
+          { id: 2, parentId: 1, nameUk: 'Завіси', pathUk: 'Фурнітура Завіси', depth: 1, hasChildren: true },
+          { id: 3, parentId: 2, nameUk: 'Кабелі', pathUk: 'Фурнітура Завіси Кабелі', depth: 2, hasChildren: false },
+        ]}
         booleanFilters={{}}
         loading={false}
         filterModel={{ items: [] }}
-        onFilterChange={() => undefined}
+        onFilterChange={onFilterChange}
         onBooleanFilterChange={() => undefined}
         onPageChange={() => undefined}
         onPageSizeChange={() => undefined}
@@ -54,11 +60,22 @@ describe('ProductsDataGrid responsive actions', () => {
 
     expect(screen.getByRole('columnheader', { name: 'Ціна' })).toBeTruthy();
     expect(screen.getByRole('columnheader', { name: 'Дії' })).toBeTruthy();
-    expect(screen.getByPlaceholderText('Пошук товарів')).toBeTruthy();
+    const searchInput = screen.getByPlaceholderText('Пошук товарів');
+    expect(searchInput.getAttribute('aria-label')).toBe('Пошук товарів');
+    expect(searchInput.closest('.MuiInputBase-root')?.querySelector('[data-testid="SearchOutlinedIcon"]')).toBeTruthy();
+    const filterTrigger = screen.getByRole('button', { name: 'Фільтри' });
+    expect(searchInput.compareDocumentPosition(filterTrigger) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Очистити пошук товарів' })).toBeNull();
+    fireEvent.change(searchInput, { target: { value: '  Кабель  ' } });
+    await waitFor(() => expect(onFilterChange.mock.calls.some(([model]) => model.quickFilterValues?.[0] === 'Кабель')).toBe(true));
+    fireEvent.click(filterTrigger);
+    expect(filterTrigger.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText('Фурнітура › Завіси › Кабелі')).toBeTruthy();
+    expect(screen.queryByText('Кабель RU')).toBeNull();
     expect(screen.queryByText('Переглянути')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Переглянути товар Кабель, ID 7' }));
     expect(onViewProduct).toHaveBeenCalledWith(row);
-  });
+  }, 10000);
 
   it('shows separate boolean columns with a check only for true values', () => {
     vi.stubGlobal('matchMedia', (query: string) => ({

@@ -1,8 +1,9 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { productsDataGridColumns } from './products-data-grid.columns';
+import { productCategoryPath } from './product-category-path';
 import { ProductsBooleanFilterHeader } from './cells/products-boolean-filter-header';
 import { ProductsViewActionCell } from './cells/products-view-action-cell';
 import { ProductsGridToolbar, ProductsGridToolbarContext } from './products-grid-toolbar';
@@ -12,7 +13,7 @@ import { ProductsDataGridErrorOverlay } from '../states/products-data-grid-error
 
 import type { AdminProductListItem, ProductCategoryOption, ProductsListSort } from '@admin/products/model';
 import type { ProductBooleanField } from './cells/products-boolean-filter-header';
-import type { GridColDef, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
+import type { GridColDef, GridFilterModel, GridPaginationModel, GridRenderCellParams } from '@mui/x-data-grid';
 
 type BooleanFilterField = ProductBooleanField;
 const booleanFields: readonly string[] = ['inStock', 'isSale', 'isNew'];
@@ -72,9 +73,36 @@ export function ProductsDataGrid({
 }: ProductsDataGridProps) {
   const theme = useTheme();
   const phone = useMediaQuery(theme.breakpoints.down('sm'));
+  const [panelAnchor, setPanelAnchor] = useState<HTMLDivElement | null>(null);
+  const [panelWidth, setPanelWidth] = useState<number>();
+
+  useEffect(() => {
+    const toolbar = panelAnchor?.parentElement;
+    if (!toolbar) return;
+
+    const updatePanelWidth = () => {
+      const width = toolbar.getBoundingClientRect().width;
+      if (width > 0) setPanelWidth(width);
+    };
+
+    updatePanelWidth();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(updatePanelWidth);
+    observer.observe(toolbar);
+    return () => observer.disconnect();
+  }, [panelAnchor]);
+  const categoriesById = useMemo(() => new Map(categories.map((category) => [category.id, category])), [categories]);
   const columns = useMemo<GridColDef<AdminProductListItem>[]>(() => [
     ...productsDataGridColumns.map((column) => {
       if (column.field === 'name') return { ...column, minWidth: phone ? 140 : 180 };
+      if (column.field === 'category') return {
+        ...column,
+        type: 'string' as const,
+        valueGetter: (_value: unknown, row: AdminProductListItem) => productCategoryPath(row, categoriesById),
+        renderCell: ({ value }: GridRenderCellParams<AdminProductListItem>) => (
+          <Box sx={{ overflowWrap: 'anywhere', py: 1, whiteSpace: 'normal', width: '100%' }}>{value}</Box>
+        ),
+      };
       if (column.field === 'price' && !priceFilterable) return { ...column, filterable: false };
       if (booleanFields.includes(column.field)) {
         const field = column.field as BooleanFilterField;
@@ -90,7 +118,7 @@ export function ProductsDataGrid({
       sortable: false, filterable: false, width: 80,
       renderCell: ({ row }) => <ProductsViewActionCell product={row} onView={onViewProduct} />,
     },
-  ], [booleanFilters, onBooleanFilterChange, onViewProduct, phone, priceFilterable]);
+  ], [booleanFilters, categoriesById, onBooleanFilterChange, onViewProduct, phone, priceFilterable]);
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
     ? () => <ProductsDataGridErrorOverlay message={errorMessage} onRetry={onRetry} />
@@ -98,7 +126,7 @@ export function ProductsDataGrid({
 
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
-        <ProductsGridToolbarContext.Provider value={{ categories, categoryId, categoriesLoading, categoriesError, onCategoryChange }}>
+        <ProductsGridToolbarContext.Provider value={{ categories, categoryId, categoriesLoading, categoriesError, onCategoryChange, setPanelAnchor }}>
         <DataGrid
           autoHeight
           columns={columns}
@@ -123,9 +151,20 @@ export function ProductsDataGrid({
           paginationMode="server"
           paginationModel={paginationModel}
           rowCount={rowCount}
-          rowHeight={72}
+          getRowHeight={() => 'auto'}
+          getEstimatedRowHeight={() => 72}
           rows={errorMessage ? [] : rows}
           showToolbar
+          slotProps={{
+            panel: { target: panelAnchor },
+            basePopper: { style: { maxWidth: panelWidth } },
+            filterPanel: {
+              sx: {
+                maxWidth: panelWidth,
+                '& .MuiDataGrid-filterForm': { flexWrap: 'wrap' },
+              },
+            },
+          }}
           slots={{ noRowsOverlay, toolbar: ProductsGridToolbar }}
           sortingMode="server"
           sortModel={sortable ? toGridSortModel(sort) : []}

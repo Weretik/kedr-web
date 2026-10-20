@@ -37,6 +37,12 @@ response type як compile-time contract і mapper, що нормалізує op
 image, stock та localized name. Generated type не експортується з data-access
 public API до feature або UI.
 
+У таблиці Admin відображається тільки `nameUk`. Колонка категорії складає шлях
+від батьківської до дочірньої за `categoryId` і довідником `getAdminCategories`;
+до завантаження довідника показує `categoryName` зі списку. Якщо ID відсутній у
+довіднику й `categoryName` порожній, UI показує ID категорії замість вигаданої
+назви. Це не змінює transport contract або серверне сортування.
+
 Admin відкриває картку через `GET /api/admin/products/by-slug/{productSlug}` і
 перевіряє відповідь runtime mapper. Ця операція повертає обидві назви, ознаки
 наявності, акції, новинки й публікації, категорію, фото та схему. Посилання на
