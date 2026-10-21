@@ -1,12 +1,23 @@
 import { normalizeProductsListQuery } from '@admin/products/model';
 import { baseApi } from '@admin/shared/api-client';
 
-import { mapAdminProductsListResponse } from '../mappers/admin-products-list.mapper';
 import { mapAdminProductCategories } from '../mappers/admin-product-categories.mapper';
-import { mapAdminProductDetailsResponse, mapMissingPhotoProductsResponse } from '../mappers/product-read.mapper';
-import { mapMissingPhotoQueryToApi, mapProductsListQueryToApi } from '../mappers/products-list-query.mapper';
+import { mapAdminProductsListResponse } from '../mappers/admin-products-list.mapper';
+import {
+  mapAdminProductDetailsResponse,
+  mapMissingPhotoProductsResponse,
+} from '../mappers/product-read.mapper';
+import {
+  mapMissingPhotoQueryToApi,
+  mapProductsListQueryToApi,
+} from '../mappers/products-list-query.mapper';
 
-import type { MissingPhotoQuery, ProductDetails, ProductsListPage, ProductsListQuery } from '@admin/products/model';
+import type {
+  MissingPhotoQuery,
+  ProductDetails,
+  ProductsListPage,
+  ProductsListQuery,
+} from '@admin/products/model';
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -44,4 +55,9 @@ export const productsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetProductsListQuery, useGetMissingPhotoProductsQuery, useGetAdminProductDetailsQuery, useGetAdminProductCategoriesQuery } = productsApi;
+export const {
+  useGetProductsListQuery,
+  useGetMissingPhotoProductsQuery,
+  useGetAdminProductDetailsQuery,
+  useGetAdminProductCategoriesQuery,
+} = productsApi;

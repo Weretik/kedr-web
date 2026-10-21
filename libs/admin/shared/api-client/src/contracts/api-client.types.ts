@@ -24,6 +24,7 @@ export interface ApiError {
   message: string;
   fieldErrors?: Record<string, string[]>;
   traceId?: string;
+  conflict?: unknown;
 }
 
 export interface AuthSessionAdapter {

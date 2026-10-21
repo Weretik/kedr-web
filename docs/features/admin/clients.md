@@ -1,56 +1,34 @@
-# Перегляд клієнтів Admin
+# Клієнти Admin
 
-**Стан:** реалізовані список `/customers` і read-only картка `/customers/:counterpartyId` за [SDD](../../specs/admin/clients/001-read-only-customers/README.md).
+**Стан:** реалізовано. Маршрути: `/customers` і `/customers/:counterpartyId`. Вимоги та перевірки: [SDD перегляду](../../specs/admin/clients/001-read-only-customers/README.md) і [SDD замовлень клієнта](../../specs/admin/clients/002-customer-orders/README.md).
 
-- **Вхід:** [clientsRoutes](../../../libs/admin/clients/feature/src/clients.routes.tsx) підключено в Admin router; меню містить пункт «Клієнти».
-- **Список:** [CustomersPage](../../../libs/admin/clients/feature/src/pages/customers-page.tsx) показує активних клієнтів у [MUI Data Grid](../../../libs/admin/clients/ui/src/tables/customers-data-grid.tsx). Одне постійно видиме поле пошуку в toolbar таблиці має іконку лупи ліворуч усередині поля та шукає на сервері за ID, ім'ям і телефоном у всій вибірці; окремої форми й кнопки «Знайти» немає. Фільтри колонок вимкнені. Заголовки «Клієнт», «Телефон» та «ID» керують серверним сортуванням за зростанням або спаданням; типовий порядок — за іменем. Пошук, сортування й серверна пагінація передаються в API; сервер рахує загальну кількість після пошуку й до пагінації. Номер і розмір сторінки, пошук та сортування зберігаються в URL для повернення з деталей. Зміна сортування повертає на першу сторінку. На телефоні й планшеті колонки та іконка перегляду з підказкою доступні через горизонтальне прокручування.
-- **Деталі:** [CustomerDetailsPage](../../../libs/admin/clients/feature/src/pages/customer-details-page.tsx) має нейтральний заголовок «Деталі клієнта» і [спільний формат сторінок](../../standards/admin/list-detail-pages.md) із посиланням повернення зі стрілкою. Три картки показують ім'я з ID, контактні дані й типи цін без таблиць. Тип цін за замовчуванням і типи цін за категоріями мають назви; категорія має назву та ID. Якщо backend не має назви, видно «Назва недоступна», а числовий ID типу цін не використовується як підпис. Довгі значення переносяться на вузькому екрані. Картки використовують світлу й темну схеми чинної Admin theme. Основна інформація займає всю ширину; від `md` контакти й типи цін стоять під нею в одному ряду, усі три картки однакової висоти. До `md` картки йдуть одна під одною з висотою за вмістом. Пряме посилання, 404, помилка, повтор запиту й повернення до списку мають окрему поведінку.
-- **Дані:** [clients data-access](../../../libs/admin/clients/data-access/src/api/admin-customers.api.ts) виконує RTK Query list/detail і мапить перевірену відповідь у [модель](../../../libs/admin/clients/model/src/entities/customer.ts). [Consumer contract](../../contracts/sales/admin-customers.md) описує чинний snapshot і параметри API; ширші серверні фільтри лишаються в контракті, але цей екран їх не показує.
-- **Локалізація:** вбудовані підписи MUI Data Grid і пагінації надходять з українських локалей спільної Admin theme.
+- [Список](../../../libs/admin/clients/feature/src/pages/customers-page.tsx) читає активних клієнтів через [clients data-access](../../../libs/admin/clients/data-access/src/api/admin-customers.api.ts). Пошук, сортування та пагінація виконуються сервером; стан списку зберігається в URL.
+- [Деталі](../../../libs/admin/clients/feature/src/pages/customer-details-page.tsx) показують основні, контактні й цінові дані. Під ними [панель замовлень](../../../libs/admin/orders/feature/src/orders.routes.tsx) запитує замовлення та чернетки з точним фільтром `counterpartyId`. App router передає панель через callback, тому clients feature не залежить від orders feature.
+- Дані та допустимі параметри описує [consumer contract](../../contracts/sales/admin-customers.md); композицію списку, деталей і повернення — [Admin standard](../../standards/admin/list-detail-pages.md). Поведінку панелі замовлень описує [окрема фіча](orders.md).
 
-## Зв'язки
+## Схема будови
 
 ```mermaid
 flowchart LR
-    Routes[clientsRoutes] --> List[CustomersPage]
+    App[AppRouter] --> Routes[createClientsRoutes]
+    Routes --> List[CustomersPage]
     Routes --> Detail[CustomerDetailsPage]
-    List --> Params[customer-page-params]
-    Detail --> Params
-    List --> Api[customersApi]
+    List --> Api[clients data-access]
     Detail --> Api
-    Api --> Mapper[customer.mapper]
-    Mapper --> Model[clients model]
-    List --> Grid[CustomersDataGrid]
-    Detail --> Cards[CustomerDetailsContent]
-    Cards --> Basic[Основна інформація]
-    Cards --> Contacts[Контактні дані]
-    Cards --> Prices[Типи цін]
+    Api --> Model[clients model]
+    Detail -. callback .-> Panel[CustomerOrdersPanel]
+    Panel --> OrdersApi[orders data-access]
 ```
 
-## Основні файли
+## Структура в коді
 
 ```text
 libs/admin/clients/
-├── data-access/src/
-│   ├── api/admin-customers.api.ts        # list/detail RTK Query
-│   └── mappers/customer.mapper.ts        # runtime validation і проєкція
-├── feature/src/
-│   ├── clients.routes.tsx                # lazy маршрути
-│   └── pages/
-│       ├── customers-page.tsx            # композиція таблиці
-│       └── customer-details-page.tsx     # композиція картки
-├── model/src/
-│   ├── entities/customer.ts              # доменні типи клієнта
-│   └── queries/customer-page-params.ts   # URL-пошук, пагінація й перевірка ID
-└── ui/src/
-    ├── tables/
-    │   ├── customers-data-grid.tsx      # композиція Data Grid і серверної пагінації
-    │   ├── customer-grid-view-cell.tsx  # дія перегляду
-    │   ├── customers-grid-toolbar.tsx   # пошук у таблиці
-    │   └── customers-grid-message.tsx   # порожній стан і повтор запиту
-    └── components/
-        ├── customer-details-content.tsx    # адаптивна композиція трьох карток
-        ├── customer-detail-field.tsx       # спільне подання підпису й значення
-        ├── customer-contact-card.tsx       # контактні дані
-        └── customer-price-types-card.tsx   # типи цін
+├── feature/src/clients.routes.tsx                  # маршрути й межа callback
+├── feature/src/pages/customers-page.tsx           # список і URL-стан
+├── feature/src/pages/customer-details-page.tsx    # деталі та місце панелі замовлень
+├── data-access/src/api/admin-customers.api.ts     # запити list/detail
+├── data-access/src/mappers/customer.mapper.ts     # перевірка відповіді
+├── model/src/queries/customer-page-params.ts      # параметри списку
+└── ui/src/                                       # таблиця й картки без HTTP
 ```

@@ -10,6 +10,9 @@
 - [Список товарів Admin](admin/products/product-list-data-grid.md)
 - [Перегляд товарів і режим «Без фото»](admin/products/001-read-only-product-browsing/README.md)
 - [Перегляд клієнтів Admin](admin/clients/001-read-only-customers/README.md)
+- [Замовлення й чернетки Admin](admin/orders/001-order-workspace/README.md)
+- [Розподіл відповідальностей замовлень Admin](admin/orders/002-order-structure-remediation/README.md)
+- [Замовлення й чернетки в деталях клієнта](admin/clients/002-customer-orders/README.md)
 
 ## Mobile React Native
 

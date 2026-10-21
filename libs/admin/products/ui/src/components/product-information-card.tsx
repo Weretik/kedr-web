@@ -1,3 +1,4 @@
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Button, Card, CardContent, Chip, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
 
@@ -9,9 +10,10 @@ interface ProductInformationCardProps {
   product: ProductDetails;
   publicUrl: string | null;
   photoStorageUrl: string;
+  onAddProduct?: (productId: number) => void;
 }
 
-export function ProductInformationCard({ product, publicUrl, photoStorageUrl }: ProductInformationCardProps) {
+export function ProductInformationCard({ product, publicUrl, photoStorageUrl, onAddProduct }: ProductInformationCardProps) {
   const details = [
     ['ID', String(product.id)],
     ['Ціна', product.price === null ? 'Не вказано' : priceFormatter.format(product.price)],
@@ -45,6 +47,7 @@ export function ProductInformationCard({ product, publicUrl, photoStorageUrl }: 
             </Table>
           </TableContainer>
           <Stack direction={{ xs: 'column', lg: 'row' }} spacing={1.5}>
+            {onAddProduct && <Button onClick={() => onAddProduct(product.id)} startIcon={<AddShoppingCartOutlinedIcon />} variant="contained">Додати до замовлення</Button>}
             {publicUrl && <Button component="a" href={publicUrl} rel="noopener noreferrer" startIcon={<OpenInNewIcon />} target="_blank" variant="contained">Відкрити на сайті</Button>}
             <Button component="a" href={photoStorageUrl} rel="noopener noreferrer" target="_blank" variant="outlined">Сховище фото</Button>
           </Stack>

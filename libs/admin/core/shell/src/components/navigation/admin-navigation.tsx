@@ -1,6 +1,7 @@
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { Box, Typography } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ const navigationItems = [
   { icon: <DashboardOutlinedIcon />, label: 'Огляд', to: '/dashboard' },
   { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
   { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
+  { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
 ] as const;
 
 interface AdminNavigationProps {

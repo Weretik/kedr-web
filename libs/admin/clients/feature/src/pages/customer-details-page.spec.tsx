@@ -23,7 +23,7 @@ describe('CustomerDetailsPage', () => {
     render(
       <MemoryRouter initialEntries={['/customers/%20%20?page=3&pageSize=50']}>
         <Routes>
-          <Route path="customers/:counterpartyId" element={<CustomerDetailsPage />} />
+          <Route path="customers/:counterpartyId" element={<CustomerDetailsPage renderOrdersPanel={() => null} />} />
         </Routes>
       </MemoryRouter>,
     );
@@ -46,7 +46,7 @@ describe('CustomerDetailsPage', () => {
     render(
       <MemoryRouter initialEntries={['/customers/0002?page=3&pageSize=50']}>
         <Routes>
-          <Route path="customers/:counterpartyId" element={<CustomerDetailsPage />} />
+          <Route path="customers/:counterpartyId" element={<CustomerDetailsPage renderOrdersPanel={() => null} />} />
           <Route path="customers" element={<ListLocation />} />
         </Routes>
       </MemoryRouter>,
@@ -59,6 +59,47 @@ describe('CustomerDetailsPage', () => {
     expect(screen.getByText('?page=3&pageSize=50')).toBeTruthy();
   });
 
+  it('injects the orders panel only for the current customer and keeps URL context', () => {
+    const customer = {
+      counterpartyId: '0002', name: 'Бета', phone: null, email: '',
+      defaultPriceTypeId: 5, defaultPriceTypeName: 'Роздрібна', categoryPriceTypes: [],
+    };
+    vi.mocked(useGetCustomerByIdQuery).mockReturnValue({
+      data: customer, currentData: customer,
+      error: undefined, isError: false, isLoading: false, isFetching: false, refetch: vi.fn(),
+    } as ReturnType<typeof useGetCustomerByIdQuery>);
+    const renderOrdersPanel = vi.fn(() => <section aria-label="Замовлення клієнта" />);
+    render(
+      <MemoryRouter initialEntries={['/customers/0002?orderTab=drafts&draftPage=2']}>
+        <Routes>
+          <Route path="customers/:counterpartyId" element={<CustomerDetailsPage renderOrdersPanel={renderOrdersPanel} />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole('region', { name: 'Замовлення клієнта' })).toBeTruthy();
+    expect(renderOrdersPanel).toHaveBeenCalledWith('0002', '/customers/0002?orderTab=drafts&draftPage=2');
+  });
+
+  it('does not show an order panel for stale customer data', () => {
+    const oldCustomer = {
+      counterpartyId: '0002', name: 'Бета', phone: null, email: '',
+      defaultPriceTypeId: 5, defaultPriceTypeName: 'Роздрібна', categoryPriceTypes: [],
+    };
+    vi.mocked(useGetCustomerByIdQuery).mockReturnValue({
+      data: oldCustomer, currentData: undefined,
+      error: undefined, isError: false, isLoading: false, isFetching: true, refetch: vi.fn(),
+    } as ReturnType<typeof useGetCustomerByIdQuery>);
+    const renderOrdersPanel = vi.fn(() => <section aria-label="Замовлення клієнта" />);
+    render(
+      <MemoryRouter initialEntries={['/customers/0003']}>
+        <Routes>
+          <Route path="customers/:counterpartyId" element={<CustomerDetailsPage renderOrdersPanel={renderOrdersPanel} />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    expect(renderOrdersPanel).not.toHaveBeenCalled();
+    expect(screen.queryByRole('region', { name: 'Замовлення клієнта' })).toBeNull();
+  });
   it('keeps the customer name and ID in one detail card beneath a neutral page heading', () => {
     vi.mocked(useGetCustomerByIdQuery).mockReturnValue({
       data: {
@@ -70,7 +111,7 @@ describe('CustomerDetailsPage', () => {
 
     render(
       <MemoryRouter initialEntries={['/customers/0002']}>
-        <Routes><Route path="customers/:counterpartyId" element={<CustomerDetailsPage />} /></Routes>
+        <Routes><Route path="customers/:counterpartyId" element={<CustomerDetailsPage renderOrdersPanel={() => null} />} /></Routes>
       </MemoryRouter>,
     );
 

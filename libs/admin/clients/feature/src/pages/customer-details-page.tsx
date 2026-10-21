@@ -1,4 +1,3 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useGetCustomerByIdQuery } from '@admin/clients/data-access';
 import {
   customerPageSearch,
@@ -6,6 +5,7 @@ import {
   parseCustomerPageQuery,
 } from '@admin/clients/model';
 import { CustomerDetailsContent } from '@admin/clients/ui';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   Alert,
   Box,
@@ -18,11 +18,18 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useRef } from 'react';
-import { Link as RouterLink, useParams, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useParams, useSearchParams } from 'react-router-dom';
 
-export function CustomerDetailsPage() {
+import type { ReactNode } from 'react';
+
+interface CustomerDetailsPageProps {
+  renderOrdersPanel: (counterpartyId: string, returnTo: string) => ReactNode;
+}
+
+export function CustomerDetailsPage({ renderOrdersPanel }: CustomerDetailsPageProps) {
   const { counterpartyId } = useParams<{ counterpartyId: string }>();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const headingReference = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     headingReference.current?.focus();
@@ -74,6 +81,9 @@ export function CustomerDetailsPage() {
         </Typography>
       </Stack>
       {content}
+      {counterpartyId && validId && customerQuery.currentData?.counterpartyId === counterpartyId && (
+        renderOrdersPanel(counterpartyId, location.pathname + location.search)
+      )}
     </Stack>
   );
 }

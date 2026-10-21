@@ -1,0 +1,13 @@
+{
+  "name": "admin-orders-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/orders/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:orders", "type:data-access"],
+  "// targets": "to see all targets run: nx show project admin-orders-data-access --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

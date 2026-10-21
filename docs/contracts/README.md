@@ -59,6 +59,7 @@ checked-in generated types відповідають snapshot.
 - Sales:
   - [Mobile manager order](sales/manager-order.md)
   - [Admin customers](sales/admin-customers.md)
+  - [Admin order workspace](sales/admin-order-workspace.md)
 
 Детальна consumer projection потрібна лише для operation зі статусом `used`,
 `planned` або `blocked`. Для `not consumed` достатньо OpenAPI і рядка реєстру;
@@ -89,6 +90,15 @@ checked-in generated types відповідають snapshot.
 | Sales customers    | `getAdminCustomerById`                  | `GET /api/admin/customers/{counterpartyId}`                 | current OpenAPI anonymous         | Admin                      | used         |
 | Sales orders       | `getAdminOrders`                        | `GET /api/admin/orders`                                     | anonymous                         | Mobile                     | used         |
 | Sales orders       | `getAdminOrderById`                     | `GET /api/admin/orders/{orderId}`                           | anonymous                         | Mobile                     | used         |
+| Sales workspace    | `getAdminWorkspaceOrders`               | `GET /api/admin/order-workspace/orders`                     | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales workspace    | `getAdminWorkspaceOrderById`            | `GET /api/admin/order-workspace/orders/{orderId}`           | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales workspace    | `quoteAdminWorkspaceOrder`              | `POST /api/admin/order-workspace/quote`                     | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales workspace    | `createAdminWorkspaceOrder`             | `POST /api/admin/order-workspace/orders`                    | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales drafts       | `getAdminOrderDrafts`                   | `GET /api/admin/order-workspace/drafts`                     | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales drafts       | `getAdminOrderDraftById`                | `GET /api/admin/order-workspace/drafts/{draftId}`           | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales drafts       | `createAdminOrderDraft`                 | `POST /api/admin/order-workspace/drafts`                    | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales drafts       | `updateAdminOrderDraft`                 | `PUT /api/admin/order-workspace/drafts/{draftId}`           | bearer, `CanManageOrders`         | Admin                      | used         |
+| Sales drafts       | `deleteAdminOrderDraft`                 | `DELETE /api/admin/order-workspace/drafts/{draftId}`        | bearer, `CanManageOrders`         | Admin                      | used         |
 | Sales order sync   | `createAdminOrder`                      | `POST /api/admin/orders`                                    | temporary anonymous               | Mobile cart                | used         |
 | Sales order sync   | `getAdminOrderSyncStatus`               | `GET /api/admin/orders/{orderId}/sync-status`               | temporary anonymous               | —                          | not consumed |
 | Sales order sync   | `retryAdminOrderSync`                   | `POST /api/admin/orders/{orderId}/sync/retry`               | temporary anonymous               | —                          | not consumed |

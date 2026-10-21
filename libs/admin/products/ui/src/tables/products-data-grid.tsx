@@ -36,6 +36,7 @@ interface ProductsDataGridProps {
   onRetry: () => void;
   onSortChange: (sort: ProductsListSort) => void;
   onViewProduct: (product: AdminProductListItem) => void;
+  onAddProduct?: (product: AdminProductListItem) => void;
   page: number;
   pageSize: number;
   rowCount: number;
@@ -63,6 +64,7 @@ export function ProductsDataGrid({
   onRetry,
   onSortChange,
   onViewProduct,
+  onAddProduct,
   page,
   pageSize,
   rowCount,
@@ -115,10 +117,10 @@ export function ProductsDataGrid({
     }),
     {
       align: 'center', field: 'view', headerAlign: 'center', headerName: 'Дії',
-      sortable: false, filterable: false, width: 80,
-      renderCell: ({ row }) => <ProductsViewActionCell product={row} onView={onViewProduct} />,
+      sortable: false, filterable: false, width: onAddProduct ? 130 : 80,
+      renderCell: ({ row }) => <ProductsViewActionCell product={row} onView={onViewProduct} onAdd={onAddProduct} />,
     },
-  ], [booleanFilters, categoriesById, onBooleanFilterChange, onViewProduct, phone, priceFilterable]);
+  ], [booleanFilters, categoriesById, onAddProduct, onBooleanFilterChange, onViewProduct, phone, priceFilterable]);
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
     ? () => <ProductsDataGridErrorOverlay message={errorMessage} onRetry={onRetry} />

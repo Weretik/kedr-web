@@ -1,17 +1,20 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useGetAdminProductDetailsQuery } from '@admin/products/data-access';
 import { ProductDetailsContent } from '@admin/products/ui';
 import { appConfig } from '@admin/shared/config';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Alert, Button, Card, CardContent, CircularProgress, Link as MuiLink, Stack, Typography } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink, useLocation, useParams } from 'react-router-dom';
+
+import type { AddProductResult } from '../products.routes';
 
 const photoStorageUrl = 'https://images-kedr.cdn.express/~/o/products';
 
-export function ProductDetailsPage() {
+export function ProductDetailsPage({ onAddProduct }: { onAddProduct?: (productId: number) => AddProductResult }) {
   const { productSlug } = useParams();
   const location = useLocation();
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const [addFeedback, setAddFeedback] = useState<{ message: string; severity: 'info' | 'warning' } | null>(null);
   const slug = productSlug?.trim() ?? '';
   const validSlug = slug.length > 0 && slug.length <= 255 && !slug.includes('/');
   const query = useGetAdminProductDetailsQuery(slug, { skip: !validSlug });
@@ -31,6 +34,7 @@ export function ProductDetailsPage() {
         </MuiLink>
         <Typography component="h1" ref={headingRef} tabIndex={-1} variant="h4">Деталі товару</Typography>
       </Stack>
+      {addFeedback && <Alert onClose={() => setAddFeedback(null)} severity={addFeedback.severity}>{addFeedback.message}</Alert>}
       {!validSlug || notFound ? (
         <Alert severity="info">Товар за цим посиланням не знайдено.</Alert>
       ) : query.isLoading ? (
@@ -40,7 +44,10 @@ export function ProductDetailsPage() {
           Не вдалося завантажити товар. Спробуйте ще раз.
         </Alert>
       ) : query.data ? (
-        <ProductDetailsContent product={query.data} publicUrl={publicUrl} photoStorageUrl={photoStorageUrl} />
+        <ProductDetailsContent product={query.data} publicUrl={publicUrl} photoStorageUrl={photoStorageUrl} onAddProduct={onAddProduct ? (id) => {
+          const result = onAddProduct(id);
+          setAddFeedback(result === 'saved' ? { message: 'Товар додано до поточного набору замовлення.', severity: 'info' } : result === 'volatile' ? { message: 'Товар додано лише в цій вкладці. Браузер не зберіг набір; після закриття вкладки зміни можуть зникнути.', severity: 'warning' } : { message: 'Не вдалося додати товар. Перевірте ліміт позицій і кількість.', severity: 'warning' });
+        } : undefined} />
       ) : (
         <Alert severity="info">Деталі товару недоступні.</Alert>
       )}

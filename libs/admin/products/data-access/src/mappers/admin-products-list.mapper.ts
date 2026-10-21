@@ -1,6 +1,10 @@
-import type { AdminProductsListResponse, AdminProductsPagedInfo } from '../contracts/admin-products-list.contract';
-import type { AdminProductListItem, ProductsListPage } from '@admin/products/model';
 import { publicCategoryNamesUk } from './public-category-names.uk';
+
+import type {
+  AdminProductsListResponse,
+  AdminProductsPagedInfo,
+} from '../contracts/admin-products-list.contract';
+import type { AdminProductListItem, ProductsListPage } from '@admin/products/model';
 
 export function mapAdminProductsListResponse(response: unknown): ProductsListPage {
   if (!isRecord(response) || !Array.isArray(response['value'])) {
@@ -71,9 +75,10 @@ function mapAdminProductListItem(value: unknown): AdminProductListItem {
     productSlug: value['productSlug'],
     photo: value['photo'],
     categoryId: value['categoryId'] ?? null,
-    categoryName: value['categoryId'] == null
-      ? value['categoryName']
-      : (publicCategoryNamesUk[value['categoryId']] ?? value['categoryName']),
+    categoryName:
+      value['categoryId'] == null
+        ? value['categoryName']
+        : (publicCategoryNamesUk[value['categoryId']] ?? value['categoryName']),
     inStock: value['inStock'],
     isSale: value['isSale'],
     isNew: value['isNew'],

@@ -1,20 +1,22 @@
 import { useGetAdminProductCategoriesQuery, useGetMissingPhotoProductsQuery, useGetProductsListQuery } from '@admin/products/data-access';
 import { ProductsDataGrid } from '@admin/products/ui';
-import { Card, Stack, Tab, Tabs } from '@mui/material';
-import { useCallback, useMemo, useRef } from 'react';
+import { Alert, Card, Stack, Tab, Tabs } from '@mui/material';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { ProductsPageToolbar } from '../components/products-page-toolbar';
 import { fromProductsGridFilterModel, toProductsGridFilterModel } from '../hooks/products-grid-filters';
 import { readProductsUrlState, writeProductsUrlState } from '../hooks/products-url-state';
 
+import type { AddProductResult } from '../products.routes';
 import type { AdminProductListItem, ProductsListSort } from '@admin/products/model';
 import type { GridFilterModel } from '@mui/x-data-grid';
 
 type BooleanFilterField = 'inStock' | 'isSale' | 'isNew';
 
-export function ProductsPage() {
+export function ProductsPage({ onAddProduct }: { onAddProduct?: (productId: number) => AddProductResult }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [addFeedback, setAddFeedback] = useState<{ message: string; severity: 'info' | 'warning' } | null>(null);
   const navigate = useNavigate();
   const urlState = useMemo(() => readProductsUrlState(searchParams), [searchParams]);
   const mode = urlState.mode;
@@ -78,6 +80,7 @@ export function ProductsPage() {
   return (
     <Stack component="section" spacing={3}>
       <ProductsPageToolbar />
+      {addFeedback && <Alert onClose={() => setAddFeedback(null)} severity={addFeedback.severity}>{addFeedback.message}</Alert>}
       <Card sx={{ overflow: 'hidden' }} variant="outlined">
         <Tabs aria-label="Режим списку товарів" onChange={(_event, value: 'all' | 'missing' | 'site') => changeMode(value)} sx={{ borderBottom: 1, borderColor: 'divider', px: { xs: 1, sm: 3 } }} value={mode} variant="scrollable" scrollButtons="auto">
           <Tab label="Усі товари" value="all" />
@@ -102,6 +105,10 @@ export function ProductsPage() {
           onRetry={activeQuery.refetch}
           onSortChange={changeSort}
           onViewProduct={viewProduct}
+          onAddProduct={onAddProduct ? (product) => {
+            const result = onAddProduct(product.id);
+            setAddFeedback(result === 'saved' ? { message: 'Товар додано до поточного набору замовлення.', severity: 'info' } : result === 'volatile' ? { message: 'Товар додано лише в цій вкладці. Браузер не зберіг набір; після закриття вкладки зміни можуть зникнути.', severity: 'warning' } : { message: 'Не вдалося додати товар. Перевірте ліміт позицій і кількість.', severity: 'warning' });
+          } : undefined}
           page={currentQuery.page - 1}
           pageSize={currentQuery.pageSize}
           priceFilterable={mode !== 'missing'}

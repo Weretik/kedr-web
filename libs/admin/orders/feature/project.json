@@ -1,0 +1,13 @@
+{
+  "name": "admin-orders-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/orders/feature/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:orders", "type:feature"],
+  "// targets": "to see all targets run: nx show project admin-orders-feature --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

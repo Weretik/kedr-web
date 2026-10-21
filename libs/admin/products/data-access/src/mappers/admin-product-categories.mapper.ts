@@ -1,16 +1,22 @@
-import type { ProductCategoryOption } from '@admin/products/model';
-import type { operations } from '@shared/api-contracts';
 import { publicCategoryNamesUk } from './public-category-names.uk';
 
-type AdminCategory = operations['getAdminCategories']['responses'][200]['content']['application/json'][number];
+import type { ProductCategoryOption } from '@admin/products/model';
+import type { operations } from '@shared/api-contracts';
+
+type AdminCategory =
+  operations['getAdminCategories']['responses'][200]['content']['application/json'][number];
 
 export function mapAdminProductCategories(response: unknown): ProductCategoryOption[] {
   if (!Array.isArray(response)) throw new Error('Invalid categories response.');
   const categories = response as AdminCategory[];
   for (const item of categories) {
-    if (!item || !Number.isInteger(item.id) || item.id <= 0 ||
+    if (
+      !item ||
+      !Number.isInteger(item.id) ||
+      item.id <= 0 ||
       typeof item.shortNameUk !== 'string' ||
-      !(item.parentId === null || Number.isInteger(item.parentId))) {
+      !(item.parentId === null || Number.isInteger(item.parentId))
+    ) {
       throw new Error('Invalid category.');
     }
   }

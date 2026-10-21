@@ -1,1 +1,1 @@
-export { clientsRoutes } from './clients.routes';
+export { createClientsRoutes } from './clients.routes';

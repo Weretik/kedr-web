@@ -301,6 +301,97 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/order-workspace/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search persisted Admin orders */
+        get: operations["getAdminWorkspaceOrders"];
+        put?: never;
+        /** Create one priced order and pending 1C sync */
+        post: operations["createAdminWorkspaceOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read a persisted Admin order */
+        get: operations["getAdminWorkspaceOrderById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Price a selected customer's lines without persisting an order */
+        post: operations["quoteAdminWorkspaceOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search saved drafts */
+        get: operations["getAdminOrderDrafts"];
+        put?: never;
+        /** Save a reusable draft */
+        post: operations["createAdminOrderDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/drafts/{draftId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        /** Read one draft with current pricing availability */
+        get: operations["getAdminOrderDraftById"];
+        /** Replace editable draft fields */
+        put: operations["updateAdminOrderDraft"];
+        post?: never;
+        /** Delete one draft and its lines */
+        delete: operations["deleteAdminOrderDraft"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/customers": {
         parameters: {
             query?: never;
@@ -745,6 +836,137 @@ export interface components {
              * @enum {string}
              */
             syncStatus: "RetryScheduled";
+        };
+        "components-schemas-PagedInfo": {
+            pageNumber: number;
+            pageSize: number;
+            totalPages: number;
+            totalRecords: number;
+        };
+        Money: number;
+        OrderListItem: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            counterpartyId: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            createdAtUtc: string;
+            lineCount: number;
+            totalAmount: components["schemas"]["Money"];
+            syncStatus: string;
+        };
+        OrderPage: {
+            pagedInfo: components["schemas"]["components-schemas-PagedInfo"];
+            value: components["schemas"]["OrderListItem"][];
+        };
+        InputLine: {
+            productId: string;
+            quantity: number;
+        };
+        QuoteRequest: {
+            counterpartyId: string;
+            lines: components["schemas"]["InputLine"][];
+        };
+        "schemas-CreateOrderRequest": components["schemas"]["QuoteRequest"] & {
+            quoteFingerprint: string;
+            comment?: string | null;
+        };
+        "schemas-CreateOrderResponse": {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            totalAmount: components["schemas"]["Money"];
+            /** @enum {string} */
+            syncStatus: "Pending";
+        };
+        QuoteLine: {
+            productId: string;
+            productName: string;
+            quantity: number;
+            unitPrice: components["schemas"]["Money"];
+            lineAmount: components["schemas"]["Money"];
+        };
+        Quote: {
+            counterpartyId: string;
+            lines: components["schemas"]["QuoteLine"][];
+            totalAmount: components["schemas"]["Money"];
+            quoteFingerprint: string;
+        };
+        OrderConflict: {
+            /** @enum {string} */
+            code: "quote_changed" | "idempotency_conflict";
+            quote?: components["schemas"]["Quote"] | null;
+        };
+        StoredLine: {
+            productId: string;
+            productName: string;
+            quantity: number;
+            amount: components["schemas"]["Money"];
+        };
+        OrderDetail: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            counterpartyId: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            createdAtUtc: string;
+            comment?: string | null;
+            lines: components["schemas"]["StoredLine"][];
+            totalAmount: components["schemas"]["Money"];
+            syncStatus: string;
+            oneCDocumentNumber?: string | null;
+        };
+        DraftListItem: {
+            /** Format: int64 */
+            draftId: number;
+            title: string;
+            counterpartyId: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            updatedAtUtc: string;
+            lineCount: number;
+        };
+        DraftPage: {
+            pagedInfo: components["schemas"]["components-schemas-PagedInfo"];
+            value: components["schemas"]["DraftListItem"][];
+        };
+        DraftInputLine: {
+            productId: string;
+            quantity: number;
+        };
+        DraftInput: {
+            title: string;
+            note?: string | null;
+            counterpartyId: string;
+            lines: components["schemas"]["DraftInputLine"][];
+        };
+        DraftQuotedLine: {
+            productId: string;
+            productName: string | null;
+            quantity: number;
+            unitPrice: number | null;
+            lineAmount: number | null;
+        };
+        DraftDetail: {
+            /** Format: int64 */
+            draftId: number;
+            version: string;
+            title: string;
+            note?: string | null;
+            counterpartyId: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            createdAtUtc: string;
+            /** Format: date-time */
+            updatedAtUtc: string;
+            lines: components["schemas"]["DraftQuotedLine"][];
+            totalAmount: number | null;
+            /** @enum {string} */
+            pricingStatus: "Available" | "Unavailable";
+            /** @description Safe reason when current pricing is unavailable. */
+            pricingErrorCode?: string | null;
         };
         CustomerListItem: {
             /** @example 000000000 */
@@ -1482,6 +1704,493 @@ export interface operations {
                 content?: never;
             };
             /** @description Current synchronization status cannot be retried. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkspaceOrders: {
+        parameters: {
+            query?: {
+                searchTerm?: string;
+                counterpartyId?: string;
+                sort?: "createdAt" | "-createdAt" | "orderNumber" | "-orderNumber" | "customerName" | "-customerName" | "totalAmount" | "-totalAmount";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Filtered page; totalRecords is computed before paging. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderPage"];
+                };
+            };
+            /** @description Invalid query. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminWorkspaceOrder: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["schemas-CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description Idempotent replay of the same request. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["schemas-CreateOrderResponse"];
+                };
+            };
+            /** @description Order created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["schemas-CreateOrderResponse"];
+                };
+            };
+            /** @description Invalid lines, customer, price or request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Selected customer or product does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Quote changed or idempotency key reused with different request. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderConflict"];
+                };
+            };
+        };
+    };
+    getAdminWorkspaceOrderById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Stored order snapshot. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderDetail"];
+                };
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Order not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    quoteAdminWorkspaceOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuoteRequest"];
+            };
+        };
+        responses: {
+            /** @description Current server-calculated quote. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Quote"];
+                };
+            };
+            /** @description Invalid lines or unavailable price. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Selected customer or product does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminOrderDrafts: {
+        parameters: {
+            query?: {
+                searchTerm?: string;
+                counterpartyId?: string;
+                sort?: "updatedAt" | "-updatedAt" | "title" | "-title" | "customerName" | "-customerName";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Filtered page; totalRecords is computed before paging. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftPage"];
+                };
+            };
+            /** @description Invalid query. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminOrderDraft: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftInput"];
+            };
+        };
+        responses: {
+            /** @description Idempotent replay of the same create. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftDetail"];
+                };
+            };
+            /** @description Draft created without order number or 1C sync. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftDetail"];
+                };
+            };
+            /** @description Invalid draft, customer, product or price. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Selected customer or product does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Idempotency key reused with different body. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminOrderDraftById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Saved lines and version remain available even if current pricing is unavailable. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftDetail"];
+                };
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Draft not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminOrderDraft: {
+        parameters: {
+            query?: never;
+            header: {
+                "If-Match": string;
+            };
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftInput"];
+            };
+        };
+        responses: {
+            /** @description Updated draft with a new version. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftDetail"];
+                };
+            };
+            /** @description Invalid draft, customer, product or price. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Draft not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Draft changed since supplied version. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminOrderDraft: {
+        parameters: {
+            query?: never;
+            header: {
+                "If-Match": string;
+            };
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Draft deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CanManageOrders policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Draft not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Draft changed since supplied version. */
             409: {
                 headers: {
                     [name: string]: unknown;

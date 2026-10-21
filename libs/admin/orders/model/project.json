@@ -1,0 +1,13 @@
+{
+  "name": "admin-orders-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/orders/model/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:orders", "type:model"],
+  "// targets": "to see all targets run: nx show project admin-orders-model --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

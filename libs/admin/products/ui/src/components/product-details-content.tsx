@@ -13,9 +13,10 @@ interface ProductDetailsContentProps {
   product: ProductDetails;
   publicUrl: string | null;
   photoStorageUrl: string;
+  onAddProduct?: (productId: number) => void;
 }
 
-export function ProductDetailsContent({ product, publicUrl, photoStorageUrl }: ProductDetailsContentProps) {
+export function ProductDetailsContent({ product, publicUrl, photoStorageUrl, onAddProduct }: ProductDetailsContentProps) {
   const [schemeFailed, setSchemeFailed] = useState(false);
   const [photoFailed, setPhotoFailed] = useState(false);
   const [preview, setPreview] = useState<Preview>(null);
@@ -33,7 +34,7 @@ export function ProductDetailsContent({ product, publicUrl, photoStorageUrl }: P
         },
       }}>
         <ProductImageCard failed={photoFailed} kind="photo" onError={() => setPhotoFailed(true)} onPreview={() => setPreview('photo')} src={product.photo} />
-        <ProductInformationCard product={product} publicUrl={publicUrl} photoStorageUrl={photoStorageUrl} />
+        <ProductInformationCard product={product} publicUrl={publicUrl} photoStorageUrl={photoStorageUrl} onAddProduct={onAddProduct} />
         {showScheme && (
           <ProductImageCard kind="scheme" onError={() => setSchemeFailed(true)} onPreview={() => setPreview('scheme')} src={product.scheme} />
         )}

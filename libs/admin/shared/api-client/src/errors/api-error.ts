@@ -95,5 +95,7 @@ export const toApiError = (error: unknown): ApiError => {
     return { code: 'Server', status, message, traceId: problemDetails?.traceId };
   }
 
+  if (status === 409) return { code: 'Unknown', status, message, conflict: data };
+
   return { code: 'Unknown', status, message, traceId: problemDetails?.traceId };
 };
