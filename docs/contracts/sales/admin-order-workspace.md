@@ -7,7 +7,7 @@
 - Операції: `getAdminWorkspaceOrders`, `getAdminWorkspaceOrderById`, `quoteAdminWorkspaceOrder`, `createAdminWorkspaceOrder`, `getAdminOrderDrafts`, `getAdminOrderDraftById`, `createAdminOrderDraft`, `updateAdminOrderDraft`, `deleteAdminOrderDraft`.
 - Споживач: `@admin/orders/data-access`; транспортні типи `operations[...]` використовуються лише на цій межі, відповіді проходять runtime validation і mapping у доменну модель.
 
-Це окремі Admin API з bearer authorization і policy `CanManageOrders`. Чинні `/api/admin/orders` і `POST /api/admin/orders` для Mobile не перемикаються на ці операції.
+Це окремі Admin API, які на поточному етапі доступні анонімно. Чинні `/api/admin/orders` і `POST /api/admin/orders` для Mobile не перемикаються на ці операції. Provider OpenAPI змінено локально; snapshot цього репозиторію потребує синхронізації після фіксації backend revision.
 
 ## Списки й деталі
 
@@ -16,6 +16,8 @@
 Деталі замовлення містять його номер, клієнта, товари, суму та статус синхронізації з 1C. Чернетка має окремий `draftId`, назву, нотатку й `version`, без номера замовлення. У відповіді деталей чернетки `pricingStatus` дорівнює `Available` або `Unavailable`. За `Unavailable` загальна сума й назви/ціни/суми рядків можуть бути `null`; перегляд лишається доступним, а UI не підставляє стару ціну. Нова операція `quoteAdminWorkspaceOrder` вимагає повного актуального розрахунку, і її mapper відхиляє nullable ціни.
 
 ## Записи й помилки
+
+Для quote з кількістю понад актуальний залишок backend повертає HTTP 400 `code=unavailable_product` і `message` з назвою товару та доступною/запитаною кількістю. `axiosBaseQuery` зберігає цей код у `ApiError.reason`; сторінка оформлення показує повідомлення, щоб користувач скоригував кількість. Provider snapshot потребує синхронізації після backend commit.
 
 Створення замовлення передає клієнта, productId/quantity, `quoteFingerprint`, необов'язковий коментар і UUID `Idempotency-Key`. Сервер перевіряє товари/клієнта й знову рахує ціну. При `409 quote_changed` frontend показує новий quote і вимагає нового підтвердження. Ключ для повтору того самого pending payload залишається тим самим; зміна payload створює новий ключ.
 

@@ -25,6 +25,11 @@ export function mapAdminProductsListResponse(response: unknown): ProductsListPag
   };
 }
 
+export function mapAllAdminProductsResponse(response: unknown): AdminProductListItem[] {
+  if (!Array.isArray(response)) throw new Error('Invalid products list response.');
+  return response.map(mapAdminProductListItem);
+}
+
 function mapPagedInfo(value: unknown): AdminProductsPagedInfo {
   if (!isRecord(value)) {
     throw new Error('Invalid products list response.');

@@ -12,6 +12,7 @@
 - [API](contracts/api-contract.md)
 - [Задачі](tasks/README.md)
 - [Трасування](traceability.md)
+- [Зміна 2026-10-22: таблиця замовлень клієнта](revision-2026-10-22.md) — нова SDD, код ще не змінено
 
 Спільні екрани й склад таблиць визначає [SDD замовлень](../../orders/001-order-workspace/README.md).
 

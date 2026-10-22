@@ -5,8 +5,11 @@ import type { OrderInputLine, OrderQuote } from '@admin/orders/model';
 
 interface QuoteState {
   key: string;
+  quoteKey: string;
+  counterpartyId: string;
   quote: OrderQuote | null;
   error: boolean;
+  errorMessage?: string;
   loading: boolean;
 }
 export function useOrderQuote(counterpartyId: string, lines: OrderInputLine[]) {
@@ -14,6 +17,8 @@ export function useOrderQuote(counterpartyId: string, lines: OrderInputLine[]) {
   const [trigger] = useQuoteWorkspaceOrderMutation();
   const [state, setState] = useState<QuoteState>({
     key: '',
+    quoteKey: '',
+    counterpartyId: '',
     quote: null,
     error: false,
     loading: false,
@@ -22,14 +27,39 @@ export function useOrderQuote(counterpartyId: string, lines: OrderInputLine[]) {
     if (!counterpartyId || lines.length === 0) return;
     let active = true;
     const timer = window.setTimeout(() => {
-      setState({ key, quote: null, error: false, loading: true });
+      setState((previous) => ({
+        key,
+        quoteKey: previous.counterpartyId === counterpartyId ? previous.quoteKey : '',
+        counterpartyId,
+        quote: previous.counterpartyId === counterpartyId ? previous.quote : null,
+        error: false,
+        loading: true,
+      }));
       void trigger({ counterpartyId, lines })
         .unwrap()
         .then((quote) => {
-          if (active) setState({ key, quote, error: false, loading: false });
+          if (active)
+            setState({ key, quoteKey: key, counterpartyId, quote, error: false, loading: false });
         })
-        .catch(() => {
-          if (active) setState({ key, quote: null, error: true, loading: false });
+        .catch((cause: unknown) => {
+          const response =
+            cause && typeof cause === 'object'
+              ? (cause as { reason?: unknown; message?: unknown })
+              : null;
+          const errorMessage =
+            response?.reason === 'unavailable_product' && typeof response.message === 'string'
+              ? response.message
+              : undefined;
+          if (active)
+            setState((previous) => ({
+              key,
+              quoteKey: previous.counterpartyId === counterpartyId ? previous.quoteKey : '',
+              counterpartyId,
+              quote: previous.counterpartyId === counterpartyId ? previous.quote : null,
+              error: true,
+              errorMessage,
+              loading: false,
+            }));
         });
     }, 250);
     return () => {
@@ -39,8 +69,10 @@ export function useOrderQuote(counterpartyId: string, lines: OrderInputLine[]) {
   }, [key, counterpartyId, lines, trigger]);
   return {
     key,
-    quote: state.key === key ? state.quote : null,
+    quote: state.quoteKey === key ? state.quote : null,
+    previewQuote: state.counterpartyId === counterpartyId ? state.quote : null,
     loading: state.key !== key || state.loading,
     error: state.key === key && state.error,
+    errorMessage: state.key === key ? state.errorMessage : undefined,
   };
 }

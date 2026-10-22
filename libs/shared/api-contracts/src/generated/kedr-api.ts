@@ -1717,6 +1717,10 @@ export interface operations {
             query?: {
                 searchTerm?: string;
                 counterpartyId?: string;
+                /** @description Inclusive calendar date in Europe/Kyiv. */
+                createdFrom?: string;
+                /** @description Inclusive calendar date in Europe/Kyiv. */
+                createdTo?: string;
                 sort?: "createdAt" | "-createdAt" | "orderNumber" | "-orderNumber" | "customerName" | "-customerName" | "totalAmount" | "-totalAmount";
                 page?: number;
                 pageSize?: number;
@@ -1738,20 +1742,6 @@ export interface operations {
             };
             /** @description Invalid query. */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1799,20 +1789,6 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Selected customer or product does not exist. */
             404: {
                 headers: {
@@ -1851,20 +1827,6 @@ export interface operations {
                     "application/json": components["schemas"]["OrderDetail"];
                 };
             };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Order not found. */
             404: {
                 headers: {
@@ -1896,26 +1858,19 @@ export interface operations {
                     "application/json": components["schemas"]["Quote"];
                 };
             };
-            /** @description Invalid lines or unavailable price. */
+            /** @description Invalid lines, insufficient product stock or unavailable UAH price. */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/json": {
+                        /** @example unavailable_product */
+                        code: string;
+                        /** @example Недостатньо товару на складі. */
+                        message: string;
+                    };
                 };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             /** @description Selected customer or product does not exist. */
             404: {
@@ -1931,6 +1886,10 @@ export interface operations {
             query?: {
                 searchTerm?: string;
                 counterpartyId?: string;
+                /** @description Inclusive creation calendar date in Europe/Kyiv. */
+                createdFrom?: string;
+                /** @description Inclusive creation calendar date in Europe/Kyiv. */
+                createdTo?: string;
                 sort?: "updatedAt" | "-updatedAt" | "title" | "-title" | "customerName" | "-customerName";
                 page?: number;
                 pageSize?: number;
@@ -1952,20 +1911,6 @@ export interface operations {
             };
             /** @description Invalid query. */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2013,20 +1958,6 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Selected customer or product does not exist. */
             404: {
                 headers: {
@@ -2062,20 +1993,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["DraftDetail"];
                 };
-            };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             /** @description Draft not found. */
             404: {
@@ -2119,20 +2036,6 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Draft not found. */
             404: {
                 headers: {
@@ -2164,20 +2067,6 @@ export interface operations {
         responses: {
             /** @description Draft deleted. */
             204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description CanManageOrders policy denied. */
-            403: {
                 headers: {
                     [name: string]: unknown;
                 };

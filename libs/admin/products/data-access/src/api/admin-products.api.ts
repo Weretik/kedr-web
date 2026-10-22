@@ -2,7 +2,10 @@ import { normalizeProductsListQuery } from '@admin/products/model';
 import { baseApi } from '@admin/shared/api-client';
 
 import { mapAdminProductCategories } from '../mappers/admin-product-categories.mapper';
-import { mapAdminProductsListResponse } from '../mappers/admin-products-list.mapper';
+import {
+  mapAdminProductsListResponse,
+  mapAllAdminProductsResponse,
+} from '../mappers/admin-products-list.mapper';
 import {
   mapAdminProductDetailsResponse,
   mapMissingPhotoProductsResponse,
@@ -14,6 +17,7 @@ import {
 
 import type {
   MissingPhotoQuery,
+  AdminProductListItem,
   ProductDetails,
   ProductsListPage,
   ProductsListQuery,
@@ -21,6 +25,11 @@ import type {
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    getAllAdminProducts: build.query<AdminProductListItem[], void>({
+      query: () => ({ url: '/api/admin/products/all', method: 'GET' }),
+      transformResponse: mapAllAdminProductsResponse,
+      providesTags: ['Products'],
+    }),
     getProductsList: build.query<ProductsListPage, ProductsListQuery>({
       providesTags: (result) => [
         { type: 'Products', id: 'LIST' },
@@ -56,6 +65,7 @@ export const productsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetAllAdminProductsQuery,
   useGetProductsListQuery,
   useGetMissingPhotoProductsQuery,
   useGetAdminProductDetailsQuery,

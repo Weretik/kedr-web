@@ -16,7 +16,7 @@ const DraftEditPage = lazy(() => import('./pages/draft-edit-page'));
 
 export function createOrdersRoutes({ CustomerPicker, ProductPicker }: { CustomerPicker: CustomerPickerComponent; ProductPicker: ProductPickerComponent }): RouteObject[] {
   return [
-    { path: 'orders', element: <OrderTables prefix="orders" CustomerPicker={CustomerPicker} /> },
+    { path: 'orders', element: <OrderTables prefix="orders" /> },
     { path: 'orders/new', element: <NewOrderPage CustomerPicker={CustomerPicker} /> },
     { path: 'orders/drafts/:draftId/edit', element: <DraftEditPage CustomerPicker={CustomerPicker} ProductPicker={ProductPicker} /> },
     { path: 'orders/drafts/:draftId', element: <DraftDetailPage /> },

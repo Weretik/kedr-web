@@ -8,13 +8,14 @@ import { OrderGridToolbar, OrderGridToolbarContext } from './order-grid-toolbar'
 
 import type { DraftSummary, OrderSummary } from '@admin/orders/model';
 import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
-import type { ReactNode } from 'react';
 
 interface OrderListGridProps {
   mode: 'orders' | 'drafts'; rows: OrderSummary[] | DraftSummary[]; rowCount: number;
-  loading: boolean; error: boolean; search: string; customerFilter?: ReactNode;
+  loading: boolean; error: boolean; search: string;
+  createdFrom: string; createdTo: string; hideSearch: boolean; hideCustomerColumn: boolean;
   page: number; pageSize: number; sort: string;
   onSearch: (value: string) => void; onPage: (page: number) => void;
+  onDateChange: (from: string, to: string) => void;
   onPageSize: (size: number) => void; onSort: (sort: string) => void;
   onView: (id: number) => void; onEdit?: (id: number) => void;
   onDelete?: (row: DraftSummary) => void; onRetry: () => void;
@@ -31,7 +32,7 @@ export function OrderListGrid(props: OrderListGridProps) {
   const orders = props.mode === 'orders';
   const columns: GridColDef[] = orders ? [
     { field: 'orderNumber', headerName: 'Номер', minWidth: 150, flex: 1 },
-    { field: 'counterpartyName', headerName: 'Клієнт', minWidth: 180, flex: 1 },
+    ...(!props.hideCustomerColumn ? [{ field: 'counterpartyName', headerName: 'Клієнт', minWidth: 180, flex: 1 } satisfies GridColDef] : []),
     { field: 'createdAtUtc', headerName: 'Створено', minWidth: 180, flex: 1, valueFormatter: (value: string) => dateFormat.format(new Date(value)) },
     { field: 'totalAmount', headerName: 'Сума', minWidth: 130, flex: 0.7, valueFormatter: (value: number) => moneyFormat.format(value) },
     { field: 'syncStatus', headerName: '1C', minWidth: 130, flex: 0.7, sortable: false },
@@ -59,11 +60,12 @@ export function OrderListGrid(props: OrderListGridProps) {
   const model: GridPaginationModel = { page: props.page - 1, pageSize: props.pageSize };
   return <Box sx={{ minWidth: 0 }}>
     {props.error && <Alert action={<Button onClick={props.onRetry}>Повторити</Button>} severity="error" sx={{ mx: 2 }}>Не вдалося завантажити записи.</Alert>}
-    <OrderGridToolbarContext.Provider value={{ mode: props.mode, search: props.search, onSearch: props.onSearch, customerFilter: props.customerFilter }}>
+    <OrderGridToolbarContext.Provider value={{ mode: props.mode, search: props.search, onSearch: props.onSearch, createdFrom: props.createdFrom, createdTo: props.createdTo, hideSearch: props.hideSearch, onDateChange: props.onDateChange }}>
     <Box sx={{ overflowX: 'auto' }}><Box sx={{ minWidth: 700 }}>
     <DataGrid
       autoHeight columns={columns} disableRowSelectionOnClick getRowId={(row) => orders ? row.orderId : row.draftId}
       loading={props.loading} onPaginationModelChange={(next) => next.pageSize !== props.pageSize ? props.onPageSize(next.pageSize) : props.onPage(next.page + 1)}
+      filterMode="server" filterModel={{ items: [], quickFilterValues: props.search ? [props.search] : [] }}
       onSortModelChange={(next) => { const entry = next[0]; if (entry?.sort) props.onSort(`${entry.sort === 'desc' ? '-' : ''}${gridFieldToApiSort[entry.field] ?? entry.field}`); }}
       pageSizeOptions={[10, 20, 30, 50]} pagination paginationMode="server" paginationModel={model}
       rowCount={props.rowCount} rows={props.error ? [] : props.rows} sortingMode="server" sortModel={sortModel}

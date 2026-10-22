@@ -6,7 +6,11 @@ import { RouteLoadingFallback } from './components/layout/route-loading-fallback
 import { AdminNavigation, adminDrawerWidth } from './components/navigation/admin-navigation';
 import { AdminTopBar } from './components/top-bar/admin-top-bar';
 
-export function AdminLayout() {
+interface AdminLayoutProps {
+  currentOrderPositionCount?: number;
+}
+
+export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps) {
   const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
 
   const closeMobileNavigation = () => {
@@ -79,7 +83,7 @@ export function AdminLayout() {
       </Drawer>
 
       <Box sx={{ marginLeft: { lg: `${adminDrawerWidth}px` }, minWidth: 0 }}>
-        <AdminTopBar onOpenNavigation={() => setIsMobileNavigationOpen(true)} />
+        <AdminTopBar currentOrderPositionCount={currentOrderPositionCount} onOpenNavigation={() => setIsMobileNavigationOpen(true)} />
         <Box component="main">
           <Container maxWidth="xl" sx={{ py: { xs: 4, lg: 8 } }}>
             <Suspense fallback={<RouteLoadingFallback />}>

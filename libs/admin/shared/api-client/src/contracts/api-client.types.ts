@@ -20,6 +20,7 @@ export type ApiErrorCode =
 
 export interface ApiError {
   code: ApiErrorCode;
+  reason?: string;
   status?: number;
   message: string;
   fieldErrors?: Record<string, string[]>;

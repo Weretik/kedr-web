@@ -12,8 +12,10 @@ vi.mock('@admin/orders/data-access', () => ({
   useLazyGetWorkspaceDraftQuery: () => [loadDraft], useDeleteWorkspaceDraftMutation: () => [deleteDraft, { isLoading: false }],
 }));
 vi.mock('@admin/orders/ui', () => ({
-  OrderListGrid: ({ onPage, onSort, onDelete, rows, rowCount }: { onPage: (page: number) => void; onSort: (sort: string) => void; onDelete?: (row: unknown) => void; rows: unknown[]; rowCount: number }) => <>
+  OrderListGrid: ({ onPage, onSort, onDelete, rows, rowCount, hideSearch, hideCustomerColumn, onDateChange }: { onPage: (page: number) => void; onSort: (sort: string) => void; onDelete?: (row: unknown) => void; rows: unknown[]; rowCount: number; hideSearch: boolean; hideCustomerColumn: boolean; onDateChange: (from: string, to: string) => void }) => <>
     <span>Server count: {rowCount}</span><button onClick={() => onPage(2)}>Друга сторінка</button><button onClick={() => onSort('orderNumber')}>Сортувати</button>
+    <span>Hide search: {String(hideSearch)}</span><span>Hide customer: {String(hideCustomerColumn)}</span>
+    <button onClick={() => onDateChange('2026-10-01', '2026-10-22')}>Задати дати</button>
     {rows.length > 0 && onDelete && <button onClick={() => onDelete(rows[0])}>Видалити рядок</button>}
   </>,
 }));
@@ -28,19 +30,23 @@ describe('orders server tables and URL state', () => {
     render(<MemoryRouter initialEntries={['/customers/C1?customerOrdersOPage=3&customerOrdersOSort=-createdAt&customerOrdersOCustomer=C2&ordersTab=drafts']}>
       <Routes><Route path="customers/:id" element={<OrderTables counterpartyId="C1" prefix="customerOrders" returnTo="/customers/C1" panelOnly />} /></Routes>
     </MemoryRouter>);
-    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 3, pageSize: 20, searchTerm: undefined, counterpartyId: 'C1', sort: '-createdAt' }, { skip: false });
+    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 3, pageSize: 20, searchTerm: undefined, counterpartyId: 'C1', createdFrom: undefined, createdTo: undefined, sort: '-createdAt' }, { skip: false });
+    expect(screen.getByText('Hide search: true')).toBeTruthy();
+    expect(screen.getByText('Hide customer: true')).toBeTruthy();
     expect(screen.getByText('Server count: 55')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Друга сторінка' }));
-    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 2, pageSize: 20, searchTerm: undefined, counterpartyId: 'C1', sort: '-createdAt' }, { skip: false });
+    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 2, pageSize: 20, searchTerm: undefined, counterpartyId: 'C1', createdFrom: undefined, createdTo: undefined, sort: '-createdAt' }, { skip: false });
+    fireEvent.click(screen.getByRole('button', { name: 'Задати дати' }));
+    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 1, pageSize: 20, searchTerm: undefined, counterpartyId: 'C1', createdFrom: '2026-10-01', createdTo: '2026-10-22', sort: '-createdAt' }, { skip: false });
   });
   it('switches to the independent drafts query and leaves the order page state intact', () => {
     render(<MemoryRouter initialEntries={['/orders?ordersOPage=4&ordersDPage=2']}>
       <Routes><Route path="orders" element={<OrderTables prefix="orders" />} /></Routes>
     </MemoryRouter>);
     fireEvent.click(screen.getByRole('tab', { name: 'Чернетки' }));
-    expect(useGetWorkspaceDraftsQuery).toHaveBeenLastCalledWith({ page: 2, pageSize: 20, searchTerm: undefined, counterpartyId: undefined, sort: '-updatedAt' }, { skip: false });
+    expect(useGetWorkspaceDraftsQuery).toHaveBeenLastCalledWith({ page: 2, pageSize: 20, searchTerm: undefined, counterpartyId: undefined, createdFrom: undefined, createdTo: undefined, sort: '-updatedAt' }, { skip: false });
     fireEvent.click(screen.getByRole('tab', { name: 'Замовлення' }));
-    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 4, pageSize: 20, searchTerm: undefined, counterpartyId: undefined, sort: '-createdAt' }, { skip: false });
+    expect(useGetWorkspaceOrdersQuery).toHaveBeenLastCalledWith({ page: 4, pageSize: 20, searchTerm: undefined, counterpartyId: undefined, createdFrom: undefined, createdTo: undefined, sort: '-createdAt' }, { skip: false });
   });
   it('loads a draft version before deletion and confirms the mutation', async () => {
     const draft = { draftId: 7, title: 'Чернетка', version: 'v1' };

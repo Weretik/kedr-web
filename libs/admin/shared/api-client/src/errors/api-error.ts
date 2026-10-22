@@ -75,11 +75,16 @@ export const toApiError = (error: unknown): ApiError => {
   }
 
   const { data, status } = error.response;
+  const businessCode =
+    isRecord(data) && typeof data['code'] === 'string' ? data['code'] : undefined;
+  const businessMessage =
+    isRecord(data) && typeof data['message'] === 'string' ? data['message'] : undefined;
   const problemDetails = toProblemDetails(data);
   const fieldErrors = toArdalisFieldErrors(data) ?? problemDetails?.errors;
   const message =
     problemDetails?.detail?.trim() ||
     problemDetails?.title?.trim() ||
+    businessMessage?.trim() ||
     error.message ||
     'Request failed';
 
@@ -89,6 +94,10 @@ export const toApiError = (error: unknown): ApiError => {
 
   if (fieldErrors && status >= 400 && status < 500) {
     return { code: 'Validation', status, message, fieldErrors, traceId: problemDetails?.traceId };
+  }
+
+  if (businessCode && status === 400) {
+    return { code: 'Validation', reason: businessCode, status, message };
   }
 
   if (status >= 500) {

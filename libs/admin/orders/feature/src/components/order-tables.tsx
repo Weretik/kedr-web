@@ -8,16 +8,16 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { DraftDeleteDialog } from '../dialogs/draft-delete-dialog';
 import { useDraftDeletion } from '../hooks/use-draft-deletion';
 
-import type { CustomerPickerComponent } from '../orders.routes';
 import type { ListQuery } from '@admin/orders/model';
 
-interface Props { prefix: string; counterpartyId?: string; returnTo?: string; CustomerPicker?: CustomerPickerComponent; panelOnly?: boolean }
+interface Props { prefix: string; counterpartyId?: string; returnTo?: string; panelOnly?: boolean }
 type Mode = 'orders' | 'drafts';
 const number = (value: string | null, fallback: number) => { const parsed = Number(value); return Number.isInteger(parsed) && parsed >= 1 ? parsed : fallback; };
+const validDate = (value: string | null) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`)) && new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value;
 const sortOrders = new Set(['createdAt', '-createdAt', 'orderNumber', '-orderNumber', 'customerName', '-customerName', 'totalAmount', '-totalAmount']);
 const sortDrafts = new Set(['updatedAt', '-updatedAt', 'title', '-title', 'customerName', '-customerName']);
 
-export function OrderTables({ prefix, counterpartyId, returnTo, CustomerPicker, panelOnly = false }: Props) {
+export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = false }: Props) {
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -27,7 +27,10 @@ export function OrderTables({ prefix, counterpartyId, returnTo, CustomerPicker, 
   const page = number(read('Page'), 1);
   const pageSize = Math.min(100, number(read('Size'), 20));
   const searchTerm = read('Search') ?? '';
-  const customer = counterpartyId ?? read('Customer') ?? '';
+  const customer = counterpartyId ?? '';
+  const createdFrom = read('From') ?? '';
+  const createdTo = read('To') ?? '';
+  const invalidDateRange = !validDate(createdFrom) || !validDate(createdTo) || !!(createdFrom && createdTo && createdFrom > createdTo);
   const allowedSorts = mode === 'orders' ? sortOrders : sortDrafts;
   const defaultSort = mode === 'orders' ? '-createdAt' : '-updatedAt';
   const sort = allowedSorts.has(read('Sort') ?? '') ? read('Sort')! : defaultSort;
@@ -51,10 +54,11 @@ export function OrderTables({ prefix, counterpartyId, returnTo, CustomerPicker, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, searchTerm, mode]);
   const query: ListQuery = useMemo(() => ({
-    page, pageSize, searchTerm: searchTerm || undefined, counterpartyId: customer || undefined, sort,
-  }), [page, pageSize, searchTerm, customer, sort]);
-  const orders = useGetWorkspaceOrdersQuery(query, { skip: mode !== 'orders' });
-  const drafts = useGetWorkspaceDraftsQuery(query, { skip: mode !== 'drafts' });
+    page, pageSize, searchTerm: panelOnly && mode === 'orders' ? undefined : searchTerm || undefined,
+    counterpartyId: customer || undefined, createdFrom: createdFrom || undefined, createdTo: createdTo || undefined, sort,
+  }), [page, pageSize, searchTerm, customer, createdFrom, createdTo, sort, panelOnly, mode]);
+  const orders = useGetWorkspaceOrdersQuery(query, { skip: mode !== 'orders' || invalidDateRange });
+  const drafts = useGetWorkspaceDraftsQuery(query, { skip: mode !== 'drafts' || invalidDateRange });
   const active = mode === 'orders' ? orders : drafts;
   const back = location.pathname.startsWith('/customers/') ? `${location.pathname}${location.search}` : (returnTo ?? `${location.pathname}${location.search}`);
   const navigateTo = (target: string) => navigate(`${target}?from=${encodeURIComponent(back)}`);
@@ -67,12 +71,14 @@ export function OrderTables({ prefix, counterpartyId, returnTo, CustomerPicker, 
       <Tabs aria-label="Списки замовлень" onChange={(_event, value: Mode) => { const next = new URLSearchParams(params); next.set(`${prefix}Tab`, value); setParams(next); }} sx={{ borderBottom: 1, borderColor: 'divider', px: { xs: 1, sm: 3 } }} value={mode} variant="scrollable">
         <Tab label="Замовлення" value="orders" /><Tab label="Чернетки" value="drafts" />
       </Tabs>
+      {invalidDateRange && <Alert severity="error">Вкажіть правильний діапазон дат: початок не може бути пізніше завершення.</Alert>}
       <OrderListGrid
         mode={mode} rows={mode === 'orders' ? orders.data?.items ?? [] : drafts.data?.items ?? []}
         rowCount={active.data?.pageInfo.totalRecords ?? 0} loading={active.isLoading || active.isFetching}
         error={active.isError} page={page} pageSize={pageSize} search={searchText} sort={sort}
-        customerFilter={!counterpartyId && CustomerPicker ? <CustomerPicker label="Клієнт" value={customer} onChange={(id) => update({ Customer: id }, true)} /> : undefined}
+        createdFrom={createdFrom} createdTo={createdTo} hideSearch={panelOnly && mode === 'orders'} hideCustomerColumn={panelOnly && mode === 'orders'}
         onSearch={setSearchText} onPage={(next) => update({ Page: String(next) })}
+        onDateChange={(from, to) => update({ From: from, To: to }, true)}
         onPageSize={(next) => update({ Size: String(next) }, true)} onSort={(next) => update({ Sort: next }, true)}
         onView={(id) => navigateTo(mode === 'orders' ? `/orders/${id}` : `/orders/drafts/${id}`)}
         onEdit={mode === 'drafts' ? (id) => navigateTo(`/orders/drafts/${id}/edit`) : undefined}

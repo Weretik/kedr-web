@@ -14,6 +14,7 @@
 - [Трасування й готовність](traceability.md)
 - [Аудит відповідальностей коду](code-audit/audit.md)
 - [Структурне виправлення](../002-order-structure-remediation/README.md)
+- [Зміна 2026-10-22: кошик, дата, вибір клієнта й діалоги оформлення](revision-2026-10-22.md) — frontend TS-007/TS-008 реалізовано; інтеграція backend date contract очікує синхронізації snapshot
 
 Поточний дизайн списків/деталей визначає [Admin standard](../../../../standards/admin/list-detail-pages.md). Розширення деталей клієнта — [окрема SDD](../../clients/002-customer-orders/README.md).
 

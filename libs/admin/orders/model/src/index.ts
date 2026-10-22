@@ -1,4 +1,5 @@
 export type {
+  CatalogLineInfo,
   CreatedOrder,
   DraftInput,
   DraftRecord,

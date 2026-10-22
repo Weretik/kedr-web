@@ -12,6 +12,11 @@ export interface QuotedLine extends OrderInputLine {
   unitPrice: number;
   lineAmount: number;
 }
+export interface CatalogLineInfo {
+  productId: string;
+  productName: string;
+  unitPrice: number | null;
+}
 export interface OrderQuote {
   counterpartyId: string;
   lines: QuotedLine[];
@@ -76,6 +81,8 @@ export interface ListQuery {
   pageSize: number;
   searchTerm?: string;
   counterpartyId?: string;
+  createdFrom?: string;
+  createdTo?: string;
   sort: string;
 }
 export interface CreatedOrder {

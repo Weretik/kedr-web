@@ -1,5 +1,7 @@
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { AppBar, Badge, IconButton, Toolbar, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { NotificationsMenu } from './notifications-menu';
 import { ProfileMenu } from './profile-menu';
@@ -7,9 +9,10 @@ import { ColorSchemeMenu } from '../theme/color-scheme-menu';
 
 interface AdminTopBarProps {
   onOpenNavigation: () => void;
+  currentOrderPositionCount: number;
 }
 
-export function AdminTopBar({ onOpenNavigation }: AdminTopBarProps) {
+export function AdminTopBar({ onOpenNavigation, currentOrderPositionCount }: AdminTopBarProps) {
   return (
     <AppBar
       color="transparent"
@@ -35,6 +38,15 @@ export function AdminTopBar({ onOpenNavigation }: AdminTopBarProps) {
         <Typography component="span" noWrap sx={{ flexGrow: 1, minWidth: 0 }} variant="h6">
           Кабінет менеджера
         </Typography>
+        <IconButton
+          aria-label={`Відкрити оформлення замовлення, позицій: ${currentOrderPositionCount}`}
+          component={RouterLink}
+          to="/orders/new"
+        >
+          <Badge badgeContent={currentOrderPositionCount} color="primary" showZero>
+            <ShoppingCartOutlinedIcon />
+          </Badge>
+        </IconButton>
         <NotificationsMenu />
         <ColorSchemeMenu />
         <ProfileMenu />
