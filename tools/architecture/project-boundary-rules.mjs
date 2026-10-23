@@ -1,4 +1,5 @@
 const documentedCrossDomainFlows = new Set([
+  'admin-orders-feature->admin-products-data-access',
   'mobile-catalog-feature->mobile-cart-data-access',
   'mobile-catalog-feature->mobile-cart-model',
   'mobile-orders-feature->mobile-customers-data-access',
@@ -38,19 +39,11 @@ export function validateProjectBoundary(source, target) {
     return `${source.name} (model:${sourceDomain ?? 'untagged'}) cannot depend on ${target.name} (domain:${targetDomain})`;
   }
 
-  if (
-    ['model', 'ui', 'data-access'].includes(sourceType) &&
-    targetType === 'feature'
-  ) {
+  if (['model', 'ui', 'data-access'].includes(sourceType) && targetType === 'feature') {
     return `${source.name} (${sourceType}) cannot depend upward on feature project ${target.name}`;
   }
 
-  if (
-    sourceDomain &&
-    targetDomain &&
-    sourceDomain !== targetDomain &&
-    sourceType !== 'feature'
-  ) {
+  if (sourceDomain && targetDomain && sourceDomain !== targetDomain && sourceType !== 'feature') {
     return `${source.name} (domain:${sourceDomain}) cannot depend on ${target.name} (domain:${targetDomain})`;
   }
 

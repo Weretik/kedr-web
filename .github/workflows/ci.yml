@@ -37,6 +37,7 @@ jobs:
       - run: npm run contracts:check
       - run: npx playwright install --with-deps chromium
       - run: npx nx run-many -t lint
+      - run: npm run architecture:boundaries
       - run: npx nx run-many -t typecheck
       - run: npm run typecheck:tests
       - run: npm run test:web

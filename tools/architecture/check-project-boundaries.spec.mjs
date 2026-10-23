@@ -20,6 +20,13 @@ test('accepts documented downward dependencies', () => {
     ),
     null,
   );
+  assert.equal(
+    validateProjectBoundary(
+      project('admin-orders-feature', 'scope:admin', 'domain:orders', 'type:feature'),
+      project('admin-products-data-access', 'scope:admin', 'domain:products', 'type:data-access'),
+    ),
+    null,
+  );
 });
 
 test('rejects core to domain', () => {
