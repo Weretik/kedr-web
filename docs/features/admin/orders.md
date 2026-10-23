@@ -1,27 +1,27 @@
-# Замовлення React Admin
+# React Admin orders
 
-**Стан:** реалізовано в React Admin. Маршрути: `/orders`, `/orders/new`, `/orders/:orderId`, `/orders/drafts/:draftId` і редагування чернетки. Вимоги та перевірки: [SDD замовлень](../../specs/admin/orders/001-order-workspace/README.md) і [SDD панелі клієнта](../../specs/admin/clients/002-customer-orders/README.md).
+**Status:** implemented in React Admin. Routes: `/orders`, `/orders/new`, `/orders/:orderId`, `/orders/drafts/:draftId`, and draft editing. Requirements and verification: [orders SDD](../../specs/admin/orders/001-order-workspace/README.md) and [customer panel SDD](../../specs/admin/clients/002-customer-orders/README.md).
 
-## Потік і дані
+## Flow and data
 
-- [Таблиці](../../../libs/admin/orders/feature/src/components/order-tables.tsx) мають вкладки замовлень і чернеток, окремий URL-стан та серверні пошук, діапазон дат створення, сортування й пагінацію; на сторінці клієнта запит обмежено його ID, а в таблиці замовлень приховано стовпець клієнта й пошук. [Видалення чернетки](../../../libs/admin/orders/feature/src/hooks/use-draft-deletion.ts) відділено від керування таблицями. Та сама панель працює в [деталях клієнта](clients.md).
-- [Локальний набір](../../../libs/admin/orders/feature/src/state/current-order-set.ts) отримує товари з каталогу й зберігає лише productId/quantity у browser storage. Його кількість позицій показує MUI кошик у шапці. [Сторінка оформлення](../../../libs/admin/orders/feature/src/pages/new-order-page.tsx) обирає клієнта з посторінковим завантаженням, показує назви й попередню суму товарів, координує серверний quote та відкриває MUI діалоги збереження чернетки й відправлення замовлення.
-- Сторінки деталей показують замовлення та стан 1C; збережену чернетку можна переглянути, змінити, видалити або повторно використати. Джерельна чернетка при повторному оформленні залишається.
-- Якщо quote відхиляє кількість через актуальний залишок, сторінка показує повідомлення сервера з назвою товару, доступною і запитаною кількістю; поточний набір лишається для виправлення.
-- Окремий [Admin API](../../contracts/sales/admin-order-workspace.md) визначає записи, версії, ідемпотентність і помилки. UI відповідає [стандарту сторінок](../../standards/admin/list-detail-pages.md).
+- [Tables](../../../libs/admin/orders/feature/src/components/order-tables.tsx) have order and draft tabs, separate URL state, and server-side search, creation date range, sorting, and pagination. On a customer page, the query is restricted to that customer's ID, and the customer column and search are hidden from the order table. [Draft deletion](../../../libs/admin/orders/feature/src/hooks/use-draft-deletion.ts) is separate from table management. The same panel is used in [customer details](clients.md).
+- The [local order set](../../../libs/admin/orders/feature/src/state/current-order-set.ts) receives products from the catalog and stores only productId/quantity in browser storage. Its item count appears in the MUI cart in the header. The [checkout page](../../../libs/admin/orders/feature/src/pages/new-order-page.tsx) selects customers with paginated loading, shows product names and a preliminary total, coordinates the server quote, and opens MUI dialogs for saving a draft and submitting an order.
+- Details pages show the order and 1C status. A saved draft can be viewed, changed, deleted, or reused. The source draft remains after reuse.
+- If a quote rejects a quantity because of current stock, the page shows the server message with the product name and available and requested quantities; the current set remains available for correction.
+- The separate [Admin API](../../contracts/sales/admin-order-workspace.md) defines records, versions, idempotency, and errors. The UI follows the [list and detail page standard](../../standards/admin/list-detail-pages.md).
 
-**Обмеження:** локальний набір очищується при явному виході, але поточна сесія не дає стабільного account ID для окремих browser-storage ключів. Зміна облікового запису без виходу в тому самому профілі може залишити набір попередньої сесії.
+**Limitation:** the local set is cleared on explicit sign-out, but the current session does not provide a stable account ID for separate browser-storage keys. Changing accounts without signing out in the same browser profile can leave the previous session's set.
 
-## Схема будови
+## Structure diagram
 
 ```mermaid
 flowchart LR
     App[AppRouter] --> Routes[createOrdersRoutes]
     App --> ProductRoutes[createProductsRoutes]
-    ProductRoutes -. додавання товару .-> Local[Поточний локальний набір]
+    ProductRoutes -. add product .-> Local[Current local order set]
     Routes --> Tables[OrderTables]
     Routes --> Checkout[NewOrderPage]
-    Routes --> Draft[Деталі й редагування чернетки]
+    Routes --> Draft[Draft details and editing]
     Checkout --> Local
     Draft --> Local
     Tables --> Api[orders data-access]
@@ -34,26 +34,26 @@ flowchart LR
     Panel --> Tables
 ```
 
-## Структура в коді
+## Code structure
 
 ```text
 libs/admin/orders/
-├── model/src/orders-model.ts                 # моделі сторінок, quote, чернетки
+├── model/src/orders-model.ts                 # page, quote, and draft models
 ├── data-access/src/
 │   ├── api/                                  # Admin endpoints, RTK Query tags, conflict mapping
 │   └── mappers/                              # runtime validation, DTO → model
 ├── feature/src/
-│   ├── orders.routes.tsx                     # маршрути й CustomerOrdersPanel
-│   ├── components/order-tables.tsx           # вкладки, URL і серверні запити
-│   ├── pages/                                # checkout, order/draft details, edit
+│   ├── orders.routes.tsx                     # routes and CustomerOrdersPanel
+│   ├── components/order-tables.tsx           # tabs, URL, and server requests
+│   ├── pages/                                # checkout, order/draft details, editing
 │   ├── hooks/                                # quote, checkout, draft save/deletion
-│   ├── dialogs/                              # окремі підтвердження видалення й повтору
-│   └── state/current-order-set.ts            # локальний набір, multi-tab узгодження
+│   ├── dialogs/                              # separate delete and reuse confirmations
+│   └── state/current-order-set.ts            # local set and multi-tab coordination
 └── ui/src/
-    ├── tables/                               # grid і toolbar без HTTP
-    ├── details/                              # відображення документа
-    ├── forms/                                # редактор позицій і форми дій
-    └── dialogs/                              # підтвердження оформлення
+    ├── tables/                               # grid and toolbar without HTTP
+    ├── details/                              # document display
+    ├── forms/                                # item editor and action forms
+    └── dialogs/                              # checkout confirmation
 ```
 
-Підбір клієнта й товару надають app adapters: [CustomerPicker](../../../apps/admin/src/app/customer-picker.tsx) та [ProductPicker](../../../apps/admin/src/app/product-picker.tsx). Orders domain не імпортує clients/products domains напряму.
+Customer and product selection are provided by app adapters: [CustomerPicker](../../../apps/admin/src/app/customer-picker.tsx) and [ProductPicker](../../../apps/admin/src/app/product-picker.tsx). To show names and base prices during checkout, `admin-orders-feature` also reads the catalog through `admin-products-data-access`; feature → data-access dependencies across domains are permitted. Orders has no other direct imports from the clients or products domains.

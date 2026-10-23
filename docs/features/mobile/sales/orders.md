@@ -1,12 +1,12 @@
-# Історія та деталі замовлень Mobile
+# Mobile order history and details
 
-**Сценарій:** список замовлень із фільтром за клієнтом та екран деталей. [SDD](../../../specs/mobile/orders/001-order-history/README.md).
+**Scenario:** order list filtered by customer and an order details screen. [SDD](../../../specs/mobile/orders/001-order-history/README.md).
 
-- [(tabs)/orders.tsx](../../../../apps/mobile/src/app/%28tabs%29/orders.tsx) підключає [OrderHistoryScreen](../../../../libs/mobile/orders/feature/src/screens/order-history-screen.tsx); [route деталей](../../../../apps/mobile/src/app/orders/[orderId].tsx) підключає окремий екран.
-- [Controller](../../../../libs/mobile/orders/feature/src/hooks/use-order-history-controller.ts) поєднує сторінки з [фільтром клієнта](../../../../libs/mobile/orders/feature/src/hooks/use-order-customer-filter.ts); вибір клієнта зберігається в Redux session state.
-- [orders.api](../../../../libs/mobile/orders/data-access/src/api/orders.api.ts) читає список і деталі, а схеми й мапери створюють [order model](../../../../libs/mobile/orders/model/src/index.ts). Picker читає [customers.api](../../../../libs/mobile/customers/data-access/src/api/customers.api.ts). Контракт: [manager order](../../../contracts/sales/manager-order.md).
+- [(tabs)/orders.tsx](../../../../apps/mobile/src/app/%28tabs%29/orders.tsx) connects [OrderHistoryScreen](../../../../libs/mobile/orders/feature/src/screens/order-history-screen.tsx); the [details route](../../../../apps/mobile/src/app/orders/[orderId].tsx) connects a separate screen.
+- The [controller](../../../../libs/mobile/orders/feature/src/hooks/use-order-history-controller.ts) combines pages with the [customer filter](../../../../libs/mobile/orders/feature/src/hooks/use-order-customer-filter.ts); the selected customer is stored in Redux session state.
+- [orders.api](../../../../libs/mobile/orders/data-access/src/api/orders.api.ts) reads lists and details, while schemas and mappers build the [order model](../../../../libs/mobile/orders/model/src/index.ts). The picker reads [customers.api](../../../../libs/mobile/customers/data-access/src/api/customers.api.ts). Contract: [manager order](../../../contracts/sales/manager-order.md).
 
-## Схема будови
+## Structure diagram
 
 ```mermaid
 flowchart LR
@@ -20,24 +20,24 @@ Detail --> API
 API --> Model["Order model"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and main feature files (other files in these directories are omitted):
 
 ```text
 apps/mobile/src/app/
-├── (tabs)/orders.tsx  # точка входу маршруту
-└── orders/[orderId].tsx  # точка входу маршруту
+├── (tabs)/orders.tsx  # route entry point
+└── orders/[orderId].tsx  # route entry point
 
 libs/mobile/customers/
-└── data-access/src/api/customers.api.ts  # запит до API
+└── data-access/src/api/customers.api.ts  # API request
 
 libs/mobile/orders/
-├── data-access/src/api/orders.api.ts  # запит до API
+├── data-access/src/api/orders.api.ts  # API request
 ├── feature/src/
 │   ├── hooks/
-│   │   ├── use-order-customer-filter.ts  # стан і дії екрана
-│   │   └── use-order-history-controller.ts  # стан і дії екрана
-│   └── screens/order-history-screen.tsx  # екран фічі
-└── model/src/index.ts  # публічний API бібліотеки
+│   │   ├── use-order-customer-filter.ts  # screen state and actions
+│   │   └── use-order-history-controller.ts  # screen state and actions
+│   └── screens/order-history-screen.tsx  # feature screen
+└── model/src/index.ts  # library public API
 ```

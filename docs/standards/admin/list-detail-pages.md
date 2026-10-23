@@ -1,21 +1,21 @@
-# Єдиний стиль списків і сторінок деталей Admin
+# Admin list and detail page standard
 
-**Чинне правило для Admin React.** Джерела: [Admin UI](admin-ui.md), [організація коду](admin-code-organization.md), [архітектура Admin](../../architecture/admin/README.md). Перевірено за кодом товарів і клієнтів 2026-10-19. Цей документ визначає композицію; поля й дії визначає SDD кожної фічі.
+**Current rule for React Admin.** Sources: [Admin UI](admin-ui.md), [code organization](admin-code-organization.md), [Admin architecture](../../architecture/admin/README.md). Checked against product and customer code on 2026-10-19. This document defines composition; each feature's SDD defines its fields and actions.
 
-## Списки
+## Lists
 
-- Сторінка має короткий заголовок, а спискова MUI Card містить вкладки режимів, якщо вони потрібні, та MUI X Data Grid. Вкладки мають внутрішній відступ Card.
-- Пошук розміщуй у toolbar Data Grid. Сортування, фільтри та пагінація відповідають серверному контракту й працюють до вибірки сторінки. Не дублюй кількість результатів під таблицею.
-- Використовуй однакові розмір рядків, оформлення Card, порожній/loading/error стани, колонку «Дії» без сортування й фільтрації з іконкою ока, підказкою та доступним ім'ям. Набір даних і підтримувані фільтри відрізняються за фічею.
-- Українська локаль MUI й Data Grid підключена централізовано через Admin theme. Вузька таблиця зберігає всі колонки через прокручування всередині Card; перевір доступність toolbar, дій та пагінації на телефоні й планшеті за кодом.
+- Use a short page heading. The MUI Card containing the list includes mode tabs when needed and the MUI X Data Grid. Tabs have internal Card padding.
+- Place search in the Data Grid toolbar. Sorting, filters, and pagination follow the server contract and apply before the page is fetched. Do not repeat the result count below the table.
+- Use consistent row heights, Card styling, empty/loading/error states, and a non-sortable, non-filterable “Actions” column with an eye icon, tooltip, and accessible name. Data sets and supported filters vary by feature.
+- The Ukrainian MUI and Data Grid locale is connected centrally through the Admin theme. A narrow table keeps all columns and scrolls inside the Card; check toolbar, action, and pagination usability on phones and tablets against the code.
 
-## Деталі
+## Details
 
-- Над вмістом розміщуй текстове MUI Link зі стрілкою назад до списку, далі нейтральний `h1` «Деталі товару» / «Деталі клієнта». Посилання зберігає стан списку в URL, якщо фіча його підтримує.
-- Ім'я сутності відображай один раз у блоці основної інформації, ID — під ним. Дані групуй за змістом: компактні картки з підписами й значеннями або таблиці, якщо табличне порівняння справді допомагає. Самостійні медіа чи інші великі області можуть мати окремі Card. Не дублюй ім'я в заголовку сторінки.
-- Деталі товару на широкому екрані мають порядок **фото → основна інформація → схема** (остання лише за доступності). На телефоні блоки переходять в один стовпець; на планшеті — у два за breakpoints теми. Деталі клієнта використовують той самий заголовок, посилання назад, Card, відступи й типографіку, але містять три картки: основну інформацію на всю ширину, під нею — контакти й типи цін в одному ряду від `md` breakpoint. Висота обох рядів і карток у нижньому ряду однакова. До `md` картки йдуть в один стовпець із висотою за вмістом.
-- Колір, поверхні, текст і фокус беруться з чинної Admin theme у світлому й темному режимах. Для одноразового layout застосовуй `sx`, для повторюваної поведінки — окремий компонент відповідного `ui` або shared шару за правилами залежностей. Не копіюй бізнесові поля між доменами.
+- Above the content, place a text MUI Link with a back arrow to the list, followed by a neutral `h1` such as «Деталі товару» / «Деталі клієнта». Preserve list state in the URL when the feature supports it.
+- Show the entity name once in the main information block and its ID below. Group data by meaning: use compact cards with labels and values, or tables when tabular comparison helps. Standalone media or other large areas may have their own Card. Do not repeat the name in the page heading.
+- On a wide screen, product details follow this order: **photo → main information → diagram** (only when available). On phones, stack blocks in one column; on tablets, use two columns at the theme breakpoints. Customer details use the same heading, back link, Card, spacing, and typography, with three cards: main information across the full width, then contacts and price types in one row from the `md` breakpoint. Keep both rows and the cards in the lower row equal in height. Below `md`, stack the cards in one column with content-based height.
+- Use colors, surfaces, text, and focus from the current Admin theme in both light and dark modes. Use `sx` for one-off layouts and a separate component in the relevant `ui` or shared layer for repeated behavior, following dependency rules. Do not copy business fields between domains.
 
-## Перед новою фічею
+## Before a new feature
 
-Звір код наявної сторінки цього типу, тему, локаль, breakpoints і цей стандарт. У SDD вкажи, що повторюється і чим дані та контракт нової фічі відрізняються. Перевіряй лише автоматичні тести зміненої фічі; браузер відкривай тільки після окремого прямого дозволу користувача на конкретну перевірку.
+Check the code for an existing page of this type, the theme, locale, breakpoints, and this standard. In the SDD, state what is reused and how the new feature's data and contract differ. Run only automated tests for the changed feature; open a browser only after separate direct user permission for that specific check.

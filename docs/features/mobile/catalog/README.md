@@ -1,9 +1,9 @@
-# Каталог Mobile
+# Mobile Catalog
 
-| Фіча                                    | Вхід                        |
-| --------------------------------------- | --------------------------- |
-| [Перегляд, пошук і фільтри](catalog.md) | `(tabs)/catalog.tsx`        |
-| [Вибір категорії](category-filter.md)   | Частина екрана catalog      |
-| [Discovery UI](catalog-discovery.md)    | Частина екрана catalog      |
-| [Деталі товару](product-details.md)     | `product/[productSlug].tsx` |
-| [Товари без фото](missing-photos.md)    | `(tabs)/profile.tsx`        |
+| Feature                                      | Entry                       |
+| -------------------------------------------- | --------------------------- |
+| [Browse, search, and filter](catalog.md)     | `(tabs)/catalog.tsx`        |
+| [Category selection](category-filter.md)     | Part of the catalog screen  |
+| [Discovery UI](catalog-discovery.md)         | Part of the catalog screen  |
+| [Product details](product-details.md)        | `product/[productSlug].tsx` |
+| [Products without photos](missing-photos.md) | `(tabs)/profile.tsx`        |

@@ -1,32 +1,26 @@
-# Online-first та майбутній офлайн Mobile
+# Mobile online-first and future offline support
 
-## Поточне рішення
+## Current decision
 
-Перший реліз є **online-first**. SQLite та AsyncStorage не встановлюються й не
-використовуються для каталогу. RTK Query cache існує лише в пам'яті процесу та
-не є офлайн-базою даних.
+The first release is **online-first**. SQLite and AsyncStorage are not installed or used for the catalog. RTK Query cache exists only in process memory and is not an offline database.
 
-`@mobile/core/connectivity` інкапсулює NetInfo й надає нормалізований стан
-мережі. Він покращує UX, але не замінює обробку фактичних HTTP-помилок.
+`@mobile/core/connectivity` encapsulates NetInfo and provides normalized network state. It improves UX but does not replace handling actual HTTP errors.
 
-| Стан                                      | Поведінка                                                                                 |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Немає мережі до першого завантаження      | offline-state, кнопка повтору                                                             |
-| Мережа зникла під час запиту              | error-state, кнопка повтору                                                               |
-| Дані каталогу вже показані, мережа зникла | показати дані в пам'яті та ненав'язливий offline indicator                                |
-| Мережа відновилась                        | не перезавантажувати непомітно; наступна дія користувача або явний refresh запускає запит |
+| State                                   | Behavior                                                                          |
+| --------------------------------------- | --------------------------------------------------------------------------------- |
+| No network before initial load          | offline state and retry button                                                    |
+| Network lost during a request           | error state and retry button                                                      |
+| Catalog data already displayed, offline | show in-memory data and an unobtrusive offline indicator                          |
+| Network restored                        | do not silently reload; the next user action or explicit refresh starts a request |
 
-## Відкладені рівні
+## Deferred levels
 
 ```text
-Етап 1 — online-first: NetInfo + RTK Query memory cache
-Етап 2 — persistent read cache: окреме рішення про AsyncStorage
-Етап 3 — offline-first: SQLite, локальна модель, sync queue, конфлікти
+Stage 1 — online-first: NetInfo + RTK Query memory cache
+Stage 2 — persistent read cache: separate decision about AsyncStorage
+Stage 3 — offline-first: SQLite, local model, sync queue, conflicts
 ```
 
-Перехід на будь-який наступний рівень потребує нового ADR. У ньому визначаються:
-дані для зберігання, TTL і versioning, інвалідація, write queue, idempotency,
-політика конфліктів, retry після відновлення мережі та захист персональних даних.
+Moving to any later level requires a new ADR. It must define data to store, TTL and versioning, invalidation, write queue, idempotency, conflict policy, retries after network recovery, and personal-data protection.
 
-AsyncStorage не використовують для токенів. Токени майбутньої сесії належать
-Expo SecureStore.
+Do not use AsyncStorage for tokens. Tokens for a future session belong in Expo SecureStore.

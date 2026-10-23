@@ -1,90 +1,40 @@
 # Frontend security rules
 
-## Межа відповідальності
+## Responsibility boundary
 
-Frontend забезпечує коректне використання сесії, безпечне відображення даних,
-мінімізацію даних у клієнті та UX access control. Backend є єдиним authority для
-authentication, authorization, role/permission enforcement, ownership checks,
-валідації, rate limiting, audit trail, CSRF/CORS/cookie attributes і підписаних
-URL. Прихований button або client-side guard ніколи не є контролем доступу.
+The frontend ensures correct session use, safe data rendering, client-side data minimization, and access-control UX. The backend is the sole authority for authentication, authorization, role/permission enforcement, ownership checks, validation, rate limiting, audit trails, CSRF/CORS/cookie attributes, and signed URLs. A hidden button or client-side guard is never an access control.
 
-## Authentication, access і session
+## Authentication, access, and session
 
-- Admin уже тримає access token у пам'яті через `admin/core/auth`, додає його
-  Axios interceptor-ом до `Authorization: Bearer`, надсилає cookies через
-  `withCredentials`, а на один `401` виконує refresh/retry. Паралельні refresh
-  запити дедуплікуються. Не переносити токен у localStorage/sessionStorage,
-  URL, Redux або логи.
-- Storefront використовує Angular `SessionStore`, auth/credentials/CSRF/
-  unauthorized interceptors і `withCredentials`; захищений cabinet має
-  `cabinetAuthGuard`. Нові protected routes мають мати guard, але backend все
-  одно перевіряє доступ.
-- Mobile catalog нині публічний: `@mobile/shared/api-client` не підключений до
-  auth або SecureStore. Не вигадуйте client auth для нової feature: спочатку
-  узгодьте API/session contract і задокументуйте secure storage, token refresh,
-  protected routes/actions та logout UX.
-- Role/permission availability визначається реальним API contract. До його
-  появи не створюйте фіктивні role checks; у spec зазначайте `n/a` з причиною.
-  Якщо roles є, обмежуйте і route, і кожну privileged action, показуючи
-  нейтральний unavailable/forbidden state.
-- `401` означає один контрольований refresh там, де він уже реалізований; за
-  невдачі очистити локальну сесію і перевести до login без loop. `403` не
-  повторювати і не показувати як session expiry: показати safe forbidden state.
+- Admin currently keeps the access token in memory through `admin/core/auth`, adds it to `Authorization: Bearer` with an Axios interceptor, sends cookies with `withCredentials`, and performs refresh/retry once on `401`. Concurrent refresh requests are deduplicated. Do not move the token to localStorage/sessionStorage, a URL, Redux, or logs.
+- Storefront uses Angular `SessionStore`, auth/credentials/CSRF/unauthorized interceptors, `withCredentials`, and `cabinetAuthGuard` for the protected cabinet. New protected routes must have a guard, but the backend still checks access.
+- The Mobile catalog is currently public: `@mobile/shared/api-client` is not connected to auth or SecureStore. Do not invent client auth for a new feature; first align the API/session contract and document secure storage, token refresh, protected routes/actions, and logout UX.
+- Role/permission availability is determined by the real API contract. Until it exists, do not create fictitious role checks; state `n/a` in the spec with a reason. If roles exist, restrict both routes and each privileged action, showing a neutral unavailable/forbidden state.
+- `401` means one controlled refresh where already implemented; on failure, clear the local session and navigate to login without a loop. Do not retry `403` or show it as session expiry: show a safe forbidden state.
 
-## Дані, XSS, помилки і logs
+## Data, XSS, errors, and logs
 
-- Виводьте зовнішні дані лише стандартним React/React Native/Angular binding.
-  `dangerouslySetInnerHTML`, прямий `innerHTML`, небезпечні URL/style values і
-  Angular trust-bypass заборонені без окремого security review, дозволеного
-  sanitizer та тесту на XSS payload.
-- Перевіряйте API data на межі `data-access`, мапте DTO до domain model і не
-  передавайте raw API errors у UI. У UI показуйте нормалізований `ApiError`,
-  field errors або безпечне узагальнене повідомлення; не показуйте stack trace,
-  request headers, tokens або backend internals.
-- PII, access/refresh tokens, cookies, passwords, authorization headers,
-  CSRF tokens і secrets не потрапляють у source, Expo `EXPO_PUBLIC_*`, Vite
-  client env, analytics, telemetry, test fixtures або console logs. Наявні
-  Admin/Mobile HTTP logs дозволені лише у development та логують method, path,
-  status/duration; нові логи зберігають цей redaction principle.
-- Будь-який `EXPO_PUBLIC_*` і Vite client env вважайте публічним. У Mobile
-  `EXPO_PUBLIC_API_BASE_URL` може містити лише public base URL.
+- Render external data only with standard React/React Native/Angular binding. `dangerouslySetInnerHTML`, direct `innerHTML`, unsafe URL/style values, and Angular trust bypass are prohibited without a separate security review, an approved sanitizer, and an XSS-payload test.
+- Validate API data at the `data-access` boundary, map DTOs to domain models, and do not pass raw API errors to the UI. Show a normalized `ApiError`, field errors, or a safe generic message in the UI; do not show stack traces, request headers, tokens, or backend internals.
+- PII, access/refresh tokens, cookies, passwords, authorization headers, CSRF tokens, and secrets must not appear in source, Expo `EXPO_PUBLIC_*`, Vite client env, analytics, telemetry, test fixtures, or console logs. Existing Admin/Mobile HTTP logs are allowed only in development and log method, path, status/duration; new logs must follow the same redaction principle.
+- Treat any `EXPO_PUBLIC_*` and Vite client env value as public. In Mobile, `EXPO_PUBLIC_API_BASE_URL` may contain only a public base URL.
 
-## Transport, cookies і CSRF
+## Transport, cookies, and CSRF
 
-- Тільки HTTPS у production; не послаблюйте certificate/transport checks.
-- Admin і Storefront використовують credentialed cookies. Refresh POST передає
-  cookie `kedr.csrf` як `X-CSRF-Token`; нові cookie-auth state-changing
-  endpoints повинні мати узгоджений backend CSRF contract. Frontend не може
-  сам гарантувати `Secure`, `HttpOnly`, `SameSite`, CORS origin allowlist або
-  cookie domain — це backend/infra responsibility, яку треба перевірити в
-  contract.
-- Mobile не використовує browser cookies у поточному public catalog flow.
-  Для майбутнього auth не переносіть cookie/CSRF припущення з web без окремого
-  mobile session design.
+- Use HTTPS only in production; do not weaken certificate/transport checks.
+- Admin and Storefront use credentialed cookies. The refresh POST sends the `kedr.csrf` cookie as `X-CSRF-Token`; new cookie-authenticated state-changing endpoints must have an aligned backend CSRF contract. The frontend cannot guarantee `Secure`, `HttpOnly`, `SameSite`, a CORS origin allowlist, or cookie domain by itself; these are backend/infra responsibilities to verify in the contract.
+- Mobile does not use browser cookies in the current public catalog flow. For future auth, do not carry over web cookie/CSRF assumptions without a separate mobile session design.
 
-## Файли, export і небезпечні операції
+## Files, export, and dangerous operations
 
-- Для upload визначайте в spec дозволені типи, size limit, серверну перевірку,
-  malware scanning ownership, failure state і PII classification. Не покладайтеся
-  лише на client `accept`/MIME; не показуйте локальний файл як trusted content.
-- Export містить лише дані, дозволені поточній server-side authorization.
-  Не кладіть PII у URL/query string; використовуйте безпечний download contract
-  і зрозумілий статус помилки.
-- Bulk/destructive actions потребують видимого scope/count, явного confirm,
-  disabled/pending state, idempotency/duplicate-submit consideration, result
-  summary і обробки partial failure. Backend підтверджує permission та цілі;
-  frontend не заявляє про незворотне видалення до підтвердженої відповіді.
+- For uploads, define allowed types, size limit, server-side validation, malware-scanning ownership, failure state, and PII classification in the spec. Do not rely only on client `accept`/MIME; do not display a local file as trusted content.
+- Export only data permitted by current server-side authorization. Do not put PII in a URL/query string; use a safe download contract and a clear error state.
+- Bulk/destructive actions require a visible scope/count, explicit confirmation, disabled/pending state, consideration of idempotency/duplicate submission, a result summary, and partial-failure handling. The backend confirms permissions and targets; the frontend must not claim irreversible deletion before a confirmed response.
 
-## Пропорційний security review
+## Proportional security review
 
-Кожна feature-spec містить один статус:
+Each feature spec includes one status:
 
-- **n/a** — немає auth, PII, external input, файлів, export або privileged/
-  destructive action; наведіть коротке обґрунтування.
-- **basic** — звичайний API/UI flow або нова route/action: перевірити access,
-  401/403, error/log redaction, XSS-safe output і застосовні transport rules.
-- **elevated** — auth/session/roles, PII, upload/download/export, bulk/
-  destructive action, payment або зовнішній/HTML content. Додайте короткий
-  threat model: assets/PII, actors і trust boundaries, abuse cases, controls,
-  residual risks і backend/infra dependencies. Перевірте security scenarios
-  тестами на можливому рівні та вручну/через E2E після readiness.
+- **n/a** — no auth, PII, external input, files, export, or privileged/destructive action; give a brief rationale.
+- **basic** — ordinary API/UI flow or a new route/action: check access, `401`/`403`, error/log redaction, XSS-safe output, and applicable transport rules.
+- **elevated** — auth/session/roles, PII, upload/download/export, bulk/destructive action, payment, or external/HTML content. Add a short threat model: assets/PII, actors and trust boundaries, abuse cases, controls, residual risks, and backend/infra dependencies. Check security scenarios with tests at a feasible level and manually/through E2E after readiness.

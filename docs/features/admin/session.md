@@ -1,11 +1,11 @@
-# Сесія й оболонка Admin
+# Admin Session and Shell
 
-**Вхід:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) обгортає маршрути в [AdminShellSessionProvider](../../../libs/admin/core/shell/src/providers/admin-shell-session-provider.tsx) та `AdminLayout`.
+**Entry point:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) wraps the routes in [AdminShellSessionProvider](../../../libs/admin/core/shell/src/providers/admin-shell-session-provider.tsx) and `AdminLayout`.
 
-- [auth-session](../../../libs/admin/core/auth/src/session/auth-session.ts) ініціалізує, оновлює та завершує сесію; [session-transport](../../../libs/admin/core/auth/src/session/session-transport.ts) викликає session API. [Контракт](../../contracts/identity/session.md).
-- [AdminLayout](../../../libs/admin/core/shell/src/admin-layout.tsx) і навігація належать `core/shell`; dashboard, products, orders і clients підключають свої маршрути через [AppRouter](../../../apps/admin/src/app/router/app-router.tsx). Власного маршруту `/login` немає. AppRouter очищує локальний набір товарів замовлення при явному виході; серверний logout виконує `auth-session`.
+- [auth-session](../../../libs/admin/core/auth/src/session/auth-session.ts) initializes, refreshes, and ends the session; [session-transport](../../../libs/admin/core/auth/src/session/session-transport.ts) calls the session API. See the [contract](../../contracts/identity/session.md).
+- [AdminLayout](../../../libs/admin/core/shell/src/admin-layout.tsx) and navigation belong to `core/shell`; dashboard, products, orders, and clients connect their routes through [AppRouter](../../../apps/admin/src/app/router/app-router.tsx). There is no `/login` route. AppRouter clears the local order product set on explicit sign-out; `auth-session` performs server logout.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -14,27 +14,27 @@ Provider --> Layout["AdminLayout"]
 Provider --> Session["auth-session"]
 Session --> Transport["session-transport"]
 Transport --> API["Session API"]
-Layout --> Routes["Dashboard, Products, Orders і Clients routes"]
-Router --> Local["Поточний набір замовлення"]
-Provider -->|явний logout| Router
-Router -->|очищення| Local
+Layout --> Routes["Dashboard, Products, Orders, and Clients routes"]
+Router --> Local["Current order set"]
+Provider -->|explicit logout| Router
+Router -->|clear| Local
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 apps/admin/src/app/
-└── router/app-router.tsx  # точка входу маршруту
+└── router/app-router.tsx  # route entry point
 
 libs/admin/core/auth/
 └── src/session/
-    ├── auth-session.ts  # реалізація фічі
-    └── session-transport.ts  # реалізація фічі
+    ├── auth-session.ts  # feature implementation
+    └── session-transport.ts  # feature implementation
 
 libs/admin/core/shell/
 └── src/
-    ├── providers/admin-shell-session-provider.tsx  # реалізація фічі
-    └── admin-layout.tsx  # реалізація фічі
+    ├── providers/admin-shell-session-provider.tsx  # feature implementation
+    └── admin-layout.tsx  # feature implementation
 ```

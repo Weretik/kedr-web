@@ -1,9 +1,9 @@
-# Контент і навігація Storefront
+# Storefront Content and Navigation
 
-| Фіча                                            | Вхід                         |
-| ----------------------------------------------- | ---------------------------- |
-| [Статті](articles.md)                           | `/articles`, `/articles/:id` |
-| [Про компанію та правові сторінки](about-us.md) | Сім маршрутів `about-us`     |
-| [Контакти](contacts.md)                         | `/contacts`                  |
-| [Регіони](regions.md)                           | `/region/:city`              |
-| [Опт](wholesale.md)                             | `/wholesale`                 |
+| Feature                              | Entry                        |
+| ------------------------------------ | ---------------------------- |
+| [Articles](articles.md)              | `/articles`, `/articles/:id` |
+| [About and legal pages](about-us.md) | Seven `about-us` routes      |
+| [Contacts](contacts.md)              | `/contacts`                  |
+| [Regions](regions.md)                | `/region/:city`              |
+| [Wholesale](wholesale.md)            | `/wholesale`                 |

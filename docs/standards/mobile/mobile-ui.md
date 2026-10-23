@@ -2,14 +2,14 @@
 
 ## Components and theme
 
-- Видимі рядки, accessible names і feature specs пишіть українською.
-- Використовуйте React Native Paper для складних controls і стандартні React Native components для простого layout.
-- Theme, colors, typography та spacing належать централізованій Paper theme; feature не створює локальні design tokens або providers.
-- Перед вибором готового UI-компонента, списку, жесту або device API звіртеся з [каталогом UI та platform-можливостей](../../architecture/mobile/platform/ui-capabilities.md). Для нових довгих списків використовуйте `@shopify/flash-list`; не переносіть desktop Admin tables на mobile screen.
+- Write visible strings, accessible names, and feature specs in Ukrainian.
+- Use React Native Paper for complex controls and standard React Native components for simple layout.
+- Theme, colors, typography, and spacing belong to the centralized Paper theme; features must not create local design tokens or providers.
+- Before choosing a built-in UI component, list, gesture, or device API, check the [UI and platform capabilities catalog](../../architecture/mobile/platform/ui-capabilities.md). Use `@shopify/flash-list` for new long lists; do not bring desktop Admin tables into mobile screens.
 
 ## States and accessibility
 
-- Екран із server data визначає застосовні `loading`, `success`, `empty`, `error` та `offline` states.
-- Error/offline state показує зрозуміле повідомлення та retry-дію, якщо вона можлива.
-- Враховуйте safe area, keyboard, touch targets, TalkBack/VoiceOver та accessibility label для icon-only controls.
-- Перевіряйте погоджені Android, iOS і web відмінності; не припускайте однакову поведінку платформ.
+- A screen with server data defines the applicable `loading`, `success`, `empty`, `error`, and `offline` states.
+- Error/offline states show a clear message and a retry action when possible.
+- Account for safe areas, keyboard, touch targets, TalkBack/VoiceOver, and accessibility labels for icon-only controls.
+- Check the agreed Android, iOS, and web differences; do not assume platforms behave identically.

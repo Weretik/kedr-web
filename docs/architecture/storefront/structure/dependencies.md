@@ -1,11 +1,10 @@
-# Правила залежностей Storefront
+# Storefront dependency rules
 
-Nx-теги `scope:storefront` ізолюють Storefront від Admin. Бібліотеки Storefront
-можуть залежати лише від `scope:storefront` і `scope:shared`.
+Nx tags `scope:storefront` isolate Storefront from Admin. Storefront libraries may depend only on `scope:storefront` and `scope:shared`.
 
-## Напрямок залежностей
+## Dependency direction
 
-| Бібліотека    | Дозволені залежності                                                   |
+| Library       | Allowed dependencies                                                   |
 | ------------- | ---------------------------------------------------------------------- |
 | `contracts`   | `contracts`, `util`, `shared`                                          |
 | `util`        | `util`, `contracts`, `shared`                                          |
@@ -14,8 +13,6 @@ Nx-теги `scope:storefront` ізолюють Storefront від Admin. Біб�
 | `feature`     | `feature`, `ui`, `util`, `data-access`, `contracts`, `shared`          |
 | `shell`       | `shell`, `feature`, `ui`, `util`, `data-access`, `contracts`, `shared` |
 
-Ці обмеження перевіряє правило `@nx/enforce-module-boundaries` у кореневому
-`eslint.config.cjs`. Не обходити їх відносними або deep-імпортами.
+These constraints are checked by `@nx/enforce-module-boundaries` in root `eslint.config.cjs`. Do not bypass them with relative or deep imports.
 
-`contracts` не залежить від feature. `data-access` не залежить від feature або
-shell. UI-компоненти не містять HTTP-викликів і не імпортують feature-сценарії.
+`contracts` does not depend on feature. `data-access` does not depend on feature or shell. UI components do not contain HTTP calls or import feature scenarios.

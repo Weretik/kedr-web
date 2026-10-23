@@ -1,14 +1,12 @@
-# Зафіксовані рішення Storefront
+# Storefront decisions in effect
 
-Нижче наведено рішення, вже реалізовані в коді. Нове спірне або довгострокове
-рішення оформлюється окремим ADR у `docs/architecture/storefront/adr/` до
-реалізації.
+The decisions below are already implemented in code. Record a new disputed or long-term decision in a separate ADR under `docs/architecture/storefront/adr/` before implementation.
 
-| Рішення                                  | Причина та наслідок                                                                          |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Standalone Angular і `ApplicationConfig` | Застосунок композиційно збирається без NgModule; провайдери залишаються централізованими.    |
-| SSR та incremental hydration             | Публічні сторінки безпечні для серверного рендерингу; browser API потребують явного захисту. |
-| Локалізовані маршрути `/uk` і `/ru`      | Локаль є частиною URL, а fallback та 404 залишаються узгодженими.                            |
-| Signals для клієнтського стану           | Доменний стан тримається поруч із доменом без глобального store.                             |
-| `HttpClient` + interceptor-и             | Авторизація, CSRF, логування та помилки обробляються централізовано.                         |
-| Transloco для текстів інтерфейсу         | Локалізація не дублюється в feature-компонентах.                                             |
+| Decision                                   | Rationale and consequence                                                         |
+| ------------------------------------------ | --------------------------------------------------------------------------------- |
+| Standalone Angular and `ApplicationConfig` | Compose the application without NgModule; keep providers centralized.             |
+| SSR and incremental hydration              | Public pages are safe for server rendering; browser APIs require explicit guards. |
+| Localized `/uk` and `/ru` routes           | Locale is part of the URL; fallback and 404 remain consistent.                    |
+| Signals for client state                   | Keep domain state alongside its domain without a global store.                    |
+| `HttpClient` + interceptors                | Handle authorization, CSRF, logging, and errors centrally.                        |
+| Transloco for UI text                      | Avoid duplicating localization in feature components.                             |

@@ -1,30 +1,30 @@
-# Регіони Storefront
+# Storefront Regions
 
-**Вхід:** [regionsRoutes](../../../../libs/storefront/feature/regions/src/lib/lib.routes.ts) відкриває `/region/:city`.
+**Entry point:** [regionsRoutes](../../../../libs/storefront/feature/regions/src/lib/lib.routes.ts) opens `/region/:city`.
 
-- [Regions](../../../../libs/storefront/feature/regions/src/lib/regions/regions.ts) читає `city` з route param, вибирає локалізований текст із fallback та складає hero, переваги компанії і бренди.
-- [LocaleNavigationService](../../../../libs/storefront/util/src/lib/services/locale-navigation.service.ts) формує локалізовані посилання в інших частинах вітрини; окремого region API на цій сторінці немає.
+- [Regions](../../../../libs/storefront/feature/regions/src/lib/regions/regions.ts) reads `city` from a route parameter, selects localized text with a fallback, and composes the hero, company benefits, and brands.
+- [LocaleNavigationService](../../../../libs/storefront/util/src/lib/services/locale-navigation.service.ts) builds localized links elsewhere in the storefront; this page has no separate region API.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
 Route["regionsRoutes"] --> Page["Regions"]
 Page --> City["city route param"]
-City --> Text["Локалізований текст з fallback"]
-Page --> Sections["Hero, переваги, бренди"]
+City --> Text["Localized text with fallback"]
+Page --> Sections["Hero, benefits, brands"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 libs/storefront/feature/regions/
 └── src/lib/
-    ├── regions/regions.ts  # реалізація фічі
-    └── lib.routes.ts  # маршрути фічі
+    ├── regions/regions.ts  # feature implementation
+    └── lib.routes.ts  # feature routes
 
 libs/storefront/util/
-└── src/lib/services/locale-navigation.service.ts  # сервіс фічі
+└── src/lib/services/locale-navigation.service.ts  # feature service
 ```

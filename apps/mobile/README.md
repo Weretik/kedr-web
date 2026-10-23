@@ -61,12 +61,12 @@ machine over the same local network.
 
 ## Development Build
 
-Expo Go — стандартний workflow, доки застосунок не потребує native library або
-зміни native configuration. Проєкт уже має EAS `development` profile в
-`eas.json`. Перед встановленням `expo-dev-client` або створенням EAS build
-прочитайте repository guide:
+Expo Go is the standard workflow until the application needs a native library or
+native configuration change. The project already has an EAS `development` profile
+in `eas.json`. Before installing `expo-dev-client` or creating an EAS build,
+read the repository guide:
 
-- [Expo Go та Development Build](../../docs/architecture/mobile/platform/development-build.md)
+- [Expo Go and Development Build](../../docs/architecture/mobile/platform/development-build.md)
 
 3. Confirm that the `KEDR Mobile` root screen opens without console errors.
 4. Switch the system light/dark setting and check theme and safe area.

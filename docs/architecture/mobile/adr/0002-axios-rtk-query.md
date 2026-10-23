@@ -1,22 +1,18 @@
-# ADR-0002: Axios-транспорт для Mobile RTK Query
+# ADR-0002: Axios transport for Mobile RTK Query
 
-**Статус:** Прийнято  
-**Дата:** 2026-07-27
+**Status:** Accepted\
+**Date:** 2026-07-27
 
-## Контекст
+## Context
 
-Mobile використовує RTK Query для server state. Команда погодила Axios, щоб
-транспортна модель відповідала Admin і не дублювала HTTP-обробку в доменах.
+Mobile uses RTK Query for server state. The team agreed on Axios so the transport model matches Admin and HTTP handling is not duplicated across domains.
 
-## Рішення
+## Decision
 
-`@mobile/shared/api-client` володіє Axios instance, `axiosBaseQuery`, `baseApi`
-і нормалізацією `ApiError`. Кожен domain `data-access` розширює `baseApi` через
-`injectEndpoints`; feature використовує тільки типізовані hooks.
+`@mobile/shared/api-client` owns the Axios instance, `axiosBaseQuery`, `baseApi`, and `ApiError` normalization. Each domain `data-access` extends `baseApi` through `injectEndpoints`; feature uses only typed hooks.
 
-## Наслідки
+## Consequences
 
-- RTK Query cache не дублюється в Redux slice.
-- Axios не викликається напряму з feature або UI.
-- Axios base query повертає `{ data }` або `{ error }`, не кидає transport
-  виняток назовні.
+- Do not duplicate the RTK Query cache in a Redux slice.
+- Do not call Axios directly from feature or UI.
+- Axios base query returns `{ data }` or `{ error }`; it does not let a transport exception escape.

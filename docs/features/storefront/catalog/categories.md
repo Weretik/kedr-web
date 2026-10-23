@@ -1,11 +1,11 @@
-# Категорії Storefront
+# Storefront Categories
 
-**Вхід:** [categoriesRoutes](../../../../libs/storefront/feature/categories/src/lib/lib.routes.ts) підключено до [app routes](../../../../apps/storefront/src/app/app.routes.ts) за локалізованими `/` та `/categories`.
+**Entry point:** [categoriesRoutes](../../../../libs/storefront/feature/categories/src/lib/lib.routes.ts) is connected to [app routes](../../../../apps/storefront/src/app/app.routes.ts) at localized `/` and `/categories`.
 
-- [Categories](../../../../libs/storefront/feature/categories/src/lib/page/categories.ts) складає розділи дверей і фурнітури з каталогових констант та локалізованих підписів; посилання ведуть до [списку товарів](catalog.md).
-- [ProductListWarmupService](../../../../libs/storefront/data-access/src/lib/catalog/state/product-list/product-list-warmup.service.ts) готує дані списку; ця сторінка не володіє checkout або cart state.
+- [Categories](../../../../libs/storefront/feature/categories/src/lib/page/categories.ts) composes door and hardware sections from catalog constants and localized labels; links open the [product list](catalog.md).
+- [ProductListWarmupService](../../../../libs/storefront/data-access/src/lib/catalog/state/product-list/product-list-warmup.service.ts) prepares list data; this page does not own checkout or cart state.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -15,19 +15,19 @@ Page --> Warmup["ProductListWarmupService"]
 Page --> Catalog["Product list"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 apps/storefront/src/app/
-└── app.routes.ts  # маршрути фічі
+└── app.routes.ts  # feature routes
 
 libs/storefront/data-access/
-└── src/lib/catalog/state/product-list/product-list-warmup.service.ts  # стан і взаємодія з даними
+└── src/lib/catalog/state/product-list/product-list-warmup.service.ts  # state and data interaction
 
 libs/storefront/feature/categories/
 └── src/lib/
-    ├── page/categories.ts  # сторінка та композиція UI
-    └── lib.routes.ts  # маршрути фічі
+    ├── page/categories.ts  # page and UI composition
+    └── lib.routes.ts  # feature routes
 ```

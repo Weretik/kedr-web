@@ -1,30 +1,27 @@
-# Фактичний frontend inventory
+# Current frontend inventory
 
-**Знято:** 2026-10-01; test targets перевірено повторно 2026-10-15
-**Оновлено для Admin:** 2026-10-19; новий домен `clients`, маршрути товарів/клієнтів і 67 проєктів підтверджено перевіркою `npm run architecture:boundaries`. Решта розділів зберігає дату свого попереднього аудиту.
-**Джерела:** `package.json`, lockfile, `nx.json`, `eslint.config.cjs`,
-`tsconfig.base.json`, усі `project.json`, `npx nx show projects --json` і
+**Captured:** 2026-10-01; test targets rechecked 2026-10-15
+**Admin update:** 2026-10-19; the new `clients` domain, product/customer routes, and 67 projects were confirmed by `npm run architecture:boundaries`. Other sections retain the date of their previous audit.
+**Sources:** `package.json`, lockfile, `nx.json`, `eslint.config.cjs`,
+`tsconfig.base.json`, all `project.json` files, `npx nx show projects --json`, and
 `npx nx graph --file=<temporary-json>`.
 
-Повний перелік прямих залежностей, їхні ролі та джерела версій дивись у
-[каталозі технологій та npm-пакетів](technology-and-packages.md).
+See the [technology and npm packages catalog](technology-and-packages.md) for the complete list of direct dependencies, their roles, and version sources.
 
-Цей документ фіксує поточний workspace, а не оголошує порушення допустимими.
-Відомі розбіжності мають `AF-*` у
-[workspace remediation SDD](../specs/architecture/001-workspace-layers-and-boundaries/README.md).
+This document records the current workspace; it does not declare violations acceptable. Known discrepancies have `AF-*` entries in the [workspace remediation SDD](../specs/architecture/001-workspace-layers-and-boundaries/README.md).
 
-## Package manager і frameworks
+## Package manager and frameworks
 
-| Область         | Факт                                                                                |
+| Area            | Fact                                                                                |
 | --------------- | ----------------------------------------------------------------------------------- |
 | Package manager | npm 11.6.2, `package-lock.json`, Node 24.20.x                                       |
-| Workspace       | Nx 23.2, 67 projects включно з root npm project (перевірено 2026-10-19)             |
+| Workspace       | Nx 23.2, 67 projects including the root npm project (checked 2026-10-19)            |
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
 | Mobile          | Expo 57, React Native 0.86, Expo Router, Paper, Redux Toolkit/RTK Query, Axios      |
 | Contracts       | OpenAPI snapshot → `openapi-typescript` → `@shared/api-contracts`                   |
 
-## Applications і library groups
+## Applications and library groups
 
 | Application  | Composition root  | Main libraries                                                                                 |
 | ------------ | ----------------- | ---------------------------------------------------------------------------------------------- |
@@ -32,14 +29,11 @@
 | `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,clients/*,shared/*}`                          |
 | `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                          |
 
-Усі libraries мають root `src/index.ts`; cross-library imports, знайдені під
-час baseline search, використовують aliases із `tsconfig.base.json`. Deep alias
-imports не виявлені. Частина barrels розкриває internal transport/mappers/
-storage; це AF-008, а не затверджений public contract.
+All libraries have a root `src/index.ts`; cross-library imports found during baseline search use aliases from `tsconfig.base.json`. No deep alias imports were found. Some barrels expose internal transport/mappers/storage; this is AF-008, not an approved public contract.
 
-## Фактичний project graph
+## Actual project graph
 
-Ключові edges, які визначають remediation:
+Key edges that determine remediation:
 
 ```text
 storefront -> storefront feature/shell/data-access + Angular shared
@@ -53,56 +47,45 @@ mobile-cart-feature -> cart lower layers + customers data-access/model/ui
 mobile-orders-feature -> orders lower layers + customers data-access/model/ui
 ```
 
-Перші три cross-domain feature edges відповідають реалізованим user flows, але
-потребують явної orchestration policy. `core -> orders/model` і
-`cart/model -> orders/model` суперечать documented direction.
+The first three cross-domain feature edges correspond to implemented user flows but need an explicit orchestration policy. `core -> orders/model` and `cart/model -> orders/model` conflict with the documented direction.
 
-## Tags і enforcement
+## Tags and enforcement
 
-Використовуються `scope:*`, `domain:*` і `type:*`. Поточний
-`@nx/enforce-module-boundaries` перевіряє scopes та частину type-напрямів, але:
+The workspace uses `scope:*`, `domain:*`, and `type:*`. Current `@nx/enforce-module-boundaries` checks scopes and some type directions, but:
 
-- Storefront app має лише `scope:storefront`, без `type:app`;
-- немає загального constraint для `type:model`;
-- `domain:*` tags не беруть участі у constraints;
-- `type:feature` може залежати від іншого `type:feature`;
-- Mobile composition і core rules не можуть одночасно пояснити domain reducer
-  у `@mobile/core/shell`.
+- the Storefront app has only `scope:storefront`, without `type:app`;
+- there is no general constraint for `type:model`;
+- `domain:*` tags do not participate in constraints;
+- `type:feature` may depend on another `type:feature`;
+- Mobile composition and core rules cannot both explain a domain reducer in `@mobile/core/shell`.
 
-Тому успішний lint є необхідним, але недостатнім evidence меж.
+Therefore, a passing lint is necessary but insufficient evidence for boundaries.
 
-## State і API baseline
+## State and API baseline
 
-| Client     | Approved server path                                                                            | Local/client state                                              |
-| ---------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| Admin      | domain RTK Query endpoint → `@admin/shared/api-client` → Axios; auth raw Axios лише за ADR-0001 | component state, React Hook Form; Redux для shared client state |
-| Mobile     | domain RTK Query endpoint → `@mobile/shared/api-client` → Axios                                 | component/reducer, React Hook Form; root Redux store            |
-| Storefront | data-access repository/facade → Angular `HttpClient`                                            | Angular signals/RxJS/domain stores                              |
+| Client     | Approved server path                                                                             | Local/client state                                              |
+| ---------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| Admin      | domain RTK Query endpoint → `@admin/shared/api-client` → Axios; auth raw Axios only per ADR-0001 | component state, React Hook Form; Redux for shared client state |
+| Mobile     | domain RTK Query endpoint → `@mobile/shared/api-client` → Axios                                  | component/reducer, React Hook Form; root Redux store            |
+| Storefront | data-access repository/facade → Angular `HttpClient`                                             | Angular signals/RxJS/domain stores                              |
 
-Прямі API calls у presentation `ui` не виявлені. Generated DTO imports
-залишаються в transport/data-access і Admin auth adapter. Винятки та порушення:
+No direct API calls were found in presentation `ui`. Generated DTO imports remain in transport/data-access and the Admin auth adapter. Exceptions and violations:
 
-- Storefront public `@storefront/contracts` називає domain-facing models `*Dto`
-  і feature імпортує їх напряму;
-- catalog і order-history controllers копіюють paged query results у local
-  arrays;
-- RTK Query endpoints не оголошують tag/invalidation semantics;
-- runtime validation є у Admin products, Mobile orders/customers/cart і одному
-  product-details flow, але відсутня для Mobile catalog list/categories та
-  Storefront responses.
+- Storefront public `@storefront/contracts` names domain-facing models `*Dto`, and feature imports them directly;
+- catalog and order-history controllers copy paged query results into local arrays;
+- RTK Query endpoints do not declare tag/invalidation semantics;
+- runtime validation exists for Admin products, Mobile orders/customers/cart, and one product-details flow, but is missing for Mobile catalog list/categories and Storefront responses.
 
-## Test і typecheck baseline
+## Test and typecheck baseline
 
-| Surface        | Runnable gates                                                                                                                         | Gap                                                                                               |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                | лише app і shared API client мають executable specs; generated empty suites не є characterization |
-| Mobile         | app `typecheck`, `npm run test:mobile` для 21 Nx project (app, shell, api-client і domain libraries), `typecheck:tests:mobile`, export | mobile E2E target відсутній                                                                       |
-| Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` для `storefront-data-access`, `typecheck:tests:storefront` | focused specs покривають лише data-access, не весь застосунок                                     |
-| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                       | contract generation змінює generated source і виконується лише в API scope                        |
+| Surface        | Runnable gates                                                                                                                             | Gap                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                    | only the app and shared API client have executable specs; generated empty suites are not characterization |
+| Mobile         | app `typecheck`, `npm run test:mobile` for 21 Nx projects (app, shell, api-client, and domain libraries), `typecheck:tests:mobile`, export | no mobile E2E target                                                                                      |
+| Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` for `storefront-data-access`, `typecheck:tests:storefront`     | focused specs cover only data-access, not the whole app                                                   |
+| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                           | contract generation changes generated source and runs only in API scope                                   |
 
-Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` пройшов для
-62 projects; Nx позначив `admin-products-data-access:lint` flaky.
-`npm run typecheck:tests` пройшов для Web, Mobile й Admin E2E configs.
+Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` passed for 62 projects; Nx marked `admin-products-data-access:lint` flaky. `npm run typecheck:tests` passed for Web, Mobile, and Admin E2E configs.
 
 ## Empty/dead candidates
 
@@ -113,5 +96,4 @@ Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` пройшов
 - `libs/storefront/feature/{articles,cabinet}/src/lib/sections`;
 - `apps/storefront/public/assets/i18n`.
 
-Видалення відбувається лише у RM-009 після перевірки generated/runtime
-consumers; сам inventory нічого не видаляє.
+Deletion happens only in RM-009 after checking generated/runtime consumers; the inventory itself does not delete anything.

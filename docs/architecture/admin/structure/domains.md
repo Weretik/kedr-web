@@ -1,6 +1,6 @@
-# Домени та структура feature Admin
+# Admin domains and feature structure
 
-## Цільова структура
+## Target structure
 
 ```text
 libs/admin/
@@ -12,63 +12,52 @@ libs/admin/
 └── dashboard/{feature,data-access,ui}/
 ```
 
-Новий код розміщується за цією структурою. Перенесення наявного коду виконується
-лише окремою задачею.
+Place new code according to this structure. Move existing code only as a separate task.
 
 ## `admin/core`
 
-`shell` містить каркас, навігацію, layout та область маршрутів; `auth` — сесію й
-автентифікацію; `permissions` — перевірку прав. `core` не містить правил
-конкретних доменів.
+`shell` contains the application frame, navigation, layout, and route area; `auth` contains the session and authentication; `permissions` checks access. `core` does not contain rules for specific domains.
 
-Новий код `core` групується за відповідальністю; корінь `src` не є місцем для
-внутрішніх реалізацій. Цільові структури для нового або суттєво зміненого коду:
+Group new `core` code by responsibility; the `src` root is not a place for internal implementations. Target structures for new or substantially changed code:
 
 ```text
 libs/admin/core/
 ├── shell/src/
 │   ├── index.ts
-│   ├── layout/             # layout composition і content area
+│   ├── layout/             # layout composition and content area
 │   ├── navigation/         # nav config, sidebar, mobile drawer
-│   ├── components/         # top bar і меню; breadcrumb прибрано
+│   ├── components/         # top bar and menus; breadcrumbs have been removed
 │   └── hooks/              # shell-specific React hooks
 ├── auth/src/
 │   ├── index.ts
-│   ├── api/                # auth transport / RTK Query, якщо він з'явиться
+│   ├── api/                # auth transport / RTK Query, if introduced
 │   ├── session/            # session model, provider, lifecycle
-│   └── hooks/              # useAuth / useSession та інші public hooks
+│   └── hooks/              # useAuth / useSession and other public hooks
 └── permissions/src/
     ├── index.ts
-    ├── policies/           # permission rules і pure predicates
+    ├── policies/           # permission rules and pure predicates
     ├── guards/             # route/action guards
-    └── hooks/              # usePermission та похідні hooks
+    └── hooks/              # usePermission and derived hooks
 ```
 
-Папка створюється лише за наявності її відповідальності. Наявний плоский код не
-переміщується масово: його розділення виконується разом зі зміною відповідної
-функціональності або окремою задачею.
+Create a folder only when its responsibility exists. Do not mass-move existing flat code; split it together with a change to the relevant functionality or in a separate task.
 
-## Бізнес-домени
+## Business domains
 
-Домен ізольований і розкриває публічний API лише через кореневий `src/index.ts`.
-Deep imports до внутрішніх модулів іншого домену заборонені.
+A domain is isolated and exposes a public API only through its root `src/index.ts`. Deep imports into another domain's internal modules are prohibited.
 
-| Шар           | Відповідальність                                          | Не повинен містити          |
-| ------------- | --------------------------------------------------------- | --------------------------- |
-| `feature`     | Екран, сценарій користувача, route entry, orchestration   | HTTP і спільні UI-примітиви |
-| `data-access` | API, query/mutation hooks, DTO mapping, cache             | JSX і маршрути              |
-| `model`       | Типи, інваріанти, чисті перетворення                      | React, HTTP, browser API    |
-| `ui`          | Повторно використовувані domain presentational-компоненти | API, router, server state   |
+| Layer         | Responsibility                                    | Must not contain              |
+| ------------- | ------------------------------------------------- | ----------------------------- |
+| `feature`     | Screen, user scenario, route entry, orchestration | HTTP and shared UI primitives |
+| `data-access` | API, query/mutation hooks, DTO mapping, cache     | JSX and routes                |
+| `model`       | Types, invariants, pure transformations           | React, HTTP, browser API      |
+| `ui`          | Reusable domain presentation components           | API, router, server state     |
 
-`model` створюється лише за наявності спільної логіки або типів. Невеликий домен
-може почати з `feature`; додаткові шари виділяються за появи нової
-відповідальності чи повторного використання.
+Create `model` only when there is shared logic or shared types. A small domain can start with `feature`; add layers when a new responsibility or reuse appears.
 
-## Внутрішня структура domain library
+## Internal domain-library structure
 
-`src/index.ts` у кожній library — лише публічний API. Внутрішній код не
-розміщується поруч з ним «тимчасово» і не накопичується у великому файлі.
-Застосовуються такі папки, якщо відповідна роль існує:
+Each library's `src/index.ts` is only its public API. Do not place internal code beside it “temporarily” or let it accumulate in a large file. Use the following folders when the corresponding role exists:
 
 ```text
 libs/admin/<domain>/
@@ -100,15 +89,11 @@ libs/admin/<domain>/
     └── state/              # local reducer/actions or durable client state
 ```
 
-Це не вимога створити всі папки наперед. Це вимога не змішувати ролі: endpoint
-не містить DTO parser, mapper не містить React-компонент, а таблиця не містить
-server-state або маршрутизацію. Коли Nx boundary забороняє залежність
-`data-access -> model`, data-access-owned типи залишаються в `data-access/models`;
-глобальні module-boundary правила не послаблюються для локальної задачі.
+This does not require creating every folder in advance. It requires keeping roles separate: an endpoint does not contain a DTO parser, a mapper does not contain a React component, and a table does not contain server state or routing. When an Nx boundary prohibits `data-access -> model`, data-access-owned types stay in `data-access/models`; do not weaken global module-boundary rules for a local task.
 
-### Приклад: products
+### Example: products
 
-`Домен products` зберігає модель товару, типи, інваріанти query та paginated result списку в `products/model`; `products/data-access` володіє endpoint, API DTO та mapper'ами.
+The `products` domain keeps the product model, types, query invariants, and paginated list result in `products/model`; `products/data-access` owns the endpoint, API DTO, and mappers.
 
 ```text
 libs/admin/products/
@@ -123,9 +108,9 @@ libs/admin/products/
     └── mappers/
 ```
 
-## Внутрішня структура feature
+## Internal feature structure
 
-Внутрішні модулі групуються за призначенням сценарію:
+Group internal modules by scenario purpose:
 
 ```text
 libs/admin/products/feature/src/
@@ -137,12 +122,8 @@ libs/admin/products/feature/src/
 └── state/
 ```
 
-Папки створюються лише за наявності відповідного коду. Якщо сторінка стає
-самостійною бізнес-межею, вона виділяється в окрему feature лише окремим
-архітектурним рішенням.
+Create folders only when the corresponding code exists. If a page becomes an independent business boundary, split it into a separate feature only through a separate architecture decision.
 
 ## `admin/shared`
 
-`admin/shared` містить лише код, спільний для кількох доменів: UI-примітиви,
-API-клієнт, transport-контракти, config, util і testing. Він не залежить від
-доменів. Код, потрібний одному домену, не переноситься до shared заздалегідь.
+`admin/shared` contains only code shared by multiple domains: UI primitives, API client, transport contracts, config, util, and testing. It does not depend on domains. Do not move code needed by one domain to shared in advance.

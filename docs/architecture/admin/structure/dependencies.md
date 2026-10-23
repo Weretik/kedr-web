@@ -1,6 +1,6 @@
-# Правила залежностей Admin
+# Admin dependency rules
 
-## Допустимі напрямки
+## Allowed directions
 
 ```text
 app -> core | feature | admin/shared
@@ -9,32 +9,33 @@ feature -> ui | model | data-access | admin/shared
 data-access -> model | admin/shared/api-client | admin/shared/contracts | admin/shared/util
 ui -> model | admin/shared/ui | admin/shared/util
 model -> admin/shared/contracts | admin/shared/util
-admin/shared/* -> admin/shared/* без циклов
+admin/shared/* -> admin/shared/* without cycles
 ```
 
-| Джерело        | Може залежати від                                   |
+| Source         | May depend on                                       |
 | -------------- | --------------------------------------------------- |
 | `app`          | `core`, `feature`, `admin/shared`                   |
 | `feature`      | `data-access`, `model`, domain `ui`, `admin/shared` |
 | `data-access`  | `model`, API client, contracts, util                |
 | domain `ui`    | `model`, shared UI, util                            |
 | `model`        | contracts, util                                     |
-| `admin/shared` | только `admin/shared`                               |
+| `admin/shared` | `admin/shared` only                                 |
 
-## Обмеження
+## Constraints
 
-- Домен не імпортує внутрішні модулі іншого домену.
-- `admin/shared` не залежить від доменних бібліотек.
-- Admin не залежить від platform/UI бібліотек кореневого `libs/shared`.
-  Єдиний поточний виняток — platform-neutral generated contract
-  `@shared/api-contracts` на session/data-access transport boundary.
-- `model`, `ui` і `data-access` не залежать від `feature`.
-- `ui` не імпортує `data-access`, router або feature.
-- `model` залишається чистим TypeScript без React.
-- API DTO не виходять із `data-access`; feature і UI використовують доменні моделі.
-- Циклічні залежності заборонені.
-- Між бібліотеками використовуються path aliases і публічні точки входу, а не
+- A domain must not import another domain's internal modules.
+- `admin/shared` must not depend on domain libraries.
+- Admin must not depend on platform/UI libraries in root `libs/shared`.
+  The only current exception is the platform-neutral generated contract
+  `@shared/api-contracts` at the session/data-access transport boundary.
+- `model`, `ui`, and `data-access` must not depend on `feature`.
+- `ui` must not import `data-access`, the router, or a feature.
+- `model` remains plain TypeScript without React.
+- API DTOs must not leave `data-access`; features and UI use domain models.
+- Cyclic dependencies are prohibited.
+- Use path aliases and public entry points between libraries, not
   relative/deep imports.
 
-Feature одного домену не імпортує feature іншого. Сценарій кількох доменів
-отримує окрему orchestration feature з явним архітектурним рішенням.
+A feature in one domain must not import a feature in another. A scenario that
+spans multiple domains requires a separate orchestration feature and an explicit
+architecture decision.

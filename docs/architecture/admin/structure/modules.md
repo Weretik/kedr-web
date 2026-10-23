@@ -1,14 +1,14 @@
-# Наявні модулі Admin
+# Existing Admin modules
 
-Це карта Nx projects, які зараз є в репозиторії, а не перелік запланованих бібліотек. Джерело — `project.json` у зазначених каталогах; перед зміною перевір актуальний код і [frontend inventory](../../frontend-inventory.md). Цільові межі та можливі майбутні домени описані в [domains.md](domains.md).
+This is a map of Nx projects currently in the repository, not a list of planned libraries. The source is `project.json` in the listed directories; before a change, check the current code and [frontend inventory](../../frontend-inventory.md). Target boundaries and potential future domains are described in [domains.md](domains.md).
 
-| Область      | Наявні Nx projects                                   | Відповідальність                             |
-| ------------ | ---------------------------------------------------- | -------------------------------------------- |
-| Застосунок   | `apps/admin`, `apps/admin-e2e`                       | Композиція React Admin і браузерні перевірки |
-| Core         | `libs/admin/core/auth`, `libs/admin/core/shell`      | Сесія та каркас застосунку                   |
-| Dashboard    | `libs/admin/dashboard/feature`                       | Маршрути й екран dashboard                   |
-| Products     | `libs/admin/products/{model,data-access,ui,feature}` | Модель товарів, API, презентація та сценарії |
-| Clients      | `libs/admin/clients/{model,data-access,ui,feature}`  | Список і картка клієнтів, API та моделі      |
-| Admin shared | `libs/admin/shared/{api-client,config}`              | API transport і конфігурація Admin           |
+| Area         | Existing Nx projects                                 | Responsibility                                  |
+| ------------ | ---------------------------------------------------- | ----------------------------------------------- |
+| Application  | `apps/admin`, `apps/admin-e2e`                       | React Admin composition and browser checks      |
+| Core         | `libs/admin/core/auth`, `libs/admin/core/shell`      | Session and application shell                   |
+| Dashboard    | `libs/admin/dashboard/feature`                       | Dashboard route and screen                      |
+| Products     | `libs/admin/products/{model,data-access,ui,feature}` | Product model, API, presentation, and scenarios |
+| Clients      | `libs/admin/clients/{model,data-access,ui,feature}`  | Customer list/card, API, and models             |
+| Admin shared | `libs/admin/shared/{api-client,config}`              | API transport and Admin configuration           |
 
-Поточний router підключає маршрути dashboard, products і clients у `apps/admin/src/app/router/app-router.tsx`. `orders` і `core/permissions` у [цільовій схемі](domains.md) не означають, що відповідні Nx projects вже існують. Спільні для клієнтів бібліотеки `libs/shared/*` наведені у [frontend inventory](../../frontend-inventory.md).
+The current router connects dashboard, products, and clients routes in `apps/admin/src/app/router/app-router.tsx`. `orders` and `core/permissions` in the [target structure](domains.md) do not mean the corresponding Nx projects already exist. Libraries shared by clients, `libs/shared/*`, are listed in the [frontend inventory](../../frontend-inventory.md).

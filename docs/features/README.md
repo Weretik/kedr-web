@@ -1,11 +1,11 @@
-# Каталог реалізованих frontend-фіч
+# Implemented frontend feature catalog
 
-**Звірено з кодом:** 2026-10-21. Цей каталог описує наявну реалізацію, а не плани зі SDD.
+**Checked against code:** 2026-10-21. This catalog describes the current implementation, not plans from SDDs.
 
-| Застосунок                                 | Фічі                                                                 |
-| ------------------------------------------ | -------------------------------------------------------------------- |
-| [Admin React](admin/README.md)             | Дашборд, товари, клієнти, замовлення й чернетки                      |
-| [Mobile React Native](mobile/README.md)    | Оболонка, каталог, деталі товару, кошик, замовлення, товари без фото |
-| [Storefront Angular](storefront/README.md) | Каталог і покупки, кабінет, контент і віджети                        |
+| Application                                | Features                                                               |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| [Admin React](admin/README.md)             | Dashboard, products, customers, orders, and drafts                     |
+| [Mobile React Native](mobile/README.md)    | Shell, catalog, product details, cart, orders, products without photos |
+| [Storefront Angular](storefront/README.md) | Catalog and shopping, account, content, and widgets                    |
 
-Кожна сторінка веде до маршруту, коду поведінки, джерел даних і пов'язаної специфікації. **«Схема будови»** показує зв'язки компонентів, а **«Структура в коді»** — дерево фактичних каталогів і основних файлів із коротким поясненням їхніх ролей. [SDD](../specs/README.md) зберігають вимоги й історію реалізації; [архітектура](../architecture/frontend-inventory.md) описує спільні межі. Після зміни поведінки звіряй обидва рівні документації з кодом.
+Each page links to routes, behavior code, data sources, and related specifications. **“Structure diagram”** shows relationships between components, while **“Code structure”** shows a tree of actual directories and key files with brief explanations of their roles. [SDDs](../specs/README.md) hold requirements and implementation history; [architecture](../architecture/frontend-inventory.md) describes shared boundaries. After behavior changes, compare both documentation levels with the code.

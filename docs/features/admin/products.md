@@ -1,37 +1,37 @@
-# Товари Admin
+# Admin Products
 
-**Стан:** реалізовано. Маршрути: `/catalog` і `/catalog/:productSlug`. Вимоги та перевірки: [SDD перегляду](../../specs/admin/products/001-read-only-product-browsing/README.md); правила композиції — [Admin standard](../../standards/admin/list-detail-pages.md).
+**Status:** implemented. Routes: `/catalog` and `/catalog/:productSlug`. Requirements and checks: [read-only browsing SDD](../../specs/admin/products/001-read-only-product-browsing/README.md); composition rules: [Admin standard](../../standards/admin/list-detail-pages.md).
 
-- [Список](../../../libs/admin/products/feature/src/pages/products-page.tsx) має режими «Усі товари», «Без фото» й «На сайті». [ProductsDataGrid](../../../libs/admin/products/ui/src/tables/products-data-grid.tsx) передає підтримувані пошук, фільтри, сортування й пагінацію на сервер; стан вкладок зберігається в URL.
-- [Деталі](../../../libs/admin/products/feature/src/pages/product-details-page.tsx) показують дані й медіа товару та повертають до попереднього стану списку. Зі списку й деталей можна додати товар до [поточного набору замовлення](orders.md) через callback AppRouter.
-- [Products data-access](../../../libs/admin/products/data-access/src/api/admin-products.api.ts) відповідає за запити і мапінг. Операції описують [контракт товарів](../../contracts/catalog/admin-products.md) і [контракт товарів без фото](../../contracts/catalog/missing-photo-products.md).
+- The [list](../../../libs/admin/products/feature/src/pages/products-page.tsx) has modes “Усі товари”, “Без фото”, and “На сайті”. [ProductsDataGrid](../../../libs/admin/products/ui/src/tables/products-data-grid.tsx) sends supported search, filters, sorting, and pagination to the server; tab state is stored in the URL.
+- [Details](../../../libs/admin/products/feature/src/pages/product-details-page.tsx) show product data and media and return to the previous list state. The list and details can add a product to the [current order set](orders.md) through an AppRouter callback.
+- [Products data access](../../../libs/admin/products/data-access/src/api/admin-products.api.ts) handles requests and mapping. Operations are described in the [products contract](../../contracts/catalog/admin-products.md) and [missing-photo products contract](../../contracts/catalog/missing-photo-products.md).
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
     App[AppRouter] --> Routes[createProductsRoutes]
     Routes --> List[ProductsPage]
     Routes --> Detail[ProductDetailsPage]
-    List --> Api[products data-access]
+    List --> Api[products data access]
     Detail --> Api
     Api --> Model[products model]
     List --> Grid[ProductsDataGrid]
     Detail --> Content[ProductDetailsContent]
-    List -. callback додавання .-> App
-    Detail -. callback додавання .-> App
-    App --> Set[Поточний набір замовлення]
+    List -. add callback .-> App
+    Detail -. add callback .-> App
+    App --> Set[Current order set]
 ```
 
-## Структура в коді
+## Code structure
 
 ```text
 libs/admin/products/
-├── feature/src/products.routes.tsx               # маршрути та callback додавання
-├── feature/src/pages/products-page.tsx           # режими й стан списку
-├── feature/src/pages/product-details-page.tsx    # деталі товару
-├── data-access/src/api/admin-products.api.ts     # запити каталогу
-├── data-access/src/mappers/                     # перевірка й проєкція даних
-├── model/src/                                   # типи товарів і параметри
-└── ui/src/                                      # таблиця й блоки деталей без HTTP
+├── feature/src/products.routes.tsx               # routes and add callback
+├── feature/src/pages/products-page.tsx           # modes and list state
+├── feature/src/pages/product-details-page.tsx    # product details
+├── data-access/src/api/admin-products.api.ts     # catalog requests
+├── data-access/src/mappers/                     # data validation and projection
+├── model/src/                                   # product types and parameters
+└── ui/src/                                      # table and detail blocks without HTTP
 ```

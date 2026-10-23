@@ -1,23 +1,18 @@
 # Frontend engineering rules
 
-Цей каталог містить сталі правила для frontend-змін. Feature-специфікації
-посилаються на ці документи, а не дублюють їх.
+This directory contains stable rules for frontend changes. Feature specifications link to these documents instead of duplicating them.
 
-## За застосунком
+## By application
 
-- **Admin React:** [організація коду](admin/admin-code-organization.md), [UI](admin/admin-ui.md), [єдиний стиль списків і деталей](admin/list-detail-pages.md), [архітектура й наявні модулі](../architecture/admin/README.md).
-- **Mobile React Native:** [організація коду](mobile/mobile-code-organization.md), [UI](mobile/mobile-ui.md), [архітектура й наявні модулі](../architecture/mobile/README.md).
-- **Storefront Angular:** [архітектурні межі](../architecture/storefront/README.md), [модулі](../architecture/storefront/structure/modules.md), [стан та API](../architecture/storefront/runtime/state-and-api.md). Правила React Admin і Mobile не переносяться на Angular автоматично.
+- **Admin React:** [code organization](admin/admin-code-organization.md), [UI](admin/admin-ui.md), [consistent list and detail pages](admin/list-detail-pages.md), [architecture and existing modules](../architecture/admin/README.md).
+- **Mobile React Native:** [code organization](mobile/mobile-code-organization.md), [UI](mobile/mobile-ui.md), [architecture and existing modules](../architecture/mobile/README.md).
+- **Storefront Angular:** [architecture boundaries](../architecture/storefront/README.md), [modules](../architecture/storefront/structure/modules.md), [state and API](../architecture/storefront/runtime/state-and-api.md). React Admin and Mobile rules do not automatically apply to Angular.
 
-## Спільні теми
+## Shared topics
 
-- [API and data rules](shared/api-data-rules.md) — DTO, mappers, errors і contracts; для кожного клієнта враховуй його transport і state stack.
-- [Testing rules](shared/testing-rules.md) — вибір перевірок та їх фіксація за наявними targets.
-- [Security rules](shared/security-rules.md) — access, sessions, безпечні дані й security review за контекстом застосунку.
-- [Delivery rules](shared/delivery-rules.md) — SDD flow, scope і definition of done.
+- [API and data rules](shared/api-data-rules.md) — DTOs, mappers, errors, and contracts; account for each client's transport and state stack.
+- [Testing rules](shared/testing-rules.md) — selecting checks and recording them against available targets.
+- [Security rules](shared/security-rules.md) — access, sessions, data safety, and security review for the application context.
+- [Delivery rules](shared/delivery-rules.md) — SDD flow, scope, and definition of done.
 
-Фактичні versions, projects і runnable targets не дублюються в цих правилах:
-їхній поточний snapshot містить [frontend inventory](../architecture/frontend-inventory.md).
-Системні розбіжності оформлюються через
-remediation SDD, а не залишаються
-необов'язковим residual risk.
+Actual versions, projects, and runnable targets are not duplicated in these rules; their current snapshot is in the [frontend inventory](../architecture/frontend-inventory.md). Systemic discrepancies are handled through a remediation SDD rather than left as optional residual risk.

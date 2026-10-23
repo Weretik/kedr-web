@@ -1,34 +1,34 @@
-# Клієнти Admin
+# Admin Clients
 
-**Стан:** реалізовано. Маршрути: `/customers` і `/customers/:counterpartyId`. Вимоги та перевірки: [SDD перегляду](../../specs/admin/clients/001-read-only-customers/README.md) і [SDD замовлень клієнта](../../specs/admin/clients/002-customer-orders/README.md).
+**Status:** implemented. Routes: `/customers` and `/customers/:counterpartyId`. Requirements and checks: [read-only view SDD](../../specs/admin/clients/001-read-only-customers/README.md) and [customer orders SDD](../../specs/admin/clients/002-customer-orders/README.md).
 
-- [Список](../../../libs/admin/clients/feature/src/pages/customers-page.tsx) читає активних клієнтів через [clients data-access](../../../libs/admin/clients/data-access/src/api/admin-customers.api.ts). Пошук, сортування та пагінація виконуються сервером; стан списку зберігається в URL.
-- [Деталі](../../../libs/admin/clients/feature/src/pages/customer-details-page.tsx) показують основні, контактні й цінові дані. Під ними [панель замовлень](../../../libs/admin/orders/feature/src/orders.routes.tsx) запитує замовлення та чернетки з точним фільтром `counterpartyId`. App router передає панель через callback, тому clients feature не залежить від orders feature.
-- Дані та допустимі параметри описує [consumer contract](../../contracts/sales/admin-customers.md); композицію списку, деталей і повернення — [Admin standard](../../standards/admin/list-detail-pages.md). Поведінку панелі замовлень описує [окрема фіча](orders.md).
+- The [list](../../../libs/admin/clients/feature/src/pages/customers-page.tsx) reads active customers through [clients data access](../../../libs/admin/clients/data-access/src/api/admin-customers.api.ts). Search, sorting, and pagination run on the server; list state is stored in the URL.
+- [Details](../../../libs/admin/clients/feature/src/pages/customer-details-page.tsx) show basic, contact, and pricing data. Below them, the [orders panel](../../../libs/admin/orders/feature/src/orders.routes.tsx) queries orders and drafts with the exact `counterpartyId` filter. The app router passes the panel through a callback, so the clients feature does not depend on the orders feature.
+- The [consumer contract](../../contracts/sales/admin-customers.md) describes data and allowed parameters; the [Admin standard](../../standards/admin/list-detail-pages.md) describes list/detail composition and return navigation. See the [separate feature](orders.md) for orders panel behavior.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
     App[AppRouter] --> Routes[createClientsRoutes]
     Routes --> List[CustomersPage]
     Routes --> Detail[CustomerDetailsPage]
-    List --> Api[clients data-access]
+    List --> Api[clients data access]
     Detail --> Api
     Api --> Model[clients model]
     Detail -. callback .-> Panel[CustomerOrdersPanel]
-    Panel --> OrdersApi[orders data-access]
+    Panel --> OrdersApi[orders data access]
 ```
 
-## Структура в коді
+## Code structure
 
 ```text
 libs/admin/clients/
-├── feature/src/clients.routes.tsx                  # маршрути й межа callback
-├── feature/src/pages/customers-page.tsx           # список і URL-стан
-├── feature/src/pages/customer-details-page.tsx    # деталі та місце панелі замовлень
-├── data-access/src/api/admin-customers.api.ts     # запити list/detail
-├── data-access/src/mappers/customer.mapper.ts     # перевірка відповіді
-├── model/src/queries/customer-page-params.ts      # параметри списку
-└── ui/src/                                       # таблиця й картки без HTTP
+├── feature/src/clients.routes.tsx                  # routes and callback boundary
+├── feature/src/pages/customers-page.tsx           # list and URL state
+├── feature/src/pages/customer-details-page.tsx    # details and orders panel placement
+├── data-access/src/api/admin-customers.api.ts     # list/detail requests
+├── data-access/src/mappers/customer.mapper.ts     # response validation
+├── model/src/queries/customer-page-params.ts      # list parameters
+└── ui/src/                                       # table and cards without HTTP
 ```

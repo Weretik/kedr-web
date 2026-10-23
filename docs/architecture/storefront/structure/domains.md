@@ -1,28 +1,22 @@
-# Домени та бібліотеки Storefront
+# Storefront domains and libraries
 
-## Ролі бібліотек
+## Library roles
 
-| Роль          | Розміщення                    | Відповідальність                                                                |
-| ------------- | ----------------------------- | ------------------------------------------------------------------------------- |
-| `contracts`   | `libs/storefront/contracts`   | DTO, контракти запитів і відповідей                                             |
-| `data-access` | `libs/storefront/data-access` | HTTP-сервіси, репозиторії, перетворення даних і доменний стан, пов'язаний з API |
-| `feature`     | `libs/storefront/feature/*`   | Маршрути, сценарії користувача, сторінки та feature-фасади                      |
-| `shell`       | `libs/storefront/shell`       | Спільна оболонка Storefront: header і footer                                    |
-| `ui`          | `libs/storefront/ui`          | Повторно використовувані презентаційні компоненти                               |
-| `util`        | `libs/storefront/util`        | Інфраструктурні утиліти, зокрема робота з локаллю                               |
+| Role          | Location                      | Responsibility                                                                 |
+| ------------- | ----------------------------- | ------------------------------------------------------------------------------ |
+| `contracts`   | `libs/storefront/contracts`   | DTOs, request and response contracts                                           |
+| `data-access` | `libs/storefront/data-access` | HTTP services, repositories, data transformation, and API-related domain state |
+| `feature`     | `libs/storefront/feature/*`   | Routes, user scenarios, pages, and feature facades                             |
+| `shell`       | `libs/storefront/shell`       | Shared Storefront shell: header and footer                                     |
+| `ui`          | `libs/storefront/ui`          | Reusable presentation components                                               |
+| `util`        | `libs/storefront/util`        | Infrastructure utilities, including locale handling                            |
 
-## Домени
+## Domains
 
-Feature-бібліотеки відображають бізнес-частини вітрини: каталог, категорії,
-кошик, оформлення замовлення, авторизацію, кабінет, статті, регіони, контакти,
-опт, сторінку «Про нас» і `not-found`. Не створюється спільна feature-бібліотека
-для різних доменів без доведеного повторного використання.
+Feature libraries represent storefront business areas: catalog, categories, cart, checkout, authentication, cabinet, articles, regions, contacts, wholesale, the about-us page, and `not-found`. Do not create a shared feature library for different domains without demonstrated reuse.
 
-`shell` не дублює сценарії feature. Наприклад, header може підключати потрібні
-публічні дані або UI кошика, але оформлення замовлення залишається в `checkout`.
+`shell` does not duplicate feature scenarios. For example, the header may connect needed public data or cart UI, but checkout remains in `checkout`.
 
-## Публічний API
+## Public API
 
-Імпорти між бібліотеками здійснюються лише через їхні package entry points
-`@storefront/...`. Глибокі імпорти до внутрішніх файлів не використовуються.
-Кожна бібліотека експортує мінімальний публічний API через `src/index.ts`.
+Imports between libraries go through their package entry points `@storefront/...` only. Do not use deep imports into internal files. Each library exports a minimal public API through `src/index.ts`.

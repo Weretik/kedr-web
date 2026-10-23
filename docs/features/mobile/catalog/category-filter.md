@@ -1,11 +1,11 @@
-# Вибір категорії Mobile
+# Mobile Category Selection
 
-**Сценарій:** звузити [каталог](catalog.md) до категорії. [SDD](../../../specs/mobile/catalog/002-category-filter/spec.md).
+**Scenario:** narrow the [catalog](catalog.md) to a category. [SDD](../../../specs/mobile/catalog/002-category-filter/spec.md).
 
-- [CatalogScreen](../../../../libs/mobile/catalog/feature/src/screens/catalog-screen.tsx) отримує дії з [useCatalogController](../../../../libs/mobile/catalog/feature/src/hooks/use-catalog-controller.ts); [catalog-query-reducer](../../../../libs/mobile/catalog/feature/src/state/catalog-query-reducer.ts) змінює query та повертає пагінацію на першу сторінку.
-- [catalog.api](../../../../libs/mobile/catalog/data-access/src/api/catalog.api.ts) окремо читає категорії та товари, а [category mapper](../../../../libs/mobile/catalog/data-access/src/mappers/catalog-categories.mapper.ts) перевіряє transport data. UI фільтра — у [catalog UI](../../../../libs/mobile/catalog/ui/src/index.ts). [Контракт категорій](../../../contracts/catalog/admin-categories.md).
+- [CatalogScreen](../../../../libs/mobile/catalog/feature/src/screens/catalog-screen.tsx) receives actions from [useCatalogController](../../../../libs/mobile/catalog/feature/src/hooks/use-catalog-controller.ts); [catalog-query-reducer](../../../../libs/mobile/catalog/feature/src/state/catalog-query-reducer.ts) changes the query and resets pagination to the first page.
+- [catalog.api](../../../../libs/mobile/catalog/data-access/src/api/catalog.api.ts) reads categories and products separately, and the [category mapper](../../../../libs/mobile/catalog/data-access/src/mappers/catalog-categories.mapper.ts) validates transport data. The filter UI is in the [catalog UI](../../../../libs/mobile/catalog/ui/src/index.ts). [Categories contract](../../../contracts/catalog/admin-categories.md).
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -16,18 +16,18 @@ API --> Mapper["category mapper"]
 Mapper --> UI["Catalog UI filter"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 libs/mobile/catalog/
 ├── data-access/src/
-│   ├── api/catalog.api.ts  # запит до API
-│   └── mappers/catalog-categories.mapper.ts  # перетворення відповіді API
+│   ├── api/catalog.api.ts  # API request
+│   └── mappers/catalog-categories.mapper.ts  # API response transformation
 ├── feature/src/
-│   ├── hooks/use-catalog-controller.ts  # стан і дії екрана
-│   ├── screens/catalog-screen.tsx  # екран фічі
-│   └── state/catalog-query-reducer.ts  # стан і взаємодія з даними
-└── ui/src/index.ts  # публічний API бібліотеки
+│   ├── hooks/use-catalog-controller.ts  # screen state and actions
+│   ├── screens/catalog-screen.tsx  # feature screen
+│   └── state/catalog-query-reducer.ts  # state and data interaction
+└── ui/src/index.ts  # library public API
 ```

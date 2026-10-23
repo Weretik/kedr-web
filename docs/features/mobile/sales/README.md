@@ -1,7 +1,7 @@
-# Продажі Mobile
+# Mobile sales
 
-| Фіча                           | Вхід                                        |
-| ------------------------------ | ------------------------------------------- |
-| [Кошик і оформлення](cart.md)  | `(tabs)/cart.tsx`                           |
-| [Історія замовлень](orders.md) | `(tabs)/orders.tsx`, `orders/[orderId].tsx` |
-| [Вибір клієнта](customers.md)  | Кошик та історія замовлень                  |
+| Feature                            | Entry point                                 |
+| ---------------------------------- | ------------------------------------------- |
+| [Cart and checkout](cart.md)       | `(tabs)/cart.tsx`                           |
+| [Order history](orders.md)         | `(tabs)/orders.tsx`, `orders/[orderId].tsx` |
+| [Customer selection](customers.md) | Cart and order history                      |

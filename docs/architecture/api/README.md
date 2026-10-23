@@ -1,15 +1,12 @@
-# API-архітектура Admin і Mobile
+# Admin and Mobile API architecture
 
-**Область:** `apps/admin`, `apps/mobile`  
-**Статус:** чинний  
-**Пов'язані документи:** [ADR Admin Axios transport](../admin/adr/0001-admin-axios-transport.md), [стан і API Admin](../admin/runtime/state-and-api.md), [стан і API Mobile](../mobile/runtime/state-and-api.md)
+**Scope:** `apps/admin`, `apps/mobile`\
+**Status:** current\
+**Related documents:** [Admin Axios transport ADR](../admin/adr/0001-admin-axios-transport.md), [Admin state and API](../admin/runtime/state-and-api.md), [Mobile state and API](../mobile/runtime/state-and-api.md)
 
-## Призначення
+## Purpose
 
-Admin і Mobile споживають один backend, тому однаково передають API-запити,
-нормалізують backend errors і підтримують cancellation. Клієнти не імпортують
-код один одного: кожен володіє власним `shared/api-client`, але реалізує цей
-контракт.
+Admin and Mobile consume one backend, so they send API requests, normalize backend errors, and support cancellation in the same way. The clients do not import each other's code: each owns its own `shared/api-client` while implementing this contract.
 
 ```text
 Admin feature / Mobile feature
@@ -19,7 +16,7 @@ domain data-access ── baseApi.injectEndpoints
              │
              ▼
 shared/api-client
-  ApiRequest → axiosBaseQuery → Axios → спільний backend
+  ApiRequest → axiosBaseQuery → Axios → shared backend
                     │                │
                     └─ ApiError ◄────┘
                          │
@@ -28,29 +25,23 @@ shared/api-client
 feature error state              runtime notifier (network/timeout/5xx)
 ```
 
-`feature` показує власні loading/error/empty states. Глобальний notifier не
-замінює error state та не повідомляє про validation errors.
+`feature` shows its own loading/error/empty states. The global notifier does not replace an error state and does not report validation errors.
 
-## Межі відповідальності
+## Responsibility boundaries
 
-`@shared/api-contracts` містить лише CLI-generated OpenAPI types і є спільним
-machine contract для Admin, Mobile та Storefront. Він не містить HTTP client,
-state, runtime validation чи domain models. Кожен client імпортує його тільки на
-transport boundary і виконує власний mapping у domain `data-access`.
+`@shared/api-contracts` contains only CLI-generated OpenAPI types and is the shared machine contract for Admin, Mobile, and Storefront. It does not contain an HTTP client, state, runtime validation, or domain models. Each client imports it only at the transport boundary and performs its own mapping in domain `data-access`.
 
-| Шар                    | Відповідальність                                                                                 |
+| Layer                  | Responsibility                                                                                   |
 | ---------------------- | ------------------------------------------------------------------------------------------------ |
-| `shared/api-contracts` | Generated OpenAPI request, response and schema types                                             |
+| `shared/api-contracts` | Generated OpenAPI request, response, and schema types                                            |
 | `shared/api-client`    | Axios instance, interceptors, `axiosBaseQuery`, `baseApi`, error normalization, runtime notifier |
-| Domain `data-access`   | DTO, runtime validation, mapper і endpoints через `baseApi.injectEndpoints`                      |
-| `feature`              | Generated RTK Query hooks, loading/error states і ручний `refetch`                               |
-| `ui` / route           | Не викликають HTTP і не імпортують transport                                                     |
+| Domain `data-access`   | DTOs, runtime validation, mapper, and endpoints through `baseApi.injectEndpoints`                |
+| `feature`              | Generated RTK Query hooks, loading/error states, and manual `refetch`                            |
+| `ui` / route           | Do not call HTTP or import transport                                                             |
 
-Кожен domain endpoint оголошується виключно через public `baseApi.injectEndpoints`.
-Не можна створювати окремий Axios instance, робити deep import у `api-client` або
-дублювати RTK Query response/error у slice.
+Declare every domain endpoint exclusively through public `baseApi.injectEndpoints`. Do not create a separate Axios instance, deep-import `api-client`, or duplicate RTK Query response/error in a slice.
 
-## Публічний transport contract
+## Public transport contract
 
 ```ts
 interface ApiRequest {
@@ -80,67 +71,54 @@ interface ApiError {
 }
 ```
 
-`axiosBaseQuery` передає RTK Query `AbortSignal` до Axios і повертає тільки
-`{ data }` або `{ error: ApiError }`. Axios exception не виходить у feature.
+`axiosBaseQuery` passes the RTK Query `AbortSignal` to Axios and returns only `{ data }` or `{ error: ApiError }`. An Axios exception does not escape into feature.
 
 ## Backend errors
 
-| Backend response              | `ApiError`                                |
-| ----------------------------- | ----------------------------------------- |
-| Немає response                | `Network`, `status: 0`                    |
-| `ECONNABORTED` / `ETIMEDOUT`  | `Timeout`                                 |
-| HTTP 401 / 403 / 404          | `Unauthorized` / `Forbidden` / `NotFound` |
-| HTTP 4xx з validation fields  | `Validation` і `fieldErrors`              |
-| HTTP 5xx                      | `Server`                                  |
-| Інша transport/client помилка | `Unknown`                                 |
+| Backend response                | `ApiError`                                |
+| ------------------------------- | ----------------------------------------- |
+| No response                     | `Network`, `status: 0`                    |
+| `ECONNABORTED` / `ETIMEDOUT`    | `Timeout`                                 |
+| HTTP 401 / 403 / 404            | `Unauthorized` / `Forbidden` / `NotFound` |
+| HTTP 4xx with validation fields | `Validation` and `fieldErrors`            |
+| HTTP 5xx                        | `Server`                                  |
+| Other transport/client error    | `Unknown`                                 |
 
 ### ASP.NET Problem Details
 
-Backend може повертати `{ detail, title, errors, traceId }`. `detail` має
-пріоритет над `title`; `errors` перетворюється на `fieldErrors`; `traceId`
-зберігається для діагностики. Response body не логується.
+The backend may return `{ detail, title, errors, traceId }`. `detail` takes precedence over `title`; `errors` is converted to `fieldErrors`; `traceId` is retained for diagnostics. Do not log the response body.
 
 ### Ardalis validation result
 
-Backend може повертати масив з `Identifier` / `ErrorMessage` або
-`identifier` / `errorMessage`. Клієнт групує повідомлення за полем у
-`fieldErrors` і повертає `Validation`.
+The backend may return an array with `Identifier` / `ErrorMessage` or `identifier` / `errorMessage`. The client groups messages by field in `fieldErrors` and returns `Validation`.
 
-## Робота з помилками
+## Error handling
 
-1. Для `Validation` feature показує field errors.
-2. Для `Network`, `Timeout` і `Server` feature пропонує доступний ручний retry
-   через `refetch`.
-3. Runtime notifier повідомляє про network, timeout, server та unknown errors;
-   4xx лишаються відповідальністю конкретного feature.
-4. `traceId` передається в support лише через нормалізований `ApiError`; feature
-   не парсить backend response самостійно.
+1. For `Validation`, feature shows field errors.
+2. For `Network`, `Timeout`, and `Server`, feature offers a manual retry through `refetch`.
+3. The runtime notifier reports network, timeout, server, and unknown errors; the specific feature handles 4xx errors.
+4. Pass `traceId` to support only through normalized `ApiError`; feature does not parse the backend response itself.
 
-## Observability і безпека
+## Observability and security
 
-- Request interceptor може додавати correlation ID і вимірює тривалість.
-- Логи містять тільки method, sanitized URL без query/fragment, status і duration.
-- Headers, request/response body, tokens і персональні дані не логуються.
-- Logging увімкнений лише за development opt-in flag: `VITE_ENABLE_HTTP_LOGS`
-  для Admin та `EXPO_PUBLIC_ENABLE_HTTP_LOGS=true` для Mobile.
+- The request interceptor may add a correlation ID and measures duration.
+- Logs contain only method, sanitized URL without query/fragment, status, and duration.
+- Do not log headers, request/response bodies, tokens, or personal data.
+- Logging is enabled only by a development opt-in flag: `VITE_ENABLE_HTTP_LOGS` for Admin and `EXPO_PUBLIC_ENABLE_HTTP_LOGS=true` for Mobile.
 
-## Відмінності клієнтів
+## Client differences
 
-| Аспект           | Admin                                                               | Mobile                                                    |
-| ---------------- | ------------------------------------------------------------------- | --------------------------------------------------------- |
-| Base URL         | `@admin/shared/config`                                              | `EXPO_PUBLIC_API_BASE_URL` через `@mobile/shared/config`  |
-| Authentication   | bearer token, refresh, CSRF, credentials через `AuthSessionAdapter` | Не реалізовано до окремої auth-фази                       |
-| Runtime notifier | Налаштовується під час Admin bootstrap                              | Реєструється у `@mobile/core/shell` notification provider |
-| Connectivity     | browser/HTTP failure handling                                       | NetInfo offline indicator, без automatic retry            |
+| Aspect           | Admin                                                                 | Mobile                                                     |
+| ---------------- | --------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Base URL         | `@admin/shared/config`                                                | `EXPO_PUBLIC_API_BASE_URL` through `@mobile/shared/config` |
+| Authentication   | bearer token, refresh, CSRF, credentials through `AuthSessionAdapter` | Not implemented before a separate auth phase               |
+| Runtime notifier | Configured during Admin bootstrap                                     | Registered in `@mobile/core/shell` notification provider   |
+| Connectivity     | browser/HTTP failure handling                                         | NetInfo offline indicator, no automatic retry              |
 
-`EXPO_PUBLIC_*` потрапляють у Mobile client bundle, тому не можуть містити
-токени, паролі чи інші secrets.
+`EXPO_PUBLIC_*` values are included in the Mobile client bundle and therefore must not contain tokens, passwords, or other secrets.
 
-## Перевірка
+## Verification
 
-- Unit: Problem Details, Ardalis, network, timeout і 5xx mapping; `AbortSignal`
-  forwarding; logger sanitization.
-- Integration: endpoint через `baseApi.injectEndpoints` повертає доменну модель,
-  а не DTO.
-- Ручна: скасувати запит при unmount/навігації; на Mobile вимкнути мережу та
-  перевірити offline indicator без аварійного завершення.
+- Unit: Problem Details, Ardalis, network, timeout, and 5xx mapping; `AbortSignal` forwarding; logger sanitization.
+- Integration: an endpoint through `baseApi.injectEndpoints` returns a domain model, not a DTO.
+- Manual: cancel a request during unmount/navigation; on Mobile, disable the network and check the offline indicator without a crash.

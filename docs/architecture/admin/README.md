@@ -1,40 +1,38 @@
-# Архітектура Admin
+# Admin architecture
 
-**Область:** React-застосунок `apps/admin` у Nx-монорепозиторії  
-**Підхід:** гібридний domain-first
+**Scope:** React application `apps/admin` in the Nx monorepo\
+**Approach:** hybrid domain-first
 
-**Стан:** [наявні Nx-модулі](structure/modules.md) і цільові межі в документах нижче описані окремо.
+**Status:** [existing Nx modules](structure/modules.md) and target boundaries are described separately in the documents below.
 
-## Призначення
+## Purpose
 
-Документи задають архітектурний контракт розробки Admin: межі доменів,
-допустимі залежності, організацію стану й API, правила Nx та SDD-процес. Нову
-можливість спочатку описують специфікацією, а потім реалізують у цих межах.
+These documents define the Admin engineering architecture contract: domain boundaries, permitted dependencies, state and API organization, Nx rules, and the SDD process. Describe new capabilities in a specification first, then implement them within these boundaries.
 
-## Карта документів
+## Document map
 
-### Структура й залежності
+### Structure and dependencies
 
-- [Наявні модулі та маршрути](structure/modules.md)
-- [Домени та внутрішня структура feature](structure/domains.md)
-- [Правила залежностей](structure/dependencies.md)
-- [Nx-контракт і публічний API](structure/nx-contract.md)
+- [Existing modules and routes](structure/modules.md)
+- [Domains and internal feature structure](structure/domains.md)
+- [Dependency rules](structure/dependencies.md)
+- [Nx contract and public API](structure/nx-contract.md)
 
-### Робота застосунку
+### Application runtime
 
-- [Застосунок і маршрутизація](runtime/application.md)
-- [Стан, API та форми](runtime/state-and-api.md)
+- [Application and routing](runtime/application.md)
+- [State, API, and forms](runtime/state-and-api.md)
 
-### Процес і рішення
+### Process and decisions
 
-- [SDD-процес і відкриті рішення](sdd-process.md)
-- [ADR Admin](adr/)
+- [SDD process and open decisions](sdd-process.md)
+- [Admin ADRs](adr/)
 
-Пов’язані стандарти:
+Related standards:
 
-- [Індекс frontend rules](../../standards/README.md)
-- [Організація коду Admin](../../standards/admin/admin-code-organization.md)
-- [Інтерфейс Admin](../../standards/admin/admin-ui.md)
-- [API та data rules](../../standards/shared/api-data-rules.md)
+- [Frontend rules index](../../standards/README.md)
+- [Admin code organization](../../standards/admin/admin-code-organization.md)
+- [Admin UI](../../standards/admin/admin-ui.md)
+- [API and data rules](../../standards/shared/api-data-rules.md)
 - [Testing rules](../../standards/shared/testing-rules.md)
 - [Delivery rules](../../standards/shared/delivery-rules.md)

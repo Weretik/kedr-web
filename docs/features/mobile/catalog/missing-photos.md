@@ -1,12 +1,12 @@
-# Товари без фото Mobile
+# Mobile Products Without Photos
 
-**Сценарій:** перегляд товарів без доступних зображень і перехід до деталей. [SDD](../../../specs/mobile/profile/001-products-missing-photos/README.md).
+**Scenario:** view products without available images and open their details. [SDD](../../../specs/mobile/profile/001-products-missing-photos/README.md).
 
-- [(tabs)/profile.tsx](../../../../apps/mobile/src/app/%28tabs%29/profile.tsx) зараз підключає [MissingPhotoProductsScreen](../../../../libs/mobile/catalog/feature/src/screens/missing-photo-products-screen.tsx); профіль користувача цим маршрутом не реалізовано.
-- [Controller](../../../../libs/mobile/catalog/feature/src/hooks/use-missing-photo-products-controller.ts) керує завантаженням та діями; [content](../../../../libs/mobile/catalog/feature/src/components/missing-photo-products-content.tsx) повторно використовує каталогові UI-компоненти.
-- [Запит](../../../../libs/mobile/catalog/data-access/src/api/missing-photo-products.requests.ts) і mapper переводять `GET /api/admin/products/missing-photos` у модель товару. [Consumer contract](../../../contracts/catalog/missing-photo-products.md); перехід — до [деталей](product-details.md).
+- [(tabs)/profile.tsx](../../../../apps/mobile/src/app/%28tabs%29/profile.tsx) currently connects [MissingPhotoProductsScreen](../../../../libs/mobile/catalog/feature/src/screens/missing-photo-products-screen.tsx); the user profile is not implemented on this route.
+- The [controller](../../../../libs/mobile/catalog/feature/src/hooks/use-missing-photo-products-controller.ts) manages loading and actions; [content](../../../../libs/mobile/catalog/feature/src/components/missing-photo-products-content.tsx) reuses catalog UI components.
+- The [request](../../../../libs/mobile/catalog/data-access/src/api/missing-photo-products.requests.ts) and mapper convert `GET /api/admin/products/missing-photos` into the product model. [Consumer contract](../../../contracts/catalog/missing-photo-products.md); transition to [details](product-details.md).
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -18,18 +18,18 @@ Model --> Content["missing-photo-products-content"]
 Content --> Details["Product details"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 apps/mobile/src/app/
-└── (tabs)/profile.tsx  # точка входу маршруту
+└── (tabs)/profile.tsx  # route entry point
 
 libs/mobile/catalog/
-├── data-access/src/api/missing-photo-products.requests.ts  # запит до API
+├── data-access/src/api/missing-photo-products.requests.ts  # API request
 └── feature/src/
-    ├── components/missing-photo-products-content.tsx  # компонент інтерфейсу
-    ├── hooks/use-missing-photo-products-controller.ts  # стан і дії екрана
-    └── screens/missing-photo-products-screen.tsx  # екран фічі
+    ├── components/missing-photo-products-content.tsx  # UI component
+    ├── hooks/use-missing-photo-products-controller.ts  # screen state and actions
+    └── screens/missing-photo-products-screen.tsx  # feature screen
 ```

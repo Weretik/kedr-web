@@ -7,22 +7,18 @@
 - Generated response: `operations['getAdminCategories']['responses'][200]['content']['application/json']`
 - Consumers: Mobile product catalog, Admin products table
 
-`GET /api/categories` не має параметрів і повертає весь depth-first список без
-pagination. Поточний OpenAPI явно задає `security: []`, але route позначений як
-catalog administration. Перед public rollout політику доступу має підтвердити
-власник backend contract.
+`GET /api/categories` takes no parameters and returns the full depth-first list without pagination. The current OpenAPI explicitly sets `security: []`, but the route is marked for catalog administration. The backend contract owner must confirm the access policy before public rollout.
 
 ## Consumer mapping
 
-`@mobile/catalog/data-access` тримає generated response на transport boundary і
-перетворює його на `CatalogCategoryOption[]`. Mapper:
+`@mobile/catalog/data-access` keeps the generated response at the transport boundary and converts it to `CatalogCategoryOption[]`. The mapper:
 
-- вибирає localized label з `shortNameUk` або `shortNameRu`;
-- будує дерево за `parentId`;
-- сортує siblings за `sortOrder`, потім `id`;
-- не передає transport DTO у feature або UI.
+- selects a localized label from `shortNameUk` or `shortNameRu`;
+- builds the tree by `parentId`;
+- sorts siblings by `sortOrder`, then `id`;
+- does not pass transport DTOs to feature or UI.
 
-`@admin/products/data-access` перетворює відповідь на опції з ID, українською назвою, глибиною та пошуковим текстом із назв предків за `parentId`. Для категорій публічного каталогу назви звірено з його українськими підписами; для інших використовується `shortNameUk` відповіді. MUI Autocomplete показує вкладеність відступами, дозволяє вибрати будь-який рівень і передає лише ID до спискового API.
+`@admin/products/data-access` converts the response to options with ID, Ukrainian name, depth, and search text built from ancestor names by `parentId`. For public catalog categories, names are matched to their Ukrainian labels; for others, the response's `shortNameUk` is used. MUI Autocomplete shows nesting with indentation, allows selecting any level, and passes only the ID to the list API.
 
 ```http
 GET /api/categories
@@ -31,10 +27,7 @@ Accept: application/json
 
 ## Behavior and limitations
 
-- Порожній масив є коректною відповіддю.
-- Operation не описує окремі error responses, тому runtime transport errors
-  нормалізуються за [integration rules](../integration.md).
-- Не додавайте client pagination, query filters або нові cache semantics без
-  зміни provider contract.
-- Invalid tree references мають оброблятися mapper-ом без створення циклів;
-  transport values не можна вигадувати або виправляти в UI.
+- An empty array is a valid response.
+- The operation does not describe separate error responses, so runtime transport errors are normalized according to the [integration rules](../integration.md).
+- Do not add client pagination, query filters, or new cache semantics without changing the provider contract.
+- Invalid tree references must be handled by the mapper without creating cycles; transport values must not be invented or corrected in the UI.

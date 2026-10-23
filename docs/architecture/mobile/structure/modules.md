@@ -1,15 +1,15 @@
-# Наявні модулі Mobile
+# Existing Mobile modules
 
-Це карта Nx projects, які зараз є в репозиторії, а не план майбутніх модулів. Джерело — `project.json` у зазначених каталогах і фактичні файли Expo Router; актуальні targets перевіряй у Nx та [frontend inventory](../../frontend-inventory.md). Цільові межі описані в [domains.md](domains.md).
+This is a map of Nx projects currently in the repository, not a plan for future modules. Sources are `project.json` in the listed directories and the actual Expo Router files; check current targets in Nx and the [frontend inventory](../../frontend-inventory.md). Target boundaries are described in [domains.md](domains.md).
 
-| Область       | Наявні Nx projects                                   | Відповідальність                                             |
-| ------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
-| Застосунок    | `apps/mobile`                                        | Expo Router, layouts і композиція застосунку                 |
-| Core          | `libs/mobile/core/{shell,connectivity}`              | Провайдери, навігаційна оболонка та стан мережі              |
-| Mobile shared | `libs/mobile/shared/{api-client,config,model}`       | Спільні для Mobile API, конфігурація й моделі                |
-| Catalog       | `libs/mobile/catalog/{feature,data-access,model,ui}` | Каталог і деталі товару                                      |
-| Cart          | `libs/mobile/cart/{feature,data-access,model,ui}`    | Кошик                                                        |
-| Orders        | `libs/mobile/orders/{feature,data-access,model,ui}`  | Замовлення та їх деталі                                      |
-| Customers     | `libs/mobile/customers/{data-access,model,ui}`       | Дані й презентація клієнта; окремого `feature` project немає |
+| Area          | Existing Nx projects                                 | Responsibility                                                |
+| ------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
+| Application   | `apps/mobile`                                        | Expo Router, layouts, and application composition             |
+| Core          | `libs/mobile/core/{shell,connectivity}`              | Providers, navigation shell, and network state                |
+| Mobile shared | `libs/mobile/shared/{api-client,config,model}`       | Mobile-wide API, configuration, and models                    |
+| Catalog       | `libs/mobile/catalog/{feature,data-access,model,ui}` | Catalog and product details                                   |
+| Cart          | `libs/mobile/cart/{feature,data-access,model,ui}`    | Cart                                                          |
+| Orders        | `libs/mobile/orders/{feature,data-access,model,ui}`  | Orders and their details                                      |
+| Customers     | `libs/mobile/customers/{data-access,model,ui}`       | Customer data and presentation; no separate `feature` project |
 
-Файлові маршрути в `apps/mobile/src/app` зараз містять вкладки `catalog`, `cart`, `orders`, `profile`, а також `product/[productSlug]` і `orders/[orderId]`. Це фактична карта файлів, а не підтвердження готовності всіх бізнес-сценаріїв. `core/auth` і заплановані route groups створюй лише за прийнятою задачею. Спільні для різних клієнтів `libs/shared/*` обліковує [frontend inventory](../../frontend-inventory.md).
+File-based routes in `apps/mobile/src/app` currently include the `catalog`, `cart`, `orders`, and `profile` tabs, as well as `product/[productSlug]` and `orders/[orderId]`. This is a map of actual files, not confirmation that every business scenario is complete. Create `core/auth` and planned route groups only for an accepted task. The [frontend inventory](../../frontend-inventory.md) tracks `libs/shared/*`, which is shared across clients.

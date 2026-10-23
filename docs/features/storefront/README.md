@@ -1,15 +1,15 @@
-# Фічі Storefront Angular
+# Storefront Angular features
 
-**Джерело маршрутів:** [app.routes.ts](../../../apps/storefront/src/app/app.routes.ts). Шляхи нижче мають префікс `/uk` або `/ru`. Кошик відкривається в оболонці, а не окремим маршрутом.
+**Route source:** [app.routes.ts](../../../apps/storefront/src/app/app.routes.ts). Paths below have the `/uk` or `/ru` prefix. The cart opens in the shell rather than at a separate route.
 
-| Модуль                                   | Фічі                                              |
-| ---------------------------------------- | ------------------------------------------------- |
-| [Каталог і покупка](catalog/README.md)   | Категорії, товари, кошик, оформлення              |
-| [Акаунт](account/README.md)              | Вхід, кабінет                                     |
-| [Контент і навігація](content/README.md) | Статті, сторінки компанії, контакти, регіони, опт |
-| Оболонка                                 | [Сторінка 404](not-found.md)                      |
+| Module                                      | Features                                              |
+| ------------------------------------------- | ----------------------------------------------------- |
+| [Catalog and shopping](catalog/README.md)   | Categories, products, cart, checkout                  |
+| [Account](account/README.md)                | Sign-in, account area                                 |
+| [Content and navigation](content/README.md) | Articles, company pages, contacts, regions, wholesale |
+| Shell                                       | [404 page](not-found.md)                              |
 
-## Наявний код без активного маршруту
+## Existing code without an active route
 
-- [Home](home.md): бібліотека й власний `homeRoutes` є, але `app.routes.ts` їх не імпортує; кореневий маршрут зараз обробляють `categoriesRoutes`.
-- [In-stock widget](widgets.md): бібліотека існує, але її компонент не імпортується в застосунок.
+- [Home](home.md): the library and its own `homeRoutes` exist, but `app.routes.ts` does not import them; `categoriesRoutes` currently handles the root route.
+- [In-stock widget](widgets.md): the library exists, but its component is not imported into the application.

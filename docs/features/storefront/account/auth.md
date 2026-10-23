@@ -1,11 +1,11 @@
-# Вхід Storefront
+# Storefront Sign-in
 
-**Вхід:** [authRoutes](../../../../libs/storefront/feature/auth/src/lib/lib.routes.ts) відкриває `/login`.
+**Entry point:** [authRoutes](../../../../libs/storefront/feature/auth/src/lib/lib.routes.ts) opens `/login`.
 
-- [Login](../../../../libs/storefront/feature/auth/src/lib/pages/login/login.ts) валідує email/пароль, викликає `AuthService` зі [shared/auth](../../../../libs/shared/auth/src/index.ts), читає `SessionStore` і переводить користувача до кабінету або перевіреного `returnUrl`.
-- Контракт і cookie/refresh правила — [Session](../../../contracts/identity/session.md). Захищений споживач сесії — [кабінет](cabinet.md).
+- [Login](../../../../libs/storefront/feature/auth/src/lib/pages/login/login.ts) validates email/password, calls `AuthService` from [shared/auth](../../../../libs/shared/auth/src/index.ts), reads `SessionStore`, and takes the user to the cabinet or a validated `returnUrl`.
+- The contract and cookie/refresh rules are in [Session](../../../contracts/identity/session.md). The [cabinet](cabinet.md) is a protected session consumer.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -13,19 +13,19 @@ Route["authRoutes"] --> Login["Login"]
 Login --> Service["AuthService"]
 Service --> Session["SessionStore"]
 Session --> Cabinet["Cabinet"]
-Login --> Return["Перевірений returnUrl"]
+Login --> Return["Validated returnUrl"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 libs/shared/auth/
-└── src/index.ts  # публічний API бібліотеки
+└── src/index.ts  # library public API
 
 libs/storefront/feature/auth/
 └── src/lib/
-    ├── pages/login/login.ts  # сторінка та композиція UI
-    └── lib.routes.ts  # маршрути фічі
+    ├── pages/login/login.ts  # page and UI composition
+    └── lib.routes.ts  # feature routes
 ```

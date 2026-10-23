@@ -1,15 +1,7 @@
 # SDD process for Mobile React Native
 
-Створюй нову feature у `docs/specs/mobile/<domain>/<NNN>-<feature-slug>/` за [правилами постачання](../../../standards/shared/delivery-rules.md). У design застосовуй React Native-specific рішення з [архітектури Mobile](../README.md);
-visual/interaction документи входять у цей самий варіант.
+Create a new feature under `docs/specs/mobile/<domain>/<NNN>-<feature-slug>/` according to the [delivery rules](../../../standards/shared/delivery-rules.md). Apply React Native-specific decisions from the [Mobile architecture](../README.md) in the design; visual/interaction documents are part of the same variant.
 
-Mobile-specific planning має назвати реальні Nx projects у `apps/mobile` і
-`libs/mobile`, тонкі Expo Router routes, межі `feature/ui/data-access/model`,
-safe area/keyboard/device risks, deep links, permissions, storage, native
-adapters та Expo Go/development-build constraint. Сценарії залишаються мовою
-observable behavior; ці технічні деталі належать у design і task-файли.
+Mobile-specific planning must name the actual Nx projects in `apps/mobile` and `libs/mobile`, thin Expo Router routes, `feature/ui/data-access/model` boundaries, safe-area/keyboard/device risks, deep links, permissions, storage, native adapters, and the Expo Go/development-build constraint. Scenarios remain in terms of observable behavior; these technical details belong in design and task files.
 
-Test level та команди обирай за
-[testing rules](../../../standards/shared/testing-rules.md), а device-specific перевірки
-узгоджуй зі [стратегією Mobile testing](testing.md). Існуючі Mobile
-специфікації мігруй поступово без зміни завершених ID чи evidence.
+Choose test level and commands according to the [testing rules](../../../standards/shared/testing-rules.md), and coordinate device-specific checks with the [Mobile testing strategy](testing.md). Migrate existing Mobile specifications gradually without changing completed IDs or evidence.

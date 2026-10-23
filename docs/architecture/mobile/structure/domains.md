@@ -1,11 +1,8 @@
-# Домени та структура бібліотек Mobile
+# Mobile domains and library structure
 
-## Цільові межі та фактичні модулі
+## Target boundaries and actual modules
 
-Поточні `catalog`, `cart`, `orders`, `customers`, `core` і `shared` наведені в
-[карті наявних модулів](modules.md). Схема нижче і наступний приклад `catalog`
-показують принцип розподілу відповідальності; вони не є повним переліком
-реалізованих бібліотек.
+The current `catalog`, `cart`, `orders`, `customers`, `core`, and `shared` are listed in the [map of existing modules](modules.md). The diagram below and the following `catalog` example show the principle for assigning responsibility; they are not a complete list of implemented libraries.
 
 ```text
 libs/mobile/
@@ -25,40 +22,30 @@ libs/mobile/
     └── ui/
 ```
 
-Нові бібліотеки створюються лише тоді, коли з'являється їхня відповідальність.
-Нові бібліотеки не створюються наперед. `orders` уже має власні бібліотеки;
-окремого `profile` feature project у поточній карті немає.
+Create new libraries only when their responsibility appears; do not create them in advance. `orders` already has its own libraries; the current map has no separate `profile` feature project.
 
 ## `mobile/core`
 
-`shell` містить мобільний каркас: глобальні providers, Redux store, mapping
-corporate Paper theme, safe-area `AppScreen`, tab/stack composition, загальні
-headers та навігаційні конфігурації, що не належать окремому домену. `auth` володіє життєвим
-циклом сесії та адаптером Expo SecureStore. `connectivity` інкапсулює NetInfo і
-надає застосунку нормалізований online/offline-стан.
+`shell` contains the mobile shell: global providers, Redux store, corporate Paper theme mapping, safe-area `AppScreen`, tab/stack composition, shared headers, and navigation configurations that do not belong to a specific domain. `auth` owns session lifecycle and the Expo SecureStore adapter. `connectivity` encapsulates NetInfo and provides normalized online/offline state to the app.
 
-`core` не містить товарів, замовлень або іншої доменної логіки.
+`core` does not contain products, orders, or other domain logic.
 
-`shared/ui` містить лише повторно використовувані presentational-компоненти та
-не володіє темою, store, safe-area shell або глобальними providers.
+`shared/ui` contains only reusable presentational components and does not own the theme, store, safe-area shell, or global providers.
 
-## Бізнес-домени
+## Business domains
 
-Домен розкриває публічний API лише через кореневий `src/index.ts`. Deep imports
-до внутрішніх модулів іншого домену заборонені.
+A domain exposes its public API only through its root `src/index.ts`. Deep imports into another domain's internal modules are prohibited.
 
-| Шар           | Відповідальність                                                                | Не повинен містити                                         |
-| ------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `feature`     | Мобільний сценарій, екран, orchestration, локальний стан                        | HTTP-деталі, спільні UI-примітиви, Expo Router route-файли |
-| `data-access` | RTK Query endpoints, DTO, мапінг, валідація відповіді, cache tags               | JSX, маршрути, Paper-компоненти                            |
-| `model`       | Доменні типи, інваріанти, чисті перетворення, Zod-схеми, якщо вони доменні      | React, HTTP, Expo API                                      |
-| `ui`          | Повторно використовувані domain presentational-компоненти на React Native Paper | API, router, server state                                  |
+| Layer         | Responsibility                                                                | Must not contain                                            |
+| ------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `feature`     | Mobile scenario, screen, orchestration, local state                           | HTTP details, shared UI primitives, Expo Router route files |
+| `data-access` | RTK Query endpoints, DTOs, mapping, response validation, cache tags           | JSX, routes, Paper components                               |
+| `model`       | Domain types, invariants, pure transformations, Zod schemas when domain-owned | React, HTTP, Expo APIs                                      |
+| `ui`          | Reusable domain presentation components based on React Native Paper           | API, router, server state                                   |
 
-Для маленького сценарію допускається почати з `feature` і `data-access`. `model`
-та `ui` виділяються, коли типи/логіка або компоненти починають повторно
-використовуватися. Це та сама еволюційна модель, що в Admin.
+A small scenario may start with `feature` and `data-access`. Extract `model` and `ui` when types/logic or components begin to be reused. This is the same evolutionary model as Admin.
 
-## Приклад структури домену: `catalog`
+## Example domain structure: `catalog`
 
 ```text
 libs/mobile/catalog/
@@ -85,17 +72,10 @@ libs/mobile/catalog/
     └── states/
 ```
 
-`CatalogScreen` компонує пошук, список, loading/empty/error стани та переходи.
-`data-access` повертає доменні моделі, а не API DTO. `ProductCard` належить
-`catalog/ui`, якщо його буде використано більше ніж в одному екрані домену.
+`CatalogScreen` composes search, list, loading/empty/error states, and navigation. `data-access` returns domain models, not API DTOs. `ProductCard` belongs in `catalog/ui` if it is used in more than one screen in the domain.
 
-## Спільний код між клієнтами
+## Code shared between clients
 
-Код не переноситься до кореневого `libs/shared` лише через назву «shared».
-Спочатку він залишається у `libs/mobile` або `libs/admin`. Спільна бібліотека
-допускається лише для чистих TypeScript-контрактів, DTO, Zod-схем або утиліт, які
-фактично використовуються щонайменше двома клієнтами й не мають залежностей від
-React DOM, MUI, React Native, Expo чи браузерних API.
+Do not move code to root `libs/shared` only because it is called “shared”. Keep it in `libs/mobile` or `libs/admin` first. A shared library is allowed only for pure TypeScript contracts, DTOs, Zod schemas, or utilities actually used by at least two clients and without dependencies on React DOM, MUI, React Native, Expo, or browser APIs.
 
-UI, навігація, auth storage та HTTP runtime конфігурація залишаються
-platform-specific, навіть якщо виконують схожу роль у web і mobile.
+UI, navigation, auth storage, and HTTP runtime configuration remain platform-specific even if they play similar roles on web and mobile.

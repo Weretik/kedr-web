@@ -1,28 +1,26 @@
-# Архітектура Storefront
+# Storefront architecture
 
-**Область:** Angular-застосунок `apps/storefront` у Nx-монорепозиторії.  
-**Підхід:** feature-first із бібліотеками за ролями та локалізованими маршрутами.
+**Scope:** Angular application `apps/storefront` in the Nx monorepo.\
+**Approach:** feature-first, with role-based libraries and localized routes.
 
-Цей розділ є архітектурним контрактом Storefront. Він описує межі бібліотек,
-композицію Angular-застосунку, стан, HTTP-взаємодію та рішення, характерні саме
-для storefront. Документи Admin не застосовуються до цього застосунку.
+This section is the Storefront architecture contract. It describes library boundaries, Angular application composition, state, HTTP interactions, and decisions specific to Storefront. Admin documents do not apply to this application.
 
-## Карта документів
+## Document map
 
-### Структура й залежності
+### Structure and dependencies
 
-- [Наявні модулі та feature-бібліотеки](structure/modules.md)
-- [Домени та бібліотеки](structure/domains.md)
-- [Правила залежностей](structure/dependencies.md)
+- [Existing modules and feature libraries](structure/modules.md)
+- [Domains and libraries](structure/domains.md)
+- [Dependency rules](structure/dependencies.md)
 
-### Робота застосунку
+### Application runtime
 
-- [Застосунок і маршрутизація](runtime/application.md)
-- [Стан, API та форми](runtime/state-and-api.md)
+- [Application and routing](runtime/application.md)
+- [State, API, and forms](runtime/state-and-api.md)
 
-### Процес і рішення
+### Process and decisions
 
-- [Зафіксовані рішення](decisions.md)
-- [SDD-процес Storefront](sdd-process.md)
+- [Recorded decisions](decisions.md)
+- [Storefront SDD process](sdd-process.md)
 
-Повна карта фронтенд-архітектури: [README](../../README.md).
+Full frontend architecture map: [README](../../README.md).

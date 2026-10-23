@@ -1,20 +1,18 @@
-# ADR-0001: Expo Router для Mobile
+# ADR-0001: Expo Router for Mobile
 
-**Статус:** Прийнято  
-**Дата:** 2026-07-27
+**Status:** Accepted\
+**Date:** 2026-07-27
 
-## Контекст
+## Context
 
-Застосунок створюється на Expo та потребує нативної навігації, deep links і
-передбачуваного розміщення маршрутів.
+The application is built with Expo and needs native navigation, deep links, and predictable route placement.
 
-## Рішення
+## Decision
 
-Використовуємо Expo Router. Файли в `apps/mobile/src/app` визначають маршрути і
-layouts; вони залишаються тонкими адаптерами до domain feature-бібліотек.
+Use Expo Router. Files in `apps/mobile/src/app` define routes and layouts; they remain thin adapters to domain feature libraries.
 
-## Наслідки
+## Consequences
 
-- Маршрути, route groups і dynamic segments визначаються файловою структурою.
-- Навігацію не дублюємо ручною картою React Navigation.
-- У `src/app` не розміщуємо компоненти, hooks або тести, що не є маршрутами.
+- Routes, route groups, and dynamic segments are defined by the file structure.
+- Do not duplicate navigation with a manually maintained React Navigation map.
+- Do not place non-route components, hooks, or tests in `src/app`.

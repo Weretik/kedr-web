@@ -1,20 +1,17 @@
-# ADR-0004: Відкладена автентифікація
+# ADR-0004: Deferred authentication
 
-**Статус:** Прийнято  
-**Дата:** 2026-07-27
+**Status:** Accepted\
+**Date:** 2026-07-27
 
-## Контекст
+## Context
 
-Перший Mobile-інкремент показує публічний каталог. Авторизаційний сценарій і
-контракт refresh token ще не входять до погодженого обсягу.
+The first Mobile increment shows a public catalog. An authentication scenario and refresh-token contract are not yet part of the agreed scope.
 
-## Рішення
+## Decision
 
-У першому релізі не створюємо login, protected routes, token interceptor або
-SecureStore persistence. `core/auth` не генерується наперед.
+Do not create login, protected routes, a token interceptor, or SecureStore persistence in the first release. Do not generate `core/auth` in advance.
 
-## Наслідки
+## Consequences
 
-- Каталог працює з публічним API або контрольованими моками.
-- При додаванні сесії створюється окремий ADR із SecureStore, refresh/logout,
-  protected route groups і очищенням cache під час logout.
+- The catalog uses a public API or controlled mocks.
+- When a session is added, create a separate ADR covering SecureStore, refresh/logout, protected route groups, and cache clearing during logout.

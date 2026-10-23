@@ -1,80 +1,56 @@
 # Delivery rules
 
-Це джерело readiness, traceability та definition of done для frontend
-feature. Порядок виконання визначають граф задач, evidence конкретної feature
-та [правила тестування](testing-rules.md).
+This is the source for frontend feature readiness, traceability, and definition of done. The task graph, feature-specific evidence, and [testing rules](testing-rules.md) determine the execution order.
+
+Prepare an SDD before implementing a new feature or changing the scenarios, UI behavior, or contracts of an existing feature. For an existing feature, update its current specification or add a revision in its directory; do not duplicate the entire SDD. Maintain `R-*`/`SC-*`/`TS-*` and traceability for the changed scope.
+
+For a local internal fix that restores already documented behavior without changing a scenario, contract, or module boundary, a short description of the problem, fix, and focused verification result in the task or report is enough. Open historical SDD revisions only for questions the current specification does not answer.
 
 ## Specification readiness
 
-Feature готова до реалізації, коли:
+Keep a feature's current scope and navigation status in its `README.md`, rules and scenarios in current requirements, execution evidence in task files, and `traceability.md` as a brief matrix of links and statuses. Revisions and earlier plans are history: link to them from `README.md`, but do not duplicate current status in them or reread them without a specific need.
 
-- scope і observable outcome погоджені;
-- бізнес-правила мають стабільні `R-*` ID;
-- acceptance-сценарії мають стабільні `SC-*` ID та Given/When/Then без назв
-  компонентів, hooks, stores, бібліотек або файлів;
-- відкриті product decisions позначені як blockers, а не вигадані;
-- кожен сценарій має risk-based test level або обґрунтоване `n/a`;
-- роботу поділено на `TS-*` з однією implementation/verification
-  responsibility та `EN-*` для shared prerequisites;
-- кожна задача має `Covers` або `Enables`, `Depends on`, точні шляхи, test
-  level, `Work`, `Evidence` і `Checkpoint`;
-- `traceability.md` пов'язує весь scope без сирітських сценаріїв або задач.
-- architecture baseline порівнює фактичні Nx projects/tags/constraints,
-  dependency graph, aliases/public APIs, approved data stack і test targets із
-  applicable rules; кожна розбіжність має `AF-*` та prerequisite `EN-*`/`RM-*`.
-- `design/frontend.md` містить компактну заплановану карту ключових файлів і
-  каталогів фічі: точні шляхи, одну роль кожного, стан `наявний` чи
-  `запланований` і рішення щодо поділу зачеплених перевантажених файлів за
-  [правилами організації Admin](../admin/admin-code-organization.md), якщо це Admin-фіча.
+A feature is ready for implementation when:
+
+- its scope and observable outcome are agreed;
+- business rules have stable `R-*` IDs;
+- acceptance scenarios have stable `SC-*` IDs and Given/When/Then without component, hook, store, library, or file names;
+- open product decisions are marked as blockers rather than invented;
+- each scenario has a risk-based test level or justified `n/a`;
+- work is divided into `TS-*` tasks with one implementation or verification responsibility and `EN-*` tasks for shared prerequisites;
+- each task has `Covers` or `Enables`, `Depends on`, exact paths, test level, `Work`, `Evidence`, and `Checkpoint`;
+- `traceability.md` covers the entire scope without orphaned scenarios or tasks;
+- the architecture baseline compares actual Nx projects/tags/constraints, dependency graph, aliases/public APIs, approved data stack, and test targets with applicable rules; each discrepancy has an `AF-*` and prerequisite `EN-*`/`RM-*`;
+- `design/frontend.md` has a compact planned map of key feature files and directories: exact paths, one role each, existing or planned status, and a decision about splitting affected overloaded files under the [Admin organization rules](../admin/admin-code-organization.md) for an Admin feature.
 
 ## Traceability
 
-`traceability.md` містить тільки зв'язок `SC → TS/EN → tests → evidence` і
-статус. Бізнес-правила живуть у `requirements/`, технічний зміст — у task та
-design-файлах, докладні результати — у відповідному task-файлі.
+`traceability.md` contains only the `SC → TS/EN → tests → evidence` links and status. Business rules live in `requirements/`, technical content in task and design files, and detailed results in the relevant task file.
 
-Після прийняття ID стабільні. Не перенумеровуй завершені legacy tasks і не
-переписуй історичне evidence без необхідності. Для зміненої старої feature
-мігруй лише новий/змінений scope, зберігаючи завершені ID, task-файли
-та історичне evidence.
+IDs remain stable after acceptance. Do not renumber completed legacy tasks or rewrite historical evidence without a need. When changing an older feature, migrate only the new or changed scope while preserving completed IDs, task files, and historical evidence.
 
 ## Execution readiness
 
-`TS-*` або `EN-*` готова, якщо її dependencies завершені, responsibility не
-перетинається з іншою задачею, paths існують або однозначно заплановані, а
-checkpoint можна перевірити доступним tooling. Велика фаза є orchestration
-файлом; вона не замінює малі task-файли.
+A `TS-*` or `EN-*` task is ready when its dependencies are complete, its responsibility does not overlap another task, paths exist or are planned unambiguously, and its checkpoint can be verified with available tooling. A large phase is an orchestration file; it does not replace small task files.
 
-Якщо користувач дозволив усю feature, фазу або набір `SC-*`, AI сам переходить
-між усіма готовими task-файлами цього scope. Окрема команда для кожної
-підфази не потрібна.
+If the user authorizes an entire feature, phase, or set of `SC-*` scenarios, the AI proceeds through all ready task files in that scope. A separate command for each subphase is unnecessary.
 
 ## Definition of done
 
-Scope завершено, коли:
+A new feature card in `docs/features/<app>/<module>/` briefly records its route, boundaries, state and data flow, contracts, SDD link, Mermaid diagram of verified relationships, and tree of actual directories with their roles. Update the index and affected card after a substantial change to these facts; do not duplicate requirements or fields from the specification or create a subdirectory for a single page.
 
-- усі in-scope `SC-*` verified або явно deferred із причиною й owner;
-- усі required `TS-*`/`EN-*` пройшли checkpoint;
-- для нового testable behavior записано Red → Green → Refactor → Regression;
-- contracts, docs і фактична поведінка узгоджені;
-- нова реалізована фіча має коротку архітектурну сторінку з Mermaid-схемою зв'язків, деревом фактичних каталогів і основних файлів із поясненням ролей та запис у [каталозі фіч](../../features/README.md); істотна зміна маршруту, стану, API або меж модулів оновлює відповідну сторінку, схему, дерево та індекс;
-- мінімальні перевірки змінених частин за [правилами обсягу](testing-rules.md#обсяг-перевірок-під-час-реалізації)
-  пройшли або мають точну перешкоду; повний прогін проєкту, coverage, production
-  build, E2E та повний аудит виконують лише за прямим запитом користувача;
-- infrastructure smoke позначено як перевірку harness, а не як evidence
-  бізнес-сценарію;
-- `traceability.md` посилається на фактичні tests/evidence;
-- delivery report містить scope, змінені файли, evidence, невиконані перевірки
-  та реальні residual risks.
-- зачеплені архітектурні межі переглянуто після останньої implementation-зміни;
-  повний code audit проводять лише за прямим запитом користувача, а підтверджені
-  in-scope `AF-*` мають статус `verified` або явно описану перешкоду.
-- нові й змінені файли фічі переглянуто за відповідальностями: самостійні
-  форми, таблиці, діалоги, стан, запити й мапінг мають відповідних власників;
-  заплановану карту звірено з фактичним деревом на сторінці фічі. Розмір файла
-  сам собою не вимагає поділу.
+Scope is complete when:
 
-`open`, `blocked` або `planned` architecture finding блокує delivery. Статус
-`deferred-approved` допустимий лише з явним погодженням, owner, окремою SDD/task
-і доказом, що finding не є prerequisite поточного dependency chain. `fixed` до
-final regression не є завершеним статусом.
+- all in-scope `SC-*` scenarios are verified or explicitly deferred with a reason and owner;
+- all required `TS-*`/`EN-*` tasks pass their checkpoints;
+- Red → Green → Refactor → Regression is recorded for new testable behavior;
+- contracts, documentation, and actual behavior agree;
+- a new implemented feature has a brief architecture page with a Mermaid relationship diagram, a tree of actual directories and key files with their roles, and an entry in the [feature catalog](../../features/README.md); a substantial change to route, state, API, or module boundaries updates the relevant page, diagram, tree, and index;
+- the minimum checks for changed parts under the [verification scope rules](testing-rules.md#verification-scope-during-implementation) pass or have a specific blocker; a full project suite, coverage, production build, E2E, and full audit run only at the user's explicit request;
+- an infrastructure smoke check is marked as harness verification rather than business scenario evidence;
+- `traceability.md` links to actual tests and evidence;
+- the delivery report includes scope, changed files, evidence, unrun checks, and real residual risks;
+- affected architecture boundaries are reviewed after the final implementation change; a full code audit runs only at the user's explicit request, and confirmed in-scope `AF-*` findings are verified or have a clearly described blocker;
+- new and changed feature files are reviewed by responsibility: independent forms, tables, dialogs, state, requests, and mapping have appropriate owners; the planned map is compared with the actual tree on the feature page. File size alone does not require splitting.
+
+An `open`, `blocked`, or `planned` architecture finding blocks delivery. `deferred-approved` is allowed only with explicit approval, an owner, a separate SDD/task, and evidence that the finding is not a prerequisite of the current dependency chain. `fixed` before final regression is not a completed status.

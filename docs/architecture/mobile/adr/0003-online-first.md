@@ -1,20 +1,18 @@
-# ADR-0003: Online-first стратегія першого релізу
+# ADR-0003: Online-first strategy for the first release
 
-**Статус:** Прийнято  
-**Дата:** 2026-07-27
+**Status:** Accepted\
+**Date:** 2026-07-27
 
-## Контекст
+## Context
 
-Перший сценарій — демонстрація каталогу. Немає підтвердженої вимоги працювати з
-каталогом або змінами повністю без мережі.
+The first scenario is a catalog demonstration. There is no confirmed requirement to use the catalog or make changes completely offline.
 
-## Рішення
+## Decision
 
-Застосунок працює online-first: RTK Query зберігає дані лише в пам'яті, NetInfo
-використовується для UX, а SQLite і AsyncStorage не додаються.
+The application is online-first: RTK Query keeps data in memory only, NetInfo is used for UX, and SQLite and AsyncStorage are not added.
 
-## Наслідки
+## Consequences
 
-- Екрани реалізують offline/error state та явну повторну спробу запиту.
-- Дані не гарантуються після перезапуску застосунку.
-- SQLite, persistent cache, sync queue та конфлікти потребують окремого ADR.
+- Screens implement offline/error states and an explicit request retry.
+- Data is not guaranteed to remain after restarting the application.
+- SQLite, persistent cache, sync queue, and conflicts require a separate ADR.

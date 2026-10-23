@@ -1,36 +1,19 @@
-# Застосунок і маршрутизація Storefront
+# Storefront application and routing
 
-## Точка композиції
+## Composition point
 
-`apps/storefront/src/app/app.config.ts` збирає провайдери Angular: router, HTTP,
-ініціалізацію авторизації, логування, UI-провайдери та Transloco. Нові глобальні
-провайдери додаються лише сюди або до їхнього локального провайдера, а не до
-feature-компонентів.
+`apps/storefront/src/app/app.config.ts` assembles Angular providers: router, HTTP, auth initialization, logging, UI providers, and Transloco. Add new global providers only here or to their local provider, not to feature components.
 
-Кореневий компонент `App` відповідає за загальну оболонку `Header` і `Footer`,
-`router-outlet`, toast-повідомлення та SEO hreflang. Він не містить доменної
-логіки.
+The root `App` component owns the shared `Header` and `Footer` shell, `router-outlet`, toast notifications, and SEO hreflang. It contains no domain logic.
 
-## Рендеринг
+## Rendering
 
-Storefront використовує standalone Angular-компоненти та клієнтську гідратацію
-з event replay, incremental hydration і HTTP transfer cache. Зміни повинні бути
-безпечними для SSR: не звертатися до browser API поза browser-only гілками та
-не створювати побічні ефекти під час серверного рендерингу.
+Storefront uses standalone Angular components and client hydration with event replay, incremental hydration, and HTTP transfer cache. Keep changes SSR-safe: do not access browser APIs outside browser-only branches or create side effects during server rendering.
 
-Cloudflare Pages build використовує статичний output. Прямі посилання на
-динамічні сторінки товарів обслуговує `_worker.js`: він віддає Angular
-`index.csr.html` для HTML-навігації за локалізованим шляхом товару, зберігаючи
-адресу браузера. Це потрібно, бо Pages може віддати згенерований `404.html`
-зі статусом `200`; перевірка лише `assetResponse.status === 404` не спрацьовує.
-Режим цих сторінок задано в `app.routes.server.ts` як `RenderMode.Client`.
+The Cloudflare Pages build uses static output. `_worker.js` handles direct links to dynamic product pages: it serves Angular `index.csr.html` for HTML navigation to a localized product path while preserving the browser URL. This is necessary because Pages may return the generated `404.html` with status `200`; checking only `assetResponse.status === 404` does not work. These pages use `RenderMode.Client` in `app.routes.server.ts`.
 
-## Маршрути
+## Routes
 
-`app.routes.ts` збирає маршрути, які експортують feature-бібліотеки. Публічні
-маршрути мають префікс локалі: `/uk` або `/ru`; кореневий шлях перенаправляє на
-`/uk`, а невідомий шлях — на локалізовану сторінку `404` через
-`LocaleNavigationService`.
+`app.routes.ts` composes routes exported by feature libraries. Public routes have a locale prefix, `/uk` or `/ru`; the root path redirects to `/uk`, and unknown paths go to a localized `404` through `LocaleNavigationService`.
 
-Новий екран належить відповідній feature-бібліотеці та експортує свій масив
-`Route[]`. Кореневий router лише підключає цей масив до `localizedRoutes`.
+A new screen belongs in the relevant feature library and exports its `Route[]` array. The root router only connects that array to `localizedRoutes`.

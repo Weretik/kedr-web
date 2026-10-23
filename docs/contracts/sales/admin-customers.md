@@ -1,27 +1,27 @@
-# Контракт споживача Admin: клієнти
+# Admin customer consumer contract
 
-## Машинозчитуваний контракт
+## Machine-readable contract
 
 - OpenAPI: [`customer-read.openapi.yaml`](../openapi/sales/customer-read.openapi.yaml)
-- Операції: `getAdminCustomers`, `getAdminCustomerById`
-- Згенеровані транспортні типи: `operations['getAdminCustomers']` і `operations['getAdminCustomerById']`
-- Споживач: список і картка клієнтів Admin
-- Походження snapshot: [`SOURCE.md`](../openapi/SOURCE.md)
+- Operations: `getAdminCustomers`, `getAdminCustomerById`
+- Generated transport types: `operations['getAdminCustomers']` and `operations['getAdminCustomerById']`
+- Consumer: Admin customer list and detail card
+- Snapshot provenance: [`SOURCE.md`](../openapi/SOURCE.md)
 
-Обидві операції належать провайдеру. Чинний OpenAPI містить `security: []`, а контролер дозволяє анонімний доступ; відкриття production-доступу потребує рішення власника backend.
+Both operations belong to the provider. The current OpenAPI has `security: []`, and the controller allows anonymous access; enabling production access requires a decision by the backend owner.
 
-## Проєкція запиту
+## Request projection
 
-Оновлений provider OpenAPI приймає `page >= 1`, `pageSize` від 1 до 100, необов'язкові `searchTerm`, `counterpartyId`, `name`, `phone` (кожне текстове значення до 100 символів) і `sort`: `name`, `-name`, `counterpartyId`, `-counterpartyId`, `phone`, `-phone`. Типові значення провайдера: `page=1`, `pageSize=20`, `sort=name`. `searchTerm` шукає серед ID, імені й телефону; сервер обчислює кількість після умов і до пагінації. Admin UI використовує `searchTerm`, `sort`, `page`, `pageSize`: один пошук у панелі таблиці та сортування за ім'ям, телефоном або ID без фільтрів колонок. Інші параметри залишаються можливостями API. При зміні пошуку або сортування UI повертається на сторінку 1. Для деталей потрібний непорожній `counterpartyId` у шляху; URL списку зберігає пошук, сортування й пагінацію для повернення.
+The updated provider OpenAPI accepts `page >= 1`, `pageSize` from 1 to 100, optional `searchTerm`, `counterpartyId`, `name`, `phone` (each text value up to 100 characters), and `sort`: `name`, `-name`, `counterpartyId`, `-counterpartyId`, `phone`, `-phone`. Provider defaults are `page=1`, `pageSize=20`, and `sort=name`. `searchTerm` searches ID, name, and phone; the server calculates the count after filters and before pagination. The Admin UI uses `searchTerm`, `sort`, `page`, and `pageSize`: one search field in the table toolbar and sorting by name, phone, or ID, without column filters. Other parameters remain API capabilities. When search or sorting changes, the UI returns to page 1. Details require a non-empty `counterpartyId` in the path; the list URL preserves search, sorting, and pagination for return navigation.
 
-**Стан синхронізації 2026-10-20:** frontend snapshot має provenance backend commit `02429192d02e8e9252d06d6ea984affa0d216aa7` за `SOURCE.md`; він уже містить параметр `sort`. Поточну реалізацію серверного сортування звірено з backend commit `8fc8729`. Параметри запиту звіряються з `CustomerPageParams` через TypeScript `satisfies`, без assertion. Snapshot та generated types не редагувалися вручну.
+**Synchronization status 2026-10-20:** the frontend snapshot has provenance from backend commit `02429192d02e8e9252d06d6ea984affa0d216aa7` per `SOURCE.md`; it already includes the `sort` parameter. The current server-side sorting implementation was checked against backend commit `8fc8729`. Request parameters are checked against `CustomerPageParams` with TypeScript `satisfies`, without an assertion. The snapshot and generated types were not edited manually.
 
-## Проєкція відповіді та UI
+## Response projection and UI
 
-- Список: `pagedInfo` задає серверну пагінацію й кількість усіх знайдених клієнтів; рядки містять `counterpartyId`, `name` і nullable `phone`.
-- Деталі: ті самі поля ідентичності й контакту, а також `email`, `defaultPriceTypeId`, nullable `defaultPriceTypeName` і `categoryPriceTypes[{categoryId,categoryName,priceTypeId,priceTypeName}]`; обидві назви в елементі масиву також nullable. UI показує назву типу цін замість ID, а категорію — назвою та ID. Для `null` використовується «Назва недоступна».
-- Ці операції не повертають адрес, замовлень, історії платежів, аватара чи статусу клієнта.
-- `@admin/clients/data-access` перевіряє unknown-відповідь у runtime та переводить згенеровані транспортні типи в UI-моделі. Feature та UI не імпортують DTO.
-- `404` деталей означає стан «не знайдено». Мережеві/серверні помилки дають безпечну дію повтору без показу response body чи контактів у логах.
+- List: `pagedInfo` provides server pagination and the total number of matching customers; rows contain `counterpartyId`, `name`, and nullable `phone`.
+- Details: the same identity and contact fields, plus `email`, `defaultPriceTypeId`, nullable `defaultPriceTypeName`, and `categoryPriceTypes[{categoryId,categoryName,priceTypeId,priceTypeName}]`; both names in the array item are also nullable. The UI shows the price type name instead of the ID, and the category by name and ID. For `null`, it uses the UI text “Назва недоступна”.
+- These operations do not return addresses, orders, payment history, an avatar, or customer status.
+- `@admin/clients/data-access` validates unknown responses at runtime and maps generated transport types to UI models. Feature and UI do not import DTOs.
+- A detail `404` means “not found”. Network/server errors provide a safe retry action without showing the response body or logging contact details.
 
-Зміна полів провайдера чи правил доступу потребує оновлення канонічного backend OpenAPI, потім версіонованого snapshot і згенерованих типів за [contract workflow](../README.md).
+A change to provider fields or access rules requires updating the canonical backend OpenAPI first, then the versioned snapshot and generated types according to the [contract workflow](../README.md).

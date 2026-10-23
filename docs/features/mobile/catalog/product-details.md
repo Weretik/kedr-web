@@ -1,12 +1,12 @@
-# Деталі товару Mobile
+# Mobile Product Details
 
-**Сценарій:** перегляд товару й додавання до кошика. [SDD](../../../specs/mobile/catalog/004-product-details/README.md).
+**Scenario:** view a product and add it to the cart. [SDD](../../../specs/mobile/catalog/004-product-details/README.md).
 
-- [Route product slug](../../../../apps/mobile/src/app/product/[productSlug].tsx) підключає [ProductDetailsScreen](../../../../libs/mobile/catalog/feature/src/screens/product-details-screen.tsx).
-- [Controller](../../../../libs/mobile/catalog/feature/src/hooks/use-product-details-controller.ts) об'єднує завантаження й дію кошика; [UI](../../../../libs/mobile/catalog/ui/src/components/product-details/product-details-view.tsx) показує галерею, характеристики та стани.
-- [catalog.api](../../../../libs/mobile/catalog/data-access/src/api/catalog.api.ts), runtime schema і mapper формують [модель деталей](../../../../libs/mobile/catalog/model/src/entities/catalog-product-details.ts). Відкривається з [каталогу](catalog.md) та [товарів без фото](missing-photos.md).
+- The [product slug route](../../../../apps/mobile/src/app/product/[productSlug].tsx) connects [ProductDetailsScreen](../../../../libs/mobile/catalog/feature/src/screens/product-details-screen.tsx).
+- The [controller](../../../../libs/mobile/catalog/feature/src/hooks/use-product-details-controller.ts) combines loading and the cart action; the [UI](../../../../libs/mobile/catalog/ui/src/components/product-details/product-details-view.tsx) shows the gallery, specifications, and states.
+- [catalog.api](../../../../libs/mobile/catalog/data-access/src/api/catalog.api.ts), the runtime schema, and mapper produce the [details model](../../../../libs/mobile/catalog/model/src/entities/catalog-product-details.ts). Opened from the [catalog](catalog.md) and [products without photos](missing-photos.md).
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -18,19 +18,19 @@ Model --> UI["product-details-view"]
 Controller --> Cart["Cart action"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 apps/mobile/src/app/
-└── product/[productSlug].tsx  # точка входу маршруту
+└── product/[productSlug].tsx  # route entry point
 
 libs/mobile/catalog/
-├── data-access/src/api/catalog.api.ts  # запит до API
+├── data-access/src/api/catalog.api.ts  # API request
 ├── feature/src/
-│   ├── hooks/use-product-details-controller.ts  # стан і дії екрана
-│   └── screens/product-details-screen.tsx  # екран фічі
-├── model/src/entities/catalog-product-details.ts  # доменна модель
-└── ui/src/components/product-details/product-details-view.tsx  # компонент інтерфейсу
+│   ├── hooks/use-product-details-controller.ts  # screen state and actions
+│   └── screens/product-details-screen.tsx  # feature screen
+├── model/src/entities/catalog-product-details.ts  # domain model
+└── ui/src/components/product-details/product-details-view.tsx  # UI component
 ```

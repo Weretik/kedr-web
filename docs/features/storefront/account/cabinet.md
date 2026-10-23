@@ -1,28 +1,28 @@
-# Кабінет Storefront
+# Storefront Cabinet
 
-**Вхід:** [cabinetRoutes](../../../../libs/storefront/feature/cabinet/src/lib/lib.routes.ts) відкриває `/cabinet/dashboard` через `CabinetSidebar`.
+**Entry point:** [cabinetRoutes](../../../../libs/storefront/feature/cabinet/src/lib/lib.routes.ts) opens `/cabinet/dashboard` through `CabinetSidebar`.
 
-- [cabinetAuthGuard](../../../../libs/storefront/feature/cabinet/src/lib/guards/cabinet-auth.guard.ts) обмежує маршрут за станом сесії; неавторизований користувач переходить до [входу](auth.md).
-- [CabinetDashboardPage](../../../../libs/storefront/feature/cabinet/src/lib/pages/cabinet-dashboard/cabinet-dashboard.page.ts) показує демонстраційні статичні дані та quick actions; API-дані замовлень тут поки не підключені. Додаткові підмаршрути не налаштовані.
+- [cabinetAuthGuard](../../../../libs/storefront/feature/cabinet/src/lib/guards/cabinet-auth.guard.ts) restricts the route based on session state; an unauthenticated user is sent to [sign-in](auth.md).
+- [CabinetDashboardPage](../../../../libs/storefront/feature/cabinet/src/lib/pages/cabinet-dashboard/cabinet-dashboard.page.ts) shows static demo data and quick actions; order API data is not connected here yet. No additional child routes are configured.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
 Route["cabinetRoutes"] --> Guard["cabinetAuthGuard"]
 Guard --> Page["CabinetDashboardPage"]
-Guard --> Login["Login для неавторизованих"]
-Page --> Static["Статичні демодані"]
+Guard --> Login["Login for unauthenticated users"]
+Page --> Static["Static demo data"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 libs/storefront/feature/cabinet/
 └── src/lib/
-    ├── guards/cabinet-auth.guard.ts  # захист маршруту
-    ├── pages/cabinet-dashboard/cabinet-dashboard.page.ts  # сторінка та композиція UI
-    └── lib.routes.ts  # маршрути фічі
+    ├── guards/cabinet-auth.guard.ts  # route protection
+    ├── pages/cabinet-dashboard/cabinet-dashboard.page.ts  # page and UI composition
+    └── lib.routes.ts  # feature routes
 ```

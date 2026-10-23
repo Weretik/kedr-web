@@ -1,26 +1,24 @@
-# Архітектура Mobile
+# Mobile architecture
 
-**Область:** наявний мобільний застосунок `apps/mobile` у Nx-монорепозиторії KEDR.
+**Scope:** the existing `apps/mobile` application in the KEDR Nx monorepo.
 
-**Підхід:** domain-first архітектура, узгоджена з Admin, з Expo Router як тонким шаром маршрутизації та спільними TypeScript-контрактами там, де це виправдано.
+**Approach:** domain-first architecture aligned with Admin, with Expo Router as a thin routing layer and shared TypeScript contracts where appropriate.
 
-## Призначення
+## Purpose
 
-Цей розділ фіксує архітектурний контракт мобільного застосунку. [Карта наявних модулів](structure/modules.md) показує поточний код; інші документи можуть описувати також цільові межі та майбутні можливості. Перед реалізацією звіряй їх із фактичним станом репозиторію.
+This section defines the mobile application architecture contract. The [map of existing modules](structure/modules.md) shows the current code; other documents may also describe target boundaries and future capabilities. Check them against the actual repository state before implementation.
 
-Мобільний застосунок є окремим клієнтом. Він не переносить UI-код React Admin або Angular Storefront, але може використовувати ті самі бекенд-API та спільні доменні контракти.
+The mobile application is a separate client. It does not reuse React Admin or Angular Storefront UI code, but it may use the same backend APIs and shared domain contracts.
 
-## Обрана архітектура
+## Selected architecture
 
-Mobile повторює **domain-first** підхід Admin: бізнес-домен ізольований, а його
-код розділений на `feature`, `data-access`, `model` і `ui`. Це не означає
-перенесення web-коду: Mobile має власні React Native/Expo UI та platform-adapters.
+Mobile follows the Admin **domain-first** approach: each business domain is isolated, and its code is divided into `feature`, `data-access`, `model`, and `ui`. This does not mean reusing web code: Mobile has its own React Native/Expo UI and platform adapters.
 
 ```text
-apps/mobile/src/app/                 Expo Router: routes і layouts
+apps/mobile/src/app/                 Expo Router: routes and layouts
               │
               ▼
-libs/mobile/<domain>/feature/        screen і user flow
+libs/mobile/<domain>/feature/        screen and user flow
        ├──────────────┬──────────────┬──────────────┐
        ▼              ▼              ▼              ▼
      ui/        data-access/       model/     mobile/shared/
@@ -37,43 +35,40 @@ libs/mobile/
 └── customers/                       data-access, model, ui
 ```
 
-`apps/mobile/src/app` — технічний шар Expo Router. Route-файли не містять HTTP
-чи бізнес-логіки: вони підключають публічний screen із domain `feature`. Між
-бібліотеками дозволені лише aliases і `src/index.ts`; DTO не виходять за межі
-`data-access`, а `ui` не залежить від API або router.
+`apps/mobile/src/app` is the Expo Router technical layer. Route files contain no HTTP or business logic; they connect to public screens from domain `feature` libraries. Across libraries, only aliases and `src/index.ts` are allowed. DTOs stay inside `data-access`, and `ui` does not depend on the API or router.
 
-## Карта документів
+## Document map
 
-### Структура й залежності
+### Structure and dependencies
 
-- [Наявні модулі та маршрути](structure/modules.md)
-- [Домени та структура бібліотек](structure/domains.md)
-- [Правила залежностей](structure/dependencies.md)
-- [Nx-контракт і публічний API](structure/nx-contract.md)
+- [Existing modules and routes](structure/modules.md)
+- [Domains and library structure](structure/domains.md)
+- [Dependency rules](structure/dependencies.md)
+- [Nx contract and public API](structure/nx-contract.md)
 
-### Робота застосунку
+### Application runtime
 
-- [Застосунок і маршрутизація](runtime/application.md)
-- [Стан, API та форми](runtime/state-and-api.md)
-- [Online-first та майбутній офлайн](runtime/offline-strategy.md)
+- [Application and routing](runtime/application.md)
+- [State, API, and forms](runtime/state-and-api.md)
+- [Online-first and future offline support](runtime/offline-strategy.md)
 
-### Платформа Expo та пристрої
+### Expo platform and devices
 
-- [Технологічний стек і межі відповідальності](platform/technology-stack.md)
-- [Каталог UI та platform-можливостей](platform/ui-capabilities.md)
-- [Expo Go та Development Build](platform/development-build.md)
+- [Technology stack and responsibility boundaries](platform/technology-stack.md)
+- [UI and platform capabilities catalog](platform/ui-capabilities.md)
+- [Expo Go and Development Build](platform/development-build.md)
 
-### Процес і рішення
+### Process and decisions
 
-- [Стратегія тестування](workflow/testing.md)
-- [SDD-процес](workflow/sdd-process.md)
-- [ADR Mobile](adr/)
+- [Testing strategy](workflow/testing.md)
+- [SDD process](workflow/sdd-process.md)
+- [Mobile ADRs](adr/)
 
-Пов'язані стандарти:
+Related standards:
 
-- [Індекс frontend rules](../../standards/README.md)
-- [Організація коду Mobile](../../standards/mobile/mobile-code-organization.md)
-- [Інтерфейс Mobile](../../standards/mobile/mobile-ui.md)
-- [API та data rules](../../standards/shared/api-data-rules.md)
+- [Frontend rules index](../../standards/README.md)
+- [Mobile code organization](../../standards/mobile/mobile-code-organization.md)
+- [Mobile UI](../../standards/mobile/mobile-ui.md)
+- [API and data rules](../../standards/shared/api-data-rules.md)
 - [Testing rules](../../standards/shared/testing-rules.md)
 - [Delivery rules](../../standards/shared/delivery-rules.md)

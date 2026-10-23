@@ -1,12 +1,12 @@
-# Оболонка й навігація Mobile
+# Mobile shell and navigation
 
-**Сценарій:** запуск застосунку, вкладки, тема й мережевий стан. [SDD](../../specs/mobile/shell/001-app-shell-navigation/spec.md).
+**Scenario:** app launch, tabs, theme, and network state. [SDD](../../specs/mobile/shell/001-app-shell-navigation/spec.md).
 
-- [Root layout](../../../apps/mobile/src/app/_layout.tsx) і [tabs layout](../../../apps/mobile/src/app/%28tabs%29/_layout.tsx) задають Expo Router структуру; React Native Paper відображає навігацію.
-- [AppProviders](../../../libs/mobile/core/shell/src/providers/app-providers.tsx), [app-store](../../../libs/mobile/core/shell/src/state/app-store.ts) і [theme preference storage](../../../libs/mobile/core/shell/src/storage/theme-preference-storage.ts) забезпечують спільний стан. [Connectivity adapter](../../../libs/mobile/core/connectivity/src/lib/connectivity-adapter.ts) відстежує мережу.
-- Route-файли залишаються тонкими; бізнес-логіка та API належать доменним бібліотекам. Початкова вкладка зараз placeholder.
+- [Root layout](../../../apps/mobile/src/app/_layout.tsx) and [tabs layout](../../../apps/mobile/src/app/%28tabs%29/_layout.tsx) define the Expo Router structure; React Native Paper renders navigation.
+- [AppProviders](../../../libs/mobile/core/shell/src/providers/app-providers.tsx), [app-store](../../../libs/mobile/core/shell/src/state/app-store.ts), and [theme preference storage](../../../libs/mobile/core/shell/src/storage/theme-preference-storage.ts) provide shared state. The [connectivity adapter](../../../libs/mobile/core/connectivity/src/lib/connectivity-adapter.ts) tracks network status.
+- Route files remain thin; business logic and API access belong to domain libraries. The initial tab is currently a placeholder.
 
-## Схема будови
+## Structure diagram
 
 ```mermaid
 flowchart LR
@@ -15,24 +15,24 @@ Providers --> Store["app-store"]
 Providers --> Theme["theme preference storage"]
 Providers --> Network["Connectivity adapter"]
 Root --> Tabs["tabs layout"]
-Tabs --> Routes["Route-файли фіч"]
+Tabs --> Routes["Feature route files"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and main feature files (other files in these directories are omitted):
 
 ```text
 apps/mobile/src/app/
-├── (tabs)/_layout.tsx  # точка входу маршруту
-└── _layout.tsx  # точка входу маршруту
+├── (tabs)/_layout.tsx  # route entry point
+└── _layout.tsx  # route entry point
 
 libs/mobile/core/connectivity/
-└── src/lib/connectivity-adapter.ts  # реалізація фічі
+└── src/lib/connectivity-adapter.ts  # feature implementation
 
 libs/mobile/core/shell/
 └── src/
-    ├── providers/app-providers.tsx  # реалізація фічі
-    ├── state/app-store.ts  # стан і взаємодія з даними
-    └── storage/theme-preference-storage.ts  # локальне збереження
+    ├── providers/app-providers.tsx  # feature implementation
+    ├── state/app-store.ts  # state and data interactions
+    └── storage/theme-preference-storage.ts  # local persistence
 ```

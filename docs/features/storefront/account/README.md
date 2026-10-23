@@ -1,6 +1,6 @@
-# Акаунт Storefront
+# Storefront Account
 
-| Фіча                  | Вхід                 |
+| Feature               | Entry                |
 | --------------------- | -------------------- |
-| [Вхід](auth.md)       | `/login`             |
-| [Кабінет](cabinet.md) | `/cabinet/dashboard` |
+| [Sign in](auth.md)    | `/login`             |
+| [Cabinet](cabinet.md) | `/cabinet/dashboard` |

@@ -1,21 +1,18 @@
-# Стратегія тестування Mobile
+# Mobile testing strategy
 
-## Фактичний test stack
+## Current test stack
 
-Mobile працює на Expo SDK 57, React Native 0.86, Expo Router, Redux Toolkit/RTK
-Query та Axios. Тести використовують Jest 29, `jest-expo` 57 і React Native
-Testing Library 13. Конфіги app і libraries є окремими `jest.config.cjs`;
-platform mocks живуть лише на реальних межах Expo, storage, network і native UI.
+Mobile uses Expo SDK 57, React Native 0.86, Expo Router, Redux Toolkit/RTK Query, and Axios. Tests use Jest 29, `jest-expo` 57, and React Native Testing Library 13. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
 
-| Рівень              | Target                                       | Що перевіряємо                                                   |
+| Level               | Target                                       | What to check                                                    |
 | ------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
-| Unit                | відповідний `*:test`                         | pure functions, Zod validation, mapper-и, reducers               |
-| Focused integration | відповідний `*:test`                         | state, providers, RTK Query/Axios boundary, connectivity         |
-| Component           | `mobile:test`, domain `*:test`, `shell:test` | екрани, доступні ролі/назви та дії користувача                   |
-| Integration         | відповідний `*:test`                         | Expo Router boundary, storage, connectivity та native adapters   |
-| Mobile E2E          | відсутній                                    | критичний journey на зібраному застосунку після окремого enabler |
+| Unit                | corresponding `*:test`                       | pure functions, Zod validation, mappers, reducers                |
+| Focused integration | corresponding `*:test`                       | state, providers, RTK Query/Axios boundary, connectivity         |
+| Component           | `mobile:test`, domain `*:test`, `shell:test` | screens, accessible roles/names, and user actions                |
+| Integration         | corresponding `*:test`                       | Expo Router boundary, storage, connectivity, and native adapters |
+| Mobile E2E          | unavailable                                  | critical journey on a built app after a separate enabler         |
 
-Основні команди:
+Primary commands:
 
 ```text
 npm run typecheck:tests:mobile
@@ -24,40 +21,27 @@ npm run test:mobile:coverage
 npx nx export mobile
 ```
 
-`apps/mobile/src/__tests__/` містить infrastructure component smoke для Expo
-Router/RN harness. Він доводить працездатність setup, але не є evidence для
-бізнес-сценарію.
+`apps/mobile/src/__tests__/` contains an infrastructure component smoke test for the Expo Router/RN harness. It proves the setup works, but it is not evidence for a business scenario.
 
-## Правила для feature
+## Feature test rules
 
-- pure logic і validation перевіряй unit-рівнем;
-- hooks, state, providers і data fetching — focused integration;
-- screens та user actions — component;
-- navigation, deep links, permissions, storage і native adapters — integration;
-- E2E використовуй лише для критичного journey, не дублюй повний `SC-*` на
-  кожному рівні;
-- тести route-файлів розміщуй у `apps/mobile/src/__tests__`, а library tests —
-  біля коду поза `apps/mobile/src/app`.
+- Check pure logic and validation at unit level.
+- Check hooks, state, providers, and data fetching with focused integration tests.
+- Check screens and user actions at component level.
+- Check navigation, deep links, permissions, storage, and native adapters with integration tests.
+- Use E2E only for a critical journey; do not duplicate every `SC-*` at each level.
+- Place route-file tests in `apps/mobile/src/__tests__`, and library tests beside the code outside `apps/mobile/src/app`.
 
-Для нового behavior виконуй Red → Green → Refactor → Regression за
-[testing rules](../../../standards/shared/testing-rules.md). Compilation/setup failure не
-є валідним Red.
+For new behavior, follow Red → Green → Refactor → Regression in the [testing rules](../../../standards/shared/testing-rules.md). Compilation/setup failure is not a valid Red.
 
-## Enabler для Mobile E2E
+## Mobile E2E enabler
 
-Detox, Maestro й Appium зараз не встановлені, а Android SDK у поточному
-середовищі не виявлено. Коли feature потребує mobile E2E, створи один `EN-*`
-task із відповідальністю вибору та запуску runner:
+Detox, Maestro, and Appium are not currently installed, and an Android SDK was not found in the current environment. When a feature needs mobile E2E, create one `EN-*` task to select and run a runner:
 
-1. Зафіксуй critical `SC-*`, тип збірки (Expo development build/EAS або local
-   native build), Android/iOS targets і CI device strategy.
-2. Порівняй runner за сумісністю з Expo Router, native modules, Windows/Linux
-   CI та потрібними permissions/deep links. Не обирай інструмент лише за назвою.
-3. Додай мінімальний smoke, Nx target, setup/cache/artifact paths і команду CI.
-4. На Android виконай test на emulator/device; iOS перевіряй лише на macOS з
-   Xcode. Невиконану платформу запиши як blocker.
-5. Після стабільного smoke створи окремі `TS-*` для critical journeys і зв'яжи
-   їх через `traceability.md`.
+1. Record the critical `SC-*`, build type (Expo development build/EAS or local native build), Android/iOS targets, and CI device strategy.
+2. Compare runners for compatibility with Expo Router, native modules, Windows/Linux CI, and required permissions/deep links. Do not choose a tool by name alone.
+3. Add a minimal smoke test, Nx target, setup/cache/artifact paths, and CI command.
+4. Run the test on an Android emulator/device; check iOS only on macOS with Xcode. Record an untested platform as a blocker.
+5. After a stable smoke test, create separate `TS-*` tasks for critical journeys and link them through `traceability.md`.
 
-До завершення enabler mobile E2E має статус `planned`; Jest component tests не
-можна називати device E2E evidence.
+Until the enabler is complete, mobile E2E is `planned`; do not call Jest component tests device E2E evidence.

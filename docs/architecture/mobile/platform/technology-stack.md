@@ -1,54 +1,51 @@
-# Технологічний стек Mobile
+# Mobile technology stack
 
-## Статус
+## Status
 
-Фактичний baseline: Expo SDK 57, React Native 0.86 і React 19.2. Точні версії
-визначає `package.json`/lockfile; native packages додаються через сумісний Expo
-installer і перевіряються Expo Doctor.
+Current baseline: Expo SDK 57, React Native 0.86, and React 19.2. Exact versions are defined in `package.json`/lockfile; native packages are added through the compatible Expo installer and checked with Expo Doctor.
 
-## Основний стек
+## Core stack
 
-| Зона                 | Рішення            | Правило використання                                                                                                                                            |
-| -------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Монорепозиторій      | Nx                 | Мобільний застосунок є окремим проєктом у наявному workspace. Nx керує задачами, кешуванням і спільними бібліотеками.                                           |
-| Нативна платформа    | React Native       | Єдиний код для Android та iOS; UI будується з React Native-компонентів, а не з веб-компонентів Admin.                                                           |
-| Framework            | Expo               | Базовий спосіб запуску, збирання та доступу до нативних можливостей. Для старту допускається Expo Go, для production-функцій — development build.               |
-| React Native runtime | New Architecture   | Використовується стандартна архітектура сумісного Expo SDK; не вимикається. Перед додаванням нативної залежності перевіряється її сумісність через Expo Doctor. |
-| Навігація            | Expo Router        | Файлова маршрутизація. Нові маршрути створюються у `src/app`; навігація не дублюється окремою конфігурацією React Navigation.                                   |
-| Мова                 | TypeScript         | Увімкнений строгий режим. Публічні API, дані запитів і форм мають явні типи.                                                                                    |
-| UI                   | React Native Paper | Основна бібліотека готових мобільних компонентів і теми. Просту розмітку слід робити стандартними компонентами React Native.                                    |
+| Area                 | Choice             | Usage rule                                                                                                                                              |
+| -------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo             | Nx                 | The mobile app is a separate project in the existing workspace. Nx manages tasks, caching, and shared libraries.                                        |
+| Native platform      | React Native       | One codebase for Android and iOS; UI is built from React Native components, not Admin web components.                                                   |
+| Framework            | Expo               | Default way to run, build, and access native capabilities. Expo Go is allowed for initial work; production features use a development build.            |
+| React Native runtime | New Architecture   | Use the standard architecture for the compatible Expo SDK; do not disable it. Check native dependency compatibility with Expo Doctor before adding one. |
+| Navigation           | Expo Router        | File-based routing. Create new routes in `src/app`; do not duplicate navigation in a separate React Navigation configuration.                           |
+| Language             | TypeScript         | Strict mode is enabled. Public APIs, request data, and forms must have explicit types.                                                                  |
+| UI                   | React Native Paper | Primary library for ready-made mobile components and theme. Use standard React Native components for simple layout.                                     |
 
-Повний перелік схвалених UI-, gesture- та device-пакетів, їхні сценарії й правила умовного підключення наведено в [каталозі UI та platform-можливостей](ui-capabilities.md). Пакети з нього не встановлюються наперед.
+The [UI and platform capabilities catalog](ui-capabilities.md) lists approved UI, gesture, and device packages, their scenarios, and conditional-use rules. Do not install packages from it in advance.
 
-## Стан, API та форми
+## State, API, and forms
 
-| Зона             | Рішення         | Правило використання                                                                                                                       |
-| ---------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Клієнтський стан | Redux Toolkit   | Лише глобальний стан, який потрібен кільком екранам або сервісам. Локальний стан залишається в компоненті.                                 |
-| Серверний стан   | RTK Query       | Єдина точка для HTTP-запитів, кешування, інвалідації та станів завантаження API. Не дублювати його дані у Redux slice без окремої причини. |
-| Форми            | React Hook Form | Керує значеннями, помилками та submit-станом форм.                                                                                         |
-| Валідація        | Zod             | Описує схеми даних і перевірку форм; зв'язується з React Hook Form через resolver.                                                         |
+| Area         | Choice          | Usage rule                                                                                                                                               |
+| ------------ | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Client state | Redux Toolkit   | Only for global state needed by multiple screens or services. Keep local state in the component.                                                         |
+| Server state | RTK Query       | The single place for HTTP requests, caching, invalidation, and API loading states. Do not duplicate its data in a Redux slice without a separate reason. |
+| Forms        | React Hook Form | Manages form values, errors, and submit state.                                                                                                           |
+| Validation   | Zod             | Describes data schemas and form validation; connects to React Hook Form through a resolver.                                                              |
 
-## Дані на пристрої та мережа
+## On-device data and network
 
-| Зона                     | Рішення                | Правило використання                                                                                                                      |
-| ------------------------ | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Секрети                  | Expo SecureStore       | Тільки чутливі дані: токени сесії та інші облікові секрети. Не використовувати для великих відповідей API або каталогів.                  |
-| Стан мережі              | NetInfo                | Визначає online/offline-стан для UX, повторних спроб і офлайн-сценаріїв. Не є заміною реальної обробки помилок запитів.                   |
-| Невеликий нечутливий кеш | AsyncStorage (опційно) | Додається лише коли буде конкретний сценарій, що не покривається RTK Query. Не зберігати токени та персональні дані без окремого рішення. |
-| Повноцінний офлайн       | SQLite (опційно)       | Не входить у перший етап. Додається окремим ADR після визначення синхронізації, конфліктів і обсягу локальних даних.                      |
+| Area                      | Choice                  | Usage rule                                                                                                                   |
+| ------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Secrets                   | Expo SecureStore        | Sensitive data only: session tokens and other credentials. Do not use for large API responses or catalogs.                   |
+| Network state             | NetInfo                 | Detects online/offline state for UX, retries, and offline scenarios. Does not replace handling actual request errors.        |
+| Small non-sensitive cache | AsyncStorage (optional) | Add only for a concrete scenario not covered by RTK Query. Do not store tokens or personal data without a separate decision. |
+| Full offline support      | SQLite (optional)       | Not in the first stage. Add through a separate ADR after defining synchronization, conflicts, and local data volume.         |
 
-## Зафіксовані межі
+## Fixed boundaries
 
-- React Admin є референсом для функціональності та API, але його MUI-компоненти й табличний UI не перевикористовуються в React Native.
-- Мобільний каталог подається нативним списком і картками, а не горизонтальною таблицею.
-- Спільними між клієнтами можуть бути контракти, DTO, Zod-схеми без UI-залежностей і чисті утиліти. Залежності від React DOM, MUI, React Native або Expo у спільних доменних бібліотеках заборонені.
-- На першому етапі офлайн-режим не реалізується; застосунок має коректно повідомляти про відсутність мережі.
+- React Admin is a reference for functionality and API, but its MUI components and tabular UI are not reused in React Native.
+- Render the mobile catalog as a native list and cards, not a horizontal table.
+- Contracts, DTOs, Zod schemas without UI dependencies, and pure utilities may be shared between clients. Shared domain libraries must not depend on React DOM, MUI, React Native, or Expo.
+- Do not implement offline mode in the first stage; the app must report network loss correctly.
 
-## Поточні рішення
+## Current decisions
 
-- Nx project застосунку: `mobile` у `apps/mobile`.
-- Реалізовані вертикалі: catalog/product details, cart/checkout та order history.
-- Джерело даних: versioned Kedr OpenAPI contract через Mobile RTK Query stack.
-- Device/E2E coverage лишається feature-level рішенням; відсутній runner не
-  можна видавати за пройдену device verification.
+- The app's Nx project is `mobile` in `apps/mobile`.
+- Implemented verticals: catalog/product details, cart/checkout, and order history.
+- Data source: versioned Kedr OpenAPI contract through the Mobile RTK Query stack.
+- Device/E2E coverage remains a feature-level decision; an unavailable runner must not be represented as completed device verification.

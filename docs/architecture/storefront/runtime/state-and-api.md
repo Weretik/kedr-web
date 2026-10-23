@@ -1,44 +1,25 @@
-# Стан, API та форми Storefront
+# Storefront state, API, and forms
 
-## Серверні дані та HTTP
+## Server data and HTTP
 
-- API service використовує generated transport types з
-  `@shared/api-contracts`, створеного з versioned OpenAPI snapshot.
-- Generated request/response не стають Storefront contract або domain model:
-  repository mapper повертає типи з `@storefront/contracts` до feature.
-- Feature та UI не імпортують `@shared/api-contracts`.
+- The API service uses generated transport types from `@shared/api-contracts`, built from the versioned OpenAPI snapshot.
+- Generated request/response types do not become a Storefront contract or domain model: repository mappers return types from `@storefront/contracts` to feature.
+- Feature and UI do not import `@shared/api-contracts`.
+- Make HTTP requests only in `data-access` through Angular `HttpClient`.
+- `provideStorefrontHttp` configures `fetch` and the interceptor chain: base URL, credentials, CSRF, authorization, unauthorized-response handling, logging, and errors.
+- An API service or repository accepts and returns types from `contracts`, converts transport DTOs to the model needed by feature, and does not pass HTTP details to UI.
+- Session initialization is centralized through `AUTH_INIT_PROVIDER`; a feature must not duplicate access-token refresh during startup.
 
-- HTTP-запити виконуються лише в `data-access` через Angular `HttpClient`.
-- `provideStorefrontHttp` налаштовує `fetch` і ланцюжок interceptor-ів: base URL,
-  credentials, CSRF, авторизація, обробка неавторизованої відповіді, логування та
-  помилки.
-- API-сервіс або репозиторій приймає та повертає типи з `contracts`, перетворює
-  транспортні DTO на модель, потрібну feature, і не передає HTTP-деталі в UI.
-- Ініціалізація сесії виконується централізовано через `AUTH_INIT_PROVIDER`;
-  feature не повинна самостійно дублювати refresh access token під час старту.
+## Client state
 
-## Клієнтський стан
+Storefront does not have one global store. Keep local component state in the component. State needed by multiple components or requiring its own actions and derived values is implemented in a domain `Store` or facade with Angular signals and `computed`.
 
-Storefront не має єдиного глобального store. Локальний стан компонента лишається
-в компоненті. Стан, який потрібен кільком компонентам або має власні дії й
-похідні значення, реалізується в доменному `Store` чи facade за допомогою Angular
-signals і `computed`.
+Current examples: `CartStore` keeps cart state, `CartUiFacade` keeps whether the cart UI is open, and checkout feature uses signal state and `rxMethod` for its asynchronous scenario. Do not add a new global store or third-party state library without a separate ADR.
 
-Поточні приклади: `CartStore` зберігає стан кошика, `CartUiFacade` — стан
-відкриття UI кошика, а feature checkout використовує signal-стан та `rxMethod`
-для асинхронного сценарію. Новий глобальний store або стороння state-бібліотека
-не додається без окремого ADR.
+## Forms
 
-## Форми
+A form belongs to a feature scenario. The form component handles input, validation, and displaying errors; submission is delegated to a feature facade or `data-access` service. Move a reusable control to `ui` only after actual reuse. Use Transloco keys, not component literals, for all user-visible text.
 
-Форма належить feature-сценарію. Компонент форми відповідає за введення,
-валідацію та відображення помилок; відправлення даних делегується feature facade
-або `data-access`-сервісу. Повторно використовуваний контрол переноситься до
-`ui` лише після фактичного повторного використання. Для всіх видимих користувачу
-текстів використовуються ключі Transloco, а не літерали в компоненті.
+## Localization
 
-## Локалізація
-
-Transloco конфігурується на рівні застосунку. Поточні підтримувані локалі —
-`uk` і `ru`, а `uk` є локаллю за замовчуванням і fallback. URL та перемикання
-локалі веде `LocaleNavigationService`; feature не формує локалізовані URL вручну.
+Transloco is configured at application level. The currently supported locales are `uk` and `ru`; `uk` is the default and fallback locale. `LocaleNavigationService` manages URLs and locale switching; a feature must not build localized URLs manually.

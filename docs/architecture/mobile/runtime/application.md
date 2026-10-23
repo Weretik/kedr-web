@@ -1,43 +1,32 @@
-# Застосунок і маршрутизація Mobile
+# Mobile application and routing
 
-## Архітектурне рішення
+## Architecture decision
 
-Mobile використовує ті самі базові принципи, що й Admin: domain-first бібліотеки,
-чіткі шари `feature` / `data-access` / `model` / `ui`, публічні точки входу та
-контроль меж через Nx. Це дозволяє команді працювати за знайомими правилами й не
-перетворювати `apps/mobile` на моноліт.
+Mobile uses the same foundational principles as Admin: domain-first libraries, clear `feature` / `data-access` / `model` / `ui` layers, public entry points, and Nx boundary enforcement. This lets the team follow familiar rules and keeps `apps/mobile` from becoming a monolith.
 
-Структура не копіює Admin буквально. Її адаптовано до Expo Router: фізичні файли
-маршрутів мають перебувати в `apps/mobile/src/app`, тому вони є тонкими
-адаптерами між файловою маршрутизацією та feature-бібліотеками.
+The structure does not copy Admin literally. It is adapted to Expo Router: physical route files must live in `apps/mobile/src/app`, so they act as thin adapters between file-based routing and feature libraries.
 
-## Відповідальність `apps/mobile`
+## `apps/mobile` responsibilities
 
-Застосунок містить тільки Expo-специфічну композицію:
+The application contains only Expo-specific composition:
 
-- конфігурацію Expo та entry point;
-- файлові маршрути Expo Router і `_layout.tsx`;
-- підключення одного `AppProviders` із `@mobile/core/shell`;
-- bootstrap конфігурації та маршрутизаційні redirects.
+- Expo configuration and entry point;
+- Expo Router file routes and `_layout.tsx`;
+- connection of one `AppProviders` from `@mobile/core/shell`;
+- configuration bootstrap and routing redirects.
 
-У маршруті не розміщуються HTTP-виклики, бізнес-логіка, складний UI або доменні
-типи. Маршрут імпортує один екран чи сценарій з feature-бібліотеки й передає
-лише параметри маршруту.
+Do not place HTTP calls, business logic, complex UI, or domain types in a route. A route imports one screen or scenario from a feature library and passes only route parameters.
 
-## Фактичні маршрути та цільова структура
+## Actual routes and target structure
 
-Поточні route-файли в `apps/mobile/src/app` містять групу `(tabs)` з
-`index`, `catalog`, `cart`, `orders` і `profile`, а також
-`product/[productSlug]` та `orders/[orderId]`. Перелік поточних бібліотек є в
-[карті модулів](../structure/modules.md). Схема нижче показує можливу майбутню організацію
-авторизованих маршрутів і не описує поточне дерево файлів.
+Current route files in `apps/mobile/src/app` include the `(tabs)` group with `index`, `catalog`, `cart`, `orders`, and `profile`, as well as `product/[productSlug]` and `orders/[orderId]`. The [module map](../structure/modules.md) lists current libraries. The diagram below shows a possible future organization of authenticated routes; it does not describe the current file tree.
 
 ```text
 apps/mobile/
 ├── app.json
 ├── project.json
 └── src/
-    ├── app/                         # лише Expo Router routes і layouts
+    ├── app/                         # Expo Router routes and layouts only
     │   ├── _layout.tsx
     │   ├── index.tsx
     │   ├── (auth)/
@@ -50,11 +39,9 @@ apps/mobile/
     │           └── [productId].tsx
 ```
 
-Групи маршрутів `(auth)` і `(app)` не входять до URL. Вони відокремлюють
-неавторизований і авторизований shell. Перший демо-реліз може не містити `(auth)`,
-якщо каталог не потребує сесії.
+Route groups `(auth)` and `(app)` are not included in URLs. They separate the unauthenticated and authenticated shells. The first demo release may omit `(auth)` if the catalog does not require a session.
 
-## Приклад тонкого маршруту
+## Thin route example
 
 ```tsx
 import { CatalogScreen } from '@mobile/catalog/feature';
@@ -64,20 +51,16 @@ export default function CatalogRoute() {
 }
 ```
 
-Feature володіє сценарієм і екраном; app володіє лише URL та Expo Router
-інтеграцією. Динамічний параметр товару читається route-адаптером і передається
-до feature у типізованому вигляді.
+Feature owns the scenario and screen; the app owns only the URL and Expo Router integration. The route adapter reads a dynamic product parameter and passes it to feature in a typed form.
 
-## Провайдери
+## Providers
 
-Кореневий `_layout.tsx` підключає один `AppProviders` із `@mobile/core/shell`.
-`core/shell` є єдиним місцем налаштування глобальних провайдерів, Redux store та
-corporate Paper theme. Їхній порядок:
+The root `_layout.tsx` connects one `AppProviders` from `@mobile/core/shell`. `core/shell` is the single place to configure global providers, Redux store, and the corporate Paper theme. Their order is:
 
 1. `SafeAreaProvider`;
 2. Redux `Provider`;
-3. `PaperProvider` із темою;
-4. глобальний error notifier;
-5. `Slot` або Expo Router navigator.
+3. `PaperProvider` with the theme;
+4. global error notifier;
+5. `Slot` or Expo Router navigator.
 
-Feature, UI-компоненти і data-access не створюють власні глобальні провайдери.
+Feature, UI components, and data-access do not create their own global providers.

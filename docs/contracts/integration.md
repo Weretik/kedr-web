@@ -1,7 +1,6 @@
-# Правила frontend-інтеграції
+# Frontend integration rules
 
-**Machine source:** [`openapi/openapi.yaml`](openapi/openapi.yaml), provenance у
-[`openapi/SOURCE.md`](openapi/SOURCE.md)
+**Machine source:** [`openapi/openapi.yaml`](openapi/openapi.yaml), provenance in [`openapi/SOURCE.md`](openapi/SOURCE.md)
 
 ## Contract pipeline
 
@@ -15,57 +14,38 @@ KedrStore docs/sdd/contracts
   -> application/domain model
 ```
 
-OpenAPI snapshot є authoritative provider contract у frontend repository.
-`@shared/api-contracts` є machine-generated compile-time representation цього
-snapshot. Сторінки у `docs/contracts/<module>/` описують лише consumer mapping,
-behavior і відомі compatibility constraints; вони не дублюють schemas.
+The OpenAPI snapshot is the authoritative provider contract in the frontend repository. `@shared/api-contracts` is the machine-generated compile-time representation of this snapshot. Pages under `docs/contracts/<module>/` describe only consumer mapping, behavior, and known compatibility constraints; they do not duplicate schemas.
 
-YAML snapshot і generated TypeScript не редагуються вручну. Для оновлення:
+Do not edit the YAML snapshot or generated TypeScript manually. To update them:
 
-1. зафіксувати backend contract у чистому checkout;
-2. виконати `npm run contracts:sync -- <path-to-KedrStore>`;
-3. виконати `npm run contracts:generate` і переглянути semantic diff;
-4. оновити affected mappers, consumer pages і tests;
-5. виконати `npm run contracts:check`.
+1. pin the backend contract in a clean checkout;
+2. run `npm run contracts:sync -- <path-to-KedrStore>`;
+3. run `npm run contracts:generate` and review the semantic diff;
+4. update affected mappers, consumer pages, and tests;
+5. run `npm run contracts:check`.
 
-Ця сторінка є frontend-проекцією спільних backend-конвенцій і authoritative для
-frontend transport implementation. Backend OpenAPI є довідкою, коли доступний;
-його пошук, доступність і актуалізація не належать frontend-власникам.
+This page projects shared backend conventions for the frontend and is authoritative for frontend transport implementation. Backend OpenAPI is a reference when available; frontend owners are not responsible for finding, access to, or updating it.
 
-## Межа контракту
+## Contract boundary
 
-- Generated request/response types імпортуються лише в transport,
-  session/auth adapters або domain `data-access`.
-- Generated types не експортуються як application/domain models і не
-  імпортуються у feature чи UI.
-- Runtime validation залишається на boundaries, де response приходить як
-  external/unknown data; code generation її не замінює.
+- Import generated request/response types only in transport, session/auth adapters, or domain `data-access`.
+- Do not export generated types as application/domain models or import them into feature or UI.
+- Keep runtime validation at boundaries where a response arrives as external/unknown data; code generation does not replace it.
+- `data-access` owns private DTOs, query serialization, runtime parsing, and mapping to the domain model.
+- Features, UI components, and routes consume the domain model and normalized `ApiError`; they do not depend on OpenAPI DTO names or raw HTTP responses.
+- A feature links to the page in this registry and may link to the backend OpenAPI file as a reference when available.
 
-- `data-access` володіє private DTO, query serialization, runtime parsing і
-  мапінгом у domain model.
-- `feature`, UI-компоненти й routes споживають domain model і нормалізований
-  `ApiError`; вони не залежать від OpenAPI DTO names або raw HTTP responses.
-- Feature посилається на сторінку цього реєстру; за наявності може вказати
-  backend OpenAPI file як довідку.
+## Shared HTTP rules
 
-## Спільні HTTP-правила
+- JSON properties use camelCase.
+- A paged response has `{ pagedInfo, value }`; `pagedInfo` contains `pageNumber`, `pageSize`, `totalPages`, and `totalRecords`.
+- For operations with these parameters, send `page >= 1` and `pageSize` from 1 to 100.
+- A `400` validation response is an Ardalis validation-error array. Do not show it to users or use localized backend error text in application logic.
+- `404` has no response body; `409` returns an array of conflict messages; `401` and `403` retain their usual meaning as authentication and authorization errors.
 
-- JSON properties використовують camelCase.
-- Paged response має `{ pagedInfo, value }`; `pagedInfo` містить `pageNumber`,
-  `pageSize`, `totalPages` і `totalRecords`.
-- Для операцій з такими parameters надсилайте `page >= 1` та `pageSize` від 1
-  до 100.
-- `400` validation response — Ardalis validation-error array. Не показуйте
-  користувачу та не використовуйте в логіці localized backend error text.
-- `404` не має response body; `409` повертає array conflict messages; `401` і
-  `403` зберігають звичайне значення authentication та authorization errors.
+## Error normalization and handling
 
-## Нормалізація та обробка помилок
-
-`shared/api-client` — єдине місце, де raw Axios/backend error перетворюється на
-`ApiError`. `data-access` повертає нормалізовану помилку через RTK Query;
-`feature` та UI не парсять `error.response.data` і не створюють власний Axios
-instance.
+`shared/api-client` is the only place where raw Axios/backend errors are converted to `ApiError`. `data-access` returns normalized errors through RTK Query; feature and UI do not parse `error.response.data` or create their own Axios instance.
 
 ```ts
 interface ApiError {
@@ -85,10 +65,9 @@ interface ApiError {
 }
 ```
 
-### Канонічні форми backend validation response
+### Canonical backend validation response shapes
 
-Backend може повернути одну з двох форм. Обидві мапляться в
-`ApiError { code: 'Validation', fieldErrors }`.
+The backend may return either of two shapes. Both map to `ApiError { code: 'Validation', fieldErrors }`.
 
 **ASP.NET Problem Details**
 
@@ -114,38 +93,28 @@ Backend може повернути одну з двох форм. Обидві 
 ]
 ```
 
-У Ardalis array допустимі також PascalCase keys `Identifier` та
-`ErrorMessage`. Прикладові повідомлення не є стабільним API: UI не повинен
-порівнювати або розгалужувати логіку за текстом backend error.
+PascalCase keys `Identifier` and `ErrorMessage` are also allowed in the Ardalis array. Example messages are not a stable API: the UI must not compare them or branch on backend error text.
 
-### Мапінг transport і HTTP-помилок
+### Transport and HTTP error mapping
 
-| Джерело                        | Нормалізований `ApiError`                       | Поведінка feature/UI                                                                        |
-| ------------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Немає response                 | `Network`, `status: 0`                          | Показати offline/network state і доступний retry.                                           |
-| `ECONNABORTED` або `ETIMEDOUT` | `Timeout`                                       | Показати timeout state і доступний retry.                                                   |
-| `401`                          | `Unauthorized`                                  | Передати у чинний session/auth flow; не показувати validation UI.                           |
-| `403`                          | `Forbidden`                                     | Показати state відсутнього доступу без retry тієї самої дії.                                |
-| `404`                          | `NotFound`                                      | Показати not-found state або feature-specific fallback.                                     |
-| `4xx` з `fieldErrors`          | `Validation`, `fieldErrors`, можливий `traceId` | Зіставити errors з полями форми; для query/filter показати зрозуміле локальне повідомлення. |
-| `5xx`                          | `Server`, можливий `traceId`                    | Зберегти наявні дані, показати error state і retry.                                         |
-| Інша client/HTTP помилка       | `Unknown`                                       | Показати безпечний generic error; не показувати raw response.                               |
+| Source                        | Normalized `ApiError`                           | Feature/UI behavior                                                      |
+| ----------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------ |
+| No response                   | `Network`, `status: 0`                          | Show offline/network state and make retry available.                     |
+| `ECONNABORTED` or `ETIMEDOUT` | `Timeout`                                       | Show timeout state and make retry available.                             |
+| `401`                         | `Unauthorized`                                  | Pass to the existing session/auth flow; do not show validation UI.       |
+| `403`                         | `Forbidden`                                     | Show an access-denied state without retrying the same action.            |
+| `404`                         | `NotFound`                                      | Show a not-found state or feature-specific fallback.                     |
+| `4xx` with `fieldErrors`      | `Validation`, `fieldErrors`, possible `traceId` | Map errors to form fields; for query/filter, show a clear local message. |
+| `5xx`                         | `Server`, possible `traceId`                    | Preserve existing data, show an error state, and offer retry.            |
+| Other client/HTTP error       | `Unknown`                                       | Show a safe generic error; do not show the raw response.                 |
 
-### Правила відображення та діагностики
+### Display and diagnostics rules
 
-1. Для `Validation` передавайте `fieldErrors` у форму або відповідний control.
-   Не показуйте raw backend body і не використовуйте глобальний toast замість
-   локальних помилок поля.
-2. Для `Network`, `Timeout`, `Server` і `Unknown` feature зберігає попередні
-   успішні дані, якщо вони є, та пропонує ручний retry через `refetch`.
-3. Runtime notifier призначений для network/timeout/server/unknown. Він не
-   замінює feature error state; `4xx` обробляє feature.
-4. `traceId` можна передати в support/діагностику через `ApiError`, але не
-   логувати response body, Authorization header, token, cookie або PII.
+1. For `Validation`, pass `fieldErrors` to the form or relevant control. Do not show the raw backend body or use a global toast in place of local field errors.
+2. For `Network`, `Timeout`, `Server`, and `Unknown`, the feature preserves previous successful data if available and offers manual retry through `refetch`.
+3. The runtime notifier is for network/timeout/server/unknown errors. It does not replace the feature error state; the feature handles `4xx`.
+4. `traceId` may be passed through `ApiError` for support/diagnostics, but do not log the response body, Authorization header, token, cookie, or PII.
 
-## Authentication і безпека
+## Authentication and security
 
-Protected operations використовують наявний frontend session adapter і Bearer
-token flow. Security, оголошена в OpenAPI, та backend authorization є
-authoritative. Зокрема, не вважайте currently anonymous admin route безпечною
-для доступу поза internal frontend surface.
+Protected operations use the existing frontend session adapter and Bearer token flow. Security declared in OpenAPI and backend authorization are authoritative. In particular, do not assume a currently anonymous admin route is safe to access outside the internal frontend surface.

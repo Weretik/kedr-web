@@ -1,29 +1,27 @@
-# Документація Kedr Web
+# Kedr Web documentation
 
-Цей каталог містить versioned engineering documentation для frontend-застосунків Kedr Web. Документація ведеться як docs-as-code разом зі змінами коду.
+This directory contains versioned engineering documentation for Kedr Web frontend applications. Documentation is maintained as docs-as-code alongside code changes.
 
 ## Frontend SDD
 
-- Архітектура — фактична топологія frontend-застосунків, модулі та межі шарів; оберіть потрібний клієнт нижче.
-- [Фактичний frontend inventory](architecture/frontend-inventory.md) — apps,
-  Nx projects/tags/targets, aliases, test gates і відомі baseline gaps.
-- [Технології та прямі npm-пакети](architecture/technology-and-packages.md) — версії, призначення та джерела залежностей.
-- [Інженерні правила](standards/README.md) — індекс rules для Admin, Mobile, UI, API, testing і delivery.
-- [Специфікації](specs/README.md) — структура feature-специфікацій та SDD-шаблони.
-- [Каталог реалізованих фіч](features/README.md) — індекс за застосунками та короткі карти архітектури кожної фічі.
-- [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md)
-  — погоджуваний план усунення підтверджених системних порушень.
+- Architecture describes the actual topology of frontend applications, modules, and layer boundaries; choose the relevant client below.
+- [Current frontend inventory](architecture/frontend-inventory.md) — apps, Nx projects/tags/targets, aliases, test gates, and known baseline gaps.
+- [Technology and direct npm packages](architecture/technology-and-packages.md) — versions, purposes, and dependency sources.
+- [Engineering rules](standards/README.md) — rules index for Admin, Mobile, UI, API, testing, and delivery.
+- [Specifications](specs/README.md) — feature specification structure and SDD templates.
+- [Implemented feature catalog](features/README.md) — index by application and brief architecture maps for each feature.
+- [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md) — a proposed plan to address confirmed systemic violations.
 
-## Застосунки
+## Applications
 
-- [Admin](architecture/admin/README.md) — архітектура адміністративного застосунку.
-- [Mobile](architecture/mobile/README.md) — архітектура мобільного застосунку на React Native та Expo.
-- [Storefront](architecture/storefront/README.md) — архітектура storefront-застосунку.
-- [API](architecture/api/README.md) — API-контракти та інтеграційні домовленості.
-- [Frontend API contracts](contracts/README.md) — реєстр операцій і frontend-проекцій backend OpenAPI-контрактів.
+- [Admin](architecture/admin/README.md) — administration application architecture.
+- [Mobile](architecture/mobile/README.md) — React Native and Expo mobile application architecture.
+- [Storefront](architecture/storefront/README.md) — storefront application architecture.
+- [API](architecture/api/README.md) — API contracts and integration agreements.
+- [Frontend API contracts](contracts/README.md) — register of operations and frontend projections of backend OpenAPI contracts.
 
-## Принцип розміщення
+## Placement principle
 
-Сталі правила належать у `architecture/` або `standards/`. Рішення, вимоги, контракти, задачі та докази перевірки конкретної feature належать у її папку в `specs/`.
+Stable rules belong in `architecture/` or `standards/`. Decisions, requirements, contracts, tasks, and verification evidence for a specific feature belong in its `specs/` directory.
 
-Перед змінами в Admin або Mobile прочитай [інструкції для AI](../AGENTS.md).
+Before changing Admin or Mobile, read the [AI instructions](../AGENTS.md).

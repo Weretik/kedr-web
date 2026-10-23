@@ -1,27 +1,27 @@
-# In-stock widget Storefront — наявний, не підключений
+# Storefront In-stock Widget — exists but is not connected
 
-**Стан:** [InStockProducts](../../../libs/storefront/feature/widgets/src/lib/in-stock-products/in-stock-products.ts) і [InStockFacade](../../../libs/storefront/feature/widgets/src/lib/in-stock-products/in-stock.facade.ts) існують, але застосунок не імпортує цей віджет.
+**Status:** [InStockProducts](../../../libs/storefront/feature/widgets/src/lib/in-stock-products/in-stock-products.ts) and [InStockFacade](../../../libs/storefront/feature/widgets/src/lib/in-stock-products/in-stock.facade.ts) exist, but the application does not import this widget.
 
-Facade читає товари через [ProductListRepository](../../../libs/storefront/data-access/src/lib/catalog/repositories/product-list.repository.ts). Перед підключенням до сторінки перевір її стан завантаження й повторне використання [каталогу](catalog/catalog.md).
+The facade reads products through [ProductListRepository](../../../libs/storefront/data-access/src/lib/catalog/repositories/product-list.repository.ts). Before connecting it to a page, check its loading state and reuse of the [catalog](catalog/catalog.md).
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
-Widget["InStockProducts — не підключено"] --> Facade["InStockFacade"]
+Widget["InStockProducts — not connected"] --> Facade["InStockFacade"]
 Facade --> Repository["ProductListRepository"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 libs/storefront/data-access/
-└── src/lib/catalog/repositories/product-list.repository.ts  # реалізація фічі
+└── src/lib/catalog/repositories/product-list.repository.ts  # feature implementation
 
 libs/storefront/feature/widgets/
 └── src/lib/in-stock-products/
-    ├── in-stock-products.ts  # реалізація фічі
-    └── in-stock.facade.ts  # стан і взаємодія з даними
+    ├── in-stock-products.ts  # feature implementation
+    └── in-stock.facade.ts  # state and data interaction
 ```

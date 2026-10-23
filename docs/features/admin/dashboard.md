@@ -1,33 +1,33 @@
-# Дашборд Admin
+# Admin Dashboard
 
-**Стан:** екран реалізовано; значення статистики в UI поки статичні, а не дані backend.
+**Status:** the screen is implemented; the statistics shown in the UI are still static rather than backend data.
 
-- **Маршрут:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) підключає [dashboardRoutes](../../../libs/admin/dashboard/feature/src/dashboard.routes.tsx) за `/dashboard`.
-- **Побудова:** [DashboardPage](../../../libs/admin/dashboard/feature/src/pages/dashboard-page.tsx) складає картки, останні товари й замовлення, графіки продажів і трафіку з компонентів `dashboard/feature`.
-- **Дані й межа:** окремої dashboard `data-access` бібліотеки зараз немає. [Admin shell](../../../libs/admin/core/shell/src/index.ts) відповідає за макет і сесію. Для майбутніх реальних показників спочатку потрібен перевірений API-контракт.
+- **Route:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) connects [dashboardRoutes](../../../libs/admin/dashboard/feature/src/dashboard.routes.tsx) at `/dashboard`.
+- **Composition:** [DashboardPage](../../../libs/admin/dashboard/feature/src/pages/dashboard-page.tsx) composes cards, recent products and orders, and sales and traffic charts from `dashboard/feature` components.
+- **Data and boundary:** there is currently no separate dashboard `data-access` library. [Admin shell](../../../libs/admin/core/shell/src/index.ts) is responsible for layout and session. Real metrics in the future require a verified API contract first.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
   Route["AppRouter /dashboard"] --> Page["DashboardPage"]
-  Page --> Widgets["Картки та графіки"]
-  Static["Статичні дані UI"] --> Widgets
+  Page --> Widgets["Cards and charts"]
+  Static["Static UI data"] --> Widgets
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 apps/admin/src/app/
-└── router/app-router.tsx  # точка входу маршруту
+└── router/app-router.tsx  # route entry point
 
 libs/admin/core/shell/
-└── src/index.ts  # публічний API бібліотеки
+└── src/index.ts  # library public API
 
 libs/admin/dashboard/
 └── feature/src/
-    ├── pages/dashboard-page.tsx  # сторінка та композиція UI
-    └── dashboard.routes.tsx  # маршрути фічі
+    ├── pages/dashboard-page.tsx  # page and UI composition
+    └── dashboard.routes.tsx  # feature routes
 ```

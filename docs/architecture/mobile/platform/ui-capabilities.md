@@ -1,73 +1,66 @@
-# Каталог UI та platform-можливостей Mobile
+# Mobile UI and platform capabilities catalog
 
-**Статус:** схвалене архітектурне рішення.  
-**Поточний стан:** у `apps/mobile` встановлюються лише пакети, потрібні для затверджених сценаріїв із цього каталогу; нові залежності не додаються наперед.
+**Status:** approved architecture decision.\
+**Current state:** only packages needed for approved scenarios in this catalog are installed in `apps/mobile`; do not add dependencies in advance.
 
-Цей документ — єдина точка вибору готових UI-компонентів, жестів і можливностей пристрою для Mobile. Перед додаванням нової бібліотеки агент або розробник звіряє сценарій із таблицею нижче, а не підбирає аналог довільно.
+This document is the single place to choose ready-made Mobile UI components, gestures, and device capabilities. Before adding a library, an agent or developer checks the scenario against the table below instead of choosing an arbitrary alternative.
 
-## Фактичний стан пакетів
+## Current package state
 
-Стан перевірено 2026-10-15 за `apps/mobile/package.json` і використанням у
-`apps/mobile/src` та `libs/mobile`. Наведені нижче правила вибору не означають,
-що кожен пакет уже інтегрований у кожен сценарій.
+Checked on 2026-10-15 against `apps/mobile/package.json` and usage in `apps/mobile/src` and `libs/mobile`. The selection rules below do not mean that every package is already integrated into every scenario.
 
-| Стан                                                | Пакети                                                                                                                                                                                    |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Оголошені в `apps/mobile/package.json`              | `react-native-paper`, `@react-native-assets/slider`, `react-native-actions-sheet`, `@shopify/flash-list`, `react-native-gesture-handler`, `react-native-reanimated-carousel`, `expo-blur` |
-| Схвалені для майбутнього сценарію, але не оголошені | `react-native-paper-dates`, `expo-camera`, `expo-haptics`                                                                                                                                 |
+| State                                            | Packages                                                                                                                                                                                  |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Declared in `apps/mobile/package.json`           | `react-native-paper`, `@react-native-assets/slider`, `react-native-actions-sheet`, `@shopify/flash-list`, `react-native-gesture-handler`, `react-native-reanimated-carousel`, `expo-blur` |
+| Approved for a future scenario, but not declared | `react-native-paper-dates`, `expo-camera`, `expo-haptics`                                                                                                                                 |
 
-Оголошення в manifest не доводить використання конкретного пакета на екрані.
-Фактичні imports і налаштування перевіряй перед зміною відповідної feature;
-повний реєстр прямих залежностей міститься в
-[каталозі технологій та npm-пакетів](../../technology-and-packages.md).
+Declaration in a manifest does not prove a package is used on a screen. Check actual imports and setup before changing the relevant feature; the complete direct-dependency register is in the [technology and npm packages catalog](../../technology-and-packages.md).
 
-## Правило підключення
+## Addition rule
 
-Пакет додається лише тоді, коли він потрібен у конкретній затвердженій задачі. У її SDD/плані потрібно зафіксувати:
+Add a package only when it is needed for a specific approved task. Record the following in its SDD/plan:
 
-1. сценарій та екран, для якого він потрібен;
-2. пакет і сумісну з поточним Expo SDK версію (встановлення через `npx expo install`, якщо пакет підтримується Expo);
-3. місце використання та межу відповідальності;
-4. чи змінює пакет native runtime, permissions або app config, а отже чи потрібен Development Build;
-5. перевірку на Android, iOS та web, якщо платформа підтримується.
+1. the scenario and screen that need it;
+2. the package and version compatible with the current Expo SDK (install through `npx expo install` if supported by Expo);
+3. where it is used and its responsibility boundary;
+4. whether it changes the native runtime, permissions, or app config, and therefore requires a Development Build;
+5. checks on Android, iOS, and web if the platform is supported.
 
-Не встановлюйте весь список «про запас» і не робіть масову міграцію вже наявних компонентів без окремої задачі та вимірюваної причини.
+Do not install the entire list “just in case” or mass-migrate existing components without a separate task and measurable reason.
 
-## Схвалені рішення
+## Approved choices
 
-| Пакет                              | Коли використовувати                                                                                               | Межа в коді та обов'язкові умови                                                                                                                                                                                                                                             |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `react-native-paper`               | Основна UI-бібліотека: кнопки, поля вводу, картки, меню, діалоги, вкладки, `Snackbar`, `Searchbar`, `Chip` і тема. | Використовувати для готових складних контролів. Простий layout — стандартними компонентами React Native. Theme і tokens централізовані; feature не створює власний provider.                                                                                                 |
-| `@react-native-assets/slider`      | Двобігунковий числовий діапазон: фільтр ціни.                                                                      | Використовувати `RangeSlider` з контрольованим `range`, обмеженнями та кольорами Paper theme. Пакет працює з React Native і Web, не вимагає native config або Development Build.                                                                                             |
-| `react-native-actions-sheet`       | Нижні панелі для сортування, вибору категорії, швидких фільтрів і короткого списку дій.                            | Компонент панелі належить `ui`; `feature` передає стан та обробники. Панель має прокручуваний вміст, явне закриття й не повинна приховувати єдину критичну дію.                                                                                                              |
-| `@shopify/flash-list`              | Довгі або потенційно великі списки: каталог товарів, клієнти, замовлення, історія операцій.                        | Це стандартний вибір для **нових** таких списків замість `FlatList`. Наявний `FlatList` не переписується автоматично. Під час міграції перевірити підтримувані props та поведінку recycled cells.                                                                            |
-| `react-native-gesture-handler`     | Свайп рядка, перетягування, довге натискання, дії «змінити/видалити» свайпом.                                      | Підключати лише коли нативного `Pressable` недостатньо. `GestureHandlerRootView` розміщувати біля кореня застосунку; для жестів у RN `Modal` обгорнути також його вміст. Передбачити доступну альтернативу жесту (видима кнопка/меню).                                       |
-| `react-native-reanimated-carousel` | Карусель фото товару, промобанерів, категорій або акцій.                                                           | Не використовувати для основної навігації чи критично важливого контенту без альтернативного доступу. Додається разом із сумісними `react-native-reanimated`, `react-native-worklets` і `react-native-gesture-handler`; перевірити встановлення саме для поточного Expo SDK. |
-| `react-native-paper-dates`         | Вибір дати, часу або періоду: строк замовлення, звіт, дата дзвінка, фільтр за датою.                               | Використовувати поверх Paper theme. До першого показу зареєструвати український переклад `uk-UA`; feature явно визначає формат, timezone та значення, яке надсилається API.                                                                                                  |
-| `expo-camera`                      | Фото товару, сканування QR/штрихкоду, прикріплення фото до замовлення.                                             | Доступ до камери та permission-flow ізолювати за platform adapter/feature boundary, не в презентаційному `ui`. Потрібні пояснення permissions і перевірка на реальному пристрої; зміни native config вимагають нової binary.                                                 |
-| `expo-haptics`                     | Ненав'язливий відгук на підтвердження натискання, успішне збереження, помилку або перемикання фільтра.             | Виклик із platform adapter, а не напряму з кожної кнопки. Haptic — лише додатковий сигнал: успіх, помилка і стан завжди мають видимий/доступний UI-відгук. Вібровідгук може бути недоступним за налаштуваннями або на частині пристроїв.                                     |
+| Package                            | When to use                                                                                                     | Code boundary and required conditions                                                                                                                                                                                                              |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `react-native-paper`               | Primary UI library: buttons, input fields, cards, menus, dialogs, tabs, `Snackbar`, `Searchbar`, `Chip`, theme. | Use for ready-made complex controls. Use standard React Native components for simple layout. Theme and tokens are centralized; features do not create their own provider.                                                                          |
+| `@react-native-assets/slider`      | Two-thumb numeric range: price filter.                                                                          | Use `RangeSlider` with controlled `range`, limits, and Paper theme colors. Works with React Native and Web; requires no native config or Development Build.                                                                                        |
+| `react-native-actions-sheet`       | Bottom sheets for sorting, category selection, quick filters, and short action lists.                           | The sheet component belongs in `ui`; `feature` passes state and handlers. The sheet needs scrollable content and explicit dismissal, and must not hide the only critical action.                                                                   |
+| `@shopify/flash-list`              | Long or potentially large lists: products, customers, orders, operation history.                                | Default choice for **new** lists of this kind instead of `FlatList`. Do not migrate an existing `FlatList` automatically. Check supported props and recycled-cell behavior during migration.                                                       |
+| `react-native-gesture-handler`     | Row swipe, drag, long press, swipe actions such as “edit/delete”.                                               | Add only when native `Pressable` is insufficient. Place `GestureHandlerRootView` near the app root; also wrap the content of an RN `Modal` when using gestures there. Provide an accessible gesture alternative (visible button/menu).             |
+| `react-native-reanimated-carousel` | Product photo, promotional banner, category, or promotion carousel.                                             | Do not use for primary navigation or critical content without an alternative. Add with compatible `react-native-reanimated`, `react-native-worklets`, and `react-native-gesture-handler`; check installation for the current Expo SDK.             |
+| `react-native-paper-dates`         | Choose a date, time, or period: order deadline, report, call date, date filter.                                 | Use with the Paper theme. Register Ukrainian translation `uk-UA` before first display; feature explicitly defines the format, timezone, and value sent to the API.                                                                                 |
+| `expo-camera`                      | Product photo, QR/barcode scan, attach a photo to an order.                                                     | Isolate camera access and permission flow behind a platform adapter/feature boundary, not presentation `ui`. Explain permissions and check on a real device; native config changes require a new binary.                                           |
+| `expo-haptics`                     | Subtle response to button confirmation, successful save, error, or filter change.                               | Call through a platform adapter, not directly from every button. Haptics are an additional signal only: success, error, and state always need visible/accessible UI feedback. Vibration may be unavailable because of settings or on some devices. |
 
-## Розміщення залежностей
+## Dependency placement
 
-`feature` оркеструє сценарій і володіє локальним станом. `ui` містить презентаційні компоненти на базі Paper, Action Sheet, FlashList, carousel або date picker і не залежить від API. Доступ до пристрою (`expo-camera`, `expo-haptics`) ізолюється в platform adapter/core або domain-specific service; `ui` отримує тільки дані та callbacks.
+`feature` orchestrates the scenario and owns local state. `ui` contains presentational components based on Paper, Action Sheet, FlashList, carousel, or date picker and does not depend on the API. Isolate device access (`expo-camera`, `expo-haptics`) in a platform adapter/core or domain-specific service; `ui` receives only data and callbacks.
 
-Публічний API кожної library залишається в її `src/index.ts`. Не експортуйте DTO чи API-клієнт через UI-бібліотеку.
+The public API of each library remains in its `src/index.ts`. Do not export DTOs or the API client through a UI library.
 
-## Expo Go та Development Build
+## Expo Go and Development Build
 
-Після додавання будь-якої залежності перевірте сумісність з поточним Expo SDK через `npx expo-doctor` і документацію пакета. `FlashList` підтримує Expo Go з SDK 46+, але це не скасовує перевірку версії. `expo-camera` додає camera permission, а пояснення permission для iOS і зміни app config потрапляють у native binary, тому для production/development build потрібна нова збірка. Для `react-native-gesture-handler` і carousel виконайте їхні актуальні native/setup-вимоги.
+After adding any dependency, check compatibility with the current Expo SDK using `npx expo-doctor` and the package documentation. FlashList supports Expo Go with SDK 46+, but the installed version still needs checking. `expo-camera` adds camera permission; the iOS permission explanation and app-config changes are included in the native binary, so a new production/development build is needed. Follow current native/setup requirements for `react-native-gesture-handler` and carousel.
 
-Повний порядок переходу й повторної збірки визначено в [Expo Go та Development Build](development-build.md). Цей каталог не є дозволом створювати `expo-dev-client` або EAS build без конкретної native-потреби.
+The complete process for switching and rebuilding is in [Expo Go and Development Build](development-build.md). This catalog does not authorize creating `expo-dev-client` or an EAS build without a specific native need.
 
-## Зареєстрована залежність: `expo-blur`
+## Registered dependency: `expo-blur`
 
-`expo-blur` схвалено лише для плаваючої нижньої навігації в mobile shell.
-Пакет оголошено для поточного Expo SDK; ним керує пара `BlurTargetView`/
-`BlurView`, що належить shell. Дозволи або зміна app config не потрібні.
-На Android використовуй `dimezisBlurViewSdk31Plus`; нижче Android API 31
-залишай напівпрозорий fallback із теми.
+`expo-blur` is approved only for floating bottom navigation in the mobile shell.
+The package is declared for the current Expo SDK; the shell owns the `BlurTargetView`/`BlurView` pair. No permissions or app-config change are needed.
+On Android, use `dimezisBlurViewSdk31Plus`; below Android API 31, keep the theme's translucent fallback.
 
-## Джерела
+## Sources
 
 - [React Native Paper](https://callstack.github.io/react-native-paper/)
 - [react-native-actions-sheet](https://rnas.vercel.app/)

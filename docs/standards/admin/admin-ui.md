@@ -1,27 +1,19 @@
 # Admin UI rules
 
-Композицію списків, деталей і посилань повернення визначає [єдиний стиль сторінок Admin](list-detail-pages.md).
+The composition of lists, details, and back links is defined by the [Admin list and detail page standard](list-detail-pages.md).
 
 ## Language and components
 
-- Видимі рядки, accessible names, empty/error messages і feature specs пишіть українською.
-- Локалізуйте всі MUI controls і MUI X Data Grid мовою застосунку централізовано
-  в `apps/admin/src/app/theme/admin-theme.ts`: зараз це `materialUkUA` та
-  `dataGridUkUA`, передані в `createTheme`; відсутні в локалі підписи доповнюйте
-  там само (зараз `columnMenuAriaLabel`). `AppProviders` підключає цю тему до
-  всіх сторінок Admin. Заголовки колонок і власні кнопки залишаються українськими;
-  не дублюйте `localeText` у кожній таблиці. Кореневий `apps/admin/index.html`
-  має `lang="uk"` для мови документа й допоміжних технологій.
-- Використовуйте наявні MUI patterns і theme; не створюйте локальні design tokens без потреби.
-- Для table, dialog, select, pagination та інших складних business controls використовуйте наявні MUI components.
-- Не змінюйте глобальні стилі, theme або routing заради локальної feature.
+- Write visible strings, accessible names, empty/error messages, and feature specs in Ukrainian.
+- Localize all MUI controls and MUI X Data Grid centrally in `apps/admin/src/app/theme/admin-theme.ts` using the application language. Currently, `materialUkUA` and `dataGridUkUA` are passed to `createTheme`; add missing locale labels there (currently `columnMenuAriaLabel`). `AppProviders` applies this theme to every Admin page. Column headings and custom buttons remain in Ukrainian; do not duplicate `localeText` in each table. The root `apps/admin/index.html` must set `lang="uk"` for the document language and assistive technology.
+- Use existing MUI patterns and theme; do not create local design tokens without need.
+- Use existing MUI components for complex business controls such as tables, dialogs, selects, and pagination.
+- Do not change global styles, theme, or routing for a local feature.
 
 ## States and accessibility
 
-- Кожен екран із server data визначає застосовні `loading`, `success`, `empty`, `error` та `forbidden` states.
-- Error state показує зрозуміле повідомлення без transport details і доступну retry-дію, якщо вона можлива.
-- Інтерактивні елементи мають semantic HTML, keyboard navigation, visible focus і доступне ім'я.
-- Icon-only control має `aria-label` або наявний еквівалент.
-- Звіряйте layout, світлу й темну схеми та breakpoints за кодом теми і компонентів.
-  Відкривати браузер для перевірки можна лише після окремого запитання й прямого
-  дозволу користувача на конкретну браузерну перевірку.
+- Each screen with server data defines the applicable `loading`, `success`, `empty`, `error`, and `forbidden` states.
+- The error state shows a clear message without transport details and an accessible retry action when possible.
+- Interactive elements must use semantic HTML, keyboard navigation, visible focus, and an accessible name.
+- Icon-only controls need `aria-label` or an existing equivalent.
+- Check the layout, light and dark themes, and breakpoints against the theme and component code. Open a browser for verification only after asking the user separately and receiving direct permission for that specific browser check.

@@ -1,28 +1,28 @@
-# Сторінка 404 Storefront
+# Storefront 404 Page
 
-**Вхід:** [notFoundRoutes](../../../libs/storefront/feature/not-found/src/lib/lib.routes.ts) відкриває `/404`; [app routes](../../../apps/storefront/src/app/app.routes.ts) перенаправляє невідомі шляхи на локалізований 404.
+**Entry point:** [notFoundRoutes](../../../libs/storefront/feature/not-found/src/lib/lib.routes.ts) opens `/404`; [app routes](../../../apps/storefront/src/app/app.routes.ts) redirects unknown paths to the localized 404.
 
-- [NotFoundPage](../../../libs/storefront/feature/not-found/src/lib/page/not-found-page/not-found-page.ts) відображає стан відсутньої сторінки. `LocaleNavigationService` зберігає поточну мову при переході.
+- [NotFoundPage](../../../libs/storefront/feature/not-found/src/lib/page/not-found-page/not-found-page.ts) displays the page-not-found state. `LocaleNavigationService` preserves the current language during navigation.
 
-## Схема будови
+## Architecture
 
 ```mermaid
 flowchart LR
-App["app routes: невідомий шлях"] --> Route["notFoundRoutes"]
+App["app routes: unknown path"] --> Route["notFoundRoutes"]
 Route --> Page["NotFoundPage"]
 Page --> Locale["LocaleNavigationService"]
 ```
 
-## Структура в коді
+## Code structure
 
-Фактичні точки входу й основні файли фічі (інші файли цих каталогів тут не перелічено):
+Actual entry points and primary feature files (other files in these directories are omitted):
 
 ```text
 apps/storefront/src/app/
-└── app.routes.ts  # маршрути фічі
+└── app.routes.ts  # feature routes
 
 libs/storefront/feature/not-found/
 └── src/lib/
-    ├── page/not-found-page/not-found-page.ts  # сторінка та композиція UI
-    └── lib.routes.ts  # маршрути фічі
+    ├── page/not-found-page/not-found-page.ts  # page and UI composition
+    └── lib.routes.ts  # feature routes
 ```

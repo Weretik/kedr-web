@@ -1,20 +1,20 @@
-# Nx-контракт і публічний API Mobile
+# Mobile Nx contract and public API
 
-## Теги та aliases
+## Tags and aliases
 
-Кожна нова Mobile-бібліотека отримує тег області, домену й типу:
+Each new Mobile library receives scope, domain, and type tags:
 
 ```json
 { "tags": ["scope:mobile", "domain:catalog", "type:feature"] }
 ```
 
-Для спільної mobile infrastructure використовується окрема область:
+Mobile infrastructure shared within the app uses a separate scope:
 
 ```json
 { "tags": ["scope:mobile-shared", "type:ui"] }
 ```
 
-Цільові aliases:
+Target aliases:
 
 ```text
 @mobile/core/<area>
@@ -22,7 +22,7 @@
 @mobile/<domain>/<layer>
 ```
 
-Приклади:
+Examples:
 
 ```text
 @mobile/core/auth
@@ -33,31 +33,25 @@
 @mobile/catalog/ui
 ```
 
-Правила `@nx/enforce-module-boundaries` уже діють для Mobile libraries. Їхню
-фактичну повноту та відомі gaps фіксує
-[frontend inventory](../../frontend-inventory.md); documented direction додатково
-перевіряється code audit до закриття AF-001.
+`@nx/enforce-module-boundaries` rules already apply to Mobile libraries. The [frontend inventory](../../frontend-inventory.md) records actual coverage and known gaps; a code audit also checks the documented direction before AF-001 is closed.
 
-## Публічний API бібліотек
+## Library public API
 
-Кожна бібліотека розкриває дозволені exports лише через `src/index.ts`.
+Each library exposes allowed exports only through `src/index.ts`.
 
 ```ts
-// Правильно
+// Correct
 import { CatalogScreen } from '@mobile/catalog/feature';
 import { ProductCard } from '@mobile/catalog/ui';
 
-// Неправильно
+// Incorrect
 import { CatalogScreen } from '@mobile/catalog/feature/src/screens/catalog-screen';
 ```
 
-`apps/mobile/src/app` є винятком лише за місцем розташування route-файлів Expo
-Router, а не за правилами імпорту: route використовує публічний API feature.
+`apps/mobile/src/app` is an exception only for Expo Router route-file placement, not for import rules: a route uses the feature's public API.
 
-## Спільний код між Admin і Mobile
+## Code shared between Admin and Mobile
 
-Спільна бібліотека створюється окремим рішенням і отримує нейтральний `scope`.
-Вона може містити лише platform-agnostic TypeScript: контракти, DTO, Zod-схеми,
-чисті мапери та утиліти. Вона не може містити UI, HTTP runtime, router або storage.
+Create a shared library through a separate decision and give it a neutral `scope`. It may contain only platform-agnostic TypeScript: contracts, DTOs, Zod schemas, pure mappers, and utilities. It must not contain UI, HTTP runtime, a router, or storage.
 
-Mobile не імпортує `@admin/*`, а Admin не імпортує `@mobile/*`.
+Mobile does not import `@admin/*`, and Admin does not import `@mobile/*`.
