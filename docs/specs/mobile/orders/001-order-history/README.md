@@ -8,9 +8,9 @@
 - **Created:** 2026-09-17
 - **Last updated:** 2026-09-17
 
-Менеджер відкриває окрему вкладку історії замовлень, переглядає newest-first
-сторінки, обмежує список одним активним клієнтом і відкриває read-only деталі
-замовлення без редагування чи повторної синхронізації.
+The manager opens a separate order history tab, reviews newest-first pages,
+filters the list by one active customer, and opens read-only order details
+without editing or retrying synchronization.
 
 ## Status
 
@@ -46,7 +46,5 @@
 
 ## Change notes
 
-- 2026-09-17 — Initial scenario-first specification from the agreed order
-  history, customer filter, pagination, read-only detail and visual decisions.
-- 2026-09-17 — Implemented the accepted feature and passed contract, lint, test,
-  typecheck and Android/iOS/web export gates; physical device QA remains assigned.
+- 2026-09-17 — Initial scenario-first specification based on agreed order history, customer filter, pagination, read-only detail, and visual decisions.
+- 2026-09-17 — Implemented the accepted feature and passed contract, lint, test, typecheck, and Android/iOS/web export gates; physical device QA remains assigned.

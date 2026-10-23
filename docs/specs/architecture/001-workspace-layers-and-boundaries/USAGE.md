@@ -1,17 +1,17 @@
-# Запуск implementation після погодження
+# Start implementation after approval
 
 ```text
-Працюй за `$frontend-remediation-plan` і
+Follow `$frontend-remediation-plan` and
 `$frontend-code-audit`.
 SDD: `docs/specs/architecture/001-workspace-layers-and-boundaries/`.
-Scope: `<погоджені EN-*/RM-* або вся remediation>`.
+Scope: `<approved EN-*/RM-* or the full remediation>`.
 
-Виконуй tasks за Depends on. Не змінюй observable behavior. Після кожної RM-*
-оновлюй AF evidence, traceability і audit. Не завершуй delivery, доки всі
-in-scope AF-* не verified і final graph/lint/source+test typecheck/tests/
-contracts/builds/docs checks не пройшли. Deferred потребує окремого явного
-погодження і не допускається для prerequisite.
+Execute tasks according to Depends on. Do not change observable behavior. After each RM-*,
+update AF evidence, traceability, and audit. Do not complete delivery until all
+in-scope AF-* findings are verified and final graph/lint/source+test typecheck/tests/
+contracts/builds/docs checks pass. Deferred items require separate explicit approval
+and are not allowed for prerequisites.
 ```
 
-Рекомендований перший scope після погодження: `EN-001`, `EN-002`, `EN-003`,
-потім `RM-001`. Це створює safety net до structural moves.
+Recommended initial scope after approval: `EN-001`, `EN-002`, `EN-003`,
+then `RM-001`. This establishes a safety net before structural moves.

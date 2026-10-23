@@ -1,9 +1,9 @@
-# Mobile product catalog — модель даних
+# Mobile product catalog — data model
 
-## Контекст
+## Context
 
-Screen отримує лише domain models із `@mobile/catalog/data-access`. Private DTO
-маплять `AdminProductPage` contract, описаний у
+The screen receives only domain models from `@mobile/catalog/data-access`. Private DTOs
+map the `AdminProductPage` contract described in
 [Admin products](../../../../contracts/catalog/admin-products.md).
 
 ## Domain / view model
@@ -36,33 +36,33 @@ CatalogCategoryOption
 └── children: CatalogCategoryOption[]
 ```
 
-## Межа DTO
+## DTO boundary
 
-- Private DTO залишаються у `@mobile/catalog/data-access`.
-- `catalog-products.mapper.ts` мапить `AdminProduct` у `CatalogProduct` і
-  normalizes відсутнє image та availability.
-- `catalog-query.mapper.ts` серіалізує `CatalogQuery` у documented query
-  parameters `GET /api/admin/products`.
+- Private DTOs remain in `@mobile/catalog/data-access`.
+- `catalog-products.mapper.ts` maps `AdminProduct` to `CatalogProduct` and
+  normalizes a missing image and availability.
+- `catalog-query.mapper.ts` serializes `CatalogQuery` into documented query
+  parameters for `GET /api/admin/products`.
 
-## Локальний query state
+## Local query state
 
-`CatalogScreen` зберігає локальний user/query state в окремому
-`feature/src/state/catalog-query-reducer.ts`. Reducer володіє лише чернеткою
-пошуку та `CatalogQuery`; RTK Query лишається джерелом server data, loading і
-error states. Дії search, filters і sort атомарно оновлюють query та скидають
-`page` до `1`, щоб не дублювати цю логіку між UI handlers.
+`CatalogScreen` stores local user/query state in a separate
+`feature/src/state/catalog-query-reducer.ts`. The reducer owns only the search draft
+and `CatalogQuery`; RTK Query remains the source of server data, loading, and
+error states. Search, filters, and sort actions atomically update the query and reset
+`page` to `1`, avoiding duplicated logic among UI handlers.
 
-## Інваріанти й нормалізація
+## Invariants and normalization
 
-- `CatalogProduct.id` обов'язковий; це `FlatList.keyExtractor` і deduplication
+- `CatalogProduct.id` is required; it serves as the `FlatList.keyExtractor` and deduplication
   key.
-- Порожній search не передається у request.
-- Зміна search, filters або sort скидає `page` до `1`.
-- Наступна page існує лише коли `pageNumber < totalPages`; client не вигадує
-  cursor або total.
-- Operation не надає currency, price unit, category options або search-field
-  semantics. Mapper зберігає nullable price, а UI не має натякати на ці
-  відсутні деталі.
-- `CatalogCategoryOption` — recursive UI/domain shape для майбутнього mapper;
-  він не є припущенням про backend DTO. До появи source selector показує лише
-  empty preparation state.
+- An empty search is not sent in the request.
+- Changing search, filters, or sort resets `page` to `1`.
+- A next page exists only when `pageNumber < totalPages`; the client does not invent
+  a cursor or total.
+- The operation does not provide currency, price unit, category options, or search-field
+  semantics. The mapper preserves a nullable price, and the UI must not imply these
+  missing details.
+- `CatalogCategoryOption` is a recursive UI/domain shape for a future mapper;
+  it is not an assumption about the backend DTO. Until a source is available, the selector shows only
+  an empty preparation state.

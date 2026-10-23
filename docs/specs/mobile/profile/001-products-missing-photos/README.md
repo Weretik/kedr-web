@@ -1,4 +1,4 @@
-# 001 — Товари без фотографій у профілі
+# 001 — Products without photos in Profile
 
 - **Application type:** React Native
 - **Client:** Mobile
@@ -8,10 +8,10 @@
 - **Created:** 2026-10-03
 - **Last updated:** 2026-10-05
 
-У вкладці «Профіль» менеджер бачить окрему секцію товарів без фотографій,
-може оновити або повторити завантаження, довантажити результати за наявності
-pagination у canonical API contract та відкрити чинні деталі товару, якщо
-контракт надає підтримуваний ідентифікатор маршруту.
+In the “Профіль” tab, the manager sees a separate section of products without
+photos, can refresh or retry loading, load more results when pagination exists
+in the canonical API contract, and open current product details if the contract
+provides a supported route identifier.
 
 ## Status
 
@@ -50,11 +50,7 @@ pagination у canonical API contract та відкрити чинні детал
 
 ## Change notes
 
-- 2026-10-03 — створено scenario-first SDD на основі фактичної Mobile
-  архітектури; невідомий API shape винесено в блокуючий `EN-001`.
-- 2026-10-05 — синхронізовано canonical API operation; підтверджено pagination
-  і чинну навігацію за `productSlug`.
-- 2026-10-05 — реалізовано Mobile data/UI/navigation slice та завершено
-  affected automated verification; TS-007 залишено заблокованим до device QA.
-- 2026-10-05 — виправлено runtime-сумісність `photoCheckedAtUtc` із backend
-  `.NET DateTimeOffset`; додано regression-тест для RFC 3339 offset `+00:00`.
+- 2026-10-03 — Created a scenario-first SDD based on the actual Mobile architecture; unknown API shape was captured in blocking `EN-001`.
+- 2026-10-05 — Synchronized the canonical API operation; confirmed pagination and current navigation by `productSlug`.
+- 2026-10-05 — Implemented the Mobile data/UI/navigation slice and completed affected automated verification; TS-007 remains blocked pending device QA.
+- 2026-10-05 — Fixed runtime compatibility of `photoCheckedAtUtc` with backend `.NET DateTimeOffset`; added a regression test for RFC 3339 offset `+00:00`.

@@ -12,11 +12,11 @@ ResolvedTheme
 
 ## Invariants
 
-- `ThemePreference` зберігає лише user choice; `ResolvedTheme` обчислюється з preference та `useColorScheme`.
-- Некоректне або недоступне storage value повертається до `system`.
-- `ResolvedTheme` не зберігається в AsyncStorage.
+- `ThemePreference` stores only the user choice; `ResolvedTheme` is computed from the preference and `useColorScheme`.
+- An invalid or unavailable storage value falls back to `system`.
+- `ResolvedTheme` is not stored in AsyncStorage.
 
 ## Data boundary
 
-AsyncStorage доступний лише через adapter `@mobile/core/shell`; route і
-presentational components не імпортують його напряму.
+AsyncStorage is available only through the `@mobile/core/shell` adapter; routes
+and presentational components do not import it directly.

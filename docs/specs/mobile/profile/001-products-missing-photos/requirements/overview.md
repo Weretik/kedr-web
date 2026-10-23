@@ -1,54 +1,41 @@
-# Товари без фотографій у профілі — scope and outcome
+# Products without photos in Profile — scope and outcome
 
 ## Goal
 
-Як менеджер, я хочу бачити у вкладці «Профіль» товари без фотографій, щоб
-швидко знаходити записи, для яких контент потребує доповнення.
+As a manager, I want to see products without photos in the “Профіль” tab so I can quickly find records that need content updates.
 
 ## In scope
 
-- секція «Товари без фотографій» у вкладці «Профіль»;
-- початкове завантаження списку та видимі loading, empty, error і success states;
-- ручний retry після помилки та pull-to-refresh успішного списку;
-- довантаження наступних результатів, лише якщо canonical API contract
-  передбачає pagination;
-- перехід до чинних деталей товару, лише якщо відповідь надає підтримуваний
-  чинною навігацією ідентифікатор;
-- українські тексти, touch targets, text scaling, TalkBack/VoiceOver, safe area
-  та поведінка Android, iOS і Expo web.
+- A “Товари без фотографій” section in the “Профіль” tab.
+- Initial list loading and visible loading, empty, error, and success states.
+- Manual retry after an error and pull-to-refresh for a successful list.
+- Load subsequent results only if the canonical API contract supports pagination.
+- Navigate to current product details only if the response provides an identifier supported by current navigation.
+- Ukrainian text, touch targets, text scaling, TalkBack/VoiceOver, safe area, and Android, iOS, and Expo web behavior.
 
 ## Out of scope
 
-- будь-які зміни backend;
-- додавання, завантаження, редагування або перевірка фотографій;
-- клієнтська повторна перевірка того, чи справді товар не має фотографій;
-- створення нового екрана деталей товару;
-- зміни інших вкладок;
-- пошук, сортування або фільтри цього списку;
-- реалізація коду застосунку в межах підготовки цієї специфікації.
+- Any backend changes.
+- Adding, uploading, editing, or checking photos.
+- Client-side rechecking whether a product actually has photos.
+- Creating a new product detail screen.
+- Changes to other tabs.
+- Search, sorting, or filters for this list.
+- Implementing application code as part of preparing this specification.
 
 ## Actors and external systems
 
-- Менеджер: переглядає список, оновлює його, повторює невдалий запит і за
-  підтримки чинного route відкриває деталі.
-- KedrStore Catalog API: повертає товари, які гарантовано не мають фотографій;
-  Mobile не ставить цю бізнес-семантику під сумнів.
-- Чинний Mobile product details flow: відкриває підтримуваний товар без
-  створення нового екрана.
+- Manager: views the list, refreshes it, retries a failed request, and opens details if the current route supports it.
+- KedrStore Catalog API: returns products guaranteed to have no photos; Mobile does not question this business meaning.
+- Current Mobile product details flow: opens a supported product without creating a new screen.
 
 ## Constraints
 
-- Єдине джерело членства у списку — відповідь спеціалізованої operation;
-  клієнт не фільтрує її за photo/image полями.
-- Поля відповіді, параметри, pagination і правила доступу не визначаються
-  припущенням; вони мають бути підтверджені актуальним API-контрактом.
-- Наявні mobile-патерни товарів повторно використовуються тільки там, де
-  підтверджені дані можна відобразити без вигаданих значень.
+- Membership in the list comes only from the specialized operation response; the client does not filter by photo/image fields.
+- Response fields, parameters, pagination, and access rules are not determined by assumption; they must be confirmed in the current API contract.
+- Reuse existing mobile product patterns only when confirmed data can be displayed without inventing values.
 
 ## Open product questions
 
-- [BLOCKED BY EN-001, owner: Catalog API owner] Які точні request/response,
-  access/error і pagination semantics має актуальний контракт списку?
-- [RESOLVED BY EN-001, owner: Mobile team] Чи містить підтверджена consumer
-  projection ідентифікатор, необхідний чинному переходу в деталі? Якщо ні,
-  товари лишаються неінтерактивними без створення нового переходу.
+- [BLOCKED BY EN-001, owner: Catalog API owner] What exact request/response, access/error, and pagination semantics does the current list contract provide?
+- [RESOLVED BY EN-001, owner: Mobile team] Does the confirmed consumer projection contain an identifier required by the existing detail navigation? If not, products remain non-interactive; no new navigation is created.

@@ -1,115 +1,115 @@
-# Клієнти — правила й сценарії
+# Customers — rules and scenarios
 
-## Правила
+## Rules
 
-### R-001 — Список активних клієнтів
+### R-001 — Active customer list
 
-Користувач бачить активних клієнтів із одним пошуком у панелі MUI Data Grid, серверним сортуванням та серверною пагінацією. Пошук охоплює ID, ім'я і телефон усієї серверної вибірки до пагінації; сервер повертає кількість знайдених рядків. Заголовки імені, телефону та ID перемикають порядок за зростанням і спаданням; зміна порядку повертає на сторінку 1, а URL зберігає його для повернення з деталей. У таблиці немає фільтрів колонок і меню фільтрів. Колонка «Дії» містить лише перегляд; дій зміни або видалення немає.
+The user sees active customers with one search field in the MUI Data Grid toolbar, server-side sorting, and server-side pagination. Search covers ID, name, and phone across the full server result set before pagination; the server returns the number of matching rows. The name, phone, and ID headers toggle ascending and descending order. Changing sort returns to page 1, and the URL preserves it for return from details. The table has no column filters or filter menu. The «Дії» column contains view only; there are no edit or delete actions.
 
-### R-002 — Деталі клієнта
+### R-002 — Customer details
 
-Із рядка відкривається саме цей клієнт. Картка показує лише наявні контактні та цінові дані; відсутній телефон має нейтральне представлення.
+Opening a row shows that customer. The card displays only available contact and pricing data; a missing phone uses a neutral representation.
 
-### R-003 — Доступне відновлення
+### R-003 — Accessible recovery
 
-Повернення з картки відновлює сторінку, пошук і сортування списку. Порожній список, неправильне посилання, 404 і помилка запиту показують різні стани з релевантними діями.
+Returning from the card restores the list page, search, and sort. An empty list, invalid link, 404, and request error each have distinct states and relevant actions.
 
-### R-004 — Адаптивність і колірні схеми Admin
+### R-004 — Responsive layout and Admin color schemes
 
-Список і картка клієнта придатні для користування на телефоні та планшеті: вміст не обрізається, горизонтальне прокручування таблиці за потреби лишає доступними перегляд рядка й пагінацію. У світлій і темній схемах елементи використовують чинну тему Admin; текст, стани й фокус залишаються читабельними.
+The list and customer card are usable on phones and tablets: content is not clipped, and horizontal table scrolling keeps row actions and pagination accessible when needed. Both light and dark schemes use the current Admin theme; text, states, and focus remain readable.
 
-Вбудовані підписи MUI Data Grid, пагінація й доступні назви кнопок таблиці відображаються українською через спільну Admin theme.
+Built-in MUI Data Grid labels, pagination, and accessible table button names are localized in Ukrainian through the shared Admin theme.
 
-### R-005 — Зрозумілі назви цінових налаштувань
+### R-005 — Clear names for pricing settings
 
-У деталях клієнта тип цін за замовчуванням і типи цін для категорій показуються своїми назвами з API замість числових ID типів цін. Категорія відображається своєю назвою разом із числовим ID. Якщо назва дорівнює `null`, картка показує нейтральне «Назва недоступна», а не видає ID за назву. Backend `getAdminCustomerById` визначає потрібні nullable назви; frontend snapshot/generated types синхронізовано.
+Customer details show the default price type and category price types by their API names instead of numeric price-type IDs. A category is shown by name together with its numeric ID. If a name is `null`, the card shows the neutral «Назва недоступна» state rather than presenting an ID as a name. Backend `getAdminCustomerById` defines the required nullable names; frontend snapshot/generated types are synchronized.
 
-### R-006 — Єдиний компактний формат деталей клієнта
+### R-006 — Consistent compact customer detail layout
 
-Заголовок сторінки — «Деталі клієнта»; ім'я клієнта не дублюється в ньому. Посилання «Назад до клієнтів» зі стрілкою має той самий вигляд і поведінку відновлення URL списку, що й повернення з деталей товару. Три компактні MUI Card без таблиць показують: основну інформацію з одним ім'ям та ID під ним, контактні дані й типи цін. Кожне значення має зрозумілий підпис; картки використовують кольори й відступи чинної Admin theme та не обрізають довгі значення на телефоні й планшеті.
+The page heading is «Деталі клієнта»; it does not repeat the customer name. The arrow link «Назад до клієнтів» matches the appearance and list-URL restoration behavior used when returning from product details. Three compact MUI Cards without tables show: basic information with the name once and the ID below it, contact details, and price types. Each value has a clear label; cards use current Admin theme colors and spacing and do not clip long values on phones or tablets.
 
-## Приймальні сценарії
+## Acceptance scenarios
 
-### SC-001 — Відкрити список
+### SC-001 — Open the list
 
-**Покриває:** R-001
+**Covers:** R-001
 
-Given користувач перебуває в Admin
-When він обирає «Клієнти» у меню
-Then бачить сторінку активних клієнтів із ім'ям, телефоном за наявності й ідентифікатором
-And не бачить дій редагування чи видалення.
+Given the user is in Admin
+When they select «Клієнти» from the menu
+Then they see the active customer page with name, phone when available, and ID
+And they see no edit or delete actions.
 
-### SC-002 — Перегорнути список
+### SC-002 — Paginate the list
 
-**Покриває:** R-001
+**Covers:** R-001
 
-Given є кілька сторінок клієнтів
-When користувач змінює сторінку або її розмір
-Then відображається відповідна серверна сторінка та правильна кількість знайдених клієнтів
-And активний пошук застосований до всіх клієнтів перед вибором сторінки.
+Given there are multiple pages of customers
+When the user changes page or page size
+Then the corresponding server page and correct matching-customer count are displayed
+And active search is applied to all customers before the page is selected.
 
-### SC-003 — Переглянути клієнта
+### SC-003 — View a customer
 
-**Покриває:** R-002, R-003
+**Covers:** R-002, R-003
 
-Given клієнт видно у списку
-When користувач відкриває його картку
-Then видно перевірені контактні дані й типи цін саме цього клієнта
-And повернення відновлює попередню сторінку списку.
+Given a customer is visible in the list
+When the user opens their card
+Then verified contact data and price types for that customer are shown
+And returning restores the previous list page.
 
-### SC-004 — Обробити невідомого клієнта
+### SC-004 — Handle an unknown customer
 
-**Покриває:** R-003
+**Covers:** R-003
 
-Given посилання має неправильний або неіснуючий ідентифікатор
-When сторінка деталей відкрита
-Then видно повідомлення про недоступного клієнта без технічних даних
-And є повернення до списку.
+Given the link has an invalid or nonexistent ID
+When the detail page opens
+Then a message says the customer is unavailable, without technical details
+And a way to return to the list is available.
 
-### SC-005 — Порожня вибірка або помилка
+### SC-005 — Empty result set or error
 
-**Покриває:** R-003
+**Covers:** R-003
 
-Given сервер повернув порожню сторінку або помилку
-When список завершує завантаження
-Then видно відповідний український стан
-And за помилки доступний повтор того самого запиту.
+Given the server returned an empty page or an error
+When the list finishes loading
+Then the corresponding Ukrainian state is shown
+And the same request can be retried after an error.
 
-### SC-006 — Користуватися з телефона й планшета в обох темах
+### SC-006 — Use on phones and tablets in both themes
 
-**Покриває:** R-004
+**Covers:** R-004
 
-Given відкрито список або картку клієнта на телефонному чи планшетному екрані у світлій або темній схемі Admin
-When користувач переглядає рядок, змінює сторінку таблиці й відкриває деталі
-Then основні дії та дані доступні без обрізання чи перекриття, навіть якщо таблиця прокручується горизонтально
-And текст, межі, стани завантаження/помилки та фокус читабельні в активній схемі.
+Given the customer list or card is open on a phone or tablet screen in the Admin light or dark scheme
+When the user views a row, changes the table page, and opens details
+Then primary actions and data remain accessible without clipping or overlap, even when the table scrolls horizontally
+And text, borders, loading/error states, and focus are readable in the active scheme.
 
-### SC-007 — Шукати серед усіх клієнтів
+### SC-007 — Search across all customers
 
-**Покриває:** R-001
+**Covers:** R-001
 
-Given клієнт перебуває за межами поточної сторінки
-When користувач вводить ID, ім'я або телефон в одне поле пошуку таблиці
-Then сервер повертає відповідні рядки й кількість знайдених клієнтів із першої сторінки
-And пагінація зберігає поточний пошуковий запит
-And додатковий підпис під таблицею з кількістю знайдених клієнтів або поясненням роботи сервера не показується.
+Given a customer is outside the current page
+When the user enters an ID, name, or phone in the table search field
+Then the server returns matching rows and the matching customer count starting from page one
+And pagination preserves the current search query
+And no extra caption below the table shows the matching count or explains server behavior.
 
-### SC-008 — Прочитати цінові налаштування за назвами
+### SC-008 — Read pricing settings by name
 
-**Покриває:** R-002, R-005
+**Covers:** R-002, R-005
 
-Given API деталей повернув назву типу цін за замовчуванням, назви категорій і відповідних типів цін
-When користувач відкриває картку клієнта
-Then бачить назви типів цін без окремого числового ID типу цін
-And кожна категорія показана назвою та ID
-And відсутня назва має нейтральний стан без вигаданого значення.
+Given the detail API returned the default price-type name, category names, and their price-type names
+When the user opens the customer card
+Then the user sees price-type names without separate numeric price-type IDs
+And each category is shown by name and ID
+And a missing name has a neutral state without an invented value.
 
-### SC-009 — Переглянути компактну картку клієнта
+### SC-009 — View the compact customer card
 
-**Покриває:** R-002, R-004, R-006
+**Covers:** R-002, R-004, R-006
 
-Given відкрито деталі клієнта
-When сторінка завантажує клієнта
-Then заголовок сторінки має текст «Деталі клієнта», а ім'я та ID з'являються лише в картці основної інформації
-And окремі компактні картки «Контактні дані» та «Типи цін» показують підписані значення без таблиць і числових ID типів цін
-And посилання зі стрілкою повертає до попереднього пошуку й сторінки клієнтів.
+Given customer details are open
+When the page loads the customer
+Then the page heading reads «Деталі клієнта», while the name and ID appear only in the basic information card
+And separate compact “Contact details” and “Price types” cards show labeled values without tables or numeric price-type IDs
+And the arrow link returns to the previous customer search and page.

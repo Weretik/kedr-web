@@ -1,43 +1,43 @@
-# Workspace layers and boundaries — findings і requirements
+# Workspace layers and boundaries — findings and requirements
 
-## Мета та межі
+## Goal and scope
 
-- **Мета:** узгодити graph, owners, state/data paths, DTO boundary, public API,
-  test gates і physical tree з project-specific Kedr architecture.
-- **У межах implementation:** `eslint.config.cjs`, `nx.json`,
+- **Goal:** align the graph, owners, state/data paths, DTO boundary, public API,
+  test gates, and physical tree with the project-specific Kedr architecture.
+- **In implementation scope:** `eslint.config.cjs`, `nx.json`,
   `tsconfig.base.json`, affected `project.json`, apps composition, affected
-  Admin/Mobile/Storefront libraries, tests і docs.
-- **Поза межами:** нова business behavior, redesign, backend/schema changes,
-  dependency upgrades і device E2E runner без окремого рішення.
-- **Зберігаємо:** routes, visible states, catalog/cart/checkout/order behavior,
-  Admin auth/products behavior, Storefront SSR/localization і API semantics.
+  Admin/Mobile/Storefront libraries, tests, and docs.
+- **Out of scope:** new business behavior, redesign, backend/schema changes,
+  dependency upgrades, and a device E2E runner without a separate decision.
+- **Preserved:** routes, visible states, catalog/cart/checkout/order behavior,
+  Admin auth/products behavior, Storefront SSR/localization, and API semantics.
 
 ## Architecture requirements
 
-- **AR-001:** graph реалізує app → core/feature/shared; core не залежить від
-  domain; feature не залежить від feature; model не залежить від framework/data;
+- **AR-001:** the graph implements app → core/feature/shared; core does not depend on
+  domain; feature does not depend on feature; model does not depend on framework/data;
   scope/domain/type rules enforceable — `docs/architecture/*/dependencies.md`,
   `admin/nx-contract.md`, `mobile/nx-contract.md`.
-- **AR-002:** Mobile cross-domain user flow може оркеструвати public lower layers
-  лише з explicit design; shared domain concept має neutral owner —
+- **AR-002:** a Mobile cross-domain user flow may orchestrate public lower layers
+  only with explicit design; a shared domain concept has a neutral owner —
   `docs/architecture/mobile/structure/dependencies.md`.
-- **AR-003:** Admin/Mobile server state належить RTK Query; Storefront — Angular
-  data-access facade. Duplicated manual server cache/lifecycle заборонений —
+- **AR-003:** Admin/Mobile server state belongs to RTK Query; Storefront uses the Angular
+  data-access facade. Duplicated manual server cache/lifecycle is prohibited —
   `docs/standards/shared/api-data-rules.md`.
-- **AR-004:** generated DTO залишаються private transport types; runtime
-  validation і mapper повертають domain/application model —
+- **AR-004:** generated DTOs remain private transport types; runtime
+  validation and the mapper return a domain/application model —
   `docs/standards/shared/api-data-rules.md`.
-- **AR-005:** cache key/tag/invalidation semantics належать approved data layer —
+- **AR-005:** cache key/tag/invalidation semantics belong to the approved data layer —
   `docs/standards/shared/api-data-rules.md`, client `state-and-api.md`.
-- **AR-006:** cross-library imports використовують exact alias/root `src/index.ts`;
-  private DTO, mapper, client, interceptor, parser і storage не exported — client
-  `nx-contract.md` та code-audit phase 04.
-- **AR-007:** source і tests мають executable gates; empty suite/package не є
-  evidence, structural moves мають characterization —
+- **AR-006:** cross-library imports use the exact alias/root `src/index.ts`;
+  private DTO, mapper, client, interceptor, parser, and storage are not exported — client
+  `nx-contract.md` and code-audit phase 04.
+- **AR-007:** source and tests have executable gates; an empty suite/package is not
+  evidence, and structural moves have characterization —
   `docs/standards/shared/testing-rules.md`.
-- **AR-008:** empty/dead projects/folders, duplicate owners і stale docs
-  видаляються після consumer check — `docs/standards/*-code-organization.md`.
-- **AR-009:** delivery потребує `verified` для всіх in-scope findings —
+- **AR-008:** empty/dead projects/folders, duplicate owners, and stale docs
+  are removed after a consumer check — `docs/standards/*-code-organization.md`.
+- **AR-009:** delivery requires `verified` status for all in-scope findings —
   `docs/standards/shared/delivery-rules.md`.
 
 ## Findings

@@ -10,9 +10,9 @@
 
 ## Operations
 
-| User intent       | Method/path                                 | Request                                                 | Success                          | Expected errors                                                        |
-| ----------------- | ------------------------------------------- | ------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| Переглянути товар | `GET /api/catalog/uk/product/{productSlug}` | path `lang='uk'`, `productSlug`; query `priceTypeId=11` | generated `200 application/json` | `400` invalid input, `404` not found, normalized network/server errors |
+| User intent  | Method/path                                 | Request                                                 | Success                          | Expected errors                                                        |
+| ------------ | ------------------------------------------- | ------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| View product | `GET /api/catalog/uk/product/{productSlug}` | path `lang='uk'`, `productSlug`; query `priceTypeId=11` | generated `200 application/json` | `400` invalid input, `404` not found, normalized network/server errors |
 
 ## Generated transport types
 
@@ -25,28 +25,28 @@ type ProductDetailsQuery = NonNullable<GetProductDetails['parameters']['query']>
 type ProductDetailsPath = GetProductDetails['parameters']['path'];
 ```
 
-Generated types залишаються private у `@mobile/catalog/data-access`.
+Generated types remain private in `@mobile/catalog/data-access`.
 
 ## Client projection
 
-- Request завжди формує `lang: 'uk'`, trimmed `productSlug` і
-  `priceTypeId: 11`; порожній slug блокується до HTTP boundary.
-- Runtime schema перевіряє external response та має бути type-compatible з
-  `ProductDetailsDto`; code generation не замінює runtime validation.
-- Mapper повертає `CatalogProductDetails`: `id`, `name`, `price`, `stock`,
-  `categoryName`, `categorySlug`, `quantityInPack`, `breadcrumbs` та image
+- The request always sets `lang: 'uk'`, a trimmed `productSlug`, and
+  `priceTypeId: 11`; an empty slug is blocked before the HTTP boundary.
+- The runtime schema validates the external response and must be type-compatible
+  with `ProductDetailsDto`; code generation does not replace runtime validation.
+- The mapper returns `CatalogProductDetails`: `id`, `name`, `price`, `stock`,
+  `categoryName`, `categorySlug`, `quantityInPack`, `breadcrumbs`, and image
   candidates `{kind: 'photo' | 'scheme', url}`.
-- Порожні image strings не входять до candidates. HTTP-valid JSON не гарантує,
-  що файл за URL існує; остаточний fallback належить image component.
-- `404` стає domain not-found state; connectivity і network/server failures —
-  safe retryable errors; raw body не показується й не логуються URL query/body.
-- RTK Query cache key визначається `productSlug`, `lang='uk'` і
-  `priceTypeId=11`; unmount скасовує непотрібний in-flight request.
+- Empty image strings are excluded from candidates. Valid HTTP JSON does not
+  guarantee that a file exists at the URL; the image component owns the final fallback.
+- `404` becomes a domain not-found state; connectivity and network/server
+  failures become safe retryable errors. Do not show the raw body or log URL query/body.
+- The RTK Query cache key is determined by `productSlug`, `lang='uk'`, and
+  `priceTypeId=11`; unmount cancels an unnecessary in-flight request.
 
 ## Contract verification
 
 - `npm run contracts:check`.
-- Mapper/runtime-schema unit tests у `mobile-catalog-data-access:test`.
-- Endpoint request/404/error focused integration у тому самому target.
-- Compatibility blocker: `ProductDetails` не містить description або масиву
-  images; gallery свідомо будується лише з `photo` і `scheme`.
+- Mapper/runtime-schema unit tests run in `mobile-catalog-data-access:test`.
+- Focused endpoint request/404/error integration runs in the same target.
+- Compatibility blocker: `ProductDetails` has no description or image array;
+  the gallery is intentionally built only from `photo` and `scheme`.

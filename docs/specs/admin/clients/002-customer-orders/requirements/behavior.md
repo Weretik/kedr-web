@@ -1,43 +1,43 @@
-# Правила й сценарії
+# Requirements and scenarios
 
-- **R-001.** Під картками деталей клієнта розміщено Card із вкладками «Замовлення» й «Чернетки». Обидві таблиці показують лише записи поточного `counterpartyId`; сервер фільтрує до pagination. Назву клієнта в кожному рядку можна пропустити як дубль.
-- **R-002.** Кожна вкладка має незалежні page/pageSize/sort/search у URL; перемикання вкладки й повернення з деталей зберігає контекст. Пагінація, сортування й пошук серверні, count показує тільки записи клієнта.
-- **R-003.** Дії замовлення — перегляд; чернетки — перегляд, редагування й видалення з підтвердженням. Посилання ведуть до orders routes; повернення відновлює саме картку цього клієнта та вкладку.
-- **R-004.** Порожні таблиці, 404 клієнта, loading/error та вузькі екрани використовують наявні Admin patterns; помилка однієї таблиці не приховує картки клієнта.
+- **R-001.** A Card with the «Замовлення» and «Чернетки» tabs appears below the customer detail cards. Both tables show only records for the current `counterpartyId`; the server filters before pagination. The customer name may be omitted from each row as redundant.
+- **R-002.** Each tab has independent page/pageSize/sort/search state in the URL; switching tabs and returning from a detail page preserves context. Pagination, sorting, and search are server-side, and the count includes only the customer's records.
+- **R-003.** Order actions are view-only; draft actions are view, edit, and delete with confirmation. Links lead to orders routes; returning restores this customer's card and the selected tab.
+- **R-004.** Empty tables, customer 404, loading/error states, and narrow screens use existing Admin patterns; an error in one table does not hide the customer cards.
 
-## Сценарії приймання
+## Acceptance scenarios
 
-### SC-001 — Побачити записи клієнта
+### SC-001 — View customer records
 
-**Покриває:** R-001
+**Covers:** R-001
 
-- Given клієнт має замовлення й чернетки, а інші клієнти теж мають записи
-- When менеджер відкриває деталі цього клієнта
-- Then дві вкладки показують лише його записи й відповідні кількості.
+- Given the customer has orders and drafts, and other customers also have records
+- When the manager opens this customer's details
+- Then the two tabs show only this customer's records and their respective counts.
 
-### SC-002 — Працювати з таблицями клієнта
+### SC-002 — Work with customer tables
 
-**Покриває:** R-002
+**Covers:** R-002
 
-- Given записів клієнта достатньо для кількох сторінок
-- When менеджер шукає, сортує, гортає і перемикає вкладки
-- Then усі результати залишаються обмеженими цим клієнтом
-- And умови кожної вкладки відновлюються після повернення.
+- Given the customer has enough records for several pages
+- When the manager searches, sorts, pages through results, and switches tabs
+- Then all results remain limited to this customer
+- And each tab's criteria are restored on return.
 
-### SC-003 — Відкрити запис і повернутися
+### SC-003 — Open a record and return
 
-**Покриває:** R-003
+**Covers:** R-003
 
-- Given менеджер відкрив замовлення або чернетку з деталей клієнта
-- When він повертається зі сторінки запису
-- Then бачить того самого клієнта та вибрану вкладку
-- And видалення чернетки виконується лише після підтвердження.
+- Given the manager opened an order or draft from customer details
+- When they return from the record page
+- Then they see the same customer and selected tab
+- And a draft is deleted only after confirmation.
 
-### SC-004 — Обробити порожню вкладку та помилку
+### SC-004 — Handle an empty tab and an error
 
-**Покриває:** R-004
+**Covers:** R-004
 
-- Given одна вкладка порожня або її запит завершився помилкою
-- When менеджер переглядає деталі клієнта
-- Then інформаційні картки клієнта й друга вкладка лишаються доступними
-- And проблемна вкладка показує власний порожній стан або повтор запиту.
+- Given one tab is empty or its request fails
+- When the manager views customer details
+- Then the customer information cards and the other tab remain available
+- And the affected tab shows its own empty state or a retry option.

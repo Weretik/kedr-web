@@ -1,33 +1,33 @@
-# Категорія в таблиці товарів — 2026-10-19
+# Category in the products table — 2026-10-19
 
-**Мета.** У трьох режимах таблиці показати українську назву категорії, дати вибір із дерева та серверне сортування за категорією.
+**Goal.** In all three table modes, show the Ukrainian category name, allow selection from a tree, and support server sorting by category.
 
-## Правила і сценарії
+## Rules and scenarios
 
-- **R-CAT-01.** Колонка «Категорія» відображає `categoryName` від Admin API або зрозумілу заміну, якщо назва недоступна. Колонка сортується на сервері за українською назвою, не в межах поточної сторінки.
-- **R-CAT-02.** Вбудований toolbar таблиці містить MUI Autocomplete з пошуком і деревом категорій із `GET /api/categories`. Кожен рівень, включно з коренем і проміжними вузлами, можна вибрати натисканням на його назву. У списку рівні розрізняються відступами; видимий підпис містить лише зрозумілу українську назву без ID. Біля батьківського вузла є окрема стрілка для розгортання й згортання нащадків, яка не вибирає категорію. Пошук охоплює назви предків і тимчасово показує їх поруч зі знайденою дочірньою категорією незалежно від стану гілки. Для категорій публічного Angular-каталогу використовуються ті самі українські підписи; для інших — `shortNameUk` API. Очищення знімає умову.
-- **R-CAT-03.** Вибраний `categoryId` передається на сервер до пагінації у кожній вкладці. Сервер включає вибрану категорію та всіх нащадків. Зміна категорії повертає до першої сторінки; окремий стан кожної вкладки зберігається в URL.
-- **R-CAT-04.** Колонки «На сайті» немає: ознаку представляє однойменна вкладка.
-- **SC-CAT-01.** Коли користувач шукає категорію та вибирає будь-який рівень дерева, список показує вкладені відступи й короткі українські назви без технічних ID; запит містить ID вибраної категорії і `page=1`, Data Grid показує серверний `rowCount`.
-- **SC-CAT-02.** Коли користувач сортує колонку категорії, запит містить `CategoryAsc` або `CategoryDesc`; сторінки зберігають глобальний порядок.
-- **SC-CAT-03.** Коли користувач перемикає вкладки та повертається з деталей, вибір категорії кожної вкладки відновлюється.
+- **R-CAT-01.** The «Категорія» column displays `categoryName` from the Admin API or a clear fallback when the name is unavailable. The column is sorted on the server by Ukrainian name, not within the current page.
+- **R-CAT-02.** The table's built-in toolbar contains an MUI Autocomplete with search and a category tree from `GET /api/categories`. Any level, including root and intermediate nodes, can be selected by clicking its name. Levels are distinguished by indentation in the list; the visible label contains only a clear Ukrainian name without an ID. A separate arrow beside a parent node expands/collapses descendants without selecting the category. Search includes ancestor names and temporarily shows them alongside a matching child category regardless of the branch's expanded state. Categories from the public Angular catalog use the same Ukrainian labels; other categories use API `shortNameUk`. Clearing removes the filter.
+- **R-CAT-03.** The selected `categoryId` is sent to the server before pagination on every tab. The server includes the selected category and all its descendants. Changing category returns to the first page; each tab's separate state is stored in the URL.
+- **R-CAT-04.** There is no «На сайті» column: the same-named tab represents that property.
+- **SC-CAT-01.** When the user searches for a category and selects any tree level, the list shows nested indentation and short Ukrainian names without technical IDs; the request contains the selected category ID and `page=1`, and the Data Grid shows the server `rowCount`.
+- **SC-CAT-02.** When the user sorts the category column, the request contains `CategoryAsc` or `CategoryDesc`; pages retain the global order.
+- **SC-CAT-03.** When the user switches tabs and returns from details, each tab's category selection is restored.
 
-## Межі і рішення
+## Boundaries and decisions
 
-`@admin/products/data-access` споживає `getAdminCategories` і спискові операції; generated DTO лишаються на transport boundary. `model` зберігає ID, назву й глибину категорії, `feature` — URL/query стан, `ui` — контроль вибору й таблицю без HTTP/router. Українські підписи відомих категорій звірено з `apps/storefront/src/app/localization/translations/catalog.translation.ts` і прив'язано до ID публічного дерева з `libs/storefront/data-access/src/lib/catalog/config/catalog-category-slugs.constants.ts`; решта назв надходить із API. MUI [Autocomplete](https://mui.com/material-ui/react-autocomplete/) підтримує керований вибір; вкладеність у списку передають відступ і окрема кнопка-стрілка батьківського вузла. Відповідь `getAdminCategories` упорядкована depth-first; порожній список і помилка довідника не блокують список товарів. Браузерних перевірок без прямого дозволу немає.
+`@admin/products/data-access` consumes `getAdminCategories` and list operations; generated DTOs remain at the transport boundary. `model` stores category ID, name, and depth, `feature` owns URL/query state, and `ui` owns the selection control and table without HTTP/router. Ukrainian labels for known categories were checked against `apps/storefront/src/app/localization/translations/catalog.translation.ts` and mapped to public-tree IDs from `libs/storefront/data-access/src/lib/catalog/config/catalog-category-slugs.constants.ts`; other names come from the API. MUI [Autocomplete](https://mui.com/material-ui/react-autocomplete/) supports controlled selection; indentation and a separate arrow button on parent nodes convey hierarchy in the list. The `getAdminCategories` response is ordered depth-first; an empty list or directory error does not block the products list. No browser checks were performed.
 
-**Джерело назв перевірено 2026-10-19:** статичний код Angular Storefront і OpenAPI Admin categories. Поточний стан серверних даних не перевірявся.
+**Name source checked 2026-10-19:** static Angular Storefront code and the OpenAPI Admin categories contract. Current server data was not checked.
 
-**Доповнення 2026-10-20 — відображення таблиці:** у всіх трьох режимах колонка товару показує лише `nameUk`; назва й шлях категорії будуються з довідника `getAdminCategories` від батьківської до дочірньої через `parentId`. Довгий текст переноситься, а висота рядка визначається вмістом. Якщо категорії немає в довіднику, використовується `categoryName` зі списку; за порожнього значення показується ID категорії. За кодом backend порожній API `categoryName` виникає, коли не знайдено категорію за ID проєкції; фактичні серверні дані не перевірялися. Попередня вимога показувати «Назва недоступна» для такого випадку замінена. Цільовий Red-тест `products-data-grid.spec.tsx` відтворив старе відображення; фінальний прогін UI 6/6 і TypeScript checks UI пройшли. Браузер не відкривали.
+**Addendum 2026-10-20 — table display:** in all three modes, the product column shows only `nameUk`; the category name and path are built from the `getAdminCategories` directory, from parent to child through `parentId`. Long text wraps and row height follows its content. If a category is missing from the directory, use `categoryName` from the list; if that is empty, show the category ID. According to backend code, an empty API `categoryName` occurs when the category is not found by the projection ID; actual server data was not checked. The previous requirement to show «Назва недоступна» for this case has been replaced. The targeted Red test `products-data-grid.spec.tsx` reproduced the old display; the final UI run passed 6/6 and UI TypeScript checks passed. The browser was not opened.
 
-**Доповнення 2026-10-20 — фільтр категорій:** гілки початково згорнуті; кнопка-стрілка окремо змінює видимість нащадків, а натискання на назву вибирає батьківський чи дочірній вузол. Для категорії, відновленої з URL, предки розгортаються. Пошук тимчасово показує збіги разом із предками. Цільовий тест `products-grid-toolbar.spec.tsx` покриває згортання, розгортання, вибір батька й пошук дочірнього вузла.
+**Addendum 2026-10-20 — category filter:** branches are collapsed initially; the arrow button separately toggles descendant visibility, while clicking a name selects the parent or child node. Ancestors expand for a category restored from the URL. Search temporarily shows matches with their ancestors. The targeted test `products-grid-toolbar.spec.tsx` covers collapsing, expanding, selecting a parent, and searching for a child node.
 
-Під час статичного аудиту цього інкременту винесено toolbar, заголовок boolean-фільтра й дію перегляду з `products-data-grid.tsx` в окремі компоненти; таблиця залишає композицію колонок і керованої MUI Data Grid. Орієнтир для стилю таблиці — [спільний стандарт Admin](../../../../standards/admin/list-detail-pages.md). Аудит не охоплює інші домени чи весь застосунок.
+During the static audit of this increment, the toolbar, boolean-filter header, and view action were extracted from `products-data-grid.tsx` into separate components; the table retains composition of columns and the controlled MUI Data Grid. The style reference for the table is the [shared Admin standard](../../../../standards/admin/list-detail-pages.md). The audit does not cover other domains or the whole application.
 
-| Задача | Сценарій | Доказ |
-| --- | --- | --- |
-| TS-CAT-01 — API і модель | SC-CAT-01–03 | мапери категорій і query, цільові тести |
-| TS-CAT-02 — URL і UI | SC-CAT-01–03 | цільові тести стану, контролу й сортування |
-| TS-CAT-03 — документи фічі | SC-CAT-01–03 | актуальні опис фічі й consumer contract |
+| Task                          | Scenario     | Evidence                                          |
+| ----------------------------- | ------------ | ------------------------------------------------- |
+| TS-CAT-01 — API and model     | SC-CAT-01–03 | category and query mappers, targeted tests        |
+| TS-CAT-02 — URL and UI        | SC-CAT-01–03 | targeted state, control, and sorting tests        |
+| TS-CAT-03 — feature documents | SC-CAT-01–03 | current feature description and consumer contract |
 
-Списки беруть кольори з чинної світлої/темної теми, локаль `uk-UA` і адаптивні правила Admin. За кодом перевіряються телефонний і планшетний breakpoint, focus та доступні назви; браузер і повний прогін лише за окремим дозволом.
+Lists use colors from the current light/dark theme, the `uk-UA` locale, and Admin responsive rules. Code checks cover phone and tablet breakpoints, focus, and accessible names; browser checks and a full run require separate authorization.

@@ -2,55 +2,49 @@
 
 ## Goal
 
-Як менеджер, я хочу перевірити товари, вибрати клієнта та оформити Sales
-замовлення, щоб backend надійно зберіг його і поставив у чергу на передачу до
-1С.
+As a manager, I want to review products, select a customer, and submit a Sales order so the backend can reliably store it and queue it for transfer to 1C.
 
 ## In scope
 
-- Окрема вкладка «Кошик» у нижній навігації.
-- Відновлення товарів після перезапуску застосунку.
-- Перегляд, збільшення, зменшення та видалення товарних рядків.
-- Обмеження кількості останнім відомим залишком товару.
-- Загальна сума лише за товарами.
-- Вибір одного активного клієнта зі списку та локальний пошук за назвою.
-- Необов'язковий коментар менеджера.
-- Одноразове створення повноцінного Sales замовлення з безпечним повтором.
-- Успішний результат з номером замовлення і статусом `Pending`.
-- Очищення кошика після підтвердженого створення.
-- Зрозумілі empty, loading, offline, validation і transport error states.
+- A separate “Кошик” tab in bottom navigation.
+- Restore products after app restart.
+- View, increase, decrease, and remove product lines.
+- Limit quantity to the last known product stock.
+- Product-only total.
+- Select one active customer from a list and search locally by name.
+- Optional manager comment.
+- Create a complete Sales order once, with safe retries.
+- Successful result includes order number and `Pending` status.
+- Clear the cart after confirmed creation.
+- Clear empty, loading, offline, validation, and transport error states.
 
 ## Out of scope
 
-- Редагування менеджером ціни або суми товарного рядка.
-- Ціни, що залежать від вибраного клієнта.
-- Доставка, адреса, податки, shipping fee і способи оплати.
-- Mobile authentication та role-based access у першій версії.
-- Історія, деталі, скасування або редагування створених замовлень.
-- Polling статусу 1С і ручний retry синхронізації.
-- Offline queue для створення замовлення.
-- Server-side пошук клієнтів.
+- Manager editing of a product price or line amount.
+- Prices that depend on the selected customer.
+- Delivery, address, taxes, shipping fee, or payment methods.
+- Mobile authentication and role-based access in the first version.
+- History, details, cancellation, or editing of created orders.
+- Polling 1C status and manual sync retry.
+- Offline queue for order creation.
+- Server-side customer search.
 
 ## Actors and external systems
 
-- Менеджер: керує кошиком, вибирає клієнта, додає коментар і створює замовлення.
-- Sales customers API: повертає активних клієнтів для вибору.
-- Sales admin order API: ідемпотентно зберігає замовлення зі статусом `Pending`.
-- 1С: отримує збережене замовлення асинхронно після завершення HTTP-запиту.
+- Manager: manages the cart, selects a customer, adds a comment, and creates an order.
+- Sales customers API: returns active customers for selection.
+- Sales admin order API: idempotently stores an order with `Pending` status.
+- 1C: receives the stored order asynchronously after the HTTP request completes.
 
 ## Constraints
 
-- Очікується 30–50 активних клієнтів; локальний пошук виконується після
-  завантаження повного набору сторінок із `pageSize=100`.
-- Ціна одиниці береться з наявного рядка кошика і не редагується.
-- `amount` є сумою всього рядка: `unitPrice × quantity`, а не ціною одиниці.
-- Frontend обмежує quantity останнім відомим `stock`; backend create API наразі
-  не гарантує перевірку актуального складського залишку.
-- Видимі тексти й accessibility labels — українською.
-- Стандартні UI, form, list, storage і data-fetching потреби покриваються
-  встановленими пакетами; новий пакет без окремого `EN-*` не додається.
+- There are expected to be 30–50 active customers; local search runs after all available pages are loaded with `pageSize=100`.
+- Unit price comes from the existing cart line and cannot be edited.
+- `amount` is the total for the line: `unitPrice × quantity`, not the unit price.
+- The frontend limits quantity to the last known `stock`; the backend create API does not currently guarantee validation against the latest warehouse stock.
+- Visible text and accessibility labels are Ukrainian.
+- Standard UI, form, list, storage, and data fetching needs are covered by installed packages; do not add a package without a separate `EN-*` task.
 
 ## Open product questions
 
-- Немає. Client-specific pricing, production authorization і authoritative
-  stock validation свідомо відкладені.
+- None. Customer-specific pricing, production authorization, and authoritative stock validation are deliberately deferred.

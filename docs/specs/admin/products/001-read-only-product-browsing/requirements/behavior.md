@@ -1,131 +1,131 @@
-# Товари — правила й сценарії
+# Products — rules and scenarios
 
-## Правила
+## Rules
 
-### Коригування R-001/R-002 від 2026-10-19
+### R-001/R-002 update, 2026-10-19
 
-Перемикач списку має три вкладки в порядку «Усі товари», «Без фото», «На сайті». Третя вкладка звертається до `GET /api/admin/products` з `exportToSite=true` на сервері до пагінації; «Усі товари» не додає умови `exportToSite`. Для трьох вкладок зберігаються окремі пошук, сортування й сторінка в URL. Колонка «На сайті» показує значення без фільтра «Так»/«Ні». Кількість записів і пагінацію показує сама таблиця, без текстового дублювання під нею.
+The list switch has three tabs in this order: «Усі товари», «Без фото», «На сайті». The third tab calls `GET /api/admin/products` with `exportToSite=true` on the server before pagination; «Усі товари» adds no `exportToSite` condition. Each tab preserves its own search, sort, and page in the URL. The «На сайті» column displays the value without a «Так»/«Ні» filter. The table itself shows the record count and pagination, without duplicate text beneath it.
 
-### SC-011 — Переглянути товари на сайті
+### SC-011 — View products on site
 
-Given відкрито список товарів
-When користувач обирає «На сайті»
-Then API отримує `exportToSite=true` і першу сторінку, а таблиця показує серверну вибірку опублікованих товарів
-And пошук, сортування й пагінація не змінюють стан інших вкладок
-And після перегляду деталей повернення відновлює вкладку й умови.
+Given the product list is open
+When the user selects «На сайті»
+Then the API receives `exportToSite=true` and the first page, and the table shows the server result set of published products
+And search, sort, and pagination do not change the state of other tabs
+And returning from details restores the tab and its conditions.
 
-### R-001 — Список і навігація
+### R-001 — List and navigation
 
-Пункт «Товари» відкриває список у MUI Data Grid без старої окремої панелі фільтрів. Пошук, фільтрація колонок, сортування й пагінація застосовуються сервером до всієї вибірки в цьому порядку: умови → порядок → сторінка. Кожен товар має іконку перегляду з підказкою; дій зміни чи видалення немає. Наявність, акція, новинка й «На сайті» є окремими колонками з галочкою лише для `true`; перші три мають фільтр «Так»/«Ні»/без умови, останню ознаку задає вкладка. Загальна кількість відображає відфільтровану вибірку.
+The «Товари» item opens the list in MUI Data Grid without the old separate filter panel. Search, column filters, sort, and pagination are applied by the server across the full result set in this order: conditions → ordering → page. Each product has a view icon with a tooltip; there are no edit or delete actions. Availability, sale, new, and «На сайті» are separate columns with a checkmark only for `true`; the first three have a «Так»/«Ні»/no-condition filter, while the tab sets the last flag. The total count reflects the filtered result set.
 
-### R-002 — Режим без фото
+### R-002 — No-photo mode
 
-Перемикач чітко показує активний режим. «Без фото» містить тільки товари, які сервер відніс до цієї вибірки; клієнт не визначає належність за URL фото. У цьому режимі пошук, фільтри, сортування й пагінація діють на всю серверну вибірку без фото. Зміна режиму починається з першої сторінки; зміна пошуку, фільтра чи сортування також повертає на першу сторінку.
+The switch clearly shows the active mode. «Без фото» contains only products assigned to this result set by the server; the client does not infer membership from a photo URL. In this mode, search, filters, sort, and pagination apply to the full server result set without photos. Changing mode starts on the first page; changing search, a filter, or sort also returns to the first page.
 
-### R-003 — Деталі й повернення
+### R-003 — Details and return navigation
 
-Сторінка деталей має одну назву товару, українську й російську; заголовок сторінки не дублює назву картки. Основна інформація (ID, ціна, залишок, категорія, упаковка) подається компактною таблицею «поле — значення» у тому самому блоці, що назви й ознаки, без category slug. Показуються лише істинні ознаки «Наявність», «Акція», «Новинка», «На сайті» як різнокольорові Chip без слів «Так»/«Ні». Фото товару й доступна схема — окремі блоки ліворуч від основного на широкому екрані. Недоступна або невдала схема не створює порожнього блока. Натискання на саме фото чи схему відкриває збільшення через діалог. Якщо «На сайті» = `true` і slug непорожній, у головному блоці є виразна кнопка на публічну картку товару. Кнопка «Сховище фото» є там само для кожного товару; окремої кнопки JPG немає. Повернення через текстове посилання зі стрілкою відновлює режим, пошук, фільтри, сортування й сторінку списку.
+The detail page shows the product name once, in Ukrainian and Russian; the page heading does not repeat the card title. Basic information (ID, price, stock, category, package) appears in a compact “field — value” table in the same section as the names and flags, without category slug. Only true flags—«Наявність», «Акція», «Новинка», and «На сайті»—are shown as colored Chips, without «Так»/«Ні» text. The product photo and an available scheme are separate sections to the left of the main section on wide screens. An unavailable or failed scheme does not create an empty section. Clicking the photo or scheme itself opens it enlarged in a dialog. If «На сайті» is `true` and the slug is non-empty, the main section has a prominent button to the public product page. A «Сховище фото» button appears there for every product; there is no separate JPG button. Returning through the arrow text link restores the list mode, search, filters, sort, and page.
 
-### R-004 — Безпечні стани
+### R-004 — Safe states
 
-Порожня вибірка, помилка, недоступні зображення, неправильне посилання та відсутній товар мають окремі зрозумілі стани українською.
+An empty result set, error, unavailable images, invalid link, and missing product each have a distinct, clear state in Ukrainian.
 
-### R-005 — Адаптивність і колірні схеми Admin
+### R-005 — Responsive layout and Admin color schemes
 
-Список, перемикач режимів і картка товару придатні для користування на телефоні та планшеті: вміст не обрізається, горизонтальне прокручування таблиці за потреби лишає доступними перегляд рядка й пагінацію. У світлій і темній схемах елементи використовують чинну тему Admin; текст, стани, фокус, зображення та їхні заміни залишаються читабельними.
+The list, mode switch, and product card are usable on phones and tablets: content is not clipped, and horizontal table scrolling keeps row actions and pagination accessible when needed. Both light and dark schemes use the current Admin theme; text, states, focus, images, and image fallbacks remain readable.
 
-### R-006 — Українська локалізація таблиць
+### R-006 — Ukrainian table localization
 
-Всі MUI Data Grid у Kedr Admin показують українською вбудовані підписи, меню сортування, пагінацію й доступні назви її кнопок. Три вкладки товарів мають внутрішній відступ як у референсі Devias Kit Pro, а таблиця йде одразу під ними.
+All MUI Data Grids in Kedr Admin show built-in labels, sort menus, pagination, and accessible button names in Ukrainian. The three product tabs have the inset spacing shown in the Devias Kit Pro reference, with the table directly below them.
 
-## Приймальні сценарії
+## Acceptance scenarios
 
-### SC-001 — Переглянути всі товари
+### SC-001 — View all products
 
-**Покриває:** R-001
+**Covers:** R-001
 
-Given користувач відкрив пункт «Товари»
-When список завантажився
-Then він бачить сторінку товарів і може перейти до деталей кожного рядка
-And немає дій редагування чи видалення.
+Given the user opened the «Товари» item
+When the list loads
+Then the user sees the product page and can open details for each row
+And there are no edit or delete actions.
 
-### SC-002 — Перемкнутися на товари без фото
+### SC-002 — Switch to products without photos
 
-**Покриває:** R-002
+**Covers:** R-002
 
-Given відкрито список товарів
-When користувач обирає «Без фото»
-Then таблиця показує серверну вибірку товарів без доступного фото з першої сторінки
-And перемикач показує активний режим.
+Given the product list is open
+When the user selects «Без фото»
+Then the table shows the first page of the server result set of products without an available photo
+And the switch shows the active mode.
 
-### SC-003 — Повернутися до всіх товарів
+### SC-003 — Return to all products
 
-**Покриває:** R-002
+**Covers:** R-002
 
-Given відкрито режим «Без фото»
-When користувач обирає «Усі товари»
-Then видно таблицю всіх товарів із серверними пошуком, фільтрами, сортуванням і пагінацією без старої окремої панелі фільтрів.
+Given «Без фото» mode is open
+When the user selects «Усі товари»
+Then the table shows all products with server-side search, filters, sort, and pagination, without the old separate filter panel.
 
-### SC-004 — Відкрити й закрити картку
+### SC-004 — Open and close a product card
 
-**Покриває:** R-001, R-003
+**Covers:** R-001, R-003
 
-Given рядок товару видно у будь-якому режимі
-When користувач відкриває його деталі
-Then видно українську й російську назви, табличні основні дані, ознаки та окремий блок схеми за її доступності без редагування
-And після повернення відновлено режим, пошук, фільтри, сортування й сторінку списку.
+Given a product row is visible in any mode
+When the user opens its details
+Then Ukrainian and Russian names, tabular basic data, flags, and a separate scheme section when available are shown without editing controls
+And returning restores the list mode, search, filters, sort, and page.
 
-### SC-005 — Обробити відсутні дані
+### SC-005 — Handle missing data
 
-**Покриває:** R-004
+**Covers:** R-004
 
-Given фото чи схема не завантажились або деталі товару недоступні
-When сторінка завершує запит
-Then фото має нейтральну заміну, а невдала схема не відображається
-And є доступна дія повернення до списку.
+Given a photo or scheme failed to load, or product details are unavailable
+When the page finishes the request
+Then the photo has a neutral fallback and a failed scheme is not displayed
+And an accessible action returns to the list.
 
-### SC-006 — Побачити порожній список чи помилку
+### SC-006 — Show an empty list or error
 
-**Покриває:** R-004
+**Covers:** R-004
 
-Given активний режим не має результатів або запит завершився помилкою
-When сторінка відображає результат
-Then видно відповідне українське повідомлення
-And для помилки є повтор поточного запиту без втрати режиму.
+Given the active mode has no results or the request failed
+When the page displays the result
+Then the corresponding Ukrainian message is shown
+And the current request can be retried after an error without losing the mode.
 
-### SC-007 — Користуватися з телефона й планшета в обох темах
+### SC-007 — Use on phones and tablets in both themes
 
-**Покриває:** R-005
+**Covers:** R-005
 
-Given відкрито список або картку товару на телефонному чи планшетному екрані у світлій або темній схемі Admin
-When користувач перемикає «Усі товари» / «Без фото», переглядає рядок, сторінку таблиці й деталі
-Then основні дії та дані доступні без обрізання чи перекриття, навіть якщо таблиця прокручується горизонтально
-And текст, межі, стани завантаження/помилки, фокус і заміни зображень читабельні в активній схемі.
+Given the product list or card is open on a phone or tablet screen in the Admin light or dark scheme
+When the user switches between «Усі товари» and «Без фото» and views a row, table page, and details
+Then primary actions and data remain accessible without clipping or overlap, even when the table scrolls horizontally
+And text, borders, loading/error states, focus, and image fallbacks are readable in the active scheme.
 
-### SC-008 — Побачити локалізовану таблицю без старих фільтрів
+### SC-008 — Show a localized table without the old filters
 
-**Покриває:** R-001, R-006
+**Covers:** R-001, R-006
 
-Given відкрито список товарів або клієнтів
-When користувач переглядає вкладки й Data Grid
-Then таблиця та її пагінація мають українські підписи й доступні назви
-And вкладки товарів розміщені з внутрішнім відступом у Card, під ними видно Data Grid із вбудованим пошуком та фільтрацією замість старої окремої панелі.
+Given a product or customer list is open
+When the user views the tabs and Data Grid
+Then the table and its pagination have Ukrainian labels and accessible names
+And the product tabs are inset in the Card, with a Data Grid below them that has built-in search and filtering instead of the old separate panel.
 
-### SC-009 — Фільтрувати весь список у кожному режимі
+### SC-009 — Filter the full list in every mode
 
-**Покриває:** R-001, R-002
+**Covers:** R-001, R-002
 
-Given у будь-якому з трьох режимів є кілька серверних сторінок
-When користувач задає пошук, діапазон ціни або колонковий фільтр
-Then API застосовує умови перед пагінацією й повертає першу сторінку та кількість усіх знайдених товарів
-And «Наявність», «Акція» та «Новинка» дозволяють окремо «Так» і «Ні», а ознаку «На сайті» задає вкладка.
+Given any of the three modes has multiple server pages
+When the user sets search, a price range, or a column filter
+Then the API applies conditions before pagination and returns the first page and total matching-product count
+And «Наявність», «Акція», and «Новинка» each allow «Так» and «Ні»; the tab sets the «На сайті» flag.
 
-### SC-010 — Відкрити медіа й публічну сторінку
+### SC-010 — Open media and the public page
 
-**Покриває:** R-003, R-004
+**Covers:** R-003, R-004
 
-Given картка товару містить доступне фото або схему
-When користувач активує відповідне зображення
-Then відкривається доступний для клавіатури діалог зі збільшеним зображенням
-And посилання на публічний товар є лише за увімкненої ознаки «На сайті» та непорожнього slug
-And кнопка папки сховища є у головному блоці для кожного товару незалежно від ознаки «На сайті»; окремої кнопки JPG немає.
+Given the product card contains an available photo or scheme
+When the user activates the relevant image
+Then a keyboard-accessible dialog opens with the enlarged image
+And a public product link is available only when «На сайті» is enabled and the slug is non-empty
+And the storage-folder button is in the main section for every product regardless of the «На сайті» flag; there is no separate JPG button.

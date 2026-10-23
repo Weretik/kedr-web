@@ -1,21 +1,22 @@
-# 001 — Замовлення та чернетки Admin
+# 001 — Admin Orders and Drafts
 
-- **Клієнт:** React Admin (`apps/admin`)
-- **Домен:** orders
-- **Статус:** реалізовано в React Admin; вузькі автоматизовані перевірки наведені у [traceability](traceability.md)
-- **Перевірено базис:** 2026-10-21
+- **Client:** React Admin (`apps/admin`)
+- **Domain:** orders
+- **Status:** implemented in React Admin; focused automated checks are listed in [traceability](traceability.md)
+- **Baseline checked:** 2026-10-21
 
-У боковому меню з’являється «Замовлення»: дві вкладки для оформлених замовлень і збережених чернеток, перегляд деталей, редагування чернетки та сторінка оформлення з тимчасовим набором товарів. Додавання товару доступне зі списку й деталей товару. Усі нові екрани належать лише Admin React.
+“Замовлення” appears in the side navigation, with two tabs for submitted orders and saved drafts, detail views, draft editing, and a checkout page with a temporary set of products. Products can be added from the product list and detail view. All new screens belong to Admin React only.
 
-- [Правила й сценарії](requirements/behavior.md)
+- [Rules and scenarios](requirements/behavior.md)
 - [Frontend design](design/frontend.md)
-- [API та стан](contracts/api-contract.md)
-- [Задачі](tasks/README.md)
-- [Трасування й готовність](traceability.md)
-- [Аудит відповідальностей коду](code-audit/audit.md)
-- [Структурне виправлення](../002-order-structure-remediation/README.md)
-- [Зміна 2026-10-22: кошик, дата, вибір клієнта й діалоги оформлення](revision-2026-10-22.md) — frontend TS-007/TS-008 реалізовано; інтеграція backend date contract очікує синхронізації snapshot
+- [API and state](contracts/api-contract.md)
+- [Tasks](tasks/README.md)
+- [Traceability and readiness](traceability.md)
+- [Code responsibility audit](code-audit/audit.md)
+- [Structural remediation](../002-order-structure-remediation/README.md)
+- [Change 2026-10-22: cart, date, customer selection, and checkout dialogs](revision-2026-10-22.md) — frontend TS-007/TS-008 implemented; provider snapshot synchronized with `c03118d`
+- [Change 2026-10-22: draft from order, product selection, and clearer details](revision-2026-10-22-order-detail-and-draft-picker.md) — SDD before implementation
 
-Поточний дизайн списків/деталей визначає [Admin standard](../../../../standards/admin/list-detail-pages.md). Розширення деталей клієнта — [окрема SDD](../../clients/002-customer-orders/README.md).
+The current list/detail design follows the [Admin standard](../../../../standards/admin/list-detail-pages.md). Customer detail extensions are covered by a [separate SDD](../../clients/002-customer-orders/README.md).
 
-- [Готовність SDD](checklist/spec-readiness.md)
+- [SDD readiness](checklist/spec-readiness.md)

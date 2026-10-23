@@ -1,4 +1,4 @@
-# Товари без фотографій у профілі — API integration contract
+# Products without photos in Profile — API integration contract
 
 ## Source
 

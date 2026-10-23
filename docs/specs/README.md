@@ -1,4 +1,4 @@
-# Індекс frontend feature-специфікацій
+# Frontend feature specifications index
 
 ## Architecture remediation
 
@@ -6,13 +6,13 @@
 
 ## Admin React
 
-- [Міграція Admin template](admin/migration/template-migration.md)
-- [Список товарів Admin](admin/products/product-list-data-grid.md)
-- [Перегляд товарів і режим «Без фото»](admin/products/001-read-only-product-browsing/README.md)
-- [Перегляд клієнтів Admin](admin/clients/001-read-only-customers/README.md)
-- [Замовлення й чернетки Admin](admin/orders/001-order-workspace/README.md)
-- [Розподіл відповідальностей замовлень Admin](admin/orders/002-order-structure-remediation/README.md)
-- [Замовлення й чернетки в деталях клієнта](admin/clients/002-customer-orders/README.md)
+- [Admin template migration](admin/migration/template-migration.md)
+- [Admin product list](admin/products/product-list-data-grid.md)
+- [Product browsing and “Without photo” mode](admin/products/001-read-only-product-browsing/README.md)
+- [Admin customer browsing](admin/clients/001-read-only-customers/README.md)
+- [Admin orders and drafts](admin/orders/001-order-workspace/README.md)
+- [Admin order responsibility split](admin/orders/002-order-structure-remediation/README.md)
+- [Orders and drafts in customer details](admin/clients/002-customer-orders/README.md)
 
 ## Mobile React Native
 
@@ -25,8 +25,6 @@
 
 ## Storefront Angular
 
-Feature-специфікацій у цьому каталозі ще немає.
+There are no feature specifications in this directory yet.
 
-Нову специфікацію створюйте за [правилами постачання](../standards/shared/delivery-rules.md) та архітектурою відповідного застосунку.
-Для системного боргу створюйте окрему remediation SDD за
-[архітектурними правилами](../standards/README.md).
+Create a new specification under the [delivery rules](../standards/shared/delivery-rules.md) and the architecture of the relevant application. For systemic debt, create a separate remediation SDD under the [architecture rules](../standards/README.md).

@@ -1,91 +1,91 @@
-# Правила й приймальні сценарії
+# Rules and acceptance scenarios
 
-## Правила
+## Rules
 
-- **R-001.** У головному меню є «Замовлення». Сторінка має вкладки «Замовлення» й «Чернетки» в одній Card; кожна вкладка має свою серверну таблицю, стан пошуку, фільтра клієнта, сортування й пагінації, які відновлюються з URL.
-- **R-002.** Список замовлень шукає за частиною номера/назви клієнта або кількома словами; чернетки — за назвою/клієнтом. Обидва підтримують точний фільтр клієнта через пошук/вибір клієнта. Зміна умов повертає на сторінку 1; результати та count приходять з сервера. Кнопки дій: у замовлень лише перегляд; у чернеток перегляд, редагування, видалення.
-- **R-003.** Деталі замовлення й чернетки використовують спільну візуальну композицію Admin: посилання зі стрілкою назад, нейтральний заголовок, картки клієнта й даних документа, таблицю товарів та підсумок. Для замовлення доступний перегляд, для чернетки — редагування, видалення й «Оформити на основі».
-- **R-004.** У React Admin є **один поточний локальний набір** товарів. Натискання «Додати» у списку чи деталях товару додає ID/кількість; набір зберігається після закриття вкладки/перезапуску браузера в цьому browser profile до успішного оформлення або явного очищення. Це ще не серверна чернетка. Після втрати доступу до browser storage показати безпечне попередження; не зберігати токени, ціни чи дані клієнта.
-- **R-005.** Сторінка оформлення показує додані товари, керування кількістю/видаленням, пошук і вибір клієнта, серверний розрахунок актуальної ціни та суми, назву й нотатку для збереження як чернетки. Порожній набір або відсутній клієнт блокує збереження/оформлення; лише frontend-перевірки не вважаються достатніми.
-- **R-006.** «Зберегти чернетку» створює окремий запис для обраного клієнта; номер замовлення не показується. Після успіху локальний набір очищається, UI відкриває збережену чернетку. При помилці набір зберігається.
-- **R-007.** «Оформити замовлення» показує актуальний серверний quote перед підтвердженням; сервер повторно рахує суму. За зміни ціни показати нову суму й попросити повторне підтвердження. Лише після успіху показати номер/стан 1C та очистити локальний набір; при помилці дані залишаються.
-- **R-008.** «Оформити на основі чернетки» додає її товари до поточного локального набору (однакові ID складають кількості) і вибирає клієнта чернетки. Якщо поточний набір має іншого клієнта, показати вибір клієнта перед оформленням; сервер перераховує ціни для остаточно вибраного клієнта. Джерельна чернетка лишається незмінною та доступною для повтору.
-- **R-009.** Редагування чернетки дозволяє змінити клієнта, назву, нотатку, товари й кількості, показує нову серверну суму. Видалення із таблиці або деталей завжди відкриває діалог підтвердження. `409` при конкурентній зміні веде до повторного завантаження без тихого перезапису.
-- **R-010.** Порожні, loading, error, 404 стани, доступні назви іконок, тема, українська локаль і вузькі екрани відповідають чинному Admin standard.
+- **R-001.** The main menu contains “Замовлення”. The page has “Замовлення” and “Чернетки” tabs in one Card; each tab has its own server table, search state, customer filter, sorting, and pagination, all restored from the URL.
+- **R-002.** The orders list searches by part of the number/customer name or by multiple words; drafts search by name/customer. Both support an exact customer filter through customer search/selection. Changing criteria returns to page 1; results and count come from the server. Order actions allow viewing only; draft actions allow viewing, editing, and deletion.
+- **R-003.** Order and draft details share the Admin visual composition: back-arrow link, neutral title, customer and document-data cards, product table, and summary. Orders can be viewed; drafts can be edited, deleted, or used with “Оформити на основі”.
+- **R-004.** React Admin has **one current local set** of products. Pressing “Додати” in the product list or detail view adds an ID/quantity; the set persists after closing a tab or restarting the browser in the same browser profile until successful checkout or explicit clearing. This is not a server draft. If browser storage is unavailable, show a safe warning; do not store tokens, prices, or customer data.
+- **R-005.** The checkout page shows added products, quantity/removal controls, customer search and selection, server calculation of current prices and total, and a name and note for saving as a draft. An empty set or missing customer blocks saving/checkout; frontend validation alone is insufficient.
+- **R-006.** “Зберегти чернетку” creates a separate record for the selected customer; no order number is shown. On success, the local set is cleared and the UI opens the saved draft. On failure, the set is retained.
+- **R-007.** “Оформити замовлення” shows the current server quote before confirmation; the server recalculates the total. If the price changes, show the new total and ask for confirmation again. Show the order number/1C status and clear the local set only after success; retain data on failure.
+- **R-008.** “Оформити на основі чернетки” adds its products to the current local set (matching IDs have their quantities summed) and selects the draft’s customer. If the current set has a different customer, ask the user to choose a customer before checkout; the server recalculates prices for the final selected customer. The source draft remains unchanged and available for reuse.
+- **R-009.** Draft editing allows changing the customer, name, note, products, and quantities, and shows the new server total. Deletion from the table or details always opens a confirmation dialog. A `409` for a concurrent change prompts a reload without silently overwriting data.
+- **R-010.** Empty, loading, error, and 404 states, accessible icon names, theme, Ukrainian locale, and narrow screens follow the current Admin standard.
 
-## Сценарії приймання
+## Acceptance scenarios
 
-### SC-001 — Переглядати два списки
+### SC-001 — View both lists
 
-**Покриває:** R-001, R-002, R-010
+**Covers:** R-001, R-002, R-010
 
-- Given у системі є замовлення й збережені чернетки кількох клієнтів
-- When менеджер відкриває «Замовлення», перемикає вкладки, шукає, фільтрує за клієнтом, сортує та гортає
-- Then кожна вкладка показує відповідну серверну вибірку й кількість записів
-- And повернення з деталей відновлює попередню вкладку та її умови.
+- Given the system has orders and saved drafts for multiple customers
+- When a manager opens “Замовлення”, switches tabs, searches, filters by customer, sorts, and paginates
+- Then each tab shows the corresponding server result set and record count
+- And returning from details restores the previous tab and its criteria.
 
-### SC-002 — Відновити тимчасовий набір
+### SC-002 — Restore the temporary set
 
-**Покриває:** R-004
+**Covers:** R-004
 
-- Given менеджер додав товари до поточного набору зі списку та деталей товару
-- When він закриває вкладку й знову відкриває Admin у тому самому browser profile
-- Then бачить ті самі товари та кількості
-- And у списку збережених чернеток новий запис не з’являється.
+- Given a manager added products to the current set from the product list and detail view
+- When they close the tab and reopen Admin in the same browser profile
+- Then they see the same products and quantities
+- And no new record appears in the saved drafts tab.
 
-### SC-003 — Перерахувати суму
+### SC-003 — Recalculate the total
 
-**Покриває:** R-005, R-010
+**Covers:** R-005, R-010
 
-- Given у наборі є товари та вибраний клієнт
-- When менеджер змінює клієнта чи кількість
-- Then бачить актуальну серверну вартість і суму для нового набору
-- And за невалідного товару чи відсутньої ціни бачить зрозумілу помилку без можливості оформити.
+- Given the set contains products and a customer is selected
+- When the manager changes the customer or a quantity
+- Then they see the current server price and total for the updated set
+- And an invalid product or missing price produces a clear error and prevents checkout.
 
-### SC-004 — Зберегти чернетку
+### SC-004 — Save a draft
 
-**Покриває:** R-005, R-006
+**Covers:** R-005, R-006
 
-- Given поточний набір має товари, клієнта й назву чернетки
-- When менеджер натискає «Зберегти чернетку»
-- Then збережений запис доступний у вкладці клієнта без номера замовлення
-- And локальний набір очищується лише після успішної відповіді.
+- Given the current set has products, a customer, and a draft name
+- When the manager presses “Зберегти чернетку”
+- Then the saved record is available under the customer without an order number
+- And the local set is cleared only after a successful response.
 
-### SC-005 — Оформити замовлення
+### SC-005 — Submit an order
 
-**Покриває:** R-005, R-007
+**Covers:** R-005, R-007
 
-- Given клієнт, товари й серверний розрахунок відображені перед підтвердженням
-- When менеджер оформлює замовлення
-- Then після успіху бачить номер і стан передачі та локальний набір очищується
-- And якщо ціна змінилася, бачить нову суму й повторно підтверджує її
-- And за помилки оформлення локальний набір лишається доступним.
+- Given the customer, products, and server calculation are displayed before confirmation
+- When the manager submits the order
+- Then on success they see the number and transfer status, and the local set is cleared
+- And if the price changed, they see the new total and confirm it again
+- And if submission fails, the local set remains available.
 
-### SC-006 — Керувати чернеткою
+### SC-006 — Manage a draft
 
-**Покриває:** R-003, R-009, R-010
+**Covers:** R-003, R-009, R-010
 
-- Given збережена чернетка відкрита
-- When менеджер змінює клієнта, назву, нотатку, товари чи кількості
-- Then бачить нові дані й серверну суму
-- And за конфлікту паралельного редагування отримує пропозицію перезавантажити актуальні дані
-- And видалення виконується лише після явного підтвердження.
+- Given a saved draft is open
+- When the manager changes the customer, name, note, products, or quantities
+- Then they see the updated data and server total
+- And a concurrent editing conflict prompts them to reload the current data
+- And deletion occurs only after explicit confirmation.
 
-### SC-007 — Повторно використати чернетку
+### SC-007 — Reuse a draft
 
-**Покриває:** R-008
+**Covers:** R-008
 
-- Given тимчасовий набір уже має товари, а збережена чернетка містить той самий та інші товари
-- When менеджер обирає «Оформити на основі чернетки»
-- Then однакові товари мають суму кількостей, а інші додані до набору
-- And менеджер бачить або обирає остаточного клієнта перед перерахунком
-- And після оформлення джерельна чернетка лишається доступною для повтору.
+- Given the temporary set already contains products and a saved draft contains the same and other products
+- When the manager selects “Оформити на основі чернетки”
+- Then matching products have their quantities summed and the others are added to the set
+- And the manager sees or selects the final customer before recalculation
+- And after checkout, the source draft remains available for reuse.
 
-### SC-008 — Переглянути оформлене замовлення
+### SC-008 — View a submitted order
 
-**Покриває:** R-003, R-010
+**Covers:** R-003, R-010
 
-- Given оформлене замовлення є у списку
-- When менеджер відкриває його деталі
-- Then бачить клієнта, товари, суму та стан передачі без дій редагування чи видалення
-- And невідомий ID та помилка мережі мають окремі безпечні стани.
+- Given a submitted order appears in the list
+- When the manager opens its details
+- Then they see the customer, products, total, and transfer status, without edit or delete actions
+- And an unknown ID and a network error have separate safe states.

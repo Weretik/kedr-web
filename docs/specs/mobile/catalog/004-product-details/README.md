@@ -8,19 +8,14 @@
 - **Created:** 2026-09-15
 - **Last updated:** 2026-09-15
 
-Менеджер відкриває товар із поточного пошукового або відфільтрованого каталогу,
-переглядає всі доступні в API деталі та зображення і може додати доступний товар
-із ціною до локального кошика. Повернення відновлює попередній каталог без
-втрати query та scroll position.
+The manager opens a product from the current searched or filtered catalog, reviews all details and images available through the API, and can add an available product with a price to the local cart. Returning restores the previous catalog without losing the query or scroll position.
 
 ## Status
 
 - Specification: ready
 - Implementation: complete
-- Verification: automated checks and Android/web production exports pass;
-  interactive device/visual QA deferred
-- Blockers: no interactive Android/iOS device was available; backend contract
-  has no description field, so the UI does not invent one
+- Verification: automated checks and Android/web production exports pass; interactive device/visual QA deferred
+- Blockers: no interactive Android/iOS device was available; the backend contract has no description field, so the UI does not invent one
 
 ## Requirements
 
@@ -49,7 +44,5 @@
 
 ## Change notes
 
-- 2026-09-15 — створено scenario-first SDD за фактичними Mobile architecture,
-  OpenAPI та наданим visual reference; implementation не розпочато.
-- 2026-09-15 — реалізовано маршрут, API mapping/query, gallery, усі page states,
-  persistent local cart і acceptance tests; Android/web bundles pass, device QA deferred.
+- 2026-09-15 — Created a scenario-first SDD based on the actual Mobile architecture, OpenAPI, and supplied visual reference; implementation had not started.
+- 2026-09-15 — Implemented the route, API mapping/query, gallery, all page states, persistent local cart, and acceptance tests; Android/web bundles pass, device QA deferred.

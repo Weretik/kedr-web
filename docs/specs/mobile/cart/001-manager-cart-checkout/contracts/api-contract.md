@@ -20,10 +20,10 @@
 
 ## Operations
 
-| User intent               | Method/path                | Request                                            | Success                       | Expected errors                                    |
-| ------------------------- | -------------------------- | -------------------------------------------------- | ----------------------------- | -------------------------------------------------- |
-| Завантажити клієнтів      | `GET /api/admin/customers` | query `page`, `pageSize=100`                       | generated customer page       | `400`, network/5xx                                 |
-| Створити Sales замовлення | `POST /api/admin/orders`   | required `Idempotency-Key`; generated request body | `200` replay or `201` created | `400`, `404`, `409`, network/5xx; future `401/403` |
+| User intent        | Method/path                | Request                                            | Success                       | Expected errors                                    |
+| ------------------ | -------------------------- | -------------------------------------------------- | ----------------------------- | -------------------------------------------------- |
+| Load customers     | `GET /api/admin/customers` | query `page`, `pageSize=100`                       | generated customer page       | `400`, network/5xx                                 |
+| Create Sales order | `POST /api/admin/orders`   | required `Idempotency-Key`; generated request body | `200` replay or `201` created | `400`, `404`, `409`, network/5xx; future `401/403` |
 
 Order history, order detail, sync-status and retry operations are available in
 the provider contract but are outside this feature.

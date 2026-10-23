@@ -39,8 +39,8 @@ libs/
 └── shared/api-contracts/  # generated transport contract only
 ```
 
-`mobile/shared/model` створюється лише якщо RM-003 підтвердить другий consumer
-для neutral sales concept. Інакше status залишається в canonical owning domain.
+Create `mobile/shared/model` only if RM-003 confirms a second consumer for the
+neutral sales concept. Otherwise, status remains in the canonical owning domain.
 
 ## Dependency matrix
 

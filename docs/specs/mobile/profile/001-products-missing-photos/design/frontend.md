@@ -1,20 +1,20 @@
-# Товари без фотографій у профілі — frontend design
+# Products without photos in Profile — frontend design
 
 ## Affected clients and boundaries
 
 - Client/project: `mobile` (`apps/mobile`), React Native/Expo.
-- Variant: [React Native design](react-native.md) і
+- Variant: [React Native design](react-native.md) and
   [visual interaction](visual-interaction.md).
 - Affected existing Nx projects: `mobile`, `mobile-catalog-model`,
   `mobile-catalog-data-access`, `mobile-catalog-ui`, `mobile-catalog-feature`.
-- `apps/mobile/src/app/(tabs)/profile.tsx` лишається thin route adapter: він
-  передає product press у Expo Router і рендерить public feature screen.
-- Catalog `data-access` володіє operation, generated DTO reference, runtime
-  validation, mapping, cache і pagination semantics; DTO не виходить назовні.
-- Catalog `feature` володіє orchestration, retry/refresh/load-more; catalog `ui`
-  володіє presentational list/cards/states без API або router imports.
-- Новий profile Nx domain не створюється: поведінка є catalog product view,
-  змонтованим app composition root у вкладці «Профіль».
+- `apps/mobile/src/app/(tabs)/profile.tsx` remains a thin route adapter: it
+  passes product presses to Expo Router and renders the public feature screen.
+- Catalog `data-access` owns the operation, generated DTO reference, runtime
+  validation, mapping, cache, and pagination semantics; the DTO stays private.
+- Catalog `feature` owns orchestration, retry/refresh/load-more; catalog `ui`
+  owns presentational list/cards/states without API or router imports.
+- No new Profile Nx domain is created: this is a catalog product view mounted
+  by the app composition root in the “Профіль” tab.
 
 ## Architecture baseline
 

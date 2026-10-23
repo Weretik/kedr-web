@@ -6,7 +6,7 @@
 npx nx start mobile
 ```
 
-Відскануйте QR-код через Expo Go на Android. Для обмеженої мережі:
+Scan the QR code with Expo Go on Android. For restricted networks:
 
 ```text
 cd apps/mobile
@@ -21,7 +21,7 @@ cd apps/mobile
 npx expo-doctor
 ```
 
-За потреби web verification:
+For web verification, if needed:
 
 ```text
 cd apps/mobile
@@ -30,7 +30,7 @@ npx expo export --platform web
 
 ## Manual acceptance
 
-1. В Expo Go відкрити Головну, Каталог і Профіль; перевірити labels, active state і safe area.
-2. Змінити System, Light і Dark; перезапустити застосунок та перевірити persistence.
-3. Перевірити loading, empty і offline states разом із header і tab bar.
-4. Відкрити web export та перевірити navigation без console errors.
+1. In Expo Go, open Головна, Каталог, and Профіль; check labels, active state, and safe area.
+2. Change among System, Light, and Dark; restart the app and check persistence.
+3. Check loading, empty, and offline states together with the header and tab bar.
+4. Open the web export and check navigation for console errors.

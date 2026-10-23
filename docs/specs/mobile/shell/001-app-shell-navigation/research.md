@@ -1,7 +1,7 @@
 # Research: Mobile app shell and navigation
 
-| Питання                  | Рішення                                 | Причина                                                                 | Відхилені альтернативи                        |
-| ------------------------ | --------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------- |
-| Root navigation          | Expo Router group `(tabs)`              | Він узгоджується з існуючим file-based router та thin route rule.       | Ручний navigation state у shell.              |
-| Theme preference storage | AsyncStorage через `core/shell` adapter | Preference не є секретом і має переживати restart.                      | SecureStore: призначений для секретних даних. |
-| Resolved theme           | `preference` + `useColorScheme`         | System theme реагує на системну схему без дубльованого persisted state. | Окремо зберігати resolved light/dark scheme.  |
+| Question                 | Decision                              | Rationale                                                                      | Rejected alternatives                            |
+| ------------------------ | ------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------ |
+| Root navigation          | Expo Router group `(tabs)`            | It follows the existing file-based router and thin route rule.                 | Manual navigation state in the shell.            |
+| Theme preference storage | AsyncStorage via `core/shell` adapter | The preference is not secret and must persist across restarts.                 | SecureStore: intended for secret data.           |
+| Resolved theme           | `preference` + `useColorScheme`       | System theme responds to the system scheme without duplicated persisted state. | Store the resolved light/dark scheme separately. |

@@ -1,34 +1,34 @@
-# Клієнти — frontend design
+# Customers — frontend design
 
-## Перевірений базис на 2026-10-19
+## Verified baseline as of 2026-10-19
 
-| Область | Факт і джерело                                                                                                                                          | Ціль                                                                                                   |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Модулі  | `libs/admin/clients/{feature,data-access,ui,model}/project.json` уже існують; [правила доменів](../../../../../architecture/admin/structure/domains.md) | розширити чинні модулі без міждоменного імпорту                                                        |
-| Router  | `apps/admin/src/app/router/app-router.tsx` підключає clientsRoutes                                                                                      | зберегти чинні маршрути й URL-контекст списку                                                          |
-| Menu    | `libs/admin/core/shell/src/components/navigation/admin-navigation.tsx`                                                                                  | чинний пункт «Клієнти» без зміни                                                                       |
-| API     | [Admin state/API](../../../../../architecture/admin/runtime/state-and-api.md)                                                                           | `baseApi.injectEndpoints` у clients data-access; runtime validation, mapper, типи за generated OpenAPI |
-| UI      | `libs/admin/clients/ui/src/tables/customers-data-grid.tsx`, `package.json`                                                                              | один MUI quick search у toolbar таблиці, без фільтрів колонок і сортування                             |
-| Тести   | `package.json`, [testing rules](../../../../../standards/shared/testing-rules.md)                                                                       | автоматичні тести цієї фічі; browser journey лише за окремим дозволом                                  |
+| Area    | Fact and source                                                                                                                                        | Goal                                                                                                           |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Modules | `libs/admin/clients/{feature,data-access,ui,model}/project.json` already exist; [domain rules](../../../../../architecture/admin/structure/domains.md) | extend existing modules without cross-domain imports                                                           |
+| Router  | `apps/admin/src/app/router/app-router.tsx` connects clientsRoutes                                                                                      | preserve existing routes and list URL context                                                                  |
+| Menu    | `libs/admin/core/shell/src/components/navigation/admin-navigation.tsx`                                                                                 | keep the existing «Клієнти» item unchanged                                                                     |
+| API     | [Admin state/API](../../../../../architecture/admin/runtime/state-and-api.md)                                                                          | `baseApi.injectEndpoints` in clients data-access; runtime validation, mapper, and types from generated OpenAPI |
+| UI      | `libs/admin/clients/ui/src/tables/customers-data-grid.tsx`, `package.json`                                                                             | one MUI quick search in the table toolbar, with no column filters or sorting                                   |
+| Tests   | `package.json`, [testing rules](../../../../../standards/shared/testing-rules.md)                                                                      | automated tests for this feature; browser journey only with separate approval                                  |
 
-Наявний домен уже має Nx projects і маршрути. `feature` володіє `/customers` та `/customers/:counterpartyId`, пошуком і пагінацією в URL та композицією; `data-access` має RTK Query list/detail, runtime validation та mapping; `ui` — таблицю й read-only поля без HTTP/router. `model` нормалізує query; застарілі параметри фільтрації колонок не відновлюються з URL. Invalid ID не доходить до HTTP. `404` — not found, інші помилки — retry. Після реалізації звірити фактичну [сторінку фічі](../../../../../features/admin/clients.md) та Admin index.
+The existing domain already has Nx projects and routes. `feature` owns `/customers` and `/customers/:counterpartyId`, search and pagination in the URL, and page composition; `data-access` owns RTK Query list/detail, runtime validation, and mapping; `ui` owns the table and read-only fields without HTTP/router dependencies. `model` normalizes the query; obsolete column-filter parameters are not restored from the URL. An invalid ID never reaches HTTP. A `404` means not found; other errors offer retry. After implementation, compare the actual [feature page](../../../../../features/admin/clients.md) and Admin index.
 
-**Доповнення 2026-10-20:** таблиця надсилає `sort` до серверного API для імені, телефону й ID в обох напрямках. `feature` зберігає `sort` у URL і скидає сторінку до 1 при зміні; `model` приймає лише значення provider enum. Таблиця використовує `sortingMode="server"`. Наведені вище цілі та рішення про вимкнене сортування описують базис 2026-10-19 і замінені цим доповненням.
+**Update 2026-10-20:** The table sends `sort` to the server API for name, phone, and ID in both directions. `feature` stores `sort` in the URL and resets the page to 1 when it changes; `model` accepts only provider enum values. The table uses `sortingMode="server"`. The goals above and the decision to disable sorting describe the 2026-10-19 baseline and are superseded by this update.
 
-Детальна сторінка використовує [спільний формат list/detail](../../../../../standards/admin/list-detail-pages.md): той самий MUI Link з `ArrowBackIcon`, що й деталі товару, та нейтральний заголовок сторінки. `CustomerDetailsContent` компонуватиме три окремі Card: ім'я й ID, контактні дані та типи цін. Дочірні компоненти відповідають кожен за свою картку, а `CustomerDetailField` — за однакове подання підпису й значення. Таблиць у деталях немає; телефонний, планшетний і широкий layout використовують breakpoints і кольори чинної Admin theme без власної палітри.
+The detail page uses the [shared list/detail format](../../../../../standards/admin/list-detail-pages.md): the same MUI Link with `ArrowBackIcon` as product details, and a neutral page heading. `CustomerDetailsContent` composes three separate Cards: name and ID, contact details, and price types. Each child component owns its card, while `CustomerDetailField` provides consistent label/value presentation. Details use no tables; phone, tablet, and wide layouts use the current Admin theme breakpoints and colors without a custom palette.
 
-## Аудит відповідальностей
+## Responsibility audit
 
-| Файл                   | Поточна роль              | Рішення                                                                                      |
-| ---------------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
-| `app-router.tsx`       | route composition         | чинні `clientsRoutes` лишаються; JSX сторінок тут немає                                      |
-| `admin-navigation.tsx` | menu configuration/render | чинний пункт і nested active state лишаються без customer logic                              |
-| customers Data Grid    | quick search у toolbar    | єдиний `searchTerm` і page/pageSize передаються в API; фільтри колонок і сортування вимкнені |
+| File                   | Current role              | Decision                                                                                    |
+| ---------------------- | ------------------------- | ------------------------------------------------------------------------------------------- |
+| `app-router.tsx`       | route composition         | existing `clientsRoutes` remain; page JSX does not belong here                              |
+| `admin-navigation.tsx` | menu configuration/render | existing item and nested active state remain without customer logic                         |
+| customers Data Grid    | quick search in toolbar   | one `searchTerm` and page/pageSize are sent to API; column filters and sorting are disabled |
 
-Нових пакетів не потрібно: MUI, `@mui/x-data-grid`, RTK Query і React Router уже є в `package.json`/lockfile. Дані клієнтів не переносяться в спільний Redux slice, оскільки RTK Query володіє серверним кешем. Поля контактів не логуються.
+No new packages are needed: MUI, `@mui/x-data-grid`, RTK Query, and React Router are already in `package.json`/lockfile. Customer data is not moved into a shared Redux slice because RTK Query owns the server cache. Contact fields are not logged.
 
-## Адаптивність і теми
+## Responsive layout and themes
 
-Перевірений стан на 2026-10-19: `apps/admin/src/app/theme/admin-theme.ts` визначає `xs: 0`, `sm: 600`, `md: 900`, `lg: 1200`, `xl: 1440` і схеми `light`/`dark`; `apps/admin/src/app/providers/app-providers.tsx` підключає цей theme через MUI `ThemeProvider` із `defaultMode="system"`. [Admin UI rules](../../../../../standards/admin/admin-ui.md) вимагають наявні MUI patterns/theme і перевірку вузьких та широких layout.
+Verified as of 2026-10-19: `apps/admin/src/app/theme/admin-theme.ts` defines `xs: 0`, `sm: 600`, `md: 900`, `lg: 1200`, `xl: 1440`, and `light`/`dark` schemes; `apps/admin/src/app/providers/app-providers.tsx` applies this theme through MUI `ThemeProvider` with `defaultMode="system"`. [Admin UI rules](../../../../../standards/admin/admin-ui.md) require existing MUI patterns/theme and checks of narrow and wide layouts.
 
-Data Grid, картка та її стани мають брати кольори/типографіку з теми Admin. Локальні жорстко задані світлі кольори не вводити. За кодом звірити підключення `light`/`dark`, горизонтальне прокручування усіх колонок на телефоні й планшеті, доступність дії та пагінації, стани loading/empty/error. Фактичне компонування, перекриття й фокус у браузері не вважати перевіреними без окремого запитання та прямого дозволу користувача на конкретний перегляд.
+The Data Grid, card, and its states must use colors and typography from the Admin theme. Do not introduce locally hard-coded light colors. Verify in code that `light`/`dark` are connected, all columns can be reached by horizontal scrolling on phones and tablets, row actions and pagination are accessible, and loading/empty/error states are covered. Do not treat actual browser layout, overlap, or focus as verified without asking separately and receiving the user's direct approval for that specific inspection.

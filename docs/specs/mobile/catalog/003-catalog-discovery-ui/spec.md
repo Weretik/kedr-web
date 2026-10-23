@@ -1,139 +1,139 @@
-# Специфікація: оновлений discovery UI каталогу
+# Specification: refreshed catalog discovery UI
 
-**Створено:** 2026-07-31  
-**Статус:** draft  
-**Вхід:** оновити каталог Mobile без зміни корпоративної теми та без зміни API.
+**Created:** 2026-07-31\
+**Status:** draft\
+**Input:** Refresh the Mobile catalog without changing the corporate theme or API.
 
-## Межі
+## Scope
 
-**У scope:**
+**In scope:**
 
-- Спільний Appbar у tab layout для «Головна», «Каталог» і «Профіль»: title активної вкладки, чинний control зміни теми та route-specific actions; у каталозі — іконка пошуку;
-- нижня навігація у цьому ж tab layout через `react-native-paper` `BottomNavigation.Bar`, інтегрована з чинними Expo Router tabs;
-- `@shopify/flash-list` для списку товарів;
-- картка товару з назвою, ціною у форматі `… грн.` та компактним `ID: …`;
-- іконки для відкриття фільтрів, сортування і категорій;
-- чотири `react-native-actions-sheet`: пошук, сортування, фільтри, категорії;
-- активні `Chip` для кожного вибраного фільтра, категорії та нестандартного сортування;
-- локальна історія до десяти застосованих пошукових фраз.
+- A shared Appbar in the tab layout for “Головна”, “Каталог”, and “Профіль”: active tab title, current theme control, and route-specific actions; the catalog has a search icon.
+- Bottom navigation in the same tab layout using `react-native-paper` `BottomNavigation.Bar`, integrated with the existing Expo Router tabs.
+- `@shopify/flash-list` for the product list.
+- Product cards with a name, price formatted as `… грн.`, and compact `ID: …`.
+- Icons to open filters, sorting, and categories.
+- Four `react-native-actions-sheet` sheets: search, sort, filters, and categories.
+- Active `Chip` for every selected filter, category, and non-default sort.
+- Local history of up to ten applied search phrases.
 
-**Поза scope:**
+**Out of scope:**
 
-- нові endpoint, DTO, серверне збереження пошуку, зміна pagination або логіки фільтрації API;
-- зміна корпоративної Paper theme, створення локальних кольорових tokens або копіювання тем із прикладів;
-- картка деталей товару, кошик, обране, камера, карусель, жести;
-- масова міграція `FlatList` поза каталогом.
+- New endpoints or DTOs, server-side search persistence, or changes to pagination or API filtering logic.
+- Changes to the corporate Paper theme, local color tokens, or copying themes from examples.
+- Product detail card, cart, favorites, camera, carousel, or gestures.
+- Bulk migration of `FlatList` outside the catalog.
 
-## Коригування UI — фаза 06
+## UI corrections — phase 06
 
-- Відступ між картками задається `FlashList.ItemSeparatorComponent` (`12dp`), а відступ до екрана — container (`16dp`).
-- У card `ID` розміщується над назвою. `in_stock` використовує `primary` (зелений), `out_of_stock` — `error` (червоний), `unknown` — `tertiary` (жовтий). Фото завжди є в білому fixed `96×96dp` frame з `contain` та `overflow: hidden`.
-- Filters sheet не містить category selector. Category tree відкривається лише у власному sheet і використовує `react-native-tree-multi-select` з одиничним вибором та Apply.
-- Theme control у спільному Appbar і всі feature sheets — `react-native-actions-sheet`. Контейнер і drag indicator отримують кольори від активної Paper theme.
+- Card spacing is set by `FlashList.ItemSeparatorComponent` (`12dp`); screen inset is set by the container (`16dp`).
+- In each card, `ID` appears above the name. `in_stock` uses `primary` (green), `out_of_stock` uses `error` (red), and `unknown` uses `tertiary` (yellow). The photo always sits in a white fixed `96×96dp` frame with `contain` and `overflow: hidden`.
+- The filters sheet has no category selector. The category tree opens only in its own sheet and uses `react-native-tree-multi-select` with single selection and Apply.
+- The shared Appbar theme control and all feature sheets use `react-native-actions-sheet`. The container and drag indicator get their colors from the active Paper theme.
 
-## Коригування поверхонь і sheet — фаза 08
+## Surface and sheet corrections — phase 08
 
-- Екран каталогу використовує сірий `theme.colors.background`; product cards — `theme.colors.surface` (білий у light theme).
-- Спільний sheet adapter отримує центрований title. Light sheet використовує світлу surface, dark sheet — dark surface.
-- Sort і theme options нейтральні за замовчуванням; лише selected option використовує `primary` та check. Напрям сортування має текст «за зростанням» або «за спаданням» разом зі стрілкою.
+- The catalog screen uses the gray `theme.colors.background`; product cards use `theme.colors.surface` (white in the light theme).
+- The shared sheet adapter receives a centered title. The light sheet uses a light surface; the dark sheet uses a dark surface.
+- Sort and theme options are neutral by default; only the selected option uses `primary` and a check. Sort direction includes the text “за зростанням” or “за спаданням” with an arrow.
 
-## Коригування search sheet — фаза 11
+## Search sheet corrections — phase 11
 
-- Recent search rows використовують `onSurface`, мають control видалення однієї фрази та сусідній «Очистити» для clear-all.
-- Search запускається trailing `primary` icon у полі або keyboard Submit; окрема Apply-кнопка відсутня.
-- Search bar — filled `surfaceVariant` 52–56dp без outline: нейтральна лупа зліва, `onSurface` input text, primary submit справа та `×` для очищення введеного тексту.
-- Sheet має keyboard-safe scroll layout без overlay над історією або control запуску.
+- Recent search rows use `onSurface`, include a control to delete one phrase, and have a neighboring “Очистити” action to clear all.
+- Search is submitted with the trailing `primary` icon in the field or keyboard Submit; there is no separate Apply button.
+- The search bar is filled `surfaceVariant`, 52–56dp, with no outline: neutral search icon on the left, `onSurface` input text, primary submit on the right, and `×` to clear entered text.
+- The sheet has a keyboard-safe scroll layout without an overlay covering history or the submit control.
 
-## Ієрархія product card — фаза 12
+## Product card hierarchy — phase 12
 
-- ID є першим, жирним `bodySmall` identifier без збільшення розміру.
-- Назва звичайної товщини, трохи компактніша за поточний title і обмежена двома рядками.
-- Price лишається bold; price та semantic availability розташовуються у спільному нижньому row: price зліва, status справа.
+- ID is the first element, a bold `bodySmall` identifier without increasing its size.
+- The name uses normal weight, is slightly more compact than the current title, and is limited to two lines.
+- Price remains bold. Price and semantic availability share the bottom row: price on the left, status on the right.
 
-## Applied query chips — фаза 13
+## Applied query chips — phase 13
 
-- Explicit search відображається над product list разом із іншими applied values через `react-native-paper` `Chip` з `onClose`.
-- Chips компактні, в один рядок і мають gap 8dp. Search query з одного короткого слова показується повністю; довгий або багатослівний query одно-рядково обрізається ellipsis у межах chip.
-- Close search chip скидає лише search; усі close actions лишаються granular.
-- Усі chips використовують штатний `react-native-paper` `Chip` у compact outlined presentation з 13sp text, 8dp gap, 16dp horizontal strip padding, close icon та обмеженням ширини; сторонній package не додається.
+- Explicit search appears above the product list with other applied values, using `react-native-paper` `Chip` with `onClose`.
+- Chips are compact, on one line, with an 8dp gap. A short one-word search query is shown in full; a long or multi-word query is truncated to one line with an ellipsis inside the chip.
+- Closing the search chip clears only search; all close actions remain granular.
+- All chips use the built-in `react-native-paper` `Chip` in a compact outlined presentation with 13sp text, 8dp gap, 16dp horizontal strip padding, a close icon, and a width limit; no third-party package is added.
 
-## Floating bottom navigation — уточнення фази 10
+## Floating bottom navigation — phase 10 clarification
 
-- Нижня навігація міститься у напівпрозорому floating pill із horizontal inset 16dp, radius 32dp і shadow/elevation. Лише frame зафарбований; фон screen залишається видимим навколо.
-- Content height 64dp і system safe area лишаються окремими. Scroll content має достатній bottom inset під floating frame.
+- Bottom navigation sits in a translucent floating pill with a 16dp horizontal inset, 32dp radius, and shadow/elevation. Only the frame is filled; the screen background remains visible around it.
+- Content height (64dp) and system safe area remain separate. Scroll content has sufficient bottom inset beneath the floating frame.
 
 ## User scenarios and acceptance
 
-### US1 — Користувач бачить зрозумілий каталог (P1)
+### US1 — User sees a clear catalog (P1)
 
-Користувач відкриває вкладку каталогу та одразу бачить назву екрана, перемикач теми, кнопку пошуку, список товарів на фоновому кольорі теми та контрастні картки.
+The user opens the catalog tab and immediately sees the screen title, theme switch, search button, product list on the theme background, and cards with clear contrast.
 
-**Independent test:** відкрити `/(tabs)/catalog` у світлій і темній темі та перевірити перший екран без виконання пошуку чи фільтра.
+**Independent test:** Open `/(tabs)/catalog` in light and dark themes and inspect the first screen without searching or filtering.
 
-1. Given каталог завантажився, when користувач відкриває вкладку, then Appbar показує «Каталог», кнопку зміни теми й іконку пошуку з українськими accessible names.
-2. Given є товар із ціною, when він з'являється у списку, then картка показує назву, ціну з суфіксом `грн.` і `ID: <id>`.
-3. Given ціна відсутня, when картка рендериться, then показано «Ціну уточнюйте», без вигаданої суми чи валюти.
-4. Given світла або темна тема, when рендериться список, then сторінка використовує чинний `theme.colors.background`, а картка — Paper elevated surface з видимим відокремленням від фону в обох темах.
-5. Given завантажено багато товарів або наступну сторінку, when користувач прокручує список, then елементи рендерить `FlashList`, а поточні pull-to-refresh і «Завантажити ще» зберігають поведінку.
+1. Given the catalog has loaded, when the user opens the tab, then the Appbar shows “Каталог”, the theme control, and the search icon with Ukrainian accessible names.
+2. Given a product has a price, when it appears in the list, then its card shows the name, price with the `грн.` suffix, and `ID: <id>`.
+3. Given the price is missing, when the card renders, then it shows “Ціну уточнюйте” without an invented amount or currency.
+4. Given either theme, when the list renders, then the page uses the current `theme.colors.background` and the card uses an elevated Paper surface with visible separation from the background in both themes.
+5. Given many products or another page has loaded, when the user scrolls the list, then `FlashList` renders the items and current pull-to-refresh and “Завантажити ще” behavior is preserved.
 
-### US2 — Користувач керує пошуком через нижню панель (P1)
+### US2 — User controls search through a bottom sheet (P1)
 
-Користувач натискає іконку пошуку в Appbar, вводить фразу та явно застосовує її. Нижня панель також показує до десяти останніх застосованих фраз.
+The user taps the search icon in the Appbar, enters a phrase, and explicitly applies it. The bottom sheet also shows up to ten most recently applied phrases.
 
-**Independent test:** застосувати дві різні фрази, перезапустити застосунок, відкрити панель пошуку й вибрати одну з них.
+**Independent test:** Apply two different phrases, restart the app, open the search sheet, and select one of them.
 
-1. Given Appbar каталогу, when натиснуто «Пошук товарів», then відкривається action sheet із полем пошуку, кнопкою «Застосувати» та списком останніх пошуків.
-2. Given непорожній текст у полі, when натиснуто «Застосувати», then запит каталогу починається з першої сторінки, панель закривається, а нормалізована фраза потрапляє на початок історії.
-3. Given порожній або пробільний текст, when натиснуто «Застосувати», then пошук очищується, панель закривається і в історію нічого не додається.
-4. Given історія містить фразу, when користувач натискає її, then ця фраза підставляється в поле; лише натискання «Застосувати» змінює результати й порядок історії.
-5. Given історія має понад десять унікальних фраз, when застосовано одинадцяту, then зберігаються лише десять найновіших.
+1. Given the catalog Appbar, when “Пошук товарів” is tapped, then an action sheet opens with a search field, an “Застосувати” button, and recent searches.
+2. Given the field contains non-empty text, when “Застосувати” is tapped, then the catalog request starts from the first page, the sheet closes, and the normalized phrase moves to the beginning of history.
+3. Given the field is empty or contains only whitespace, when “Застосувати” is tapped, then search is cleared, the sheet closes, and nothing is added to history.
+4. Given history contains a phrase, when the user taps it, then that phrase is copied into the field; results and history order change only after “Застосувати” is tapped.
+5. Given history contains more than ten unique phrases, when an eleventh phrase is applied, then only the ten most recent remain.
 
-### US3 — Користувач керує каталогом іконками та бачить активний стан (P1)
+### US3 — User controls the catalog with icons and sees active state (P1)
 
-Користувач не бачить текстових кнопок «Фільтри» і «Сортування» біля списку. Він відкриває окремі зрозумілі іконки та бачить вибір як chips, які можна прибрати окремо.
+The user sees no text buttons for “Фільтри” or “Сортування” beside the list. They open separate, recognizable icons and see selections as individually removable chips.
 
-**Independent test:** вибрати категорію, ціну «від», «Лише в наявності» і сортування за ціною; послідовно прибрати всі chips.
+**Independent test:** Select a category, a minimum price, “Лише в наявності”, and price sorting; then remove all chips one by one.
 
-1. Given Appbar та список товарів, when користувач переглядає query controls, then є три окремі icon buttons: «Фільтри», «Сортування», «Категорії»; текстового `Searchbar` та текстових кнопок у верхній частині екрана немає.
-2. Given натиснуто «Сортування», when action sheet відкрито, then він показує всі підтримувані варіанти, позначає поточний і застосовує вибір одразу.
-3. Given натиснуто «Фільтри», when action sheet відкрито, then він містить лише перемикачі наявності/новинки/акції та межі ціни, має незалежний draft, «Скинути» і «Застосувати»; категорія в цій панелі не дублюється.
-4. Given натиснуто «Категорії», when action sheet відкрито, then користувач бачить прокручуване дерево з expand/collapse, вибирає одну категорію та застосовує її до списку.
-5. Given вибрано категорію, кожен фільтр або нестандартне сортування, when панель закрито, then для кожного значення показано окремий `Chip` із кнопкою видалення.
-6. Given користувач натискає хрестик конкретного chip, when дія завершена, then прибирається лише відповідне значення, page скидається на `1`, а інші selections лишаються.
+1. Given the Appbar and product list, when the user views query controls, then there are three separate icon buttons: “Фільтри”, “Сортування”, and “Категорії”; there is no text `Searchbar` or text button at the top of the screen.
+2. Given “Сортування” is tapped, when the action sheet opens, then it shows all supported options, marks the current one, and applies a choice immediately.
+3. Given “Фільтри” is tapped, when the action sheet opens, then it contains only availability/new/sale toggles and price boundaries, has an isolated draft, “Скинути”, and “Застосувати”; category is not duplicated in this sheet.
+4. Given “Категорії” is tapped, when the action sheet opens, then the user sees a scrollable tree with expand/collapse, selects one category, and applies it to the list.
+5. Given a category, each filter, or a non-default sort is selected, when the sheet closes, then a separate `Chip` with a removal button appears for each value.
+6. Given the user taps a specific chip’s close icon, when the action completes, then only the corresponding value is removed, the page resets to `1`, and other selections remain.
 
 ## Functional requirements
 
-- **FR-001:** `apps/mobile/src/app/(tabs)/_layout.tsx` володіє єдиним `react-native-paper` `Appbar` для кожної tab-сторінки. Він показує title активної вкладки та чинний `ThemePreferenceHeaderControl`; каталог додає до правої зони іконку пошуку. Feature-екрани не рендерять власний Appbar.
-- **FR-002:** Список каталогу використовує `@shopify/flash-list`; `FlatList` у `CatalogList` замінюється тільки в межах цієї задачі.
-- **FR-003:** Відображення картки не змінює `CatalogProduct`. Ціна — `${price} грн.`; ID — `ID: ${id}`; image та availability лишаються допоміжними даними, якщо вже наявні.
-- **FR-004:** Фон екрана — централізований `theme.colors.background`; картка — `Card`/elevated surface з чинної Paper theme. Заборонено literal корпоративних кольорів у feature/UI.
-- **FR-005:** Пошук, sort, filters і categories реалізуються як чотири окремі екземпляри `react-native-actions-sheet`; видимість і draft не змішуються між панелями.
-- **FR-006:** Пошук не дебаунситься під час набору: API-query змінюється тільки при «Застосувати», виборі history entry + «Застосувати», або очищенні пошуку.
-- **FR-007:** Історія пошуку зберігається локально в AsyncStorage у ключі, ізольованому в `catalog/feature`; максимум 10 уникальних нормалізованих рядків. Дані не передаються в API.
-- **FR-008:** `Chip` показуються для category, `inStock`, `isNew`, `isSale`, межі/діапазону ціни і sort, якщо sort не `IdAsc`. Кожен має `onClose` та локалізований accessible name.
-- **FR-009:** Скидання одного chip не повинно скидати інші фільтри, search або sort. Глобальне «Скинути все» може лишитися лише в панелі фільтрів і скидає filter fields, не category/sort/search.
-- **FR-010:** Усі видимі тексти, labels та accessible names — українською; touch targets — не менше 48dp.
-- **FR-011:** `apps/mobile/src/app/(tabs)/_layout.tsx` володіє єдиною нижньою навігацією `BottomNavigation.Bar` з `react-native-paper` для всіх tab-сторінок. Вона відображає «Головна», «Каталог» і «Профіль», передає Expo Router navigation state, safe-area insets і tab events, а `renderIcon` делегує screen options. Другий Paper provider не створюється.
+- **FR-001:** `apps/mobile/src/app/(tabs)/_layout.tsx` owns the single `react-native-paper` `Appbar` for every tab page. It shows the active tab title and current `ThemePreferenceHeaderControl`; the catalog adds a search icon in the right action area. Feature screens do not render their own Appbar.
+- **FR-002:** The catalog list uses `@shopify/flash-list`; replace `FlatList` in `CatalogList` only within this task.
+- **FR-003:** Card presentation does not change `CatalogProduct`. Price is `${price} грн.`; ID is `ID: ${id}`; image and availability remain supporting data if already present.
+- **FR-004:** The screen background is centralized as `theme.colors.background`; the card uses `Card`/an elevated surface from the current Paper theme. Literal corporate colors are prohibited in feature/UI.
+- **FR-005:** Search, sort, filters, and categories use four separate `react-native-actions-sheet` instances; visibility and drafts are not shared between sheets.
+- **FR-006:** Search is not debounced while typing: the API query changes only on “Застосувати”, selecting a history entry followed by “Застосувати”, or clearing search.
+- **FR-007:** Search history is stored locally in AsyncStorage under a key isolated in `catalog/feature`; it contains at most 10 unique normalized strings. Data is not sent to the API.
+- **FR-008:** Show `Chip` for category, `inStock`, `isNew`, `isSale`, price boundary/range, and sort when sort is not `IdAsc`. Each has `onClose` and a localized accessible name.
+- **FR-009:** Removing one chip must not reset other filters, search, or sort. Global “Скинути все” may remain only in the filters sheet and resets filter fields, not category/sort/search.
+- **FR-010:** All visible text, labels, and accessible names are Ukrainian; touch targets are at least 48dp.
+- **FR-011:** `apps/mobile/src/app/(tabs)/_layout.tsx` owns the single `react-native-paper` `BottomNavigation.Bar` for all tab pages. It shows “Головна”, “Каталог”, and “Профіль”, forwards Expo Router navigation state, safe-area insets, and tab events, and delegates icons through screen options. No second Paper provider is created.
 
 ## Edge cases
 
-- Категорії ще завантажуються/порожні/недоступні: category sheet показує чинний loading, empty або error/retry state; інші панелі доступні.
-- Фільтри містять неправильну межу цін: існуюча локальна валідація не дозволяє передати нечислове/від'ємне значення; діапазон `від > до` має видиму помилку до «Застосувати».
-- Довга назва, ID або фраза history: текст переноситься/обрізається без виходу з картки або action sheet.
-- Закриття action sheet без «Застосувати» відкидає draft для search і filters; sort і category застосовуються за явною дією, описаною у visual contract.
-- Offline/error/loading/empty каталогу зберігають чинні page states і не маскуються нижніми панелями.
-- Web: action sheet, focus, Enter/Space та Escape перевіряються вручну; доступна кнопка/Chip не покладається лише на жест.
+- Categories are still loading, empty, or unavailable: the category sheet shows the current loading, empty, or error/retry state in place of the tree; other sheets remain available.
+- Filters contain invalid price boundaries: existing local validation prevents non-numeric/negative values; a range with `from > to` shows a visible error before “Застосувати”.
+- Long name, ID, or history phrase: text wraps/truncates without overflowing the card or action sheet.
+- Dismissing an action sheet without “Застосувати” discards search and filter drafts; sort and category apply through the explicit action described in the visual contract.
+- Offline/error/loading/empty catalog states preserve existing page states and are not obscured by bottom sheets.
+- Web: manually check action sheet, focus, Enter/Space, and Escape; an accessible button/Chip does not rely on a gesture alone.
 
 ## Success criteria
 
-- **SC-001:** На екрані каталогу немає inline `Searchbar` і текстових кнопок фільтра/сортування; усі чотири сценарії доступні через описані Appbar/icon actions.
-- **SC-002:** Кожен активний filter, category і non-default sort має окремий chip, який прибирає лише себе.
-- **SC-003:** Після 11 застосованих різних пошукових фраз панель показує рівно 10 останніх; після перезапуску вони зберігаються.
-- **SC-004:** Targeted Jest/RNTL тести покривають reducer/storage, `FlashList` rendering, sheets і видалення chips; Android і web QA підтверджують scroll, safe area, theme, keyboard/focus та accessibility.
+- **SC-001:** The catalog screen has no inline `Searchbar` or text buttons for filters/sort; all four scenarios are available through the described Appbar/icon actions.
+- **SC-002:** Every active filter, category, and non-default sort has its own chip that removes only itself.
+- **SC-003:** After 11 different searches are applied, the sheet shows exactly the latest 10; they remain after app restart.
+- **SC-004:** Targeted Jest/RNTL tests cover reducer/storage, `FlashList` rendering, sheets, and chip removal; Android and web QA confirm scrolling, safe area, theme, keyboard/focus, and accessibility.
 
 ## Assumptions and dependencies
 
-- Додаються лише `@shopify/flash-list` і `react-native-actions-sheet` у сумісних із Expo SDK 56 версіях. Перед установленням виконується `npx expo-doctor`.
-- Поточний products/categories API достатній; ця задача не додає параметрів або endpoint.
-- Валюта «грн.» — затверджений UX-суфікс для ціни, а не поле серверного контракту.
-- Локальна історія належить поточній інсталяції застосунку та не синхронізується між пристроями або користувачами.
+- Add only `@shopify/flash-list` and `react-native-actions-sheet` versions compatible with Expo SDK 56. Run `npx expo-doctor` before installation.
+- The current products/categories API is sufficient; this task adds no parameters or endpoints.
+- “грн.” is an approved UX suffix for price, not a server-contract field.
+- Local history belongs to the current app installation and is not synchronized across devices or users.

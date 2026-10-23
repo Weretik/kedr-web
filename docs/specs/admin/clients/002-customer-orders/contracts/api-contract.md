@@ -1,5 +1,5 @@
-# API
+# API contract
 
-Використати плановані операції `getAdminWorkspaceOrders` та `getAdminOrderDrafts` із `counterpartyId` поточного клієнта, а також чинний `getAdminCustomerById`. Відповіді пагіновані й сервер повертає `totalRecords` після фільтра клієнта. Списки не завантажують усі записи для локальної фільтрації.
+Use the planned operations `getAdminWorkspaceOrders` and `getAdminOrderDrafts` with the current customer's `counterpartyId`, together with the existing `getAdminCustomerById` operation. Responses are paginated, and the server returns `totalRecords` after filtering by customer. Lists do not fetch all records for local filtering.
 
-Операції входять до versioned frontend snapshot із KedrStore commit `b3797c1` у `docs/contracts/openapi/`; generated types оновлено. Походження зафіксовано в [`SOURCE.md`](../../../../../contracts/openapi/SOURCE.md). Consumer projection orders узгоджується за [правилом](../../../../../standards/shared/api-data-rules.md). Контракт і робота з 401/403, 404, 409 — у [orders SDD](../../../orders/001-order-workspace/contracts/api-contract.md). Для customer-specific списку не створювати дубль API.
+The operations are included in the versioned frontend snapshot from KedrStore commit `b3797c1` in `docs/contracts/openapi/`; generated types have been updated. Their provenance is recorded in [`SOURCE.md`](../../../../../contracts/openapi/SOURCE.md). The consumer projection for orders follows this [rule](../../../../../standards/shared/api-data-rules.md). The contract and handling of 401/403, 404, and 409 are described in the [orders SDD](../../../orders/001-order-workspace/contracts/api-contract.md). Do not create a duplicate API for the customer-specific list.

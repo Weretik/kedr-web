@@ -1,27 +1,27 @@
-# Вибір категорії у mobile catalog — API і навігація
+# Mobile catalog category selection — API and navigation
 
-**Frontend-контракт:** [Admin categories](../../../../../contracts/catalog/admin-categories.md)
-**Машиночитане джерело:** `KedrStore/docs/sdd/contracts/catalog/category-read.openapi.yaml` (`getAdminCategories`)
+**Frontend contract:** [Admin categories](../../../../../contracts/catalog/admin-categories.md)
+**Machine-readable source:** `KedrStore/docs/sdd/contracts/catalog/category-read.openapi.yaml` (`getAdminCategories`)
 
 ## API
 
-| Операція                        | Endpoint                  | Request                                | Response                  | Errors                                                                    |
-| ------------------------------- | ------------------------- | -------------------------------------- | ------------------------- | ------------------------------------------------------------------------- |
-| Завантажити category options    | `GET /api/categories`     | немає                                  | `CatalogCategoryOption[]` | normalized `ApiError`; OpenAPI формально визначає лише `200`              |
-| Застосувати category до catalog | `GET /api/admin/products` | `categoryId` + існуючий products query | `CatalogPage`             | як у [Admin products](../../../../../contracts/catalog/admin-products.md) |
+| Operation                 | Endpoint                  | Request                                | Response                  | Errors                                                                     |
+| ------------------------- | ------------------------- | -------------------------------------- | ------------------------- | -------------------------------------------------------------------------- |
+| Load category options     | `GET /api/categories`     | none                                   | `CatalogCategoryOption[]` | normalized `ApiError`; OpenAPI formally defines only `200`                 |
+| Apply category to catalog | `GET /api/admin/products` | `categoryId` + existing products query | `CatalogPage`             | as in [Admin products](../../../../../contracts/catalog/admin-products.md) |
 
-Канонічні request/response наведено у frontend-контракті [Admin
-categories](../../../../../contracts/catalog/admin-categories.md); private DTO і mapper
-залишаються в `data-access`. Categories operation unpaged. Зміна selection
-виконується only через Apply reducer action, скидає products `page` до `1` і не
-серіалізує порожній/невалідний id. Access policy endpoint — production blocker,
-який належить backend-власнику.
+Canonical requests/responses are defined in the frontend contract [Admin
+categories](../../../../../contracts/catalog/admin-categories.md); the private DTO and mapper
+remain in `data-access`. The categories operation is unpaged. Selection changes
+occur only through the Apply reducer action, reset the products `page` to `1`, and do not
+serialize an empty/invalid ID. The endpoint access policy is a production blocker
+for the backend owner to resolve.
 
-## Навігація
+## Navigation
 
-| Route             | Route file                               | Feature public API                          | Параметри | Back/deep-link behavior                                         |
-| ----------------- | ---------------------------------------- | ------------------------------------------- | --------- | --------------------------------------------------------------- |
-| `/(tabs)/catalog` | `apps/mobile/src/app/(tabs)/catalog.tsx` | `@mobile/catalog/feature` → `CatalogScreen` | Немає     | Existing root tab; modal closes without changing applied query. |
+| Route             | Route file                               | Feature public API                          | Parameters | Back/deep-link behavior                                             |
+| ----------------- | ---------------------------------------- | ------------------------------------------- | ---------- | ------------------------------------------------------------------- |
+| `/(tabs)/catalog` | `apps/mobile/src/app/(tabs)/catalog.tsx` | `@mobile/catalog/feature` → `CatalogScreen` | None       | Existing root tab; modal closes without changing the applied query. |
 
-Нова route, deep link, permissions, persisted category filter та category details
-не застосовуються.
+No new route, deep link, permissions, persisted category filter, or category details
+are included.

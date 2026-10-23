@@ -1,25 +1,25 @@
-# Товари — межі та результат
+# Products — scope and outcome
 
-## Мета
+## Goal
 
-Як користувач Admin, я хочу відкрити товар зі списку, переглянути його дані та окремо побачити товари без доступного фото, щоб перевіряти каталог без редагування.
+As an Admin user, I want to open a product from the list, view its data, and separately see products without an available photo so I can review the catalog without editing it.
 
-## У межах
+## In scope
 
-- У бічному меню є зрозумілий пункт «Товари» для наявного списку.
-- Верхній перемикач «Усі товари» / «Без фото» / «На сайті»; другий режим отримує окрему серверну сторінку товарів без доступного фото, третій — серверну вибірку з `exportToSite=true`.
-- Таблиця кожного режиму виконує пошук, підтримувану фільтрацію й пагінацію на сервері до вибірки сторінки; фільтри наявності, акції та новинки мають вибір «Так» / «Ні» / усі. Ознаку «На сайті» перемикає вкладка.
-- Обидва режими дають доступний перехід до картки з українською й російською назвами, основними даними, чотирма ознаками та окремими блоками фото і схеми. Доступне зображення відкривається збільшеним у MUI Dialog.
-- Якщо товар позначено «На сайті», картка має посилання на публічний товар за його slug.
-- Картка кожного товару має кнопку переходу до папки сховища фото в основному блоці. Саме зображення відкриває збільшення; окремої кнопки JPG немає.
-- Повернення з картки зберігає режим і параметри списку в межах поточної браузерної сесії або URL.
-- Loading, empty, error, invalid link та not found; адаптивний перегляд і клавіатурна навігація.
+- The sidebar has a clear «Товари» item for the existing list.
+- A top-level switch provides «Усі товари» / «Без фото» / «На сайті». The second mode loads a separate server page of products without an available photo; the third loads a server result set with `exportToSite=true`.
+- Each mode's table performs search, supported filtering, and pagination on the server before selecting the page. Availability, sale, and new-item filters offer «Так» / «Ні» / all. The «На сайті» tab controls that flag.
+- Both modes provide accessible navigation to a detail card with Ukrainian and Russian names, basic data, four flags, and separate photo and scheme sections. An available image opens enlarged in an MUI Dialog.
+- If a product is marked «На сайті», its card links to the public product by slug.
+- Every product card has a button in the main section linking to the photo storage folder. The image itself opens enlarged; there is no separate JPG button.
+- Returning from a card preserves the mode and list parameters in the current browser session or URL.
+- Loading, empty, error, invalid-link, and not-found states; responsive viewing and keyboard navigation.
 
-## Поза межами
+## Out of scope
 
-- Створення, редагування, видалення, масові операції, кошик, зміна фото та діагностика CDN.
-- Форма редагування з референсу, технічний `photoStatus`, зміна ознак і масові дії.
+- Creation, editing, deletion, bulk operations, cart, photo changes, and CDN diagnostics.
+- The reference's edit form, technical `photoStatus`, changing flags, and bulk actions.
 
-## Обмеження
+## Constraints
 
-Admin використовує окрему операцію деталей із `nameRu`, `isSale`, `isNew`, `exportToSite` і slug товару; backend-контракт і frontend snapshot синхронізовані. `photoStatus` і стан CDN не домислюються клієнтом. Production rollout залежить від backend-політики доступу до тимчасово anonymous Admin endpoints.
+Admin uses a separate detail operation with `nameRu`, `isSale`, `isNew`, `exportToSite`, and product slug; the backend contract and frontend snapshot are synchronized. The client does not infer `photoStatus` or CDN state. Production rollout depends on the backend access policy for temporarily anonymous Admin endpoints.

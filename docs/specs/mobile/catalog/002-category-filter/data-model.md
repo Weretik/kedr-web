@@ -1,10 +1,10 @@
-# Вибір категорії у mobile catalog — модель даних
+# Mobile catalog category selection — data model
 
-## Контекст
+## Context
 
-`GET /api/categories` повертає unpaged administration rows. `data-access`
-мапить їх у domain tree, який використовують existing `CatalogCategorySelector`
-і filter draft. Product API отримує тільки selected `categoryId`.
+`GET /api/categories` returns unpaged administration rows. `data-access`
+maps them to a domain tree used by the existing `CatalogCategorySelector`
+and filter draft. The Product API receives only the selected `categoryId`.
 
 ## Domain / view model
 
@@ -18,16 +18,16 @@ CatalogFilterSelection
 └── categoryId?: number
 ```
 
-## Межа DTO
+## DTO boundary
 
-- `AdminCategoryDto` приватний у `libs/mobile/catalog/data-access/src/contracts/` і відображає `id`, names, `slug`, `productTypeIdOneC`, `parentId`, `sortOrder`, `level`.
-- `catalog-categories.mapper.ts` показує `shortNameUk`; за відсутності української short name використовує `shortNameRu`, будує tree за `parentId` і повертає `CatalogCategoryOption[]`.
-- UI, feature та reducer не отримують DTO, `slug`, `productTypeIdOneC` або raw HTTP errors.
+- `AdminCategoryDto` is private to `libs/mobile/catalog/data-access/src/contracts/` and represents `id`, names, `slug`, `productTypeIdOneC`, `parentId`, `sortOrder`, and `level`.
+- `catalog-categories.mapper.ts` uses `shortNameUk`; if the Ukrainian short name is missing, it uses `shortNameRu`, builds the tree from `parentId`, and returns `CatalogCategoryOption[]`.
+- UI, feature, and reducer do not receive the DTO, `slug`, `productTypeIdOneC`, or raw HTTP errors.
 
-## Інваріанти та нормалізація
+## Invariants and normalization
 
-- `id` додатний integer; лише такий id може бути збережений у `filters.categoryId`.
-- `parentId: null` означає root; sibling ordering: `sortOrder`, потім `id`.
-- Рівні 0–2 доступні selector; nodes глибше не рендеряться як selectable options у цій feature.
-- Duplicate IDs, missing parent, cycle або `level` mismatch є malformed response: mapper виключає такі nodes із результату без infinite recursion.
-- `shortNameUk`/`shortNameRu` обов'язкові за contract; українська short name є основною, російська — fallback. UI не використовує raw `name`.
+- `id` is a positive integer; only such an ID can be stored in `filters.categoryId`.
+- `parentId: null` means root; sibling ordering is by `sortOrder`, then `id`.
+- Levels 0–2 are available to the selector; deeper nodes are not rendered as selectable options in this feature.
+- Duplicate IDs, a missing parent, a cycle, or a `level` mismatch make the response malformed; the mapper excludes those nodes without infinite recursion.
+- `shortNameUk`/`shortNameRu` are required by the contract; the Ukrainian short name is primary, and Russian is the fallback. The UI does not use raw `name`.

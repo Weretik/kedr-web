@@ -4,50 +4,39 @@
 
 ### R-001 — Persisted cart
 
-Товарні рядки зберігаються між перезапусками застосунку, доки менеджер не
-видалить їх або backend не підтвердить створення замовлення.
+Cart lines persist across app restarts until the manager removes them or the backend confirms order creation.
 
 ### R-002 — Quantity and stock boundary
 
-Кількість є додатним цілим числом, не перевищує останній відомий залишок;
-зменшення нижче одного не відбувається, а видалення є окремою явною дією.
+Quantity is a positive integer and does not exceed the last known stock; it cannot be decreased below one, and removal is a separate explicit action.
 
 ### R-003 — Deterministic totals
 
-Ціна одиниці не редагується. Сума рядка дорівнює `unitPrice × quantity`, а
-загальна сума — сумі всіх рядків без доставки, податків чи інших нарахувань.
+Unit price cannot be edited. The line amount equals `unitPrice × quantity`, and the total is the sum of all lines without delivery, taxes, or other charges.
 
 ### R-004 — Complete local customer search
 
-Перед пошуком застосунок отримує повний набір активних клієнтів доступними
-сторінками. Пошук за назвою ігнорує регістр та крайні пробіли.
+Before searching, the app loads the complete set of active customers from all available pages. Name search ignores case and surrounding whitespace.
 
 ### R-005 — Minimal checkout input
 
-Для оформлення менеджер обирає одного клієнта і може додати коментар до 1000
-символів. Технічні поля рядків формуються з кошика і не редагуються вручну.
+To submit, the manager selects one customer and may add a comment of up to 1000 characters. Technical line fields are built from the cart and are not edited manually.
 
 ### R-006 — Idempotent order creation
 
-Одна незмінена create action має один UUID idempotency key. Паралельна відправка
-неможлива; безпечний retry того самого payload використовує той самий ключ.
+One unchanged create action has one UUID idempotency key. Parallel submission is prevented; a safe retry of the same payload uses the same key.
 
 ### R-007 — Backend-authoritative errors
 
-Frontend виконує лише мінімальні перевірки, а normalized backend field і
-business errors показуються без raw transport details та без втрати введених
-даних.
+The frontend performs only minimal checks. Normalized backend field and business errors are shown without raw transport details or losing entered data.
 
 ### R-008 — Confirmed success cleanup
 
-Лише підтверджений `200` або `201` показує номер замовлення і `Pending`, очищає
-кошик та закриває форму. Помилка локального очищення не повторює HTTP create.
+Only a confirmed `200` or `201` shows the order number and `Pending`, clears the cart, and closes the form. A local cleanup failure does not repeat the HTTP create request.
 
 ### R-009 — Established mobile interaction
 
-Екран і нижні панелі використовують корпоративну тему, доступні touch targets,
-безпечну роботу клавіатури й готові mobile controls без перенесення доставки,
-податків або оплати з візуального референсу.
+The screen and bottom sheets use the corporate theme, accessible touch targets, safe keyboard behavior, and existing mobile controls. Do not bring delivery, taxes, or payment from the visual reference into scope.
 
 ## Acceptance scenarios
 
@@ -55,123 +44,119 @@ business errors показуються без raw transport details та без 
 
 **Covers:** R-001
 
-Given менеджер раніше додав товари до кошика
-When застосунок запускається повторно і локальний стан відновлено
-Then у вкладці «Кошик» видно ті самі товарні рядки та кількість
-And загальна сума відповідає відновленим даним.
+Given the manager previously added products to the cart\
+When the app starts again and local state is restored\
+Then the “Кошик” tab shows the same product lines and quantities\
+And the total matches the restored data.
 
 ### SC-002 — Show an empty cart
 
 **Covers:** R-001, R-009
 
-Given збережених товарних рядків немає
-When менеджер відкриває вкладку «Кошик»
-Then видно український empty state
-And оформлення замовлення недоступне.
+Given there are no saved product lines\
+When the manager opens the “Кошик” tab\
+Then a Ukrainian empty state is visible\
+And checkout is unavailable.
 
 ### SC-003 — Change quantity within stock
 
 **Covers:** R-002, R-003
 
-Given рядок має quantity менше останнього відомого stock
-When менеджер збільшує або зменшує quantity
-Then quantity змінюється на одну одиницю в допустимих межах
-And сума рядка та загальна сума одразу перераховуються і зберігаються.
+Given a line quantity is below the last known stock\
+When the manager increases or decreases the quantity\
+Then the quantity changes by one unit within the allowed range\
+And the line amount and total are recalculated and saved immediately.
 
 ### SC-004 — Stop at the stock boundary
 
 **Covers:** R-002
 
-Given quantity дорівнює останньому відомому stock
-When менеджер переглядає control збільшення
-Then збільшення недоступне і причина доступна assistive technology
-And quantity та суми не змінюються.
+Given quantity equals the last known stock\
+When the manager views the increase control\
+Then increase is unavailable and its reason is available to assistive technology\
+And quantity and totals remain unchanged.
 
 ### SC-005 — Remove a cart line
 
 **Covers:** R-001, R-003
 
-Given кошик містить кілька товарів
-When менеджер видаляє один рядок
-Then цей товар зникає з кошика
-And загальна сума та persisted cart містять лише решту рядків.
+Given the cart contains multiple products\
+When the manager removes one line\
+Then that product disappears from the cart\
+And the total and persisted cart contain only the remaining lines.
 
 ### SC-006 — Find and select a customer
 
 **Covers:** R-004, R-005
 
-Given повний список активних клієнтів завантажено
-When менеджер вводить частину назви без урахування регістру
-Then список показує лише відповідні назви
-And вибір одного результату заповнює поле клієнта та закриває selector.
+Given the complete list of active customers has loaded\
+When the manager enters part of a name, ignoring case\
+Then the list shows only matching names\
+And selecting one result fills the customer field and closes the selector.
 
 ### SC-007 — Handle customer loading failure
 
 **Covers:** R-004, R-007
 
-Given список клієнтів не вдалося завантажити або пристрій offline
-When менеджер відкриває вибір клієнта
-Then видно безпечний error або offline state з retry
-And створення замовлення без клієнта недоступне.
+Given the customer list failed to load or the device is offline\
+When the manager opens customer selection\
+Then a safe error or offline state with retry is visible\
+And creating an order without a customer is unavailable.
 
 ### SC-008 — Validate checkout locally
 
 **Covers:** R-005, R-007
 
-Given кошик не порожній, але клієнт не вибраний або коментар довший за 1000
-символів
-When менеджер намагається створити замовлення
-Then запит не відправляється
-And відповідне поле має зрозумілу українську помилку.
+Given the cart is non-empty but no customer is selected or the comment exceeds 1000 characters\
+When the manager attempts to create an order\
+Then no request is sent\
+And the relevant field shows a clear Ukrainian error.
 
 ### SC-009 — Submit one order once
 
 **Covers:** R-003, R-005, R-006
 
-Given кошик валідний, клієнт вибраний і мережа доступна
-When менеджер підтверджує оформлення
-Then відправляється один запит із клієнтом, коментарем, cart lines і одним
-idempotency key
-And submit залишається недоступним до завершення відповіді.
+Given the cart is valid, a customer is selected, and the network is available\
+When the manager confirms checkout\
+Then one request is sent with the customer, comment, cart lines, and one idempotency key\
+And submit remains unavailable until the response completes.
 
 ### SC-010 — Retry the same failed action safely
 
 **Covers:** R-006, R-007
 
-Given результат create невідомий через network або server failure
-And manager не змінив клієнта, коментар чи кошик
-When менеджер повторює відправлення
-Then повторюється той самий payload із тим самим idempotency key
-And форма та кошик залишаються заповненими до підтвердженого успіху.
+Given the create result is unknown because of a network or server failure\
+And the manager has not changed the customer, comment, or cart\
+When the manager resubmits\
+Then the same payload is retried with the same idempotency key\
+And the form and cart remain populated until success is confirmed.
 
 ### SC-011 — Show backend validation or conflict
 
 **Covers:** R-007
 
-Given backend повертає validation, not-found або idempotency conflict
-When відповідь нормалізовано
-Then field error прив'язаний до відомого поля або видно безпечне загальне
-повідомлення
-And кошик, клієнт і коментар не втрачаються.
+Given the backend returns validation, not-found, or idempotency conflict\
+When the response is normalized\
+Then a field error is attached to a known field or a safe general message is shown\
+And the cart, customer, and comment are retained.
 
 ### SC-012 — Complete a created order
 
 **Covers:** R-008
 
-Given backend повернув `200` replay або `201` created
-When результат оброблено
-Then менеджер бачить `orderNumber` і статус `Pending`
-And форма закривається, а in-memory і persisted cart очищаються без повторного
-create.
+Given the backend returned a `200` replay or `201` created\
+When the result is handled\
+Then the manager sees `orderNumber` and `Pending` status\
+And the form closes and both in-memory and persisted carts are cleared without another create request.
 
 ### SC-013 — Preserve success when local cleanup fails
 
 **Covers:** R-008
 
-Given backend уже підтвердив створення замовлення
-When локальне очищення storage завершується помилкою
-Then результат замовлення лишається успішним і повторна відправка недоступна
-And менеджер бачить безпечне повідомлення про локальне очищення.
+Given the backend has confirmed order creation\
+When local storage cleanup fails\
+Then the order result remains successful and resubmission is unavailable\
+And the manager sees a safe message about local cleanup.
 
 ## Examples
 
@@ -186,8 +171,8 @@ And менеджер бачить безпечне повідомлення пр
 
 ## Deferred scenarios
 
-- Перерахунок цін за вибраним клієнтом.
-- Ручне редагування ціни або line amount.
+- Recalculate prices for the selected customer.
+- Manually edit unit price or line amount.
 - Backend-authoritative stock validation.
 - Production Mobile authentication and authorization.
-- Order history, details, sync polling and manual 1C retry.
+- Order history, details, sync polling, and manual 1C retry.

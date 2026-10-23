@@ -31,4 +31,8 @@
 | R-011       | SC-009   | TS-007 | `admin-top-bar.spec.tsx`: badge з числом позицій і перехід на `/orders/new` пройшли.                                                                                                                                                   |
 | R-012–R-013 | SC-010   | TS-008 | `order-tables.spec.tsx` перевіряє URL і передавання діапазону в query. Provider OpenAPI snapshot і generated types не оголошують `createdFrom`/`createdTo`, тому backend filtering та межі `Europe/Kyiv` залишаються непідтвердженими. |
 
-**Стан перевірки:** вузькі компонентні тести кошика, таблиць, вибору клієнта, рядків товарів і оформлення пройшли; `apps/admin` TypeScript check пройшов. Backend date parser перевірено окремими unit tests для `Europe/Kyiv`; frontend provider snapshot/generated types потребують синхронізації після commit backend. Повний перелік — у [revision 2026-10-22](revision-2026-10-22.md).
+**Стан перевірки:** вузькі компонентні тести кошика, таблиць, вибору клієнта, рядків товарів і оформлення пройшли; `apps/admin` TypeScript check пройшов. Backend date parser перевірено окремими unit tests для `Europe/Kyiv`. Після первинного запису доказів frontend provider snapshot/generated types синхронізовано з backend commit `c03118d`; `contracts:check` пройшов. Повний перелік — у [revision 2026-10-22](revision-2026-10-22.md).
+
+## Наступний інкремент: деталі замовлення й чернетки
+
+[SDD до реалізації](revision-2026-10-22-order-detail-and-draft-picker.md#трасування-та-готовність) пов'язує R-019–R-025, SC-016–SC-022 і EN-003/TS-013–TS-018. Доказів реалізації цього інкременту ще немає; їх слід додати після виконання задач, не змінюючи історичні результати вище.

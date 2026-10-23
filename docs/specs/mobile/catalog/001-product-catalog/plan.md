@@ -1,24 +1,24 @@
 # Implementation plan: Mobile product catalog
 
 **Spec:** [spec.md](spec.md)  
-**Дата:** 2026-07-28
+**Date:** 2026-07-28
 
-**API-контракт:** [GET /api/admin/products](contracts/api-contract.md)
-зафіксований для цієї feature. Він використовує page-based pagination і замінює
-попередній contract gate.
+**API contract:** [GET /api/admin/products](contracts/api-contract.md)
+is confirmed for this feature. It uses page-based pagination and replaces
+the previous contract gate.
 
 ## Summary
 
-Створити domain-first catalog feature. `CatalogScreen` оркеструє server query і
-локальний UI state; `FlatList` виводить картки; search, filters, sort і next page
-оновлюють один typed domain query. Поставку починати лише після погодження API contract.
+Create a domain-first catalog feature. `CatalogScreen` orchestrates the server query and
+local UI state; `FlatList` renders the cards; search, filters, sorting, and next page
+update one typed domain query. Start delivery only after the API contract is agreed.
 
 ## Technical context
 
 - **Stack:** Expo SDK 56, React Native `FlatList`, React Native Paper, RTK Query, Redux Toolkit, Nx.
 - **Testing:** Jest + React Native Testing Library; Samsung Galaxy A12 Expo Go; web export.
-- **Target platforms:** Android і web; iOS ручна перевірка після появи пристрою.
-- **Constraints:** server-side data operations, safe area, online-first, image performance, no new dependency в P1.
+- **Target platforms:** Android and web; manual iOS check when a device is available.
+- **Constraints:** server-side data operations, safe area, online-first, image performance, no new dependency in P1.
 
 ## Architecture and source paths
 
@@ -42,20 +42,20 @@ libs/mobile/catalog/
     └── screens/catalog-screen.tsx
 ```
 
-- Route імпортує тільки `CatalogScreen` із `@mobile/catalog/feature`.
-- `model` містить pure TS entities, query і invariants; не імпортує React або API.
-- `data-access` володіє private DTO, mapper та RTK Query endpoint; API contract не проходить у `ui`.
-- `ui` приймає domain data й callbacks через props; не знає router, storage або RTK Query.
-- `feature` тримає search debounce, filters modal state та query composition; не створює provider.
+- The route imports only `CatalogScreen` from `@mobile/catalog/feature`.
+- `model` contains pure TS entities, query, and invariants; it does not import React or API code.
+- `data-access` owns the private DTO, mapper, and RTK Query endpoint; the API contract does not reach `ui`.
+- `ui` receives domain data and callbacks through props; it does not know about the router, storage, or RTK Query.
+- `feature` holds the search debounce, filters modal state, and query composition; it does not create a provider.
 
 ## Constitution check
 
-- [x] Thin Expo Router route, Nx boundaries і public `src/index.ts` дотримано.
-- [x] DTO, API errors і pagination transport semantics ізольовано в `data-access`.
-- [x] `FlatList` і Paper controls покривають P1–P3 без нової list/UI dependency.
+- [x] Thin Expo Router route, Nx boundaries, and public `src/index.ts` are respected.
+- [x] DTOs, API errors, and pagination transport semantics are isolated in `data-access`.
+- [x] `FlatList` and Paper controls cover P1–P3 without a new list/UI dependency.
 
 ## Complexity tracking
 
-| Відхилення | Чому потрібне                          | Чому простіший варіант не підходить |
-| ---------- | -------------------------------------- | ----------------------------------- |
-| n/a        | `FlatList` уже входить до React Native | n/a                                 |
+| Deviation | Why needed                            | Why a simpler option does not work |
+| --------- | ------------------------------------- | ---------------------------------- |
+| n/a       | `FlatList` is already in React Native | n/a                                |

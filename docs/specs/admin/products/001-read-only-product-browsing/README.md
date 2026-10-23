@@ -1,23 +1,23 @@
-# 001 — Перегляд товарів Admin і режим «Без фото»
+# 001 — Admin Product Browsing and “Without photo” mode
 
-- **Клієнт:** Admin React (`apps/admin`)
-- **Домен:** products
-- **Статус:** frontend і backend інкременти реалізовано; OpenAPI snapshot/generated types синхронізовано
-- **Створено:** 2026-10-19
-- **Архітектура:** [Admin](../../../../architecture/admin/README.md)
+- **Client:** Admin React (`apps/admin`)
+- **Domain:** products
+- **Status:** frontend and backend increments implemented; OpenAPI snapshot/generated types synchronized
+- **Created:** 2026-10-19
+- **Architecture:** [Admin](../../../../architecture/admin/README.md)
 
-Ця специфікація розширює вже реалізований список `/catalog`: дає перехід до інформаційної картки товару та окремий режим товарів без фото. Чинна [SDD таблиці](../product-list-data-grid.md) зберігає історію реалізації списку й не переписується.
+This specification extends the implemented `/catalog` list with navigation to an informational product card and a separate mode for products without photos. The current [table SDD](../product-list-data-grid.md) preserves the implementation history for the list and is not being rewritten.
 
-- [Межі](requirements/overview.md) · [Правила й сценарії](requirements/behavior.md)
-- [Frontend design](design/frontend.md) · [React і візуальна взаємодія](design/react.md)
-- [API](contracts/api-contract.md) · [Задачі](tasks/README.md)
-- [Трасування](traceability.md) · [Готовність SDD](checklist/spec-readiness.md) · [Готовність до постачання](checklist/delivery-readiness.md)
-- [Локальний аудит відповідальностей](code-audit/audit.md) · [Єдиний стиль Admin](../../../../standards/admin/list-detail-pages.md)
+- [Scope](requirements/overview.md) · [Rules and scenarios](requirements/behavior.md)
+- [Frontend design](design/frontend.md) · [React and visual interaction](design/react.md)
+- [API](contracts/api-contract.md) · [Tasks](tasks/README.md)
+- [Traceability](traceability.md) · [SDD readiness](checklist/spec-readiness.md) · [Delivery readiness](checklist/delivery-readiness.md)
+- [Local responsibility audit](code-audit/audit.md) · [Consistent Admin style](../../../../standards/admin/list-detail-pages.md)
 
-## Стан
+## Status
 
-Реалізовано список, маршрут деталей, режим «Без фото» та зміни меню. Інкремент від 2026-10-19 додав серверний пошук, фільтрацію й пагінацію в обох режимах Data Grid, двозначні фільтри ознак, «На сайті» та нове компонування картки. Розширений backend OpenAPI описує нові поля й окрему Admin-операцію деталей; frontend snapshot і generated types синхронізовано з commit `8fc8729`.
+The list, detail route, “Без фото” mode, and menu changes are implemented. The 2026-10-19 increment added server search, filtering, and pagination in both Data Grid modes, tri-state feature filters, “На сайті”, and a new card composition. The extended backend OpenAPI describes the new fields and a separate Admin detail operation; the frontend snapshot and generated types were synchronized with commit `8fc8729`.
 
-## Коригування вкладок від 2026-10-19
+## Tab correction, 2026-10-19
 
-На сторінці списку є третя вкладка «На сайті» після «Без фото». Вона використовує звичайний Admin список із серверною умовою `exportToSite=true`, власними пошуком, сортуванням і пагінацією та відновлюється після перегляду деталей. Колонка «На сайті» лишається інформаційною, без окремого фільтра; «Усі товари» не обмежує значення `exportToSite`. Додатковий підпис кількості під таблицею не показується: кількість і навігація доступні в Data Grid. Це доповнення замінює попереднє правило колонкового фільтра «На сайті» в цьому документі та пов'язаних сценаріях.
+The list page has a third tab, “На сайті”, after “Без фото”. It uses the ordinary Admin list with the server condition `exportToSite=true`, its own search, sorting, and pagination, and restores after viewing details. The “На сайті” column remains informational, without a separate filter; “Усі товари” does not constrain `exportToSite`. No extra count label is shown below the table: count and navigation are available in Data Grid. This addition replaces the previous column-filter rule for “На сайті” in this document and related scenarios.

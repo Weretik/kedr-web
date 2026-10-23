@@ -1,22 +1,22 @@
-# Модель даних: catalog discovery UI
+# Data model: catalog discovery UI
 
-## Чинні дані
+## Current data
 
-`CatalogProduct`, `CatalogQuery`, `CatalogFilterSelection` і `CatalogSort` лишаються чинними model-типами. API DTO та mapper не змінюються.
+`CatalogProduct`, `CatalogQuery`, `CatalogFilterSelection`, and `CatalogSort` remain the current model types. The API DTO and mapper do not change.
 
-## Новий локальний view/state model
+## New local view/state model
 
 ```text
 CatalogDiscoveryState
-├── query: CatalogQuery                    # чинний applied API query
+├── query: CatalogQuery                    # current applied API query
 ├── searchSheet
-│   └── draft: string                      # не впливає на API до Apply
+│   └── draft: string                      # does not affect API until Apply
 ├── filtersSheet
-│   └── draft: CatalogFilterSelection      # не впливає на API до Apply
+│   └── draft: CatalogFilterSelection      # does not affect API until Apply
 ├── categorySheet
-│   └── draftCategoryId?: number           # не впливає на API до Apply
+│   └── draftCategoryId?: number           # does not affect API until Apply
 ├── activeSheet: 'search' | 'sort' | 'filters' | 'categories' | null
-└── searchHistory: readonly string[]       # 0..10 локальних normalized phrases
+└── searchHistory: readonly string[]       # 0..10 locally stored normalized phrases
 ```
 
 ## Persistent storage boundary
@@ -26,16 +26,16 @@ AsyncStorage key: mobile.catalog.search-history.v1
 value: JSON string[]
 ```
 
-- Storage adapter живе в `libs/mobile/catalog/feature/src/storage/` і експортується лише через `feature/src/index.ts`, якщо потрібен поза internal feature code.
-- У storage записуються лише нормалізовані непорожні фрази, без user ID, токенів, товарів або результатів API.
-- Нормалізація: `trim`, collapse repeated whitespace; deduplication порівнює case-insensitive, але зберігає останній введений display text.
-- Новий applied search переноситься на початок; список обрізається до 10. Corrupt/не-масивне значення читається як порожня історія й перезаписується тільки під час наступного успішного Apply.
+- The storage adapter lives in `libs/mobile/catalog/feature/src/storage/` and is exported only through `feature/src/index.ts` if needed outside internal feature code.
+- Only normalized, non-empty phrases are stored; no user ID, tokens, products, or API results are included.
+- Normalization: `trim`, collapse repeated whitespace; deduplication compares case-insensitively while preserving the latest entered display text.
+- A newly applied search moves to the beginning; the list is capped at 10. A corrupt or non-array value is read as an empty history and overwritten only on the next successful Apply.
 
-## Інваріанти
+## Invariants
 
 - `searchHistory.length <= 10`.
-- Порожня фраза ніколи не потрапляє до history.
-- Лише застосований query викликає `useGetCatalogProductsQuery`; draft у sheet — ні.
-- Видалення chip скидає `query.page` до `1` та не змінює нецільові query fields.
-- Default sort `IdAsc` не створює chip.
-- Для category chip використовується уже замаплений український `CatalogCategoryOption.label`, не transport DTO.
+- An empty phrase is never added to history.
+- Only an applied query invokes `useGetCatalogProductsQuery`; the sheet draft does not.
+- Removing a chip resets `query.page` to `1` and does not change unrelated query fields.
+- The default `IdAsc` sort does not create a chip.
+- The category chip uses the already mapped Ukrainian `CatalogCategoryOption.label`, not the transport DTO.

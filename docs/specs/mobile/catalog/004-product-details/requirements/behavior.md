@@ -2,173 +2,159 @@
 
 ## Business rules
 
-### R-001 — Відкриття товару
+### R-001 — Open a product
 
-Натискання будь-якої видимої картки каталогу відкриває саме цей товар за його
-`productSlug`, незалежно від активного пошуку, категорії, filters чи sort.
+Tapping any visible catalog card opens that exact product by its `productSlug`, regardless of active search, category, filters, or sort.
 
-### R-002 — Повернення до каталогу
+### R-002 — Return to the catalog
 
-Після повернення користувач бачить той самий query, накопичені результати та
-приблизно ту саму позицію прокрутки, що були до відкриття товару.
+After returning, the user sees the same query, accumulated results, and approximately the same scroll position as before opening the product.
 
-### R-003 — Українські контрактні дані
+### R-003 — Ukrainian contract data
 
-Деталі завжди запитуються українською. Екран показує всі доступні поля чинного
-API без вигаданого description: назву, ID, основне фото, схему, stock,
-категорію, category slug, quantity in pack, price та breadcrumbs.
+Details are always requested in Ukrainian. The screen shows all fields available from the current API without an invented description: name, ID, main photo, scheme, stock, category, category slug, quantity in pack, price, and breadcrumbs.
 
-### R-004 — Галерея доступних зображень
+### R-004 — Gallery of available images
 
-Основне фото й схема є кандидатами галереї у такому порядку. Порожній або
-недоступний URL не лишає broken image. Два доступні зображення можна гортати;
-одне доступне зображення показується без зайвого pager indicator; коли не
-завантажилось жодне, показується нейтральний fallback.
+The main photo and scheme are gallery candidates in that order. An empty or unavailable URL does not leave a broken image. Two available images can be swiped; one available image is shown without an unnecessary pager indicator; if neither loads, show a neutral fallback.
 
-### R-005 — Зрозумілі стани
+### R-005 — Clear states
 
-Loading, offline, not found, invalid link і transport failure мають окремі
-українські повідомлення та лише релевантні дії. Raw backend error не показується.
+Loading, offline, not found, invalid link, and transport failure have separate Ukrainian messages and only relevant actions. Do not show raw backend errors.
 
-### R-006 — Додавання до кошика
+### R-006 — Add to cart
 
-Товар зі `stock > 0` і числовою ціною додається по одній одиниці. Повторне
-додавання того самого ID збільшує quantity. Успіх підтверджується повідомленням
-«Товар додано до кошика».
+A product with `stock > 0` and a numeric price is added one unit at a time. Repeated additions of the same ID increase quantity. Confirm success with “Товар додано до кошика”.
 
-### R-007 — Недоступна cart action
+### R-007 — Cart action unavailable
 
-За `stock <= 0` кнопка недоступна з текстом «Немає в наявності». За `price=null`
-кнопка недоступна, а ціна й причина читаються як «Ціну уточнюйте».
+For `stock <= 0`, disable the button and show “Немає в наявності”. For `price=null`, disable the button and show the price and reason as “Ціну уточнюйте”.
 
-### R-008 — Спокійна корпоративна подача
+### R-008 — Calm corporate presentation
 
-Екран повторює інформаційну ієрархію reference, використовує лише чинну
-корпоративну Paper theme і typography, без декоративних кольорових фігур,
-favorite control або візуального шуму.
+The screen follows the reference’s information hierarchy and uses only the current corporate Paper theme and typography, without decorative colored shapes, a favorite control, or visual noise.
 
 ## Acceptance scenarios
 
-### SC-001 — Відкрити товар із поточного результату
+### SC-001 — Open a product from the current result
 
 **Covers:** R-001
 
-Given каталог показує результати активного пошуку або filters
-When користувач натискає картку товару
-Then відкривається сторінка деталей саме цього товару
-And URL містить його `productSlug`.
+Given the catalog shows results for an active search or filters\
+When the user taps a product card\
+Then the detail page for that exact product opens\
+And the URL contains its `productSlug`.
 
-### SC-002 — Повернутися без втрати контексту
+### SC-002 — Return without losing context
 
 **Covers:** R-002
 
-Given користувач відкрив товар із прокрученого та відфільтрованого каталогу
-When він натискає Back
-Then каталог показує попередній search, filters, sort і завантажені rows
-And позиція списку відновлена біля раніше вибраної картки.
+Given the user opened a product from a scrolled and filtered catalog\
+When they tap Back\
+Then the catalog shows the previous search, filters, sort, and loaded rows\
+And the list position is restored near the previously selected card.
 
-### SC-003 — Побачити всі деталі товару
+### SC-003 — See all product details
 
 **Covers:** R-003
 
-Given API повернув товар українською
-When сторінка завантажилась
-Then користувач бачить name, ID, price, stock, category name, category slug,
-quantity in pack і breadcrumbs
-And відсутнє в API description не замінюється вигаданим текстом.
+Given the API returned the product in Ukrainian\
+When the page loads\
+Then the user sees name, ID, price, stock, category name, category slug, quantity in pack, and breadcrumbs\
+And a description missing from the API is not replaced with invented text.
 
-### SC-004 — Гортати фото і схему
+### SC-004 — Swipe between photo and scheme
 
 **Covers:** R-004
 
-Given основне фото і схема успішно завантажуються
-When користувач горизонтально гортає gallery
-Then він переходить між двома зображеннями
-And indicator та screen reader повідомляють поточну позицію з двох.
+Given the main photo and scheme load successfully\
+When the user swipes horizontally through the gallery\
+Then they move between the two images\
+And the indicator and screen reader announce the current position out of two.
 
-### SC-005 — Обробити відсутні файли зображень
+### SC-005 — Handle missing image files
 
 **Covers:** R-004, R-005
 
-Given `photo` або `scheme` URL порожній чи повертає image load error
-When gallery завершує завантаження
-Then недоступний кадр не показується як broken image
-And за відсутності всіх кадрів видно «Зображення недоступне».
+Given the `photo` or `scheme` URL is empty or returns an image load error\
+When the gallery finishes loading\
+Then the unavailable frame is not shown as a broken image\
+And “Зображення недоступне” is shown when no frames loaded.
 
-### SC-006 — Дочекатися завантаження
-
-**Covers:** R-005
-
-Given запит деталей ще виконується
-When сторінка відкрита
-Then видно стабільний skeleton gallery та content без стрибків layout
-And cart action недоступна.
-
-### SC-007 — Побачити, що товар не знайдено
+### SC-006 — Wait for loading
 
 **Covers:** R-005
 
-Given API повертає 404
-When відповідь оброблена
-Then видно «Товар не знайдено» і дію «Повернутися до каталогу».
+Given the detail request is still running\
+When the page is open\
+Then a stable gallery and content skeleton is visible without layout jumps\
+And the cart action is unavailable.
 
-### SC-008 — Повторити невдалий запит
-
-**Covers:** R-005
-
-Given API повернув network або server error
-When видно error state
-Then користувач бачить «Не вдалося завантажити товар» і «Спробувати ще раз»
-And натискання повторює запит без дублювання screen.
-
-### SC-009 — Побачити offline state
+### SC-007 — See that the product was not found
 
 **Covers:** R-005
 
-Given пристрій не має мережі й cached detail відсутній
-When користувач відкриває товар
-Then видно «Немає з’єднання з інтернетом» і «Спробувати ще раз»
-And відновлення мережі дозволяє успішний retry.
+Given the API returns 404\
+When the response is handled\
+Then “Товар не знайдено” and the “Повернутися до каталогу” action are visible.
 
-### SC-010 — Додати товар до кошика
+### SC-008 — Retry a failed request
+
+**Covers:** R-005
+
+Given the API returned a network or server error\
+When the error state is visible\
+Then the user sees “Не вдалося завантажити товар” and “Спробувати ще раз”\
+And tapping the action repeats the request without duplicating the screen.
+
+### SC-009 — See the offline state
+
+**Covers:** R-005
+
+Given the device has no network and no cached detail\
+When the user opens a product\
+Then “Немає з’єднання з інтернетом” and “Спробувати ще раз” are visible\
+And restored connectivity allows a successful retry.
+
+### SC-010 — Add a product to the cart
 
 **Covers:** R-006
 
-Given товар має ціну та `stock > 0`
-When користувач натискає «Додати до кошика»
-Then одна одиниця додається або quantity наявного рядка збільшується на один
-And видно повідомлення «Товар додано до кошика».
+Given the product has a price and `stock > 0`\
+When the user taps “Додати до кошика”\
+Then one unit is added or the existing line quantity increases by one\
+And “Товар додано до кошика” is shown.
 
-### SC-011 — Не додавати недоступний товар
+### SC-011 — Do not add an unavailable product
 
 **Covers:** R-007
 
-Given товар не має ціни або має `stock <= 0`
-When сторінка завантажилась
-Then cart action недоступна і пояснює причину українською
-And товар не змінює cart state.
+Given the product has no price or has `stock <= 0`\
+When the page loads\
+Then the cart action is unavailable and explains the reason in Ukrainian\
+And the product does not change cart state.
 
-### SC-012 — Відкрити неправильне пряме посилання
+### SC-012 — Open an invalid direct link
 
 **Covers:** R-001, R-005
 
-Given direct link не містить непорожнього `productSlug`
-When застосунок обробляє route
-Then API-запит не виконується
-And видно «Неправильне посилання на товар» та повернення до каталогу.
+Given the direct link has no non-empty `productSlug`\
+When the app handles the route\
+Then no API request is made\
+And “Неправильне посилання на товар” and a return-to-catalog action are visible.
 
 ## Examples
 
 | Input/state                  | Expected observable result               |
 | ---------------------------- | ---------------------------------------- |
-| `price=null`                 | «Ціну уточнюйте», add action disabled    |
-| `stock=0`                    | «Немає в наявності», add action disabled |
+| `price=null`                 | “Ціну уточнюйте”, add action disabled    |
+| `stock=0`                    | “Немає в наявності”, add action disabled |
 | photo succeeds, scheme empty | one image, no pager indicator            |
 | photo fails, scheme succeeds | scheme remains as the only image         |
-| both images fail             | «Зображення недоступне»                  |
+| both images fail             | “Зображення недоступне”                  |
 
 ## Deferred scenarios
 
-- Перегляд кошика, checkout і синхронізація cart із backend.
-- Product description після появи versioned OpenAPI field.
-- Fullscreen image zoom, share, favorites, reviews і recommendations.
+- View cart, checkout, and synchronize cart with the backend.
+- Product description after a versioned OpenAPI field is added.
+- Fullscreen image zoom, sharing, favorites, reviews, and recommendations.

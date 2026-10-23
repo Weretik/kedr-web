@@ -1,21 +1,21 @@
-# Implementation plan: Вибір категорії у mobile catalog
+# Implementation plan: Mobile catalog category selection
 
 **Spec:** [spec.md](spec.md)  
-**Дата:** 2026-07-31
+**Date:** 2026-07-31
 
 ## Summary
 
-Розширити наявний catalog domain без нової route або library: `data-access`
-отримує і мапить category rows, `feature` підключає RTK Query result до filter
-controls, а `ui` відображає existing selector і його states. Apply flow reducer
-лишається єдиним місцем, яке передає valid `categoryId` в products query та
-скидає page.
+Extend the existing catalog domain without a new route or library: `data-access`
+fetches and maps category rows, `feature` connects the RTK Query result to filter
+controls, and `ui` renders the existing selector and its states. The Apply flow reducer
+remains the only place that passes a valid `categoryId` to the products query and
+resets the page.
 
 ## Technical context
 
 - **Stack:** Expo SDK 56, React Native, React Native Paper, RTK Query, Redux Toolkit, Nx.
-- **Testing:** Jest + React Native Testing Library: mapper, API hook/controller, modal/selector states; Android Expo Go і web manual checks.
-- **Target platforms:** Android і web; iOS manual check після появи пристрою.
+- **Testing:** Jest + React Native Testing Library: mapper, API hook/controller, modal/selector states; manual Android Expo Go and web checks.
+- **Target platforms:** Android and web; manual iOS check when a device is available.
 - **Constraints:** server-side filtering, online-first, no new dependency, max three displayed category levels.
 
 ## Architecture and source paths
@@ -34,19 +34,19 @@ libs/mobile/catalog/
     └── components/catalog-query-controls.tsx                   # pass domain state and callbacks
 ```
 
-- Route і `CatalogScreen` не містять HTTP або transport DTO.
-- `data-access` володіє `AdminCategoryDto`, locale mapping і tree construction.
-- `ui` отримує only domain categories, query status та callbacks; RTK hooks не імпортуються.
-- `feature` не дублює server state в reducer і не створює providers.
+- The route and `CatalogScreen` contain no HTTP or transport DTO.
+- `data-access` owns `AdminCategoryDto`, locale mapping, and tree construction.
+- `ui` receives only domain categories, query status, and callbacks; RTK hooks are not imported.
+- `feature` does not duplicate server state in the reducer or create providers.
 
 ## Constitution check
 
-- [x] Thin Expo Router route, Nx boundaries і public `src/index.ts` збережено.
-- [x] DTO, mapper, API errors і cache semantics ізольовано в `data-access`.
-- [x] Existing Paper modal/selector покривають scope без нової dependency.
+- [x] The thin Expo Router route, Nx boundaries, and public `src/index.ts` are preserved.
+- [x] DTO, mapper, API errors, and cache semantics are isolated in `data-access`.
+- [x] The existing Paper modal/selector covers the scope without a new dependency.
 
 ## Complexity tracking
 
-| Відхилення              | Чому потрібне                                                  | Чому простіший варіант не підходить                         |
-| ----------------------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
-| Flat rows → tree mapper | API повертає depth-first rows, UI потрібна recursive структура | UI не повинен знати `parentId`, DTO або transport ordering. |
+| Deviation               | Why it is needed                                                      | Why a simpler option is unsuitable                               |
+| ----------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Flat rows → tree mapper | The API returns depth-first rows; the UI needs a recursive structure. | The UI must not know `parentId`, the DTO, or transport ordering. |

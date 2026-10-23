@@ -1,155 +1,144 @@
-# Товари без фотографій у профілі — business rules and scenarios
+# Products without photos in Profile — business rules and scenarios
 
 ## Business rules
 
-### R-001 — Авторитетний список
+### R-001 — Authoritative list
 
-Секція показує всі й лише ті товари, які повернула спеціалізована operation.
-Клієнт не перевіряє і не переобчислює ознаку відсутності фотографій.
+The section shows all and only products returned by the specialized operation. The client does not check or recompute whether photos are missing.
 
-### R-002 — Явне початкове завантаження
+### R-002 — Explicit initial loading
 
-Поки перша відповідь відсутня, секція показує стабільний стан завантаження й не
-показує порожній або помилковий список.
+Until the first response arrives, the section shows a stable loading state and does not show an empty or erroneous list.
 
-### R-003 — Зрозумілий успішний список
+### R-003 — Clear successful list
 
-Кожен результат відображається один раз за чинною mobile-ієрархією товару.
+Each result appears once using the current mobile product hierarchy.
 
-### R-004 — Позитивний порожній стан
+### R-004 — Positive empty state
 
-Успішна відповідь без товарів повідомляє, що товарів без фотографій немає, і
-не виглядає як помилка.
+A successful response with no products says that there are no products without photos and does not look like an error.
 
-### R-005 — Відновлювана помилка
+### R-005 — Recoverable error
 
-Network або server failure показує безпечне українське повідомлення та retry.
-Сирий transport/backend error користувачу не показується.
+A network or server failure shows a safe Ukrainian message and retry action. Raw transport/backend errors are not shown to the user.
 
-### R-006 — Ручне оновлення
+### R-006 — Manual refresh
 
-Pull-to-refresh повторно запитує актуальний список, показує індикатор оновлення
-і не замінює вже видимі результати початковим loading state.
+Pull-to-refresh requests the current list again, shows a refresh indicator, and does not replace already visible results with the initial loading state.
 
-### R-007 — Контрактна pagination
+### R-007 — Contractual pagination
 
-Якщо сервіс ділить список на частини й повідомляє про наступні результати,
-користувач може довантажити їх без дублікатів. Якщо сервіс повертає весь список
-одразу, дія довантаження не показується.
+If the service divides the list into pages and reports more results, the user can load them without duplicates. If the service returns the entire list at once, no load-more action is shown.
 
-### R-008 — Безпечна навігація до деталей
+### R-008 — Safe navigation to details
 
-Якщо для результату доступні чинні деталі товару, натискання відкриває саме цей
-товар. Якщо чинні деталі не підтримують результат, товар не обіцяє
-навігаційну дію.
+If current product details are available for a result, tapping it opens that exact product. If current details do not support the result, the product does not promise a navigation action.
 
-### R-009 — Доступна мобільна взаємодія
+### R-009 — Accessible mobile interaction
 
-Секція, стани, картки й дії мають логічний порядок читання, українські доступні
-назви, не покладаються лише на колір і мають touch targets щонайменше 48dp.
+The section, states, cards, and actions have a logical reading order and Ukrainian accessible names, do not rely on color alone, and have touch targets of at least 48dp.
 
-### R-010 — Лише підтверджені дані
+### R-010 — Confirmed data only
 
-Список показує лише дані, надані актуальним контрактом; відсутні значення не
-замінюються вигаданим контентом.
+The list shows only data provided by the current contract; missing values are not replaced with invented content.
 
 ## Acceptance scenarios
 
-### SC-001 — Побачити секцію під час завантаження
+### SC-001 — See the section while loading
 
 **Covers:** R-002, R-009
 
-Given користувач відкрив вкладку «Профіль»
-And перша відповідь списку ще не надійшла
-When секція відображається
-Then видно заголовок «Товари без фотографій» і стан завантаження
-And assistive technology отримує зрозуміле повідомлення про завантаження.
+Given the user opened the “Профіль” tab\
+And the first list response has not arrived\
+When the section is rendered\
+Then the “Товари без фотографій” heading and a loading state are visible\
+And assistive technology receives a clear loading announcement.
 
-### SC-002 — Побачити товари без фотографій
+### SC-002 — See products without photos
 
 **Covers:** R-001, R-003, R-009, R-010
 
-Given сервіс успішно повернув один або більше товарів
-When список відображається
-Then кожен повернутий товар видно один раз у чинній mobile-ієрархії картки
-And відсутні контрактні дані не замінюються вигаданими значеннями
-And клієнт не відкидає результати через власну перевірку фотографій.
+Given the service successfully returned one or more products\
+When the list is rendered\
+Then each returned product appears once using the current mobile card hierarchy\
+And missing contract data is not replaced with invented values\
+And the client does not discard results by checking photos itself.
 
-### SC-003 — Побачити, що список порожній
+### SC-003 — See that the list is empty
 
 **Covers:** R-004, R-009
 
-Given сервіс успішно повернув порожній список
-When відповідь відображається
-Then видно повідомлення «Усі товари мають фотографії»
-And немає error або retry state.
+Given the service successfully returned an empty list\
+When the response is rendered\
+Then “Усі товари мають фотографії” is visible\
+And there is no error or retry state.
 
-### SC-004 — Повторити невдале завантаження
+### SC-004 — Retry a failed load
 
 **Covers:** R-005, R-009
 
-Given перше завантаження завершилося network або server failure
-When користувач бачить помилку
-Then показано безпечне українське повідомлення та дію «Повторити»
-And натискання «Повторити» повторює той самий запит без дублювання секції.
+Given the initial load ended with a network or server failure\
+When the user sees the error\
+Then a safe Ukrainian message and “Повторити” action are shown\
+And tapping “Повторити” repeats the same request without duplicating the section.
 
-### SC-005 — Оновити успішний список
+### SC-005 — Refresh a successful list
 
 **Covers:** R-006
 
-Given секція вже показує успішно завантажені товари
-When користувач виконує pull-to-refresh
-Then поточні товари лишаються видимими з індикатором оновлення
-And після успіху список відповідає новій повній відповіді сервісу.
+Given the section already shows successfully loaded products\
+When the user pulls to refresh\
+Then current products remain visible with a refresh indicator\
+And after success the list matches the service’s new complete response.
 
-### SC-006 — Довантажити наступні результати
-
-**Covers:** R-007
-
-Given успішно завантажений список має наступні результати
-When користувач активує довантаження
-Then наступні товари додаються до видимого списку без дублікатів
-And повторна помилка довантаження зберігає вже видимі товари та пропонує retry.
-
-### SC-007 — Не показувати вигадану pagination
+### SC-006 — Load subsequent results
 
 **Covers:** R-007
 
-Given сервіс повернув повний список без наступних результатів
-When успішний список відображено
-Then дії довантаження немає
-And повторний запит для неіснуючої наступної частини не виконується.
+Given a successfully loaded list has subsequent results\
+When the user activates load more\
+Then subsequent products are added to the visible list without duplicates\
+And a repeated load-more error retains visible products and offers retry.
 
-### SC-008 — Відкрити чинні деталі товару
+### SC-007 — Do not invent pagination
+
+**Covers:** R-007
+
+Given the service returned a complete list with no subsequent results\
+When the successful list is rendered\
+Then there is no load-more action\
+And no request is made for a nonexistent next page.
+
+### SC-008 — Open current product details
 
 **Covers:** R-008, R-009
 
-Given для товару доступний чинний перехід до деталей
-When користувач активує картку
-Then відкриваються деталі саме цього товару
-And повернення веде назад до вкладки «Профіль» зі збереженим списком.
+Given a current detail route is available for the product\
+When the user activates the card\
+Then details for that exact product open\
+And Back returns to the “Профіль” tab with the list preserved.
 
-### SC-009 — Не обіцяти недоступний перехід
+### SC-009 — Do not promise unavailable navigation
 
 **Covers:** R-008, R-009
 
-Given для товару немає підтримуваного переходу до чинних деталей
-When картка відображається
-Then вона не має button/link semantics
-And жоден новий екран деталей або synthetic identifier не створюється.
+Given there is no supported route to current details for the product\
+When the card is rendered\
+Then it has no button/link semantics\
+And no new detail screen or synthetic identifier is created.
 
 ## Examples
 
-| Input/state                                 | Expected observable result                       |
-| ------------------------------------------- | ------------------------------------------------ |
-| initial request pending                     | заголовок секції та loading state                |
-| successful response with no items           | «Усі товари мають фотографії»                    |
-| refresh while rows are visible              | rows лишаються, refresh indicator активний       |
-| next-page failure in paginated contract     | rows лишаються, footer пропонує retry            |
-| response without supported route identifier | картка читається як content, а не як button/link |
+| Input/state                                 | Expected observable result                    |
+| ------------------------------------------- | --------------------------------------------- |
+| initial request pending                     | section heading and loading state             |
+| successful response with no items           | “Усі товари мають фотографії”                 |
+| refresh while rows are visible              | rows remain, refresh indicator active         |
+| next-page failure in paginated contract     | rows remain, footer offers retry              |
+| response without supported route identifier | card is read as content, not as a button/link |
 
 ## Deferred scenarios
 
-- Додавання, завантаження чи редагування фотографій.
-- Новий detail route або fallback navigation за іншим ідентифікатором.
-- Search, filters, sort, bulk actions і зміни інших вкладок.
+- Adding, uploading, or editing photos.
+- New detail route or fallback navigation by another identifier.
+- Search, filters, sort, bulk actions, and changes to other tabs.

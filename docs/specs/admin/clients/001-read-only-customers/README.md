@@ -1,15 +1,15 @@
-# 001 — Перегляд клієнтів Admin
+# 001 — Admin Customer Browsing
 
-- **Клієнт:** Admin React (`apps/admin`)
-- **Домен:** clients
-- **Статус:** frontend інкремент реалізовано; серверне сортування підключено в Admin 2026-10-20
-- **Створено:** 2026-10-19
-- **Архітектура:** [Admin](../../../../architecture/admin/README.md)
+- **Client:** Admin React (`apps/admin`)
+- **Domain:** clients
+- **Status:** frontend increment implemented; server sorting connected in Admin on 2026-10-20
+- **Created:** 2026-10-19
+- **Architecture:** [Admin](../../../../architecture/admin/README.md)
 
-Сторінка клієнтів у бічному меню, MUI Data Grid з одним пошуком у панелі таблиці, серверним сортуванням за ім'ям, телефоном або ID та серверною пагінацією, а також інформаційна картка клієнта. Пошук охоплює ID, ім'я і телефон на сервері; фільтрів колонок у цьому екрані немає. Backend Sales контракт підтримує ширші фільтри для інших споживачів. Версійний OpenAPI snapshot уже містив `sort`; його provenance записано в [SOURCE.md](../../../../contracts/openapi/SOURCE.md).
+The customer page is in the side navigation and uses MUI Data Grid with one search field in the table toolbar, server sorting by name, phone, or ID, server pagination, and an informational customer card. Server search covers ID, name, and phone; this screen has no column filters. The backend Sales contract supports broader filters for other consumers. The versioned OpenAPI snapshot already included `sort`; its provenance is recorded in [SOURCE.md](../../../../contracts/openapi/SOURCE.md).
 
-- [Межі](requirements/overview.md) · [Правила й сценарії](requirements/behavior.md)
-- [Frontend design](design/frontend.md) · [React і візуальна взаємодія](design/react.md)
-- [API](contracts/api-contract.md) · [Задачі](tasks/README.md)
-- [Трасування](traceability.md) · [Готовність SDD](checklist/spec-readiness.md) · [Готовність до постачання](checklist/delivery-readiness.md)
-- [Локальний аудит відповідальностей клієнтської фічі](code-audit/audit.md)
+- [Scope](requirements/overview.md) · [Rules and scenarios](requirements/behavior.md)
+- [Frontend design](design/frontend.md) · [React and visual interaction](design/react.md)
+- [API](contracts/api-contract.md) · [Tasks](tasks/README.md)
+- [Traceability](traceability.md) · [SDD readiness](checklist/spec-readiness.md) · [Delivery readiness](checklist/delivery-readiness.md)
+- [Local audit of customer feature responsibilities](code-audit/audit.md)

@@ -1,4 +1,4 @@
-# Товари без фотографій у профілі — React Native design
+# Products without photos in Profile — React Native design
 
 ## Architecture placement
 

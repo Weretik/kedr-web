@@ -1,13 +1,13 @@
-# Quickstart та QA: catalog discovery UI
+# Quickstart and QA: catalog discovery UI
 
-## До реалізації
+## Before implementation
 
 ```powershell
 cd apps/mobile
 npx expo-doctor
 ```
 
-Після phase 01 зафіксувати фактичні команди install, resolved versions і чи лишився достатнім Expo Go. Не створювати EAS binary лише тому, що задача містить UI-пакети.
+After phase 01, record the actual install commands, resolved versions, and whether Expo Go remains sufficient. Do not create an EAS binary only because the task includes UI packages.
 
 ## Phase 00 evidence (2026-07-31)
 
@@ -17,9 +17,9 @@ npm ls react-native-actions-sheet @shopify/flash-list --depth=0
 npm view react-native-actions-sheet@10.1.2 peerDependencies dependencies --json
 ```
 
-- Nx підтвердив `shell`, `mobile-catalog-model`, `mobile-catalog-ui`, `mobile-catalog-feature` і `mobile`; назви model/UI/feature у наступних командах збігаються з workspace.
-- `npm ls` підтвердив, що обидві нові бібліотеки ще не встановлено, тому resolved версію lockfile не можна зафіксувати до T005.
-- Для запланованої `react-native-actions-sheet@10.1.2` npm metadata визначає peer dependencies `react-native`, `react-native-gesture-handler`, `react-native-reanimated`, `react-native-safe-area-context` та dependency `react-native-worklets`; остаточну Expo-сумісність перевірити через `npx expo-doctor` перед встановленням у T005.
+- Nx confirmed `shell`, `mobile-catalog-model`, `mobile-catalog-ui`, `mobile-catalog-feature`, and `mobile`; model/UI/feature names in the following commands match the workspace.
+- `npm ls` confirmed that neither new library was installed yet, so the resolved lockfile versions could not be recorded before T005.
+- npm metadata for planned `react-native-actions-sheet@10.1.2` lists peer dependencies `react-native`, `react-native-gesture-handler`, `react-native-reanimated`, `react-native-safe-area-context`, and dependency `react-native-worklets`; check final Expo compatibility with `npx expo-doctor` before installing in T005.
 
 ## Phase 01 evidence (2026-07-31)
 
@@ -32,9 +32,9 @@ npx expo-doctor
 ```
 
 - Resolved application versions: `@shopify/flash-list@2.0.2`, `react-native-actions-sheet@0.9.7`, `react-native-gesture-handler@2.31.2`.
-- `react-native-actions-sheet@10.1.2` було відхилено: воно додає вкладений `react-native-worklets@0.7.4`, який дублює Expo SDK 56 `react-native-worklets@0.11.3`. Версія `0.9.7` не має цього dependency, але потребує прямого peer `react-native-gesture-handler`, встановленого через Expo.
-- Після вирівнювання root/application runtime (`expo@56.0.18`, `react-native-safe-area-context@5.7.x`, `react-native-gesture-handler@2.31.x`) повторний `npx expo-doctor` пройшов 21/21 перевірок. Root `expo-router` лишився на `56.2.16`, щоб не розширювати зміну до його нової peer-вимоги React; duplicate native modules відсутні.
-- `FlashList` і ActionSheet `0.9.7` не змінили `app.json`, permissions або config plugins. Expo Go лишається цільовим runtime; окрема native binary для цієї UI-задачі не потрібна.
+- `react-native-actions-sheet@10.1.2` was rejected: it adds nested `react-native-worklets@0.7.4`, duplicating Expo SDK 56's `react-native-worklets@0.11.3`. Version `0.9.7` has no such dependency, but requires a direct `react-native-gesture-handler` peer, installed through Expo.
+- After aligning the root/application runtime (`expo@56.0.18`, `react-native-safe-area-context@5.7.x`, `react-native-gesture-handler@2.31.x`), a repeat `npx expo-doctor` passed all 21 checks. Root `expo-router` remained at `56.2.16` to avoid expanding the change to its newer React peer requirement; no duplicate native modules were found.
+- `FlashList` and ActionSheet `0.9.7` did not change `app.json`, permissions, or config plugins. Expo Go remains the target runtime; a separate native binary is not needed for this UI task.
 
 ## Phase 01 automated checks
 
@@ -61,9 +61,9 @@ npx nx lint mobile-catalog-ui
 ```
 
 - Mobile route tests: 1 suite, 2 tests passed. Catalog feature tests: 5 suites, 18 tests passed. Catalog UI tests: 5 suites, 12 tests passed.
-- Lint passed for `mobile`, `mobile-catalog-feature` and `mobile-catalog-ui`.
-- `npx tsc --noEmit -p libs/mobile/catalog/ui/tsconfig.lib.json` is not a valid production type-check yet: its existing `src/test-setup.ts` is included without Jest types and has two implicit `any` parameters. The FlashList callback mismatch discovered by this command was fixed before handoff.
-- `npx nx lint shell` is blocked by the existing ESLint configuration error: rule `@typescript-eslint/no-array-constructor` is configured without the `@typescript-eslint` plugin. It is unrelated to the Paper test mock change.
+- Lint passed for `mobile`, `mobile-catalog-feature`, and `mobile-catalog-ui`.
+- `npx tsc --noEmit -p libs/mobile/catalog/ui/tsconfig.lib.json` is not yet a valid production type check: its existing `src/test-setup.ts` is included without Jest types and has two implicit `any` parameters. The FlashList callback mismatch discovered by this command was fixed before handoff.
+- `npx nx lint shell` is blocked by an existing ESLint configuration error: rule `@typescript-eslint/no-array-constructor` is configured without the `@typescript-eslint` plugin. This is unrelated to the Paper test mock change.
 
 ## Paper BottomNavigation migration (2026-07-31)
 
@@ -72,9 +72,9 @@ npx nx lint mobile
 npx nx test mobile
 ```
 
-- The tab layout now owns both the shared Paper `Appbar` and `react-native-paper` `BottomNavigation.Bar` for every tab. It forwards tab press/long-press events, safe-area insets and navigation to Expo Router without adding a second Paper provider.
+- The tab layout now owns both the shared Paper `Appbar` and `react-native-paper` `BottomNavigation.Bar` for every tab. It forwards tab press/long-press events, safe-area insets, and navigation to Expo Router without adding a second Paper provider.
 - The catalog screen registers its search action with the layout; it does not render a second Appbar.
-- Після корекції ownership: `npx nx test mobile` пройшов 2 suites / 3 tests; `npx nx lint mobile` і `npx nx lint mobile-catalog-feature` пройшли успішно. `npx nx test mobile-catalog-feature` пройшов 5 suites / 19 tests.
+- After the ownership correction, `npx nx test mobile` passed 2 suites / 3 tests; `npx nx lint mobile` and `npx nx lint mobile-catalog-feature` passed. `npx nx test mobile-catalog-feature` passed 5 suites / 19 tests.
 
 ## Phase 03 automated checks (2026-07-31)
 
@@ -85,9 +85,9 @@ npx nx lint mobile-catalog-ui
 npx nx lint mobile-catalog-feature
 ```
 
-- UI: 5 suites / 13 tests; feature: 5 suites / 20 tests. Обидва lint targets пройшли.
-- Покрито explicit Apply, відсутність query під час набору, blank Apply, history draft selection, reopen; pure history/storage tests покривають normalize, case-insensitive deduplicate та limit 10.
-- T016 залишається ручним QA: Android/iOS keyboard і autofocus, а також web Escape/focus ще не перевірялися на цільових runtime.
+- UI: 5 suites / 13 tests; feature: 5 suites / 20 tests. Both lint targets passed.
+- Covered explicit Apply, no query during typing, blank Apply, history draft selection, and reopen; pure history/storage tests cover normalization, case-insensitive deduplication, and limit 10.
+- T016 remains manual QA: Android/iOS keyboard and autofocus, and web Escape/focus, have not yet been checked on target runtimes.
 
 ## Phase 04 automated checks (2026-08-01)
 
@@ -98,8 +98,8 @@ npx nx lint mobile-catalog-ui
 npx nx lint mobile-catalog-feature
 ```
 
-- UI: 5 suites / 9 tests; feature: 5 suites / 20 tests. Обидва lint targets пройшли.
-- Перевірено ActionSheet transition для search/filter/category/sort через feature reducer та RNTL; category loading/error/empty, nested selection, filter range validation і точкове скидання query-полів покриті відповідними тестами.
+- UI: 5 suites / 9 tests; feature: 5 suites / 20 tests. Both lint targets passed.
+- ActionSheet transitions for search/filter/category/sort were checked through the feature reducer and RNTL; category loading/error/empty, nested selection, filter range validation, and targeted query-field resets are covered by corresponding tests.
 
 ## Phase 05 delivery checks (2026-08-01)
 
@@ -116,10 +116,10 @@ npx expo export --platform web
 
 - Model: 4 suites / 12 tests; UI: 5 suites / 9 tests; feature: 5 suites / 20 tests. All listed lint targets passed.
 - Web export passed: Metro bundled 1,787 modules and wrote `apps/mobile/dist`.
-- Manual Android/iOS/web QA and light/dark screenshot evidence remain recorded as blockers in `checklists/delivery.md`; they require the Mobile QA / product owner on target runtimes.
+- Manual Android/iOS/web QA and light/dark screenshot evidence remain recorded as blockers in `checklists/delivery.md`; they require Mobile QA / the product owner on target runtimes.
 - Environment check: `adb` is unavailable and no Android/iOS simulator process is running; this workspace also has no interactive browser session for web focus/keyboard inspection.
 
-## Automated checks після реалізації
+## Automated checks after implementation
 
 ```powershell
 npx nx test mobile-catalog-model
@@ -131,26 +131,26 @@ cd apps/mobile
 npx expo export --platform web
 ```
 
-Перед виконанням уточнити реальні Nx project names через `npx nx show projects`; у delivery записати фактичні команди та результати, а не цей шаблонний список.
+Before running, confirm actual Nx project names with `npx nx show projects`; record actual commands and results in delivery rather than treating this template list as evidence.
 
 ## Manual Android / iOS QA
 
-1. У світлій і темній темі відкрити каталог: Appbar, фоновий колір і elevated cards мають бути видимими та контрастними.
-2. Прокрутити довгий каталог, виконати pull-to-refresh і «Завантажити ще»; не повинно бути duplicate/missing items.
-3. Відкрити search sheet, застосувати пошук, перезапустити застосунок, обрати фразу з history та застосувати її.
-4. Відкрити кожен із трьох action sheets: filter, sort, category. Перевірити dismiss без Apply, Apply, error/loading/empty categories і довге дерево.
-5. Вибрати category, кожен тип filter і sort; прибрати chips по одному. Перевірити, що нецільові values лишаються.
-6. Перевірити TalkBack/VoiceOver та 48dp targets для іконок, chip close і sheet actions.
+1. Open the catalog in light and dark themes: Appbar, background color, and elevated cards should be visible and have sufficient contrast.
+2. Scroll a long catalog, pull to refresh, and select “Завантажити ще”; there should be no duplicate or missing items.
+3. Open the search sheet, apply a search, restart the app, choose a phrase from history, and apply it.
+4. Open each of the three action sheets: filters, sort, and category. Check dismiss without Apply, Apply, category error/loading/empty states, and a long tree.
+5. Select a category, each filter type, and a sort; remove chips one by one. Confirm unrelated values remain.
+6. Check TalkBack/VoiceOver and 48dp targets for icons, chip close controls, and sheet actions.
 
 ## Manual web QA
 
 1. Tab order: theme → search → filters → sort → categories → chips → list.
-2. Enter/Space активують icon buttons/chips; Escape закриває відкритий sheet.
-3. Перевірити focus trap/visible focus у sheet, вертикальний scroll content і горизонтальний scroll chips.
-4. Перевірити console без runtime errors під час відкриття кожного sheet і списку.
+2. Enter/Space activate icon buttons/chips; Escape closes an open sheet.
+3. Check focus trapping/visible focus in a sheet, vertical content scrolling, and horizontal chip scrolling.
+4. Check the console for runtime errors while opening each sheet and the list.
 
 ## Delivery evidence
 
-- [ ] Команди та фактичні outputs записані.
-- [ ] Скриншоти light/dark default catalog та всіх чотирьох sheets додані/посилені.
-- [ ] Ручні Android/iOS/web результати та відомі обмеження записані.
+- [ ] Commands and actual outputs are recorded.
+- [ ] Light/dark screenshots of the default catalog and all four sheets are added/linked.
+- [ ] Manual Android/iOS/web results and known limitations are recorded.

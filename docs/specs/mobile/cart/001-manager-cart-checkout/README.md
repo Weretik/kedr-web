@@ -8,9 +8,9 @@
 - **Created:** 2026-09-17
 - **Last updated:** 2026-09-17
 
-Менеджер переглядає збережений кошик, коригує кількість у межах останнього
-відомого залишку, вибирає активного клієнта та створює повноцінне Sales
-замовлення для асинхронної передачі до 1С.
+The manager reviews the saved cart, adjusts quantities within the last known
+stock, selects an active customer, and creates a complete Sales order for
+asynchronous transfer to 1C.
 
 ## Status
 
@@ -47,7 +47,5 @@
 
 ## Change notes
 
-- 2026-09-17 — Initial scenario-first specification from agreed cart, customer
-  selection and manager-order decisions.
-- 2026-09-17 — Implemented the accepted feature, synchronized the Sales
-  contract, passed automated delivery checks and recorded unavailable device QA.
+- 2026-09-17 — Initial scenario-first specification based on agreed cart, customer selection, and manager-order decisions.
+- 2026-09-17 — Implemented the accepted feature, synchronized the Sales contract, passed automated delivery checks, and recorded unavailable device QA.

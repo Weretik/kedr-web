@@ -1,19 +1,19 @@
-# 001 — Відновлення frontend layers і boundaries
+# 001 — Frontend layer and boundary remediation
 
-- **Поверхні:** Angular Storefront, React Admin, React Native Mobile
-- **Статус:** implemented and verified
-- **Власник:** frontend
-- **Оновлено:** 2026-10-02
+- **Surfaces:** Angular Storefront, React Admin, React Native Mobile
+- **Status:** implemented and verified
+- **Owner:** frontend
+- **Updated:** 2026-10-02
 
-SDD переводить фактичний workspace до узгоджених Kedr layers, data paths,
-public APIs і executable gates без зміни observable поведінки застосунків.
-Remediation реалізовано та перевірено executable gates, focused tests і
-production builds для трьох клієнтів.
+This SDD brings the actual workspace in line with Kedr layers, data paths,
+public APIs, and executable gates without changing observable application
+behavior. Remediation is implemented and was verified with executable gates,
+focused tests, and production builds for all three clients.
 
-## Навігація
+## Navigation
 
-- [Findings і architecture requirements](requirements/findings.md)
-- [Target architecture і migration sequence](design/target-architecture.md)
+- [Findings and architecture requirements](requirements/findings.md)
+- [Target architecture and migration sequence](design/target-architecture.md)
 - [Root-cause analysis](analysis/root-cause.md)
 - [Task graph](tasks/README.md)
 - [Traceability](traceability.md)
@@ -22,5 +22,5 @@ production builds для трьох клієнтів.
 - [Initial code audit](code-audit/audit.md)
 - [Implementation prompt](USAGE.md)
 
-AF-001–AF-011 мають статус `verified`; деталі виконання та evidence наведені у
-task graph, traceability і final audit.
+AF-001–AF-011 have status `verified`; implementation details and evidence are
+recorded in the task graph, traceability, and final audit.
