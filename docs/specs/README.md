@@ -13,6 +13,7 @@
 - [Admin orders and drafts](admin/orders/001-order-workspace/README.md)
 - [Admin order responsibility split](admin/orders/002-order-structure-remediation/README.md)
 - [Orders and drafts in customer details](admin/clients/002-customer-orders/README.md)
+- [Redesign: design system and shell](admin/redesign/001-design-system-and-shell/README.md)
 
 ## Mobile React Native
 
