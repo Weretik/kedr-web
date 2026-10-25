@@ -5,7 +5,8 @@ jest.mock('react-native/Libraries/Modal/Modal', () => {
   };
 });
 
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, waitFor, within } from '@testing-library/react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 
 import { CatalogSearchSheet } from './catalog-search-sheet';
@@ -47,6 +48,28 @@ describe('CatalogSearchSheet', () => {
     expect(onSelectHistory).toHaveBeenCalledWith(phrase);
     expect(onRemoveHistory).toHaveBeenCalledWith(phrase);
     expect(onClearHistory).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the input label-free so the sheet title is the only visible caption', async () => {
+    const { getAllByText, getByLabelText } = renderSheet();
+
+    await waitFor(() => expect(getByLabelText('Пошук товарів')).toBeTruthy());
+    expect(getByLabelText('Пошук товарів').props.label).toBeUndefined();
+    expect(getAllByText('Пошук товарів')).toHaveLength(1);
+  });
+
+  it('keeps history controls tappable inside one keyboard-aware scroll area', async () => {
+    const { getByTestId, UNSAFE_getByType } = renderSheet({ history: ['кабель'] });
+
+    await waitFor(() => expect(getByTestId('catalog-search-sheet')).toBeTruthy());
+    const content = getByTestId('catalog-search-sheet');
+    const keyboardArea = UNSAFE_getByType(KeyboardAvoidingView);
+
+    expect(content.props.keyboardShouldPersistTaps).toBe('handled');
+    expect(keyboardArea.props.style).toEqual(expect.objectContaining({ flex: 1 }));
+    expect(within(keyboardArea).getByTestId('catalog-search-sheet')).toBeTruthy();
+    expect(within(content).getByLabelText('Пошук товарів')).toBeTruthy();
+    expect(within(content).getByLabelText('Шукати: кабель')).toBeTruthy();
   });
 });
 

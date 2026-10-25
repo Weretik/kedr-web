@@ -40,10 +40,10 @@ Expo Router layout пишуться вручну, оскільки для них
 
 ## Критерії приймання
 
-- [ ] App запускається з Paper theme і Safe Area.
-- [ ] Є light/dark corporate palette без копіювання MUI component overrides.
-- [ ] Стартовий screen показує назву застосунку та перевіряє navigation shell.
-- [ ] Icon-only controls мають accessible name.
+- [x] App запускається з Paper theme і Safe Area.
+- [x] Є light/dark corporate palette без копіювання MUI component overrides.
+- [x] Стартовий screen показує назву застосунку та перевіряє navigation shell.
+- [x] Icon-only controls мають accessible name.
 
 ## Перевірка
 

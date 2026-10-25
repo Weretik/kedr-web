@@ -56,9 +56,9 @@ The complete process for switching and rebuilding is in [Expo Go and Development
 
 ## Registered dependency: `expo-blur`
 
-`expo-blur` is approved only for floating bottom navigation in the mobile shell.
-The package is declared for the current Expo SDK; the shell owns the `BlurTargetView`/`BlurView` pair. No permissions or app-config change are needed.
-On Android, use `dimezisBlurViewSdk31Plus`; below Android API 31, keep the theme's translucent fallback.
+`expo-blur` is declared in `apps/mobile/package.json` and mapped to a Jest mock, but no code uses it.
+The frosted bottom navigation it was added for was dropped on 2026-10-25; the shell uses Paper `BottomNavigation.Bar` without blur.
+Remove the package in a separate dependency change, or register a new approved use before importing it.
 
 ## Sources
 

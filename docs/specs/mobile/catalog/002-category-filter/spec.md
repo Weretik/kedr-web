@@ -1,7 +1,7 @@
 # Feature specification: Mobile catalog category selection
 
 **Created:** 2026-07-31\
-**Status:** draft\
+**Status:** implemented; manual check T017 and backend access-policy confirmation T018 pending\
 **Domain:** `catalog`\
 **Input:** Connect the categories API to the catalog so users can select a category and filter products server-side.
 

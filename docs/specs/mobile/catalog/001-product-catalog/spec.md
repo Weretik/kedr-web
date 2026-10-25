@@ -1,7 +1,7 @@
 # Feature specification: Mobile product catalog
 
 **Created:** 2026-07-28\
-**Status:** draft — API contract confirmed
+**Status:** implemented — API contract confirmed; manual device check T023 pending\
 **Domain:** `catalog`\
 **Input:** Mobile product catalog with images, search, filters, sorting, and server-side pagination.
 

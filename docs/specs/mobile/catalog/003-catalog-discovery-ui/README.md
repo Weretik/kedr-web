@@ -2,7 +2,7 @@
 
 SDD for redesigning the `/(tabs)/catalog` screen: Appbar, product cards, quick actions, bottom sheets, and search history.
 
-**Status:** draft; do not begin implementation without a separate command to start phase `00`.
+**Status:** implemented; phases 00–13, 15 and 16 complete, phase 14 removed (2026-10-25). Manual QA was completed by the product owner in phase 16; light/dark screenshots remain optional.
 
 ## Documents
 

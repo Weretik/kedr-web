@@ -38,10 +38,10 @@ shared/api-client/
 
 ## Критерії приймання
 
-- [ ] `baseApi` готовий до `injectEndpoints`, але не містить catalog endpoint.
-- [ ] Помилки 4xx, 5xx і network error нормалізовані та протестовані.
-- [ ] HTTP logging доступний лише в development і не містить чутливих даних.
-- [ ] Втрата мережі показує базовий offline indicator/state; ручний retry доступний
+- [x] `baseApi` готовий до `injectEndpoints`, але не містить catalog endpoint.
+- [x] Помилки 4xx, 5xx і network error нормалізовані та протестовані.
+- [x] HTTP logging доступний лише в development і не містить чутливих даних.
+- [x] Втрата мережі показує базовий offline indicator/state; ручний retry доступний
       feature, коли з'явиться запит.
 
 ## Перевірка

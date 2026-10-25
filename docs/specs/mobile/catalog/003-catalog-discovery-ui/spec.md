@@ -1,7 +1,7 @@
 # Specification: refreshed catalog discovery UI
 
 **Created:** 2026-07-31\
-**Status:** draft\
+**Status:** implemented (see [README](README.md))\
 **Input:** Refresh the Mobile catalog without changing the corporate theme or API.
 
 ## Scope

@@ -1,6 +1,6 @@
 # Фаза 2: React data-access для списку товарів
 
-**Статус:** accepted  
+**Статус:** completed  
 **Залежить від:** [фаза 1](01-admin-api-contract.md)  
 **Блокує:** фази 3–5
 
@@ -43,11 +43,11 @@ Query та надати feature типізований hook без transport-д�
 
 ## Критерії приймання
 
-- [ ] У `ProductsPage` немає Axios або прямого HTTP.
-- [ ] DTO не виходить за межі `data-access`.
-- [ ] Канонічні доменні типи імпортуються з `@admin/products/model`; public API
+- [x] У `ProductsPage` немає Axios або прямого HTTP.
+- [x] DTO не виходить за межі `data-access`.
+- [x] Канонічні доменні типи імпортуються з `@admin/products/model`; public API
       `data-access` містить hook і сумісні re-export'и.
-- [ ] Дотримані Nx dependency boundaries.
+- [x] Дотримані Nx dependency boundaries.
 
 ## Перевірка
 
