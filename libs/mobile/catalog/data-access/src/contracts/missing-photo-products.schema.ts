@@ -8,6 +8,7 @@ const missingPhotoProductSchema = z.object({
   productSlug: z.string(),
   photo: z.string(),
   categoryId: z.number().int().nullable().optional(),
+  categoryName: z.string(),
   inStock: z.boolean(),
   isSale: z.boolean(),
   isNew: z.boolean(),

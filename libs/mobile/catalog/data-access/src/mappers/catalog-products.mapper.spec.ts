@@ -7,6 +7,7 @@ describe('mapAdminProductPage', () => {
         pagedInfo: { pageNumber: 1, pageSize: 20, totalPages: 2, totalRecords: 21 },
         value: [
           {
+            categoryName: '',
             id: 12,
             inStock: true,
             isNew: false,

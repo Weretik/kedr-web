@@ -81,6 +81,7 @@ function validResponse() {
     value: [
       {
         categoryId: null,
+        categoryName: '',
         exportToSite: true,
         id: 12,
         inStock: true,

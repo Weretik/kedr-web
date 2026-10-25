@@ -1,8 +1,17 @@
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { Autocomplete, Badge, Box, Button, IconButton, InputAdornment, TextField, createFilterOptions } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import {
+  Autocomplete,
+  Badge,
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  createFilterOptions,
+} from '@mui/material';
 import { FilterPanelTrigger, QuickFilter, QuickFilterControl, Toolbar } from '@mui/x-data-grid';
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -18,8 +27,11 @@ export interface ProductsGridToolbarProps {
 }
 
 export const ProductsGridToolbarContext = createContext<ProductsGridToolbarProps>({
-  categories: [], categoriesLoading: false, categoriesError: false,
-  onCategoryChange: () => undefined, setPanelAnchor: () => undefined,
+  categories: [],
+  categoriesLoading: false,
+  categoriesError: false,
+  onCategoryChange: () => undefined,
+  setPanelAnchor: () => undefined,
 });
 
 const filterCategories = createFilterOptions<ProductCategoryOption>({
@@ -61,7 +73,14 @@ function filterCategoryTree(
 }
 
 export function ProductsGridToolbar() {
-  const { categories, categoryId, categoriesLoading, categoriesError, onCategoryChange, setPanelAnchor } = useContext(ProductsGridToolbarContext);
+  const {
+    categories,
+    categoryId,
+    categoriesLoading,
+    categoriesError,
+    onCategoryChange,
+    setPanelAnchor,
+  } = useContext(ProductsGridToolbarContext);
   const [expandedIds, setExpandedIds] = useState<ReadonlySet<number>>(() => new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const selected = categories.find((category) => category.id === categoryId) ?? null;
@@ -94,11 +113,34 @@ export function ProductsGridToolbar() {
   };
 
   return (
-    <Toolbar style={{ flexWrap: 'wrap', justifyContent: 'flex-start', gap: 8, padding: '8px 16px', position: 'relative' }}>
+    <Toolbar
+      style={{
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        gap: 8,
+        padding: '8px 16px',
+        position: 'relative',
+      }}
+    >
       {/* MUI вирівнює широку панель за правим краєм цієї точки в межах таблиці. */}
-      <Box ref={setPanelAnchor} aria-hidden="true" sx={{ bottom: 0, height: 0, left: 'min(100%, 800px)', pointerEvents: 'none', position: 'absolute', width: 0 }} />
+      <Box
+        ref={setPanelAnchor}
+        aria-hidden="true"
+        sx={{
+          bottom: 0,
+          height: 0,
+          left: 'min(100%, 800px)',
+          pointerEvents: 'none',
+          position: 'absolute',
+          width: 0,
+        }}
+      />
       <Box sx={{ flex: '1 1 220px', maxWidth: 320, minWidth: 0 }}>
-        <QuickFilter expanded debounceMs={300} parser={(value) => value.trim() ? [value.trim()] : []}>
+        <QuickFilter
+          expanded
+          debounceMs={300}
+          parser={(value) => (value.trim() ? [value.trim()] : [])}
+        >
           <QuickFilterControl
             fullWidth
             placeholder="Пошук товарів"
@@ -106,30 +148,50 @@ export function ProductsGridToolbar() {
             slotProps={{
               htmlInput: { 'aria-label': 'Пошук товарів' },
               input: {
-                startAdornment: <InputAdornment position="start"><SearchOutlinedIcon aria-hidden="true" fontSize="small" /></InputAdornment>,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchOutlinedIcon aria-hidden="true" fontSize="small" />
+                  </InputAdornment>
+                ),
               },
             }}
           />
         </QuickFilter>
       </Box>
-      <FilterPanelTrigger render={(props, { filterCount }) => (
-        <Button {...props} size="small" startIcon={<Badge badgeContent={filterCount} color="primary"><FilterListIcon /></Badge>}>
-          Фільтри
-        </Button>
-      )} />
+      <FilterPanelTrigger
+        render={(props, { filterCount }) => (
+          <Button
+            {...props}
+            size="small"
+            startIcon={
+              <Badge badgeContent={filterCount} color="primary">
+                <FilterListIcon />
+              </Badge>
+            }
+          >
+            Фільтри
+          </Button>
+        )}
+      />
       <Box sx={{ ml: { sm: 'auto' }, minWidth: { xs: '100%', sm: 240 }, width: { sm: 320 } }}>
         <Autocomplete
           getOptionKey={(option) => option.id}
-          filterOptions={(options, state) => filterCategoryTree(
-            options, state, expandedIds,
-            searchTerm === selected?.nameUk ? '' : searchTerm,
-          )}
+          filterOptions={(options, state) =>
+            filterCategoryTree(
+              options,
+              state,
+              expandedIds,
+              searchTerm === selected?.nameUk ? '' : searchTerm,
+            )
+          }
           getOptionLabel={(option) => option.nameUk}
           inputValue={searchTerm}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           loading={categoriesLoading}
           loadingText="Завантаження категорій…"
-          noOptionsText={categoriesError ? 'Не вдалося завантажити категорії' : 'Категорій не знайдено'}
+          noOptionsText={
+            categoriesError ? 'Не вдалося завантажити категорії' : 'Категорій не знайдено'
+          }
           onChange={(_event, category) => {
             setSearchTerm(category?.nameUk ?? '');
             onCategoryChange(category?.id);
@@ -141,32 +203,51 @@ export function ProductsGridToolbar() {
           renderOption={(props, option) => {
             const { key, ...optionProps } = props;
             return (
-              <li key={key} {...optionProps} aria-label={`Рівень ${option.depth + 1}: ${option.nameUk}`}>
+              <li
+                key={key}
+                {...optionProps}
+                aria-label={`Рівень ${option.depth + 1}: ${option.nameUk}`}
+              >
                 <Box sx={{ ml: option.depth * 2, width: 32, flexShrink: 0 }}>
                   {option.hasChildren && (!searchTerm || searchTerm === selected?.nameUk) && (
                     <IconButton
                       aria-expanded={expandedIds.has(option.id)}
                       aria-label={`${expandedIds.has(option.id) ? 'Згорнути' : 'Розгорнути'} категорію ${option.nameUk}`}
-                      onClick={(event) => { event.stopPropagation(); toggleCategory(option.id); }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        toggleCategory(option.id);
+                      }}
                       onKeyDown={(event) => event.stopPropagation()}
-                      onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); }}
+                      onMouseDown={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }}
                       size="small"
                     >
-                      {expandedIds.has(option.id) ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}
+                      {expandedIds.has(option.id) ? (
+                        <ExpandMoreIcon fontSize="small" />
+                      ) : (
+                        <ChevronRightIcon fontSize="small" />
+                      )}
                     </IconButton>
                   )}
                 </Box>
-                <Box component="span" sx={{
-                  fontWeight: option.hasChildren ? 600 : 400,
-                  overflowWrap: 'anywhere',
-                  whiteSpace: 'normal',
-                }}>
+                <Box
+                  component="span"
+                  sx={{
+                    fontWeight: option.hasChildren ? 600 : 400,
+                    overflowWrap: 'anywhere',
+                    whiteSpace: 'normal',
+                  }}
+                >
                   {option.nameUk}
                 </Box>
               </li>
             );
           }}
-          renderInput={(params) => <TextField {...params} label="Категорія" placeholder="Усі категорії" size="small" />}
+          renderInput={(params) => (
+            <TextField {...params} label="Категорія" placeholder="Усі категорії" size="small" />
+          )}
           size="small"
           value={selected}
         />
