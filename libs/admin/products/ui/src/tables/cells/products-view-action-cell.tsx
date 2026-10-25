@@ -13,16 +13,31 @@ interface ProductsViewActionCellProps {
 export function ProductsViewActionCell({ product, onView, onAdd }: ProductsViewActionCellProps) {
   return (
     <>
-    <Tooltip title="Переглянути товар">
-      <IconButton
-        aria-label={`Переглянути товар ${product.nameUk}, ID ${product.id}`}
-        onClick={() => onView(product)}
-        size="small"
-      >
-        <VisibilityOutlinedIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-    {onAdd && <Tooltip title="Додати до поточного набору"><IconButton aria-label={`Додати товар ${product.nameUk} до поточного набору`} onClick={() => onAdd(product)} size="small"><AddShoppingCartOutlinedIcon fontSize="small" /></IconButton></Tooltip>}
+      <Tooltip title="Переглянути товар">
+        <IconButton
+          aria-label={`Переглянути товар ${product.nameUk}, ID ${product.id}`}
+          onClick={() => onView(product)}
+          size="small"
+        >
+          <VisibilityOutlinedIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+      {onAdd && (
+        <Tooltip title="Додати до поточного набору">
+          <IconButton
+            aria-label={`Додати товар ${product.nameUk} до поточного набору`}
+            onClick={() => onAdd(product)}
+            size="small"
+            sx={{
+              bgcolor: 'primary.light',
+              color: 'primary.dark',
+              '&:hover': { bgcolor: 'primary.main', color: 'primary.contrastText' },
+            }}
+          >
+            <AddShoppingCartOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
     </>
   );
 }

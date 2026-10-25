@@ -35,9 +35,30 @@ describe('ProductsDataGrid responsive actions', () => {
     render(
       <ProductsDataGrid
         categories={[
-          { id: 1, parentId: null, nameUk: 'Фурнітура', pathUk: 'Фурнітура', depth: 0, hasChildren: true },
-          { id: 2, parentId: 1, nameUk: 'Завіси', pathUk: 'Фурнітура Завіси', depth: 1, hasChildren: true },
-          { id: 3, parentId: 2, nameUk: 'Кабелі', pathUk: 'Фурнітура Завіси Кабелі', depth: 2, hasChildren: false },
+          {
+            id: 1,
+            parentId: null,
+            nameUk: 'Фурнітура',
+            pathUk: 'Фурнітура',
+            depth: 0,
+            hasChildren: true,
+          },
+          {
+            id: 2,
+            parentId: 1,
+            nameUk: 'Завіси',
+            pathUk: 'Фурнітура Завіси',
+            depth: 1,
+            hasChildren: true,
+          },
+          {
+            id: 3,
+            parentId: 2,
+            nameUk: 'Кабелі',
+            pathUk: 'Фурнітура Завіси Кабелі',
+            depth: 2,
+            hasChildren: false,
+          },
         ]}
         booleanFilters={{}}
         loading={false}
@@ -62,12 +83,22 @@ describe('ProductsDataGrid responsive actions', () => {
     expect(screen.getByRole('columnheader', { name: 'Дії' })).toBeTruthy();
     const searchInput = screen.getByPlaceholderText('Пошук товарів');
     expect(searchInput.getAttribute('aria-label')).toBe('Пошук товарів');
-    expect(searchInput.closest('.MuiInputBase-root')?.querySelector('[data-testid="SearchOutlinedIcon"]')).toBeTruthy();
+    expect(
+      searchInput
+        .closest('.MuiInputBase-root')
+        ?.querySelector('[data-testid="SearchOutlinedIcon"]'),
+    ).toBeTruthy();
     const filterTrigger = screen.getByRole('button', { name: 'Фільтри' });
-    expect(searchInput.compareDocumentPosition(filterTrigger) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      searchInput.compareDocumentPosition(filterTrigger) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Очистити пошук товарів' })).toBeNull();
     fireEvent.change(searchInput, { target: { value: '  Кабель  ' } });
-    await waitFor(() => expect(onFilterChange.mock.calls.some(([model]) => model.quickFilterValues?.[0] === 'Кабель')).toBe(true));
+    await waitFor(() =>
+      expect(
+        onFilterChange.mock.calls.some(([model]) => model.quickFilterValues?.[0] === 'Кабель'),
+      ).toBe(true),
+    );
     fireEvent.click(filterTrigger);
     expect(filterTrigger.getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByText('Фурнітура › Завіси › Кабелі')).toBeTruthy();
@@ -101,22 +132,24 @@ describe('ProductsDataGrid responsive actions', () => {
         pageSize={20}
         priceFilterable
         rowCount={1}
-        rows={[{
-          id: 7,
-          nameUk: 'Кабель',
-          nameRu: 'Кабель',
-          productSlug: 'cable',
-          photo: '/photo.jpg',
-          categoryId: null,
-          categoryName: 'Електрика',
-          inStock: true,
-          isSale: false,
-          isNew: true,
-          exportToSite: true,
-          price: 100,
-          stock: 2,
-          quantityInPack: 1,
-        }]}
+        rows={[
+          {
+            id: 7,
+            nameUk: 'Кабель',
+            nameRu: 'Кабель',
+            productSlug: 'cable',
+            photo: '/photo.jpg',
+            categoryId: null,
+            categoryName: 'Електрика',
+            inStock: true,
+            isSale: false,
+            isNew: true,
+            exportToSite: true,
+            price: 100,
+            stock: 2,
+            quantityInPack: 1,
+          },
+        ]}
         sort="id-asc"
       />,
     );
@@ -126,13 +159,19 @@ describe('ProductsDataGrid responsive actions', () => {
     expect(screen.getByRole('columnheader', { name: /Новинка/ })).toBeTruthy();
     expect(screen.queryByRole('columnheader', { name: /На сайті/ })).toBeNull();
     expect(screen.getByRole('columnheader', { name: 'Категорія' })).toBeTruthy();
-    expect(screen.getAllByRole('img', { name: 'Так' })).toHaveLength(2);
-    expect(screen.getByRole('img', { name: 'Ні' }).querySelector('svg')).toBeNull();
+    const cellText = (field: string) =>
+      document.querySelector(`[role="gridcell"][data-field="${field}"]`)?.textContent;
+    expect(cellText('inStock')).toBe('Є');
+    expect(cellText('isNew')).toBe('Новинка');
+    expect(screen.getByRole('img', { name: 'Ні' }).textContent).toBe('—');
   });
 
   it('offers independent yes/no filters in boolean column headers', () => {
     vi.stubGlobal('matchMedia', (query: string) => ({
-      matches: false, media: query, addEventListener: vi.fn(), removeEventListener: vi.fn(),
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
     }));
     const onBooleanFilterChange = vi.fn();
     render(

@@ -61,6 +61,7 @@
       "@admin/core/auth": ["libs/admin/core/auth/src/index.ts"],
       "@admin/shared/config": ["libs/admin/shared/config/src/index.ts"],
       "@admin/shared/api-client": ["libs/admin/shared/api-client/src/index.ts"],
+      "@admin/shared/ui": ["libs/admin/shared/ui/src/index.ts"],
       "@admin/dashboard/feature": ["libs/admin/dashboard/feature/src/index.ts"],
       "@mobile/shared/api-client": ["./libs/mobile/shared/api-client/src/index.ts"],
       "@mobile/shared/config": ["./libs/mobile/shared/config/src/index.ts"],
