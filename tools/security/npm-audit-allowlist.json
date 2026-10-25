@@ -1,0 +1,14 @@
+[
+  {
+    "advisory": "GHSA-86w9-cpqp-85rv",
+    "package": "node-forge",
+    "reason": "Reached only through @expo/cli (mobile build tooling); no patched node-forge release exists.",
+    "review": "Remove once @expo/cli ships a node-forge fix."
+  },
+  {
+    "advisory": "GHSA-mrhx-c7xc-m3w5",
+    "package": "zod",
+    "reason": "@expo/cli depends on zod ^3.25.76; the fix exists only in zod 4.6.6+. Application code already uses zod 4.6.7.",
+    "review": "Remove once @expo/cli moves to zod 4."
+  }
+]
