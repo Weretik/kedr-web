@@ -4,7 +4,7 @@ This directory contains stable rules for frontend changes. Feature specification
 
 ## By application
 
-- **Admin React:** [code organization](admin/admin-code-organization.md), [UI](admin/admin-ui.md), [consistent list and detail pages](admin/list-detail-pages.md), [architecture and existing modules](../architecture/admin/README.md).
+- **Admin React:** [code organization](admin/admin-code-organization.md), [UI](admin/admin-ui.md), [design system «Кедровий ліс»](admin/design-system.md), [consistent list and detail pages](admin/list-detail-pages.md), [architecture and existing modules](../architecture/admin/README.md).
 - **Mobile React Native:** [code organization](mobile/mobile-code-organization.md), [UI](mobile/mobile-ui.md), [architecture and existing modules](../architecture/mobile/README.md).
 - **Storefront Angular:** [architecture boundaries](../architecture/storefront/README.md), [modules](../architecture/storefront/structure/modules.md), [state and API](../architecture/storefront/runtime/state-and-api.md). React Admin and Mobile rules do not automatically apply to Angular.
 

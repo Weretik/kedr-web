@@ -2,10 +2,11 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
-export const adminDrawerWidth = 280;
+export const adminDrawerWidth = 264;
+export const adminDrawerCollapsedWidth = 84;
 
 const navigationItems = [
   { icon: <DashboardOutlinedIcon />, label: 'Огляд', to: '/dashboard' },
@@ -15,69 +16,81 @@ const navigationItems = [
 ] as const;
 
 interface AdminNavigationProps {
+  isCollapsed?: boolean;
   onNavigate?: () => void;
 }
 
-export function AdminNavigation({ onNavigate }: AdminNavigationProps) {
+export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNavigationProps) {
   const location = useLocation();
 
   return (
-    <Box component="nav" sx={{ p: '12px' }}>
+    <Box aria-label="Основна навігація" component="nav" sx={{ px: 2 }}>
+      <Typography
+        component="span"
+        sx={{ color: 'text.secondary', display: isCollapsed ? 'none' : 'block', px: 1.5, pb: 1 }}
+        variant="overline"
+      >
+        Робота
+      </Typography>
       <Box
         component="ul"
-        sx={{ display: 'flex', flexDirection: 'column', gap: 1, listStyle: 'none', m: 0, p: 0 }}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, listStyle: 'none', m: 0, p: 0 }}
       >
         {navigationItems.map(({ icon, label, to }) => {
           const isActive = location.pathname === to || location.pathname.startsWith(`${to}/`);
 
           return (
             <Box component="li" key={to}>
-              <Box
-                component={RouterLink}
-                aria-current={isActive ? 'page' : undefined}
-                onClick={onNavigate}
-                sx={{
-                  alignItems: 'center',
-                  borderRadius: 1,
-                  color: 'secondary.contrastText',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  gap: 1,
-                  opacity: isActive ? 1 : 0.78,
-                  p: '6px 16px',
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                  '&:focus-visible': {
-                    outline: '2px solid currentColor',
-                    outlineOffset: 2,
-                  },
-                  '&:hover': {
-                    bgcolor: isActive ? 'primary.dark' : 'action.hover',
-                  },
-                  ...(isActive && {
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
-                  }),
-                }}
-                to={to}
+              <Tooltip
+                disableHoverListener={!isCollapsed}
+                disableFocusListener={!isCollapsed}
+                disableTouchListener
+                placement="right"
+                title={label}
               >
                 <Box
-                  sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto', opacity: 0.72 }}
+                  component={RouterLink}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={isCollapsed ? label : undefined}
+                  onClick={onNavigate}
+                  sx={(theme) => ({
+                    alignItems: 'center',
+                    borderRadius: '12px',
+                    color: isActive ? 'primary.dark' : 'text.secondary',
+                    bgcolor: isActive ? 'primary.light' : 'transparent',
+                    display: 'flex',
+                    gap: 1.5,
+                    justifyContent: isCollapsed ? 'center' : 'flex-start',
+                    minHeight: 44,
+                    px: isCollapsed ? 0 : 1.5,
+                    textDecoration: 'none',
+                    transition: theme.transitions.create(['background-color', 'color'], {
+                      duration: theme.transitions.duration.shorter,
+                    }),
+                    whiteSpace: 'nowrap',
+                    '&:hover': {
+                      bgcolor: isActive ? 'primary.light' : 'action.hover',
+                      color: isActive ? 'primary.dark' : 'text.primary',
+                    },
+                    '&:focus-visible': {
+                      outline: '2px solid',
+                      outlineColor: theme.palette.primary.main,
+                      outlineOffset: 2,
+                    },
+                  })}
+                  to={to}
                 >
-                  {icon}
+                  <Box sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto' }}>{icon}</Box>
+                  {isCollapsed ? null : (
+                    <Typography
+                      component="span"
+                      sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 700 }}
+                    >
+                      {label}
+                    </Typography>
+                  )}
                 </Box>
-                <Typography
-                  component="span"
-                  sx={{
-                    color: 'inherit',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    lineHeight: '28px',
-                  }}
-                >
-                  {label}
-                </Typography>
-              </Box>
+              </Tooltip>
             </Box>
           );
         })}

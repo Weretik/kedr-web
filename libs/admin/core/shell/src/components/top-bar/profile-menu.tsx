@@ -40,12 +40,19 @@ export function ProfileMenu() {
         aria-haspopup="menu"
         aria-label="Відкрити меню профілю"
         onClick={handleOpen}
-        sx={{ opacity: 1, p: 0 }}
+        sx={{ p: 0.5 }}
       >
         <Avatar
           alt="Іконка менеджера"
           src="/assets/images/icons8-manager-100.png"
-          sx={{ height: 48, width: 48, '& .MuiAvatar-img': { transform: 'scale(1.33)' } }}
+          sx={{
+            bgcolor: 'primary.light',
+            borderRadius: '10px',
+            height: 32,
+            width: 32,
+            '& .MuiAvatar-img': { transform: 'scale(1.33)' },
+          }}
+          variant="rounded"
         />
       </IconButton>
       <Menu anchorEl={anchorElement} id="profile-menu" onClose={handleClose} open={isOpen}>
