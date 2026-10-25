@@ -31,4 +31,6 @@ libs/admin/clients/
 ├── data-access/src/mappers/customer.mapper.ts     # response validation
 ├── model/src/queries/customer-page-params.ts      # list parameters
 └── ui/src/                                       # table and cards without HTTP
+
+libs/admin/shared/ui/src/                         # grid overlay, page header
 ```

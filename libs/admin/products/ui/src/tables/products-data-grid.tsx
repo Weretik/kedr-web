@@ -1,3 +1,4 @@
+import { DataGridMessageOverlay } from '@admin/shared/ui';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useMemo, useState } from 'react';
@@ -8,8 +9,6 @@ import { productCategoryPath } from './product-category-path';
 import { productsDataGridColumns } from './products-data-grid.columns';
 import { toGridSortModel, toProductsListSort } from './products-data-grid.sort';
 import { ProductsGridToolbar, ProductsGridToolbarContext } from './products-grid-toolbar';
-import { ProductsDataGridEmptyOverlay } from '../states/products-data-grid-empty-overlay';
-import { ProductsDataGridErrorOverlay } from '../states/products-data-grid-error-overlay';
 
 import type { ProductBooleanField } from './cells/products-boolean-filter-header';
 import type {
@@ -164,8 +163,8 @@ export function ProductsDataGrid({
   );
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
-    ? () => <ProductsDataGridErrorOverlay message={errorMessage} onRetry={onRetry} />
-    : () => <ProductsDataGridEmptyOverlay message={emptyMessage} />;
+    ? () => <DataGridMessageOverlay message={errorMessage} onRetry={onRetry} />
+    : () => <DataGridMessageOverlay message={emptyMessage ?? 'Товарів немає.'} />;
 
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
@@ -222,14 +221,6 @@ export function ProductsDataGrid({
           slots={{ noRowsOverlay, toolbar: ProductsGridToolbar }}
           sortingMode="server"
           sortModel={sortable ? toGridSortModel(sort) : []}
-          sx={{
-            bgcolor: 'background.paper',
-            border: 0,
-            borderRadius: 0,
-            '& .MuiDataGrid-footerContainer': { flexWrap: 'wrap' },
-            '& .MuiTablePagination-selectLabel': { display: { xs: 'none', sm: 'block' } },
-            '& .MuiTablePagination-toolbar': { px: { xs: 1, sm: 2 } },
-          }}
         />
       </ProductsGridToolbarContext.Provider>
     </Box>

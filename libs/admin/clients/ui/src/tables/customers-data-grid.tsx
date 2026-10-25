@@ -1,8 +1,8 @@
+import { DataGridMessageOverlay } from '@admin/shared/ui';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { CustomerGridViewCell } from './customer-grid-view-cell';
-import { CustomersGridMessage } from './customers-grid-message';
 import { CustomersGridToolbar } from './customers-grid-toolbar';
 
 import type { CustomerListItem, CustomerSort } from '@admin/clients/model';
@@ -120,17 +120,14 @@ export function CustomersDataGrid({
         showToolbar
         slots={{
           noRowsOverlay: error
-            ? () => <CustomersGridMessage onRetry={onRetry} />
-            : () => <CustomersGridMessage />,
+            ? () => (
+                <DataGridMessageOverlay
+                  message="Не вдалося завантажити клієнтів."
+                  onRetry={onRetry}
+                />
+              )
+            : () => <DataGridMessageOverlay message="Клієнтів немає." />,
           toolbar: CustomersGridToolbar,
-        }}
-        sx={{
-          bgcolor: 'background.paper',
-          border: 0,
-          borderRadius: 0,
-          '& .MuiDataGrid-footerContainer': { flexWrap: 'wrap' },
-          '& .MuiTablePagination-selectLabel': { display: { xs: 'none', sm: 'block' } },
-          '& .MuiTablePagination-toolbar': { px: { xs: 1, sm: 2 } },
         }}
       />
     </Box>

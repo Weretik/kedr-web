@@ -50,6 +50,7 @@ libs/admin/orders/
 │   ├── dialogs/                              # separate delete and reuse confirmations
 │   └── state/current-order-set.ts            # local set and multi-tab coordination
 └── ui/src/
+    ├── components/order-status-chip.tsx      # 1C code → Ukrainian label and tone
     ├── tables/                               # grid and toolbar without HTTP
     ├── details/                              # document display
     ├── forms/                                # item editor and action forms

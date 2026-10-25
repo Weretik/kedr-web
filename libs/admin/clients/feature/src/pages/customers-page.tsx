@@ -1,7 +1,8 @@
 import { useGetCustomersPageQuery } from '@admin/clients/data-access';
 import { customerPageSearch, parseCustomerPageQuery } from '@admin/clients/model';
 import { CustomersDataGrid } from '@admin/clients/ui';
-import { Card, Stack, Typography } from '@mui/material';
+import { AdminPageHeader } from '@admin/shared/ui';
+import { Card, Stack } from '@mui/material';
 import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -34,9 +35,7 @@ export function CustomersPage() {
 
   return (
     <Stack component="section" spacing={3}>
-      <Typography component="h1" ref={headingReference} tabIndex={-1} variant="h4">
-        Клієнти
-      </Typography>
+      <AdminPageHeader headingRef={headingReference} title="Клієнти" />
       <Card sx={{ overflow: 'hidden' }} variant="outlined">
         <CustomersDataGrid
           error={customersQuery.isError}
