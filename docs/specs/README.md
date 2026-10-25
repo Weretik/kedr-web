@@ -15,6 +15,7 @@
 - [Orders and drafts in customer details](admin/clients/002-customer-orders/README.md)
 - [Redesign: design system and shell](admin/redesign/001-design-system-and-shell/README.md)
 - [Redesign: tables and lists](admin/redesign/002-tables-and-lists/README.md)
+- [Redesign: detail pages, forms, and dialogs](admin/redesign/003-details-forms-dialogs/README.md)
 
 ## Mobile React Native
 

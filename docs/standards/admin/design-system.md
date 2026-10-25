@@ -103,6 +103,9 @@ Use MUI components with the theme overrides above; do not restyle them locally.
 - **Tables:** MUI X Data Grid styled by the `MuiDataGrid` theme override: 12 px uppercase column titles on `background.paper`, `divider` row lines, hover `action.hover`, brand focus outline, wrapping footer, compact pagination on phones. Do not add grid `sx` for these. Numbers are right aligned with tabular figures. Wide tables scroll inside their card.
 - **Table states:** `DataGridMessageOverlay` for empty and error rows; an error passes `onRetry`, is announced, and shows «Повторити».
 - **Boolean and status columns:** a `StatusPill` with text for a meaningful value; an empty value is a muted «—» with an accessible name.
+- **Detail pages:** `AdminDetailHeader`, then `SectionCard`s. The main entity card has an overline eyebrow and an `h5` name; a key amount such as a price or order total is set large with tabular figures. Statuses in details use `StatusPill`.
+- **Dialogs and alerts:** the theme sets dialog title, content, and action padding and an 800-weight title; standard alerts use the tone `.light` surface, primary text, and a tone icon. Destructive confirmations use a contained `error` button.
+- **Motion:** each route fades up on entry (shell); dashboard cards rise in with a 60 ms stagger. The global reduced-motion rule turns both off.
 - **List pages:** `AdminPageHeader` (one `h1` and the primary actions) above a `Card variant="outlined"` holding tabs and the grid. Tabs use the theme indicator (3 px, brand green).
 - **Menus and tooltips:** 14 px radius menus with a border; tooltips use the inverse surface.
 

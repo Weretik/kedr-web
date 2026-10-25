@@ -1,6 +1,20 @@
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import { Avatar, Button, Card, CardActions, CardHeader, Divider, IconButton, List, ListItem, ListItemAvatar, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  Card,
+  CardActions,
+  CardHeader,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const products = [
   { name: 'Мастило для деревини', updatedAt: 'Сьогодні' },
@@ -15,20 +29,47 @@ export function DashboardLatestProducts() {
       <Divider />
       <List>
         {products.map((product, index) => (
-          <ListItem divider={index < products.length - 1} key={product.name} secondaryAction={<IconButton aria-label={`Дії для ${product.name}`}><MoreVertOutlinedIcon /></IconButton>}>
+          <ListItem
+            divider={index < products.length - 1}
+            key={product.name}
+            secondaryAction={
+              <IconButton aria-label={`Дії для ${product.name}`}>
+                <MoreVertOutlinedIcon />
+              </IconButton>
+            }
+          >
             <ListItemAvatar>
-              <Avatar variant="rounded">{product.name.slice(0, 1)}</Avatar>
+              <Avatar
+                sx={{
+                  bgcolor: 'primary.light',
+                  borderRadius: '12px',
+                  color: 'primary.dark',
+                  fontWeight: 800,
+                }}
+                variant="rounded"
+              >
+                {product.name.slice(0, 1)}
+              </Avatar>
             </ListItemAvatar>
             <Stack spacing={0.25}>
               <Typography variant="subtitle1">{product.name}</Typography>
-              <Typography color="text.secondary" variant="body2">Оновлено: {product.updatedAt}</Typography>
+              <Typography color="text.secondary" variant="body2">
+                Оновлено: {product.updatedAt}
+              </Typography>
             </Stack>
           </ListItem>
         ))}
       </List>
       <Divider />
       <CardActions sx={{ justifyContent: 'flex-end' }}>
-        <Button color="inherit" endIcon={<ArrowForwardOutlinedIcon />} size="small">Усі товари</Button>
+        <Button
+          component={RouterLink}
+          endIcon={<ArrowForwardOutlinedIcon />}
+          size="small"
+          to="/catalog"
+        >
+          Усі товари
+        </Button>
       </CardActions>
     </Card>
   );

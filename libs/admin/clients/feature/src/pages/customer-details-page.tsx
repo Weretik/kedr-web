@@ -5,20 +5,10 @@ import {
   parseCustomerPageQuery,
 } from '@admin/clients/model';
 import { CustomerDetailsContent } from '@admin/clients/ui';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  Link as MuiLink,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { AdminDetailHeader, PageLoader } from '@admin/shared/ui';
+import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef } from 'react';
-import { Link as RouterLink, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 import type { ReactNode } from 'react';
 
@@ -42,27 +32,15 @@ export function CustomerDetailsPage({ renderOrdersPanel }: CustomerDetailsPagePr
   if (!validId || isNotFound(customerQuery.error)) {
     content = <Alert severity="info">Клієнта не знайдено або посилання недійсне.</Alert>;
   } else if (customerQuery.isLoading || (customerQuery.isFetching && !customerQuery.data)) {
-    content = (
-      <Box
-        aria-label="Завантаження клієнта"
-        role="status"
-        sx={{ display: 'flex', justifyContent: 'center', py: 8 }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    content = <PageLoader label="Завантаження клієнта" />;
   } else if (customerQuery.isError) {
     content = (
-      <Card variant="outlined">
-        <CardContent>
-          <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
-            <Alert severity="error">Не вдалося завантажити клієнта.</Alert>
-            <Button onClick={() => void customerQuery.refetch()} variant="outlined">
-              Повторити
-            </Button>
-          </Stack>
-        </CardContent>
-      </Card>
+      <Alert
+        action={<Button onClick={() => void customerQuery.refetch()}>Повторити</Button>}
+        severity="error"
+      >
+        Не вдалося завантажити клієнта.
+      </Alert>
     );
   } else if (customerQuery.data) {
     content = <CustomerDetailsContent customer={customerQuery.data} />;
@@ -72,18 +50,17 @@ export function CustomerDetailsPage({ renderOrdersPanel }: CustomerDetailsPagePr
 
   return (
     <Stack component="section" spacing={3}>
-      <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
-        <MuiLink component={RouterLink} to={listUrl} underline="hover" sx={{ alignItems: 'center', display: 'inline-flex', gap: 0.75 }}>
-          <ArrowBackIcon fontSize="small" />Назад до клієнтів
-        </MuiLink>
-        <Typography component="h1" ref={headingReference} sx={{ overflowWrap: 'anywhere' }} tabIndex={-1} variant="h4">
-          Деталі клієнта
-        </Typography>
-      </Stack>
+      <AdminDetailHeader
+        backLabel="Назад до клієнтів"
+        backTo={listUrl}
+        headingRef={headingReference}
+        title="Деталі клієнта"
+      />
       {content}
-      {counterpartyId && validId && customerQuery.currentData?.counterpartyId === counterpartyId && (
-        renderOrdersPanel(counterpartyId, location.pathname + location.search)
-      )}
+      {counterpartyId &&
+        validId &&
+        customerQuery.currentData?.counterpartyId === counterpartyId &&
+        renderOrdersPanel(counterpartyId, location.pathname + location.search)}
     </Stack>
   );
 }

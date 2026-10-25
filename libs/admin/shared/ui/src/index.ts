@@ -1,4 +1,8 @@
+export { AdminDetailHeader } from './lib/admin-detail-header';
 export { AdminPageHeader } from './lib/admin-page-header';
 export { DataGridMessageOverlay } from './lib/data-grid-message-overlay';
+export { DetailField, DetailFieldList } from './lib/detail-field';
+export { PageLoader } from './lib/page-loader';
+export { SectionCard } from './lib/section-card';
 export { StatusPill } from './lib/status-pill';
 export type { StatusTone } from './lib/status-pill';

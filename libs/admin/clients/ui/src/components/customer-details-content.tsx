@@ -1,7 +1,7 @@
-import { Box, Card, CardContent, Stack, Typography } from '@mui/material';
+import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
+import { Box } from '@mui/material';
 
 import { CustomerContactCard } from './customer-contact-card';
-import { CustomerDetailField } from './customer-detail-field';
 import { CustomerPriceTypesCard } from './customer-price-types-card';
 
 import type { CustomerDetail } from '@admin/clients/model';
@@ -11,37 +11,23 @@ export function CustomerDetailsContent({ customer }: { customer: CustomerDetail 
     <Box
       sx={{
         display: 'grid',
-        gap: 2,
+        gap: 3,
         gridAutoRows: { md: '1fr' },
         gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
         minWidth: 0,
       }}
     >
-      <Card
-        aria-labelledby="customer-detail-name"
-        component="article"
-        sx={{ gridColumn: '1 / -1', minWidth: 0 }}
-        variant="outlined"
+      <SectionCard
+        as="article"
+        eyebrow="Основна інформація"
+        sx={{ gridColumn: '1 / -1' }}
+        title={customer.name}
+        titleVariant="h5"
       >
-        <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-          <Stack spacing={1.5}>
-            <Typography color="text.secondary" component="p" variant="subtitle2">
-              Основна інформація
-            </Typography>
-            <Typography
-              component="h2"
-              id="customer-detail-name"
-              sx={{ overflowWrap: 'anywhere' }}
-              variant="h5"
-            >
-              {customer.name}
-            </Typography>
-            <Box component="dl" sx={{ m: 0 }}>
-              <CustomerDetailField label="ID клієнта" value={customer.counterpartyId} />
-            </Box>
-          </Stack>
-        </CardContent>
-      </Card>
+        <DetailFieldList>
+          <DetailField label="ID клієнта" value={customer.counterpartyId} />
+        </DetailFieldList>
+      </SectionCard>
       <CustomerContactCard email={customer.email} phone={customer.phone} />
       <CustomerPriceTypesCard
         categoryPriceTypes={customer.categoryPriceTypes}
