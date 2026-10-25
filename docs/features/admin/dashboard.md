@@ -3,6 +3,7 @@
 **Status:** the screen is implemented; the statistics shown in the UI are still static rather than backend data.
 
 - **Route:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) connects [dashboardRoutes](../../../libs/admin/dashboard/feature/src/dashboard.routes.tsx) at `/dashboard`.
+- **Design (2026-10-25):** «Огляд» header with «Каталог» and «Нове замовлення», a «Демо-дані» label, statistic cards with tone pills, charts, latest orders and products; cards rise in one after another (off with reduced motion).
 - **Composition:** [DashboardPage](../../../libs/admin/dashboard/feature/src/pages/dashboard-page.tsx) composes cards, recent products and orders, and sales and traffic charts from `dashboard/feature` components.
 - **Data and boundary:** there is currently no separate dashboard `data-access` library. [Admin shell](../../../libs/admin/core/shell/src/index.ts) is responsible for layout and session. Real metrics in the future require a verified API contract first.
 

@@ -1,6 +1,6 @@
-import { Box, Container, Drawer } from '@mui/material';
+import { Box, Container, Drawer, keyframes } from '@mui/material';
 import { Suspense, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { AdminSidebar } from './components/layout/admin-sidebar';
 import { RouteLoadingFallback } from './components/layout/route-loading-fallback';
@@ -10,6 +10,11 @@ import {
 } from './components/navigation/admin-navigation';
 import { useNavigationCollapsed } from './components/navigation/use-navigation-collapsed';
 import { AdminTopBar } from './components/top-bar/admin-top-bar';
+
+const pageEnter = keyframes`
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+`;
 
 interface AdminLayoutProps {
   currentOrderPositionCount?: number;
@@ -23,6 +28,7 @@ const drawerPaperSx = {
 } as const;
 
 export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps) {
+  const { pathname } = useLocation();
   const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
   const { isCollapsed, toggleCollapsed } = useNavigationCollapsed();
   const desktopDrawerWidth = isCollapsed ? adminDrawerCollapsedWidth : adminDrawerWidth;
@@ -85,9 +91,16 @@ export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps)
         />
         <Box component="main">
           <Container maxWidth="xl" sx={{ py: { xs: 3, lg: 5 }, px: { xs: 2, sm: 3, lg: 5 } }}>
-            <Suspense fallback={<RouteLoadingFallback />}>
-              <Outlet />
-            </Suspense>
+            <Box
+              key={pathname}
+              sx={(theme) => ({
+                animation: `${pageEnter} ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeOut} both`,
+              })}
+            >
+              <Suspense fallback={<RouteLoadingFallback />}>
+                <Outlet />
+              </Suspense>
+            </Box>
           </Container>
         </Box>
       </Box>

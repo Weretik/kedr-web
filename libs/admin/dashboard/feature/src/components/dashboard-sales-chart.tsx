@@ -12,12 +12,17 @@ export function DashboardSalesChart() {
   return (
     <Card sx={{ height: '100%' }}>
       <CardHeader
-        action={<Button color="inherit" size="small" startIcon={<RefreshOutlinedIcon />}>Синхронізувати</Button>}
+        action={
+          <Button color="inherit" size="small" startIcon={<RefreshOutlinedIcon />}>
+            Синхронізувати
+          </Button>
+        }
         title="Продажі"
       />
       <CardContent>
         <BarChart
-          colors={[theme.palette.primary.main, alpha(theme.palette.primary.main, 0.25)]}
+          borderRadius={6}
+          colors={[theme.palette.primary.main, alpha(theme.palette.text.secondary, 0.3)]}
           grid={{ horizontal: true }}
           height={350}
           series={[
@@ -29,7 +34,9 @@ export function DashboardSalesChart() {
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: 'flex-end' }}>
-        <Button color="inherit" endIcon={<ArrowForwardOutlinedIcon />} size="small">Огляд</Button>
+        <Button color="inherit" endIcon={<ArrowForwardOutlinedIcon />} size="small">
+          Огляд
+        </Button>
       </CardActions>
     </Card>
   );
