@@ -1,10 +1,15 @@
+import { DetailField, DetailFieldList, SectionCard, StatusPill } from '@admin/shared/ui';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Button, Card, CardContent, Chip, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
+import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 
 import type { ProductDetails } from '@admin/products/model';
 
-const priceFormatter = new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH', maximumFractionDigits: 2 });
+const priceFormatter = new Intl.NumberFormat('uk-UA', {
+  style: 'currency',
+  currency: 'UAH',
+  maximumFractionDigits: 2,
+});
 
 interface ProductInformationCardProps {
   product: ProductDetails;
@@ -13,46 +18,74 @@ interface ProductInformationCardProps {
   onAddProduct?: (productId: number) => void;
 }
 
-export function ProductInformationCard({ product, publicUrl, photoStorageUrl, onAddProduct }: ProductInformationCardProps) {
-  const details = [
-    ['ID', String(product.id)],
-    ['Ціна', product.price === null ? 'Не вказано' : priceFormatter.format(product.price)],
-    ['Залишок', String(product.stock)],
-    ['Категорія', product.categoryName || 'Не вказано'],
-    ['Кількість в упаковці', String(product.quantityInPack)],
-  ];
+export function ProductInformationCard({
+  product,
+  publicUrl,
+  photoStorageUrl,
+  onAddProduct,
+}: ProductInformationCardProps) {
+  const hasStatus = product.inStock || product.isSale || product.isNew || product.exportToSite;
 
   return (
-    <Card sx={{ minWidth: 0 }} variant="outlined">
-      <CardContent>
-        <Stack spacing={2}>
-          <Typography component="h2" sx={{ overflowWrap: 'anywhere' }} variant="h5">{product.nameUk}</Typography>
-          <Typography color="text.secondary" sx={{ overflowWrap: 'anywhere' }}>Російською: {product.nameRu}</Typography>
-          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
-            {product.inStock && <Chip color="success" label="Наявність" size="small" />}
-            {product.isSale && <Chip color="error" label="Акція" size="small" />}
-            {product.isNew && <Chip color="info" label="Новинка" size="small" />}
-            {product.exportToSite && <Chip color="secondary" label="На сайті" size="small" />}
-          </Stack>
-          <TableContainer>
-            <Table aria-label="Основна інформація про товар" size="small">
-              <TableBody>
-                {details.map(([label, value]) => (
-                  <TableRow key={label}>
-                    <TableCell component="th" scope="row" sx={{ color: 'text.secondary', width: { xs: '45%', sm: '35%' } }}>{label}</TableCell>
-                    <TableCell sx={{ overflowWrap: 'anywhere' }}>{value}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Stack direction={{ xs: 'column', lg: 'row' }} spacing={1.5}>
-            {onAddProduct && <Button onClick={() => onAddProduct(product.id)} startIcon={<AddShoppingCartOutlinedIcon />} variant="contained">Додати до замовлення</Button>}
-            {publicUrl && <Button component="a" href={publicUrl} rel="noopener noreferrer" startIcon={<OpenInNewIcon />} target="_blank" variant="contained">Відкрити на сайті</Button>}
-            <Button component="a" href={photoStorageUrl} rel="noopener noreferrer" target="_blank" variant="outlined">Сховище фото</Button>
-          </Stack>
+    <SectionCard as="article" eyebrow="Основна інформація" title={product.nameUk} titleVariant="h5">
+      <Typography color="text.secondary" sx={{ mt: -1, overflowWrap: 'anywhere' }}>
+        Російською: {product.nameRu}
+      </Typography>
+      {hasStatus && (
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
+          {product.inStock && <StatusPill label="Наявність" tone="success" />}
+          {product.isSale && <StatusPill label="Акція" tone="warning" />}
+          {product.isNew && <StatusPill label="Новинка" tone="info" />}
+          {product.exportToSite && <StatusPill label="На сайті" tone="neutral" />}
         </Stack>
-      </CardContent>
-    </Card>
+      )}
+      <Box>
+        <Typography color="text.secondary" component="p" variant="caption">
+          Ціна
+        </Typography>
+        <Typography component="p" sx={{ fontVariantNumeric: 'tabular-nums' }} variant="h4">
+          {product.price === null ? 'Не вказано' : priceFormatter.format(product.price)}
+        </Typography>
+      </Box>
+      <Divider />
+      <DetailFieldList columns={2}>
+        <DetailField label="ID" value={String(product.id)} />
+        <DetailField label="Залишок" value={String(product.stock)} />
+        <DetailField label="Категорія" value={product.categoryName || 'Не вказано'} />
+        <DetailField label="Кількість в упаковці" value={String(product.quantityInPack)} />
+      </DetailFieldList>
+      <Stack direction={{ xs: 'column', lg: 'row' }} spacing={1.5} sx={{ pt: 1 }}>
+        {onAddProduct && (
+          <Button
+            onClick={() => onAddProduct(product.id)}
+            startIcon={<AddShoppingCartOutlinedIcon />}
+            variant="contained"
+          >
+            Додати до замовлення
+          </Button>
+        )}
+        {publicUrl && (
+          <Button
+            component="a"
+            href={publicUrl}
+            rel="noopener noreferrer"
+            startIcon={<OpenInNewIcon />}
+            target="_blank"
+            variant="outlined"
+          >
+            Відкрити на сайті
+          </Button>
+        )}
+        <Button
+          component="a"
+          href={photoStorageUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+          variant="text"
+        >
+          Сховище фото
+        </Button>
+      </Stack>
+    </SectionCard>
   );
 }

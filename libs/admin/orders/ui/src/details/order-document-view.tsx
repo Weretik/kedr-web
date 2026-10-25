@@ -1,8 +1,7 @@
+import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
 import {
   Alert,
   Box,
-  Card,
-  CardContent,
   Divider,
   Stack,
   Table,
@@ -31,6 +30,7 @@ interface Props {
 }
 const money = new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH' });
 const dateFormat = new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium', timeStyle: 'short' });
+const numeric = { fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' } as const;
 
 export function OrderDocumentView({
   customerName,
@@ -58,77 +58,68 @@ export function OrderDocumentView({
           gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
         }}
       >
-        <Card variant="outlined">
-          <CardContent>
-            <Stack spacing={1}>
-              <Typography color="text.secondary" variant="subtitle2">
-                Клієнт
-              </Typography>
-              <Typography variant="h6">{customerName}</Typography>
-              <Typography color="text.secondary">ID: {counterpartyId}</Typography>
-            </Stack>
-          </CardContent>
-        </Card>
-        <Card variant="outlined">
-          <CardContent>
-            <Stack spacing={1}>
-              <Typography color="text.secondary" variant="subtitle2">
-                Документ
-              </Typography>
-              <Typography variant="h6">{reference}</Typography>
-              <Typography color="text.secondary">{dateFormat.format(new Date(date))}</Typography>
-              {status && (
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Typography color="text.secondary" variant="body2">
-                    Стан 1С:
-                  </Typography>
-                  <OrderStatusChip status={status} />
-                </Stack>
-              )}
-              {note && <Typography sx={{ overflowWrap: 'anywhere' }}>Примітка: {note}</Typography>}
-            </Stack>
-          </CardContent>
-        </Card>
+        <SectionCard eyebrow="Клієнт" title={customerName}>
+          <DetailFieldList>
+            <DetailField label="ID клієнта" value={counterpartyId} />
+          </DetailFieldList>
+        </SectionCard>
+        <SectionCard eyebrow="Документ" title={reference}>
+          <DetailFieldList columns={2}>
+            <DetailField label="Дата" value={dateFormat.format(new Date(date))} />
+            {status && <DetailField label="Стан 1С" value={<OrderStatusChip status={status} />} />}
+            {note && (
+              <Box sx={{ gridColumn: '1 / -1' }}>
+                <DetailField label="Примітка" value={note} />
+              </Box>
+            )}
+          </DetailFieldList>
+        </SectionCard>
       </Box>
-      <Card variant="outlined">
-        <CardContent>
-          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-            Товари
-          </Typography>
-          <TableContainer>
-            <Table size="small" sx={{ minWidth: 500 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Товар</TableCell>
-                  <TableCell align="right">Кількість</TableCell>
-                  <TableCell align="right">Ціна</TableCell>
-                  <TableCell align="right">Сума</TableCell>
+      <SectionCard title="Товари">
+        <TableContainer>
+          <Table size="small" sx={{ minWidth: 500 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Товар</TableCell>
+                <TableCell align="right">Кількість</TableCell>
+                <TableCell align="right">Ціна</TableCell>
+                <TableCell align="right">Сума</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {lines.map((line) => (
+                <TableRow key={line.productId}>
+                  <TableCell sx={{ fontWeight: 600 }}>
+                    {line.productName ?? `ID ${line.productId}`}
+                  </TableCell>
+                  <TableCell align="right" sx={numeric}>
+                    {line.quantity}
+                  </TableCell>
+                  <TableCell align="right" sx={numeric}>
+                    {line.unitPrice === null ? '—' : money.format(line.unitPrice)}
+                  </TableCell>
+                  <TableCell align="right" sx={numeric}>
+                    {line.lineAmount === null ? '—' : money.format(line.lineAmount)}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {lines.map((line) => (
-                  <TableRow key={line.productId}>
-                    <TableCell>{line.productName ?? `ID ${line.productId}`}</TableCell>
-                    <TableCell align="right">{line.quantity}</TableCell>
-                    <TableCell align="right">
-                      {line.unitPrice === null ? '—' : money.format(line.unitPrice)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {line.lineAmount === null ? '—' : money.format(line.lineAmount)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Divider sx={{ my: 2 }} />
-          <Stack sx={{ alignItems: 'flex-end' }}>
-            <Typography variant="h6">
-              Разом: {totalAmount === null ? 'Недоступно' : money.format(totalAmount)}
-            </Typography>
-          </Stack>
-        </CardContent>
-      </Card>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Divider />
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ alignItems: 'baseline', justifyContent: 'flex-end' }}
+        >
+          <Typography color="text.secondary" variant="subtitle2">
+            Разом
+          </Typography>
+          <Typography component="p" sx={numeric} variant="h5">
+            {totalAmount === null ? 'Недоступно' : money.format(totalAmount)}
+          </Typography>
+        </Stack>
+      </SectionCard>
     </Stack>
   );
 }

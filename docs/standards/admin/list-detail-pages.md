@@ -11,7 +11,8 @@
 
 ## Details
 
-- Above the content, place a text MUI Link with a back arrow to the list, followed by a neutral `h1` such as «Деталі товару» / «Деталі клієнта». Preserve list state in the URL when the feature supports it.
+- Above the content, use `AdminDetailHeader` from `@admin/shared/ui`: a text link with a back arrow to the list, a neutral `h1` such as «Деталі товару» / «Деталі клієнта», and the page actions. Preserve list state in the URL when the feature supports it.
+- Build blocks with `SectionCard` (a labelled `section`, or an `article` for the main entity) and `DetailField`/`DetailFieldList` for label and value pairs; show loading with `PageLoader` and a load error as an `Alert` with «Повторити».
 - Show the entity name once in the main information block and its ID below. Group data by meaning: use compact cards with labels and values, or tables when tabular comparison helps. Standalone media or other large areas may have their own Card. Do not repeat the name in the page heading.
 - On a wide screen, product details follow this order: **photo → main information → diagram** (only when available). On phones, stack blocks in one column; on tablets, use two columns at the theme breakpoints. Customer details use the same heading, back link, Card, spacing, and typography, with three cards: main information across the full width, then contacts and price types in one row from the `md` breakpoint. Keep both rows and the cards in the lower row equal in height. Below `md`, stack the cards in one column with content-based height.
 - Use colors, surfaces, text, and focus from the current Admin theme in both light and dark modes. Use `sx` for one-off layouts and a separate component in the relevant `ui` or shared layer for repeated behavior, following dependency rules. Do not copy business fields between domains.

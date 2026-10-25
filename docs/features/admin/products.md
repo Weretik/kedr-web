@@ -35,5 +35,5 @@ libs/admin/products/
 ├── model/src/                                   # product types and parameters
 └── ui/src/                                      # table and detail blocks without HTTP
 
-libs/admin/shared/ui/src/                        # status pill, grid overlay, page header
+libs/admin/shared/ui/src/                        # status pill, grid overlay, page and detail headers, cards
 ```

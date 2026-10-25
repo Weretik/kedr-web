@@ -22,6 +22,20 @@ export const adminComponents = {
       },
     },
   },
+  MuiAlert: {
+    styleOverrides: {
+      root: { alignItems: 'center', borderRadius: 12, fontWeight: 500 },
+      action: { paddingTop: 0 },
+    },
+    variants: (['success', 'info', 'warning', 'error'] as const).map((severity) => ({
+      props: { severity, variant: 'standard' as const },
+      style: ({ theme }: { theme: Theme }) => ({
+        backgroundColor: (theme.vars ?? theme).palette[severity].light,
+        color: (theme.vars ?? theme).palette.text.primary,
+        '& .MuiAlert-icon': { color: (theme.vars ?? theme).palette[severity].main },
+      }),
+    })),
+  },
   MuiAvatar: {
     styleOverrides: { root: { fontSize: '0.8125rem', fontWeight: 800, letterSpacing: 0 } },
   },
@@ -128,6 +142,15 @@ export const adminComponents = {
   },
   MuiDialog: {
     styleOverrides: { paper: { borderRadius: 20 } },
+  },
+  MuiDialogActions: {
+    styleOverrides: { root: { padding: '16px 24px 24px' } },
+  },
+  MuiDialogContent: {
+    styleOverrides: { root: { padding: '8px 24px' } },
+  },
+  MuiDialogTitle: {
+    styleOverrides: { root: { fontSize: '1.25rem', fontWeight: 800, padding: '24px 24px 8px' } },
   },
   MuiDrawer: {
     styleOverrides: {
