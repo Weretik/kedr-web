@@ -1,17 +1,31 @@
-import { Box, Container, Divider, Drawer } from '@mui/material';
+import { Box, Container, Drawer } from '@mui/material';
 import { Suspense, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { AdminSidebar } from './components/layout/admin-sidebar';
 import { RouteLoadingFallback } from './components/layout/route-loading-fallback';
-import { AdminNavigation, adminDrawerWidth } from './components/navigation/admin-navigation';
+import {
+  adminDrawerCollapsedWidth,
+  adminDrawerWidth,
+} from './components/navigation/admin-navigation';
+import { useNavigationCollapsed } from './components/navigation/use-navigation-collapsed';
 import { AdminTopBar } from './components/top-bar/admin-top-bar';
 
 interface AdminLayoutProps {
   currentOrderPositionCount?: number;
 }
 
+const drawerPaperSx = {
+  bgcolor: 'background.paper',
+  borderRight: 1,
+  borderColor: 'divider',
+  boxSizing: 'border-box',
+} as const;
+
 export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps) {
   const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
+  const { isCollapsed, toggleCollapsed } = useNavigationCollapsed();
+  const desktopDrawerWidth = isCollapsed ? adminDrawerCollapsedWidth : adminDrawerWidth;
 
   const closeMobileNavigation = () => {
     setIsMobileNavigationOpen(false);
@@ -22,70 +36,55 @@ export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps)
       <Drawer
         slotProps={{
           paper: {
-            sx: {
-              bgcolor: 'secondary.main',
-              boxSizing: 'border-box',
-              color: 'secondary.contrastText',
-              width: adminDrawerWidth,
-            },
+            sx: (theme) => ({
+              ...drawerPaperSx,
+              overflowX: 'hidden',
+              transition: theme.transitions.create('width', {
+                duration: theme.transitions.duration.complex,
+              }),
+              width: desktopDrawerWidth,
+            }),
           },
         }}
-        sx={{ display: { xs: 'none', lg: 'block' }, width: adminDrawerWidth }}
+        sx={{ display: { xs: 'none', lg: 'block' } }}
         variant="permanent"
       >
-        <Box sx={{ alignItems: 'center', display: 'flex', height: 112, px: 3 }}>
-          <Box
-            alt="Логотип Class Kedr"
-            component="img"
-            src="/assets/logo/main-logo.svg"
-            sx={{
-              maxHeight: 92,
-              objectFit: 'contain',
-              width: 180,
-            }}
-          />
-        </Box>
-        <Divider sx={{ borderColor: 'secondary.light', mx: 3, opacity: 0.6 }} />
-        <AdminNavigation />
+        <AdminSidebar
+          currentOrderPositionCount={currentOrderPositionCount}
+          isCollapsed={isCollapsed}
+          onToggleCollapsed={toggleCollapsed}
+        />
       </Drawer>
 
       <Drawer
         ModalProps={{ keepMounted: true }}
         onClose={closeMobileNavigation}
         open={isMobileNavigationOpen}
-        slotProps={{
-          paper: {
-            sx: {
-              bgcolor: 'secondary.main',
-              boxSizing: 'border-box',
-              color: 'secondary.contrastText',
-              width: adminDrawerWidth,
-            },
-          },
-        }}
+        slotProps={{ paper: { sx: { ...drawerPaperSx, width: adminDrawerWidth } } }}
         sx={{ display: { lg: 'none' } }}
         variant="temporary"
       >
-        <Box sx={{ alignItems: 'center', display: 'flex', height: 112, px: 3 }}>
-          <Box
-            alt="Логотип Class Kedr"
-            component="img"
-            src="/assets/logo/main-logo.svg"
-            sx={{
-              maxHeight: 92,
-              objectFit: 'contain',
-              width: 180,
-            }}
-          />
-        </Box>
-        <Divider sx={{ borderColor: 'secondary.light', mx: 3, opacity: 0.6 }} />
-        <AdminNavigation onNavigate={closeMobileNavigation} />
+        <AdminSidebar
+          currentOrderPositionCount={currentOrderPositionCount}
+          onNavigate={closeMobileNavigation}
+        />
       </Drawer>
 
-      <Box sx={{ marginLeft: { lg: `${adminDrawerWidth}px` }, minWidth: 0 }}>
-        <AdminTopBar currentOrderPositionCount={currentOrderPositionCount} onOpenNavigation={() => setIsMobileNavigationOpen(true)} />
+      <Box
+        sx={(theme) => ({
+          marginLeft: { lg: `${desktopDrawerWidth}px` },
+          minWidth: 0,
+          transition: theme.transitions.create('margin-left', {
+            duration: theme.transitions.duration.complex,
+          }),
+        })}
+      >
+        <AdminTopBar
+          currentOrderPositionCount={currentOrderPositionCount}
+          onOpenNavigation={() => setIsMobileNavigationOpen(true)}
+        />
         <Box component="main">
-          <Container maxWidth="xl" sx={{ py: { xs: 4, lg: 8 } }}>
+          <Container maxWidth="xl" sx={{ py: { xs: 3, lg: 5 }, px: { xs: 2, sm: 3, lg: 5 } }}>
             <Suspense fallback={<RouteLoadingFallback />}>
               <Outlet />
             </Suspense>
