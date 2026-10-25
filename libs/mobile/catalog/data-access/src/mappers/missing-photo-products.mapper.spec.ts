@@ -5,6 +5,7 @@ const response = {
   value: [
     {
       categoryId: null,
+      categoryName: '',
       exportToSite: true,
       id: 12,
       inStock: true,

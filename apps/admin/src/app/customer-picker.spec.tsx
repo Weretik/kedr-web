@@ -43,12 +43,15 @@ describe('CustomerPicker', () => {
       data: undefined,
       isFetching: false,
       isError: false,
-    } as ReturnType<typeof useGetCustomerByIdQuery>);
-    vi.mocked(useGetCustomersPageQuery).mockImplementation(({ page }) => ({
-      data: page === 1 ? firstPage : secondPage,
-      isFetching: false,
-      isError: false,
-    } as ReturnType<typeof useGetCustomersPageQuery>));
+    } as unknown as ReturnType<typeof useGetCustomerByIdQuery>);
+    vi.mocked(useGetCustomersPageQuery).mockImplementation(
+      (args) =>
+        ({
+          data: typeof args === 'object' && args.page === 1 ? firstPage : secondPage,
+          isFetching: false,
+          isError: false,
+        }) as unknown as ReturnType<typeof useGetCustomersPageQuery>,
+    );
   });
 
   afterEach(() => {
@@ -83,12 +86,12 @@ describe('CustomerPicker', () => {
       data: selectedCustomer,
       isFetching: false,
       isError: false,
-    } as ReturnType<typeof useGetCustomerByIdQuery>);
+    } as unknown as ReturnType<typeof useGetCustomerByIdQuery>);
     vi.mocked(useGetCustomersPageQuery).mockReturnValue({
       data: emptyPage,
       isFetching: false,
       isError: true,
-    } as ReturnType<typeof useGetCustomersPageQuery>);
+    } as unknown as ReturnType<typeof useGetCustomersPageQuery>);
 
     render(<CustomerPicker value="C99" label="Клієнт" onChange={vi.fn()} />);
     expect(screen.getByRole('combobox', { name: 'Клієнт' })).toHaveValue('Вибраний клієнт');

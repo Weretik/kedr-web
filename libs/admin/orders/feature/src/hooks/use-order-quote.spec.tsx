@@ -9,13 +9,21 @@ describe('useOrderQuote', () => {
   it('shows the server stock error for the current customer and lines', async () => {
     const message = 'Недостатньо товару «Двері» на складі: доступно 1, потрібно 2.';
     const lines = [{ productId: '6', quantity: 2 }];
-    const trigger = vi.fn(() => ({ unwrap: () => Promise.reject({ reason: 'unavailable_product', message }) }));
-    vi.mocked(useQuoteWorkspaceOrderMutation).mockReturnValue([trigger, {}] as ReturnType<typeof useQuoteWorkspaceOrderMutation>);
+    const trigger = vi.fn(() => ({
+      unwrap: () => Promise.reject({ reason: 'unavailable_product', message }),
+    }));
+    vi.mocked(useQuoteWorkspaceOrderMutation).mockReturnValue([
+      trigger,
+      {},
+    ] as unknown as ReturnType<typeof useQuoteWorkspaceOrderMutation>);
 
     const { result } = renderHook(() => useOrderQuote('customer', lines));
 
     await waitFor(() => expect(result.current.error).toBe(true));
     expect(result.current.errorMessage).toBe(message);
-    expect(trigger).toHaveBeenCalledWith({ counterpartyId: 'customer', lines: [{ productId: '6', quantity: 2 }] });
+    expect(trigger).toHaveBeenCalledWith({
+      counterpartyId: 'customer',
+      lines: [{ productId: '6', quantity: 2 }],
+    });
   });
 });

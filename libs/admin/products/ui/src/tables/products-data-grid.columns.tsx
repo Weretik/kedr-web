@@ -1,10 +1,10 @@
+import { getGridNumericOperators } from '@mui/x-data-grid';
+
 import { ProductsDataGridBooleanCell } from './cells/products-data-grid-boolean-cell';
 import { ProductsDataGridNameCell } from './cells/products-data-grid-name-cell';
 import { ProductsDataGridPhotoCell } from './cells/products-data-grid-photo-cell';
 
 import type { AdminProductListItem } from '@admin/products/model';
-import { getGridNumericOperators } from '@mui/x-data-grid';
-
 import type { GridColDef } from '@mui/x-data-grid';
 
 const priceFormatter = new Intl.NumberFormat('uk-UA', {
@@ -46,7 +46,9 @@ export const productsDataGridColumns: readonly GridColDef<AdminProductListItem>[
     headerAlign: 'right',
     headerName: 'Ціна',
     valueFormatter: (value) => (value == null ? '—' : priceFormatter.format(value)),
-    filterOperators: getGridNumericOperators().filter((operator) => operator.value === '>=' || operator.value === '<=' || operator.value === '='),
+    filterOperators: getGridNumericOperators().filter(
+      (operator) => operator.value === '>=' || operator.value === '<=' || operator.value === '=',
+    ),
     width: 116,
   },
   {
