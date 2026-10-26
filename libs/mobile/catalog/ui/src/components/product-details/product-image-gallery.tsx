@@ -48,7 +48,12 @@ export function ProductImageGallery({
           { backgroundColor: kedr.colors.primary, borderRadius: kedr.radius.xl },
         ]}
       >
-        <View style={[styles.frame, { borderRadius: kedr.radius.lg, width }]}>
+        <View
+          style={[
+            styles.frame,
+            { backgroundColor: kedr.colors.photoFrame, borderRadius: kedr.radius.lg, width },
+          ]}
+        >
           <ProductImage
             onError={() => rejectUrl(availableUrls[0])}
             productName={productName}
@@ -82,7 +87,10 @@ export function ProductImageGallery({
             url={item}
           />
         )}
-        style={[styles.frame, { borderRadius: kedr.radius.lg, width }]}
+        style={[
+          styles.frame,
+          { backgroundColor: kedr.colors.photoFrame, borderRadius: kedr.radius.lg, width },
+        ]}
         testID="product-image-carousel"
       />
       <Pagination
@@ -111,7 +119,6 @@ const styles = StyleSheet.create({
   // Product photos are shot on white, so the photo frame stays white in both schemes.
   frame: {
     alignSelf: 'center',
-    backgroundColor: '#FFFFFF',
     height: 260,
     overflow: 'hidden',
   },

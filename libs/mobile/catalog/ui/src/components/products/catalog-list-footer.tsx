@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 
 export interface CatalogListFooterProps {
   isLoading?: boolean;
@@ -12,7 +13,7 @@ export function CatalogListFooter({
   kind,
   onPress,
 }: Readonly<CatalogListFooterProps>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const isRetry = kind === 'retry';
   const label = isRetry ? 'Не вдалося завантажити наступну сторінку.' : 'Завантажити ще';
 

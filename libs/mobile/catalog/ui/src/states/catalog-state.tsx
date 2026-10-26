@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 export type CatalogStateKind = 'empty' | 'error' | 'loading' | 'offline';
 
@@ -37,7 +38,7 @@ export function CatalogState({
   onAction,
   onRetry,
 }: Readonly<CatalogStateProps>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const { description, title } = stateContent[kind];
 
   return (

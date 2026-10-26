@@ -30,7 +30,10 @@ export function CartLineCard({
       style={[styles.card, { backgroundColor: kedr.colors.surface, borderRadius: kedr.radius.lg }]}
     >
       <View
-        style={[styles.imageFrame, { borderRadius: kedr.radius.md }]}
+        style={[
+          styles.imageFrame,
+          { backgroundColor: kedr.colors.photoFrame, borderRadius: kedr.radius.md },
+        ]}
         testID={`cart-item-image-frame-${line.id}`}
       >
         {line.imageUrl ? (
@@ -108,6 +111,6 @@ const styles = StyleSheet.create({
   image: { height: '100%', width: '100%' },
   imageFallback: { alignItems: 'center', justifyContent: 'center' },
   // Product photos are shot on white, so the frame stays white in both schemes.
-  imageFrame: { backgroundColor: '#ffffff', height: 72, overflow: 'hidden', width: 72 },
+  imageFrame: { height: 72, overflow: 'hidden', width: 72 },
   remove: { alignItems: 'center', height: 32, justifyContent: 'center', width: 32 },
 });

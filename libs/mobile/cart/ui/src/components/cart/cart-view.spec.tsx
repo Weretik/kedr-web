@@ -97,7 +97,7 @@ describe('CartView', () => {
     );
 
     expect(view.getByTestId('cart-item-image-frame-product-1')).toHaveStyle({
-      backgroundColor: '#ffffff',
+      backgroundColor: '#FFFFFF',
       height: 72,
       width: 72,
     });

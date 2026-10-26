@@ -1,3 +1,4 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -7,7 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { IconButton, Text, TextInput, useTheme } from 'react-native-paper';
+import { IconButton, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface CatalogSearchSheetProps {
@@ -33,7 +34,7 @@ export function CatalogSearchSheet({
   value,
   visible,
 }: Readonly<CatalogSearchSheetProps>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const right = (
     <View style={styles.trailingActions}>
       {value ? (
@@ -133,7 +134,7 @@ function HistoryRow({
   onSelect,
   phrase,
 }: Readonly<{ onRemove: () => void; onSelect: () => void; phrase: string }>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   return (
     <View style={styles.historyRow}>
       <Pressable

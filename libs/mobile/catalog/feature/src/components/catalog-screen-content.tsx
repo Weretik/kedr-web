@@ -1,8 +1,9 @@
 import { HeroHeader, SearchField, useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
 
-import { CatalogQueryControls, countActiveFilters } from './catalog-query-controls';
+import { CatalogQueryControls } from './catalog-query-controls';
 import { CatalogResults } from './catalog-results';
+import { countActiveFilters } from '../state/catalog-query-selectors';
 
 import type { useCatalogController } from '../hooks/use-catalog-controller';
 import type { CatalogProduct } from '@mobile/catalog/model';

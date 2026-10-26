@@ -20,6 +20,8 @@ export interface KedrColors {
   onSurfaceVariant: string;
   outline: string;
   outlineVariant: string;
+  /** Always white: product photos are shot on white, so their frame stays white in dark mode too. */
+  photoFrame: string;
   primary: string;
   primaryContainer: string;
   status: Readonly<Record<KedrStatusKind, KedrStatusColors>>;
@@ -40,6 +42,7 @@ export const kedrLightColors: KedrColors = {
   onSurfaceVariant: '#5D665A',
   outline: '#C9CFC4',
   outlineVariant: '#E6E9E1',
+  photoFrame: '#FFFFFF',
   primary: kedrBrand.green,
   primaryContainer: '#E3F3E0',
   status: {
@@ -65,6 +68,7 @@ export const kedrDarkColors: KedrColors = {
   onSurfaceVariant: '#9DA899',
   outline: '#3A4138',
   outlineVariant: '#272C26',
+  photoFrame: '#FFFFFF',
   primary: kedrBrand.green,
   primaryContainer: '#1C3A1A',
   status: {

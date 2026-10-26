@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 export type MissingPhotoProductsStateKind = 'empty' | 'error' | 'loading';
 
@@ -27,7 +28,7 @@ export function MissingPhotoProductsState({
   kind,
   onRetry,
 }: Readonly<MissingPhotoProductsStateProps>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const state = content[kind];
 
   return (

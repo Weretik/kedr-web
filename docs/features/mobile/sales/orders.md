@@ -39,5 +39,10 @@ libs/mobile/orders/
 │   │   ├── use-order-customer-filter.ts  # screen state and actions
 │   │   └── use-order-history-controller.ts  # screen state and actions
 │   └── screens/order-history-screen.tsx  # feature screen
-└── model/src/index.ts  # library public API
+├── model/src/index.ts  # library public API
+└── ui/src/
+    ├── components/history/  # order rows, bento summary, list, footer
+    ├── components/detail/  # detail view, summary, products, metadata
+    ├── components/status/  # status pill and icon
+    └── states/  # loading, empty, error
 ```

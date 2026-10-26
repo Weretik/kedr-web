@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
-import { Button, IconButton, Text, useTheme } from 'react-native-paper';
+import { Button, IconButton, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CatalogCategorySelector } from './catalog-category-selector';
@@ -27,7 +28,7 @@ export function CatalogCategorySheet({
   selectedCategoryId?: number;
   visible: boolean;
 }>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
 
   return (
     <Modal animationType="slide" onRequestClose={onDismiss} visible={visible}>

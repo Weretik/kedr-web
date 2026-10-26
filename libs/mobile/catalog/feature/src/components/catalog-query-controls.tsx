@@ -7,16 +7,15 @@ import {
   CatalogSortMenu,
 } from '@mobile/catalog/ui';
 
+import {
+  countActiveFilters,
+  selectedCatalogCategory,
+  sortChipLabel,
+} from '../state/catalog-query-selectors';
+
 import type { useCatalogController } from '../hooks/use-catalog-controller';
-import type {
-  CatalogCategoryOption,
-  CatalogFilterSelection,
-  CatalogSort,
-} from '@mobile/catalog/model';
 
 type CatalogController = ReturnType<typeof useCatalogController>;
-type CategoryPathItem = { id: number; label: string };
-type SelectedCategory = { label: string; path: readonly CategoryPathItem[] };
 
 export function CatalogQueryControls({
   applySearch,
@@ -48,14 +47,14 @@ export function CatalogQueryControls({
     isLoading: isCategoriesLoading,
   } = categoriesQueryResult;
 
-  const selectedCategory = findCategory(categories, state.query.filters.categoryId);
+  const selectedCategory = selectedCatalogCategory(categories, state.query.filters.categoryId);
 
   return (
     <>
       <CatalogQueryActionRow
         activeFilterCount={countActiveFilters(state.query.filters)}
         categoryLabel={selectedCategory?.label}
-        sortLabel={state.query.sort === 'IdAsc' ? undefined : sortLabels[state.query.sort]}
+        sortLabel={sortChipLabel(state.query.sort)}
         onOpenCategories={() => dispatch({ type: 'categoryOpened' })}
         onOpenFilters={() => dispatch({ type: 'filtersOpened' })}
         onOpenSort={() => dispatch({ type: 'sortOpened' })}
@@ -109,36 +108,4 @@ export function CatalogQueryControls({
       />
     </>
   );
-}
-
-function findCategory(
-  categories: readonly CatalogCategoryOption[],
-  categoryId: number | undefined,
-  path: readonly CategoryPathItem[] = [],
-): SelectedCategory | undefined {
-  if (categoryId === undefined) return undefined;
-
-  for (const category of categories) {
-    const categoryPath = [...path, { id: category.id, label: category.label }];
-    if (category.id === categoryId) return { label: category.label, path: categoryPath };
-    const child = findCategory(category.children, categoryId, categoryPath);
-    if (child !== undefined) return child;
-  }
-
-  return undefined;
-}
-
-const sortLabels: Record<CatalogSort, string> = {
-  IdAsc: 'ID ↑',
-  IdDesc: 'ID ↓',
-  NameAsc: 'Назва А–Я',
-  NameDesc: 'Назва Я–А',
-  PriceAsc: 'Ціна ↑',
-  PriceDesc: 'Ціна ↓',
-};
-
-/** Filters shown behind the "Фільтри" entry (category has its own entry). */
-export function countActiveFilters(filters: CatalogFilterSelection): number {
-  const priceRange = filters.priceFrom !== undefined || filters.priceTo !== undefined;
-  return [filters.inStock, filters.isNew, filters.isSale, priceRange].filter(Boolean).length;
 }

@@ -1,6 +1,7 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Button, Divider, RadioButton, Text, useTheme } from 'react-native-paper';
+import { Button, Divider, RadioButton, Text } from 'react-native-paper';
 
 import { CatalogActionSheet } from './catalog-action-sheet';
 
@@ -27,7 +28,7 @@ export function CatalogSortMenu({
   visible: boolean;
 }>) {
   const [draftSort, setDraftSort] = useState<CatalogSort>(sort);
-  const theme = useTheme();
+  const theme = useKedrTheme();
 
   useEffect(() => {
     if (visible) setDraftSort(sort);

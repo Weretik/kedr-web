@@ -43,7 +43,12 @@ export function ProductCard({ onPress, product }: Readonly<ProductCardProps>) {
         ]}
       >
         {product.imageUrl ? (
-          <View style={[styles.frame, { borderRadius: kedr.radius.sm }]}>
+          <View
+            style={[
+              styles.frame,
+              { backgroundColor: kedr.colors.photoFrame, borderRadius: kedr.radius.sm },
+            ]}
+          >
             <Image
               accessibilityLabel={`Фото товару ${product.name}`}
               resizeMode="contain"
@@ -85,7 +90,7 @@ export function ProductCard({ onPress, product }: Readonly<ProductCardProps>) {
 
 const styles = StyleSheet.create({
   fallback: { alignItems: 'center', flex: 1, justifyContent: 'center' },
-  frame: { backgroundColor: '#FFFFFF', flex: 1, margin: 8, overflow: 'hidden' },
+  frame: { flex: 1, margin: 8, overflow: 'hidden' },
   id: { marginTop: 2 },
   image: { height: '100%', width: '100%' },
   name: { minHeight: 34 },

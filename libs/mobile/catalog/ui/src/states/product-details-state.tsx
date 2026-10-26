@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Button, Text } from 'react-native-paper';
 
 export type ProductDetailsStateKind = 'invalid' | 'loading' | 'not_found' | 'offline' | 'error';
 
@@ -17,7 +18,7 @@ export function ProductDetailsState({
   kind,
   onRetry,
 }: Readonly<{ kind: ProductDetailsStateKind; onRetry?: () => void }>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
 
   if (kind === 'loading') {
     return (

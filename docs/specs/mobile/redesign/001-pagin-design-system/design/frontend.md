@@ -28,20 +28,20 @@ Found by reading the code; not checked on a device.
 
 ## File map
 
-| Path                                                                  | Role                                       | Stage |
-| --------------------------------------------------------------------- | ------------------------------------------ | ----- |
-| `libs/mobile/shared/ui/src/theme/palette.ts`                          | Brand constants and color roles            | 1     |
-| `libs/mobile/shared/ui/src/theme/typography.ts`                       | Font families, Paper `fonts` config        | 1     |
-| `libs/mobile/shared/ui/src/theme/shape.ts`                            | Radii, spacing, touch targets              | 1     |
-| `libs/mobile/shared/ui/src/theme/motion.ts`                           | Durations, springs, press scale            | 1     |
-| `libs/mobile/shared/ui/src/theme/kedr-theme.ts`                       | `kedr` tokens type and `useKedrTheme` hook | 1     |
-| `libs/mobile/core/shell/src/theme/app-theme.ts`                       | Paper theme assembly with `kedr` tokens    | 1     |
-| `apps/mobile/src/app/_layout.tsx`                                     | Font loading behind the splash screen      | 1     |
-| `libs/mobile/shared/ui/src/*`                                         | Shared components listed in the standard   | 1     |
-| `libs/mobile/core/shell/src/components/navigation/pill-tab-bar.tsx`   | Floating pill tab bar                      | 2     |
-| `apps/mobile/src/app/(tabs)/_layout.tsx`                              | Uses `PillTabBar` and new headers          | 2     |
-| `libs/mobile/catalog/ui/src/components/*`                             | Category rail, tiles, chips, sheets        | 3–4   |
-| `libs/mobile/cart/ui/src/lib/*`, `libs/mobile/customers/ui/src/lib/*` | Total card, lines, sheets                  | 5     |
-| `libs/mobile/orders/ui/src/components/*`                              | Bento summary, order rows, detail          | 6     |
+| Path                                                                             | Role                                       | Stage |
+| -------------------------------------------------------------------------------- | ------------------------------------------ | ----- |
+| `libs/mobile/shared/ui/src/theme/palette.ts`                                     | Brand constants and color roles            | 1     |
+| `libs/mobile/shared/ui/src/theme/typography.ts`                                  | Font families, Paper `fonts` config        | 1     |
+| `libs/mobile/shared/ui/src/theme/shape.ts`                                       | Radii, spacing, touch targets              | 1     |
+| `libs/mobile/shared/ui/src/theme/motion.ts`                                      | Durations, springs, press scale            | 1     |
+| `libs/mobile/shared/ui/src/theme/kedr-theme.ts`                                  | `kedr` tokens type and `useKedrTheme` hook | 1     |
+| `libs/mobile/core/shell/src/theme/app-theme.ts`                                  | Paper theme assembly with `kedr` tokens    | 1     |
+| `apps/mobile/src/app/_layout.tsx`                                                | Font loading behind the splash screen      | 1     |
+| `libs/mobile/shared/ui/src/*`                                                    | Shared components listed in the standard   | 1     |
+| `libs/mobile/core/shell/src/components/navigation/pill-tab-bar/pill-tab-bar.tsx` | Floating pill tab bar                      | 2     |
+| `apps/mobile/src/app/(tabs)/_layout.tsx`                                         | Uses `PillTabBar` and new headers          | 2     |
+| `libs/mobile/catalog/ui/src/components/*`                                        | Category rail, tiles, chips, sheets        | 3–4   |
+| `libs/mobile/cart/ui/src/lib/*`, `libs/mobile/customers/ui/src/lib/*`            | Total card, lines, sheets                  | 5     |
+| `libs/mobile/orders/ui/src/components/*`                                         | Bento summary, order rows, detail          | 6     |
 
 The map was checked against the code after stage 6.

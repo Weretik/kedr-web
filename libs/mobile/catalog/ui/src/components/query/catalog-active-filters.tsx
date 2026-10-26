@@ -1,12 +1,14 @@
 import { FilterChip } from '@mobile/shared/ui';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
+import {
+  CatalogCategoryBreadcrumbs,
+  type CatalogCategoryFilter,
+} from '../category/catalog-category-breadcrumbs';
 
 import type { CatalogFilterSelection, CatalogSort } from '@mobile/catalog/model';
 
 type ActiveChip = { label: string; onClose: () => void };
-type CategoryPathItem = { id: number; label: string };
-type CategoryFilter = { label: string; path: readonly CategoryPathItem[] };
 
 export function CatalogActiveFilters({
   category,
@@ -20,7 +22,7 @@ export function CatalogActiveFilters({
   search,
   sort,
 }: Readonly<{
-  category?: CategoryFilter;
+  category?: CatalogCategoryFilter;
   categoryLabel?: string;
   filters: CatalogFilterSelection;
   onSelectCategory: (categoryId?: number) => void;
@@ -56,7 +58,10 @@ export function CatalogActiveFilters({
   return (
     <View>
       {selectedCategory ? (
-        <CategoryBreadcrumbs category={selectedCategory} onSelectCategory={onSelectCategory} />
+        <CatalogCategoryBreadcrumbs
+          category={selectedCategory}
+          onSelectCategory={onSelectCategory}
+        />
       ) : null}
       {activeChips.length ? (
         <ScrollView
@@ -84,61 +89,6 @@ export function CatalogActiveFilters({
   );
 }
 
-function CategoryBreadcrumbs({
-  category,
-  onSelectCategory,
-}: Readonly<{ category: CategoryFilter; onSelectCategory: (categoryId?: number) => void }>) {
-  const theme = useTheme();
-
-  return (
-    <ScrollView
-      accessibilityLabel="Шлях вибраної категорії"
-      contentContainerStyle={styles.breadcrumbs}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-    >
-      <BreadcrumbItem active={false} label="Всі" onPress={() => onSelectCategory(undefined)} />
-      {category.path.map((item, index) => (
-        <View key={item.id} style={styles.breadcrumbPart}>
-          <Text style={{ color: theme.colors.onSurfaceVariant }} variant="bodyMedium">
-            →
-          </Text>
-          <BreadcrumbItem
-            active={index === category.path.length - 1}
-            label={item.label}
-            onPress={() => onSelectCategory(item.id)}
-          />
-        </View>
-      ))}
-    </ScrollView>
-  );
-}
-
-function BreadcrumbItem({
-  active,
-  label,
-  onPress,
-}: Readonly<{ active: boolean; label: string; onPress: () => void }>) {
-  const theme = useTheme();
-  return (
-    <Pressable
-      accessibilityLabel={`Вибрати категорію ${label}`}
-      accessibilityRole="button"
-      onPress={onPress}
-      style={
-        active ? [styles.activeBreadcrumb, { borderBottomColor: theme.colors.primary }] : undefined
-      }
-    >
-      <Text
-        style={{ color: active ? theme.colors.primary : theme.colors.onSurface }}
-        variant="labelLarge"
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
 function sortLabel(sort: CatalogSort) {
   const labels: Record<CatalogSort, string> = {
     IdAsc: 'ID — за зростанням',
@@ -152,9 +102,6 @@ function sortLabel(sort: CatalogSort) {
 }
 
 const styles = StyleSheet.create({
-  activeBreadcrumb: { borderBottomWidth: 2 },
-  breadcrumbPart: { alignItems: 'center', flexDirection: 'row', gap: 6 },
-  breadcrumbs: { alignItems: 'center', gap: 6, paddingHorizontal: 16, paddingTop: 8 },
   scroll: { flexGrow: 0, flexShrink: 0 },
   strip: { alignItems: 'center', gap: 8, paddingBottom: 8, paddingHorizontal: 16 },
 });
