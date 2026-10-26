@@ -9,7 +9,7 @@ export const environment = {
   },
 
   api: {
-    baseUrl: 'https://api-449981321140.europe-central2.run.app',
+    baseUrl: 'https://api.classkedr.com.ua',
     timeoutMs: 15000,
   },
 
