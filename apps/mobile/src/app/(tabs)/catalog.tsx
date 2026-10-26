@@ -1,8 +1,7 @@
 import { CatalogScreen } from '@mobile/catalog/feature';
-import { ThemePreferenceHeaderControl } from '@mobile/core/shell';
+import { RoundIconButton } from '@mobile/shared/ui';
 import { router, Tabs } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Appbar } from 'react-native-paper';
 
 export default function CatalogRoute() {
   const [openSearch, setOpenSearch] = useState<(() => void) | undefined>();
@@ -14,18 +13,14 @@ export default function CatalogRoute() {
     <>
       <Tabs.Screen
         options={{
-          headerRight: () => (
-            <>
-              <ThemePreferenceHeaderControl />
-              {openSearch ? (
-                <Appbar.Action
-                  accessibilityLabel="Пошук товарів"
-                  icon="magnify"
-                  onPress={openSearch}
-                />
-              ) : null}
-            </>
-          ),
+          headerRight: () =>
+            openSearch ? (
+              <RoundIconButton
+                accessibilityLabel="Пошук товарів"
+                icon="magnify"
+                onPress={openSearch}
+              />
+            ) : null,
         }}
       />
       <CatalogScreen

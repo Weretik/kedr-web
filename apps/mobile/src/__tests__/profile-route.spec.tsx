@@ -26,6 +26,7 @@ jest.mock('@mobile/catalog/feature', () => ({
 
 jest.mock('expo-router', () => ({
   router: { push: (...args: unknown[]) => mockPush(...args) },
+  Tabs: { Screen: () => null },
 }));
 
 describe('ProfileRoute', () => {

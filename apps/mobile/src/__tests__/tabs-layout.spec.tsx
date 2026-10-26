@@ -8,6 +8,10 @@ import type { ReactNode } from 'react';
 const mockEmit = jest.fn(() => ({ defaultPrevented: false }));
 const mockNavigate = jest.fn();
 
+jest.mock('@mobile/cart/data-access', () => ({
+  useCart: () => ({ lines: [{ id: 1 }, { id: 2 }] }),
+}));
+
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
@@ -61,7 +65,7 @@ describe('TabsLayout', () => {
     mockNavigate.mockClear();
   });
 
-  it('uses Paper bottom navigation to switch Expo Router tabs', async () => {
+  it('uses the pill tab bar to switch Expo Router tabs and shows the cart count', async () => {
     const { getByLabelText, getByTestId } = render(
       <AppProviders>
         <TabsLayout />
@@ -72,6 +76,7 @@ describe('TabsLayout', () => {
       expect(getByTestId('mobile-bottom-navigation')).toBeTruthy();
     });
 
+    expect(getByLabelText('Кошик').props.accessibilityHint).toBe('Позицій: 2');
     fireEvent.press(getByLabelText('Каталог'));
 
     expect(mockEmit).toHaveBeenCalledWith({

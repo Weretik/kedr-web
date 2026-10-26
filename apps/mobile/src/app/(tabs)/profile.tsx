@@ -1,15 +1,19 @@
 import { MissingPhotoProductsScreen } from '@mobile/catalog/feature';
-import { router } from 'expo-router';
+import { ThemePreferenceHeaderControl } from '@mobile/core/shell';
+import { router, Tabs } from 'expo-router';
 
 export default function ProfileRoute() {
   return (
-    <MissingPhotoProductsScreen
-      onProductPress={(product) =>
-        router.push({
-          pathname: '/product/[productSlug]',
-          params: { productSlug: product.productSlug },
-        })
-      }
-    />
+    <>
+      <Tabs.Screen options={{ headerRight: () => <ThemePreferenceHeaderControl /> }} />
+      <MissingPhotoProductsScreen
+        onProductPress={(product) =>
+          router.push({
+            pathname: '/product/[productSlug]',
+            params: { productSlug: product.productSlug },
+          })
+        }
+      />
+    </>
   );
 }

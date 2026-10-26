@@ -1,107 +1,52 @@
-import { ThemePreferenceHeaderControl } from '@mobile/core/shell';
+import { useCart } from '@mobile/cart/data-access';
+import { PillTabBar, type PillTab } from '@mobile/core/shell';
+import { ScreenHeader } from '@mobile/shared/ui';
 import { Tabs } from 'expo-router';
-import { Appbar, BottomNavigation, useTheme } from 'react-native-paper';
 
-type Tab = {
-  focusedIcon: string;
-  options: { tabBarAccessibilityLabel: string; title: string };
-  unfocusedIcon: string;
-};
-
-const tabs: Record<string, Tab> = {
-  cart: {
-    focusedIcon: 'cart',
-    options: { tabBarAccessibilityLabel: 'Кошик', title: 'Кошик' },
-    unfocusedIcon: 'cart-outline',
-  },
-  catalog: {
-    focusedIcon: 'view-grid',
-    options: { tabBarAccessibilityLabel: 'Каталог', title: 'Каталог' },
-    unfocusedIcon: 'view-grid-outline',
-  },
-  index: {
-    focusedIcon: 'home',
-    options: { tabBarAccessibilityLabel: 'Головна', title: 'Головна' },
-    unfocusedIcon: 'home-outline',
-  },
+const tabs: Record<string, PillTab> = {
+  cart: { focusedIcon: 'cart', label: 'Кошик', unfocusedIcon: 'cart-outline' },
+  catalog: { focusedIcon: 'view-grid', label: 'Каталог', unfocusedIcon: 'view-grid-outline' },
+  index: { focusedIcon: 'home', label: 'Головна', unfocusedIcon: 'home-outline' },
   orders: {
     focusedIcon: 'receipt-text',
-    options: { tabBarAccessibilityLabel: 'Замовлення', title: 'Замовлення' },
+    label: 'Замовлення',
     unfocusedIcon: 'receipt-text-outline',
   },
-  profile: {
-    focusedIcon: 'account',
-    options: { tabBarAccessibilityLabel: 'Профіль', title: 'Профіль' },
-    unfocusedIcon: 'account-outline',
-  },
+  profile: { focusedIcon: 'account', label: 'Профіль', unfocusedIcon: 'account-outline' },
 };
 
+const options = (name: keyof typeof tabs) => ({
+  tabBarAccessibilityLabel: tabs[name].label,
+  title: tabs[name].label,
+});
+
 export default function TabsLayout() {
-  const theme = useTheme();
+  const { lines } = useCart();
 
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        header: ({ options }) => (
-          <Appbar.Header>
-            <Appbar.Content title={options.title ?? route.name} />
-            {options.headerRight?.({ canGoBack: false })}
-          </Appbar.Header>
+        header: ({ options: screenOptions }) => (
+          <ScreenHeader
+            right={screenOptions.headerRight?.({ canGoBack: false })}
+            title={screenOptions.title ?? route.name}
+          />
         ),
-        headerRight: () => <ThemePreferenceHeaderControl />,
-        headerTitleAlign: 'center',
-        tabBarAccessibilityLabel: tabs[route.name].options.tabBarAccessibilityLabel,
       })}
-      tabBar={({ descriptors, insets = { bottom: 0 }, navigation, state }) => (
-        <BottomNavigation.Bar
-          activeColor={theme.colors.primary}
-          activeIndicatorStyle={{ backgroundColor: 'transparent' }}
-          compact={false}
-          getAccessibilityLabel={({ route }) =>
-            descriptors[route.key].options.tabBarAccessibilityLabel ?? route.name
-          }
-          getLabelText={({ route }) =>
-            descriptors[route.key].options.tabBarLabel?.toString() ??
-            descriptors[route.key].options.title ??
-            route.name
-          }
-          inactiveColor={theme.colors.onSurfaceVariant}
-          labeled
-          navigationState={{
-            ...state,
-            routes: state.routes.map((route) => ({
-              ...route,
-              ...tabs[route.name],
-            })),
-          }}
-          onTabPress={({ preventDefault, route }) => {
-            const event = navigation.emit({
-              canPreventDefault: true,
-              target: route.key,
-              type: 'tabPress',
-            });
-            if (event.defaultPrevented) preventDefault();
-            else navigation.navigate(route.name);
-          }}
-          onTabLongPress={({ route }) =>
-            navigation.emit({ target: route.key, type: 'tabLongPress' })
-          }
-          safeAreaInsets={{ bottom: 0 }}
-          shifting={false}
-          style={{
-            backgroundColor: theme.colors.background,
-            height: 72,
-            marginBottom: insets.bottom,
-          }}
-          testID="mobile-bottom-navigation"
+      tabBar={({ navigation, state }) => (
+        <PillTabBar
+          badges={{ cart: lines.length }}
+          navigation={navigation}
+          state={state}
+          tabs={tabs}
         />
       )}
     >
-      <Tabs.Screen name="index" options={tabs.index.options} />
-      <Tabs.Screen name="catalog" options={tabs.catalog.options} />
-      <Tabs.Screen name="cart" options={tabs.cart.options} />
-      <Tabs.Screen name="orders" options={tabs.orders.options} />
-      <Tabs.Screen name="profile" options={tabs.profile.options} />
+      <Tabs.Screen name="index" options={options('index')} />
+      <Tabs.Screen name="catalog" options={options('catalog')} />
+      <Tabs.Screen name="cart" options={options('cart')} />
+      <Tabs.Screen name="orders" options={options('orders')} />
+      <Tabs.Screen name="profile" options={options('profile')} />
     </Tabs>
   );
 }

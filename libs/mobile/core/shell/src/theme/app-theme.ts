@@ -1,49 +1,78 @@
 import {
+  createKedrTokens,
+  kedrDarkColors,
+  kedrLightColors,
+  kedrPaperFontConfig,
+  type KedrColors,
+  type KedrTheme,
+} from '@mobile/shared/ui';
+import {
   DarkTheme as navigationDarkTheme,
   DefaultTheme as navigationLightTheme,
 } from 'expo-router/react-navigation';
-import { MD3DarkTheme, MD3LightTheme, type MD3Theme } from 'react-native-paper';
+import { configureFonts, MD3DarkTheme, MD3LightTheme, type MD3Theme } from 'react-native-paper';
 
-export const mobileLightTheme: MD3Theme = {
+/** Maps Kedr roles onto every Paper MD3 color so no default (purple) role can leak into the UI. */
+function paperColors(base: MD3Theme['colors'], c: KedrColors): MD3Theme['colors'] {
+  return {
+    ...base,
+    background: c.background,
+    backdrop: c.backdrop,
+    error: c.status.error.foreground,
+    errorContainer: c.status.error.background,
+    inverseOnSurface: c.inverseOnSurface,
+    inversePrimary: c.accentText,
+    inverseSurface: c.inverseSurface,
+    onBackground: c.onBackground,
+    onError: c.surface,
+    onErrorContainer: c.status.error.foreground,
+    onPrimary: c.onPrimary,
+    onPrimaryContainer: c.accentText,
+    onSecondary: c.inverseOnSurface,
+    onSecondaryContainer: c.onSurface,
+    onSurface: c.onSurface,
+    onSurfaceDisabled: `${c.onSurface}61`,
+    onSurfaceVariant: c.onSurfaceVariant,
+    onTertiary: c.surface,
+    onTertiaryContainer: c.status.warning.foreground,
+    outline: c.outline,
+    outlineVariant: c.outlineVariant,
+    primary: c.primary,
+    primaryContainer: c.primaryContainer,
+    secondary: c.inverseSurface,
+    secondaryContainer: c.surfaceVariant,
+    surface: c.surface,
+    surfaceDisabled: `${c.onSurface}1F`,
+    surfaceVariant: c.surfaceVariant,
+    tertiary: c.status.warning.foreground,
+    tertiaryContainer: c.status.warning.background,
+    elevation: {
+      level0: 'transparent',
+      level1: c.surface,
+      level2: c.surface,
+      level3: c.surface,
+      level4: c.surface,
+      level5: c.surface,
+    },
+  };
+}
+
+const fonts = configureFonts({ config: kedrPaperFontConfig });
+
+export const mobileLightTheme: KedrTheme = {
   ...MD3LightTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    background: '#f8faf8',
-    error: '#ef4444',
-    errorContainer: '#fce8e8',
-    onError: '#ffffff',
-    onPrimary: '#ffffff',
-    onSecondary: '#ffffff',
-    onSurface: '#272927',
-    onSurfaceVariant: '#4b5563',
-    primary: '#18b125',
-    primaryContainer: '#dff5e2',
-    secondary: '#272927',
-    secondaryContainer: '#e8eae8',
-    surface: '#ffffff',
-    surfaceVariant: '#eef1ee',
-  },
+  colors: paperColors(MD3LightTheme.colors, kedrLightColors),
+  fonts,
+  kedr: createKedrTokens(false),
+  roundness: 4,
 };
 
-export const mobileDarkTheme: MD3Theme = {
+export const mobileDarkTheme: KedrTheme = {
   ...MD3DarkTheme,
-  colors: {
-    ...MD3DarkTheme.colors,
-    background: '#101010',
-    error: '#f79e9e',
-    errorContainer: '#5d1f1f',
-    onError: '#101010',
-    onPrimary: '#101010',
-    onSecondary: '#eeeeee',
-    onSurface: '#eeeeee',
-    onSurfaceVariant: '#c5c9c5',
-    primary: '#18b125',
-    primaryContainer: '#1d4f23',
-    secondary: '#1e1f1e',
-    secondaryContainer: '#303230',
-    surface: '#1e1f1e',
-    surfaceVariant: '#272927',
-  },
+  colors: paperColors(MD3DarkTheme.colors, kedrDarkColors),
+  fonts,
+  kedr: createKedrTokens(true),
+  roundness: 4,
 };
 
 export function createMobileNavigationTheme(theme: MD3Theme) {

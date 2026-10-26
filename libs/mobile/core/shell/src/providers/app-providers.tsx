@@ -16,7 +16,11 @@ export interface AppProvidersProps {
   store?: ProviderProps['store'];
 }
 
-export function AppProviders({ children, colorScheme, store = appStore }: Readonly<AppProvidersProps>) {
+export function AppProviders({
+  children,
+  colorScheme,
+  store = appStore,
+}: Readonly<AppProvidersProps>) {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
