@@ -2,27 +2,29 @@ import { OrderLineEditor } from '@admin/orders/ui';
 import { useGetAllAdminProductsQuery } from '@admin/products/data-access';
 import { AdminDetailHeader, SectionCard } from '@admin/shared/ui';
 import { Alert, Button, CircularProgress, Stack } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 
+import { CurrentOrderSetAlert } from '../components/current-order-set-alert';
 import { SaveDraftDialog } from '../dialogs/save-draft-dialog';
 import { SubmitOrderDialog } from '../dialogs/submit-order-dialog';
 import { useOrderQuote } from '../hooks/use-order-quote';
 import { useSaveDraft } from '../hooks/use-save-draft';
 import { useSubmitOrder } from '../hooks/use-submit-order';
-import {
-  acceptExternalOrderSet,
-  keepCurrentOrderSet,
-  setCurrentOrderLines,
-  useCurrentOrderSet,
-} from '../state/current-order-set';
+import { getCurrentOrderCustomer, setCurrentOrderCustomer } from '../state/current-order-customer';
+import { setCurrentOrderLines, useCurrentOrderSet } from '../state/current-order-set';
 
 import type { CustomerPickerComponent } from '../orders.routes';
 
 export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPickerComponent }) {
   const [params] = useSearchParams();
   const current = useCurrentOrderSet();
-  const [customerId, setCustomerId] = useState(params.get('customerId') ?? '');
+  const [customerId, setCustomerId] = useState(
+    () => params.get('customerId') ?? getCurrentOrderCustomer(),
+  );
+  useEffect(() => {
+    setCurrentOrderCustomer(customerId);
+  }, [customerId]);
   const [draftOpen, setDraftOpen] = useState(false);
   const quoted = useOrderQuote(customerId, current.lines);
   const catalog = useGetAllAdminProductsQuery();
@@ -35,30 +37,7 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
         backTo="/orders"
         title="Оформлення замовлення"
       />
-      {current.warning === 'invalid' && (
-        <Alert severity="warning">
-          Збережений локальний набір був пошкоджений і не відновився.
-        </Alert>
-      )}
-      {current.warning === 'storage' && (
-        <Alert severity="warning">
-          Браузер не зберіг зміни. Не закривайте вкладку, доки не оформите або не збережете
-          чернетку.
-        </Alert>
-      )}
-      {current.warning === 'conflict' && (
-        <Alert
-          action={
-            <Stack direction="row">
-              <Button onClick={acceptExternalOrderSet}>Завантажити зміни</Button>
-              <Button onClick={keepCurrentOrderSet}>Залишити мої</Button>
-            </Stack>
-          }
-          severity="warning"
-        >
-          Інша вкладка змінила поточний набір. Оберіть версію.
-        </Alert>
-      )}
+      <CurrentOrderSetAlert warning={current.warning} />
       {order.error && <Alert severity="error">{order.error}</Alert>}
       {draft.error && <Alert severity="error">{draft.error}</Alert>}
       <SectionCard title="Клієнт">
@@ -90,7 +69,7 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
         </Alert>
       )}
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-        <Button component={RouterLink} to="/catalog" variant="outlined">
+        <Button component={RouterLink} to="/orders/pick-products" variant="outlined">
           Додати з каталогу
         </Button>
         <Button

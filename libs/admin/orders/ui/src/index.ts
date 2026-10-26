@@ -1,4 +1,6 @@
 export { OrderListGrid } from './tables/order-list-grid';
+export { ProductPickerGrid } from './tables/product-picker-grid';
+export type { ProductPickerRow } from './tables/product-picker-grid';
 export { OrderDocumentView } from './details/order-document-view';
 export { OrderLineEditor } from './forms/order-line-editor';
 export { SaveDraftForm } from './forms/save-draft-form';

@@ -16,6 +16,7 @@
 - [Structural remediation](../002-order-structure-remediation/README.md)
 - [Change 2026-10-22: cart, date, customer selection, and checkout dialogs](revision-2026-10-22.md) — frontend TS-007/TS-008 implemented; provider snapshot synchronized with `c03118d`
 - [Change 2026-10-22: draft from order, product selection, and clearer details](revision-2026-10-22-order-detail-and-draft-picker.md) — SDD before implementation
+- [Change 2026-10-26: shared product picker, saved checkout customer, and button fixes](revision-2026-10-26-catalog-picker-and-ui-fixes.md) — simplified correction, implemented
 
 The current list/detail design follows the [Admin standard](../../../../standards/admin/list-detail-pages.md). Customer detail extensions are covered by a [separate SDD](../../clients/002-customer-orders/README.md).
 

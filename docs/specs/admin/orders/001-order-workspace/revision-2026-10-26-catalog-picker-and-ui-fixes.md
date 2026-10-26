@@ -1,0 +1,34 @@
+# Change 2026-10-26 — Shared product picker and Admin order fixes
+
+**Status:** implemented and verified (typecheck, lint, orders feature/ui unit tests). Simplified correction of the [order workspace](README.md); implemented in Admin React. Requirements below replace conflicting parts of R-016 (the «Додати з каталогу» target) and of the [2026-10-22 order detail and draft picker revision](revision-2026-10-22-order-detail-and-draft-picker.md) (the draft product Autocomplete). Mobile, Storefront, and the backend are out of scope.
+
+## Rules
+
+- **R-030. Shared product picker.** `/orders/pick-products` (target: current order set) and `/orders/drafts/:draftId/pick-products` (target: the draft being edited) open one shared page: an MUI X DataGrid of all catalog products with only ID, name, price, and an «Додати» action (icon button with an accessible name and a tooltip). Quick search by name or ID is client-side. Adding a product increments the quantity when it is already in the target (limit 100 lines), shows a short confirmation, and keeps the manager on the page. «Назад» returns to the source page.
+- **R-031. Entry points.** «Додати з каталогу» on «Оформлення замовлення» opens the picker for the order set. On «Редагування чернетки» the «Знайти й додати товар» Autocomplete is replaced by a «Додати з каталогу» button that opens the picker for that draft.
+- **R-032. Unsaved draft edits.** While editing a draft, the title, note, customer, and lines are kept in `sessionStorage` per draft and version, so going to the picker and back (or reloading the tab) restores them. They are discarded after a successful save or reload of the server version. A stored edit for an older draft version is ignored.
+- **R-033. Checkout customer.** The customer selected on «Оформлення замовлення» is stored in `localStorage` next to the current order set. It survives closing tabs and going to the catalog or picker, and is cleared only after an order is submitted, a draft is created from the set, or on logout. A `customerId` query parameter (from customer details) replaces the stored value.
+- **R-034. Create order button.** On «Замовлення» the create action is a contained icon-only button with a white «+» icon, the accessible name «Створити замовлення», and the same tooltip.
+- **R-035. Customer drafts tab.** In customer details both «Замовлення» and «Чернетки» tabs show only the date range filter; there is no search field and no search parameter is sent.
+- **R-036. Draft reuse button.** On «Деталі чернетки» the text and icon of «Оформити на основі» are white (`common.white`) in both themes. This is a deliberate local exception to the brand-ink `primary.contrastText` rule for these two actions (R-034, R-036).
+- **R-037. Per-user set (answer).** The current order set and its customer live in the browser's `localStorage`, so they are separate per browser profile and device, not per account; logout clears them. Making the set follow an account across devices requires a backend cart and is not part of this change.
+
+## Acceptance scenarios
+
+| ID         | Given / When / Then                                                                                                                                                                                |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **SC-030** | Given the order set has a customer and one product; When the manager opens «Додати з каталогу», adds two products, and goes back; Then the set has three lines and the same customer.              |
+| **SC-031** | Given a draft is being edited with a changed title; When the manager opens «Додати з каталогу», adds a product, and goes back; Then the changed title and the new line are shown and can be saved. |
+| **SC-032** | Given a customer is selected on checkout; When the tab is closed and `/orders/new` is reopened; Then the customer is still selected; after a successful order or draft creation it is empty.       |
+| **SC-033** | Given the orders page; When the manager hovers the create button; Then a white «+» icon button shows the «Створити замовлення» tooltip and opens `/orders/new`.                                    |
+| **SC-034** | Given customer details; When the «Чернетки» tab is opened; Then only «Дата від» / «Дата до» are shown.                                                                                             |
+
+## Tasks
+
+| ID     | Task                                                                                                                                     | Files                                                                                                                                                                                        |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TS-030 | Shared picker page, routes, order and draft targets                                                                                      | `feature/src/pages/product-picker-page.tsx`, `feature/src/state/draft-edit-session.ts`, `orders.routes.tsx`                                                                                  |
+| TS-031 | Draft edit uses session state and the picker button                                                                                      | `feature/src/pages/draft-edit-page.tsx`                                                                                                                                                      |
+| TS-032 | Persist checkout customer                                                                                                                | `feature/src/state/current-order-set.ts`, `pages/new-order-page.tsx`                                                                                                                         |
+| TS-033 | Create icon button, customer drafts filter, white reuse button                                                                           | `components/order-tables.tsx`, `pages/draft-detail-page.tsx`                                                                                                                                 |
+| TS-034 | Post-change split by responsibility: draft edit form hook, list URL state hook, order set alert, picker toolbar, checkout customer store | `hooks/use-draft-edit-form.ts`, `hooks/use-order-list-url-state.ts`, `components/current-order-set-alert.tsx`, `ui/src/tables/product-picker-toolbar.tsx`, `state/current-order-customer.ts` |

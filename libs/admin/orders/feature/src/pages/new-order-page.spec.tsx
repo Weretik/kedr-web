@@ -28,6 +28,10 @@ vi.mock('../state/current-order-set', () => ({
   acceptExternalOrderSet: vi.fn(),
   keepCurrentOrderSet: vi.fn(),
 }));
+vi.mock('../state/current-order-customer', () => ({
+  getCurrentOrderCustomer: vi.fn(() => ''),
+  setCurrentOrderCustomer: vi.fn(),
+}));
 vi.mock('@admin/orders/ui', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@admin/orders/ui')>()),
   OrderLineEditor: () => <div>Товари</div>,

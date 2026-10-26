@@ -2,13 +2,15 @@ import { useGetWorkspaceDraftsQuery, useGetWorkspaceOrdersQuery } from '@admin/o
 import { OrderListGrid } from '@admin/orders/ui';
 import { AdminPageHeader } from '@admin/shared/ui';
 import AddIcon from '@mui/icons-material/Add';
-import { Alert, Button, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Alert, Card, IconButton, Stack, Tab, Tabs, Tooltip } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { DraftDeleteDialog } from '../dialogs/draft-delete-dialog';
 import { useDraftDeletion } from '../hooks/use-draft-deletion';
+import { useOrderListUrlState } from '../hooks/use-order-list-url-state';
 
+import type { Mode } from '../hooks/use-order-list-url-state';
 import type { ListQuery } from '@admin/orders/model';
 
 interface Props {
@@ -17,70 +19,28 @@ interface Props {
   returnTo?: string;
   panelOnly?: boolean;
 }
-type Mode = 'orders' | 'drafts';
-const number = (value: string | null, fallback: number) => {
-  const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed >= 1 ? parsed : fallback;
-};
-const validDate = (value: string | null) =>
-  !value ||
-  (/^\d{4}-\d{2}-\d{2}$/.test(value) &&
-    !Number.isNaN(Date.parse(`${value}T00:00:00Z`)) &&
-    new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value);
-const sortOrders = new Set([
-  'createdAt',
-  '-createdAt',
-  'orderNumber',
-  '-orderNumber',
-  'customerName',
-  '-customerName',
-  'totalAmount',
-  '-totalAmount',
-]);
-const sortDrafts = new Set([
-  'updatedAt',
-  '-updatedAt',
-  'title',
-  '-title',
-  'customerName',
-  '-customerName',
-]);
-
 export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = false }: Props) {
-  const [params, setParams] = useSearchParams();
+  const {
+    params,
+    setParams,
+    mode,
+    page,
+    pageSize,
+    searchTerm,
+    createdFrom,
+    createdTo,
+    invalidDateRange,
+    sort,
+    update,
+  } = useOrderListUrlState(prefix);
   const location = useLocation();
   const navigate = useNavigate();
-  const mode: Mode = params.get(`${prefix}Tab`) === 'drafts' ? 'drafts' : 'orders';
-  const marker = mode === 'orders' ? 'O' : 'D';
-  const read = (name: string) => params.get(`${prefix}${marker}${name}`);
-  const page = number(read('Page'), 1);
-  const pageSize = Math.min(100, number(read('Size'), 20));
-  const searchTerm = read('Search') ?? '';
   const customer = counterpartyId ?? '';
-  const createdFrom = read('From') ?? '';
-  const createdTo = read('To') ?? '';
-  const invalidDateRange =
-    !validDate(createdFrom) ||
-    !validDate(createdTo) ||
-    !!(createdFrom && createdTo && createdFrom > createdTo);
-  const allowedSorts = mode === 'orders' ? sortOrders : sortDrafts;
-  const defaultSort = mode === 'orders' ? '-createdAt' : '-updatedAt';
-  const sort = allowedSorts.has(read('Sort') ?? '') ? read('Sort')! : defaultSort;
   const [searchText, setSearchText] = useState(searchTerm);
   const deletion = useDraftDeletion();
   useEffect(() => {
     setSearchText(searchTerm);
   }, [mode, searchTerm]);
-  const update = (changes: Record<string, string | null>, resetPage = false) => {
-    const next = new URLSearchParams(params);
-    for (const [name, value] of Object.entries(changes)) {
-      const key = `${prefix}${marker}${name}`;
-      if (value === null || value === '') next.delete(key);
-      else next.set(key, value);
-    }
-    if (resetPage) next.delete(`${prefix}${marker}Page`);
-    setParams(next);
-  };
   useEffect(() => {
     if (searchText === searchTerm) return;
     const timeout = window.setTimeout(() => update({ Search: searchText }, true), 300);
@@ -92,13 +52,13 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
     () => ({
       page,
       pageSize,
-      searchTerm: panelOnly && mode === 'orders' ? undefined : searchTerm || undefined,
+      searchTerm: panelOnly ? undefined : searchTerm || undefined,
       counterpartyId: customer || undefined,
       createdFrom: createdFrom || undefined,
       createdTo: createdTo || undefined,
       sort,
     }),
-    [page, pageSize, searchTerm, customer, createdFrom, createdTo, sort, panelOnly, mode],
+    [page, pageSize, searchTerm, customer, createdFrom, createdTo, sort, panelOnly],
   );
   const orders = useGetWorkspaceOrdersQuery(query, { skip: mode !== 'orders' || invalidDateRange });
   const drafts = useGetWorkspaceDraftsQuery(query, { skip: mode !== 'drafts' || invalidDateRange });
@@ -112,13 +72,19 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
       {!panelOnly && (
         <AdminPageHeader
           actions={
-            <Button
-              onClick={() => navigate('/orders/new')}
-              startIcon={<AddIcon />}
-              variant="contained"
-            >
-              Створити замовлення
-            </Button>
+            <Tooltip title="Створити замовлення">
+              <IconButton
+                aria-label="Створити замовлення"
+                onClick={() => navigate('/orders/new')}
+                sx={{
+                  bgcolor: 'primary.main',
+                  color: 'common.white',
+                  '&:hover': { bgcolor: 'primary.dark' },
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
           }
           title="Замовлення"
         />
@@ -155,7 +121,7 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
           sort={sort}
           createdFrom={createdFrom}
           createdTo={createdTo}
-          hideSearch={panelOnly && mode === 'orders'}
+          hideSearch={panelOnly}
           hideCustomerColumn={panelOnly && mode === 'orders'}
           onSearch={setSearchText}
           onPage={(next) => update({ Page: String(next) })}

@@ -5,9 +5,4 @@ export {
   getCurrentOrderSet,
   useCurrentOrderSet,
 } from './state/current-order-set';
-export type {
-  CustomerPickerComponent,
-  CustomerPickerProps,
-  ProductPickerComponent,
-  ProductPickerProps,
-} from './orders.routes';
+export type { CustomerPickerComponent, CustomerPickerProps } from './orders.routes';

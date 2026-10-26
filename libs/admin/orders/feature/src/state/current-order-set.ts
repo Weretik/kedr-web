@@ -1,5 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
+import { setCurrentOrderCustomer } from './current-order-customer';
+
 import type { OrderInputLine } from '@admin/orders/model';
 
 const key = 'kedr-admin-current-order-set';
@@ -134,6 +136,7 @@ export function mergeDraftIntoCurrentOrder(lines: OrderInputLine[]) {
 export function clearCurrentOrder() {
   initialize();
   replace([]);
+  setCurrentOrderCustomer('');
   try {
     window.localStorage.removeItem(key);
   } catch {
