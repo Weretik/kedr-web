@@ -7,6 +7,7 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
+    '^@mobile/shared/ui$': '<rootDir>/../../shared/ui/src/index.ts',
     '^@mobile/catalog/model$': '<rootDir>/../model/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/src/test-mocks/flash-list.tsx',
     '^expo-image$': '<rootDir>/src/test-mocks/expo-image.tsx',

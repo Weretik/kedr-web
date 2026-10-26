@@ -35,5 +35,4 @@ describe('cart checkout sheets', () => {
     expect(onCommentChange).toHaveBeenCalledWith('new note');
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
-
 });

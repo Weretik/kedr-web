@@ -1,5 +1,6 @@
+import { FilterChip } from '@mobile/shared/ui';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Chip, Text, useTheme } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 
 import type { CatalogFilterSelection, CatalogSort } from '@mobile/catalog/model';
 
@@ -30,14 +31,11 @@ export function CatalogActiveFilters({
   search: string;
   sort: CatalogSort;
 }>) {
-  const theme = useTheme();
   const selectedCategory =
     category ??
     (categoryLabel
       ? { label: categoryLabel, path: [{ id: -1, label: categoryLabel }] }
       : undefined);
-  const chipBackgroundColor = theme.dark ? theme.colors.onSurface : theme.colors.secondary;
-  const chipContentColor = theme.dark ? theme.colors.surface : theme.colors.onSecondary;
   const chips: readonly (ActiveChip | null)[] = [
     search ? { label: `Пошук: ${search}`, onClose: onRemoveSearch } : null,
     filters.inStock ? { label: 'В наявності', onClose: () => onRemoveFilter('inStock') } : null,
@@ -71,27 +69,14 @@ export function CatalogActiveFilters({
           style={styles.scroll}
         >
           {activeChips.map(({ label, onClose }) => (
-            <Chip
-              closeIcon="close"
-              closeIconAccessibilityLabel={`Прибрати: ${label}`}
-              compact
-              ellipsizeMode="tail"
+            <FilterChip
+              accessibilityLabel={`Прибрати: ${label}`}
               key={label}
-              mode="flat"
-              onClose={onClose}
+              label={label}
+              onPress={onClose}
+              removable
               selected
-              selectedColor={chipContentColor}
-              showSelectedCheck={false}
-              style={[
-                styles.chip,
-                {
-                  backgroundColor: chipBackgroundColor,
-                },
-              ]}
-              textStyle={[styles.chipText, { color: chipContentColor }]}
-            >
-              {label}
-            </Chip>
+            />
           ))}
         </ScrollView>
       ) : null}
@@ -170,14 +155,6 @@ const styles = StyleSheet.create({
   activeBreadcrumb: { borderBottomWidth: 2 },
   breadcrumbPart: { alignItems: 'center', flexDirection: 'row', gap: 6 },
   breadcrumbs: { alignItems: 'center', gap: 6, paddingHorizontal: 16, paddingTop: 8 },
-  chip: { borderRadius: 10, height: 20, maxWidth: 220, minHeight: 0 },
-  chipText: {
-    fontSize: 12,
-    includeFontPadding: false,
-    lineHeight: 14,
-    marginVertical: 3,
-    textAlignVertical: 'center',
-  },
-  scroll: { flexGrow: 0, flexShrink: 0, height: 28 },
-  strip: { alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 4 },
+  scroll: { flexGrow: 0, flexShrink: 0 },
+  strip: { alignItems: 'center', gap: 8, paddingBottom: 8, paddingHorizontal: 16 },
 });

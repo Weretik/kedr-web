@@ -84,11 +84,11 @@ export function CatalogSortMenu({
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 20 },
+  content: { padding: 16, paddingBottom: 24 },
   divider: { marginLeft: 20 },
   option: { alignItems: 'center', flexDirection: 'row', minHeight: 58, paddingHorizontal: 20 },
   optionLabel: { flex: 1 },
-  options: { borderRadius: 12, overflow: 'hidden' },
-  saveButton: { marginTop: 16 },
-  saveButtonContent: { minHeight: 44 },
+  options: { borderRadius: 22, overflow: 'hidden' },
+  saveButton: { borderRadius: 999, marginTop: 16 },
+  saveButtonContent: { minHeight: 48 },
 });

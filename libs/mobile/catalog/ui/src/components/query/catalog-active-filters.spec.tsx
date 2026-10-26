@@ -1,19 +1,11 @@
-jest.mock('react-native-paper', () => {
-  const actual = jest.requireActual('react-native-paper');
-  return { ...actual, Chip: jest.fn(actual.Chip) };
-});
-
 import { fireEvent, render } from '@testing-library/react-native';
-import { StyleSheet } from 'react-native';
-import { Chip, PaperProvider } from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 
 import { CatalogActiveFilters } from './catalog-active-filters';
 
 describe('CatalogActiveFilters', () => {
-  beforeEach(() => jest.mocked(Chip).mockClear());
-
-  it('renders compact themed Paper chips with vertically centered single-line labels', () => {
-    render(
+  it('renders a removable chip for each applied query value', () => {
+    const { getByLabelText } = render(
       <PaperProvider theme={testTheme}>
         <CatalogActiveFilters
           filters={{ isSale: true }}
@@ -28,27 +20,11 @@ describe('CatalogActiveFilters', () => {
       </PaperProvider>,
     );
 
-    const calls = jest.mocked(Chip).mock.calls.map(([props]) => props);
-    expect(calls.map((props) => props.children)).toEqual(['Пошук: кабель', 'Акції']);
-    for (const props of calls) {
-      expect(props).toEqual(
-        expect.objectContaining({ compact: true, ellipsizeMode: 'tail', mode: 'flat' }),
-      );
-      expect(StyleSheet.flatten(props.style)).toEqual(
-        expect.objectContaining({ backgroundColor: testTheme.colors.secondary }),
-      );
-      expect(StyleSheet.flatten(props.textStyle)).toEqual(
-        expect.objectContaining({
-          color: testTheme.colors.onSecondary,
-          includeFontPadding: false,
-          marginVertical: 3,
-          textAlignVertical: 'center',
-        }),
-      );
-    }
+    expect(getByLabelText('Прибрати: Пошук: кабель')).toBeTruthy();
+    expect(getByLabelText('Прибрати: Акції')).toBeTruthy();
   });
 
-  it('shows the applied search as a removable Paper chip without removing other query values', () => {
+  it('shows the applied search as a removable chip without removing other query values', () => {
     const onRemoveSearch = jest.fn();
     const onRemoveFilter = jest.fn();
     const { getByLabelText, getByText } = render(
@@ -68,7 +44,7 @@ describe('CatalogActiveFilters', () => {
     );
 
     expect(getByLabelText('Активні фільтри')).toBeTruthy();
-    fireEvent(getByText('Пошук: Мідний кабель для монтажу'), 'longPress');
+    fireEvent.press(getByLabelText('Прибрати: Пошук: Мідний кабель для монтажу'));
 
     expect(onRemoveSearch).toHaveBeenCalledTimes(1);
     expect(onRemoveFilter).not.toHaveBeenCalled();

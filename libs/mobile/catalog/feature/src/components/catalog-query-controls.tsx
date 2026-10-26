@@ -8,7 +8,11 @@ import {
 } from '@mobile/catalog/ui';
 
 import type { useCatalogController } from '../hooks/use-catalog-controller';
-import type { CatalogCategoryOption } from '@mobile/catalog/model';
+import type {
+  CatalogCategoryOption,
+  CatalogFilterSelection,
+  CatalogSort,
+} from '@mobile/catalog/model';
 
 type CatalogController = ReturnType<typeof useCatalogController>;
 type CategoryPathItem = { id: number; label: string };
@@ -44,9 +48,14 @@ export function CatalogQueryControls({
     isLoading: isCategoriesLoading,
   } = categoriesQueryResult;
 
+  const selectedCategory = findCategory(categories, state.query.filters.categoryId);
+
   return (
     <>
       <CatalogQueryActionRow
+        activeFilterCount={countActiveFilters(state.query.filters)}
+        categoryLabel={selectedCategory?.label}
+        sortLabel={state.query.sort === 'IdAsc' ? undefined : sortLabels[state.query.sort]}
         onOpenCategories={() => dispatch({ type: 'categoryOpened' })}
         onOpenFilters={() => dispatch({ type: 'filtersOpened' })}
         onOpenSort={() => dispatch({ type: 'sortOpened' })}
@@ -63,7 +72,7 @@ export function CatalogQueryControls({
         visible={state.searchVisible}
       />
       <CatalogActiveFilters
-        category={findCategory(categories, state.query.filters.categoryId)}
+        category={selectedCategory}
         filters={state.query.filters}
         onSelectCategory={(categoryId) => dispatch({ categoryId, type: 'categorySelected' })}
         onRemoveFilter={(field) => dispatch({ field, type: 'filterRemoved' })}
@@ -117,4 +126,19 @@ function findCategory(
   }
 
   return undefined;
+}
+
+const sortLabels: Record<CatalogSort, string> = {
+  IdAsc: 'ID ↑',
+  IdDesc: 'ID ↓',
+  NameAsc: 'Назва А–Я',
+  NameDesc: 'Назва Я–А',
+  PriceAsc: 'Ціна ↑',
+  PriceDesc: 'Ціна ↓',
+};
+
+/** Filters shown behind the "Фільтри" entry (category has its own entry). */
+export function countActiveFilters(filters: CatalogFilterSelection): number {
+  const priceRange = filters.priceFrom !== undefined || filters.priceTo !== undefined;
+  return [filters.inStock, filters.isNew, filters.isSale, priceRange].filter(Boolean).length;
 }

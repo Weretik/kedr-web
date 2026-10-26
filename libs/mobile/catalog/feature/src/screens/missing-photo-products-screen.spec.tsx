@@ -41,7 +41,7 @@ describe('MissingPhotoProductsScreen', () => {
     );
     const { getByLabelText, getByText } = renderScreen(onProductPress);
 
-    expect(getByText('Фото відсутнє')).toBeTruthy();
+    expect(getByLabelText('Фото товару відсутнє')).toBeTruthy();
     fireEvent.press(getByLabelText(/Товар Кабель/));
     expect(onProductPress).toHaveBeenCalledWith(product);
   });

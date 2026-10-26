@@ -7,6 +7,7 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
+    '^@mobile/shared/ui$': '<rootDir>/../../shared/ui/src/index.ts',
     '^@reduxjs/toolkit$': '<rootDir>/../../../../node_modules/@reduxjs/toolkit/dist/cjs/index.js',
     '^immer$': '<rootDir>/../../../../node_modules/immer/dist/cjs/index.js',
     '^@mobile/cart/model$': '<rootDir>/../model/src/index.ts',

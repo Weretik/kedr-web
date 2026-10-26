@@ -46,11 +46,17 @@ export function CatalogState({
       style={styles.container}
       testID={`catalog-state-${kind}`}
     >
-      {kind === 'loading' ? <ActivityIndicator accessibilityLabel="Завантаження" color={theme.colors.primary} size="large" /> : null}
-      <Text accessibilityRole="header" variant="titleLarge">
+      {kind === 'loading' ? (
+        <ActivityIndicator
+          accessibilityLabel="Завантаження"
+          color={theme.colors.primary}
+          size="large"
+        />
+      ) : null}
+      <Text accessibilityRole="header" style={styles.center} variant="titleLarge">
         {title}
       </Text>
-      <Text style={{ color: theme.colors.onSurfaceVariant }} variant="bodyLarge">
+      <Text style={[styles.center, { color: theme.colors.onSurfaceVariant }]} variant="bodyLarge">
         {description}
       </Text>
       {onRetry && kind !== 'loading' ? (
@@ -58,9 +64,9 @@ export function CatalogState({
           accessibilityLabel="Повторити спробу"
           accessibilityRole="button"
           onPress={onRetry}
-          style={[styles.retryButton, { backgroundColor: theme.colors.primaryContainer }]}
+          style={[styles.retryButton, { backgroundColor: theme.colors.inverseSurface }]}
         >
-          <Text style={{ color: theme.colors.onPrimaryContainer }} variant="labelLarge">
+          <Text style={{ color: theme.colors.inverseOnSurface }} variant="labelLarge">
             Повторити
           </Text>
         </Pressable>
@@ -69,9 +75,9 @@ export function CatalogState({
           accessibilityLabel={actionAccessibilityLabel ?? actionLabel}
           accessibilityRole="button"
           onPress={onAction}
-          style={[styles.retryButton, { backgroundColor: theme.colors.primaryContainer }]}
+          style={[styles.retryButton, { backgroundColor: theme.colors.inverseSurface }]}
         >
-          <Text style={{ color: theme.colors.onPrimaryContainer }} variant="labelLarge">
+          <Text style={{ color: theme.colors.inverseOnSurface }} variant="labelLarge">
             {actionLabel}
           </Text>
         </Pressable>
@@ -81,6 +87,7 @@ export function CatalogState({
 }
 
 const styles = StyleSheet.create({
+  center: { maxWidth: 320, textAlign: 'center' },
   container: {
     alignItems: 'center',
     flex: 1,
@@ -89,7 +96,7 @@ const styles = StyleSheet.create({
   },
   retryButton: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 999,
     justifyContent: 'center',
     minHeight: 48,
     paddingHorizontal: 16,
