@@ -2,7 +2,7 @@ import { ActionBar, ActionPillButton, tabularNumbers, useKedrTheme } from '@mobi
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { formatMoney } from './format-money';
+import { formatMoney } from '../../utils/format-money';
 
 export function CartSummary({
   disabled,

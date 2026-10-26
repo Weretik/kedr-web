@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
 
 export interface ActionBarProps {
   children: ReactNode;

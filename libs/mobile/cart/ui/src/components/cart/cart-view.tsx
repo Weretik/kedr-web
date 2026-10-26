@@ -13,7 +13,7 @@ import { Text } from 'react-native-paper';
 
 import { CartLineCard } from './cart-line-card';
 import { CartSummary } from './cart-summary';
-import { formatMoney } from './format-money';
+import { formatMoney } from '../../utils/format-money';
 
 export interface CartViewProps {
   isReady: boolean;

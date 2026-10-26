@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Icon, Text, TextInput } from 'react-native-paper';
 
 import { CartActionSheet } from './cart-action-sheet';
-import { formatMoney } from './format-money';
+import { formatMoney } from '../../utils/format-money';
 
 export interface CheckoutSheetProps {
   comment: string;

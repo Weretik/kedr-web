@@ -21,17 +21,17 @@ export {
   kedrPaperFontConfig,
   tabularNumbers,
 } from './theme/typography';
-export { ActionBar, actionBarReservedHeight } from './components/action-bar';
-export { ActionPillButton } from './components/action-pill-button';
-export { FilterChip } from './components/filter-chip';
-export { HeroHeader } from './components/hero-header';
-export { KedrCard } from './components/kedr-card';
-export { KedrSheet } from './components/kedr-sheet';
-export { MetricTile } from './components/metric-tile';
-export { PressableScale } from './components/pressable-scale';
-export { QuantityStepper } from './components/quantity-stepper';
-export { RoundIconButton } from './components/round-icon-button';
-export { ScreenHeader } from './components/screen-header';
-export { SearchField } from './components/search-field';
-export { StateView, type StateViewKind } from './components/state-view';
-export { StatusPill } from './components/status-pill';
+export { ActionBar, actionBarReservedHeight } from './components/layout/action-bar';
+export { ActionPillButton } from './components/controls/action-pill-button';
+export { FilterChip } from './components/controls/filter-chip';
+export { HeroHeader } from './components/layout/hero-header';
+export { KedrCard } from './components/surfaces/kedr-card';
+export { KedrSheet } from './components/surfaces/kedr-sheet';
+export { MetricTile } from './components/surfaces/metric-tile';
+export { PressableScale } from './components/controls/pressable-scale';
+export { QuantityStepper } from './components/controls/quantity-stepper';
+export { RoundIconButton } from './components/controls/round-icon-button';
+export { ScreenHeader } from './components/layout/screen-header';
+export { SearchField } from './components/controls/search-field';
+export { StateView, type StateViewKind } from './components/feedback/state-view';
+export { StatusPill } from './components/feedback/status-pill';

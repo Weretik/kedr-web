@@ -7,8 +7,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { useReducedMotion } from '../hooks/use-reduced-motion';
-import { kedrMotion } from '../theme/motion';
+import { useReducedMotion } from '../../hooks/use-reduced-motion';
+import { kedrMotion } from '../../theme/motion';
 
 export type PressableScaleProps = Omit<PressableProps, 'children' | 'style'> & {
   children: ReactNode;

@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
-import { type KedrStatusKind } from '../theme/palette';
+import { useKedrTheme } from '../../theme/kedr-theme';
+import { type KedrStatusKind } from '../../theme/palette';
 
 export interface StatusPillProps {
   kind: KedrStatusKind;

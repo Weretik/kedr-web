@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
-import { FilterChip } from './filter-chip';
-import { QuantityStepper } from './quantity-stepper';
-import { StateView } from './state-view';
-import { StatusPill } from './status-pill';
+import { FilterChip } from './controls/filter-chip';
+import { QuantityStepper } from './controls/quantity-stepper';
+import { StateView } from './feedback/state-view';
+import { StatusPill } from './feedback/status-pill';
 import { createKedrTokens } from '../theme/kedr-theme';
 
 describe('shared mobile UI', () => {

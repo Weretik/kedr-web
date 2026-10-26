@@ -1,1 +1,1 @@
-export * from './lib/customer-selector-sheet';
+export * from './components/selector/customer-selector-sheet';

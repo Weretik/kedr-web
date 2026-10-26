@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
 
 export interface SearchFieldProps {
   accessibilityLabel?: string;

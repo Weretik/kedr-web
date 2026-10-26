@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
 
 export interface KedrCardProps {
   children: ReactNode;

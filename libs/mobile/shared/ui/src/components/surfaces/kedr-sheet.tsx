@@ -4,8 +4,8 @@ import ActionSheet, { type ActionSheetRef } from 'react-native-actions-sheet';
 import { Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RoundIconButton } from './round-icon-button';
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
+import { RoundIconButton } from '../controls/round-icon-button';
 
 export interface KedrSheetProps {
   children: ReactNode;

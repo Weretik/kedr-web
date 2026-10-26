@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
 
 export interface ActionPillButtonProps {
   accessibilityLabel?: string;

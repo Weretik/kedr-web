@@ -3,7 +3,7 @@ import { useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { OrderStatusChip } from './order-status-chip';
+import { OrderStatusChip } from '../status/order-status-chip';
 
 export function OrderDetailSummary({ order }: Readonly<{ order: OrderDetail }>) {
   const { kedr } = useKedrTheme();

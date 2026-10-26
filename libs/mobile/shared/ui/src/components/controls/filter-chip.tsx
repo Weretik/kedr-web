@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
 
 export interface FilterChipProps {
   accessibilityLabel?: string;

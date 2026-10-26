@@ -3,7 +3,7 @@ import { Image, type ImageProps } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
 
-import { formatMoney } from './format-money';
+import { formatMoney } from '../../utils/format-money';
 
 import type { CartLine } from '@mobile/cart/model';
 import type { ComponentType } from 'react';

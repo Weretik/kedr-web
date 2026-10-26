@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { OrderHistoryFooter } from './order-history-footer';
-import { OrderHistoryEmpty } from '../states/order-history-empty';
+import { OrderHistoryEmpty } from '../../states/order-history-empty';
 
 describe('order history states', () => {
   it('shows the filtered empty action and the explicit load-more action', () => {

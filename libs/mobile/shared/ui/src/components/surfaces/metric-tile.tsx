@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
-import { type KedrStatusKind } from '../theme/palette';
-import { tabularNumbers } from '../theme/typography';
+import { useKedrTheme } from '../../theme/kedr-theme';
+import { type KedrStatusKind } from '../../theme/palette';
+import { tabularNumbers } from '../../theme/typography';
 
 export interface MetricTileProps {
   label: string;

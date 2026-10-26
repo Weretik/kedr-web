@@ -1,9 +1,9 @@
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
 
-import { useBump } from '../hooks/use-bump';
-import { useKedrTheme } from '../theme/kedr-theme';
-import { tabularNumbers } from '../theme/typography';
+import { useBump } from '../../hooks/use-bump';
+import { useKedrTheme } from '../../theme/kedr-theme';
+import { tabularNumbers } from '../../theme/typography';
 
 export interface QuantityStepperProps {
   /** Product name used in accessible labels. */

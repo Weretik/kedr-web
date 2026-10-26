@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RoundIconButton } from './round-icon-button';
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
+import { RoundIconButton } from '../controls/round-icon-button';
 
 export interface ScreenHeaderProps {
   onBack?: () => void;

@@ -9,7 +9,7 @@ import { PressableScale, tabularNumbers, useKedrTheme } from '@mobile/shared/ui'
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { OrderStatusIcon } from './order-status-icon';
+import { OrderStatusIcon } from '../status/order-status-icon';
 
 export function OrderCard({
   order,

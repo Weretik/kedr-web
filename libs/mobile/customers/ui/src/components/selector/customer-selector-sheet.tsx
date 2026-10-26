@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { CustomerActionSheet } from './customer-action-sheet';
 import { CustomerSelectorList } from './customer-selector-list';
-import { CustomerSelectorState } from './customer-selector-state';
+import { CustomerSelectorState } from '../../states/customer-selector-state';
 
 import type { Customer } from '@mobile/customers/model';
 

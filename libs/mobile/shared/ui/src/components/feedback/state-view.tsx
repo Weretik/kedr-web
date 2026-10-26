@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Button, Icon, Text } from 'react-native-paper';
 
-import { useKedrTheme } from '../theme/kedr-theme';
+import { useKedrTheme } from '../../theme/kedr-theme';
 
 export type StateViewKind = 'empty' | 'error' | 'loading' | 'offline';
 
