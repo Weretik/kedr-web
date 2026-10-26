@@ -27,7 +27,7 @@ describe('CatalogActiveFilters', () => {
   it('shows the applied search as a removable chip without removing other query values', () => {
     const onRemoveSearch = jest.fn();
     const onRemoveFilter = jest.fn();
-    const { getByLabelText, getByText } = render(
+    const { getByLabelText } = render(
       <PaperProvider theme={testTheme}>
         <CatalogActiveFilters
           categoryLabel={undefined}

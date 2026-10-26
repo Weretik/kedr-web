@@ -2,10 +2,10 @@
 
 - **Client:** Mobile React Native (`apps/mobile`, `libs/mobile/*`)
 - **Domain:** core / shell theme, shared UI, all screens
-- **Status:** design approved, documented; implementation not started
+- **Status:** implemented (stages 1–6 and docs sync); deferred items listed in [tasks](tasks/README.md)
 - **Verified baseline:** 2026-10-26
 
-The product owner asked for a full redesign of the manager app: the current design is hard to read and some components break. On 2026-10-26 they chose direction C «Пагін» from the [concept page](https://claude.ai/artifact/Bt5JEczChkmo4dsAJWWzDL): keep all functionality and the brand colors (`#3FA435`, `#0F110F`), replace the visual style and the components that break. This SDD fixes the design rules and the rollout plan; the owner asked to document first and implement later.
+The product owner asked for a full redesign of the manager app: the current design is hard to read and some components break. On 2026-10-26 they chose direction C «Пагін» from the [concept page](https://claude.ai/artifact/Bt5JEczChkmo4dsAJWWzDL): keep all functionality and the brand colors (`#3FA435`, `#0F110F`), replace the visual style and the components that break. This SDD fixes the design rules and the rollout plan; the owner asked to document first and implement later, then approved the implementation the same day.
 
 - [Requirements and scenarios](requirements/behavior.md)
 - [Frontend design](design/frontend.md)

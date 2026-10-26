@@ -39,7 +39,7 @@ describe('MissingPhotoProductsScreen', () => {
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({ data: page([product]), isFetching: false, isLoading: false }),
     );
-    const { getByLabelText, getByText } = renderScreen(onProductPress);
+    const { getByLabelText } = renderScreen(onProductPress);
 
     expect(getByLabelText('Фото товару відсутнє')).toBeTruthy();
     fireEvent.press(getByLabelText(/Товар Кабель/));
