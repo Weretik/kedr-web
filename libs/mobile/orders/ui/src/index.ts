@@ -7,3 +7,5 @@ export * from './states/order-detail-state';
 export * from './states/order-history-empty';
 export * from './states/order-history-error';
 export * from './states/order-history-loading';
+export * from './components/order-history-summary';
+export * from './components/order-status-icon';

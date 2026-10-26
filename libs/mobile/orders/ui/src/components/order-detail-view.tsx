@@ -16,4 +16,4 @@ export function OrderDetailView({ order }: Readonly<{ order: OrderDetail }>) {
   );
 }
 
-const styles = StyleSheet.create({ content: { gap: 16, padding: 16 } });
+const styles = StyleSheet.create({ content: { gap: 12, padding: 16, paddingBottom: 32 } });

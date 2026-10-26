@@ -1,12 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { StateView } from '@mobile/shared/ui';
 
 export function OrderHistoryLoading() {
-  return (
-    <View style={styles.state}>
-      <ActivityIndicator accessibilityLabel="Завантаження замовлень" />
-    </View>
-  );
+  return <StateView kind="loading" title="Завантаження замовлень" />;
 }
-
-const styles = StyleSheet.create({ state: { alignItems: 'center', padding: 24 } });

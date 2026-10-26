@@ -1,31 +1,28 @@
-import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { StateView } from '@mobile/shared/ui';
 
 export function OrderDetailLoading() {
-  return (
-    <View style={styles.state}>
-      <ActivityIndicator accessibilityLabel="Завантаження замовлення" />
-    </View>
-  );
+  return <StateView kind="loading" title="Завантаження замовлення" />;
 }
+
 export function OrderDetailError({
   notFound = false,
   onBack,
   onRetry,
 }: Readonly<{ notFound?: boolean; onBack: () => void; onRetry: () => void }>) {
-  return (
-    <View style={styles.state}>
-      <Text accessibilityRole="alert">
-        {notFound
-          ? 'Замовлення не знайдено або воно більше недоступне'
-          : 'Не вдалося завантажити замовлення'}
-      </Text>
-      {notFound ? (
-        <Button onPress={onBack}>Повернутися до історії</Button>
-      ) : (
-        <Button onPress={onRetry}>Повторити</Button>
-      )}
-    </View>
+  return notFound ? (
+    <StateView
+      actionLabel="Повернутися до історії"
+      icon="receipt-text-remove-outline"
+      kind="empty"
+      onAction={onBack}
+      title="Замовлення не знайдено або воно більше недоступне"
+    />
+  ) : (
+    <StateView
+      actionLabel="Повторити"
+      kind="error"
+      onAction={onRetry}
+      title="Не вдалося завантажити замовлення"
+    />
   );
 }
-const styles = StyleSheet.create({ state: { alignItems: 'center', gap: 12, padding: 24 } });

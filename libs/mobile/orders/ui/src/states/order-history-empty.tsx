@@ -1,16 +1,16 @@
-import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { StateView } from '@mobile/shared/ui';
 
 export function OrderHistoryEmpty({
   filtered,
   onClear,
 }: Readonly<{ filtered: boolean; onClear: () => void }>) {
   return (
-    <View style={styles.state}>
-      <Text>{filtered ? 'Для цього клієнта замовлень не знайдено' : 'Замовлень ще немає'}</Text>
-      {filtered ? <Button onPress={onClear}>Очистити фільтр</Button> : null}
-    </View>
+    <StateView
+      actionLabel={filtered ? 'Очистити фільтр' : undefined}
+      icon="receipt-text-outline"
+      kind="empty"
+      onAction={filtered ? onClear : undefined}
+      title={filtered ? 'Для цього клієнта замовлень не знайдено' : 'Замовлень ще немає'}
+    />
   );
 }
-
-const styles = StyleSheet.create({ state: { alignItems: 'center', gap: 12, padding: 24 } });

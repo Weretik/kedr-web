@@ -3,6 +3,7 @@ import { RefreshControl, StyleSheet, View } from 'react-native';
 
 import { OrderCard } from './order-card';
 import { OrderHistoryFooter } from './order-history-footer';
+import { OrderHistorySummary } from './order-history-summary';
 
 import type { OrderSummary } from '@mobile/orders/model';
 
@@ -26,6 +27,7 @@ export function OrderHistoryList(props: Readonly<OrderHistoryListProps>) {
       renderItem={({ item }) => <OrderCard order={item} onPress={props.onOpenOrder} />}
       refreshControl={<RefreshControl refreshing={props.refreshing} onRefresh={props.onRefresh} />}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ListHeaderComponent={<OrderHistorySummary items={props.items} />}
       ListFooterComponent={
         <OrderHistoryFooter
           error={props.nextPageError}
@@ -38,4 +40,7 @@ export function OrderHistoryList(props: Readonly<OrderHistoryListProps>) {
     />
   );
 }
-const styles = StyleSheet.create({ content: { padding: 16 }, separator: { height: 12 } });
+const styles = StyleSheet.create({
+  content: { padding: 16, paddingBottom: 24 },
+  separator: { height: 8 },
+});

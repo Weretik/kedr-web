@@ -1,5 +1,5 @@
 import { formatOrderDateTime, type OrderDetail } from '@mobile/orders/model';
-import { StyleSheet, View } from 'react-native';
+import { KedrCard, useKedrTheme } from '@mobile/shared/ui';
 import { Text } from 'react-native-paper';
 
 export function OrderDetailMetadata({ order }: Readonly<{ order: OrderDetail }>) {
@@ -17,14 +17,12 @@ export function OrderDetailMetadata({ order }: Readonly<{ order: OrderDetail }>)
 }
 
 function MetadataSection({ title, value }: Readonly<{ title: string; value: string }>) {
+  const { kedr } = useKedrTheme();
   return (
-    <View style={styles.section}>
-      <Text accessibilityRole="header" variant="titleMedium">
-        {title}
+    <KedrCard title={title}>
+      <Text style={{ color: kedr.colors.onSurface }} variant="bodyMedium">
+        {value}
       </Text>
-      <Text>{value}</Text>
-    </View>
+    </KedrCard>
   );
 }
-
-const styles = StyleSheet.create({ section: { gap: 12 } });
