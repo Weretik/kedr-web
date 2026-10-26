@@ -1,5 +1,5 @@
+import { SearchField } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
-import { Searchbar } from 'react-native-paper';
 
 import { CustomerActionSheet } from './customer-action-sheet';
 import { CustomerSelectorList } from './customer-selector-list';
@@ -31,7 +31,7 @@ export function CustomerSelectorSheet(props: Readonly<CustomerSelectorSheetProps
       visible={props.visible}
     >
       <View style={styles.content}>
-        <Searchbar
+        <SearchField
           accessibilityLabel="Пошук клієнта за назвою"
           onChangeText={props.onQueryChange}
           placeholder="Пошук за назвою"
@@ -60,5 +60,5 @@ export function CustomerSelectorSheet(props: Readonly<CustomerSelectorSheetProps
 }
 
 const styles = StyleSheet.create({
-  content: { gap: 12, maxHeight: 560, minHeight: 280, padding: 20 },
+  content: { gap: 12, maxHeight: 560, minHeight: 280, padding: 16 },
 });

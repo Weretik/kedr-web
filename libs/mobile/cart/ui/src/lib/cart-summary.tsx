@@ -1,5 +1,6 @@
+import { ActionBar, ActionPillButton, tabularNumbers, useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 
 import { formatMoney } from './format-money';
 
@@ -8,27 +9,31 @@ export function CartSummary({
   onCheckout,
   total,
 }: Readonly<{ disabled: boolean; onCheckout: () => void; total: number }>) {
-  const theme = useTheme();
+  const { kedr } = useKedrTheme();
 
   return (
-    <View style={[styles.summary, { borderTopColor: theme.colors.outlineVariant }]}>
-      <View style={styles.summaryRow}>
-        <Text variant="titleMedium">Загальна сума</Text>
-        <Text variant="titleMedium">{formatMoney(total)}</Text>
+    <ActionBar respectBottomInset={false}>
+      <View style={styles.total}>
+        <Text style={{ color: kedr.colors.inverseOnSurface, opacity: 0.7 }} variant="labelSmall">
+          Загальна сума
+        </Text>
+        <Text
+          numberOfLines={1}
+          style={[kedr.type.price, tabularNumbers, { color: kedr.colors.inverseOnSurface }]}
+        >
+          {formatMoney(total)}
+        </Text>
       </View>
-      <Button
+      <ActionPillButton
         accessibilityLabel="Оформити замовлення"
         disabled={disabled}
-        mode="contained"
+        icon="send"
         onPress={onCheckout}
       >
-        Оформити замовлення
-      </Button>
-    </View>
+        Оформити
+      </ActionPillButton>
+    </ActionBar>
   );
 }
 
-const styles = StyleSheet.create({
-  summary: { borderTopWidth: StyleSheet.hairlineWidth, gap: 12, paddingBottom: 12, paddingTop: 12 },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
-});
+const styles = StyleSheet.create({ total: { flexShrink: 1, paddingLeft: 10 } });

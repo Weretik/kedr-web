@@ -1,6 +1,7 @@
+import { QuantityStepper, tabularNumbers, useKedrTheme } from '@mobile/shared/ui';
 import { Image, type ImageProps } from 'expo-image';
-import { StyleSheet, View } from 'react-native';
-import { Card, IconButton, Text, useTheme } from 'react-native-paper';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Icon, Text } from 'react-native-paper';
 
 import { formatMoney } from './format-money';
 
@@ -22,88 +23,91 @@ export function CartLineCard({
   onIncrement,
   onRemove,
 }: Readonly<CartLineCardProps>) {
-  const theme = useTheme();
+  const { kedr } = useKedrTheme();
 
   return (
-    <Card mode="contained" style={styles.card}>
-      <Card.Content style={styles.cardContent}>
-        <View style={styles.imageFrame} testID={`cart-item-image-frame-${line.id}`}>
-          {line.imageUrl ? (
-            <CachedImage
-              accessibilityLabel={`Зображення ${line.name}`}
-              cachePolicy="memory-disk"
-              contentFit="contain"
-              source={{ uri: line.imageUrl }}
-              style={styles.image}
-              transition={180}
-            />
-          ) : (
-            <View
-              accessibilityLabel={`Зображення ${line.name} відсутнє`}
-              style={[
-                styles.image,
-                styles.imageFallback,
-                { backgroundColor: theme.colors.surfaceVariant },
-              ]}
-            >
-              <Text variant="bodySmall">Фото відсутнє</Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.details}>
-          <View style={styles.titleRow}>
-            <Text numberOfLines={2} style={styles.name} variant="titleMedium">
-              {line.name}
-            </Text>
-            <IconButton
-              accessibilityLabel={`Видалити ${line.name}`}
-              icon="delete-outline"
-              onPress={onRemove}
-            />
+    <View
+      style={[styles.card, { backgroundColor: kedr.colors.surface, borderRadius: kedr.radius.lg }]}
+    >
+      <View
+        style={[styles.imageFrame, { borderRadius: kedr.radius.md }]}
+        testID={`cart-item-image-frame-${line.id}`}
+      >
+        {line.imageUrl ? (
+          <CachedImage
+            accessibilityLabel={`Зображення ${line.name}`}
+            cachePolicy="memory-disk"
+            contentFit="contain"
+            source={{ uri: line.imageUrl }}
+            style={styles.image}
+            transition={180}
+          />
+        ) : (
+          <View
+            accessibilityLabel={`Зображення ${line.name} відсутнє`}
+            style={[
+              styles.image,
+              styles.imageFallback,
+              { backgroundColor: kedr.colors.surfaceVariant },
+            ]}
+          >
+            <Icon color={kedr.colors.primary} size={26} source="image-off-outline" />
           </View>
-          <Text>{formatMoney(line.unitPrice)} за одиницю</Text>
-          <View style={styles.quantityRow}>
-            <Text style={styles.lineAmount}>{formatMoney(line.unitPrice * line.quantity)}</Text>
-            <View style={styles.stepper}>
-              <IconButton
-                accessibilityLabel={`Зменшити кількість ${line.name}`}
-                disabled={line.quantity <= 1}
-                icon="minus"
-                onPress={onDecrement}
-              />
-              <Text accessibilityLabel={`Кількість ${line.name}: ${line.quantity}`}>
-                {line.quantity}
-              </Text>
-              <IconButton
-                accessibilityLabel={`Збільшити кількість ${line.name}`}
-                disabled={line.quantity >= line.stock}
-                icon="plus"
-                onPress={onIncrement}
-              />
-            </View>
-          </View>
+        )}
+      </View>
+      <View style={styles.details}>
+        <Text numberOfLines={2} style={{ color: kedr.colors.onSurface }} variant="bodySmall">
+          {line.name}
+        </Text>
+        <Text
+          style={[tabularNumbers, { color: kedr.colors.onSurfaceVariant }]}
+          variant="labelSmall"
+        >
+          {formatMoney(line.unitPrice)} за одиницю
+        </Text>
+        <View style={styles.amountRow}>
+          <Text style={[kedr.type.price, tabularNumbers, { color: kedr.colors.onSurface }]}>
+            {formatMoney(line.unitPrice * line.quantity)}
+          </Text>
+          <Pressable
+            accessibilityLabel={`Видалити ${line.name}`}
+            accessibilityRole="button"
+            hitSlop={8}
+            onPress={onRemove}
+            style={styles.remove}
+          >
+            <Icon
+              color={kedr.colors.status.error.foreground}
+              size={18}
+              source="trash-can-outline"
+            />
+          </Pressable>
         </View>
-      </Card.Content>
-    </Card>
+      </View>
+      <QuantityStepper
+        itemName={line.name}
+        max={line.stock}
+        onDecrement={onDecrement}
+        onIncrement={onIncrement}
+        orientation="vertical"
+        value={line.quantity}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: 12 },
-  cardContent: { alignItems: 'center', flexDirection: 'row', gap: 12 },
-  details: { flex: 1, gap: 8 },
-  image: { height: '100%', width: '100%' },
-  imageFallback: { alignItems: 'center', justifyContent: 'center', padding: 6 },
-  imageFrame: {
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    height: 88,
-    overflow: 'hidden',
-    width: 88,
+  amountRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
   },
-  lineAmount: { flex: 1, fontWeight: '700' },
-  name: { flex: 1 },
-  quantityRow: { alignItems: 'center', flexDirection: 'row', gap: 8 },
-  stepper: { alignItems: 'center', flexDirection: 'row' },
-  titleRow: { alignItems: 'flex-start', flexDirection: 'row' },
+  card: { alignItems: 'center', flexDirection: 'row', gap: 10, marginBottom: 10, padding: 8 },
+  details: { flex: 1, gap: 4 },
+  image: { height: '100%', width: '100%' },
+  imageFallback: { alignItems: 'center', justifyContent: 'center' },
+  // Product photos are shot on white, so the frame stays white in both schemes.
+  imageFrame: { backgroundColor: '#ffffff', height: 72, overflow: 'hidden', width: 72 },
+  remove: { alignItems: 'center', height: 32, justifyContent: 'center', width: 32 },
 });

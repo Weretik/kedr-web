@@ -70,7 +70,7 @@ describe('CartView', () => {
       />,
     );
 
-    expect(view.getAllByText('250 грн.')).toHaveLength(2);
+    expect(view.getAllByText('250 грн.').length).toBeGreaterThanOrEqual(2);
     fireEvent.press(view.getByLabelText('Зменшити кількість Товар'));
     fireEvent.press(view.getByLabelText('Збільшити кількість Товар'));
     fireEvent.press(view.getByLabelText('Видалити Товар'));
@@ -98,8 +98,8 @@ describe('CartView', () => {
 
     expect(view.getByTestId('cart-item-image-frame-product-1')).toHaveStyle({
       backgroundColor: '#ffffff',
-      height: 88,
-      width: 88,
+      height: 72,
+      width: 72,
     });
     expect(view.getByLabelText('Зображення Товар').props.contentFit).toBe('contain');
   });

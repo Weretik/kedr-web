@@ -8,11 +8,18 @@ export interface ActionBarProps {
   children: ReactNode;
   /** Extra bottom offset, e.g. the pill navigation height on tab screens. */
   bottomOffset?: number;
+  /** Turn off inside tab screens, where the tab bar already clears the system inset. */
+  respectBottomInset?: boolean;
   testID?: string;
 }
 
 /** Dark floating pill that holds the screen's primary action. */
-export function ActionBar({ bottomOffset = 0, children, testID }: Readonly<ActionBarProps>) {
+export function ActionBar({
+  bottomOffset = 0,
+  children,
+  respectBottomInset = true,
+  testID,
+}: Readonly<ActionBarProps>) {
   const { kedr } = useKedrTheme();
   const insets = useSafeAreaInsets();
 
@@ -23,7 +30,7 @@ export function ActionBar({ bottomOffset = 0, children, testID }: Readonly<Actio
         {
           backgroundColor: kedr.colors.inverseSurface,
           borderRadius: kedr.radius.pill,
-          bottom: insets.bottom + 12 + bottomOffset,
+          bottom: (respectBottomInset ? insets.bottom : 0) + 12 + bottomOffset,
         },
       ]}
       testID={testID}

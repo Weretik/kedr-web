@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { StateView } from '@mobile/shared/ui';
+import { ActivityIndicator } from 'react-native-paper';
 
 interface CustomerSelectorStateProps {
   error: boolean;
@@ -18,24 +18,25 @@ export function CustomerSelectorState({
 
   if (error)
     return (
-      <View style={styles.state}>
-        <Text accessibilityRole="alert">Не вдалося завантажити клієнтів.</Text>
-        <Button onPress={onRetry}>Повторити</Button>
-      </View>
+      <StateView
+        actionLabel="Повторити"
+        kind="error"
+        onAction={onRetry}
+        title="Не вдалося завантажити клієнтів."
+      />
     );
 
   return (
-    <View style={styles.state}>
-      <Text>
-        {query.trim()
+    <StateView
+      actionLabel={query.trim() ? undefined : 'Оновити список'}
+      icon="account-search-outline"
+      kind="empty"
+      onAction={query.trim() ? undefined : onRetry}
+      title={
+        query.trim()
           ? 'Клієнтів за цією назвою не знайдено.'
-          : 'Sales API не повернув жодного клієнта.'}
-      </Text>
-      {!query.trim() ? <Button onPress={onRetry}>Оновити список</Button> : null}
-    </View>
+          : 'Sales API не повернув жодного клієнта.'
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  state: { alignItems: 'center', gap: 8, paddingVertical: 24, textAlign: 'center' },
-});
