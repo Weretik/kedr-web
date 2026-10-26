@@ -1,5 +1,12 @@
+import {
+  PressableScale,
+  StatusPill,
+  tabularNumbers,
+  useKedrTheme,
+  type KedrStatusKind,
+} from '@mobile/shared/ui';
 import { Image, StyleSheet, View } from 'react-native';
-import { Card, Text, useTheme } from 'react-native-paper';
+import { Icon, Text } from 'react-native-paper';
 
 import type { CatalogProduct } from '@mobile/catalog/model';
 
@@ -8,103 +15,85 @@ export interface ProductCardProps {
   product: CatalogProduct;
 }
 
-const availabilityLabels: Record<CatalogProduct['availability'], string> = {
-  in_stock: 'В наявності',
-  out_of_stock: 'Немає в наявності',
-  unknown: 'Наявність уточнюється',
+const availability: Record<
+  CatalogProduct['availability'],
+  { kind: KedrStatusKind; label: string }
+> = {
+  in_stock: { kind: 'success', label: 'В наявності' },
+  out_of_stock: { kind: 'error', label: 'Немає в наявності' },
+  unknown: { kind: 'warning', label: 'Наявність уточнюється' },
 };
 
+/** Product tile for the two-column catalog grid. */
 export function ProductCard({ onPress, product }: Readonly<ProductCardProps>) {
-  const theme = useTheme();
-  const availability = availabilityLabels[product.availability];
-  const availabilityColor =
-    product.availability === 'in_stock'
-      ? theme.colors.primary
-      : product.availability === 'out_of_stock'
-        ? theme.colors.error
-        : theme.colors.tertiary;
+  const { kedr } = useKedrTheme();
+  const status = availability[product.availability];
 
   return (
-    <Card
-      accessibilityLabel={`Товар ${product.name}. ${availability}. ID: ${product.id}.`}
+    <PressableScale
+      accessibilityLabel={`Товар ${product.name}. ${status.label}. ID: ${product.id}.`}
       accessibilityRole="button"
-      mode="elevated"
       onPress={() => onPress(product)}
-      style={[styles.card, { backgroundColor: theme.colors.surface }]}
+      style={[styles.tile, { backgroundColor: kedr.colors.surface, borderRadius: kedr.radius.lg }]}
     >
-      <Card.Content style={styles.content}>
-        <View style={[styles.imageFrame, { backgroundColor: theme.colors.surface }]}>
-          {product.imageUrl ? (
+      <View
+        style={[
+          styles.well,
+          { backgroundColor: kedr.colors.surfaceVariant, borderRadius: kedr.radius.md },
+        ]}
+      >
+        {product.imageUrl ? (
+          <View
+            style={[
+              styles.frame,
+              { backgroundColor: kedr.colors.photoFrame, borderRadius: kedr.radius.sm },
+            ]}
+          >
             <Image
               accessibilityLabel={`Фото товару ${product.name}`}
               resizeMode="contain"
               source={{ uri: product.imageUrl }}
               style={styles.image}
             />
-          ) : (
-            <View
-              accessibilityLabel="Фото товару відсутнє"
-              style={[
-                styles.image,
-                styles.imageFallback,
-                { backgroundColor: theme.colors.surfaceVariant },
-              ]}
-            >
-              <Text variant="bodyMedium">Фото відсутнє</Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.details}>
-          <Text
-            numberOfLines={1}
-            style={{ color: theme.colors.onSurfaceVariant, fontWeight: '700' }}
-            variant="bodySmall"
-          >{`ID: ${product.id}`}</Text>
-          <Text
-            accessibilityRole="header"
-            numberOfLines={2}
-            style={{ color: theme.colors.onSurface, fontWeight: '400' }}
-            variant="bodyMedium"
-          >
-            {product.name}
-          </Text>
-          <View style={styles.summaryRow}>
-            <Text
-              style={{ color: theme.colors.onSurface, fontWeight: '700' }}
-              variant="titleMedium"
-            >
-              {product.price === null ? 'Ціну уточнюйте' : `${product.price} грн.`}
-            </Text>
-            <Text
-              numberOfLines={1}
-              style={{ color: availabilityColor, flexShrink: 1, textAlign: 'right' }}
-              variant="bodyMedium"
-            >
-              {availability}
-            </Text>
           </View>
-        </View>
-      </Card.Content>
-    </Card>
+        ) : (
+          <View accessibilityLabel="Фото товару відсутнє" style={styles.fallback}>
+            <Icon color={kedr.colors.primary} size={36} source="image-off-outline" />
+          </View>
+        )}
+      </View>
+      <Text
+        numberOfLines={1}
+        style={[styles.id, tabularNumbers, { color: kedr.colors.onSurfaceVariant }]}
+        variant="labelSmall"
+      >
+        {`ID: ${product.id}`}
+      </Text>
+      <Text
+        accessibilityRole="header"
+        numberOfLines={2}
+        style={[styles.name, { color: kedr.colors.onSurface }]}
+        variant="bodySmall"
+      >
+        {product.name}
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={[kedr.type.price, tabularNumbers, { color: kedr.colors.onSurface }]}
+      >
+        {product.price === null ? 'Ціну уточнюйте' : `${product.price} грн.`}
+      </Text>
+      <StatusPill kind={status.kind} label={status.label} />
+    </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { minHeight: 120 },
-  content: { flexDirection: 'row', gap: 12, padding: 12 },
-  details: { flex: 1, gap: 6, justifyContent: 'center' },
+  fallback: { alignItems: 'center', flex: 1, justifyContent: 'center' },
+  frame: { flex: 1, margin: 8, overflow: 'hidden' },
+  id: { marginTop: 2 },
   image: { height: '100%', width: '100%' },
-  imageFallback: { alignItems: 'center', justifyContent: 'center', padding: 8 },
-  imageFrame: {
-    borderRadius: 8,
-    height: 96,
-    overflow: 'hidden',
-    width: 96,
-  },
-  summaryRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    justifyContent: 'space-between',
-  },
+  name: { minHeight: 34 },
+  tile: { flex: 1, gap: 4, padding: 8 },
+  well: { aspectRatio: 1 / 0.82, overflow: 'hidden', width: '100%' },
 });

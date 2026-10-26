@@ -12,10 +12,10 @@ describe('ProductDetailsView', () => {
       </PaperProvider>,
     );
 
-    expect(getByText('Товар')).toBeTruthy();
+    expect(getAllByText('Товар').length).toBeGreaterThan(0);
     expect(getByText('ID: 42')).toBeTruthy();
-    expect(getByText('123.5 грн.')).toBeTruthy();
-    expect(getAllByText('Категорія')).toHaveLength(2);
+    expect(getAllByText('123.5 грн.').length).toBeGreaterThan(0);
+    expect(getAllByText('Категорія')).toHaveLength(3);
     expect(getByText('category')).toBeTruthy();
     expect(getByText('10')).toBeTruthy();
     expect(getByText('4')).toBeTruthy();

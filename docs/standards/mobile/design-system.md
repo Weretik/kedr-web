@@ -2,23 +2,24 @@
 
 This is the visual standard for Kedr Mobile (`apps/mobile`, `libs/mobile/*`). The product owner chose it on 2026-10-26 from the [concept page](https://claude.ai/artifact/Bt5JEczChkmo4dsAJWWzDL) (direction C). Language, states, and accessibility stay in the [Mobile UI rules](mobile-ui.md); library choice stays in the [UI and platform capabilities catalog](../../architecture/mobile/platform/ui-capabilities.md). Admin and Storefront do not follow this document.
 
-**Status:** approved, not implemented yet. The current theme in `libs/mobile/core/shell/src/theme/app-theme.ts` still uses the old palette. The rollout is planned in the [redesign SDD](../../specs/mobile/redesign/001-pagin-design-system/README.md). Until a screen is migrated, new work on it follows this document.
+**Status:** implemented on 2026-10-26 for all screens (stages 1–6 of the [redesign SDD](../../specs/mobile/redesign/001-pagin-design-system/README.md)). Items marked _deferred_ below are not built yet. New mobile work follows this document.
 
 The character is bright, bold, and friendly: a brand-green hero block with a large rounded bottom edge, product tiles in two columns, a dark floating pill navigation, a display face for headings and prices, and short, springy motion that confirms what the manager did.
 
 ## Where the tokens live
 
-Tokens are code in `@mobile/core/shell` (`libs/mobile/core/shell/src/theme/`); this page describes them, the code is the source of truth.
+Tokens are code in `@mobile/shared/ui` (`libs/mobile/shared/ui/src/theme/`), because shared UI components need them and `scope:mobile-shared` libraries cannot depend on `@mobile/core/shell`. The shell assembles the Paper themes from them in `libs/mobile/core/shell/src/theme/app-theme.ts`. This page describes the tokens; the code is the source of truth.
 
-| File (planned)  | Owns                                                                              |
-| --------------- | --------------------------------------------------------------------------------- |
-| `palette.ts`    | `kedrBrand`, light and dark color roles                                           |
-| `typography.ts` | Font families and the type scale mapped onto Paper `fonts`                        |
-| `shape.ts`      | Radii, spacing, touch targets, elevation                                          |
-| `motion.ts`     | Durations, spring configs, press scale                                            |
-| `app-theme.ts`  | Assembles the Paper MD3 theme (`roundness`, `colors`, `fonts`) plus `kedr` tokens |
+| File                   | Owns                                                                              |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `palette.ts`           | `kedrBrand`, light and dark color roles                                           |
+| `typography.ts`        | Font families and the type scale mapped onto Paper `fonts`                        |
+| `shape.ts`             | Radii, spacing, touch targets, elevation                                          |
+| `motion.ts`            | Durations, spring configs, press scale                                            |
+| `kedr-theme.ts`        | `KedrTokens`, `KedrTheme`, `createKedrTokens`, `useKedrTheme()`                   |
+| `app-theme.ts` (shell) | Assembles the Paper MD3 theme (`roundness`, `colors`, `fonts`) plus `kedr` tokens |
 
-The Paper `MD3Theme` is extended with a typed `kedr` object (`theme.kedr.radius`, `theme.kedr.space`, `theme.kedr.motion`, `theme.kedr.colors`) read through a `useKedrTheme()` hook exported from `@mobile/core/shell`. Feature and UI code uses theme values only: no hex values, font names, durations, or radii in components. A new token goes into the theme first and onto this page second.
+The Paper `MD3Theme` is extended with a typed `kedr` object (`theme.kedr.radius`, `theme.kedr.space`, `theme.kedr.motion`, `theme.kedr.colors`) read through a `useKedrTheme()` hook exported from `@mobile/shared/ui`. Outside a Kedr theme (for example in tests with a plain Paper theme) the hook falls back to the light tokens. Feature and UI code uses theme values only: no hex values, font names, durations, or radii in components. A new token goes into the theme first and onto this page second.
 
 ## Color
 
@@ -119,23 +120,25 @@ Shared presentational components live in a new `@mobile/shared/ui` library (alia
 | `ScreenHeader`    | `@mobile/shared/ui`  | Paper `Appbar` on inner screens; round icon buttons                          |
 | `PillTabBar`      | `@mobile/core/shell` | Paper `BottomNavigation.Bar` in `(tabs)/_layout.tsx`                         |
 | `SearchField`     | `@mobile/shared/ui`  | Search entry in catalog and orders; pill, optional trailing action           |
-| `CategoryRail`    | `@mobile/catalog/ui` | `CatalogQueryActionRow` icon buttons, breadcrumb strip                       |
+| `CategoryRail`    | `@mobile/catalog/ui` | _Deferred._ Labeled `FilterChip`s in `CatalogQueryActionRow` for now         |
 | `FilterChip`      | `@mobile/shared/ui`  | Clipped Paper `Chip` in `catalog-active-filters.tsx`; height 32, wraps label |
-| `ProductTile`     | `@mobile/catalog/ui` | `ProductCard` (row card)                                                     |
+| `ProductTile`     | `@mobile/catalog/ui` | Implemented as the restyled `ProductCard` (two-column tile)                  |
 | `QuantityStepper` | `@mobile/shared/ui`  | Icon-button steppers in cart and detail; `horizontal` and `vertical`         |
 | `ActionBar`       | `@mobile/shared/ui`  | `ProductDetailsCartAction`, cart summary button                              |
-| `TotalCard`       | `@mobile/cart/ui`    | `CartSummary`                                                                |
+| `TotalCard`       | `@mobile/cart/ui`    | Total card in the `CartView` list header; `CartSummary` is the action bar    |
 | `StatusPill`      | `@mobile/shared/ui`  | `OrderStatusChip`, stock labels; takes a status kind and label               |
 | `MetricTile`      | `@mobile/shared/ui`  | New, orders bento summary                                                    |
-| `OrderRow`        | `@mobile/orders/ui`  | `OrderCard`                                                                  |
+| `OrderRow`        | `@mobile/orders/ui`  | Implemented as the restyled `OrderCard`; bento is `OrderHistorySummary`      |
 | `KedrSheet`       | `@mobile/shared/ui`  | Catalog, cart, and customer action sheets and the filters modal              |
 | `StateView`       | `@mobile/shared/ui`  | Loading, empty, error, offline states; illustration tile, text, retry        |
-| `Skeleton`        | `@mobile/shared/ui`  | Spinners in list loading states                                              |
+| `Skeleton`        | `@mobile/shared/ui`  | _Deferred._ `StateView kind="loading"` for now                               |
 | Theme choice      | `@mobile/core/shell` | Moves from every tab header into the profile screen                          |
+
+Also in `@mobile/shared/ui`: `PressableScale`, `RoundIconButton`, `ActionPillButton`, `KedrCard`, and the `useBump` and `useReducedMotion` hooks. The tab bar is laid out in the normal flow (not absolutely positioned), so screen content never hides behind it.
 
 ## Motion
 
-Motion is short and springy and always confirms an action or shows where something came from. It runs on the UI thread with Reanimated; tokens are in `motion.ts`.
+Motion is short and springy and always confirms an action or shows where something came from. It uses React Native `Animated` with the native driver (transform and opacity only); tokens are in `motion.ts`. Reanimated stays available for gesture-driven motion.
 
 | Token           | Value                             | Used for                                          |
 | --------------- | --------------------------------- | ------------------------------------------------- |
@@ -151,12 +154,12 @@ Moments:
 
 - Pressed tiles and buttons scale to `press.scale`.
 - The active nav pill grows to reveal its label (`spring.snappy`).
-- «+» on a tile morphs into a check, and the cart badge bumps (`spring.bouncy`); a light haptic is added only once `expo-haptics` is approved through a platform adapter.
+- _Deferred:_ «+» quick add on a tile (list items do not carry stock yet). The cart badge bumps (`spring.bouncy`); a light haptic is added only once `expo-haptics` is approved through a platform adapter.
 - Quantity and totals bump when they change.
-- List items enter with a 10 px rise and 40 ms stagger, only on first load of a list, never on scroll recycling.
-- The product stage has a slow «breathing» halo behind the photo (4 s loop, scale 1 → 1.08), stopped when the screen is not focused.
+- _Deferred:_ list items enter with a 10 px rise and 40 ms stagger, only on first load of a list, never on scroll recycling.
+- _Deferred:_ the product stage has a slow «breathing» halo behind the photo (4 s loop, scale 1 → 1.08), stopped when the screen is not focused.
 
-Reduced motion (`AccessibilityInfo.isReduceMotionEnabled` / Reanimated `ReduceMotion.System`) turns off the halo, staggers, and bumps, and replaces springs with instant changes.
+Reduced motion (`AccessibilityInfo.isReduceMotionEnabled`, read by `useReducedMotion`) turns off the halo, staggers, and bumps, and replaces springs with instant changes.
 
 ## Do and don't
 

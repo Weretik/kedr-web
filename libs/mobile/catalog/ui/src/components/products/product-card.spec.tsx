@@ -1,31 +1,11 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import { StyleSheet, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 
 import { ProductCard } from './product-card';
 
 describe('ProductCard', () => {
-  it('uses ID as the bold identifier and keeps the product title visually quiet', () => {
-    const { getByText } = renderCard({
-      availability: 'in_stock',
-      id: '12',
-      imageUrl: null,
-      name: 'Кабель мідний',
-      price: 120.5,
-      productSlug: 'kabel-12',
-    });
-
-    expect(getByText('ID: 12').props.style).toEqual(expect.objectContaining({ fontWeight: '700' }));
-    expect(getByText('Кабель мідний').props.style).toEqual(
-      expect.objectContaining({ fontWeight: '400' }),
-    );
-    expect(getByText('120.5 грн.').props.style).toEqual(
-      expect.objectContaining({ fontWeight: '700' }),
-    );
-  });
-
-  it('keeps the availability status alongside the price and retains its semantic color', () => {
-    const { getByText } = renderCard({
+  it('shows ID, name, price, and a labeled availability pill', () => {
+    const { getByLabelText, getByText } = renderCard({
       availability: 'out_of_stock',
       id: '13',
       imageUrl: null,
@@ -34,12 +14,27 @@ describe('ProductCard', () => {
       productSlug: 'rele-13',
     });
 
-    expect(getByText('Немає в наявності').props.style).toEqual(
-      expect.objectContaining({ color: '#c00' }),
+    expect(getByText('ID: 13')).toBeTruthy();
+    expect(getByText('Реле')).toBeTruthy();
+    expect(getByText('Ціну уточнюйте')).toBeTruthy();
+    expect(getByLabelText('Немає в наявності')).toBeTruthy();
+    expect(getByLabelText('Фото товару відсутнє')).toBeTruthy();
+  });
+
+  it('marks unknown availability with a warning label instead of an off-brand color', () => {
+    const { getByText } = renderCard({
+      availability: 'unknown',
+      id: '14',
+      imageUrl: null,
+      name: 'Кабель',
+      price: 10,
+      productSlug: 'kabel-14',
+    });
+
+    expect(getByText('Наявність уточнюється').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ color: '#A86A00' })]),
     );
-    expect(getByText('Ціну уточнюйте').props.style).toEqual(
-      expect.objectContaining({ fontWeight: '700' }),
-    );
+    expect(getByText('10 грн.')).toBeTruthy();
   });
 
   it('opens the selected product', () => {
@@ -60,24 +55,6 @@ describe('ProductCard', () => {
 
     fireEvent.press(getByLabelText(/Товар Кабель мідний/));
     expect(onPress).toHaveBeenCalledWith(product);
-  });
-
-  it('uses the Paper theme for the product image frame', () => {
-    const { UNSAFE_getAllByType } = renderCard({
-      availability: 'in_stock',
-      id: '12',
-      imageUrl: null,
-      name: 'Кабель мідний',
-      price: 120.5,
-      productSlug: 'kabel-12',
-    });
-
-    const imageFrame = UNSAFE_getAllByType(View).find(
-      (view) => StyleSheet.flatten(view.props.style)?.width === 96,
-    );
-    expect(StyleSheet.flatten(imageFrame?.props.style)).toEqual(
-      expect.objectContaining({ backgroundColor: '#f1e2d3' }),
-    );
   });
 });
 

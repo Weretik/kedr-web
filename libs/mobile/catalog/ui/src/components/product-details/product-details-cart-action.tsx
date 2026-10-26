@@ -1,47 +1,52 @@
-import { StyleSheet } from 'react-native';
-import { Button, Surface, Text, useTheme } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActionBar, ActionPillButton, tabularNumbers, useKedrTheme } from '@mobile/shared/ui';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 interface ProductDetailsCartActionProps {
   disabled: boolean;
   disabledReason?: string;
   onAddToCart: () => void;
+  price?: number | null;
 }
 
 export function ProductDetailsCartAction({
   disabled,
   disabledReason,
   onAddToCart,
+  price,
 }: Readonly<ProductDetailsCartActionProps>) {
-  const theme = useTheme();
-  const insets = useSafeAreaInsets();
+  const { kedr } = useKedrTheme();
 
   return (
-    <Surface
-      elevation={3}
-      style={[
-        styles.actionBar,
-        { backgroundColor: theme.colors.surface, paddingBottom: Math.max(16, insets.bottom) },
-      ]}
-    >
-      {disabledReason ? (
-        <Text
-          style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center' }}
-          variant="bodySmall"
-        >
-          {disabledReason}
-        </Text>
-      ) : null}
-      <Button
+    <ActionBar>
+      <View style={styles.summary}>
+        {disabledReason ? (
+          <Text
+            numberOfLines={2}
+            style={{ color: kedr.colors.inverseOnSurface }}
+            variant="labelSmall"
+          >
+            {disabledReason}
+          </Text>
+        ) : (
+          <Text
+            numberOfLines={1}
+            style={[kedr.type.price, tabularNumbers, { color: kedr.colors.inverseOnSurface }]}
+          >
+            {price === null || price === undefined ? 'Ціну уточнюйте' : `${price} грн.`}
+          </Text>
+        )}
+      </View>
+      <ActionPillButton
         accessibilityLabel="Додати товар у кошик"
         disabled={disabled}
-        mode="contained"
+        icon="cart-plus"
         onPress={onAddToCart}
       >
         Додати в кошик
-      </Button>
-    </Surface>
+      </ActionPillButton>
+    </ActionBar>
   );
 }
 
-const styles = StyleSheet.create({ actionBar: { gap: 8, paddingHorizontal: 16, paddingTop: 12 } });
+const styles = StyleSheet.create({ summary: { flexShrink: 1, paddingLeft: 10 } });

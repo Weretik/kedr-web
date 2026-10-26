@@ -7,6 +7,7 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
+    '^@mobile/shared/ui$': '<rootDir>/../../shared/ui/src/index.ts',
     '^@mobile/customers/model$': '<rootDir>/../model/src/index.ts',
     '^@shopify/flash-list$': '<rootDir>/../../catalog/ui/src/test-mocks/flash-list.tsx',
     '^react-native-actions-sheet$':

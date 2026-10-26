@@ -6,12 +6,12 @@ import {
   resolveOrderAttempt,
   type OrderAttempt,
 } from '@mobile/cart/model';
-import { useGetCustomersQuery } from '@mobile/customers/data-access';
-import { filterCustomersByName, type Customer } from '@mobile/customers/model';
+import { type Customer } from '@mobile/customers/model';
 import { type OrderSyncStatus } from '@mobile/shared/model';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useCheckoutCustomers } from './use-checkout-customers';
 import {
   checkoutFormSchema,
   createIdempotencyKey,
@@ -27,16 +27,10 @@ export interface OrderReceipt {
 export function useCartCheckoutController() {
   const cart = useCart();
   const [checkoutVisible, setCheckoutVisible] = useState(false);
-  const [selectorVisible, setSelectorVisible] = useState(false);
-  const [query, setQuery] = useState('');
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<OrderReceipt | null>(null);
   const attempt = useRef<OrderAttempt | null>(null);
   const submitLocked = useRef(false);
-  const customersQuery = useGetCustomersQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-    skip: !checkoutVisible,
-  });
   const [createOrder, createState] = useCreateCartOrderMutation();
   const form = useForm<CheckoutFormValues>({
     defaultValues: { comment: '', counterpartyId: '' },
@@ -44,12 +38,11 @@ export function useCartCheckoutController() {
   });
   const customerId = form.watch('counterpartyId');
   const comment = form.watch('comment');
-  const customers = customersQuery.data ?? [];
-  const selectedCustomer = customers.find((customer) => customer.counterpartyId === customerId);
-  const filteredCustomers = useMemo(
-    () => filterCustomersByName(customers, query),
-    [customers, query],
-  );
+  const {
+    close: closeSelector,
+    open: openSelector,
+    ...customers
+  } = useCheckoutCustomers(checkoutVisible, customerId);
 
   const submit = form.handleSubmit(async (values) => {
     if (submitLocked.current || createState.isLoading || cart.lines.length === 0 || receipt) return;
@@ -67,7 +60,7 @@ export function useCartCheckoutController() {
       }).unwrap();
       setReceipt({ orderNumber: created.orderNumber, syncStatus: created.syncStatus });
       setCheckoutVisible(false);
-      setSelectorVisible(false);
+      closeSelector();
       form.reset();
       await cart.clear();
     } catch (error) {
@@ -81,7 +74,7 @@ export function useCartCheckoutController() {
     form.setValue('counterpartyId', customer.counterpartyId, { shouldValidate: true });
     form.clearErrors('counterpartyId');
     setSubmitError(null);
-    setSelectorVisible(false);
+    closeSelector();
   };
 
   return {
@@ -96,7 +89,7 @@ export function useCartCheckoutController() {
         setReceipt(null);
         setCheckoutVisible(true);
       },
-      openCustomerSelector: () => setSelectorVisible(true),
+      openCustomerSelector: openSelector,
       setComment: (value: string) => {
         form.setValue('comment', value, { shouldValidate: form.formState.isSubmitted });
         setSubmitError(null);
@@ -106,18 +99,7 @@ export function useCartCheckoutController() {
       submitting: createState.isLoading,
       visible: checkoutVisible,
     },
-    customers: {
-      close: () => setSelectorVisible(false),
-      error: customersQuery.isError,
-      filtered: filteredCustomers,
-      loading: customersQuery.isLoading || customersQuery.isFetching,
-      query,
-      retry: () => void customersQuery.refetch(),
-      select: selectCustomer,
-      selectedName: selectedCustomer?.name,
-      setQuery,
-      visible: selectorVisible,
-    },
+    customers: { ...customers, close: closeSelector, select: selectCustomer },
     receipt,
     total: calculateCartTotal(cart.lines),
   };

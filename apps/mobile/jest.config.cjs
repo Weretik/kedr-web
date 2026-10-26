@@ -16,11 +16,13 @@ module.exports = {
     '^@mobile/orders/data-access$': '<rootDir>/../../libs/mobile/orders/data-access/src/index.ts',
     '^@mobile/orders/model$': '<rootDir>/../../libs/mobile/orders/model/src/index.ts',
     '^@mobile/orders/ui$': '<rootDir>/../../libs/mobile/orders/ui/src/index.ts',
-    '^@mobile/customers/data-access$': '<rootDir>/../../libs/mobile/customers/data-access/src/index.ts',
+    '^@mobile/customers/data-access$':
+      '<rootDir>/../../libs/mobile/customers/data-access/src/index.ts',
     '^@mobile/customers/model$': '<rootDir>/../../libs/mobile/customers/model/src/index.ts',
     '^@mobile/customers/ui$': '<rootDir>/../../libs/mobile/customers/ui/src/index.ts',
     '^@mobile/shared/api-client$': '<rootDir>/../../libs/mobile/shared/api-client/src/index.ts',
     '^@mobile/shared/config$': '<rootDir>/../../libs/mobile/shared/config/src/index.ts',
+    '^@mobile/shared/ui$': '<rootDir>/../../libs/mobile/shared/ui/src/index.ts',
     '^@mobile/shared/model$': '<rootDir>/../../libs/mobile/shared/model/src/index.ts',
     '^@react-native-community/netinfo$':
       '<rootDir>/../../libs/mobile/core/shell/src/test-mocks/netinfo.ts',

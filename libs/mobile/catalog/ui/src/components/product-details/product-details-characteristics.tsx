@@ -1,29 +1,29 @@
 import { type CatalogProductDetails } from '@mobile/catalog/model';
+import { KedrCard, useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
-import { Divider, Surface, Text, useTheme } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 
 export function ProductDetailsCharacteristics({
   product,
 }: Readonly<{ product: CatalogProductDetails }>) {
-  const theme = useTheme();
-
   return (
-    <Surface elevation={0} style={[styles.section, { backgroundColor: theme.colors.surface }]}>
-      <Text variant="titleMedium">Характеристики</Text>
-      <Divider />
+    <KedrCard title="Характеристики">
       <DetailRow label="Категорія" value={product.categoryName} />
       <DetailRow label="Код категорії" value={product.categorySlug} />
       <DetailRow label="Залишок" value={`${product.stock}`} />
       <DetailRow label="Кількість в упаковці" value={`${product.quantityInPack}`} />
-    </Surface>
+    </KedrCard>
   );
 }
 
 function DetailRow({ label, value }: Readonly<{ label: string; value: string }>) {
+  const { kedr } = useKedrTheme();
   return (
-    <View style={styles.row}>
-      <Text variant="bodyMedium">{label}</Text>
-      <Text style={styles.rowValue} variant="bodyMedium">
+    <View style={[styles.row, { borderTopColor: kedr.colors.outlineVariant }]}>
+      <Text style={{ color: kedr.colors.onSurfaceVariant }} variant="bodyMedium">
+        {label}
+      </Text>
+      <Text style={[styles.rowValue, { color: kedr.colors.onSurface }]} variant="labelLarge">
         {value}
       </Text>
     </View>
@@ -31,7 +31,12 @@ function DetailRow({ label, value }: Readonly<{ label: string; value: string }>)
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: 16, justifyContent: 'space-between' },
-  rowValue: { flexShrink: 1, fontWeight: '600', textAlign: 'right' },
-  section: { borderRadius: 16, gap: 12, padding: 16 },
+  row: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  rowValue: { flexShrink: 1, textAlign: 'right' },
 });

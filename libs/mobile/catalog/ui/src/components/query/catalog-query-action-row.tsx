@@ -1,8 +1,53 @@
-import { StyleSheet, View } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { FilterChip } from '@mobile/shared/ui';
+import { ScrollView, StyleSheet } from 'react-native';
 
-export function CatalogQueryActionRow({ onOpenCategories, onOpenFilters, onOpenSort }: Readonly<{ onOpenCategories: () => void; onOpenFilters: () => void; onOpenSort: () => void }>) {
-  return <View style={styles.row}><IconButton accessibilityLabel="Фільтри" icon="filter-variant" onPress={onOpenFilters} /><IconButton accessibilityLabel="Сортування" icon="sort" onPress={onOpenSort} /><IconButton accessibilityLabel="Категорії" icon="view-list" onPress={onOpenCategories} /></View>;
+export interface CatalogQueryActionRowProps {
+  activeFilterCount?: number;
+  categoryLabel?: string;
+  onOpenCategories: () => void;
+  onOpenFilters: () => void;
+  onOpenSort: () => void;
+  sortLabel?: string;
 }
 
-const styles = StyleSheet.create({ row: { flexDirection: 'row', justifyContent: 'flex-end' } });
+/** Labeled entry points for categories, filters, and sort; each shows when it is in effect. */
+export function CatalogQueryActionRow({
+  activeFilterCount = 0,
+  categoryLabel,
+  onOpenCategories,
+  onOpenFilters,
+  onOpenSort,
+  sortLabel,
+}: Readonly<CatalogQueryActionRowProps>) {
+  return (
+    <ScrollView
+      contentContainerStyle={styles.row}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    >
+      <FilterChip
+        accessibilityLabel="Категорії"
+        icon="shape-outline"
+        label={categoryLabel ?? 'Категорії'}
+        onPress={onOpenCategories}
+        selected={categoryLabel !== undefined}
+      />
+      <FilterChip
+        accessibilityLabel="Фільтри"
+        icon="tune-variant"
+        label={activeFilterCount ? `Фільтри · ${activeFilterCount}` : 'Фільтри'}
+        onPress={onOpenFilters}
+        selected={activeFilterCount > 0}
+      />
+      <FilterChip
+        accessibilityLabel="Сортування"
+        icon="sort"
+        label={sortLabel ?? 'Сортування'}
+        onPress={onOpenSort}
+        selected={sortLabel !== undefined}
+      />
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({ row: { gap: 8, paddingHorizontal: 16, paddingVertical: 12 } });

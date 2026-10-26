@@ -1,3 +1,4 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Switch, Text } from 'react-native-paper';
 
@@ -26,6 +27,7 @@ export function CatalogFiltersModal({
   onReset,
   visible,
 }: Readonly<CatalogFiltersModalProps>) {
+  const { kedr } = useKedrTheme();
   const toggle = (key: 'inStock' | 'isNew' | 'isSale') =>
     onChange({ ...filters, [key]: filters[key] ? undefined : true });
   const changePrice = ([priceFrom, priceTo]: readonly [number, number]) =>
@@ -59,10 +61,24 @@ export function CatalogFiltersModal({
           value={filters.isSale === true}
         />
         <View style={styles.actions}>
-          <Button accessibilityLabel="Скинути фільтри" onPress={onReset}>
+          <Button
+            accessibilityLabel="Скинути фільтри"
+            contentStyle={styles.buttonContent}
+            onPress={onReset}
+            style={styles.button}
+            textColor={kedr.colors.onSurface}
+          >
             Скинути
           </Button>
-          <Button accessibilityLabel="Застосувати фільтри" mode="contained" onPress={onApply}>
+          <Button
+            accessibilityLabel="Застосувати фільтри"
+            buttonColor={kedr.colors.primary}
+            contentStyle={styles.buttonContent}
+            mode="contained"
+            onPress={onApply}
+            style={styles.button}
+            textColor={kedr.colors.onPrimary}
+          >
             Застосувати
           </Button>
         </View>
@@ -76,16 +92,38 @@ function FilterSwitch({
   onToggle,
   value,
 }: Readonly<{ label: string; onToggle: () => void; value: boolean }>) {
+  const { kedr } = useKedrTheme();
   return (
-    <View style={styles.switchRow}>
-      <Switch accessibilityLabel={label} onValueChange={onToggle} value={value} />
-      <Text>{label}</Text>
+    <View
+      style={[
+        styles.switchRow,
+        { backgroundColor: kedr.colors.surfaceVariant, borderRadius: kedr.radius.md },
+      ]}
+    >
+      <Text style={styles.switchLabel} variant="bodyMedium">
+        {label}
+      </Text>
+      <Switch
+        accessibilityLabel={label}
+        color={kedr.colors.primary}
+        onValueChange={onToggle}
+        value={value}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  actions: { flexDirection: 'row', justifyContent: 'flex-end' },
-  content: { gap: 16, padding: 20 },
-  switchRow: { alignItems: 'center', flexDirection: 'row', gap: 8 },
+  actions: { flexDirection: 'row', gap: 8 },
+  button: { borderRadius: 999, flex: 1 },
+  buttonContent: { minHeight: 48 },
+  content: { gap: 12, padding: 16, paddingBottom: 24 },
+  switchLabel: { flex: 1 },
+  switchRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    minHeight: 52,
+    paddingHorizontal: 14,
+  },
 });

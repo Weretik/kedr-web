@@ -7,12 +7,15 @@ import {
   CatalogSortMenu,
 } from '@mobile/catalog/ui';
 
+import {
+  countActiveFilters,
+  selectedCatalogCategory,
+  sortChipLabel,
+} from '../state/catalog-query-selectors';
+
 import type { useCatalogController } from '../hooks/use-catalog-controller';
-import type { CatalogCategoryOption } from '@mobile/catalog/model';
 
 type CatalogController = ReturnType<typeof useCatalogController>;
-type CategoryPathItem = { id: number; label: string };
-type SelectedCategory = { label: string; path: readonly CategoryPathItem[] };
 
 export function CatalogQueryControls({
   applySearch,
@@ -44,9 +47,14 @@ export function CatalogQueryControls({
     isLoading: isCategoriesLoading,
   } = categoriesQueryResult;
 
+  const selectedCategory = selectedCatalogCategory(categories, state.query.filters.categoryId);
+
   return (
     <>
       <CatalogQueryActionRow
+        activeFilterCount={countActiveFilters(state.query.filters)}
+        categoryLabel={selectedCategory?.label}
+        sortLabel={sortChipLabel(state.query.sort)}
         onOpenCategories={() => dispatch({ type: 'categoryOpened' })}
         onOpenFilters={() => dispatch({ type: 'filtersOpened' })}
         onOpenSort={() => dispatch({ type: 'sortOpened' })}
@@ -63,7 +71,7 @@ export function CatalogQueryControls({
         visible={state.searchVisible}
       />
       <CatalogActiveFilters
-        category={findCategory(categories, state.query.filters.categoryId)}
+        category={selectedCategory}
         filters={state.query.filters}
         onSelectCategory={(categoryId) => dispatch({ categoryId, type: 'categorySelected' })}
         onRemoveFilter={(field) => dispatch({ field, type: 'filterRemoved' })}
@@ -100,21 +108,4 @@ export function CatalogQueryControls({
       />
     </>
   );
-}
-
-function findCategory(
-  categories: readonly CatalogCategoryOption[],
-  categoryId: number | undefined,
-  path: readonly CategoryPathItem[] = [],
-): SelectedCategory | undefined {
-  if (categoryId === undefined) return undefined;
-
-  for (const category of categories) {
-    const categoryPath = [...path, { id: category.id, label: category.label }];
-    if (category.id === categoryId) return { label: category.label, path: categoryPath };
-    const child = findCategory(category.children, categoryId, categoryPath);
-    if (child !== undefined) return child;
-  }
-
-  return undefined;
 }

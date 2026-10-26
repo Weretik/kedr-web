@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { StyleSheet, View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 
 export interface CatalogListFooterProps {
   isLoading?: boolean;
@@ -7,22 +8,28 @@ export interface CatalogListFooterProps {
   onPress: () => void;
 }
 
-export function CatalogListFooter({ isLoading = false, kind, onPress }: Readonly<CatalogListFooterProps>) {
-  const theme = useTheme();
+export function CatalogListFooter({
+  isLoading = false,
+  kind,
+  onPress,
+}: Readonly<CatalogListFooterProps>) {
+  const theme = useKedrTheme();
   const isRetry = kind === 'retry';
   const label = isRetry ? 'Не вдалося завантажити наступну сторінку.' : 'Завантажити ще';
 
   return (
     <View style={styles.footer}>
       <Button
-        accessibilityLabel={isRetry ? 'Повторити завантаження наступної сторінки' : 'Завантажити ще'}
-        buttonColor={theme.colors.primary}
+        accessibilityLabel={
+          isRetry ? 'Повторити завантаження наступної сторінки' : 'Завантажити ще'
+        }
+        buttonColor={theme.colors.inverseSurface}
         contentStyle={styles.buttonContent}
         disabled={isLoading}
         mode="contained"
         onPress={onPress}
         style={styles.button}
-        textColor={theme.colors.onPrimary}
+        textColor={theme.colors.inverseOnSurface}
       >
         {isLoading ? 'Завантаження…' : label}
       </Button>
@@ -32,7 +39,7 @@ export function CatalogListFooter({ isLoading = false, kind, onPress }: Readonly
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 8,
+    borderRadius: 999,
   },
   buttonContent: {
     minHeight: 48,

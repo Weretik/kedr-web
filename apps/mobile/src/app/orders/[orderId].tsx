@@ -8,7 +8,7 @@ export default function OrderDetailRoute() {
   const parsed = raw && /^\d+$/.test(raw) ? Number(raw) : undefined;
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, title: 'Замовлення' }} />
+      <Stack.Screen options={{ headerShown: false }} />
       <OrderDetailScreen orderId={parsed} onBack={() => router.back()} />
     </>
   );

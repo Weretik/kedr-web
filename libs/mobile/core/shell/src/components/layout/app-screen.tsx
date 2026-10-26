@@ -35,8 +35,8 @@ export function AppScreen({
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   safeArea: {
     flex: 1,

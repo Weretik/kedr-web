@@ -1,5 +1,6 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 export type MissingPhotoProductsStateKind = 'empty' | 'error' | 'loading';
 
@@ -27,7 +28,7 @@ export function MissingPhotoProductsState({
   kind,
   onRetry,
 }: Readonly<MissingPhotoProductsStateProps>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const state = content[kind];
 
   return (
@@ -54,9 +55,9 @@ export function MissingPhotoProductsState({
           accessibilityLabel="Повторити"
           accessibilityRole="button"
           onPress={onRetry}
-          style={[styles.retryButton, { backgroundColor: theme.colors.primaryContainer }]}
+          style={[styles.retryButton, { backgroundColor: theme.colors.inverseSurface }]}
         >
-          <Text style={{ color: theme.colors.onPrimaryContainer }} variant="labelLarge">
+          <Text style={{ color: theme.colors.inverseOnSurface }} variant="labelLarge">
             Повторити
           </Text>
         </Pressable>
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   },
   retryButton: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 999,
     justifyContent: 'center',
     minHeight: 48,
     paddingHorizontal: 16,

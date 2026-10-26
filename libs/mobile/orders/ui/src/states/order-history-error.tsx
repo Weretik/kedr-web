@@ -1,13 +1,15 @@
-import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { StateView } from '@mobile/shared/ui';
+import { View } from 'react-native';
 
 export function OrderHistoryError({ onRetry }: Readonly<{ onRetry: () => void }>) {
   return (
-    <View style={styles.state}>
-      <Text accessibilityRole="alert">Не вдалося завантажити замовлення. Перевірте з’єднання.</Text>
-      <Button onPress={onRetry}>Повторити</Button>
+    <View accessibilityRole="alert" style={{ flex: 1 }}>
+      <StateView
+        actionLabel="Повторити"
+        kind="error"
+        onAction={onRetry}
+        title="Не вдалося завантажити замовлення. Перевірте з’єднання."
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({ state: { alignItems: 'center', gap: 12, padding: 24 } });

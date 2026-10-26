@@ -81,3 +81,7 @@ export function IconButton({
     </Text>
   );
 }
+
+export function Icon({ source }: { color?: string; size?: number; source: string }) {
+  return <Text accessibilityElementsHidden>{source}</Text>;
+}

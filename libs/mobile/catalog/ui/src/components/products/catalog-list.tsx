@@ -21,8 +21,10 @@ export function CatalogList({
   onRefresh,
   refreshing,
 }: Readonly<CatalogListProps>) {
-  const renderItem: ListRenderItem<CatalogProduct> = ({ item }) => (
-    <ProductCard onPress={onProductPress} product={item} />
+  const renderItem: ListRenderItem<CatalogProduct> = ({ index, item }) => (
+    <View style={index % 2 === 0 ? styles.leftCell : styles.rightCell}>
+      <ProductCard onPress={onProductPress} product={item} />
+    </View>
   );
 
   return (
@@ -30,6 +32,7 @@ export function CatalogList({
       contentContainerStyle={styles.content}
       data={items}
       keyExtractor={(item) => item.id}
+      numColumns={2}
       ListFooterComponent={footer}
       ItemSeparatorComponent={ListSeparator}
       onRefresh={onRefresh}
@@ -43,15 +46,17 @@ export function CatalogList({
 
 const styles = StyleSheet.create({
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 112,
-    paddingTop: 16,
+    paddingBottom: 24,
+    paddingHorizontal: 11,
+    paddingTop: 12,
   },
+  leftCell: { flex: 1, paddingHorizontal: 5 },
   list: {
     flex: 1,
   },
+  rightCell: { flex: 1, paddingHorizontal: 5 },
   separator: {
-    height: 12,
+    height: 10,
   },
 });
 

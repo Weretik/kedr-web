@@ -42,10 +42,13 @@ export function ShellState({ description, kind, onRetry, title }: Readonly<Shell
           size="large"
         />
       ) : null}
-      <Text accessibilityRole="header" variant="titleLarge">
+      <Text accessibilityRole="header" style={{ textAlign: 'center' }} variant="titleLarge">
         {title}
       </Text>
-      <Text style={{ color: theme.colors.onSurfaceVariant }} variant="bodyLarge">
+      <Text
+        style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center' }}
+        variant="bodyLarge"
+      >
         {description}
       </Text>
       {kind === 'error' && onRetry ? (
@@ -53,9 +56,9 @@ export function ShellState({ description, kind, onRetry, title }: Readonly<Shell
           accessibilityLabel="Повторити спробу"
           accessibilityRole="button"
           onPress={onRetry}
-          style={[styles.retryButton, { backgroundColor: theme.colors.primaryContainer }]}
+          style={[styles.retryButton, { backgroundColor: theme.colors.inverseSurface }]}
         >
-          <Text style={{ color: theme.colors.onPrimaryContainer }} variant="labelLarge">
+          <Text style={{ color: theme.colors.inverseOnSurface }} variant="labelLarge">
             Повторити
           </Text>
         </Pressable>
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
   },
   retryButton: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 999,
     justifyContent: 'center',
     minHeight: 48,
     paddingHorizontal: 16,

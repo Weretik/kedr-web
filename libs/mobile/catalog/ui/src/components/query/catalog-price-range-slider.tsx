@@ -1,7 +1,8 @@
+import { useKedrTheme } from '@mobile/shared/ui';
 import { RangeSlider } from '@react-native-assets/slider';
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 
 const MIN_PRICE = 0;
 const MAX_PRICE = 20_000;
@@ -16,7 +17,7 @@ export function CatalogPriceRangeSlider({
   priceFrom?: number;
   priceTo?: number;
 }>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const committedRange = useMemo<[number, number]>(
     () => [priceFrom ?? MIN_PRICE, priceTo ?? MAX_PRICE],
     [priceFrom, priceTo],

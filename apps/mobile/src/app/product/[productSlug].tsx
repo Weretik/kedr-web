@@ -1,6 +1,6 @@
 import { ProductDetailsScreen } from '@mobile/catalog/feature';
 import { useConnectivity } from '@mobile/core/shell';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 
 export default function ProductDetailsRoute() {
   const { productSlug } = useLocalSearchParams<{ productSlug?: string | string[] }>();
@@ -9,8 +9,12 @@ export default function ProductDetailsRoute() {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, title: 'Товар' }} />
-      <ProductDetailsScreen isOnline={connectivity?.isOnline} productSlug={normalizedSlug} />
+      <Stack.Screen options={{ headerShown: false, title: 'Товар' }} />
+      <ProductDetailsScreen
+        isOnline={connectivity?.isOnline}
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/catalog'))}
+        productSlug={normalizedSlug}
+      />
     </>
   );
 }

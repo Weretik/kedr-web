@@ -1,9 +1,9 @@
+import { findCatalogCategoryPath, type CatalogCategoryOption } from '@mobile/catalog/model';
+import { useKedrTheme } from '@mobile/shared/ui';
 import { FlashList } from '@shopify/flash-list';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
-import { IconButton, Text, useTheme } from 'react-native-paper';
-
-import type { CatalogCategoryOption } from '@mobile/catalog/model';
+import { IconButton, Text } from 'react-native-paper';
 
 export interface CatalogCategorySelectorProps {
   categories: readonly CatalogCategoryOption[];
@@ -18,11 +18,14 @@ export function CatalogCategorySelector({
   selectedCategoryId,
   style,
 }: Readonly<CatalogCategorySelectorProps>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const [path, setPath] = useState<readonly CatalogCategoryOption[]>([]);
   const currentCategories = path[path.length - 1]?.children ?? categories;
   const selectedPath = useMemo(
-    () => findCategoryPath(categories, selectedCategoryId),
+    () =>
+      findCatalogCategoryPath(categories, selectedCategoryId)
+        ?.map((item) => item.label)
+        .join(' → '),
     [categories, selectedCategoryId],
   );
 
@@ -72,23 +75,6 @@ export function CatalogCategorySelector({
   );
 }
 
-function findCategoryPath(
-  categories: readonly CatalogCategoryOption[],
-  categoryId: number | undefined,
-  parentPath: readonly string[] = [],
-): string | undefined {
-  if (categoryId === undefined) return undefined;
-
-  for (const category of categories) {
-    const path = [...parentPath, category.label];
-    if (category.id === categoryId) return path.join(' → ');
-    const childPath = findCategoryPath(category.children, categoryId, path);
-    if (childPath) return childPath;
-  }
-
-  return undefined;
-}
-
 function CategoryRow({
   category,
   isSelected,
@@ -100,7 +86,7 @@ function CategoryRow({
   onOpen: () => void;
   onSelect: () => void;
 }>) {
-  const theme = useTheme();
+  const theme = useKedrTheme();
   const hasChildren = category.children.length > 0;
 
   return (
