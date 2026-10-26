@@ -25,6 +25,7 @@
 - [Orders specifications](mobile/orders/README.md)
 - [Cart checkout](mobile/cart/001-manager-cart-checkout/README.md)
 - [Products without photos](mobile/profile/001-products-missing-photos/README.md)
+- [Redesign: design system «Пагін»](mobile/redesign/001-pagin-design-system/README.md)
 
 ## Storefront Angular
 
