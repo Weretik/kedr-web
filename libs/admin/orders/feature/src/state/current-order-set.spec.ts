@@ -80,4 +80,13 @@ describe('current Admin order set', () => {
     expect(current.getCurrentOrderSet().lines).toEqual([]);
     expect(window.localStorage.getItem(storageKey)).toBeNull();
   });
+
+  it('keeps the checkout customer until the set is cleared', async () => {
+    const customer = await import('./current-order-customer');
+    customer.setCurrentOrderCustomer('C1');
+    vi.resetModules();
+    expect((await import('./current-order-customer')).getCurrentOrderCustomer()).toBe('C1');
+    (await subject()).clearCurrentOrder();
+    expect((await import('./current-order-customer')).getCurrentOrderCustomer()).toBe('');
+  });
 });

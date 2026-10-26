@@ -7,7 +7,6 @@ import { createProductsRoutes } from '@admin/products/feature';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { CustomerPicker } from '../customer-picker';
-import { ProductPicker } from '../product-picker';
 
 function AdminShellRoute() {
   const { lines } = useCurrentOrderSet();
@@ -26,7 +25,7 @@ export function AppRouter() {
         { index: true, element: <Navigate replace to="/dashboard" /> },
         ...dashboardRoutes,
         ...createProductsRoutes({ onAddProduct: (productId) => addProductToCurrentOrder(String(productId)) }),
-        ...createOrdersRoutes({ CustomerPicker, ProductPicker }),
+        ...createOrdersRoutes({ CustomerPicker }),
         ...createClientsRoutes({ renderOrdersPanel: (counterpartyId, returnTo) => <CustomerOrdersPanel counterpartyId={counterpartyId} returnTo={returnTo} /> }),
       ],
     },

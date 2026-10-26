@@ -79,6 +79,7 @@ export function DraftDetailPage() {
               onClick={() => setConfirm('reuse')}
               startIcon={<ShoppingCartCheckoutIcon />}
               variant="contained"
+              sx={{ color: 'common.white' }}
             >
               Оформити на основі
             </Button>
