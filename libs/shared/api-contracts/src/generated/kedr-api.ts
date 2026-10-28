@@ -138,7 +138,7 @@ export interface paths {
         };
         /**
          * List admin product rows
-         * @description Current controller explicitly allows anonymous access; restrict this route before exposing it outside an internal frontend.
+         * @description Policy CanManageProducts (Manager and Admin).
          */
         get: operations["getAdminProducts"];
         put?: never;
@@ -158,7 +158,7 @@ export interface paths {
         };
         /**
          * List all admin product rows
-         * @description Current controller explicitly allows anonymous access; this returns the unpaged admin row model.
+         * @description Policy CanManageProducts (Manager and Admin). Returns the unpaged admin row model.
          */
         get: operations["getAllAdminProducts"];
         put?: never;
@@ -178,7 +178,7 @@ export interface paths {
         };
         /**
          * List active products whose latest photo check is unavailable
-         * @description Temporarily anonymous. Reads persisted photo-check state only and does not contact the CDN while handling the request.
+         * @description Policy CanManageProducts. Reads persisted photo-check state only and does not contact the CDN while handling the request.
          */
         get: operations["getAdminProductsWithUnavailablePhotos"];
         put?: never;
@@ -198,7 +198,7 @@ export interface paths {
         };
         /**
          * Get one admin product by slug
-         * @description Current Admin controller explicitly allows anonymous access.
+         * @description Policy CanManageProducts (Manager and Admin).
          */
         get: operations["getAdminProductBySlug"];
         put?: never;
@@ -241,7 +241,7 @@ export interface paths {
         put?: never;
         /**
          * Create an admin order for asynchronous 1C delivery
-         * @description Temporarily anonymous. Before production, protect with PolicyNames.CanManageOrders (Manager and Admin).
+         * @description Policy CanManageOrders (Manager and Admin).
          */
         post: operations["createAdminOrder"];
         delete?: never;
@@ -276,7 +276,7 @@ export interface paths {
         };
         /**
          * Get the current 1C delivery status for an admin order
-         * @description Temporarily anonymous. Before production, protect with PolicyNames.CanManageOrders (Manager and Admin).
+         * @description Policy CanManageOrders (Manager and Admin).
          */
         get: operations["getAdminOrderSyncStatus"];
         put?: never;
@@ -298,7 +298,7 @@ export interface paths {
         put?: never;
         /**
          * Schedule a failed order for another 1C delivery cycle
-         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Temporarily anonymous. Before production, protect with PolicyNames.CanManageOrders (Manager and Admin).
+         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Policy CanManageOrders (Manager and Admin).
          */
         post: operations["retryAdminOrderSync"];
         delete?: never;
@@ -432,6 +432,103 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/cookie/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign a browser in with the session cookie
+         * @description Admin and storefront. Rate-limited by the AuthLogin policy. Sets the HttpOnly session cookie `__Host-kedr.session` (SameSite=Lax, sliding 7 days) and the readable `kedr.csrf` cookie. No token is returned. Five wrong passwords lock the account for 15 minutes.
+         */
+        post: operations["loginCookieSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/cookie/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** End the browser session */
+        post: operations["logoutCookieSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/mobile/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign the mobile app in
+         * @description Rate-limited by the AuthLogin policy. Returns both tokens in JSON; the app stores them in the device secure store. Sets no cookies.
+         */
+        post: operations["loginMobile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/mobile/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rotate the mobile token pair
+         * @description Rate-limited by the AuthRefresh policy. The old refresh token stops working. A token rotated less than 60 seconds ago returns 401 without other effect; one rotated earlier is treated as stolen and ends all of the user's sessions.
+         */
+        post: operations["refreshMobile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/mobile/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * End the mobile session
+         * @description Revokes the session of the given refresh token; without it, all of the user's refresh sessions.
+         */
+        post: operations["logoutMobile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/session/login": {
         parameters: {
             query?: never;
@@ -442,8 +539,9 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Create an authenticated session
-         * @description Rate-limited by the AuthLogin policy. On success sets `kedr.rt` (HTTP-only) and `kedr.csrf` cookies.
+         * Create an authenticated session (deprecated)
+         * @deprecated
+         * @description Replaced by cookie and mobile login; removed once the frontends stop calling it. On success sets `kedr.rt` (HTTP-only, path `/api/auth/session`) and `kedr.csrf` cookies.
          */
         post: operations["loginSession"];
         delete?: never;
@@ -462,7 +560,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Refresh an authenticated session
+         * Refresh an authenticated session (deprecated)
+         * @deprecated
          * @description Rate-limited by the AuthRefresh policy. Send refresh cookies with credentials included and header `X-CSRF-Token` equal to the `kedr.csrf` cookie value. Rotates both cookies.
          */
         post: operations["refreshSession"];
@@ -482,8 +581,9 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * End the current session
-         * @description Revokes the current authenticated session and expires refresh/CSRF cookies.
+         * End the current session (deprecated)
+         * @deprecated
+         * @description Revokes the refresh session from the `kedr.rt` cookie (other devices stay signed in) and expires refresh/CSRF cookies.
          */
         post: operations["logoutSession"];
         delete?: never;
@@ -499,9 +599,93 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get the current user */
+        /**
+         * Get the current user
+         * @description Works with the browser session cookie and with a mobile bearer token. For a cookie session it reissues a missing CSRF cookie.
+         */
         get: operations["getCurrentSession"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List administrators and managers
+         * @description Policy `CanManageUsers` (role Admin). Customers are not listed.
+         */
+        get: operations["getStaffAccounts"];
+        put?: never;
+        /** Create an administrator or manager */
+        post: operations["createStaffAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a staff account's role
+         * @description The account's sessions pick up the new role within 5 minutes. An administrator cannot change their own role (400).
+         */
+        put: operations["changeStaffRole"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/blocked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Block or unblock a staff account
+         * @description Blocking ends mobile sessions at once and browser sessions within 5 minutes. An administrator cannot block their own account (400).
+         */
+        put: operations["setStaffBlocked"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set a new password for a staff account
+         * @description Ends the account's existing sessions.
+         */
+        put: operations["setStaffPassword"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1014,6 +1198,22 @@ export interface components {
             /** Format: password */
             password: string;
         };
+        SessionMeResponse: {
+            userId: string;
+            /** Format: email */
+            email: string;
+            fullName: string;
+            roles: ("Admin" | "Manager" | "User")[];
+        };
+        MobileTokenResponse: {
+            /** @example Bearer */
+            tokenType: string;
+            accessToken: string;
+            /** @description Access-token lifetime in seconds */
+            expiresIn: number;
+            /** @description Random opaque token; send it back to refresh and logout */
+            refreshToken: string;
+        };
         SessionTokenResponse: {
             /** @example Bearer */
             tokenType: string;
@@ -1021,11 +1221,24 @@ export interface components {
             /** @description Access-token lifetime in seconds */
             expiresIn: number;
         };
-        SessionMeResponse: {
-            userId: string;
+        /** @enum {string} */
+        StaffRole: "Admin" | "Manager";
+        StaffAccountResponse: {
+            /** Format: uuid */
+            id: string;
             /** Format: email */
             email: string;
-            roles: string[];
+            fullName: string;
+            role: components["schemas"]["StaffRole"];
+            isBlocked: boolean;
+        };
+        CreateStaffAccountRequest: {
+            /** Format: email */
+            email: string;
+            fullName: string;
+            role: components["schemas"]["StaffRole"];
+            /** Format: password */
+            password: string;
         };
         CatalogProductsRequest: {
             categoryId?: number | null;
@@ -1128,6 +1341,9 @@ export interface components {
         "parameters-CategorySlug": string;
         AdminInStock: boolean;
         ExportToSite: boolean;
+        /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+        CsrfHeader: string;
+        UserId: string;
     };
     requestBodies: never;
     headers: never;
@@ -1311,6 +1527,20 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCategory"][];
                 };
             };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     getAdminCategoryById: {
@@ -1334,6 +1564,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Category not found */
             404: {
                 headers: {
@@ -1375,6 +1619,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     getAllAdminProducts: {
@@ -1394,6 +1652,20 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AdminProduct"][];
                 };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -1426,6 +1698,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     getAdminProductBySlug: {
@@ -1449,6 +1735,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Product not found */
             404: {
                 headers: {
@@ -1522,6 +1822,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     createAdminOrder: {
@@ -1572,14 +1886,14 @@ export interface operations {
                 };
             };
             400: components["responses"]["admin-order-one-c-sync.openapi_components-responses-ValidationError"];
-            /** @description Returned after production authorization is enabled. */
+            /** @description Not signed in. */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Returned after production authorization is enabled. */
+            /** @description Signed in without the Manager or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1611,6 +1925,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description No manager order exists for the supplied identifier. */
             404: {
                 headers: {
@@ -1640,14 +1968,14 @@ export interface operations {
                     "application/json": components["schemas"]["OrderSyncStatusResponse"];
                 };
             };
-            /** @description Returned after production authorization is enabled. */
+            /** @description Not signed in. */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Returned after production authorization is enabled. */
+            /** @description Signed in without the Manager or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1688,14 +2016,14 @@ export interface operations {
                 };
             };
             400: components["responses"]["admin-order-one-c-sync.openapi_components-responses-ValidationError"];
-            /** @description Returned after production authorization is enabled. */
+            /** @description Not signed in. */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Returned after production authorization is enabled. */
+            /** @description Signed in without the Manager or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1753,6 +2081,20 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     createAdminWorkspaceOrder: {
@@ -1795,6 +2137,20 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Selected customer or product does not exist. */
             404: {
                 headers: {
@@ -1832,6 +2188,20 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OrderDetail"];
                 };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Order not found. */
             404: {
@@ -1878,6 +2248,20 @@ export interface operations {
                     };
                 };
             };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Selected customer or product does not exist. */
             404: {
                 headers: {
@@ -1917,6 +2301,20 @@ export interface operations {
             };
             /** @description Invalid query. */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1964,6 +2362,20 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Selected customer or product does not exist. */
             404: {
                 headers: {
@@ -1999,6 +2411,20 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["DraftDetail"];
                 };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Draft not found. */
             404: {
@@ -2042,6 +2468,20 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Draft not found. */
             404: {
                 headers: {
@@ -2073,6 +2513,20 @@ export interface operations {
         responses: {
             /** @description Draft deleted. */
             204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2125,6 +2579,20 @@ export interface operations {
                 };
             };
             400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     getAdminCustomerById: {
@@ -2148,8 +2616,206 @@ export interface operations {
                 };
             };
             400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description No active customer exists for the supplied identifier. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    loginCookieSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Signed in */
+            200: {
+                headers: {
+                    /** @description Session and CSRF cookies */
+                    "Set-Cookie"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionMeResponse"];
+                };
+            };
+            /** @description Invalid credentials, locked or blocked account */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Login rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    logoutCookieSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signed out; session and CSRF cookies expired */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid CSRF token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No valid session */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    loginMobile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Token pair */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MobileTokenResponse"];
+                };
+            };
+            /** @description Invalid credentials, locked or blocked account */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Login rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    refreshMobile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    refreshToken: string;
+                };
+            };
+        };
+        responses: {
+            /** @description New token pair */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MobileTokenResponse"];
+                };
+            };
+            /** @description Unknown, expired, revoked, or already rotated refresh token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Refresh rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    logoutMobile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    refreshToken?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Signed out */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid access token */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2201,7 +2867,8 @@ export interface operations {
         parameters: {
             query?: never;
             header: {
-                "X-CSRF-Token": string;
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
             };
             path?: never;
             cookie?: never;
@@ -2284,8 +2951,269 @@ export interface operations {
                     "application/json": components["schemas"]["SessionMeResponse"];
                 };
             };
-            /** @description Missing or invalid access token */
+            /** @description Not signed in */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getStaffAccounts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff accounts ordered by email */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffAccountResponse"][];
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createStaffAccount: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStaffAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffAccountResponse"];
+                };
+            };
+            /** @description Invalid email, name, role or password */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Email already used */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeStaffRole: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    role: components["schemas"]["StaffRole"];
+                };
+            };
+        };
+        responses: {
+            /** @description Role changed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid role or own account */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setStaffBlocked: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    blocked: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Updated */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Own account */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setStaffPassword: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: password */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Password set */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Password too short or too weak */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
