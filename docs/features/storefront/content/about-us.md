@@ -37,3 +37,7 @@ libs/storefront/feature/about-us/
     │   └── lib.routes.ts  # feature routes
     └── index.ts  # library public API
 ```
+
+## Tests
+
+No automated tests cover this feature yet.

@@ -14,7 +14,7 @@ Checked on 2026-10-15 against `apps/mobile/package.json` and usage in `apps/mobi
 | Declared in `apps/mobile/package.json`           | `react-native-paper`, `@react-native-assets/slider`, `react-native-actions-sheet`, `@shopify/flash-list`, `react-native-gesture-handler`, `react-native-reanimated-carousel`, `expo-blur`, `@expo-google-fonts/unbounded`, `@expo-google-fonts/golos-text` |
 | Approved for a future scenario, but not declared | `react-native-paper-dates`, `expo-camera`, `expo-haptics`                                                                                                                                                                                                  |
 
-Declaration in a manifest does not prove a package is used on a screen. Check actual imports and setup before changing the relevant feature; the complete direct-dependency register is in the [technology and npm packages catalog](../../technology-and-packages.md).
+Declaration in a manifest does not prove a package is used on a screen. Check actual imports and setup before changing the relevant feature; exact versions are in `apps/mobile/package.json` and the root `package.json`; stack decisions are in the [technology overview](../../technology-and-packages.md).
 
 ## Addition rule
 

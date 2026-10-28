@@ -50,3 +50,12 @@ libs/admin/core/shell/
 
 apps/admin/src/app/theme/  # design system tokens: palette, typography, shadows, motion, components
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/admin` (3 spec files): `npx nx run admin:vite:test -- --run`
+- `libs/admin/core/shell` (2 spec files): `npx nx run admin-core-shell:vite:test -- --run`
+
+Without tests: `admin-core-auth`.

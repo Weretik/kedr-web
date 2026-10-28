@@ -6,7 +6,7 @@ This directory contains versioned engineering documentation for Kedr Web fronten
 
 - Architecture describes the actual topology of frontend applications, modules, and layer boundaries; choose the relevant client below.
 - [Current frontend inventory](architecture/frontend-inventory.md) — apps, Nx projects/tags/targets, aliases, test gates, and known baseline gaps.
-- [Technology and direct npm packages](architecture/technology-and-packages.md) — versions, purposes, and dependency sources.
+- [Technology and direct npm packages](architecture/technology-and-packages.md) — stack composition and package decisions by client; versions are in the manifests.
 - [Engineering rules](standards/README.md) — rules index for Admin, Mobile, UI, API, testing, and delivery.
 - [Specifications](specs/README.md) — feature specification structure and SDD templates.
 - [Implemented feature catalog](features/README.md) — index by application and brief architecture maps for each feature.

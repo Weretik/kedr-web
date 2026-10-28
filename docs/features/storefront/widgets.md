@@ -25,3 +25,11 @@ libs/storefront/feature/widgets/
     ├── in-stock-products.ts  # feature implementation
     └── in-stock.facade.ts  # state and data interaction
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `libs/storefront/data-access` (3 spec files): `npx nx run storefront-data-access:vite:test -- --run`
+
+Without tests: `widgets`.

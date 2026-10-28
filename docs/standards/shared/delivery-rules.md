@@ -37,7 +37,12 @@ If the user authorizes an entire feature, phase, or set of `SC-*` scenarios, the
 
 ## Definition of done
 
-A new feature card in `docs/features/<app>/<module>/` briefly records its route, boundaries, state and data flow, contracts, SDD link, Mermaid diagram of verified relationships, and tree of actual directories with their roles. Update the index and affected card after a substantial change to these facts; do not duplicate requirements or fields from the specification or create a subdirectory for a single page.
+A new feature card in `docs/features/<app>/<module>/` briefly records its route, boundaries, state and data flow, contracts, SDD link, Mermaid diagram of verified relationships, tree of actual directories with their roles, and a “Tests” section with the Nx projects that test it and their focused run commands (or a note that none exist). Add it as one row of the flat [feature catalog](../../features/README.md); do not add per-app or per-area index pages. Update the catalog row and affected card after a substantial change to these facts; do not duplicate requirements or fields from the specification, record environment state, or create a subdirectory for a single page.
+
+- When an SDD status changes, update its row in the [specification index](../../specs/README.md) in the same change.
+- When tests for a feature are added, moved, or removed, update the card's “Tests” section.
+- A small fix that does not change the card's facts does not touch the card.
+- After a backend OpenAPI change, run `npm run contracts:sync -- <path-to-KedrStore>` and commit the snapshot and generated types together.
 
 Scope is complete when:
 

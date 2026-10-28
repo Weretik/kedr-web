@@ -4,25 +4,7 @@
 
 ## Contract pipeline
 
-```text
-KedrStore docs/sdd/contracts
-  -> npm run contracts:sync
-  -> docs/contracts/openapi (versioned snapshot)
-  -> npm run contracts:generate
-  -> @shared/api-contracts
-  -> app data-access mapper
-  -> application/domain model
-```
-
-The OpenAPI snapshot is the authoritative provider contract in the frontend repository. `@shared/api-contracts` is the machine-generated compile-time representation of this snapshot. Pages under `docs/contracts/<module>/` describe only consumer mapping, behavior, and known compatibility constraints; they do not duplicate schemas.
-
-Do not edit the YAML snapshot or generated TypeScript manually. To update them:
-
-1. pin the backend contract in a clean checkout;
-2. run `npm run contracts:sync -- <path-to-KedrStore>`;
-3. run `npm run contracts:generate` and review the semantic diff;
-4. update affected mappers, consumer pages, and tests;
-5. run `npm run contracts:check`.
+The sync, generation, and check workflow is in the [contract registry](README.md#contract-workflow). Pages under `docs/contracts/<module>/` describe only consumer mapping, behavior, and known compatibility constraints; they do not duplicate schemas.
 
 This page projects shared backend conventions for the frontend and is authoritative for frontend transport implementation. Backend OpenAPI is a reference when available; frontend owners are not responsible for finding, access to, or updating it.
 

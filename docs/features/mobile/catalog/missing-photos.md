@@ -33,3 +33,13 @@ libs/mobile/catalog/
     ├── hooks/use-missing-photo-products-controller.ts  # screen state and actions
     └── screens/missing-photo-products-screen.tsx  # feature screen
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/mobile` (5 spec files): `npx nx run mobile:test`
+- `libs/mobile/catalog/data-access` (9 spec files): `npx nx run mobile-catalog-data-access:test`
+- `libs/mobile/catalog/feature` (7 spec files): `npx nx run mobile-catalog-feature:test`
+- `libs/mobile/catalog/model` (5 spec files): `npx nx run mobile-catalog-model:test`
+- `libs/mobile/catalog/ui` (9 spec files): `npx nx run mobile-catalog-ui:test`

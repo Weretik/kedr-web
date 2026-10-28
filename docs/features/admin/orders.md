@@ -58,3 +58,14 @@ libs/admin/orders/
 ```
 
 Customer selection is provided by the app adapter [CustomerPicker](../../../apps/admin/src/app/customer-picker.tsx). Products are added on the shared [picker page](../../../libs/admin/orders/feature/src/pages/product-picker-page.tsx) (`/orders/pick-products` for the order set, `/orders/drafts/:draftId/pick-products` for an edited draft; unsaved draft edits live in [session state](../../../libs/admin/orders/feature/src/state/draft-edit-session.ts)). To show names and base prices during checkout, `admin-orders-feature` also reads the catalog through `admin-products-data-access`; feature → data-access dependencies across domains are permitted. Orders has no other direct imports from the clients or products domains.
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/admin` (3 spec files): `npx nx run admin:vite:test -- --run`
+- `libs/admin/orders/data-access` (1 spec files): `npx nx run admin-orders-data-access:vite:test -- --run`
+- `libs/admin/orders/feature` (5 spec files): `npx nx run admin-orders-feature:vite:test -- --run`
+- `libs/admin/orders/ui` (4 spec files): `npx nx run admin-orders-ui:vite:test -- --run`
+
+Without tests: `admin-orders-model`.

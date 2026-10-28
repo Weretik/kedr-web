@@ -51,53 +51,13 @@ interface ApiRequest {
   params?: AxiosRequestConfig['params'];
   headers?: AxiosRequestConfig['headers'];
 }
-
-type ApiErrorCode =
-  | 'Unknown'
-  | 'Network'
-  | 'Timeout'
-  | 'Unauthorized'
-  | 'Forbidden'
-  | 'NotFound'
-  | 'Validation'
-  | 'Server';
-
-interface ApiError {
-  code: ApiErrorCode;
-  status?: number;
-  message: string;
-  fieldErrors?: Record<string, string[]>;
-  traceId?: string;
-}
 ```
 
 `axiosBaseQuery` passes the RTK Query `AbortSignal` to Axios and returns only `{ data }` or `{ error: ApiError }`. An Axios exception does not escape into feature.
 
-## Backend errors
+## Errors
 
-| Backend response                | `ApiError`                                |
-| ------------------------------- | ----------------------------------------- |
-| No response                     | `Network`, `status: 0`                    |
-| `ECONNABORTED` / `ETIMEDOUT`    | `Timeout`                                 |
-| HTTP 401 / 403 / 404            | `Unauthorized` / `Forbidden` / `NotFound` |
-| HTTP 4xx with validation fields | `Validation` and `fieldErrors`            |
-| HTTP 5xx                        | `Server`                                  |
-| Other transport/client error    | `Unknown`                                 |
-
-### ASP.NET Problem Details
-
-The backend may return `{ detail, title, errors, traceId }`. `detail` takes precedence over `title`; `errors` is converted to `fieldErrors`; `traceId` is retained for diagnostics. Do not log the response body.
-
-### Ardalis validation result
-
-The backend may return an array with `Identifier` / `ErrorMessage` or `identifier` / `errorMessage`. The client groups messages by field in `fieldErrors` and returns `Validation`.
-
-## Error handling
-
-1. For `Validation`, feature shows field errors.
-2. For `Network`, `Timeout`, and `Server`, feature offers a manual retry through `refetch`.
-3. The runtime notifier reports network, timeout, server, and unknown errors; the specific feature handles 4xx errors.
-4. Pass `traceId` to support only through normalized `ApiError`; feature does not parse the backend response itself.
+`shared/api-client` normalizes every backend and transport error into `ApiError`. The `ApiError` shape, backend response mapping (Problem Details, Ardalis), and feature display rules are owned by the [frontend integration rules](../../contracts/integration.md#error-normalization-and-handling).
 
 ## Observability and security
 

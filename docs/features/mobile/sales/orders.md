@@ -46,3 +46,16 @@ libs/mobile/orders/
     ├── components/status/  # status pill and icon
     └── states/  # loading, empty, error
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/mobile` (5 spec files): `npx nx run mobile:test`
+- `libs/mobile/customers/data-access` (2 spec files): `npx nx run mobile-customers-data-access:test`
+- `libs/mobile/customers/model` (1 spec files): `npx nx run mobile-customers-model:test`
+- `libs/mobile/customers/ui` (1 spec files): `npx nx run mobile-customers-ui:test`
+- `libs/mobile/orders/data-access` (4 spec files): `npx nx run mobile-orders-data-access:test`
+- `libs/mobile/orders/feature` (3 spec files): `npx nx run mobile-orders-feature:test`
+- `libs/mobile/orders/model` (2 spec files): `npx nx run mobile-orders-model:test`
+- `libs/mobile/orders/ui` (3 spec files): `npx nx run mobile-orders-ui:test`

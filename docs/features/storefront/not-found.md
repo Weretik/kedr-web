@@ -26,3 +26,7 @@ libs/storefront/feature/not-found/
     ├── page/not-found-page/not-found-page.ts  # page and UI composition
     └── lib.routes.ts  # feature routes
 ```
+
+## Tests
+
+No automated tests cover this feature yet.

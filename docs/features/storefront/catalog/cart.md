@@ -34,3 +34,11 @@ libs/storefront/feature/cart/
 libs/storefront/shell/
 └── src/lib/header/header.ts  # feature implementation
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `libs/storefront/data-access` (3 spec files): `npx nx run storefront-data-access:vite:test -- --run`
+
+Without tests: `cart`, `storefront-shell`.

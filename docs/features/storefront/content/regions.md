@@ -28,3 +28,7 @@ libs/storefront/feature/regions/
 libs/storefront/util/
 └── src/lib/services/locale-navigation.service.ts  # feature service
 ```
+
+## Tests
+
+No automated tests cover this feature yet.

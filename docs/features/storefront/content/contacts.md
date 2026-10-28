@@ -30,3 +30,7 @@ libs/storefront/feature/contacts/
 libs/storefront/ui/
 └── src/index.ts  # library public API
 ```
+
+## Tests
+
+No automated tests cover this feature yet.

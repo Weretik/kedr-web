@@ -32,3 +32,12 @@ libs/admin/dashboard/
     ├── pages/dashboard-page.tsx  # page and UI composition
     └── dashboard.routes.tsx  # feature routes
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/admin` (3 spec files): `npx nx run admin:vite:test -- --run`
+- `libs/admin/core/shell` (2 spec files): `npx nx run admin-core-shell:vite:test -- --run`
+
+Without tests: `admin-dashboard-feature`.
