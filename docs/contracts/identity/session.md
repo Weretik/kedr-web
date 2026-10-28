@@ -14,7 +14,7 @@
 | Mobile sign out   | `logoutMobile`        | Mobile                    |
 | Read current user | `getCurrentSession`   | Admin, Storefront, Mobile |
 
-The earlier `loginSession`, `refreshSession`, and `logoutSession` operations are deprecated and not consumed. Auth adapters import generated request and response types at the HTTP boundary; application session state keeps its own model so a provider field change does not propagate into features.
+Auth adapters import generated request and response types at the HTTP boundary; application session state keeps its own model so a provider field change does not propagate into features.
 
 ## Browser session (Admin, Storefront)
 

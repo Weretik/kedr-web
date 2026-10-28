@@ -529,69 +529,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/session/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create an authenticated session (deprecated)
-         * @deprecated
-         * @description Replaced by cookie and mobile login; removed once the frontends stop calling it. On success sets `kedr.rt` (HTTP-only, path `/api/auth/session`) and `kedr.csrf` cookies.
-         */
-        post: operations["loginSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/session/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Refresh an authenticated session (deprecated)
-         * @deprecated
-         * @description Rate-limited by the AuthRefresh policy. Send refresh cookies with credentials included and header `X-CSRF-Token` equal to the `kedr.csrf` cookie value. Rotates both cookies.
-         */
-        post: operations["refreshSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/session/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * End the current session (deprecated)
-         * @deprecated
-         * @description Revokes the refresh session from the `kedr.rt` cookie (other devices stay signed in) and expires refresh/CSRF cookies.
-         */
-        post: operations["logoutSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/auth/session/me": {
         parameters: {
             query?: never;
@@ -1213,13 +1150,6 @@ export interface components {
             expiresIn: number;
             /** @description Random opaque token; send it back to refresh and logout */
             refreshToken: string;
-        };
-        SessionTokenResponse: {
-            /** @example Bearer */
-            tokenType: string;
-            accessToken: string;
-            /** @description Access-token lifetime in seconds */
-            expiresIn: number;
         };
         /** @enum {string} */
         StaffRole: "Admin" | "Manager";
@@ -2808,116 +2738,6 @@ export interface operations {
         };
         responses: {
             /** @description Signed out */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Missing or invalid access token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    loginSession: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SessionLoginRequest"];
-            };
-        };
-        responses: {
-            /** @description Authenticated session */
-            200: {
-                headers: {
-                    /** @description Refresh and CSRF cookies */
-                    "Set-Cookie"?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SessionTokenResponse"];
-                };
-            };
-            /** @description Invalid credentials */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Login rate limit exceeded */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    refreshSession: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Refreshed session */
-            200: {
-                headers: {
-                    "Set-Cookie"?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SessionTokenResponse"];
-                };
-            };
-            /** @description Missing or invalid CSRF token */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Missing, expired, or invalid refresh cookie */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Refresh rate limit exceeded */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    logoutSession: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Logged out */
             204: {
                 headers: {
                     [name: string]: unknown;
