@@ -29,3 +29,7 @@ libs/storefront/feature/auth/
     ├── pages/login/login.ts  # page and UI composition
     └── lib.routes.ts  # feature routes
 ```
+
+## Tests
+
+No automated tests cover this feature yet.

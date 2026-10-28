@@ -49,3 +49,16 @@ libs/mobile/cart/
 libs/mobile/customers/
 └── data-access/src/api/customers.api.ts  # API request
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/mobile` (5 spec files): `npx nx run mobile:test`
+- `libs/mobile/cart/data-access` (2 spec files): `npx nx run mobile-cart-data-access:test`
+- `libs/mobile/cart/feature` (4 spec files): `npx nx run mobile-cart-feature:test`
+- `libs/mobile/cart/model` (2 spec files): `npx nx run mobile-cart-model:test`
+- `libs/mobile/cart/ui` (2 spec files): `npx nx run mobile-cart-ui:test`
+- `libs/mobile/customers/data-access` (2 spec files): `npx nx run mobile-customers-data-access:test`
+- `libs/mobile/customers/model` (1 spec files): `npx nx run mobile-customers-model:test`
+- `libs/mobile/customers/ui` (1 spec files): `npx nx run mobile-customers-ui:test`

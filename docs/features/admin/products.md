@@ -37,3 +37,14 @@ libs/admin/products/
 
 libs/admin/shared/ui/src/                        # status pill, grid overlay, page and detail headers, cards
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `libs/admin/products/data-access` (3 spec files): `npx nx run admin-products-data-access:vite:test -- --run`
+- `libs/admin/products/feature` (3 spec files): `npx nx run admin-products-feature:vite:test -- --run`
+- `libs/admin/products/ui` (3 spec files): `npx nx run admin-products-ui:vite:test -- --run`
+- `libs/admin/shared/ui` (2 spec files): `npx nx run admin-shared-ui:vite:test -- --run`
+
+Without tests: `admin-products-model`.

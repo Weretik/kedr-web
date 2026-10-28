@@ -45,3 +45,12 @@ libs/mobile/shared/ui/
     ├── hooks/  # useBump, useReducedMotion
     └── components/{layout,controls,feedback,surfaces}/  # shared presentational components
 ```
+
+## Tests
+
+Spec files sit next to the code in each project. Focused runs:
+
+- `apps/mobile` (5 spec files): `npx nx run mobile:test`
+- `libs/mobile/core/connectivity` (1 spec files): `npx nx run mobile-core-connectivity:test`
+- `libs/mobile/core/shell` (6 spec files): `npx nx run shell:test`
+- `libs/mobile/shared/ui` (1 spec files): `npx nx run mobile-shared-ui:test`

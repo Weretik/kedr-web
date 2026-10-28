@@ -34,6 +34,8 @@ npm run contracts:check
 
 `contracts:sync` accepts only a clean backend checkout, copies all OpenAPI YAML files, and records the backend commit. `contracts:check` validates OpenAPI and confirms that checked-in generated types match the snapshot.
 
+Do not edit the YAML snapshot or generated TypeScript manually. To update them: pin the backend contract in a clean checkout, run `contracts:sync`, run `contracts:generate` and review the semantic diff, update affected mappers, consumer pages, and tests, then run `contracts:check`.
+
 ## Consumer projections
 
 - [Shared integration rules](integration.md)

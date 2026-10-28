@@ -35,6 +35,7 @@ jobs:
       - run: npm ls --all
       - run: npm run security:audit
       - run: npm run contracts:check
+      - run: npm run docs:check
       - run: npx playwright install --with-deps chromium
       - run: npx nx run-many -t lint
       - run: npm run architecture:boundaries

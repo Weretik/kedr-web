@@ -6,7 +6,7 @@
 `tsconfig.base.json`, all `project.json` files, `npx nx show projects --json`, and
 `npx nx graph --file=<temporary-json>`.
 
-See the [technology and npm packages catalog](technology-and-packages.md) for the complete list of direct dependencies, their roles, and version sources.
+See the [technology and npm packages catalog](technology-and-packages.md) for the stack and package decisions; exact versions are in the manifests.
 
 This document records the current workspace; it does not declare violations acceptable. Known discrepancies have `AF-*` entries in the [workspace remediation SDD](../specs/architecture/001-workspace-layers-and-boundaries/README.md).
 
