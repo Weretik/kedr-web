@@ -14,3 +14,14 @@ export function ActivityIndicator({
 }) {
   return <Text accessibilityLabel={accessibilityLabel}>Завантаження</Text>;
 }
+
+export function HelperText({
+  children,
+  visible = true,
+}: {
+  children: ReactNode;
+  type?: string;
+  visible?: boolean;
+}) {
+  return visible ? <Text>{children}</Text> : null;
+}

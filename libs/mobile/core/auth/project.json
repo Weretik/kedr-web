@@ -1,0 +1,9 @@
+{
+  "name": "mobile-core-auth",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/core/auth/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:core", "type:core"],
+  "// targets": "to see all targets run: nx show project mobile-core-auth --web",
+  "targets": {}
+}

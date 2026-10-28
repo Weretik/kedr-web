@@ -1,11 +1,22 @@
 import { MissingPhotoProductsScreen } from '@mobile/catalog/feature';
+import { AccountHeaderControl } from '@mobile/core/auth';
 import { ThemePreferenceHeaderControl } from '@mobile/core/shell';
 import { router, Tabs } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 
 export default function ProfileRoute() {
   return (
     <>
-      <Tabs.Screen options={{ headerRight: () => <ThemePreferenceHeaderControl /> }} />
+      <Tabs.Screen
+        options={{
+          headerRight: () => (
+            <View style={styles.headerActions}>
+              <ThemePreferenceHeaderControl />
+              <AccountHeaderControl />
+            </View>
+          ),
+        }}
+      />
       <MissingPhotoProductsScreen
         onProductPress={(product) =>
           router.push({
@@ -17,3 +28,7 @@ export default function ProfileRoute() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  headerActions: { flexDirection: 'row', gap: 8 },
+});
