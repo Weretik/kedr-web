@@ -1,7 +1,8 @@
 # Current frontend inventory
 
 **Captured:** 2026-10-01; test targets rechecked 2026-10-15
-**Admin update:** 2026-10-19; the new `clients` domain, product/customer routes, and 67 projects were confirmed by `npm run architecture:boundaries`. Other sections retain the date of their previous audit.
+**Admin update:** 2026-10-19; the new `clients` domain, product/customer routes, and 67 projects were confirmed by `npm run architecture:boundaries`.
+**Auth update:** 2026-10-28; the `users` domain (`libs/admin/users/*`) and `libs/mobile/core/auth` were added, 78 projects confirmed by `npm run architecture:boundaries`. Other sections retain the date of their previous audit.
 **Sources:** `package.json`, lockfile, `nx.json`, `eslint.config.cjs`,
 `tsconfig.base.json`, all `project.json` files, `npx nx show projects --json`, and
 `npx nx graph --file=<temporary-json>`.
@@ -26,7 +27,7 @@ This document records the current workspace; it does not declare violations acce
 | Application  | Composition root  | Main libraries                                                                                 |
 | ------------ | ----------------- | ---------------------------------------------------------------------------------------------- |
 | `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*` |
-| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,clients/*,shared/*}`                          |
+| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,clients/*,users/*,shared/*}`                  |
 | `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                          |
 
 All libraries have a root `src/index.ts`; cross-library imports found during baseline search use aliases from `tsconfig.base.json`. No deep alias imports were found. Some barrels expose internal transport/mappers/storage; this is AF-008, not an approved public contract.
@@ -38,7 +39,9 @@ Key edges that determine remediation:
 ```text
 storefront -> storefront feature/shell/data-access + Angular shared
 admin -> admin core/features/shared
-mobile -> shell + catalog/cart/orders features
+mobile -> shell + mobile-core-auth + catalog/cart/orders features
+
+mobile-core-auth -> shell + mobile-shared/api-client + mobile-shared/config + mobile-shared/ui
 
 shell -> mobile-core-connectivity + mobile-shared/api-client + mobile-orders/model
 mobile-cart-model -> mobile-orders-model

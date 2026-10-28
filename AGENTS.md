@@ -4,7 +4,7 @@ This is a short entry point for working in this frontend repository. The project
 
 ## Product
 
-Kedr sells door hardware wholesale (with optional retail orders), not services such as fitting or repair. The KedrStore backend owns business rules and the OpenAPI contract; backend authorization is not enforced yet.
+Kedr sells door hardware wholesale (with optional retail orders), not services such as fitting or repair. The KedrStore backend owns business rules, the OpenAPI contract, and authorization: Admin and Storefront use an HttpOnly cookie session, Mobile uses bearer + refresh tokens, and admin APIs require the Manager or Admin role.
 
 ## Project context
 

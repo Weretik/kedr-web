@@ -12,14 +12,14 @@ Admin uses RTK Query for server state, caching, loading states, and invalidation
 - `@admin/shared/api-client` owns one Axios instance, `axiosClient`.
 - `baseApi` uses `axiosBaseQuery`; each endpoint returns `ApiRequest` and does not call Axios directly.
 - `axiosBaseQuery` passes `AbortSignal` to Axios and converts errors to the public `ApiError` contract.
-- The request interceptor adds a bearer token from `AuthSessionAdapter` and sends credentials.
+- The request interceptor sends credentials and adds `X-CSRF-Token` to non-GET requests (cookie session; see the update below).
 - The response interceptor handles `401` once per request; concurrent `401` responses share a refresh promise.
-- `admin/core/auth` owns tokens, the refresh endpoint, and logout; during bootstrap it configures the API client and refreshes the access token.
+- `admin/core/auth` owns sign-in, the current user, and logout; during bootstrap it configures the API client and reads `/api/auth/session/me`.
 - HTTP logs contain only method, URL, status, and duration; `VITE_ENABLE_HTTP_LOGS` enables them.
 
 ## Integration contract
 
-The auth feature passes `AuthSessionAdapter` through `configureApiClient`. `refreshAccessToken` performs `POST /api/auth/session/refresh` with `withCredentials: true`, sends `kedr.csrf` as `X-CSRF-Token`, and uses a separate raw Axios client to avoid recursive refresh.
+The auth feature passes `AuthSessionAdapter` through `configureApiClient`. Since the cookie-session rollout (2026-10) the adapter has only `onUnauthenticated`: there is no access token or refresh in the browser, and a `401` outside `/api/auth/` opens the login page. Sign-in calls use a separate raw Axios client.
 
 ## Consequences
 

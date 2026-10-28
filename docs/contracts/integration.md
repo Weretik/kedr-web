@@ -99,4 +99,4 @@ PascalCase keys `Identifier` and `ErrorMessage` are also allowed in the Ardalis 
 
 ## Authentication and security
 
-Protected operations use the existing frontend session adapter and Bearer token flow. Security declared in OpenAPI and backend authorization are authoritative. In particular, do not assume a currently anonymous admin route is safe to access outside the internal frontend surface.
+Admin and Storefront use the HttpOnly cookie session with a CSRF header on non-GET requests; Mobile uses a bearer access token with a rotating refresh token. Details are in the [session contract](identity/session.md). Every `/api/admin/*` and `/api/categories` operation requires a staff role (Manager or Admin), and `/api/admin/users` requires Admin. Security declared in OpenAPI and backend authorization are authoritative; a client guard only improves the UX.

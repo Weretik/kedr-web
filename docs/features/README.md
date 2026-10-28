@@ -4,11 +4,12 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 ## Admin React
 
-[AppRouter](../../apps/admin/src/app/router/app-router.tsx) assembles routes inside `AdminLayout`. Admin has no separate login screen. See [Admin architecture](../architecture/admin/README.md).
+[AppRouter](../../apps/admin/src/app/router/app-router.tsx) opens `/login` and assembles the other routes inside `AdminLayout` behind the staff session guard. See [Admin architecture](../architecture/admin/README.md).
 
 | Feature                               | Route or entry                               | Status                                             |
 | ------------------------------------- | -------------------------------------------- | -------------------------------------------------- |
-| [Session and shell](admin/session.md) | All routes                                   | Shared layout, navigation, and session             |
+| [Session and shell](admin/session.md) | `/login`, all routes                         | Cookie sign-in, role guards, layout, navigation    |
+| [Users](admin/users.md)               | `/users`                                     | Admin only: staff accounts, roles, block, password |
 | [Dashboard](admin/dashboard.md)       | `/dashboard`                                 | Visual metrics are currently static                |
 | [Products](admin/products.md)         | `/catalog`, `/catalog/:productSlug`          | List, details, and adding products to an order set |
 | [Customers](admin/clients.md)         | `/customers`, `/customers/:counterpartyId`   | List, details, and order tables                    |
@@ -16,11 +17,12 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 ## Mobile React Native
 
-[Expo Router](../../apps/mobile/src/app/_layout.tsx) connects screens from `libs/mobile/*/feature`. `index` currently displays a placeholder; the `profile` tab opens the products-without-photos screen rather than a user profile. See [Mobile architecture](../architecture/mobile/README.md).
+[Expo Router](../../apps/mobile/src/app/_layout.tsx) connects screens from `libs/mobile/*/feature`. `index` currently displays a placeholder; the `profile` tab opens the products-without-photos screen and the account/sign-out control. All screens except login need a staff session. See [Mobile architecture](../architecture/mobile/README.md).
 
 | Feature                                                     | Route or entry                              |
 | ----------------------------------------------------------- | ------------------------------------------- |
 | [Shell and navigation](mobile/shell.md)                     | `_layout.tsx`, `(tabs)/_layout.tsx`         |
+| [Sign-in](mobile/auth.md)                                   | `login.tsx`, root layout guard              |
 | [Browse, search, and filter](mobile/catalog/catalog.md)     | `(tabs)/catalog.tsx`                        |
 | [Category selection](mobile/catalog/category-filter.md)     | Part of the catalog screen                  |
 | [Discovery UI](mobile/catalog/catalog-discovery.md)         | Part of the catalog screen                  |
