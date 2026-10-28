@@ -1,14 +1,5 @@
-import {
-  provideHttpClient,
-  withFetch,
-  withInterceptors,
-} from '@angular/common/http';
-import {
-  authInterceptor,
-  credentialsInterceptor,
-  csrfInterceptor,
-  unauthorizedInterceptor,
-} from '@shared/auth';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { credentialsInterceptor, csrfInterceptor, unauthorizedInterceptor } from '@shared/auth';
 import {
   baseUrlInterceptor,
   errorInterceptor,
@@ -17,10 +8,7 @@ import {
   API_BASE_URL,
 } from '@shared/http';
 
-export function provideStorefrontHttp(
-  apiBaseUrl: string,
-  enableHttpLogs: boolean,
-) {
+export function provideStorefrontHttp(apiBaseUrl: string, enableHttpLogs: boolean) {
   return [
     { provide: API_BASE_URL, useValue: apiBaseUrl },
     { provide: ENABLE_HTTP_LOGS, useValue: enableHttpLogs },
@@ -30,7 +18,6 @@ export function provideStorefrontHttp(
         baseUrlInterceptor,
         credentialsInterceptor,
         csrfInterceptor,
-        authInterceptor,
         unauthorizedInterceptor,
         loggingInterceptor,
         errorInterceptor,

@@ -1,43 +1,35 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { finalize, map, shareReplay, tap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, finalize, tap } from 'rxjs/operators';
 
 import { AuthApi, LoginRequest } from '../data-access/auth.api';
-import { SessionStore } from '../state/session.store';
+import { SessionStore, SessionUser } from '../state/session.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly api = inject(AuthApi);
   private readonly session = inject(SessionStore);
-  private refreshRequest$: Observable<string> | null = null;
 
-  login(request: LoginRequest) {
-    return this.api
-      .login(request)
-      .pipe(
-        tap((responseData) =>
-          this.session.setAccessToken(responseData.accessToken),
-        ),
-      );
+  login(request: LoginRequest): Observable<SessionUser> {
+    return this.api.login(request).pipe(tap((user) => this.session.setUser(user)));
   }
 
-  logout() {
-    return this.api.logout().pipe(tap(() => this.session.clear()));
+  logout(): Observable<void> {
+    return this.api.logout().pipe(finalize(() => this.session.clear()));
   }
 
-  refreshAccessToken(): Observable<string> {
-    if (!this.refreshRequest$) {
-      this.refreshRequest$ = this.api.refresh().pipe(
-        map((response) => response.accessToken),
-        tap((token) => this.session.setAccessToken(token)),
-        finalize(() => {
-          this.refreshRequest$ = null;
-        }),
-        shareReplay(1),
-      );
-    }
-
-    return this.refreshRequest$;
+  /** Reads the signed-in user from the session cookie; a guest gets null. */
+  restoreSession(): Observable<SessionUser | null> {
+    return this.api.me().pipe(
+      tap((user) => this.session.setUser(user)),
+      catchError((error: unknown) => {
+        this.session.clear();
+        return error instanceof HttpErrorResponse && error.status === 401
+          ? of(null)
+          : throwError(() => error);
+      }),
+    );
   }
 
   forceLogout(): void {

@@ -1,55 +1,32 @@
-import {
-  HttpContextToken,
-  HttpErrorResponse,
-  HttpInterceptorFn,
-} from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject, InjectionToken } from '@angular/core';
 import { throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 
-const RETRIED_ON_401 = new HttpContextToken<boolean>(() => false);
-const LOGIN_PATH = '/api/auth/session/login';
-const REFRESH_PATH = '/api/auth/session/refresh';
+const AUTH_PATH = '/api/auth/';
 
+/** App-specific reaction when the session ends, for example opening the localized login page. */
+export const UNAUTHENTICATED_HANDLER = new InjectionToken<() => void>('UNAUTHENTICATED_HANDLER');
+
+/** A 401 outside the sign-in calls means the cookie session ended: forget the user and let the app react. */
 export const unauthorizedInterceptor: HttpInterceptorFn = (request, next) => {
   const auth = inject(AuthService);
-  const router = inject(Router);
+  const onUnauthenticated = inject(UNAUTHENTICATED_HANDLER, { optional: true });
 
   return next(request).pipe(
     catchError((error: unknown) => {
-      if (!(error instanceof HttpErrorResponse) || error.status !== 401) {
-        return throwError(() => error);
+      if (
+        error instanceof HttpErrorResponse &&
+        error.status === 401 &&
+        !request.url.includes(AUTH_PATH)
+      ) {
+        auth.forceLogout();
+        onUnauthenticated?.();
       }
 
-      const isSessionRequest =
-        request.url.includes(LOGIN_PATH) || request.url.includes(REFRESH_PATH);
-      const alreadyRetried = request.context.get(RETRIED_ON_401);
-      if (isSessionRequest || alreadyRetried) {
-        if (alreadyRetried) {
-          auth.forceLogout();
-          void router.navigateByUrl('/admin/login');
-        }
-        return throwError(() => error);
-      }
-
-      return auth.refreshAccessToken().pipe(
-        switchMap((accessToken) =>
-          next(
-            request.clone({
-              context: request.context.set(RETRIED_ON_401, true),
-              setHeaders: { Authorization: `Bearer ${accessToken}` },
-            }),
-          ),
-        ),
-        catchError((refreshError: unknown) => {
-          auth.forceLogout();
-          void router.navigateByUrl('/admin/login');
-          return throwError(() => refreshError);
-        }),
-      );
+      return throwError(() => error);
     }),
   );
 };
