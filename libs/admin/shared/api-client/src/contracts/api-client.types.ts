@@ -28,9 +28,8 @@ export interface ApiError {
   conflict?: unknown;
 }
 
+/** The browser session lives in an HttpOnly cookie; the client only reacts when it ends. */
 export interface AuthSessionAdapter {
-  getAccessToken: () => string | null | Promise<string | null>;
-  refreshAccessToken?: () => Promise<string | null>;
   onUnauthenticated?: () => void | Promise<void>;
 }
 

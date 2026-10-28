@@ -1,9 +1,12 @@
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { Box, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+
+import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
 
 export const adminDrawerWidth = 264;
 export const adminDrawerCollapsedWidth = 84;
@@ -13,7 +16,13 @@ const navigationItems = [
   { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
   { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
   { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
-] as const;
+];
+
+const usersNavigationItem = {
+  icon: <ManageAccountsOutlinedIcon />,
+  label: 'Користувачі',
+  to: '/users',
+};
 
 interface AdminNavigationProps {
   isCollapsed?: boolean;
@@ -22,6 +31,9 @@ interface AdminNavigationProps {
 
 export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNavigationProps) {
   const location = useLocation();
+  const user = useAdminShellUser();
+  // Hidden for managers; the route itself also shows "no access".
+  const items = user?.canManageUsers ? [...navigationItems, usersNavigationItem] : navigationItems;
 
   return (
     <Box aria-label="Основна навігація" component="nav" sx={{ px: 2 }}>
@@ -36,7 +48,7 @@ export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNaviga
         component="ul"
         sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, listStyle: 'none', m: 0, p: 0 }}
       >
-        {navigationItems.map(({ icon, label, to }) => {
+        {items.map(({ icon, label, to }) => {
           const isActive = location.pathname === to || location.pathname.startsWith(`${to}/`);
 
           return (

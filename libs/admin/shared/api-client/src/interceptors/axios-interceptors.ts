@@ -1,18 +1,17 @@
 import { logRequest, logResponse } from './api-logging.interceptor';
-import { retryAfterAuthRefresh } from './auth-refresh.interceptor';
-import { attachAuthorizationHeader } from './auth-request.interceptor';
+import { attachCsrfHeader } from './csrf-request.interceptor';
+import { handleUnauthorized } from './unauthorized.interceptor';
 
 import type { TimedRequestConfig } from './api-logging.interceptor';
 import type { AxiosError, AxiosInstance } from 'axios';
 
 export function installAxiosInterceptors(client: AxiosInstance): void {
-  client.interceptors.request.use(async (config) => {
-    const timedConfig = config as TimedRequestConfig;
+  client.interceptors.request.use((config) => {
+    const timedConfig = attachCsrfHeader(config as TimedRequestConfig);
     timedConfig.requestStartedAt = Date.now();
-    const authorizedConfig = await attachAuthorizationHeader(timedConfig);
-    logRequest(authorizedConfig);
+    logRequest(timedConfig);
 
-    return authorizedConfig;
+    return timedConfig;
   });
 
   client.interceptors.response.use(
@@ -26,7 +25,7 @@ export function installAxiosInterceptors(client: AxiosInstance): void {
         logResponse(error.config as TimedRequestConfig, error.response?.status ?? 0);
       }
 
-      return retryAfterAuthRefresh(client, error);
+      return handleUnauthorized(error);
     },
   );
 }
