@@ -5,6 +5,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   moduleNameMapper: {
     '^@reduxjs/toolkit$': '<rootDir>/../../node_modules/@reduxjs/toolkit/dist/cjs/index.js',
+    '^@mobile/core/auth$': '<rootDir>/../../libs/mobile/core/auth/src/index.ts',
     '^@mobile/core/connectivity$': '<rootDir>/../../libs/mobile/core/connectivity/src/index.ts',
     '^@mobile/core/shell$': '<rootDir>/../../libs/mobile/core/shell/src/index.ts',
     '^@mobile/catalog/feature$': '<rootDir>/../../libs/mobile/catalog/feature/src/index.ts',

@@ -1,21 +1,21 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-export interface Session {
-  accessToken: string | null;
-}
+import type { SessionUserResponse } from '../data-access/auth.api';
+
+export type SessionUser = SessionUserResponse;
 
 @Injectable({ providedIn: 'root' })
 export class SessionStore {
-  private readonly _session = signal<Session>({ accessToken: null });
+  private readonly _user = signal<SessionUser | null>(null);
 
-  readonly session = computed(() => this._session());
-  readonly isAuthenticated = computed(() => !!this._session().accessToken);
+  readonly user = this._user.asReadonly();
+  readonly isAuthenticated = computed(() => this._user() !== null);
 
-  setAccessToken(token: string | null): void {
-    this._session.set({ accessToken: token });
+  setUser(user: SessionUser | null): void {
+    this._user.set(user);
   }
 
   clear(): void {
-    this.setAccessToken(null);
+    this._user.set(null);
   }
 }

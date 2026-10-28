@@ -5,6 +5,7 @@
 - [Root layout](../../../apps/mobile/src/app/_layout.tsx) and [tabs layout](../../../apps/mobile/src/app/%28tabs%29/_layout.tsx) define the Expo Router structure. The root layout loads the brand fonts behind the splash screen; the tabs use the [PillTabBar](../../../libs/mobile/core/shell/src/components/navigation/pill-tab-bar/pill-tab-bar.tsx) with a cart badge.
 - The [«Пагін» design system](../../standards/mobile/design-system.md): tokens and shared components live in `@mobile/shared/ui` (`libs/mobile/shared/ui/src`); the shell's [app theme](../../../libs/mobile/core/shell/src/theme/app-theme.ts) assembles the Paper light and dark themes from them.
 - [AppProviders](../../../libs/mobile/core/shell/src/providers/app-providers.tsx), [app-store](../../../libs/mobile/core/shell/src/state/app-store.ts), and [theme preference storage](../../../libs/mobile/core/shell/src/storage/theme-preference-storage.ts) provide shared state. The [connectivity adapter](../../../libs/mobile/core/connectivity/src/lib/connectivity-adapter.ts) tracks network status.
+- The root layout also gates every screen behind the staff session; see [Mobile sign-in](auth.md).
 - Route files remain thin; business logic and API access belong to domain libraries. The initial tab is currently a placeholder.
 
 ## Structure diagram

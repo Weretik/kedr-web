@@ -11,7 +11,7 @@ function initializeAuthSession(): Promise<void> {
   if (!isPlatformBrowser(platformId)) return Promise.resolve();
 
   return firstValueFrom(
-    auth.refreshAccessToken().pipe(
+    auth.restoreSession().pipe(
       map(() => void 0),
       catchError(() => of(void 0)),
     ),

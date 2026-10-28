@@ -1,0 +1,13 @@
+{
+  "name": "admin-users-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/users/feature/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:users", "type:feature"],
+  "// targets": "to see all targets run: nx show project admin-users-feature --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

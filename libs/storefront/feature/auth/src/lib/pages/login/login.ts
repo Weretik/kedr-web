@@ -44,9 +44,7 @@ export class Login {
 
   constructor() {
     if (this.sessionStore.isAuthenticated()) {
-      void this.router.navigate(
-        this.localeNavigation.localizedSegments('cabinet', 'dashboard'),
-      );
+      void this.router.navigate(this.localeNavigation.localizedSegments('cabinet', 'dashboard'));
     }
   }
 
@@ -75,22 +73,15 @@ export class Login {
         }),
       );
 
-      const returnUrl = this.sanitizeReturnUrl(
-        this.route.snapshot.queryParamMap.get('returnUrl'),
-      );
+      const returnUrl = this.sanitizeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
       if (returnUrl) {
         await this.router.navigateByUrl(returnUrl);
         return;
       }
 
-      await this.router.navigate(
-        this.localeNavigation.localizedSegments('cabinet', 'dashboard'),
-      );
+      await this.router.navigate(this.localeNavigation.localizedSegments('cabinet', 'dashboard'));
     } catch {
-      this.notificationService.error(
-        'Login failed',
-        'Check email or password and try again.',
-      );
+      this.notificationService.error('Login failed', 'Check email or password and try again.');
     } finally {
       this.isSubmitting.set(false);
     }
@@ -99,7 +90,7 @@ export class Login {
   private sanitizeReturnUrl(returnUrl: string | null): string | null {
     if (!returnUrl) return null;
     if (!returnUrl.startsWith('/')) return null;
-    if (returnUrl.startsWith('//')) return null;
+    if (returnUrl.startsWith('//') || returnUrl.startsWith('/\\')) return null;
     return returnUrl;
   }
 }

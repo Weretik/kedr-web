@@ -1,7 +1,4 @@
-import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import {
   provideClientHydration,
   withEventReplay,
@@ -18,6 +15,7 @@ import {
 
 import { appRoutes } from './app.routes';
 import { AUTH_INIT_PROVIDER } from './auth/auth-init.provider';
+import { UNAUTHENTICATED_HANDLER_PROVIDER } from './auth/unauthenticated-handler.provider';
 import { provideStorefrontHttp } from './http/http.providers';
 import { TRANSLOCO_PROVIDERS } from './localization/transloco.providers';
 import { provideStorefrontLogging } from './logging/logging.providers';
@@ -26,12 +24,10 @@ import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    ...provideStorefrontHttp(
-      environment.api.baseUrl,
-      environment.enableHttpLogs,
-    ),
+    ...provideStorefrontHttp(environment.api.baseUrl, environment.enableHttpLogs),
     provideStorefrontLogging(environment),
     AUTH_INIT_PROVIDER,
+    UNAUTHENTICATED_HANDLER_PROVIDER,
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       appRoutes,
