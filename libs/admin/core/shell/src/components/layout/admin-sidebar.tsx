@@ -2,8 +2,8 @@ import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDou
 import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { AdminNavigation } from '../navigation/admin-navigation';
 import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
+import { AdminNavigation } from '../navigation/admin-navigation';
 
 interface AdminSidebarProps {
   currentOrderPositionCount: number;
@@ -14,7 +14,17 @@ interface AdminSidebarProps {
 }
 
 function AdminLogo({ isCollapsed }: { isCollapsed: boolean }) {
-  const height = isCollapsed ? 28 : 44;
+  const height = 44;
+
+  if (isCollapsed)
+    return (
+      <Box
+        alt="Логотип Class Kedr"
+        component="img"
+        src="/assets/logo/kedr-emblem.svg"
+        sx={{ borderRadius: '10px', display: 'block', height: 40, width: 40 }}
+      />
+    );
 
   return (
     <>
@@ -25,7 +35,6 @@ function AdminLogo({ isCollapsed }: { isCollapsed: boolean }) {
         sx={(theme) => ({
           display: 'block',
           height,
-          transition: theme.transitions.create('height'),
           width: 'auto',
           ...theme.applyStyles('dark', { display: 'none' }),
         })}
@@ -37,7 +46,6 @@ function AdminLogo({ isCollapsed }: { isCollapsed: boolean }) {
         sx={(theme) => ({
           display: 'none',
           height,
-          transition: theme.transitions.create('height'),
           width: 'auto',
           ...theme.applyStyles('dark', { display: 'block' }),
         })}

@@ -3,8 +3,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { vi } from 'vitest';
 
 import { AdminTopBar } from './admin-top-bar';
-import { AdminSidebar } from '../layout/admin-sidebar';
 import { AdminShellSessionProvider } from '../../providers/admin-shell-session-provider';
+import { AdminSidebar } from '../layout/admin-sidebar';
 
 vi.mock('./notifications-menu', () => ({ NotificationsMenu: () => null }));
 vi.mock('./profile/profile-menu', () => ({ ProfileMenu: () => null }));
