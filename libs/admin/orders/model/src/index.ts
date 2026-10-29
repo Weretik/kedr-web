@@ -18,6 +18,8 @@ export {
   adjustedLine,
   formatPriceAdjustment,
   maxPriceAdjustment,
+  adjustedPriceIssue,
+  minDiscountedUnitPrice,
   parsePriceAdjustment,
   priceAdjustmentTone,
 } from './price-adjustment';

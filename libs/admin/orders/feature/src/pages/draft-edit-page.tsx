@@ -1,5 +1,5 @@
 import { OrderLineEditor } from '@admin/orders/ui';
-import { PageLoader, SectionCard } from '@admin/shared/ui';
+import { PageIssues, PageLoader, SectionCard } from '@admin/shared/ui';
 import { Alert, Button, Stack, TextField } from '@mui/material';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 
@@ -50,13 +50,17 @@ export function DraftEditPage({ CustomerPicker }: { CustomerPicker: CustomerPick
               Актуальна ціна недоступна. Виправте клієнта або товари, щоб перерахувати суму.
             </Alert>
           )}
-          {error && (
+          <PageIssues
+            messages={[
+              !error.includes('іншій вкладці') && error,
+              customerId && lines.length > 0 && !quote.loading && quote.error && quote.errorMessage,
+            ]}
+            revealKey={error}
+            title="Чернетку не можна зберегти"
+          />
+          {error.includes('іншій вкладці') && (
             <Alert
-              action={
-                error.includes('іншій вкладці') ? (
-                  <Button onClick={() => void reload()}>Перезавантажити</Button>
-                ) : undefined
-              }
+              action={<Button onClick={() => void reload()}>Перезавантажити</Button>}
               severity="error"
             >
               {error}
@@ -86,31 +90,21 @@ export function DraftEditPage({ CustomerPicker }: { CustomerPicker: CustomerPick
             customerPrices={customerPrices}
             onChange={setLines}
           />
-          <Button
-            component={RouterLink}
-            to={pickerPath}
-            variant="outlined"
-            sx={{ alignSelf: 'flex-start' }}
-          >
-            Додати з каталогу
-          </Button>
-          {customerId &&
-            lines.length > 0 &&
-            (quote.loading ? (
-              <Alert severity="info">Розраховуємо актуальну суму…</Alert>
-            ) : quote.error ? (
-              <Alert severity="error">
-                Не вдалося розрахувати ціну. Перевірте товар, залишки й клієнта.
-              </Alert>
-            ) : null)}
-          <Button
-            disabled={!title.trim() || !customerId || !lines.length || !quote.quote || saving}
-            onClick={() => void save()}
-            variant="contained"
-            sx={{ alignSelf: 'flex-start' }}
-          >
-            Зберегти зміни
-          </Button>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <Button component={RouterLink} to={pickerPath} variant="outlined">
+              Додати з каталогу
+            </Button>
+            <Button
+              disabled={!title.trim() || !customerId || !lines.length || !quote.quote || saving}
+              onClick={() => void save()}
+              variant="contained"
+            >
+              Зберегти зміни
+            </Button>
+          </Stack>
+          {customerId && lines.length > 0 && quote.loading && (
+            <Alert severity="info">Розраховуємо актуальну суму…</Alert>
+          )}
         </>
       ) : null}
     </Stack>

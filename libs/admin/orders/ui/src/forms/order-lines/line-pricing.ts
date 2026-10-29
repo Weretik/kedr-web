@@ -1,4 +1,4 @@
-import { adjustedLine } from '@admin/orders/model';
+import { adjustedLine, adjustedPriceIssue } from '@admin/orders/model';
 
 import type { CatalogLineInfo, OrderInputLine, OrderQuote } from '@admin/orders/model';
 
@@ -19,6 +19,8 @@ export interface LinePricing {
   lineAmount: number | null;
   /** True while the price is the retail catalog price because no customer is chosen yet. */
   retail: boolean;
+  /** Why the line cannot be ordered as entered, for example a discount above the price. */
+  issue: string | null;
 }
 
 /** Picks the best known price for a line: current quote, last quote, customer prices, then retail. */
@@ -45,13 +47,15 @@ export function priceLine(line: OrderInputLine, sources: LinePriceSources): Line
       unitPrice: current.unitPrice,
       lineAmount: current.lineAmount,
       retail: false,
+      issue: null,
     };
   if (baseUnitPrice === null)
-    return { productName, baseUnitPrice, unitPrice: null, lineAmount: null, retail };
+    return { productName, baseUnitPrice, unitPrice: null, lineAmount: null, retail, issue: null };
   return {
     productName,
     baseUnitPrice,
     ...adjustedLine(baseUnitPrice, line.priceAdjustment ?? 0, line.quantity),
     retail,
+    issue: adjustedPriceIssue(baseUnitPrice, line.priceAdjustment ?? 0),
   };
 }

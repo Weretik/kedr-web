@@ -147,4 +147,19 @@ describe('OrderLineEditor', () => {
 
     expect(screen.getByText(/до двох знаків після коми/)).toBeTruthy();
   });
+
+  it('flags a discount that takes the price below 1 UAH right on the line', () => {
+    render(
+      <OrderLineEditor
+        lines={[{ productId: 'P1', quantity: 3, priceAdjustment: -91 }]}
+        quote={null}
+        customerPrices={{ P1: 90 }}
+        onChange={() => undefined}
+      />,
+    );
+
+    const field = screen.getByLabelText('Знижка або націнка за штуку, товар P1');
+    expect(field.getAttribute('aria-invalid')).toBe('true');
+    expect(screen.getByText(/Найбільша знижка — 89,00/)).toBeTruthy();
+  });
 });

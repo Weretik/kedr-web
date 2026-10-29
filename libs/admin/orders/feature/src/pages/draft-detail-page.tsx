@@ -3,7 +3,7 @@ import {
   useGetWorkspaceDraftQuery,
 } from '@admin/orders/data-access';
 import { OrderDocumentView } from '@admin/orders/ui';
-import { PageLoader } from '@admin/shared/ui';
+import { NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
@@ -14,9 +14,11 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { DetailHeader, safeReturnTo } from '../components/detail-header';
 import { DraftDeleteDialog } from '../dialogs/draft-delete-dialog';
 import { DraftReuseDialog } from '../dialogs/draft-reuse-dialog';
+import { useRouteNotice } from '../hooks/use-route-notice';
 import { mergeDraftIntoCurrentOrder, useCurrentOrderSet } from '../state/current-order-set';
 
 export function DraftDetailPage() {
+  const { notice, close: closeNotice } = useRouteNotice();
   const id = Number(useParams<{ draftId: string }>().draftId);
   const valid = Number.isSafeInteger(id) && id > 0;
   const query = useGetWorkspaceDraftQuery(id, { skip: !valid });
@@ -67,6 +69,7 @@ export function DraftDetailPage() {
   };
   return (
     <Stack component="section" spacing={3}>
+      <NoticeSnackbar message={notice} onClose={closeNotice} />
       <DetailHeader title="Деталі чернетки">
         {draft && (
           <>

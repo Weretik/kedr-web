@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 interface Props {
   productId: string;
   value: number;
+  /** A problem with the resulting price, shown under the field like a typing error. */
+  issue?: string | null;
   onChange: (value: number) => void;
 }
 
@@ -15,7 +17,7 @@ const toText = (value: number) =>
  * "Знижка/Націнка" per unit in UAH: a minus sign makes a discount (red), a plus or a bare number a
  * markup (green). Keeps what the manager types until it is a valid amount.
  */
-export function PriceAdjustmentField({ productId, value, onChange }: Props) {
+export function PriceAdjustmentField({ productId, value, issue, onChange }: Props) {
   const [text, setText] = useState(() => toText(value));
   const [error, setError] = useState('');
   useEffect(() => {
@@ -26,10 +28,13 @@ export function PriceAdjustmentField({ productId, value, onChange }: Props) {
     });
   }, [value]);
   const tone = priceAdjustmentTone(value);
+  const message = error || issue || '';
+  const toneColor =
+    tone === 'discount' ? 'error.main' : tone === 'markup' ? 'success.main' : undefined;
   return (
     <TextField
-      error={Boolean(error)}
-      helperText={error || undefined}
+      error={Boolean(message)}
+      helperText={message || undefined}
       onBlur={() => {
         if (!error) setText(toText(value));
       }}
@@ -56,9 +61,11 @@ export function PriceAdjustmentField({ productId, value, onChange }: Props) {
       }}
       sx={{
         width: 116,
+        // The border follows the sign too, so a discount never looks "fine" in green on focus.
+        '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline, & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+          toneColor ? { borderColor: message ? 'error.main' : toneColor } : {},
         '& .MuiInputBase-input': {
-          color:
-            tone === 'discount' ? 'error.main' : tone === 'markup' ? 'success.main' : undefined,
+          color: toneColor,
           fontVariantNumeric: 'tabular-nums',
           fontWeight: tone === 'none' ? undefined : 600,
         },
