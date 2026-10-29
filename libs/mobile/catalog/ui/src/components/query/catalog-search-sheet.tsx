@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-autofocus -- The search field is focused when this modal opens. */
 import { useKedrTheme } from '@mobile/shared/ui';
 import {
   KeyboardAvoidingView,
