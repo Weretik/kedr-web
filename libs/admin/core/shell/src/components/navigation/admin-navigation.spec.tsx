@@ -9,7 +9,14 @@ const renderNavigation = (canManageUsers: boolean) =>
     <MemoryRouter>
       <AdminShellSessionProvider
         onLogout={async () => undefined}
-        user={{ canManageUsers, email: 'staff@kedr.ua', fullName: 'Staff', roleLabel: 'Роль' }}
+        profileHref="/profile"
+        user={{
+          avatarUrl: null,
+          canManageUsers,
+          email: 'staff@kedr.ua',
+          fullName: 'Staff',
+          roleLabel: 'Роль',
+        }}
       >
         <AdminNavigation />
       </AdminShellSessionProvider>

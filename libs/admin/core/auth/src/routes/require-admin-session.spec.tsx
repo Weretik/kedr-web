@@ -10,6 +10,7 @@ const staff = (roles: SessionUser['roles']): SessionUser => ({
   id: 'u-1',
   email: 'staff@kedr.ua',
   fullName: 'Олена',
+  avatarUrl: null,
   roles,
 });
 
