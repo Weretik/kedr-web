@@ -15,6 +15,7 @@ const order = (orderId: number, syncStatus: string): OrderSummary =>
     lineCount: 1,
     totalAmount: 100,
     syncStatus,
+    adjustmentAmount: 0,
   }) satisfies OrderSummary;
 
 function renderGrid(overrides: Partial<Parameters<typeof OrderListGrid>[0]> = {}) {

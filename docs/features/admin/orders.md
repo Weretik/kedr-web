@@ -1,11 +1,12 @@
 # React Admin orders
 
-**Status:** implemented in React Admin. Routes: `/orders`, `/orders/new`, `/orders/:orderId`, `/orders/drafts/:draftId`, and draft editing. Requirements and verification: [orders SDD](../../specs/admin/orders/001-order-workspace/README.md) and [customer panel SDD](../../specs/admin/clients/002-customer-orders/README.md).
+**Status:** implemented in React Admin. Routes: `/orders`, `/orders/new`, `/orders/:orderId`, `/orders/drafts/:draftId`, and draft editing. Requirements and verification: [orders SDD](../../specs/admin/orders/001-order-workspace/README.md), [customer prices and discount/markup SDD](../../specs/admin/orders/003-customer-prices-and-adjustments/README.md), and [customer panel SDD](../../specs/admin/clients/002-customer-orders/README.md).
 
 ## Flow and data
 
 - [Tables](../../../libs/admin/orders/feature/src/components/order-tables.tsx) have order and draft tabs, separate URL state, and server-side search, creation date range, sorting, and pagination. On a customer page, the query is restricted to that customer's ID, and the customer column and search are hidden from the order table. [Draft deletion](../../../libs/admin/orders/feature/src/hooks/use-draft-deletion.ts) is separate from table management. The same panel is used in [customer details](clients.md).
-- The [local order set](../../../libs/admin/orders/feature/src/state/current-order-set.ts) receives products from the catalog and stores only productId/quantity in browser storage; the checkout customer is kept next to it in [current-order-customer](../../../libs/admin/orders/feature/src/state/current-order-customer.ts) until submit, draft creation, or logout. Storage is per browser profile, not per account. Its item count appears in the MUI cart in the header. The [checkout page](../../../libs/admin/orders/feature/src/pages/new-order-page.tsx) selects customers with paginated loading, shows product names and a preliminary total, coordinates the server quote, and opens MUI dialogs for saving a draft and submitting an order.
+- The [local order set](../../../libs/admin/orders/feature/src/state/current-order-set.ts) receives products from the catalog and stores only productId, quantity, and the per-unit adjustment in browser storage; the checkout customer is kept next to it in [current-order-customer](../../../libs/admin/orders/feature/src/state/current-order-customer.ts) until submit, draft creation, or logout. Storage is per browser profile, not per account. Its item count appears in the MUI cart in the header. The [checkout page](../../../libs/admin/orders/feature/src/pages/new-order-page.tsx) selects customers with paginated loading, shows product names and a preliminary total, coordinates the server quote, and opens MUI dialogs for saving a draft and submitting an order.
+- **Prices and discount/markup.** With a customer chosen, the [line editor](../../../libs/admin/orders/ui/src/forms/order-line-editor.tsx) shows «Ціна клієнта» from [customer prices](../../../libs/admin/orders/feature/src/hooks/use-customer-prices.ts) (the customer's category rule, inherited by subcategories; independent of stock); without one it shows «Ціна (роздріб)» from the catalog. Each line has a «Знижка/Націнка, ₴ за шт.» field ([price-adjustment](../../../libs/admin/orders/model/src/price-adjustment.ts)): minus is a discount (red), plus or a bare number a markup (green). The adjustment goes to the server quote, drafts, and the order; 1C receives only amounts. Details show a per-unit adjustment column when a line has one, and the order list shows the order's total adjustment.
 - Details pages show the order and 1C status. A saved draft can be viewed, changed, deleted, or reused. The source draft remains after reuse.
 - If a quote rejects a quantity because of current stock, the page shows the server message with the product name and available and requested quantities; the current set remains available for correction.
 - The separate [Admin API](../../contracts/sales/admin-order-workspace.md) defines records, versions, idempotency, and errors. The UI follows the [list and detail page standard](../../standards/admin/list-detail-pages.md).
@@ -39,6 +40,7 @@ flowchart LR
 ```text
 libs/admin/orders/
 ├── model/src/orders-model.ts                 # page, quote, and draft models
+├── model/src/price-adjustment.ts             # parse, format, apply a per-unit discount/markup
 ├── data-access/src/
 │   ├── api/                                  # Admin endpoints, RTK Query tags, conflict mapping
 │   └── mappers/                              # runtime validation, DTO → model
@@ -46,7 +48,7 @@ libs/admin/orders/
 │   ├── orders.routes.tsx                     # routes and CustomerOrdersPanel
 │   ├── components/order-tables.tsx           # tabs, URL, and server requests
 │   ├── pages/                                # checkout, order/draft details, editing
-│   ├── hooks/                                # quote, checkout, draft save/deletion
+│   ├── hooks/                                # quote, customer prices, checkout, draft save/deletion
 │   ├── dialogs/                              # separate delete and reuse confirmations
 │   └── state/current-order-set.ts            # local set and multi-tab coordination
 └── ui/src/
@@ -54,6 +56,7 @@ libs/admin/orders/
     ├── tables/                               # grid and toolbar without HTTP
     ├── details/                              # document display
     ├── forms/                                # item editor and action forms
+    ├── forms/order-lines/                    # price source priority, line row, adjustment field
     └── dialogs/                              # checkout confirmation
 ```
 
@@ -68,4 +71,4 @@ Spec files sit next to the code in each project. Focused runs:
 - `libs/admin/orders/feature` (5 spec files): `npx nx run admin-orders-feature:vite:test -- --run`
 - `libs/admin/orders/ui` (4 spec files): `npx nx run admin-orders-ui:vite:test -- --run`
 
-Without tests: `admin-orders-model`.
+- `libs/admin/orders/model` (1 spec file): `npx nx run admin-orders-model:vite:test -- --run`

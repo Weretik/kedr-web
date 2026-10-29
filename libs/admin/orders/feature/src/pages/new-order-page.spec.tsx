@@ -20,6 +20,7 @@ vi.mock('@admin/orders/data-access', () => ({
       : null,
 }));
 vi.mock('../hooks/use-order-quote', () => ({ useOrderQuote: vi.fn() }));
+vi.mock('../hooks/use-customer-prices', () => ({ useCustomerPrices: () => undefined }));
 vi.mock('@admin/products/data-access', () => ({ useGetAllAdminProductsQuery: vi.fn() }));
 vi.mock('../state/current-order-set', () => ({
   useCurrentOrderSet: vi.fn(),
@@ -38,7 +39,17 @@ vi.mock('@admin/orders/ui', async (importOriginal) => ({
 }));
 const first = {
   counterpartyId: 'C1',
-  lines: [{ productId: '7', productName: 'Товар', quantity: 1, unitPrice: 10, lineAmount: 10 }],
+  lines: [
+    {
+      productId: '7',
+      productName: 'Товар',
+      quantity: 1,
+      unitPrice: 10,
+      lineAmount: 10,
+      baseUnitPrice: 10,
+      priceAdjustment: 0,
+    },
+  ],
   totalAmount: 10,
   quoteFingerprint: 'old',
 };

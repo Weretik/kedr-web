@@ -1,3 +1,4 @@
+import { maxPriceAdjustment } from '@admin/orders/model';
 import { useSyncExternalStore } from 'react';
 
 import { setCurrentOrderCustomer } from './current-order-customer';
@@ -22,6 +23,9 @@ const replace = (lines: OrderInputLine[], warning: Warning = null) => {
   snapshot = { lines, warning };
   emit();
 };
+
+const isAdjustment = (value: unknown) =>
+  typeof value === 'number' && Number.isFinite(value) && Math.abs(value) <= maxPriceAdjustment;
 
 function parse(value: string | null): OrderInputLine[] {
   if (value === null) return [];
@@ -48,11 +52,15 @@ function parse(value: string | null): OrderInputLine[] {
       typeof line.quantity !== 'number' ||
       !Number.isSafeInteger(line.quantity) ||
       line.quantity < 1 ||
+      ('priceAdjustment' in line && !isAdjustment(line.priceAdjustment)) ||
       seen.has(line.productId)
     )
       throw new Error('Invalid saved order line');
     seen.add(line.productId);
-    return { productId: line.productId, quantity: line.quantity };
+    const priceAdjustment = 'priceAdjustment' in line ? Number(line.priceAdjustment) : 0;
+    return priceAdjustment
+      ? { productId: line.productId, quantity: line.quantity, priceAdjustment }
+      : { productId: line.productId, quantity: line.quantity };
   });
 }
 function persist(lines: OrderInputLine[]) {
@@ -122,9 +130,16 @@ export function addProductToCurrentOrder(productId: string, quantity = 1) {
 export function mergeDraftIntoCurrentOrder(lines: OrderInputLine[]) {
   initialize();
   if (snapshot.warning === 'conflict') return false;
-  const map = new Map(snapshot.lines.map((line) => [line.productId, line.quantity]));
-  for (const line of lines) map.set(line.productId, (map.get(line.productId) ?? 0) + line.quantity);
-  const merged = [...map].map(([productId, quantity]) => ({ productId, quantity }));
+  const map = new Map(snapshot.lines.map((line) => [line.productId, { ...line }]));
+  for (const line of lines) {
+    const existing = map.get(line.productId);
+    // A product already in the set keeps its own adjustment; a new one brings the draft's.
+    map.set(
+      line.productId,
+      existing ? { ...existing, quantity: existing.quantity + line.quantity } : { ...line },
+    );
+  }
+  const merged = [...map.values()];
   if (
     merged.length > 100 ||
     merged.some((line) => !Number.isSafeInteger(line.quantity) || line.quantity < 1)

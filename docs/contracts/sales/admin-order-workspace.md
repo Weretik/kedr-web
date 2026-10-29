@@ -4,7 +4,7 @@
 
 - Provider snapshots: [`admin-order-workspace.openapi.yaml`](../openapi/sales/admin-order-workspace.openapi.yaml) and [`admin-order-drafts.openapi.yaml`](../openapi/sales/admin-order-drafts.openapi.yaml).
 - Provenance: [`SOURCE.md`](../openapi/SOURCE.md), KedrStore commit `b3797c1`.
-- Operations: `getAdminWorkspaceOrders`, `getAdminWorkspaceOrderById`, `quoteAdminWorkspaceOrder`, `createAdminWorkspaceOrder`, `getAdminOrderDrafts`, `getAdminOrderDraftById`, `createAdminOrderDraft`, `updateAdminOrderDraft`, `deleteAdminOrderDraft`.
+- Operations: `getAdminWorkspaceOrders`, `getAdminWorkspaceOrderById`, `quoteAdminWorkspaceOrder`, `createAdminWorkspaceOrder`, `getAdminOrderDrafts`, `getAdminOrderDraftById`, `createAdminOrderDraft`, `updateAdminOrderDraft`, `deleteAdminOrderDraft`, `getAdminWorkspaceCustomerPrices`.
 - Consumer: `@admin/orders/data-access`; `operations[...]` transport types are used only at this boundary, and responses undergo runtime validation and mapping to domain models.
 
 These are separate Admin APIs that are currently available anonymously. The existing `/api/admin/orders` and `POST /api/admin/orders` operations for Mobile are not switched to these operations. Provider OpenAPI was changed locally; this repository's snapshot needs synchronization after the backend revision is committed.
@@ -24,3 +24,5 @@ Order creation sends the customer, productId/quantity, `quoteFingerprint`, an op
 Draft creation sends title, note, customer, productId/quantity, and `Idempotency-Key`; editing/deletion uses `If-Match: version`. A version `409` requires loading the current draft before a new action. Mutations invalidate the corresponding RTK Query list and detail tags. The local browser-storage product set is not a server draft and does not store prices or customer data.
 
 Do not change DTOs or endpoints in this frontend without provider OpenAPI. The synchronization order is in the [contract workflow](../README.md).
+
+`getAdminWorkspaceCustomerPrices` (`POST /api/admin/order-workspace/customer-prices`) returns the chosen customer's unit price for each requested product (`null` when it has none), without checking stock; checkout uses it to show «Ціна клієнта» before a full quote. Every input line (quote, order, draft) carries `priceAdjustment`, a per-unit UAH discount (negative) or markup; quote lines return `baseUnitPrice` and `priceAdjustment`, stored lines return `priceAdjustment`, and order list rows return `adjustmentAmount`. Invalid adjustments return `400 invalid_price_adjustment`; a negative final price returns `400 negative_price`.

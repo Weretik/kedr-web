@@ -46,7 +46,11 @@ export function DraftDetailPage() {
   const reuse = () => {
     if (!draft) return;
     const merged = mergeDraftIntoCurrentOrder(
-      draft.lines.map(({ productId, quantity }) => ({ productId, quantity })),
+      draft.lines.map(({ productId, quantity, priceAdjustment }) => ({
+        productId,
+        quantity,
+        priceAdjustment,
+      })),
     );
     if (!merged) {
       setError(

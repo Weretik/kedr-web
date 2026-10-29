@@ -2,11 +2,13 @@ import { baseApi } from '@admin/shared/api-client';
 
 import {
   mapCreatedOrder,
+  mapCustomerPrices,
   mapDraftPage,
   mapDraftRecord,
   mapOrderPage,
   mapOrderRecord,
   mapQuote,
+  toInputLines,
 } from '../mappers/orders.mapper';
 
 import type {
@@ -28,6 +30,8 @@ type QuoteBody =
 type CreateOrderBody =
   operations['createAdminWorkspaceOrder']['requestBody']['content']['application/json'];
 type DraftBody = operations['createAdminOrderDraft']['requestBody']['content']['application/json'];
+type CustomerPricesBody =
+  operations['getAdminWorkspaceCustomerPrices']['requestBody']['content']['application/json'];
 const root = '/api/admin/order-workspace';
 
 interface CreateOrderArgs {
@@ -67,15 +71,30 @@ export const ordersApi = baseApi.injectEndpoints({
       OrderQuote,
       { counterpartyId: string; lines: OrderInputLine[] }
     >({
-      query: (body) => ({ url: `${root}/quote`, method: 'POST', data: body satisfies QuoteBody }),
+      query: ({ counterpartyId, lines }) => ({
+        url: `${root}/quote`,
+        method: 'POST',
+        data: { counterpartyId, lines: toInputLines(lines) } satisfies QuoteBody,
+      }),
       transformResponse: mapQuote,
     }),
+    getWorkspaceCustomerPrices: build.query<
+      Record<string, number | null>,
+      { counterpartyId: string; productIds: string[] }
+    >({
+      query: (body) => ({
+        url: `${root}/customer-prices`,
+        method: 'POST',
+        data: body satisfies CustomerPricesBody,
+      }),
+      transformResponse: mapCustomerPrices,
+    }),
     createWorkspaceOrder: build.mutation<CreatedOrder, CreateOrderArgs>({
-      query: ({ idempotencyKey, ...body }) => ({
+      query: ({ idempotencyKey, lines, ...body }) => ({
         url: `${root}/orders`,
         method: 'POST',
         headers: { 'Idempotency-Key': idempotencyKey },
-        data: body satisfies CreateOrderBody,
+        data: { ...body, lines: toInputLines(lines) } satisfies CreateOrderBody,
       }),
       transformResponse: mapCreatedOrder,
       invalidatesTags: ['AdminOrders'],
@@ -95,7 +114,7 @@ export const ordersApi = baseApi.injectEndpoints({
         url: `${root}/drafts`,
         method: 'POST',
         headers: { 'Idempotency-Key': idempotencyKey },
-        data: input satisfies DraftBody,
+        data: { ...input, lines: toInputLines(input.lines) } satisfies DraftBody,
       }),
       transformResponse: mapDraftRecord,
       invalidatesTags: ['AdminOrderDrafts'],
@@ -105,7 +124,7 @@ export const ordersApi = baseApi.injectEndpoints({
         url: `${root}/drafts/${draftId}`,
         method: 'PUT',
         headers: { 'If-Match': version },
-        data: input satisfies DraftBody,
+        data: { ...input, lines: toInputLines(input.lines) } satisfies DraftBody,
       }),
       transformResponse: mapDraftRecord,
       invalidatesTags: ['AdminOrderDrafts'],
@@ -125,6 +144,7 @@ export const {
   useGetWorkspaceOrdersQuery,
   useGetWorkspaceOrderQuery,
   useQuoteWorkspaceOrderMutation,
+  useGetWorkspaceCustomerPricesQuery,
   useCreateWorkspaceOrderMutation,
   useGetWorkspaceDraftsQuery,
   useGetWorkspaceDraftQuery,

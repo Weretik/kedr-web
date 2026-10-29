@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type {
   DraftRecord,
   DraftSummary,
+  OrderInputLine,
   OrderQuote,
   OrderRecord,
   OrderSummary,
@@ -24,16 +25,21 @@ const pageInfo = z.object({
   totalPages: z.number().int().nonnegative(),
   totalRecords: z.number().int().nonnegative(),
 });
+const adjustment = z.number();
 const inputLine = z.object({ productId: z.string().min(1), quantity: positive });
 const pricedLine = inputLine.extend({
   productName: z.string().nullable(),
   unitPrice: nonNegative.nullable(),
   lineAmount: nonNegative.nullable(),
+  priceAdjustment: adjustment,
+  baseUnitPrice: nonNegative.nullable(),
 });
 const quotedLine = inputLine.extend({
   productName: z.string(),
   unitPrice: nonNegative,
   lineAmount: nonNegative,
+  baseUnitPrice: nonNegative,
+  priceAdjustment: adjustment,
 });
 const quote = z.object({
   counterpartyId: z.string().min(1),
@@ -50,6 +56,7 @@ const orderSummary = z.object({
   lineCount: positive,
   totalAmount: nonNegative,
   syncStatus: z.string(),
+  adjustmentAmount: adjustment,
 });
 const draftSummary = z.object({
   draftId: positive,
@@ -59,9 +66,11 @@ const draftSummary = z.object({
   updatedAtUtc: date,
   lineCount: positive,
 });
-const orderRecord = orderSummary.omit({ lineCount: true }).extend({
+const orderRecord = orderSummary.omit({ lineCount: true, adjustmentAmount: true }).extend({
   comment: z.string().nullish(),
-  lines: inputLine.extend({ productName: z.string(), amount: nonNegative }).array(),
+  lines: inputLine
+    .extend({ productName: z.string(), amount: nonNegative, priceAdjustment: adjustment })
+    .array(),
   oneCDocumentNumber: z.string().nullish(),
 });
 const draftRecord = z.object({
@@ -77,6 +86,10 @@ const draftRecord = z.object({
   totalAmount: nonNegative.nullable(),
   pricingStatus: z.enum(['Available', 'Unavailable']),
   pricingErrorCode: z.string().nullish(),
+});
+const customerPrices = z.object({
+  counterpartyId: z.string(),
+  prices: z.object({ productId: z.string(), unitPrice: nonNegative.nullable() }).array(),
 });
 const createdOrder = z.object({
   orderId: positive,
@@ -101,6 +114,10 @@ export function mapOrderRecord(value: unknown): OrderRecord {
   return {
     ...parsed,
     lineCount: parsed.lines.length,
+    adjustmentAmount:
+      Math.round(
+        parsed.lines.reduce((sum, line) => sum + line.priceAdjustment * line.quantity, 0) * 100,
+      ) / 100,
     comment: parsed.comment ?? null,
     oneCDocumentNumber: parsed.oneCDocumentNumber ?? null,
   };
@@ -114,6 +131,19 @@ export function mapDraftRecord(value: unknown): DraftRecord {
   };
 }
 export const mapCreatedOrder = (value: unknown) => createdOrder.parse(value);
+/** Customer unit prices by product ID; null when the product has no price for that customer. */
+export function mapCustomerPrices(value: unknown): Record<string, number | null> {
+  return Object.fromEntries(
+    customerPrices.parse(value).prices.map((price) => [price.productId, price.unitPrice]),
+  );
+}
+/** Request lines with the adjustment always present, as the server contract expects. */
+export const toInputLines = (lines: OrderInputLine[]) =>
+  lines.map(({ productId, quantity, priceAdjustment }) => ({
+    productId,
+    quantity,
+    priceAdjustment: priceAdjustment ?? 0,
+  }));
 export function mapOrderConflict(
   value: unknown,
 ): { code: string; quote: OrderQuote | null } | null {

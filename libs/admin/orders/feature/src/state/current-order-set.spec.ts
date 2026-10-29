@@ -89,4 +89,35 @@ describe('current Admin order set', () => {
     (await subject()).clearCurrentOrder();
     expect((await import('./current-order-customer')).getCurrentOrderCustomer()).toBe('');
   });
+
+  it('keeps a per-unit adjustment and lets an existing line keep its own when a draft is merged', async () => {
+    const current = await subject();
+    current.setCurrentOrderLines([{ productId: '7', quantity: 1, priceAdjustment: -50 }]);
+    vi.resetModules();
+    const reloaded = await subject();
+    expect(reloaded.getCurrentOrderSet().lines).toEqual([
+      { productId: '7', quantity: 1, priceAdjustment: -50 },
+    ]);
+    expect(
+      reloaded.mergeDraftIntoCurrentOrder([
+        { productId: '7', quantity: 2, priceAdjustment: 10 },
+        { productId: '8', quantity: 1, priceAdjustment: 5.5 },
+      ]),
+    ).toBe(true);
+    expect(reloaded.getCurrentOrderSet().lines).toEqual([
+      { productId: '7', quantity: 3, priceAdjustment: -50 },
+      { productId: '8', quantity: 1, priceAdjustment: 5.5 },
+    ]);
+  });
+
+  it('rejects a saved adjustment outside the allowed range', async () => {
+    window.localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        version: 1,
+        lines: [{ productId: '7', quantity: 1, priceAdjustment: 2e6 }],
+      }),
+    );
+    expect((await subject()).getCurrentOrderSet().warning).toBe('invalid');
+  });
 });

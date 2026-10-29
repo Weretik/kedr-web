@@ -1,3 +1,5 @@
+import { maxPriceAdjustment } from '@admin/orders/model';
+
 import type { OrderInputLine } from '@admin/orders/model';
 
 export interface DraftEditSession {
@@ -37,7 +39,11 @@ export function readDraftEditSession(draftId: number): DraftEditSession | null {
           'quantity' in line &&
           typeof line.quantity === 'number' &&
           Number.isSafeInteger(line.quantity) &&
-          line.quantity >= 1,
+          line.quantity >= 1 &&
+          (!('priceAdjustment' in line) ||
+            (typeof line.priceAdjustment === 'number' &&
+              Number.isFinite(line.priceAdjustment) &&
+              Math.abs(line.priceAdjustment) <= maxPriceAdjustment)),
       )
     )
       return null;

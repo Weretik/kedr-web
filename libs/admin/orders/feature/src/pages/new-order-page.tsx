@@ -8,6 +8,7 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { CurrentOrderSetAlert } from '../components/current-order-set-alert';
 import { SaveDraftDialog } from '../dialogs/save-draft-dialog';
 import { SubmitOrderDialog } from '../dialogs/submit-order-dialog';
+import { useCustomerPrices } from '../hooks/use-customer-prices';
 import { useOrderQuote } from '../hooks/use-order-quote';
 import { useSaveDraft } from '../hooks/use-save-draft';
 import { useSubmitOrder } from '../hooks/use-submit-order';
@@ -27,6 +28,7 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
   }, [customerId]);
   const [draftOpen, setDraftOpen] = useState(false);
   const quoted = useOrderQuote(customerId, current.lines);
+  const customerPrices = useCustomerPrices(customerId, current.lines);
   const catalog = useGetAllAdminProductsQuery();
   const order = useSubmitOrder(customerId, current.lines, quoted.key, quoted.quote, quoted.loading);
   const draft = useSaveDraft(customerId, current.lines, order.ready);
@@ -56,6 +58,8 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
         lines={current.lines}
         quote={order.quote}
         previewQuote={quoted.previewQuote}
+        customerPrices={customerPrices}
+        hasCustomer={Boolean(customerId)}
         catalogLines={(catalog.data ?? []).map((product) => ({
           productId: String(product.id),
           productName: product.nameUk || product.nameRu,
