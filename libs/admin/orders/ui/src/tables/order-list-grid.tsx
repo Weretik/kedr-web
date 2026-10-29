@@ -7,6 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import { OrderGridToolbar, OrderGridToolbarContext } from './order-grid-toolbar';
 import { OrderStatusChip } from '../components/order-status-chip';
+import { PriceAdjustmentText } from '../components/price-adjustment-text';
 
 import type { DraftSummary, OrderSummary } from '@admin/orders/model';
 import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
@@ -75,6 +76,14 @@ export function OrderListGrid(props: OrderListGridProps) {
           minWidth: 130,
           flex: 0.7,
           valueFormatter: (value: number) => moneyFormat.format(value),
+        },
+        {
+          field: 'adjustmentAmount',
+          headerName: 'Знижка/Націнка',
+          minWidth: 140,
+          flex: 0.7,
+          sortable: false,
+          renderCell: ({ value }) => <PriceAdjustmentText value={Number(value ?? 0)} />,
         },
         {
           field: 'syncStatus',

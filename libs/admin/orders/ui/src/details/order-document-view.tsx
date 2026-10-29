@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 
 import { OrderStatusChip } from '../components/order-status-chip';
+import { PriceAdjustmentText } from '../components/price-adjustment-text';
 
 import type { PricedLine } from '@admin/orders/model';
 
@@ -43,6 +44,7 @@ export function OrderDocumentView({
   totalAmount,
   pricingUnavailable,
 }: Props) {
+  const adjusted = lines.some((line) => line.priceAdjustment);
   return (
     <Stack spacing={3}>
       {pricingUnavailable && (
@@ -83,6 +85,7 @@ export function OrderDocumentView({
                 <TableCell>Товар</TableCell>
                 <TableCell align="right">Кількість</TableCell>
                 <TableCell align="right">Ціна</TableCell>
+                {adjusted && <TableCell align="right">Знижка/Націнка за шт.</TableCell>}
                 <TableCell align="right">Сума</TableCell>
               </TableRow>
             </TableHead>
@@ -98,6 +101,11 @@ export function OrderDocumentView({
                   <TableCell align="right" sx={numeric}>
                     {line.unitPrice === null ? '—' : money.format(line.unitPrice)}
                   </TableCell>
+                  {adjusted && (
+                    <TableCell align="right" sx={numeric}>
+                      <PriceAdjustmentText value={line.priceAdjustment} />
+                    </TableCell>
+                  )}
                   <TableCell align="right" sx={numeric}>
                     {line.lineAmount === null ? '—' : money.format(line.lineAmount)}
                   </TableCell>
@@ -112,6 +120,17 @@ export function OrderDocumentView({
           spacing={2}
           sx={{ alignItems: 'baseline', justifyContent: 'flex-end' }}
         >
+          {adjusted && (
+            <Typography sx={numeric} variant="body2">
+              <PriceAdjustmentText
+                label
+                value={lines.reduce(
+                  (sum, line) => sum + (line.priceAdjustment ?? 0) * line.quantity,
+                  0,
+                )}
+              />
+            </Typography>
+          )}
           <Typography color="text.secondary" variant="subtitle2">
             Разом
           </Typography>

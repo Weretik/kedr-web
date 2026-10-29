@@ -2,6 +2,7 @@ export {
   useGetWorkspaceOrdersQuery,
   useGetWorkspaceOrderQuery,
   useQuoteWorkspaceOrderMutation,
+  useGetWorkspaceCustomerPricesQuery,
   useCreateWorkspaceOrderMutation,
   useGetWorkspaceDraftsQuery,
   useGetWorkspaceDraftQuery,

@@ -359,6 +359,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/order-workspace/customer-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read a customer's unit prices for products, ignoring stock
+         * @description Uses the price type of the nearest customer rule on the product's category or any parent category, otherwise the customer's default price type. A product without such a UAH price, or an unknown product, returns a null unitPrice.
+         */
+        post: operations["getAdminWorkspaceCustomerPrices"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/order-workspace/drafts": {
         parameters: {
             query?: never;
@@ -1141,14 +1161,20 @@ export interface components {
             lineCount: number;
             totalAmount: components["schemas"]["Money"];
             syncStatus: string;
+            /** @description Sum of discounts (negative) and markups (positive) over all units; 0 when none. */
+            adjustmentAmount: number;
         };
         OrderPage: {
             pagedInfo: components["schemas"]["components-schemas-PagedInfo"];
             value: components["schemas"]["OrderListItem"][];
         };
+        /** @description Per-unit discount (negative) or markup (positive) in UAH applied on top of the customer price. */
+        PriceAdjustment: number;
         InputLine: {
             productId: string;
             quantity: number;
+            /** @default 0 */
+            priceAdjustment: components["schemas"]["PriceAdjustment"];
         };
         QuoteRequest: {
             counterpartyId: string;
@@ -1172,6 +1198,8 @@ export interface components {
             quantity: number;
             unitPrice: components["schemas"]["Money"];
             lineAmount: components["schemas"]["Money"];
+            baseUnitPrice: components["schemas"]["Money"];
+            priceAdjustment: components["schemas"]["PriceAdjustment"];
         };
         Quote: {
             counterpartyId: string;
@@ -1189,6 +1217,7 @@ export interface components {
             productName: string;
             quantity: number;
             amount: components["schemas"]["Money"];
+            priceAdjustment: components["schemas"]["PriceAdjustment"];
         };
         OrderDetail: {
             /** Format: int64 */
@@ -1203,6 +1232,17 @@ export interface components {
             totalAmount: components["schemas"]["Money"];
             syncStatus: string;
             oneCDocumentNumber?: string | null;
+        };
+        CustomerPricesRequest: {
+            counterpartyId: string;
+            productIds: string[];
+        };
+        CustomerPrices: {
+            counterpartyId: string;
+            prices: {
+                productId: string;
+                unitPrice: number | null;
+            }[];
         };
         DraftListItem: {
             /** Format: int64 */
@@ -1221,6 +1261,11 @@ export interface components {
         DraftInputLine: {
             productId: string;
             quantity: number;
+            /**
+             * @description Per-unit discount (negative) or markup (positive) in UAH, kept with the draft.
+             * @default 0
+             */
+            priceAdjustment: number;
         };
         DraftInput: {
             title: string;
@@ -1232,8 +1277,13 @@ export interface components {
             productId: string;
             productName: string | null;
             quantity: number;
+            /** @description Final unit price after the adjustment. */
             unitPrice: number | null;
             lineAmount: number | null;
+            /** @description Stored per-unit discount (negative) or markup (positive) in UAH. */
+            priceAdjustment: number;
+            /** @description Current customer price before the adjustment. */
+            baseUnitPrice: number | null;
         };
         DraftDetail: {
             /** Format: int64 */
@@ -2373,7 +2423,7 @@ export interface operations {
                     "application/json": components["schemas"]["Quote"];
                 };
             };
-            /** @description Invalid lines, insufficient product stock or unavailable UAH price. */
+            /** @description Invalid lines (invalid_lines), invalid price adjustment (invalid_price_adjustment), insufficient stock (unavailable_product), unavailable UAH price (unavailable_price) or a discount larger than the price (negative_price). */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -2402,6 +2452,58 @@ export interface operations {
                 content?: never;
             };
             /** @description Selected customer or product does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkspaceCustomerPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerPricesRequest"];
+            };
+        };
+        responses: {
+            /** @description Customer prices in the requested product order, duplicates removed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerPrices"];
+                };
+            };
+            /** @description Missing customer or 1-100 valid product IDs not supplied (code invalid_products). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Selected customer does not exist. */
             404: {
                 headers: {
                     [name: string]: unknown;

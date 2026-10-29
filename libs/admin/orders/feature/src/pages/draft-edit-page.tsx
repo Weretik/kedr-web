@@ -23,6 +23,7 @@ export function DraftEditPage({ CustomerPicker }: { CustomerPicker: CustomerPick
     setLines,
     error,
     quote,
+    customerPrices,
     reload,
     save,
     saving,
@@ -78,7 +79,13 @@ export function DraftEditPage({ CustomerPicker }: { CustomerPicker: CustomerPick
             />
             <CustomerPicker label="Клієнт" value={customerId} onChange={setCustomerId} />
           </SectionCard>
-          <OrderLineEditor lines={lines} quote={quote.quote} onChange={setLines} />
+          <OrderLineEditor
+            lines={lines}
+            quote={quote.quote}
+            previewQuote={quote.previewQuote}
+            customerPrices={customerPrices}
+            onChange={setLines}
+          />
           <Button
             component={RouterLink}
             to={pickerPath}

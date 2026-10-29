@@ -41,7 +41,7 @@ export function ProductInformationCard({
       )}
       <Box>
         <Typography color="text.secondary" component="p" variant="caption">
-          Ціна
+          Ціна (роздріб)
         </Typography>
         <Typography component="p" sx={{ fontVariantNumeric: 'tabular-nums' }} variant="h4">
           {product.price === null ? 'Не вказано' : priceFormatter.format(product.price)}

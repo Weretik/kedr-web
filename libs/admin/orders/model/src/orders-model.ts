@@ -1,16 +1,25 @@
 export interface OrderInputLine {
   productId: string;
   quantity: number;
+  /** Per-unit discount (negative) or markup (positive) in UAH; missing means 0. */
+  priceAdjustment?: number;
 }
 export interface PricedLine extends OrderInputLine {
   productName: string | null;
+  /** Final unit price including the adjustment. */
   unitPrice: number | null;
   lineAmount: number | null;
+  /** The customer's unit price before the adjustment, when known. */
+  baseUnitPrice?: number | null;
 }
 export interface QuotedLine extends OrderInputLine {
   productName: string;
+  /** Final unit price: the customer price plus the adjustment. */
   unitPrice: number;
   lineAmount: number;
+  /** The customer's unit price before the adjustment. */
+  baseUnitPrice: number;
+  priceAdjustment: number;
 }
 export interface CatalogLineInfo {
   productId: string;
@@ -42,6 +51,8 @@ export interface OrderSummary {
   lineCount: number;
   totalAmount: number;
   syncStatus: string;
+  /** Sum of discounts (negative) and markups (positive) over all units. */
+  adjustmentAmount: number;
 }
 export interface DraftSummary {
   draftId: number;
@@ -53,7 +64,7 @@ export interface DraftSummary {
 }
 export interface OrderRecord extends OrderSummary {
   comment: string | null;
-  lines: Array<OrderInputLine & { productName: string; amount: number }>;
+  lines: Array<OrderInputLine & { productName: string; amount: number; priceAdjustment: number }>;
   oneCDocumentNumber: string | null;
 }
 export interface DraftRecord {

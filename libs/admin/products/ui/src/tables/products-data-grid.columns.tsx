@@ -44,7 +44,7 @@ export const productsDataGridColumns: readonly GridColDef<AdminProductListItem>[
     field: 'price',
     type: 'number',
     headerAlign: 'right',
-    headerName: 'Ціна',
+    headerName: 'Ціна (роздріб)',
     valueFormatter: (value) => (value == null ? '—' : priceFormatter.format(value)),
     filterOperators: getGridNumericOperators().filter(
       (operator) => operator.value === '>=' || operator.value === '<=' || operator.value === '=',

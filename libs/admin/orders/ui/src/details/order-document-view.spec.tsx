@@ -26,4 +26,29 @@ describe('OrderDocumentView', () => {
     expect(document.textContent).toContain('Терміново');
     expect(screen.getByRole('region', { name: 'Товари' }).textContent).toMatch(/Разом48,00/);
   });
+
+  it('shows the per-unit adjustment column and the total adjustment only when a line has one', () => {
+    render(
+      <OrderDocumentView
+        counterpartyId="C-1"
+        customerName="ТОВ Кедр"
+        date="2026-10-20T10:00:00Z"
+        lines={[
+          {
+            productId: 'P1',
+            productName: 'Кава',
+            quantity: 3,
+            unitPrice: 50,
+            lineAmount: 150,
+            priceAdjustment: -50,
+          },
+        ]}
+        reference="KD-1"
+        totalAmount={150}
+      />,
+    );
+
+    expect(screen.getByRole('columnheader', { name: 'Знижка/Націнка за шт.' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'Товари' }).textContent).toMatch(/Знижка: −150,00/);
+  });
 });

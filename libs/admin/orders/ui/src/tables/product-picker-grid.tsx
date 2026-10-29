@@ -41,7 +41,7 @@ export function ProductPickerGrid({
     { field: 'name', headerName: 'Назва', flex: 1, minWidth: 220 },
     {
       field: 'price',
-      headerName: 'Ціна',
+      headerName: 'Ціна (роздріб)',
       width: 140,
       type: 'number',
       valueFormatter: (value: number | null) => (value == null ? '—' : money.format(value)),

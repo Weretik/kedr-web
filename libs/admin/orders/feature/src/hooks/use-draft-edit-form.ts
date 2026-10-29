@@ -5,6 +5,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useCustomerPrices } from './use-customer-prices';
 import { useOrderQuote } from './use-order-quote';
 import {
   clearDraftEditSession,
@@ -26,7 +27,11 @@ const fromServer = (draft: ServerDraft): DraftEditValues => ({
   title: draft.title,
   note: draft.note ?? '',
   customerId: draft.counterpartyId,
-  lines: draft.lines.map(({ productId, quantity }) => ({ productId, quantity })),
+  lines: draft.lines.map(({ productId, quantity, priceAdjustment }) => ({
+    productId,
+    quantity,
+    priceAdjustment: priceAdjustment ?? 0,
+  })),
 });
 
 /** Draft edit form state: seeds from the server or the unsaved session, keeps the session, saves. */
@@ -42,6 +47,7 @@ export function useDraftEditForm(id: number, valid: boolean) {
   const [lines, setLines] = useState<OrderInputLine[]>([]);
   const [error, setError] = useState('');
   const quote = useOrderQuote(customerId, lines);
+  const customerPrices = useCustomerPrices(customerId, lines);
   const apply = (values: DraftEditValues) => {
     setTitle(values.title);
     setNote(values.note);
@@ -103,6 +109,7 @@ export function useDraftEditForm(id: number, valid: boolean) {
     setLines,
     error,
     quote,
+    customerPrices,
     reload,
     save,
     saving: updating.isLoading,

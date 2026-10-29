@@ -14,3 +14,11 @@ export type {
   PricedLine,
   QuotedLine,
 } from './orders-model';
+export {
+  adjustedLine,
+  formatPriceAdjustment,
+  maxPriceAdjustment,
+  parsePriceAdjustment,
+  priceAdjustmentTone,
+} from './price-adjustment';
+export type { ParsedPriceAdjustment, PriceAdjustmentTone } from './price-adjustment';

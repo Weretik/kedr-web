@@ -51,6 +51,9 @@ describe('AdminSidebar collapsible navigation', () => {
 
     expect(screen.queryByText('Огляд')).toBeNull();
     expect(screen.queryByRole('link', { name: 'Оформити' })).toBeNull();
+    expect(screen.getByRole('img', { name: 'Логотип Class Kedr' }).getAttribute('src')).toBe(
+      '/assets/logo/kedr-emblem.svg',
+    );
     expect(screen.getByRole('link', { name: 'Клієнти' }).getAttribute('href')).toBe('/customers');
     expect(screen.getByRole('link', { name: 'Товари' }).getAttribute('aria-current')).toBe('page');
     expect(

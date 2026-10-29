@@ -34,7 +34,7 @@ export function OrderDetailPage() {
           note={query.data.comment}
           lines={query.data.lines.map((line) => ({
             ...line,
-            unitPrice: null,
+            unitPrice: Math.round((line.amount / line.quantity) * 100) / 100,
             lineAmount: line.amount,
           }))}
           totalAmount={query.data.totalAmount}
