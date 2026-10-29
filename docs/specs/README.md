@@ -29,8 +29,12 @@
 - [Products without photos](mobile/profile/001-products-missing-photos/README.md)
 - [Redesign: design system «Пагін»](mobile/redesign/001-pagin-design-system/README.md)
 
+## Site Next.js
+
+- [Storefront migration to Next.js: plan](site/migration/README.md) and [feature inventory with SEO analysis](site/migration/feature-inventory.md)
+
 ## Storefront Angular
 
-There are no feature specifications in this directory yet.
+There are no feature specifications in this directory yet. New storefront work goes to the Next.js site above.
 
 Create a new specification under the [delivery rules](../standards/shared/delivery-rules.md) and the architecture of the relevant application. For systemic debt, create a separate remediation SDD under the [architecture rules](../standards/README.md).

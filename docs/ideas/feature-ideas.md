@@ -68,4 +68,4 @@
 
 ## 5. Новая витрина на Next.js
 
-Полная пересборка публичной витрины на Next.js, shadcn/ui и Tailwind с упором на SEO: дизайн, макет, технологии и этапы описаны в [storefront-nextjs](storefront-nextjs/README.md). L.
+Полная пересборка публичной витрины на Next.js, shadcn/ui и Tailwind с упором на SEO: дизайн, макет, технологии и этапы описаны в [storefront-nextjs](storefront-nextjs/README.md). L. **Принято:** оболочка `apps/site` создана, дальше по [плану миграции](../specs/site/migration/README.md).

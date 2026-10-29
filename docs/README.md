@@ -18,7 +18,8 @@ This directory contains versioned engineering documentation for Kedr Web fronten
 
 - [Admin](architecture/admin/README.md) — administration application architecture.
 - [Mobile](architecture/mobile/README.md) — React Native and Expo mobile application architecture.
-- [Storefront](architecture/storefront/README.md) — storefront application architecture.
+- [Storefront](architecture/storefront/README.md) — current Angular storefront application architecture.
+- [Site](architecture/site/README.md) — new public Next.js storefront; [migration plan](specs/site/migration/README.md).
 - [API](architecture/api/README.md) — API contracts and integration agreements.
 - [Frontend API contracts](contracts/README.md) — register of operations and frontend projections of backend OpenAPI contracts.
 
