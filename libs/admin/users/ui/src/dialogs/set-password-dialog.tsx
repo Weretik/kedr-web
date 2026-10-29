@@ -1,6 +1,5 @@
 import { validateStaffPassword } from '@admin/users/model';
 import {
-  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -17,19 +16,12 @@ import type { FormEvent } from 'react';
 interface SetPasswordDialogProps {
   /** Email of the account; the dialog is open while it is set. */
   email: string | null;
-  submitting: boolean;
-  error: string | null;
   onClose: () => void;
-  onSubmit: (password: string) => Promise<boolean>;
+  /** Called with a valid password; the caller asks for confirmation before saving. */
+  onSubmit: (password: string) => void;
 }
 
-export function SetPasswordDialog({
-  email,
-  error,
-  onClose,
-  onSubmit,
-  submitting,
-}: SetPasswordDialogProps) {
+export function SetPasswordDialog({ email, onClose, onSubmit }: SetPasswordDialogProps) {
   const [password, setPassword] = useState('');
   const [fieldError, setFieldError] = useState<string | undefined>();
 
@@ -39,24 +31,18 @@ export function SetPasswordDialog({
     onClose();
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const validationError = validateStaffPassword(password);
     setFieldError(validationError);
     if (validationError) return;
 
-    if (await onSubmit(password)) {
-      handleClose();
-    }
+    setPassword('');
+    onSubmit(password);
   };
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="xs"
-      onClose={submitting ? undefined : handleClose}
-      open={email !== null}
-    >
+    <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={email !== null}>
       <form noValidate onSubmit={handleSubmit}>
         <DialogTitle>Новий пароль</DialogTitle>
         <DialogContent>
@@ -64,7 +50,6 @@ export function SetPasswordDialog({
             <DialogContentText>
               {email}: після зміни пароля всі сесії цього користувача завершаться.
             </DialogContentText>
-            {error ? <Alert severity="error">{error}</Alert> : null}
             <TextField
               autoComplete="new-password"
               error={Boolean(fieldError)}
@@ -78,11 +63,9 @@ export function SetPasswordDialog({
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button disabled={submitting} onClick={handleClose}>
-            Скасувати
-          </Button>
-          <Button disabled={submitting} type="submit" variant="contained">
-            Зберегти
+          <Button onClick={handleClose}>Скасувати</Button>
+          <Button type="submit" variant="contained">
+            Далі
           </Button>
         </DialogActions>
       </form>

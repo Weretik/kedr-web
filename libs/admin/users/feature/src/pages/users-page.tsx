@@ -1,16 +1,18 @@
 import { AdminPageHeader } from '@admin/shared/ui';
 import { useGetStaffAccountsQuery } from '@admin/users/data-access';
-import {
-  ConfirmActionDialog,
-  CreateStaffDialog,
-  SetPasswordDialog,
-  StaffAccountsTable,
-} from '@admin/users/ui';
+import { ConfirmActionDialog, CreateStaffDialog, StaffAccountsTable } from '@admin/users/ui';
 import AddIcon from '@mui/icons-material/Add';
-import { Alert, Button, Card, Snackbar, Stack, Typography } from '@mui/material';
+import { Alert, Button, Card, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
+import { ChangeConfirmationDialog } from '../components/change-confirmation-dialog';
+import { StaffEditDialogs } from '../components/staff-edit-dialogs';
+import { SuccessSnackbar } from '../components/success-snackbar';
 import { useStaffAccountActions } from '../hooks/use-staff-account-actions';
+import { isStaffProfileAction, useStaffProfileActions } from '../hooks/use-staff-profile-actions';
+
+import type { StaffAccount } from '@admin/users/model';
+import type { StaffAccountAction } from '@admin/users/ui';
 
 interface UsersPageProps {
   currentUserId: string | null;
@@ -20,6 +22,15 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
   const accountsQuery = useGetStaffAccountsQuery();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const actions = useStaffAccountActions(setSuccessMessage);
+  const profileActions = useStaffProfileActions(setSuccessMessage);
+
+  const handleAction = (account: StaffAccount, action: StaffAccountAction) => {
+    if (isStaffProfileAction(action)) {
+      profileActions.start(account, action);
+    } else {
+      actions.startAction(account, action);
+    }
+  };
 
   return (
     <Stack component="section" spacing={3}>
@@ -33,15 +44,21 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
       />
       <Typography color="text.secondary">
         Адміністратори керують користувачами та бачать усі розділи. Менеджери працюють із товарами,
-        клієнтами та замовленнями.
+        клієнтами та замовленнями. Імʼя, email, пароль і фото тут змінюються лише для менеджерів;
+        свої дані адміністратор змінює в «Моєму кабінеті».
       </Typography>
+      {profileActions.fileError ? (
+        <Alert onClose={profileActions.clearFileError} severity="warning">
+          {profileActions.fileError}
+        </Alert>
+      ) : null}
       <Card sx={{ overflow: 'hidden' }} variant="outlined">
         <StaffAccountsTable
           accounts={accountsQuery.currentData ?? []}
           currentUserId={currentUserId}
           error={accountsQuery.isError}
           loading={accountsQuery.isFetching}
-          onAction={actions.startAction}
+          onAction={handleAction}
           onRetry={() => void accountsQuery.refetch()}
         />
       </Card>
@@ -52,12 +69,10 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
         open={actions.isCreateOpen}
         submitting={actions.creating}
       />
-      <SetPasswordDialog
-        email={actions.passwordTarget?.email ?? null}
-        error={actions.error}
-        onClose={actions.closeDialogs}
-        onSubmit={actions.submitPassword}
-        submitting={actions.settingPassword}
+      <StaffEditDialogs
+        editDialog={profileActions.editDialog}
+        onClose={profileActions.closeEdit}
+        onSubmit={profileActions.submitEdit}
       />
       <ConfirmActionDialog
         confirmLabel={actions.confirmation?.confirmLabel ?? ''}
@@ -70,15 +85,8 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
         submitting={actions.confirming}
         title={actions.confirmation?.title ?? ''}
       />
-      <Snackbar
-        autoHideDuration={4000}
-        onClose={() => setSuccessMessage(null)}
-        open={successMessage !== null}
-      >
-        <Alert onClose={() => setSuccessMessage(null)} severity="success" variant="filled">
-          {successMessage}
-        </Alert>
-      </Snackbar>
+      <ChangeConfirmationDialog change={profileActions.confirmation} />
+      <SuccessSnackbar message={successMessage} onClose={() => setSuccessMessage(null)} />
     </Stack>
   );
 }

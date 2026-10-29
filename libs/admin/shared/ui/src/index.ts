@@ -6,3 +6,4 @@ export { PageLoader } from './lib/page-loader';
 export { SectionCard } from './lib/section-card';
 export { StatusPill } from './lib/status-pill';
 export type { StatusTone } from './lib/status-pill';
+export { avatarColorIndex, avatarInitial, UserAvatar } from './lib/user-avatar';

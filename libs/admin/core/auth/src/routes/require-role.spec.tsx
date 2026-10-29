@@ -20,7 +20,7 @@ describe('RequireRole', () => {
   it('opens the section for an admin', () => {
     setSessionState({
       status: 'authenticated',
-      user: { id: '1', email: 'a@kedr.ua', fullName: 'A', roles: ['Admin'] },
+      user: { id: '1', email: 'a@kedr.ua', fullName: 'A', roles: ['Admin'], avatarUrl: null },
     });
     renderUsersRoute();
 
@@ -30,7 +30,7 @@ describe('RequireRole', () => {
   it('shows "no access" to a manager', () => {
     setSessionState({
       status: 'authenticated',
-      user: { id: '2', email: 'm@kedr.ua', fullName: 'M', roles: ['Manager'] },
+      user: { id: '2', email: 'm@kedr.ua', fullName: 'M', roles: ['Manager'], avatarUrl: null },
     });
     renderUsersRoute();
 

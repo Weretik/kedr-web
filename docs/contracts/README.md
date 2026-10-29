@@ -48,6 +48,7 @@ Do not edit the YAML snapshot or generated TypeScript manually. To update them: 
 - Identity:
   - [Session](identity/session.md)
   - [Staff accounts](identity/staff-accounts.md)
+  - [Staff profile](identity/profile.md)
 - Sales:
   - [Mobile manager order](sales/manager-order.md)
   - [Admin customers](sales/admin-customers.md)
@@ -82,6 +83,16 @@ A detailed consumer projection is needed only for operations with status `used`,
 | Identity users     | `changeStaffRole`                       | `PUT /api/admin/users/{userId}/role`                        | Admin                        | Admin                      | used         |
 | Identity users     | `setStaffBlocked`                       | `PUT /api/admin/users/{userId}/blocked`                     | Admin                        | Admin                      | used         |
 | Identity users     | `setStaffPassword`                      | `PUT /api/admin/users/{userId}/password`                    | Admin                        | Admin                      | used         |
+| Identity users     | `changeStaffName`                       | `PUT /api/admin/users/{userId}/name`                        | Admin                        | Admin                      | used         |
+| Identity users     | `changeStaffEmail`                      | `PUT /api/admin/users/{userId}/email`                       | Admin                        | Admin                      | used         |
+| Identity users     | `uploadStaffAvatar`                     | `PUT /api/admin/users/{userId}/avatar`                      | Admin                        | Admin                      | used         |
+| Identity users     | `removeStaffAvatar`                     | `DELETE /api/admin/users/{userId}/avatar`                   | Admin                        | Admin                      | used         |
+| Identity profile   | `getMyProfile`                          | `GET /api/profile`                                          | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `changeMyName`                          | `PUT /api/profile/name`                                     | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `uploadMyAvatar`                        | `PUT /api/profile/avatar`                                   | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `removeMyAvatar`                        | `DELETE /api/profile/avatar`                                | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `changeMyEmail`                         | `PUT /api/profile/email`                                    | Admin                        | Admin                      | used         |
+| Identity profile   | `changeMyPassword`                      | `PUT /api/profile/password`                                 | Admin                        | Admin                      | used         |
 | Sales catalog      | `getSalesCatalogProducts`               | `POST /api/sales/{lang}/catalog/products`                   | authenticated                | —                          | not consumed |
 | Sales customers    | `getAdminCustomers`                     | `GET /api/admin/customers`                                  | staff (Manager or Admin)     | Mobile cart, orders, Admin | used         |
 | Sales customers    | `getAdminCustomerById`                  | `GET /api/admin/customers/{counterpartyId}`                 | staff (Manager or Admin)     | Admin                      | used         |

@@ -8,8 +8,12 @@ import {
   DialogTitle,
 } from '@mui/material';
 
+import type { ReactNode } from 'react';
+
 interface ConfirmActionDialogProps {
   open: boolean;
+  /** Shown above the description, for example a photo preview. */
+  children?: ReactNode;
   title: string;
   description: string;
   confirmLabel: string;
@@ -21,6 +25,7 @@ interface ConfirmActionDialogProps {
 }
 
 export function ConfirmActionDialog({
+  children,
   confirmLabel,
   description,
   destructive = false,
@@ -40,6 +45,7 @@ export function ConfirmActionDialog({
             {error}
           </Alert>
         ) : null}
+        {children}
         <DialogContentText>{description}</DialogContentText>
       </DialogContent>
       <DialogActions>

@@ -1,5 +1,14 @@
+export { AvatarPickerButton } from './avatar/avatar-picker-button';
+export { ChangeEmailDialog } from './profile/dialogs/change-email-dialog';
+export { ChangePasswordDialog } from './profile/dialogs/change-password-dialog';
 export { ConfirmActionDialog } from './dialogs/confirm-action-dialog';
 export { CreateStaffDialog } from './dialogs/create-staff-dialog';
+export { EditTextDialog } from './dialogs/edit-text-dialog';
+export { ProfileDetailsCard } from './profile/profile-details-card';
+export { ProfilePhotoCard } from './profile/profile-photo-card';
 export { SetPasswordDialog } from './dialogs/set-password-dialog';
 export { StaffAccountsTable } from './tables/staff-accounts-table';
+export type { OwnEmailChange } from './profile/dialogs/change-email-dialog';
+export type { OwnPasswordChange } from './profile/dialogs/change-password-dialog';
+export type { ProfileField } from './profile/profile-details-card';
 export type { StaffAccountAction } from './tables/staff-account-actions-menu';

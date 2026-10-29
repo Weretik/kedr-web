@@ -11,4 +11,5 @@ export const toShellUser = (user: SessionUser): AdminShellUser => ({
   email: user.email,
   fullName: user.fullName,
   roleLabel: roleLabel(user),
+  avatarUrl: user.avatarUrl,
 });

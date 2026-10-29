@@ -6,13 +6,21 @@ import { StaffAccountsTable } from './staff-accounts-table';
 import type { StaffAccount } from '@admin/users/model';
 
 const accounts: StaffAccount[] = [
-  { id: 'admin-1', email: 'admin@kedr.ua', fullName: 'Адмін', role: 'Admin', isBlocked: false },
+  {
+    id: 'admin-1',
+    email: 'admin@kedr.ua',
+    fullName: 'Адмін',
+    role: 'Admin',
+    isBlocked: false,
+    avatarUrl: null,
+  },
   {
     id: 'manager-1',
     email: 'manager@kedr.ua',
     fullName: 'Олена',
     role: 'Manager',
     isBlocked: true,
+    avatarUrl: 'https://cdn.test/olena.webp',
   },
 ];
 
@@ -56,5 +64,30 @@ describe('StaffAccountsTable', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Розблокувати' }));
 
     expect(onAction).toHaveBeenCalledWith(accounts[1], { type: 'setBlocked', blocked: false });
+  });
+
+  it('shows the photo or the initial next to the name', () => {
+    renderTable();
+
+    expect(screen.getByRole('img', { name: 'Олена' }).getAttribute('src')).toBe(
+      'https://cdn.test/olena.webp',
+    );
+    const adminRow = screen.getByText('admin@kedr.ua').closest('tr') as HTMLElement;
+    expect(within(adminRow).getByText('А')).toBeTruthy();
+  });
+
+  it('offers profile edits for managers only', () => {
+    const onAction = vi.fn();
+    renderTable(onAction);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Дії для manager@kedr.ua' }));
+    expect(screen.getByRole('menuitem', { name: 'Змінити email' })).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: 'Видалити фото' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Змінити імʼя' }));
+    expect(onAction).toHaveBeenCalledWith(accounts[1], { type: 'changeName' });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Дії для admin@kedr.ua' }));
+    expect(screen.queryByRole('menuitem', { name: 'Змінити імʼя' })).toBeNull();
+    expect(screen.queryByRole('menuitem', { name: 'Встановити новий пароль' })).toBeNull();
   });
 });

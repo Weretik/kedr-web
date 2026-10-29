@@ -38,7 +38,13 @@ describe('LoginPage', () => {
   });
 
   it('returns the manager to the page they came from', async () => {
-    loginMock.mockResolvedValue({ id: '1', email: 'm@kedr.ua', fullName: 'M', roles: ['Manager'] });
+    loginMock.mockResolvedValue({
+      id: '1',
+      email: 'm@kedr.ua',
+      fullName: 'M',
+      roles: ['Manager'],
+      avatarUrl: null,
+    });
     renderLogin();
     fillAndSubmit();
 

@@ -1,27 +1,25 @@
+import { UserAvatar } from '@admin/shared/ui';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import {
-  Avatar,
-  Box,
-  Divider,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Divider, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { ProfileCard } from './profile-card';
 import {
   useAdminShellLogout,
+  useAdminShellProfileHref,
   useAdminShellUser,
-} from '../../providers/admin-shell-session-provider';
+} from '../../../providers/admin-shell-session-provider';
 
 import type { MouseEvent } from 'react';
 
 export function ProfileMenu() {
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
   const logout = useAdminShellLogout();
+  const profileHref = useAdminShellProfileHref();
   const user = useAdminShellUser();
+  const navigate = useNavigate();
   const isOpen = Boolean(anchorElement);
 
   const handleOpen = (event: MouseEvent<HTMLElement>) => {
@@ -30,6 +28,13 @@ export function ProfileMenu() {
 
   const handleClose = () => {
     setAnchorElement(null);
+  };
+
+  const handleOpenProfile = () => {
+    handleClose();
+    if (profileHref) {
+      navigate(profileHref);
+    }
   };
 
   const handleLogout = async () => {
@@ -55,31 +60,30 @@ export function ProfileMenu() {
         onClick={handleOpen}
         sx={{ p: 0.5 }}
       >
-        <Avatar
-          alt="Іконка менеджера"
-          src="/assets/images/icons8-manager-100.png"
-          sx={{
-            bgcolor: 'primary.light',
-            borderRadius: '10px',
-            height: 32,
-            width: 32,
-            '& .MuiAvatar-img': { transform: 'scale(1.33)' },
-          }}
-          variant="rounded"
+        <UserAvatar
+          avatarUrl={user?.avatarUrl}
+          email={user?.email}
+          name={user?.fullName ?? ''}
+          size={32}
         />
       </IconButton>
-      <Menu anchorEl={anchorElement} id="profile-menu" onClose={handleClose} open={isOpen}>
-        {user ? (
-          <Box sx={{ maxWidth: 280, px: 2, py: 1 }}>
-            <Typography noWrap sx={{ fontWeight: 700 }} variant="body2">
-              {user.fullName || user.email}
-            </Typography>
-            <Typography color="text.secondary" noWrap variant="caption" component="p">
-              {user.email} · {user.roleLabel}
-            </Typography>
-          </Box>
-        ) : null}
+      <Menu
+        anchorEl={anchorElement}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        id="profile-menu"
+        onClose={handleClose}
+        open={isOpen}
+        slotProps={{ paper: { sx: { minWidth: 260, maxWidth: 320 } } }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+      >
+        {user ? <ProfileCard user={user} /> : null}
         {user ? <Divider /> : null}
+        <MenuItem disabled={!profileHref} onClick={handleOpenProfile}>
+          <ListItemIcon>
+            <AccountCircleOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          Мій кабінет
+        </MenuItem>
         <MenuItem disabled={!logout} onClick={handleLogout}>
           <ListItemIcon>
             <LogoutOutlinedIcon fontSize="small" />
