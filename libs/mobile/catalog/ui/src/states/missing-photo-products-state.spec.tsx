@@ -4,16 +4,16 @@ import { PaperProvider } from 'react-native-paper';
 import { MissingPhotoProductsState } from './missing-photo-products-state';
 
 describe('MissingPhotoProductsState', () => {
-  it('presents an empty response as successful photo coverage', () => {
-    const { getByText, queryByRole } = renderState('empty');
+  it('presents an empty response as successful photo coverage', async () => {
+    const { getByText, queryByRole } = await renderState('empty');
 
     expect(getByText('Усі товари мають фотографії')).toBeTruthy();
     expect(queryByRole('alert')).toBeNull();
   });
 
-  it('announces a safe error and retries explicitly', () => {
+  it('announces a safe error and retries explicitly', async () => {
     const onRetry = jest.fn();
-    const { getByRole, getByTestId, getByText } = render(
+    const { getByRole, getByTestId, getByText } = await render(
       <PaperProvider theme={testTheme}>
         <MissingPhotoProductsState kind="error" onRetry={onRetry} />
       </PaperProvider>,
@@ -21,19 +21,19 @@ describe('MissingPhotoProductsState', () => {
 
     expect(getByTestId('missing-photo-products-state-error').props.accessibilityRole).toBe('alert');
     expect(getByText('Не вдалося завантажити товари без фотографій')).toBeTruthy();
-    fireEvent.press(getByRole('button', { name: 'Повторити' }));
+    await fireEvent.press(getByRole('button', { name: 'Повторити' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 
-  it('exposes an accessible loading indicator', () => {
-    const { getByLabelText } = renderState('loading');
+  it('exposes an accessible loading indicator', async () => {
+    const { getByLabelText } = await renderState('loading');
 
     expect(getByLabelText('Завантаження товарів без фотографій')).toBeTruthy();
   });
 });
 
-function renderState(kind: Parameters<typeof MissingPhotoProductsState>[0]['kind']) {
-  return render(
+async function renderState(kind: Parameters<typeof MissingPhotoProductsState>[0]['kind']) {
+  return await render(
     <PaperProvider theme={testTheme}>
       <MissingPhotoProductsState kind={kind} />
     </PaperProvider>,

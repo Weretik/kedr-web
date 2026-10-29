@@ -2,7 +2,7 @@
 
 ## Status
 
-Current baseline: Expo SDK 57, React Native 0.86, and React 19.2. Exact versions are defined in `package.json`/lockfile; native packages are added through the compatible Expo installer and checked with Expo Doctor.
+Current baseline: Expo SDK 58, React Native 0.88, and React 19.3. Exact versions are defined in `package.json`/lockfile; native packages are added through the compatible Expo installer and checked with Expo Doctor.
 
 ## Core stack
 

@@ -33,10 +33,11 @@ export default function TabsLayout() {
           />
         ),
       })}
-      tabBar={({ navigation, state }) => (
+      tabBar={({ emitter, navigateToTab, state }) => (
         <PillTabBar
           badges={{ cart: lines.length }}
-          navigation={navigation}
+          emitter={emitter}
+          navigateToTab={navigateToTab}
           state={state}
           tabs={tabs}
         />

@@ -16,7 +16,7 @@ Shared code lives in `libs/` and is grouped by application and responsibility. P
 
 ## Prerequisites
 
-- Node.js **24.20.x** (see `.nvmrc`, `.node-version`, and `package.json`)
+- Node.js **24.18.x or newer in the 24.x line** (`package.json`); `.nvmrc` and `.node-version` recommend 24.20.0
 - npm (the repository uses `package-lock.json`)
 
 Check your installed Node.js version:

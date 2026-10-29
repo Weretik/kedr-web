@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus -- The search field is focused when this modal opens. */
 import { useKedrTheme } from '@mobile/shared/ui';
 import {
   KeyboardAvoidingView,
@@ -65,6 +66,7 @@ export function CatalogSearchSheet({
         <KeyboardAvoidingView
           behavior={Platform.select({ android: 'height', ios: 'padding' })}
           style={styles.keyboardArea}
+          testID="catalog-search-keyboard-area"
         >
           <View style={styles.header}>
             <IconButton accessibilityLabel="Закрити пошук" icon="arrow-left" onPress={onDismiss} />

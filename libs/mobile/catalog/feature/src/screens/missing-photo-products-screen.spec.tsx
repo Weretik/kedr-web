@@ -24,50 +24,50 @@ describe('MissingPhotoProductsScreen', () => {
     mockUseGetMissingPhotoProductsQuery.mockReset();
   });
 
-  it('renders the section heading and initial loading state', () => {
+  it('renders the section heading and initial loading state', async () => {
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({ isFetching: true, isLoading: true }),
     );
-    const { getByLabelText, getByRole } = renderScreen();
+    const { getByLabelText, getByRole } = await renderScreen();
 
     expect(getByRole('header', { name: 'Товари без фотографій' })).toBeTruthy();
     expect(getByLabelText('Завантаження товарів без фотографій')).toBeTruthy();
   });
 
-  it('renders authoritative products and opens the selected existing details', () => {
+  it('renders authoritative products and opens the selected existing details', async () => {
     const onProductPress = jest.fn();
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({ data: page([product]), isFetching: false, isLoading: false }),
     );
-    const { getByLabelText } = renderScreen(onProductPress);
+    const { getByLabelText } = await renderScreen(onProductPress);
 
     expect(getByLabelText('Фото товару відсутнє')).toBeTruthy();
-    fireEvent.press(getByLabelText(/Товар Кабель/));
+    await fireEvent.press(getByLabelText(/Товар Кабель/));
     expect(onProductPress).toHaveBeenCalledWith(product);
   });
 
-  it('renders the positive empty state after a successful response', () => {
+  it('renders the positive empty state after a successful response', async () => {
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({ data: page([]), isFetching: false, isLoading: false }),
     );
-    const { getByText } = renderScreen();
+    const { getByText } = await renderScreen();
 
     expect(getByText('Усі товари мають фотографії')).toBeTruthy();
   });
 
-  it('retries an initial failure without duplicating the section', () => {
+  it('retries an initial failure without duplicating the section', async () => {
     const refetch = jest.fn();
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({ isError: true, isFetching: false, isLoading: false, refetch }),
     );
-    const { getAllByRole, getByRole } = renderScreen();
+    const { getAllByRole, getByRole } = await renderScreen();
 
-    fireEvent.press(getByRole('button', { name: 'Повторити' }));
+    await fireEvent.press(getByRole('button', { name: 'Повторити' }));
     expect(refetch).toHaveBeenCalledTimes(1);
     expect(getAllByRole('header', { name: 'Товари без фотографій' })).toHaveLength(1);
   });
 
-  it('keeps rows while loading or retrying the next page', () => {
+  it('keeps rows while loading or retrying the next page', async () => {
     const refetch = jest.fn();
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({
@@ -78,14 +78,16 @@ describe('MissingPhotoProductsScreen', () => {
         refetch,
       }),
     );
-    const { getByRole, getByText } = renderScreen();
+    const { getByRole, getByText } = await renderScreen();
 
     expect(getByText('Кабель')).toBeTruthy();
-    fireEvent.press(getByRole('button', { name: 'Повторити завантаження наступної сторінки' }));
+    await fireEvent.press(
+      getByRole('button', { name: 'Повторити завантаження наступної сторінки' }),
+    );
     expect(refetch).toHaveBeenCalledTimes(1);
   });
 
-  it('refreshes visible rows and loads the next page explicitly', () => {
+  it('refreshes visible rows and loads the next page explicitly', async () => {
     const refetch = jest.fn();
     mockUseGetMissingPhotoProductsQuery.mockReturnValue(
       queryResult({
@@ -95,18 +97,18 @@ describe('MissingPhotoProductsScreen', () => {
         refetch,
       }),
     );
-    const { getByRole, getByTestId } = renderScreen();
+    const { getByRole, getByTestId } = await renderScreen();
 
-    fireEvent(getByTestId('catalog-list'), 'refresh');
+    await fireEvent(getByTestId('catalog-list'), 'refresh');
     expect(refetch).toHaveBeenCalledTimes(1);
 
-    fireEvent.press(getByRole('button', { name: 'Завантажити ще' }));
+    await fireEvent.press(getByRole('button', { name: 'Завантажити ще' }));
     expect(mockUseGetMissingPhotoProductsQuery).toHaveBeenLastCalledWith({ page: 2 });
   });
 });
 
-function renderScreen(onProductPress = jest.fn()) {
-  return render(
+async function renderScreen(onProductPress = jest.fn()) {
+  return await render(
     <PaperProvider theme={testTheme}>
       <MissingPhotoProductsScreen onProductPress={onProductPress} />
     </PaperProvider>,

@@ -21,16 +21,16 @@ function createOrder(overrides: Partial<OrderDetail> = {}): OrderDetail {
 }
 
 describe('OrderDetailView', () => {
-  it('renders authoritative fields and omits absent optional sections', () => {
-    const view = render(<OrderDetailView order={createOrder()} />);
+  it('renders authoritative fields and omits absent optional sections', async () => {
+    const view = await render(<OrderDetailView order={createOrder()} />);
     expect(view.getByText('Замовлення № ORD-7')).toBeTruthy();
     expect(view.getByText('Стілець')).toBeTruthy();
     expect(view.queryByText('Коментар')).toBeNull();
     expect(view.queryByText('Документ 1С')).toBeNull();
   });
 
-  it('shows optional comment, 1С document and accepted Kyiv time', () => {
-    const view = render(
+  it('shows optional comment, 1С document and accepted Kyiv time', async () => {
+    const view = await render(
       <OrderDetailView
         order={createOrder({
           acceptedAtUtc: '2026-09-17T11:35:00Z',

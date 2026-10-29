@@ -7,18 +7,18 @@ import { StatusPill } from './feedback/status-pill';
 import { createKedrTokens } from '../theme/kedr-theme';
 
 describe('shared mobile UI', () => {
-  it('labels a status pill with text, not color only', () => {
-    const { getByLabelText, getByText } = render(
+  it('labels a status pill with text, not color only', async () => {
+    const { getByLabelText, getByText } = await render(
       <StatusPill kind="success" label="Прийнято в 1С" />,
     );
     expect(getByLabelText('Прийнято в 1С')).toBeTruthy();
     expect(getByText('Прийнято в 1С')).toBeTruthy();
   });
 
-  it('disables quantity buttons at the limits', () => {
+  it('disables quantity buttons at the limits', async () => {
     const onDecrement = jest.fn();
     const onIncrement = jest.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText } = await render(
       <QuantityStepper
         itemName="Ручка"
         max={2}
@@ -28,25 +28,25 @@ describe('shared mobile UI', () => {
       />,
     );
 
-    fireEvent.press(getByLabelText('Зменшити кількість Ручка'));
+    await fireEvent.press(getByLabelText('Зменшити кількість Ручка'));
     expect(onDecrement).not.toHaveBeenCalled();
-    fireEvent.press(getByLabelText('Збільшити кількість Ручка'));
+    await fireEvent.press(getByLabelText('Збільшити кількість Ручка'));
     expect(onIncrement).toHaveBeenCalledTimes(1);
     expect(getByLabelText('Кількість Ручка: 1')).toBeTruthy();
   });
 
-  it('removes a filter through a labeled chip', () => {
+  it('removes a filter through a labeled chip', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText } = await render(
       <FilterChip label="В наявності" onPress={onPress} removable selected />,
     );
-    fireEvent.press(getByLabelText('Прибрати фільтр В наявності'));
+    await fireEvent.press(getByLabelText('Прибрати фільтр В наявності'));
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('offers a retry action in the error state', () => {
+  it('offers a retry action in the error state', async () => {
     const onAction = jest.fn();
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText } = await render(
       <StateView
         actionLabel="Повторити"
         kind="error"
@@ -56,7 +56,7 @@ describe('shared mobile UI', () => {
       />,
     );
     expect(getByRole('header', { name: 'Не вдалося завантажити' })).toBeTruthy();
-    fireEvent.press(getByText('Повторити'));
+    await fireEvent.press(getByText('Повторити'));
     expect(onAction).toHaveBeenCalled();
   });
 

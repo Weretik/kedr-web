@@ -10,7 +10,7 @@ describe('CustomerSelectorSheet', () => {
     const onQueryChange = jest.fn();
     const onSelect = jest.fn();
     const customer = { counterpartyId: 'c-1', name: 'Кедр', phone: null };
-    const view = render(
+    const view = await render(
       <PaperProvider theme={theme}>
         <CustomerSelectorSheet
           customers={[customer]}
@@ -27,15 +27,15 @@ describe('CustomerSelectorSheet', () => {
     );
 
     await waitFor(() => expect(view.getByLabelText('Пошук клієнта за назвою')).toBeTruthy());
-    fireEvent.changeText(view.getByLabelText('Пошук клієнта за назвою'), 'кед');
-    fireEvent.press(view.getByLabelText('Обрати клієнта Кедр'));
+    await fireEvent.changeText(view.getByLabelText('Пошук клієнта за назвою'), 'кед');
+    await fireEvent.press(view.getByLabelText('Обрати клієнта Кедр'));
     expect(onQueryChange).toHaveBeenCalledWith('кед');
     expect(onSelect).toHaveBeenCalledWith(customer);
   });
 
   it('offers all customers when enabled', async () => {
     const onSelectAll = jest.fn();
-    const view = render(
+    const view = await render(
       <PaperProvider theme={theme}>
         <CustomerSelectorSheet
           customers={[{ counterpartyId: 'c-1', name: 'Кедр', phone: null }]}
@@ -54,13 +54,13 @@ describe('CustomerSelectorSheet', () => {
     );
 
     await waitFor(() => expect(view.getByLabelText('Обрати всіх клієнтів')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Обрати всіх клієнтів'));
+    await fireEvent.press(view.getByLabelText('Обрати всіх клієнтів'));
     expect(onSelectAll).toHaveBeenCalledTimes(1);
   });
 
   it('explains an empty API result and allows retry', async () => {
     const onRetry = jest.fn();
-    const view = render(
+    const view = await render(
       <PaperProvider theme={theme}>
         <CustomerSelectorSheet
           customers={[]}
@@ -79,7 +79,7 @@ describe('CustomerSelectorSheet', () => {
     await waitFor(() =>
       expect(view.getByText('Sales API не повернув жодного клієнта.')).toBeTruthy(),
     );
-    fireEvent.press(view.getByText('Оновити список'));
+    await fireEvent.press(view.getByText('Оновити список'));
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

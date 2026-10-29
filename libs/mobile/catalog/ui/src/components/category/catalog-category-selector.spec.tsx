@@ -4,9 +4,9 @@ import { PaperProvider } from 'react-native-paper';
 import { CatalogCategorySelector } from './catalog-category-selector';
 
 describe('CatalogCategorySelector', () => {
-  it('opens nested categories and selects a leaf category', () => {
+  it('opens nested categories and selects a leaf category', async () => {
     const onSelect = jest.fn();
-    const { getByRole } = render(
+    const { getByRole } = await render(
       <PaperProvider theme={testTheme}>
         <CatalogCategorySelector
           categories={[
@@ -23,14 +23,14 @@ describe('CatalogCategorySelector', () => {
       </PaperProvider>,
     );
 
-    fireEvent.press(getByRole('button', { name: 'Відкрити підкатегорії Електрика' }));
-    fireEvent.press(getByRole('button', { name: 'Відкрити підкатегорії Кабелі' }));
-    fireEvent.press(getByRole('radio', { name: 'Категорія USB-C' }));
+    await fireEvent.press(getByRole('button', { name: 'Відкрити підкатегорії Електрика' }));
+    await fireEvent.press(getByRole('button', { name: 'Відкрити підкатегорії Кабелі' }));
+    await fireEvent.press(getByRole('radio', { name: 'Категорія USB-C' }));
     expect(onSelect).toHaveBeenCalledWith(3);
   });
 
-  it('keeps subcategories hidden until their parent is opened', () => {
-    const { getByLabelText, getByRole, queryByRole } = render(
+  it('keeps subcategories hidden until their parent is opened', async () => {
+    const { getByLabelText, getByRole, queryByRole } = await render(
       <PaperProvider theme={testTheme}>
         <CatalogCategorySelector
           categories={[
@@ -44,7 +44,7 @@ describe('CatalogCategorySelector', () => {
 
     expect(queryByRole('radio', { name: 'Категорія Кабелі' })).toBeNull();
     expect(getByLabelText('Вибрана категорія: Електрика → Кабелі')).toBeTruthy();
-    fireEvent.press(getByRole('button', { name: 'Відкрити підкатегорії Електрика' }));
+    await fireEvent.press(getByRole('button', { name: 'Відкрити підкатегорії Електрика' }));
     expect(getByRole('radio', { name: 'Категорія Кабелі' })).toBeTruthy();
   });
 });

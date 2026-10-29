@@ -48,13 +48,13 @@ describe('ProductDetailsScreen', () => {
     });
   });
 
-  it('does not request data for an invalid slug', () => {
-    const { getByText } = renderScreen('  ');
+  it('does not request data for an invalid slug', async () => {
+    const { getByText } = await renderScreen('  ');
     expect(getByText('Некоректне посилання')).toBeTruthy();
     expect(mockQuery).toHaveBeenCalledWith('', { skip: true });
   });
 
-  it('shows the dedicated offline and not-found states', () => {
+  it('shows the dedicated offline and not-found states', async () => {
     mockQuery.mockReturnValue({
       data: undefined,
       isError: false,
@@ -62,9 +62,9 @@ describe('ProductDetailsScreen', () => {
       isLoading: false,
       refetch: jest.fn(),
     });
-    const offline = renderScreen('product', false);
+    const offline = await renderScreen('product', false);
     expect(offline.getByText('Немає з’єднання')).toBeTruthy();
-    offline.unmount();
+    await offline.unmount();
 
     mockQuery.mockReturnValue({
       data: undefined,
@@ -74,10 +74,10 @@ describe('ProductDetailsScreen', () => {
       isLoading: false,
       refetch: jest.fn(),
     });
-    expect(renderScreen('missing').getByText('Товар не знайдено')).toBeTruthy();
+    expect((await renderScreen('missing')).getByText('Товар не знайдено')).toBeTruthy();
   });
 
-  it('shows loading and retries a transport error', () => {
+  it('shows loading and retries a transport error', async () => {
     mockQuery.mockReturnValue({
       data: undefined,
       isError: false,
@@ -85,9 +85,9 @@ describe('ProductDetailsScreen', () => {
       isLoading: true,
       refetch: jest.fn(),
     });
-    const loading = renderScreen('product');
+    const loading = await renderScreen('product');
     expect(loading.getAllByLabelText('Завантаження товару')).toHaveLength(2);
-    loading.unmount();
+    await loading.unmount();
 
     const refetch = jest.fn();
     mockQuery.mockReturnValue({
@@ -98,14 +98,14 @@ describe('ProductDetailsScreen', () => {
       isLoading: false,
       refetch,
     });
-    const error = renderScreen('product');
-    fireEvent.press(error.getByLabelText('Повторити завантаження товару'));
+    const error = await renderScreen('product');
+    await fireEvent.press(error.getByLabelText('Повторити завантаження товару'));
     expect(refetch).toHaveBeenCalledTimes(1);
   });
 
-  it('adds one product and reports success', () => {
-    const { getByLabelText, getByText } = renderScreen('product');
-    fireEvent.press(getByLabelText('Додати товар у кошик'));
+  it('adds one product and reports success', async () => {
+    const { getByLabelText, getByText } = await renderScreen('product');
+    await fireEvent.press(getByLabelText('Додати товар у кошик'));
 
     expect(mockAddProduct).toHaveBeenCalledWith({
       id: '42',
@@ -121,7 +121,7 @@ describe('ProductDetailsScreen', () => {
   it.each([
     [{ ...product, price: null }, 'Додавання недоступне: ціна не вказана.'],
     [{ ...product, stock: 0 }, 'Додавання недоступне: товару немає в наявності.'],
-  ])('disables adding an ineligible product', (ineligibleProduct, reason) => {
+  ])('disables adding an ineligible product', async (ineligibleProduct, reason) => {
     mockQuery.mockReturnValue({
       data: ineligibleProduct,
       isError: false,
@@ -129,16 +129,16 @@ describe('ProductDetailsScreen', () => {
       isLoading: false,
       refetch: jest.fn(),
     });
-    const { getByLabelText, getByText } = renderScreen('product');
+    const { getByLabelText, getByText } = await renderScreen('product');
 
-    fireEvent.press(getByLabelText('Додати товар у кошик'));
+    await fireEvent.press(getByLabelText('Додати товар у кошик'));
     expect(mockAddProduct).not.toHaveBeenCalled();
     expect(getByText(reason)).toBeTruthy();
   });
 });
 
-function renderScreen(productSlug?: string, isOnline = true) {
-  return render(
+async function renderScreen(productSlug?: string, isOnline = true) {
+  return await render(
     <PaperProvider theme={testTheme}>
       <ProductDetailsScreen isOnline={isOnline} productSlug={productSlug} />
     </PaperProvider>,

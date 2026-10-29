@@ -55,24 +55,24 @@ describe('useOrderHistoryController', () => {
   });
 
   it('requests page one, accumulates data and advances while another page exists', async () => {
-    const { result } = renderHook(() => useOrderHistoryController());
+    const { result } = await renderHook(() => useOrderHistoryController());
     await waitFor(() => expect(result.current.history.items).toHaveLength(1));
     expect(mockGetOrders).toHaveBeenCalledWith(
       { counterpartyId: undefined, page: 1 },
       { refetchOnMountOrArgChange: true },
     );
-    act(() => result.current.history.loadNextPage());
+    await act(() => result.current.history.loadNextPage());
     expect(mockGetOrders).toHaveBeenLastCalledWith(
       { counterpartyId: undefined, page: 2 },
       { refetchOnMountOrArgChange: true },
     );
   });
 
-  it('filters customers locally and stores the selected identity', () => {
-    const { result } = renderHook(() => useOrderHistoryController());
-    act(() => result.current.filter.pickerDispatch({ type: 'searchChanged', value: 'кедр' }));
+  it('filters customers locally and stores the selected identity', async () => {
+    const { result } = await renderHook(() => useOrderHistoryController());
+    await act(() => result.current.filter.pickerDispatch({ type: 'searchChanged', value: 'кедр' }));
     expect(result.current.filter.customers).toHaveLength(1);
-    act(() => result.current.filter.chooseCustomer(result.current.filter.customers[0]));
+    await act(() => result.current.filter.chooseCustomer(result.current.filter.customers[0]));
     expect(mockReduxDispatch).toHaveBeenCalledWith(
       expect.objectContaining({ payload: { counterpartyId: 'cp-1', name: 'ТОВ Кедр' } }),
     );

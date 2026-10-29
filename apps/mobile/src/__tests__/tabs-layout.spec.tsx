@@ -41,13 +41,14 @@ jest.mock('expo-router', () => {
   }: {
     tabBar: (props: {
       descriptors: typeof descriptors;
-      navigation: { emit: typeof mockEmit; navigate: typeof mockNavigate };
+      emitter: { emit: typeof mockEmit };
+      navigateToTab: typeof mockNavigate;
       state: typeof state;
     }) => ReactNode;
   }) {
     return (
       <View>
-        {tabBar({ descriptors, navigation: { emit: mockEmit, navigate: mockNavigate }, state })}
+        {tabBar({ descriptors, emitter: { emit: mockEmit }, navigateToTab: mockNavigate, state })}
       </View>
     );
   }
@@ -66,7 +67,7 @@ describe('TabsLayout', () => {
   });
 
   it('uses the pill tab bar to switch Expo Router tabs and shows the cart count', async () => {
-    const { getByLabelText, getByTestId } = render(
+    const { getByLabelText, getByTestId } = await render(
       <AppProviders>
         <TabsLayout />
       </AppProviders>,
@@ -77,18 +78,18 @@ describe('TabsLayout', () => {
     });
 
     expect(getByLabelText('Кошик').props.accessibilityHint).toBe('Позицій: 2');
-    fireEvent.press(getByLabelText('Каталог'));
+    await fireEvent.press(getByLabelText('Каталог'));
 
     expect(mockEmit).toHaveBeenCalledWith({
       canPreventDefault: true,
       target: 'catalog-key',
       type: 'tabPress',
     });
-    expect(mockNavigate).toHaveBeenCalledWith('catalog');
+    expect(mockNavigate).toHaveBeenCalledWith('catalog-key');
 
-    fireEvent.press(getByLabelText('Кошик'));
-    expect(mockNavigate).toHaveBeenCalledWith('cart');
-    fireEvent.press(getByLabelText('Замовлення'));
-    expect(mockNavigate).toHaveBeenCalledWith('orders');
+    await fireEvent.press(getByLabelText('Кошик'));
+    expect(mockNavigate).toHaveBeenCalledWith('cart-key');
+    await fireEvent.press(getByLabelText('Замовлення'));
+    expect(mockNavigate).toHaveBeenCalledWith('orders-key');
   });
 });

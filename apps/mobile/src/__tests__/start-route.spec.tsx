@@ -59,7 +59,7 @@ jest.mock('expo-router', () => {
 
 describe('StartRoute', () => {
   it('renders the home tab placeholder', async () => {
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText } = await render(
       <AppProviders>
         <StartRoute />
       </AppProviders>,
@@ -72,7 +72,7 @@ describe('StartRoute', () => {
   });
 
   it('renders the catalog and profile root tab routes', async () => {
-    const { getByRole } = render(
+    const { getByRole } = await render(
       <AppProviders>
         <CatalogRoute />
         <ProfileRoute />
@@ -86,7 +86,7 @@ describe('StartRoute', () => {
   });
 
   it('renders the cart feature route', async () => {
-    const { getByRole } = render(
+    const { getByRole } = await render(
       <AppProviders>
         <CartRoute />
       </AppProviders>,
@@ -96,7 +96,7 @@ describe('StartRoute', () => {
   });
 
   it('opens the selected catalog slug and normalizes the product route parameter', async () => {
-    const { getByText } = render(
+    const { getByText } = await render(
       <AppProviders>
         <CatalogRoute />
         <ProductDetailsRoute />

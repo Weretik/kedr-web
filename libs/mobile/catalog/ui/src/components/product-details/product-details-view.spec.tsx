@@ -4,9 +4,9 @@ import { PaperProvider } from 'react-native-paper';
 import { ProductDetailsView } from './product-details-view';
 
 describe('ProductDetailsView', () => {
-  it('shows all public contract data and adds an eligible product', () => {
+  it('shows all public contract data and adds an eligible product', async () => {
     const onAddToCart = jest.fn();
-    const { getAllByText, getByLabelText, getByText } = render(
+    const { getAllByText, getByLabelText, getByText } = await render(
       <PaperProvider theme={testTheme}>
         <ProductDetailsView addToCartDisabled={false} onAddToCart={onAddToCart} product={product} />
       </PaperProvider>,
@@ -20,7 +20,7 @@ describe('ProductDetailsView', () => {
     expect(getByText('10')).toBeTruthy();
     expect(getByText('4')).toBeTruthy();
     expect(getByText('Батьківська · parent · ID: 2')).toBeTruthy();
-    fireEvent.press(getByLabelText('Додати товар у кошик'));
+    await fireEvent.press(getByLabelText('Додати товар у кошик'));
     expect(onAddToCart).toHaveBeenCalledTimes(1);
   });
 });

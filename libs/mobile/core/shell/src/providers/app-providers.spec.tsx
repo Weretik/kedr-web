@@ -12,7 +12,7 @@ function ThemeProbe() {
 
 describe('AppProviders', () => {
   it('provides the dark corporate Paper theme', async () => {
-    const { getByText } = render(
+    const { getByText } = await render(
       <AppProviders colorScheme="dark">
         <ThemeProbe />
       </AppProviders>,

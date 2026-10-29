@@ -6,7 +6,7 @@ import { AppProviders } from '../../providers/app-providers';
 
 describe('AppScreen', () => {
   it('renders screen content inside the safe area container', async () => {
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByText } = await render(
       <AppProviders>
         <AppScreen testID="app-screen">
           <Text>Вміст екрана</Text>

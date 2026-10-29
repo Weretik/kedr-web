@@ -5,7 +5,7 @@ import { AppProviders } from '../../providers/app-providers';
 
 describe('ShellState', () => {
   it('renders an accessible empty state', async () => {
-    const { getByRole, getByTestId } = render(
+    const { getByRole, getByTestId } = await render(
       <AppProviders>
         <ShellState
           description="У цьому розділі поки немає вмісту."
@@ -23,7 +23,7 @@ describe('ShellState', () => {
 
   it('exposes a retry action for an error state', async () => {
     const onRetry = jest.fn();
-    const { getByRole } = render(
+    const { getByRole } = await render(
       <AppProviders>
         <ShellState
           description="Не вдалося завантажити дані."
@@ -35,7 +35,7 @@ describe('ShellState', () => {
     );
 
     await waitFor(() => expect(getByRole('button', { name: 'Повторити спробу' })).toBeTruthy());
-    fireEvent.press(getByRole('button', { name: 'Повторити спробу' }));
+    await fireEvent.press(getByRole('button', { name: 'Повторити спробу' }));
 
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
