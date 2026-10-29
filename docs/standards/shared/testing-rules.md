@@ -54,11 +54,11 @@ Red-first may be unsuitable for documentation-only changes, generators, test har
 
 ## Verification path
 
-| When                        | Minimum action                                                                                                                                                                  |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Local change                | Run one test for the affected Nx project (`npx nx run <project>:vite:test --run` if the target exists). For documentation, check links and run `git diff --check`.              |
-| Boundary or contract change | Add `npm run architecture:boundaries` or `npm run contracts:check` only for the affected boundary; for a validator change, also run `npm run architecture:boundaries:fixtures`. |
-| Full CI                     | The [workflow](../../../.github/workflows/ci.yml) runs general checks for PRs/pushes; rerun the full set locally only on direct request.                                        |
+| When                        | Minimum action                                                                                                                                                                                                                                                                           |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Local change                | Run one test for the affected Nx project (`npx nx run <project>:vite:test --run` if the target exists). For documentation, check links and run `git diff --check`.                                                                                                                       |
+| Boundary or contract change | Add `npm run architecture:boundaries` or `npm run contracts:check` only for the affected boundary; for a validator change, also run `npm run architecture:boundaries:fixtures`.                                                                                                          |
+| Full CI                     | The [workflow](../../../.github/workflows/ci.yml) runs every check on pushes to `main`; on PRs, lint, typecheck, tests, e2e and builds run only for projects the change affects ([run-affected](../../../tools/ci/run-affected.mjs)). Rerun the full set locally only on direct request. |
 
 Verify the specific target in `project.json` or with `npx nx show project <name> --json`.
 
