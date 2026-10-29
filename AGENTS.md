@@ -9,11 +9,11 @@ Kedr sells door hardware wholesale (with optional retail orders), not services s
 ## Project context
 
 - [Frontend inventory](docs/architecture/frontend-inventory.md) — applications, tools, and available Nx targets.
-- Application architecture: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), and [Storefront Angular](docs/architecture/storefront/README.md).
+- Application architecture: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), [Storefront Angular](docs/architecture/storefront/README.md) (current public site), and [Site Next.js](docs/architecture/site/README.md) (new public site replacing it by the [migration plan](docs/specs/site/migration/README.md); new storefront work goes here).
 - [Standards index](docs/standards/README.md) — stable rules for code, UI, API, testing, security, and delivery.
 - [Feature catalog](docs/features/README.md) — one table of current Admin, Mobile, and Storefront features with routes and cards.
 
-Identify the application from the request and current code. If choosing between React, React Native, and Angular affects the result and cannot be determined from context, clarify it before creating files. For task-specific context, navigate from the [feature catalog](docs/features/README.md) to the relevant feature card and code; read SDD, architecture, and standards only for the issues involved.
+Identify the application from the request and current code. If choosing between React, React Native, Next.js, and Angular affects the result and cannot be determined from context, clarify it before creating files. For task-specific context, navigate from the [feature catalog](docs/features/README.md) to the relevant feature card and code; read SDD, architecture, and standards only for the issues involved.
 
 ## Context search order
 
@@ -24,10 +24,11 @@ Identify the application from the request and current code. If choosing between 
 
 ## Commands
 
-- Admin and Storefront tests (Vitest): `npx nx run <project>:vite:test -- --run`.
+- Admin, Storefront, and Site tests (Vitest): `npx nx run <project>:vite:test -- --run`; all site libraries: `npm run test:site`.
 - Mobile tests (Jest): `npx nx run <project>:test`.
 - Project lint or typecheck: `npx nx run <project>:lint`, `npx nx run <project>:typecheck`.
 - Documentation: `npm run docs:check`. Contract snapshot: `npm run contracts:check`.
+- Scaffold with console generators, not hand-written configs: `npx nx g @nx/react:library`, `npx nx g @nx/next:application`, `npx shadcn@latest add <component>` and similar. Then trim generator output to the repository's conventions (no deprecated executors, `resolve.tsconfigPaths` in Vite configs, project tags).
 - Feature cards list the exact projects. Do not run `test:web`, `test:mobile`, `run-many`, builds, or E2E unless asked; they are slow and CI runs them.
 
 A small fix that restores documented behavior needs no SDD, file-role map, or audit: fix it, run the focused test, and describe the change briefly.
