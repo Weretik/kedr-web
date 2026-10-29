@@ -3,6 +3,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { vi } from 'vitest';
 
 import { AdminTopBar } from './admin-top-bar';
+import { AdminSidebar } from '../layout/admin-sidebar';
+import { AdminShellSessionProvider } from '../../providers/admin-shell-session-provider';
 
 vi.mock('./notifications-menu', () => ({ NotificationsMenu: () => null }));
 vi.mock('./profile/profile-menu', () => ({ ProfileMenu: () => null }));
@@ -29,5 +31,42 @@ describe('AdminTopBar order checkout link', () => {
     fireEvent.click(checkoutLink);
 
     expect(screen.getByText('Сторінка оформлення')).toBeTruthy();
+  });
+});
+
+describe('AdminTopBar and sidebar role labels', () => {
+  const renderFor = (isAdmin: boolean) =>
+    render(
+      <MemoryRouter>
+        <AdminShellSessionProvider
+          onLogout={async () => undefined}
+          profileHref="/profile"
+          user={{
+            avatarUrl: null,
+            canManageUsers: isAdmin,
+            email: 'staff@kedr.ua',
+            fullName: 'Олена',
+            isAdmin,
+            roleLabel: isAdmin ? 'Адміністратор' : 'Менеджер',
+          }}
+        >
+          <AdminTopBar currentOrderPositionCount={0} onOpenNavigation={() => undefined} />
+          <AdminSidebar currentOrderPositionCount={0} />
+        </AdminShellSessionProvider>
+      </MemoryRouter>,
+    );
+
+  it('names the admin cabinet and shows the Admin badge for an admin', () => {
+    renderFor(true);
+
+    expect(screen.getByText('Кабінет адміністратора')).toBeTruthy();
+    expect(screen.getByText('Admin')).toBeTruthy();
+  });
+
+  it('names the manager cabinet and shows the Manager badge for a manager', () => {
+    renderFor(false);
+
+    expect(screen.getByText('Кабінет менеджера')).toBeTruthy();
+    expect(screen.getByText('Manager')).toBeTruthy();
   });
 });

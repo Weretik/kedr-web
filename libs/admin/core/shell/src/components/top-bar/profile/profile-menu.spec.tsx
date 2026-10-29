@@ -13,6 +13,7 @@ const manager: AdminShellUser = {
   email: 'olena@kedr.ua',
   fullName: 'Олена Коваль',
   roleLabel: 'Менеджер',
+  isAdmin: false,
 };
 
 function renderMenu(onLogout = vi.fn().mockResolvedValue(undefined)) {

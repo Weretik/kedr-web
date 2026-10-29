@@ -3,6 +3,7 @@ import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { AdminNavigation } from '../navigation/admin-navigation';
+import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
 
 interface AdminSidebarProps {
   currentOrderPositionCount: number;
@@ -52,6 +53,7 @@ export function AdminSidebar({
   onToggleCollapsed,
 }: AdminSidebarProps) {
   const toggleLabel = isCollapsed ? 'Розгорнути меню' : 'Згорнути меню';
+  const roleBadge = useAdminShellUser()?.isAdmin === false ? 'Manager' : 'Admin';
 
   return (
     <Box
@@ -88,7 +90,7 @@ export function AdminSidebar({
             }}
             variant="overline"
           >
-            Admin
+            {roleBadge}
           </Typography>
         )}
       </Box>

@@ -9,6 +9,8 @@ export interface AdminShellUser {
   email: string;
   fullName: string;
   roleLabel: string;
+  /** Admin sees "ADMIN" and "Кабінет адміністратора"; a manager sees the manager variants. */
+  isAdmin: boolean;
   avatarUrl: string | null;
   canManageUsers: boolean;
 }

@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { NotificationsMenu } from './notifications-menu';
 import { ProfileMenu } from './profile/profile-menu';
+import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
 import { ColorSchemeMenu } from '../theme/color-scheme-menu';
 
 interface AdminTopBarProps {
@@ -13,6 +14,8 @@ interface AdminTopBarProps {
 }
 
 export function AdminTopBar({ onOpenNavigation, currentOrderPositionCount }: AdminTopBarProps) {
+  const title = useAdminShellUser()?.isAdmin ? 'Кабінет адміністратора' : 'Кабінет менеджера';
+
   return (
     <AppBar
       color="transparent"
@@ -46,7 +49,7 @@ export function AdminTopBar({ onOpenNavigation, currentOrderPositionCount }: Adm
           <MenuOutlinedIcon />
         </IconButton>
         <Typography component="span" noWrap sx={{ flexGrow: 1, minWidth: 0 }} variant="h6">
-          Кабінет менеджера
+          {title}
         </Typography>
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
           <Tooltip title="Поточне замовлення">

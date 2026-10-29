@@ -13,6 +13,7 @@ const renderNavigation = (canManageUsers: boolean) =>
         user={{
           avatarUrl: null,
           canManageUsers,
+          isAdmin: canManageUsers,
           email: 'staff@kedr.ua',
           fullName: 'Staff',
           roleLabel: 'Роль',
