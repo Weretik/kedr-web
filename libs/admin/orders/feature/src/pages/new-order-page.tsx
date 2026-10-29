@@ -1,6 +1,6 @@
 import { OrderLineEditor } from '@admin/orders/ui';
 import { useGetAllAdminProductsQuery } from '@admin/products/data-access';
-import { AdminDetailHeader, SectionCard } from '@admin/shared/ui';
+import { AdminDetailHeader, PageIssues, SectionCard } from '@admin/shared/ui';
 import { Alert, Button, CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
@@ -32,6 +32,7 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
   const catalog = useGetAllAdminProductsQuery();
   const order = useSubmitOrder(customerId, current.lines, quoted.key, quoted.quote, quoted.loading);
   const draft = useSaveDraft(customerId, current.lines, order.ready);
+  const hasQuoteInput = Boolean(customerId) && current.lines.length > 0;
   return (
     <Stack component="section" spacing={3}>
       <AdminDetailHeader
@@ -39,9 +40,16 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
         backTo="/orders"
         title="Оформлення замовлення"
       />
+      <PageIssues
+        messages={[
+          order.error,
+          draft.error,
+          hasQuoteInput && !quoted.loading && quoted.error && quoted.errorMessage,
+        ]}
+        revealKey={order.error || draft.error}
+        title="Замовлення не можна оформити"
+      />
       <CurrentOrderSetAlert warning={current.warning} />
-      {order.error && <Alert severity="error">{order.error}</Alert>}
-      {draft.error && <Alert severity="error">{draft.error}</Alert>}
       <SectionCard title="Клієнт">
         <CustomerPicker
           label="Клієнт для замовлення"
@@ -91,18 +99,11 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
           Оформити замовлення
         </Button>
       </Stack>
-      {customerId &&
-        current.lines.length > 0 &&
-        (quoted.loading ? (
-          <Alert icon={<CircularProgress size={18} />} severity="info">
-            Розраховуємо актуальну суму…
-          </Alert>
-        ) : quoted.error ? (
-          <Alert severity="error">
-            {quoted.errorMessage ??
-              'Не вдалося розрахувати ціну. Перевірте товари, залишки й клієнта.'}
-          </Alert>
-        ) : null)}
+      {hasQuoteInput && quoted.loading && (
+        <Alert icon={<CircularProgress size={18} />} severity="info">
+          Розраховуємо актуальну суму…
+        </Alert>
+      )}
       <SaveDraftDialog
         open={draftOpen}
         title={draft.title}

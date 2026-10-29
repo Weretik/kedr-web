@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useCustomerPrices } from './use-customer-prices';
 import { useOrderQuote } from './use-order-quote';
+import { withNotice } from './use-route-notice';
 import {
   clearDraftEditSession,
   readDraftEditSession,
@@ -88,7 +89,10 @@ export function useDraftEditForm(id: number, valid: boolean) {
         },
       }).unwrap();
       clearDraftEditSession(id);
-      navigate(`/orders/drafts/${id}${params.toString() ? `?${params}` : ''}`);
+      navigate(
+        `/orders/drafts/${id}${params.toString() ? `?${params}` : ''}`,
+        withNotice('Зміни в чернетці збережено.'),
+      );
     } catch (cause) {
       setError(
         (cause as { status?: number }).status === 409

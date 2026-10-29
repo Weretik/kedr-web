@@ -1,6 +1,8 @@
 import { useQuoteWorkspaceOrderMutation } from '@admin/orders/data-access';
 import { useEffect, useMemo, useState } from 'react';
 
+import { quoteErrorMessage } from '../errors/quote-error-message';
+
 import type { OrderInputLine, OrderQuote } from '@admin/orders/model';
 
 interface QuoteState {
@@ -42,14 +44,7 @@ export function useOrderQuote(counterpartyId: string, lines: OrderInputLine[]) {
             setState({ key, quoteKey: key, counterpartyId, quote, error: false, loading: false });
         })
         .catch((cause: unknown) => {
-          const response =
-            cause && typeof cause === 'object'
-              ? (cause as { reason?: unknown; message?: unknown })
-              : null;
-          const errorMessage =
-            response?.reason === 'unavailable_product' && typeof response.message === 'string'
-              ? response.message
-              : undefined;
+          const errorMessage = quoteErrorMessage(cause);
           if (active)
             setState((previous) => ({
               key,

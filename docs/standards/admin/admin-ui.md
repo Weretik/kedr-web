@@ -13,7 +13,7 @@ The composition of lists, details, and back links is defined by the [Admin list 
 ## States and accessibility
 
 - Each screen with server data defines the applicable `loading`, `success`, `empty`, `error`, and `forbidden` states.
-- The error state shows a clear message without transport details and an accessible retry action when possible.
+- The error state shows a clear message without transport details and an accessible retry action when possible. Where errors and confirmations appear and how they are worded: [feedback and error messages](feedback-and-errors.md).
 - Interactive elements must use semantic HTML, keyboard navigation, visible focus, and an accessible name.
 - Icon-only controls need `aria-label` or an existing equivalent.
 - Check the layout, light and dark themes, and breakpoints against the theme and component code. Open a browser for verification only after asking the user separately and receiving direct permission for that specific browser check.

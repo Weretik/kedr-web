@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {
+  alpha,
   IconButton,
   Stack,
   TableCell,
@@ -31,7 +32,17 @@ export function OrderLineRow({ line, pricing, onQuantity, onAdjustment, onRemove
   const adjustment = line.priceAdjustment ?? 0;
   const tone = priceAdjustmentTone(adjustment);
   return (
-    <TableRow>
+    <TableRow
+      sx={
+        pricing.issue
+          ? (theme) => ({
+              bgcolor: theme.vars
+                ? `rgba(${theme.vars.palette.error.mainChannel} / 0.06)`
+                : alpha(theme.palette.error.main, 0.06),
+            })
+          : undefined
+      }
+    >
       <TableCell>{pricing.productName}</TableCell>
       <TableCell>
         <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
@@ -79,6 +90,7 @@ export function OrderLineRow({ line, pricing, onQuantity, onAdjustment, onRemove
         <PriceAdjustmentField
           productId={line.productId}
           value={adjustment}
+          issue={pricing.issue}
           onChange={onAdjustment}
         />
       </TableCell>

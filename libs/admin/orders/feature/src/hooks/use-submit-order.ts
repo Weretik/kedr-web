@@ -5,6 +5,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { withNotice } from './use-route-notice';
 import { clearCurrentOrder } from '../state/current-order-set';
 import { keyForRequest } from '../state/idempotency-key';
 
@@ -48,7 +49,10 @@ export function useSubmitOrder(
       }).unwrap();
       clearCurrentOrder();
       pending.current = null;
-      navigate(`/orders/${result.orderId}`);
+      navigate(
+        `/orders/${result.orderId}`,
+        withNotice(`Замовлення ${result.orderNumber} оформлено.`),
+      );
     } catch (cause) {
       const conflict = getOrderSubmissionConflict(cause);
       if (conflict?.type === 'quote-changed') {

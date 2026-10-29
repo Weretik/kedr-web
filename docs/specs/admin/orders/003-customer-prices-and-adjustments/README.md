@@ -21,6 +21,9 @@ The same change labels the retail price column «Ціна (роздріб)» in 
 - **R-004.** The adjustment is kept in the local order set, in drafts (editable there), and in the created order. Order and draft details show a «Знижка/Націнка за шт.» column only when a line has one; the order list shows a «Знижка/Націнка» column with the order's total adjustment.
 - **R-005.** When a draft is merged into the current set, a product already in the set keeps its own adjustment; a new product brings the draft's.
 
+- **R-006 (revision 2026-10-29).** A discount may not take the unit price below 1 ₴ (a product already cheaper than 1 ₴ cannot be discounted; a markup is always allowed). The line shows the reason and the largest allowed discount under the field while typing; the server returns `price_below_minimum` with the same wording.
+- **R-007 (revision 2026-10-29).** Errors and confirmations follow the [feedback rules](../../../../standards/admin/feedback-and-errors.md): blocking problems in a pinned block under the top bar with the server's specific reason, success notices at the top centre after an order or draft is saved. On draft editing, «Додати з каталогу» and «Зберегти зміни» sit in one row.
+
 ## Acceptance scenarios
 
 | ID         | Scenario                                                                                                                         |
