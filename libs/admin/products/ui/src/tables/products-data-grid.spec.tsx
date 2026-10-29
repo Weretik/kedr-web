@@ -79,7 +79,7 @@ describe('ProductsDataGrid responsive actions', () => {
       />,
     );
 
-    expect(screen.getByRole('columnheader', { name: 'Ціна' })).toBeTruthy();
+    expect(screen.getByRole('columnheader', { name: 'Ціна (роздріб)' })).toBeTruthy();
     expect(screen.getByRole('columnheader', { name: 'Дії' })).toBeTruthy();
     const searchInput = screen.getByPlaceholderText('Пошук товарів');
     expect(searchInput.getAttribute('aria-label')).toBe('Пошук товарів');
