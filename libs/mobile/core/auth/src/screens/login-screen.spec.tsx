@@ -7,17 +7,17 @@ import { login } from '../session/mobile-auth';
 
 jest.mock('../session/mobile-auth', () => ({ login: jest.fn(), logout: jest.fn() }));
 
-const renderScreen = () =>
-  render(
+const renderScreen = async () =>
+  await render(
     <AppProviders>
       <LoginScreen />
     </AppProviders>,
   );
 
-const fillAndSubmit = async (screen: ReturnType<typeof renderScreen>) => {
-  fireEvent.changeText(await screen.findByLabelText('Email'), 'm@kedr.ua');
-  fireEvent.changeText(screen.getByLabelText('Пароль'), 'secret-pass');
-  fireEvent.press(screen.getByRole('button', { name: 'Увійти' }));
+const fillAndSubmit = async (screen: Awaited<ReturnType<typeof renderScreen>>) => {
+  await fireEvent.changeText(await screen.findByLabelText('Email'), 'm@kedr.ua');
+  await fireEvent.changeText(screen.getByLabelText('Пароль'), 'secret-pass');
+  await fireEvent.press(screen.getByRole('button', { name: 'Увійти' }));
 };
 
 describe('LoginScreen', () => {
@@ -27,11 +27,11 @@ describe('LoginScreen', () => {
     jest
       .mocked(login)
       .mockResolvedValue({ email: 'm@kedr.ua', fullName: 'M', id: '1', roles: ['Manager'] });
-    const screen = renderScreen();
+    const screen = await renderScreen();
 
-    fireEvent.changeText(await screen.findByLabelText('Email'), ' m@kedr.ua ');
-    fireEvent.changeText(screen.getByLabelText('Пароль'), 'secret-pass');
-    fireEvent.press(screen.getByRole('button', { name: 'Увійти' }));
+    await fireEvent.changeText(await screen.findByLabelText('Email'), ' m@kedr.ua ');
+    await fireEvent.changeText(screen.getByLabelText('Пароль'), 'secret-pass');
+    await fireEvent.press(screen.getByRole('button', { name: 'Увійти' }));
 
     await waitFor(() =>
       expect(login).toHaveBeenCalledWith({ email: 'm@kedr.ua', password: 'secret-pass' }),
@@ -49,7 +49,7 @@ describe('LoginScreen', () => {
         statusText: '',
       }),
     );
-    const screen = renderScreen();
+    const screen = await renderScreen();
 
     await fillAndSubmit(screen);
 
