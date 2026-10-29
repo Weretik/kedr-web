@@ -4,8 +4,8 @@ import { PaperProvider } from 'react-native-paper';
 import { ProductCard } from './product-card';
 
 describe('ProductCard', () => {
-  it('shows ID, name, price, and a labeled availability pill', () => {
-    const { getByLabelText, getByText } = renderCard({
+  it('shows ID, name, price, and a labeled availability pill', async () => {
+    const { getByLabelText, getByText } = await renderCard({
       availability: 'out_of_stock',
       id: '13',
       imageUrl: null,
@@ -21,8 +21,8 @@ describe('ProductCard', () => {
     expect(getByLabelText('Фото товару відсутнє')).toBeTruthy();
   });
 
-  it('marks unknown availability with a warning label instead of an off-brand color', () => {
-    const { getByText } = renderCard({
+  it('marks unknown availability with a warning label instead of an off-brand color', async () => {
+    const { getByText } = await renderCard({
       availability: 'unknown',
       id: '14',
       imageUrl: null,
@@ -37,7 +37,7 @@ describe('ProductCard', () => {
     expect(getByText('10 грн.')).toBeTruthy();
   });
 
-  it('opens the selected product', () => {
+  it('opens the selected product', async () => {
     const onPress = jest.fn();
     const product = {
       availability: 'in_stock' as const,
@@ -47,19 +47,19 @@ describe('ProductCard', () => {
       price: 120.5,
       productSlug: 'kabel-12',
     };
-    const { getByLabelText } = render(
+    const { getByLabelText } = await render(
       <PaperProvider theme={testTheme}>
         <ProductCard onPress={onPress} product={product} />
       </PaperProvider>,
     );
 
-    fireEvent.press(getByLabelText(/Товар Кабель мідний/));
+    await fireEvent.press(getByLabelText(/Товар Кабель мідний/));
     expect(onPress).toHaveBeenCalledWith(product);
   });
 });
 
-function renderCard(product: Parameters<typeof ProductCard>[0]['product']) {
-  return render(
+async function renderCard(product: Parameters<typeof ProductCard>[0]['product']) {
+  return await render(
     <PaperProvider theme={testTheme}>
       <ProductCard onPress={jest.fn()} product={product} />
     </PaperProvider>,

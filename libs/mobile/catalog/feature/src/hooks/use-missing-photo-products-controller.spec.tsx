@@ -41,24 +41,24 @@ describe('useMissingPhotoProductsController', () => {
     });
   });
 
-  it('exposes cached items and advances only while another page exists', () => {
-    const { result } = renderHook(() => useMissingPhotoProductsController());
+  it('exposes cached items and advances only while another page exists', async () => {
+    const { result } = await renderHook(() => useMissingPhotoProductsController());
 
     expect(result.current.items).toEqual(products);
-    act(() => result.current.loadNextPage());
+    await act(() => result.current.loadNextPage());
     expect(mockUseGetMissingPhotoProductsQuery).toHaveBeenLastCalledWith({ page: 2 });
   });
 
-  it('refreshes page one directly and exposes explicit retry', () => {
-    const { result } = renderHook(() => useMissingPhotoProductsController());
+  it('refreshes page one directly and exposes explicit retry', async () => {
+    const { result } = await renderHook(() => useMissingPhotoProductsController());
 
-    act(() => result.current.refresh());
-    act(() => result.current.retry());
+    await act(() => result.current.refresh());
+    await act(() => result.current.retry());
 
     expect(refetch).toHaveBeenCalledTimes(2);
   });
 
-  it('does not advance while the current request is fetching', () => {
+  it('does not advance while the current request is fetching', async () => {
     mockUseGetMissingPhotoProductsQuery.mockReturnValue({
       data: {
         items: products,
@@ -72,9 +72,9 @@ describe('useMissingPhotoProductsController', () => {
       isLoading: false,
       refetch,
     });
-    const { result } = renderHook(() => useMissingPhotoProductsController());
+    const { result } = await renderHook(() => useMissingPhotoProductsController());
 
-    act(() => result.current.loadNextPage());
+    await act(() => result.current.loadNextPage());
 
     expect(mockUseGetMissingPhotoProductsQuery).toHaveBeenLastCalledWith({ page: 1 });
   });

@@ -5,19 +5,21 @@ import { CustomersDataGrid } from './customers-data-grid';
 
 import type { CustomerSort } from '@admin/clients/model';
 
-function renderGrid(options: {
-  error?: boolean;
-  loading?: boolean;
-  onPageChange?: (page: number) => void;
-  onRetry?: () => void;
-  onSearchChange?: (searchTerm: string | undefined) => void;
-  onSortChange?: (sort: CustomerSort) => void;
-  onView?: (id: string) => void;
-  page?: number;
-  rowCount?: number;
-  searchTerm?: string;
-  sort?: CustomerSort;
-} = {}) {
+function renderGrid(
+  options: {
+    error?: boolean;
+    loading?: boolean;
+    onPageChange?: (page: number) => void;
+    onRetry?: () => void;
+    onSearchChange?: (searchTerm: string | undefined) => void;
+    onSortChange?: (sort: CustomerSort) => void;
+    onView?: (id: string) => void;
+    page?: number;
+    rowCount?: number;
+    searchTerm?: string;
+    sort?: CustomerSort;
+  } = {},
+) {
   return render(
     <CustomersDataGrid
       error={options.error ?? false}
@@ -46,7 +48,9 @@ describe('CustomersDataGrid', () => {
     renderGrid({ onView });
 
     const search = screen.getByPlaceholderText('Пошук клієнтів');
-    const adornment = search.closest('.MuiInputBase-root')?.querySelector('.MuiInputAdornment-positionStart');
+    const adornment = search
+      .closest('.MuiInputBase-root')
+      ?.querySelector('.MuiInputAdornment-positionStart');
     expect(adornment?.querySelector('[data-testid="SearchOutlinedIcon"]')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Знайти' })).toBeNull();
     expect(screen.queryByPlaceholderText('Фільтр')).toBeNull();
@@ -65,14 +69,14 @@ describe('CustomersDataGrid', () => {
   it('requests server sorting when a sortable column is selected', async () => {
     const onSortChange = vi.fn();
     renderGrid({ onSortChange });
-    fireEvent.click(screen.getByRole('columnheader', { name: 'Телефон' }));
+    fireEvent.click(screen.getByRole('columnheader', { name: /^Телефон/ }));
     await waitFor(() => expect(onSortChange).toHaveBeenCalledWith('phone'));
   });
 
   it('requests descending server sorting on the second header selection', async () => {
     const onSortChange = vi.fn();
     renderGrid({ onSortChange, sort: 'phone' });
-    fireEvent.click(screen.getByRole('columnheader', { name: 'Телефон' }));
+    fireEvent.click(screen.getByRole('columnheader', { name: /^Телефон/ }));
     await waitFor(() => expect(onSortChange).toHaveBeenCalledWith('-phone'));
   });
 

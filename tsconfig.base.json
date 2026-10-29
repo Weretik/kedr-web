@@ -16,6 +16,10 @@
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
+      "react-native": ["node_modules/react-native/types_generated/index.d.ts"],
+      "expo-router/react-navigation": [
+        "node_modules/expo-router/build/react-navigation/index.d.ts"
+      ],
       "@tokens/*": ["tools/tokens/*"],
       "@storefront/data-access": ["libs/storefront/data-access/src/index.ts"],
       "@storefront/ui": ["libs/storefront/ui/src/index.ts"],

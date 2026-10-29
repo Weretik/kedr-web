@@ -47,8 +47,8 @@ describe('CatalogScreen', () => {
     });
   });
 
-  it('renders the current loading state on the theme background', () => {
-    const { getAllByTestId, getByLabelText } = renderScreen();
+  it('renders the current loading state on the theme background', async () => {
+    const { getAllByTestId, getByLabelText } = await renderScreen();
 
     expect(getByLabelText('Завантаження')).toBeTruthy();
     expect(StyleSheet.flatten(getAllByTestId('catalog-screen')[0].props.style)).toMatchObject({
@@ -56,24 +56,24 @@ describe('CatalogScreen', () => {
     });
   });
 
-  it('registers its search action for the layout Appbar', () => {
+  it('registers its search action for the layout Appbar', async () => {
     const onSearchActionChange = jest.fn();
-    renderScreen(testTheme, onSearchActionChange);
+    await renderScreen(testTheme, onSearchActionChange);
 
     expect(onSearchActionChange).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it('applies search only after Apply and allows history selection as a draft', async () => {
     let openSearch: (() => void) | undefined;
-    const { getByLabelText } = renderScreen(testTheme, (action) => {
+    const { getByLabelText } = await renderScreen(testTheme, (action) => {
       openSearch = action;
     });
 
     await waitFor(() => expect(openSearch).toEqual(expect.any(Function)));
-    act(() => openSearch?.());
+    await act(() => openSearch?.());
     await waitFor(() => expect(getByLabelText('Пошук товарів')).toBeTruthy());
-    fireEvent.changeText(getByLabelText('Пошук товарів'), '   ');
-    fireEvent.press(getByLabelText('Шукати товари'));
+    await fireEvent.changeText(getByLabelText('Пошук товарів'), '   ');
+    await fireEvent.press(getByLabelText('Шукати товари'));
     await waitFor(() =>
       expect(mockUseGetCatalogProductsQuery).toHaveBeenLastCalledWith(
         expect.objectContaining({ page: 1, search: '' }),
@@ -81,16 +81,16 @@ describe('CatalogScreen', () => {
       ),
     );
 
-    act(() => openSearch?.());
+    await act(() => openSearch?.());
     await waitFor(() => expect(getByLabelText('Пошук товарів')).toBeTruthy());
-    fireEvent.changeText(getByLabelText('Пошук товарів'), '  Мідний   кабель ');
+    await fireEvent.changeText(getByLabelText('Пошук товарів'), '  Мідний   кабель ');
 
     expect(mockUseGetCatalogProductsQuery).toHaveBeenLastCalledWith(
       expect.objectContaining({ search: '' }),
       { refetchOnMountOrArgChange: true },
     );
 
-    fireEvent.press(getByLabelText('Шукати товари'));
+    await fireEvent.press(getByLabelText('Шукати товари'));
     await waitFor(() =>
       expect(mockUseGetCatalogProductsQuery).toHaveBeenLastCalledWith(
         expect.objectContaining({ page: 1, search: 'Мідний кабель' }),
@@ -98,17 +98,17 @@ describe('CatalogScreen', () => {
       ),
     );
 
-    act(() => openSearch?.());
+    await act(() => openSearch?.());
     await waitFor(() => expect(getByLabelText('Шукати: Мідний кабель')).toBeTruthy());
-    fireEvent.press(getByLabelText('Шукати: Мідний кабель'));
+    await fireEvent.press(getByLabelText('Шукати: Мідний кабель'));
     expect(mockUseGetCatalogProductsQuery).toHaveBeenLastCalledWith(
       expect.objectContaining({ search: 'Мідний кабель' }),
       { refetchOnMountOrArgChange: true },
     );
   });
 
-  it('uses the active dark theme background', () => {
-    const { getAllByTestId } = renderScreen(darkTestTheme);
+  it('uses the active dark theme background', async () => {
+    const { getAllByTestId } = await renderScreen(darkTestTheme);
 
     expect(StyleSheet.flatten(getAllByTestId('catalog-screen')[0].props.style)).toMatchObject({
       backgroundColor: '#101010',
@@ -123,12 +123,12 @@ describe('CatalogScreen', () => {
       isLoading: false,
       refetch: jest.fn(),
     });
-    const { getByRole, getByTestId, getByText } = renderScreen();
+    const { getByRole, getByTestId, getByText } = await renderScreen();
 
     await waitFor(() => expect(getByTestId('catalog-list')).toBeTruthy());
     expect(getByText('10 грн.')).toBeTruthy();
     expect(getByText('ID: 1')).toBeTruthy();
-    fireEvent.press(getByRole('button', { name: 'Завантажити ще' }));
+    await fireEvent.press(getByRole('button', { name: 'Завантажити ще' }));
     expect(mockUseGetCatalogProductsQuery).toHaveBeenLastCalledWith(
       expect.objectContaining({ page: 2 }),
       { refetchOnMountOrArgChange: true },
@@ -144,13 +144,13 @@ describe('CatalogScreen', () => {
       refetch: jest.fn(),
     });
     const onProductPress = jest.fn();
-    const { getByLabelText } = renderScreen(testTheme, undefined, onProductPress);
+    const { getByLabelText } = await renderScreen(testTheme, undefined, onProductPress);
 
-    await waitFor(() => fireEvent.press(getByLabelText(/Товар Кабель/)));
+    await waitFor(async () => await fireEvent.press(getByLabelText(/Товар Кабель/)));
     expect(onProductPress).toHaveBeenCalledWith(catalogPage.items[0]);
   });
 
-  it('preserves the current empty state', () => {
+  it('preserves the current empty state', async () => {
     mockUseGetCatalogProductsQuery.mockReturnValue({
       currentData: { ...catalogPage, items: [], totalRecords: 0 },
       isError: false,
@@ -158,12 +158,12 @@ describe('CatalogScreen', () => {
       isLoading: false,
       refetch: jest.fn(),
     });
-    const { getByTestId } = renderScreen();
+    const { getByTestId } = await renderScreen();
 
     expect(getByTestId('catalog-state-empty')).toBeTruthy();
   });
 
-  it('preserves the current error state and retry action', () => {
+  it('preserves the current error state and retry action', async () => {
     const refetch = jest.fn();
     mockUseGetCatalogProductsQuery.mockReturnValue({
       currentData: undefined,
@@ -173,20 +173,20 @@ describe('CatalogScreen', () => {
       isLoading: false,
       refetch,
     });
-    const { getByRole, getByTestId } = renderScreen();
+    const { getByRole, getByTestId } = await renderScreen();
 
     expect(getByTestId('catalog-state-error')).toBeTruthy();
-    fireEvent.press(getByRole('button', { name: 'Повторити спробу' }));
+    await fireEvent.press(getByRole('button', { name: 'Повторити спробу' }));
     expect(refetch).toHaveBeenCalledTimes(1);
   });
 });
 
-function renderScreen(
+async function renderScreen(
   theme = testTheme,
   onSearchActionChange?: (action: (() => void) | undefined) => void,
   onProductPress = jest.fn(),
 ) {
-  return render(
+  return await render(
     <PaperProvider theme={theme}>
       <CatalogScreen onProductPress={onProductPress} onSearchActionChange={onSearchActionChange} />
     </PaperProvider>,

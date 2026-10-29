@@ -42,20 +42,20 @@ describe('orders routes', () => {
     mockPush.mockClear();
     mockOrderId = '7';
   });
-  it('opens a selected order from the tab route', () => {
-    const view = render(<OrdersRoute />);
-    fireEvent.press(view.getByText('Історія'));
+  it('opens a selected order from the tab route', async () => {
+    const view = await render(<OrdersRoute />);
+    await fireEvent.press(view.getByText('Історія'));
     expect(mockPush).toHaveBeenCalledWith('/orders/7');
   });
-  it('normalizes a valid detail id and preserves standard back navigation', () => {
-    const view = render(<OrderDetailRoute />);
+  it('normalizes a valid detail id and preserves standard back navigation', async () => {
+    const view = await render(<OrderDetailRoute />);
     expect(view.getByText('Деталі 7')).toBeTruthy();
-    fireEvent.press(view.getByText('Деталі 7'));
+    await fireEvent.press(view.getByText('Деталі 7'));
     expect(mockBack).toHaveBeenCalled();
   });
-  it('passes an invalid id to the safe unavailable state', () => {
+  it('passes an invalid id to the safe unavailable state', async () => {
     mockOrderId = 'not-a-number';
-    const view = render(<OrderDetailRoute />);
+    const view = await render(<OrderDetailRoute />);
     expect(view.getByText('Деталі undefined')).toBeTruthy();
   });
 });

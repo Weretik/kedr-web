@@ -59,22 +59,34 @@ describe('CartScreen checkout flow', () => {
   });
 
   it('submits one order, clears the cart and shows the pending receipt', async () => {
-    const view = render(
+    let resolveOrder!: (value: {
+      orderId: string;
+      orderNumber: string;
+      syncStatus: string;
+    }) => void;
+    mockUnwrap.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveOrder = resolve;
+        }),
+    );
+    const view = await render(
       <PaperProvider theme={theme}>
         <CartScreen />
       </PaperProvider>,
     );
 
-    fireEvent.press(view.getByLabelText('Оформити замовлення'));
+    await fireEvent.press(view.getByLabelText('Оформити замовлення'));
     await waitFor(() => expect(view.getByLabelText('Вибрати клієнта')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Вибрати клієнта'));
+    await fireEvent.press(view.getByLabelText('Вибрати клієнта'));
     await waitFor(() => expect(view.getByLabelText('Обрати клієнта Клієнт')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Обрати клієнта Клієнт'));
-    fireEvent.changeText(view.getByLabelText('Коментар до замовлення'), ' Терміново ');
-    fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
-    fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
+    await fireEvent.press(view.getByLabelText('Обрати клієнта Клієнт'));
+    await fireEvent.changeText(view.getByLabelText('Коментар до замовлення'), ' Терміново ');
+    await fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
+    await fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
 
     await waitFor(() => expect(mockCreateOrder).toHaveBeenCalledTimes(1));
+    resolveOrder({ orderId: 'o-1', orderNumber: 'ORD-1', syncStatus: 'Pending' });
     expect(mockCreateOrder).toHaveBeenCalledWith({
       idempotencyKey: expect.stringMatching(/^[0-9a-f-]{36}$/i),
       payload: {
@@ -92,21 +104,21 @@ describe('CartScreen checkout flow', () => {
     mockUnwrap
       .mockRejectedValueOnce({ code: 'Network', message: 'Мережа недоступна.' })
       .mockResolvedValueOnce({ orderId: 'o-1', orderNumber: 'ORD-1', syncStatus: 'Pending' });
-    const view = render(
+    const view = await render(
       <PaperProvider theme={theme}>
         <CartScreen />
       </PaperProvider>,
     );
 
-    fireEvent.press(view.getByLabelText('Оформити замовлення'));
+    await fireEvent.press(view.getByLabelText('Оформити замовлення'));
     await waitFor(() => expect(view.getByLabelText('Вибрати клієнта')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Вибрати клієнта'));
+    await fireEvent.press(view.getByLabelText('Вибрати клієнта'));
     await waitFor(() => expect(view.getByLabelText('Обрати клієнта Клієнт')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Обрати клієнта Клієнт'));
-    fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
+    await fireEvent.press(view.getByLabelText('Обрати клієнта Клієнт'));
+    await fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
 
     await waitFor(() => expect(view.getByText('Мережа недоступна.')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
+    await fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
     await waitFor(() => expect(mockCreateOrder).toHaveBeenCalledTimes(2));
     expect(mockCreateOrder.mock.calls[1][0].idempotencyKey).toBe(
       mockCreateOrder.mock.calls[0][0].idempotencyKey,
@@ -115,15 +127,15 @@ describe('CartScreen checkout flow', () => {
   });
 
   it('does not submit until a customer is selected', async () => {
-    const view = render(
+    const view = await render(
       <PaperProvider theme={theme}>
         <CartScreen />
       </PaperProvider>,
     );
 
-    fireEvent.press(view.getByLabelText('Оформити замовлення'));
+    await fireEvent.press(view.getByLabelText('Оформити замовлення'));
     await waitFor(() => expect(view.getByLabelText('Підтвердити замовлення')).toBeTruthy());
-    fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
+    await fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
     await waitFor(() => expect(view.getByText('Оберіть клієнта.')).toBeTruthy());
     expect(mockCreateOrder).not.toHaveBeenCalled();
   });

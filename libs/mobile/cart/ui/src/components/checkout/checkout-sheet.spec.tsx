@@ -6,10 +6,10 @@ import { CheckoutSheet } from './checkout-sheet';
 const theme = { colors: { onSurface: '#111', surface: '#fff' }, dark: false };
 
 describe('cart checkout sheets', () => {
-  it('shows form errors and delegates form input and submit', () => {
+  it('shows form errors and delegates form input and submit', async () => {
     const onCommentChange = jest.fn();
     const onSubmit = jest.fn();
-    const view = render(
+    const view = await render(
       <PaperProvider theme={theme}>
         <CheckoutSheet
           comment="note"
@@ -26,8 +26,8 @@ describe('cart checkout sheets', () => {
       </PaperProvider>,
     );
 
-    fireEvent.changeText(view.getByLabelText('Коментар до замовлення'), 'new note');
-    fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
+    await fireEvent.changeText(view.getByLabelText('Коментар до замовлення'), 'new note');
+    await fireEvent.press(view.getByLabelText('Підтвердити замовлення'));
     expect(view.getByText('Оберіть клієнта.')).toBeTruthy();
     expect(view.getByText('Клієнт *')).toBeTruthy();
     expect(view.getByText('Коментар до замовлення')).toBeTruthy();

@@ -16,12 +16,12 @@ This document records the current workspace; it does not declare violations acce
 
 | Area            | Fact                                                                                |
 | --------------- | ----------------------------------------------------------------------------------- |
-| Package manager | npm 11.6.2, `package-lock.json`, Node 24.20.x                                       |
+| Package manager | npm 11.6.2, `package-lock.json`, Node >=24.18 <25 (24.20.0 recommended)             |
 | Workspace       | Nx 23.2, 67 projects including the root npm project (checked 2026-10-19)            |
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Site            | Next.js 16 App Router, React 19, shadcn/ui (Radix), Tailwind CSS v4, server `fetch` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
-| Mobile          | Expo 57, React Native 0.86, Expo Router, Paper, Redux Toolkit/RTK Query, Axios      |
+| Mobile          | Expo 58, React Native 0.88, Expo Router, Paper, Redux Toolkit/RTK Query, Axios      |
 | Contracts       | OpenAPI snapshot → `openapi-typescript` → `@shared/api-contracts`                   |
 
 ## Applications and library groups

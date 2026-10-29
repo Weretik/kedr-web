@@ -9,7 +9,7 @@
 | Storefront | Angular 21, SSR, RxJS           | PrimeNG, Tailwind, Angular Router, Transloco                  | Angular signals, NgRx Signals, HttpClient                     | Nx Angular, Vite/Vitest, production build |
 | Site       | Next.js 16 App Router, React 19 | shadcn/ui on Radix UI, Tailwind CSS v4, lucide, `next-themes` | Server Components, server-only `fetch` over the OpenAPI types | `@nx/next`, Vitest, `next build`          |
 | Admin      | React 19                        | MUI 9, React Router 7                                         | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod          | Nx React/Vite, Vitest, Playwright         |
-| Mobile     | Expo 57, React Native 0.86      | Expo Router, React Native Paper, native UI packages           | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod          | Nx Expo, Jest, Expo export                |
+| Mobile     | Expo 58, React Native 0.88      | Expo Router, React Native Paper, native UI packages           | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod          | Nx Expo, Jest, Expo export                |
 
 Check the client composition and actual Nx targets in the [frontend inventory](frontend-inventory.md). Mobile architecture implications are described in its [technology stack](mobile/platform/technology-stack.md) and [UI capabilities](mobile/platform/ui-capabilities.md).
 

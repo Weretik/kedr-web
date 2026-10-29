@@ -78,6 +78,13 @@ module.exports = [
   },
 
   {
+    files: ['**/catalog-search-sheet.tsx'],
+    rules: {
+      'jsx-a11y/no-autofocus': 'off', // Search opens with the input focused.
+    },
+  },
+
+  {
     files: ['apps/**/*.html', 'libs/**/*.html'],
     rules: {
       '@angular-eslint/template/alt-text': 'off',

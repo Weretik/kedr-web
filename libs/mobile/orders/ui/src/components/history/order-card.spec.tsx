@@ -15,15 +15,15 @@ const summary: OrderSummary = {
 };
 
 describe('OrderCard', () => {
-  it('shows every localized summary field and opens the order', () => {
+  it('shows every localized summary field and opens the order', async () => {
     const onPress = jest.fn();
-    const view = render(<OrderCard order={summary} onPress={onPress} />);
+    const view = await render(<OrderCard order={summary} onPress={onPress} />);
     expect(view.getByText('№ ORD-7')).toBeTruthy();
     expect(view.getByText('ТОВ Кедр')).toBeTruthy();
     expect(view.getByText('Прийнято в 1С')).toBeTruthy();
     expect(view.getByText('2 позиції')).toBeTruthy();
     expect(view.getByText('25 000,00 грн.')).toBeTruthy();
-    fireEvent.press(view.getByRole('button'));
+    await fireEvent.press(view.getByRole('button'));
     expect(onPress).toHaveBeenCalledWith(summary);
   });
 });

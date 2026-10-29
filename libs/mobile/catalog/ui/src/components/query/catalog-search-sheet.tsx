@@ -65,6 +65,7 @@ export function CatalogSearchSheet({
         <KeyboardAvoidingView
           behavior={Platform.select({ android: 'height', ios: 'padding' })}
           style={styles.keyboardArea}
+          testID="catalog-search-keyboard-area"
         >
           <View style={styles.header}>
             <IconButton accessibilityLabel="Закрити пошук" icon="arrow-left" onPress={onDismiss} />

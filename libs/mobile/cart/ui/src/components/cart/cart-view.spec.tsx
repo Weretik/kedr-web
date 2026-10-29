@@ -16,8 +16,8 @@ const line: CartLine = {
 };
 
 describe('CartView', () => {
-  it('keeps checkout visible but disabled while restoring', () => {
-    const view = renderCart(
+  it('keeps checkout visible but disabled while restoring', async () => {
+    const view = await renderCart(
       <CartView
         isReady={false}
         lines={[]}
@@ -34,8 +34,8 @@ describe('CartView', () => {
     expect(view.getByLabelText('Оформити замовлення').props.accessibilityState.disabled).toBe(true);
   });
 
-  it('shows the empty cart and disables checkout', () => {
-    const view = renderCart(
+  it('shows the empty cart and disables checkout', async () => {
+    const view = await renderCart(
       <CartView
         isReady
         lines={[]}
@@ -52,12 +52,12 @@ describe('CartView', () => {
     expect(view.getByLabelText('Оформити замовлення').props.accessibilityState.disabled).toBe(true);
   });
 
-  it('renders totals and delegates accessible line actions', () => {
+  it('renders totals and delegates accessible line actions', async () => {
     const onIncrement = jest.fn();
     const onDecrement = jest.fn();
     const onRemove = jest.fn();
     const onCheckout = jest.fn();
-    const view = renderCart(
+    const view = await renderCart(
       <CartView
         isReady
         lines={[line]}
@@ -71,10 +71,10 @@ describe('CartView', () => {
     );
 
     expect(view.getAllByText('250 грн.').length).toBeGreaterThanOrEqual(2);
-    fireEvent.press(view.getByLabelText('Зменшити кількість Товар'));
-    fireEvent.press(view.getByLabelText('Збільшити кількість Товар'));
-    fireEvent.press(view.getByLabelText('Видалити Товар'));
-    fireEvent.press(view.getByLabelText('Оформити замовлення'));
+    await fireEvent.press(view.getByLabelText('Зменшити кількість Товар'));
+    await fireEvent.press(view.getByLabelText('Збільшити кількість Товар'));
+    await fireEvent.press(view.getByLabelText('Видалити Товар'));
+    await fireEvent.press(view.getByLabelText('Оформити замовлення'));
 
     expect(onDecrement).toHaveBeenCalledWith('product-1');
     expect(onIncrement).toHaveBeenCalledWith('product-1');
@@ -82,8 +82,8 @@ describe('CartView', () => {
     expect(onCheckout).toHaveBeenCalledTimes(1);
   });
 
-  it('contains a product image inside a square white frame', () => {
-    const view = renderCart(
+  it('contains a product image inside a square white frame', async () => {
+    const view = await renderCart(
       <CartView
         isReady
         lines={[{ ...line, imageUrl: 'https://example.com/product.png' }]}
@@ -104,9 +104,9 @@ describe('CartView', () => {
     expect(view.getByLabelText('Зображення Товар').props.contentFit).toBe('contain');
   });
 
-  it('disables increment at the last known stock boundary', () => {
+  it('disables increment at the last known stock boundary', async () => {
     const onIncrement = jest.fn();
-    const view = renderCart(
+    const view = await renderCart(
       <CartView
         isReady
         lines={[{ ...line, quantity: 3 }]}
@@ -126,8 +126,8 @@ describe('CartView', () => {
   });
 });
 
-function renderCart(element: React.ReactElement) {
-  return render(<PaperProvider theme={testTheme}>{element}</PaperProvider>);
+async function renderCart(element: React.ReactElement) {
+  return await render(<PaperProvider theme={testTheme}>{element}</PaperProvider>);
 }
 
 const testTheme = {

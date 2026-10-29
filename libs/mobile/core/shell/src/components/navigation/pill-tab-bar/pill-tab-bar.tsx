@@ -14,18 +14,24 @@ interface TabRoute {
 export interface PillTabBarProps {
   /** Count badges by route name, e.g. `{ cart: 3 }`. */
   badges?: Readonly<Record<string, number>>;
-  navigation: {
+  emitter: {
     emit: (event: { canPreventDefault: true; target: string; type: 'tabPress' }) => {
       defaultPrevented: boolean;
     };
-    navigate: (name: string) => void;
   };
+  navigateToTab: (routeKey: string) => void;
   state: { index: number; routes: readonly TabRoute[] };
   tabs: Readonly<Record<string, PillTab>>;
 }
 
 /** Floating dark pill navigation; the active tab expands into a green pill with its label. */
-export function PillTabBar({ badges = {}, navigation, state, tabs }: Readonly<PillTabBarProps>) {
+export function PillTabBar({
+  badges = {},
+  emitter,
+  navigateToTab,
+  state,
+  tabs,
+}: Readonly<PillTabBarProps>) {
   const { kedr } = useKedrTheme();
   const insets = useSafeAreaInsets();
 
@@ -55,13 +61,12 @@ export function PillTabBar({ badges = {}, navigation, state, tabs }: Readonly<Pi
               focused={state.index === index}
               key={route.key}
               onPress={() => {
-                const event = navigation.emit({
+                const event = emitter.emit({
                   canPreventDefault: true,
                   target: route.key,
                   type: 'tabPress',
                 });
-                if (!event.defaultPrevented && state.index !== index)
-                  navigation.navigate(route.name);
+                if (!event.defaultPrevented && state.index !== index) navigateToTab(route.key);
               }}
               tab={tab}
             />

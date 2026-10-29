@@ -2,7 +2,7 @@
 
 ## Current test stack
 
-Mobile uses Expo SDK 57, React Native 0.86, Expo Router, Redux Toolkit/RTK Query, and Axios. Tests use Jest 29, `jest-expo` 57, and React Native Testing Library 13. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
+Mobile uses Expo SDK 58, React Native 0.88, Expo Router, Redux Toolkit/RTK Query, and Axios. Tests use Jest 30, `jest-expo` 58, and React Native Testing Library 14. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
 
 | Level               | Target                                       | What to check                                                    |
 | ------------------- | -------------------------------------------- | ---------------------------------------------------------------- |

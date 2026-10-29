@@ -8,14 +8,19 @@ const allowlist = JSON.parse(
 );
 const allowed = new Set(allowlist.map((entry) => entry.advisory));
 
+const npmCli = process.env.npm_execpath;
+const command = npmCli ? process.execPath : 'npm';
+const args = npmCli ? [npmCli, 'audit', '--json'] : ['audit', '--json'];
+
 let output;
 try {
-  output = execFileSync('npm', ['audit', '--json'], {
+  output = execFileSync(command, args, {
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
   });
 } catch (error) {
   // npm audit exits non-zero when it finds anything; the JSON report is still on stdout.
+  if (!error.stdout) throw error;
   output = error.stdout;
 }
 const report = JSON.parse(output);

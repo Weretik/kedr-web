@@ -33,7 +33,7 @@ describe('ProfileRoute', () => {
   beforeEach(() => mockPush.mockClear());
 
   it('composes the missing-photo feature and opens existing product details', async () => {
-    const { getByLabelText, getByRole } = render(
+    const { getByLabelText, getByRole } = await render(
       <AppProviders>
         <ProfileRoute />
       </AppProviders>,
@@ -42,7 +42,7 @@ describe('ProfileRoute', () => {
     await waitFor(() =>
       expect(getByRole('header', { name: 'Товари без фотографій' })).toBeTruthy(),
     );
-    fireEvent.press(getByLabelText('Товар Кабель'));
+    await fireEvent.press(getByLabelText('Товар Кабель'));
     expect(mockPush).toHaveBeenCalledWith({
       params: { productSlug: 'kabel-12' },
       pathname: '/product/[productSlug]',

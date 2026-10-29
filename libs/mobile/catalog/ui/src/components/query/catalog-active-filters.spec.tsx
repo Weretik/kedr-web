@@ -4,8 +4,8 @@ import { PaperProvider } from 'react-native-paper';
 import { CatalogActiveFilters } from './catalog-active-filters';
 
 describe('CatalogActiveFilters', () => {
-  it('renders a removable chip for each applied query value', () => {
-    const { getByLabelText } = render(
+  it('renders a removable chip for each applied query value', async () => {
+    const { getByLabelText } = await render(
       <PaperProvider theme={testTheme}>
         <CatalogActiveFilters
           filters={{ isSale: true }}
@@ -24,10 +24,10 @@ describe('CatalogActiveFilters', () => {
     expect(getByLabelText('Прибрати: Акції')).toBeTruthy();
   });
 
-  it('shows the applied search as a removable chip without removing other query values', () => {
+  it('shows the applied search as a removable chip without removing other query values', async () => {
     const onRemoveSearch = jest.fn();
     const onRemoveFilter = jest.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText } = await render(
       <PaperProvider theme={testTheme}>
         <CatalogActiveFilters
           categoryLabel={undefined}
@@ -44,15 +44,15 @@ describe('CatalogActiveFilters', () => {
     );
 
     expect(getByLabelText('Активні фільтри')).toBeTruthy();
-    fireEvent.press(getByLabelText('Прибрати: Пошук: Мідний кабель для монтажу'));
+    await fireEvent.press(getByLabelText('Прибрати: Пошук: Мідний кабель для монтажу'));
 
     expect(onRemoveSearch).toHaveBeenCalledTimes(1);
     expect(onRemoveFilter).not.toHaveBeenCalled();
   });
 
-  it('renders a clickable category breadcrumb path above filter chips', () => {
+  it('renders a clickable category breadcrumb path above filter chips', async () => {
     const onSelectCategory = jest.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText } = await render(
       <PaperProvider theme={testTheme}>
         <CatalogActiveFilters
           category={{
@@ -75,8 +75,8 @@ describe('CatalogActiveFilters', () => {
       </PaperProvider>,
     );
 
-    fireEvent.press(getByLabelText('Вибрати категорію Всі'));
-    fireEvent.press(getByLabelText('Вибрати категорію Зимовий спецодяг'));
+    await fireEvent.press(getByLabelText('Вибрати категорію Всі'));
+    await fireEvent.press(getByLabelText('Вибрати категорію Зимовий спецодяг'));
     expect(onSelectCategory).toHaveBeenNthCalledWith(1, undefined);
     expect(onSelectCategory).toHaveBeenNthCalledWith(2, 2);
   });
