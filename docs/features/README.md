@@ -33,6 +33,14 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Order history](mobile/sales/orders.md)                     | `(tabs)/orders.tsx`, `orders/[orderId].tsx` |
 | [Customer selection](mobile/sales/customers.md)             | Cart and order history                      |
 
+## Site Next.js
+
+The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site/src/app/[locale]/layout.tsx). Features move here from the Angular storefront by the [migration plan](../specs/site/migration/README.md). See [Site architecture](../architecture/site/README.md).
+
+| Feature                     | Route or entry                                  | Status                                      |
+| --------------------------- | ----------------------------------------------- | ------------------------------------------- |
+| [Site shell](site/shell.md) | all `/uk` and `/ru` routes, `robots`, `sitemap` | Header, footer, themes, languages, SEO base |
+
 ## Storefront Angular
 
 Routes come from [app.routes.ts](../../apps/storefront/src/app/app.routes.ts) and have the `/uk` or `/ru` prefix. See [Storefront architecture](../architecture/storefront/README.md).

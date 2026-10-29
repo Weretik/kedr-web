@@ -4,17 +4,19 @@
 
 ## Stack composition
 
-| Client     | Framework and runtime      | UI and navigation                                   | State, API, and forms                                | Build and verification                    |
-| ---------- | -------------------------- | --------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------- |
-| Storefront | Angular 21, SSR, RxJS      | PrimeNG, Tailwind, Angular Router, Transloco        | Angular signals, NgRx Signals, HttpClient            | Nx Angular, Vite/Vitest, production build |
-| Admin      | React 19                   | MUI 9, React Router 7                               | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod | Nx React/Vite, Vitest, Playwright         |
-| Mobile     | Expo 57, React Native 0.86 | Expo Router, React Native Paper, native UI packages | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod | Nx Expo, Jest, Expo export                |
+| Client     | Framework and runtime           | UI and navigation                                             | State, API, and forms                                         | Build and verification                    |
+| ---------- | ------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------- |
+| Storefront | Angular 21, SSR, RxJS           | PrimeNG, Tailwind, Angular Router, Transloco                  | Angular signals, NgRx Signals, HttpClient                     | Nx Angular, Vite/Vitest, production build |
+| Site       | Next.js 16 App Router, React 19 | shadcn/ui on Radix UI, Tailwind CSS v4, lucide, `next-themes` | Server Components, server-only `fetch` over the OpenAPI types | `@nx/next`, Vitest, `next build`          |
+| Admin      | React 19                        | MUI 9, React Router 7                                         | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod          | Nx React/Vite, Vitest, Playwright         |
+| Mobile     | Expo 57, React Native 0.86      | Expo Router, React Native Paper, native UI packages           | Redux Toolkit/RTK Query, Axios, React Hook Form, Zod          | Nx Expo, Jest, Expo export                |
 
 Check the client composition and actual Nx targets in the [frontend inventory](frontend-inventory.md). Mobile architecture implications are described in its [technology stack](mobile/platform/technology-stack.md) and [UI capabilities](mobile/platform/ui-capabilities.md).
 
 ## Architecture decisions by group
 
 - **Storefront:** Angular SSR and hydration form the server and browser runtimes; PrimeNG and Tailwind define the UI layer. Verify changes with the Storefront build and targeted tests; boundaries between `apps/storefront` and `libs/storefront` are described in the [Storefront architecture](storefront/README.md).
+- **Site:** the new public storefront. Next.js renders pages on the server (static and ISR) with metadata, sitemaps, and JSON-LD; `radix-ui`, `class-variance-authority`, `clsx`, and `tailwind-merge` back the shadcn/ui primitives in `libs/site/shared/ui`; `server-only` keeps API calls off the client; `next-themes` switches light and dark. See the [site architecture](site/README.md) and [ADR-0001](site/adr/0001-nextjs-public-site.md).
 - **Admin:** React and MUI provide the browser interface, while React Router handles navigation. RTK Query uses the shared API client and Axios for server state; local forms use React Hook Form and Zod. The auth transport exception is described in the [Admin ADR](admin/README.md).
 - **Mobile:** The Expo SDK, Expo Router, and React Native define the native runtime and routes; Paper and additional native UI packages are used in specific scenarios. Native packages require SDK compatibility checks and a development build; see [Mobile architecture](mobile/README.md) for details.
 - **Contracts:** `@redocly/cli` validates the OpenAPI snapshot, and `openapi-typescript` generates TS types; the source and workflow are in the [API contract registry](../contracts/README.md).

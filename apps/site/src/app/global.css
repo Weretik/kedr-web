@@ -1,0 +1,98 @@
+@import 'tailwindcss';
+
+/* Site libraries live outside the app folder; Tailwind must scan them for classes. */
+@source '../../../../libs/site';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens from docs/standards/site/design-system.md (shadcn/ui names). */
+:root {
+  --background: #ffffff;
+  --foreground: #0f110f;
+  --muted: #f4f5f2;
+  --muted-foreground: #5c6459;
+  --card: #ffffff;
+  --border: #e3e6df;
+  --input: #d9ddd5;
+  --primary: #0f110f;
+  --primary-foreground: #fafbf8;
+  --brand: #3fa435;
+  --brand-foreground: #0f110f;
+  --brand-text: #2a7323;
+  --brand-soft: #eaf5e7;
+  --warning: #94600a;
+  --warning-soft: #fbf1de;
+  --ring: rgb(63 164 53 / 0.45);
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #0c0d0c;
+  --foreground: #edefea;
+  --muted: #161815;
+  --muted-foreground: #9aa296;
+  --card: #111311;
+  --border: #242823;
+  --input: #2e332c;
+  --primary: #edefea;
+  --primary-foreground: #0f110f;
+  --brand-text: #7dd06f;
+  --brand-soft: #15241a;
+  --warning: #e8ae45;
+  --warning-soft: #2b210f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-text: var(--brand-text);
+  --color-brand-soft: var(--brand-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-onest), 'Segoe UI', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

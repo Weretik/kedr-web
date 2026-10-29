@@ -50,6 +50,8 @@ module.exports = [
       'libs/admin/**/*.tsx',
       'apps/mobile/**/*.tsx',
       'libs/mobile/**/*.tsx',
+      'apps/site/**/*.tsx',
+      'libs/site/**/*.tsx',
     ],
     ...react.configs.flat.recommended,
     languageOptions: {
@@ -155,6 +157,11 @@ module.exports = [
               sourceTag: 'scope:storefront',
               onlyDependOnLibsWithTags: ['scope:storefront', 'scope:shared'],
             },
+            // site (public Next.js storefront) can only depend on shared and site
+            {
+              sourceTag: 'scope:site',
+              onlyDependOnLibsWithTags: ['scope:site', 'scope:shared'],
+            },
             // admin can only depend on shared and admin
             {
               sourceTag: 'scope:admin',
@@ -183,6 +190,7 @@ module.exports = [
                 'type:ui',
                 'type:util',
                 'scope:admin-shared',
+                'scope:site-shared',
                 'scope:mobile-shared',
                 'scope:shared',
               ],
@@ -202,6 +210,12 @@ module.exports = [
             {
               allSourceTags: ['scope:mobile', 'type:core'],
               onlyDependOnLibsWithTags: ['type:core', 'scope:mobile-shared', 'scope:shared'],
+            },
+
+            // Site core (SEO builders) uses only site utilities (config, i18n) and shared libraries.
+            {
+              allSourceTags: ['scope:site', 'type:core'],
+              onlyDependOnLibsWithTags: ['type:util', 'scope:shared'],
             },
 
             // Models are framework-neutral and may only use models or shared utilities/contracts.
@@ -296,6 +310,7 @@ module.exports = [
                 'type:contracts',
                 'scope:shared',
                 'scope:admin-shared',
+                'scope:site-shared',
                 'scope:mobile-shared',
               ],
             },
@@ -312,6 +327,7 @@ module.exports = [
                 'type:contracts',
                 'scope:shared',
                 'scope:admin-shared',
+                'scope:site-shared',
               ],
             },
 

@@ -2,6 +2,7 @@
 
 **Captured:** 2026-10-01; test targets rechecked 2026-10-15
 **Admin update:** 2026-10-19; the new `clients` domain, product/customer routes, and 67 projects were confirmed by `npm run architecture:boundaries`.
+**Site update:** 2026-10-29; the Next.js app `site` and six `libs/site/*` libraries were added, 85 projects confirmed by `npm run architecture:boundaries`.
 **Auth update:** 2026-10-28; the `users` domain (`libs/admin/users/*`) and `libs/mobile/core/auth` were added, 78 projects confirmed by `npm run architecture:boundaries`. Other sections retain the date of their previous audit.
 **Sources:** `package.json`, lockfile, `nx.json`, `eslint.config.cjs`,
 `tsconfig.base.json`, all `project.json` files, `npx nx show projects --json`, and
@@ -18,6 +19,7 @@ This document records the current workspace; it does not declare violations acce
 | Package manager | npm 11.6.2, `package-lock.json`, Node 24.20.x                                       |
 | Workspace       | Nx 23.2, 67 projects including the root npm project (checked 2026-10-19)            |
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
+| Site            | Next.js 16 App Router, React 19, shadcn/ui (Radix), Tailwind CSS v4, server `fetch` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
 | Mobile          | Expo 57, React Native 0.86, Expo Router, Paper, Redux Toolkit/RTK Query, Axios      |
 | Contracts       | OpenAPI snapshot → `openapi-typescript` → `@shared/api-contracts`                   |
@@ -27,6 +29,7 @@ This document records the current workspace; it does not declare violations acce
 | Application  | Composition root  | Main libraries                                                                                 |
 | ------------ | ----------------- | ---------------------------------------------------------------------------------------------- |
 | `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*` |
+| `site`       | `apps/site`       | `libs/site/{core/{config,i18n,seo,shell},shared/{ui,api-client}}`                              |
 | `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,clients/*,users/*,shared/*}`                  |
 | `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                          |
 
@@ -86,6 +89,7 @@ No direct API calls were found in presentation `ui`. Generated DTO imports remai
 | Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                    | only the app and shared API client have executable specs; generated empty suites are not characterization |
 | Mobile         | app `typecheck`, `npm run test:mobile` for 21 Nx projects (app, shell, api-client, and domain libraries), `typecheck:tests:mobile`, export | no mobile E2E target                                                                                      |
 | Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` for `storefront-data-access`, `typecheck:tests:storefront`     | focused specs cover only data-access, not the whole app                                                   |
+| Site           | `site:typecheck`, `site:lint`, `site:build`, `npm run test:site` for six libraries, `typecheck:tests:site`                                 | the app itself has no unit tests; rendered HTML is checked with `curl` against `next start`               |
 | Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                           | contract generation changes generated source and runs only in API scope                                   |
 
 Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` passed for 62 projects; Nx marked `admin-products-data-access:lint` flaky. `npm run typecheck:tests` passed for Web, Mobile, and Admin E2E configs.

@@ -7,11 +7,12 @@ const scopes = {
   web: ['apps/admin', 'libs/admin'],
   storefront: ['apps/storefront', 'libs/storefront'],
   mobile: ['apps/mobile', 'libs/mobile'],
+  site: ['apps/site', 'libs/site'],
 };
 const selectedScope = process.argv[2];
 
 if (!(selectedScope in scopes)) {
-  console.error('Usage: node tools/testing/typecheck-tests.mjs <web|storefront|mobile>');
+  console.error('Usage: node tools/testing/typecheck-tests.mjs <web|storefront|mobile|site>');
   process.exit(2);
 }
 

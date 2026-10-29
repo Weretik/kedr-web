@@ -90,7 +90,13 @@
       "@mobile/orders/feature": ["./libs/mobile/orders/feature/src/index.ts"],
       "@mobile/customers/model": ["./libs/mobile/customers/model/src/index.ts"],
       "@mobile/customers/data-access": ["./libs/mobile/customers/data-access/src/index.ts"],
-      "@mobile/customers/ui": ["./libs/mobile/customers/ui/src/index.ts"]
+      "@mobile/customers/ui": ["./libs/mobile/customers/ui/src/index.ts"],
+      "@site/core/config": ["./libs/site/core/config/src/index.ts"],
+      "@site/core/i18n": ["./libs/site/core/i18n/src/index.ts"],
+      "@site/core/seo": ["./libs/site/core/seo/src/index.ts"],
+      "@site/core/shell": ["./libs/site/core/shell/src/index.ts"],
+      "@site/shared/ui": ["./libs/site/shared/ui/src/index.ts"],
+      "@site/shared/api-client": ["./libs/site/shared/api-client/src/index.ts"]
     }
   }
 }

@@ -11,13 +11,15 @@ This directory contains versioned engineering documentation for Kedr Web fronten
 - [Specifications](specs/README.md) — feature specification structure and SDD templates.
 - [Implemented feature catalog](features/README.md) — index by application and brief architecture maps for each feature.
 - [Feature ideas](ideas/feature-ideas.md) — audit findings and candidate features, not yet accepted.
+- [Next.js storefront idea](ideas/storefront-nextjs/README.md) — planned rebuild of the public storefront: design, mockup, stack, and SEO plan.
 - [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md) — a proposed plan to address confirmed systemic violations.
 
 ## Applications
 
 - [Admin](architecture/admin/README.md) — administration application architecture.
 - [Mobile](architecture/mobile/README.md) — React Native and Expo mobile application architecture.
-- [Storefront](architecture/storefront/README.md) — storefront application architecture.
+- [Storefront](architecture/storefront/README.md) — current Angular storefront application architecture.
+- [Site](architecture/site/README.md) — new public Next.js storefront; [migration plan](specs/site/migration/README.md).
 - [API](architecture/api/README.md) — API contracts and integration agreements.
 - [Frontend API contracts](contracts/README.md) — register of operations and frontend projections of backend OpenAPI contracts.
 

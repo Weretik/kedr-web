@@ -1,0 +1,12 @@
+{
+  "name": "site-core-i18n",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/site/core/i18n/src",
+  "projectType": "library",
+  "tags": ["scope:site", "scope:site-shared", "type:util"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
