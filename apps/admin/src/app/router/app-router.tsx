@@ -4,6 +4,7 @@ import {
   LoginPage,
   loginPath,
   logout,
+  refreshSession,
   RequireAdminSession,
   RequireRole,
   useAdminSession,
@@ -18,7 +19,7 @@ import {
   useCurrentOrderSet,
 } from '@admin/orders/feature';
 import { createProductsRoutes } from '@admin/products/feature';
-import { createUsersRoutes } from '@admin/users/feature';
+import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { CustomerPicker } from '../customer-picker';
@@ -34,6 +35,7 @@ function AdminShellRoute({ user }: { user: SessionUser }) {
         clearCurrentOrder();
         await logout();
       }}
+      profileHref={profilePath}
       user={toShellUser(user)}
     >
       <AdminLayout currentOrderPositionCount={lines.length} />
@@ -42,6 +44,7 @@ function AdminShellRoute({ user }: { user: SessionUser }) {
 }
 
 const usersRoutes = createUsersRoutes({ useCurrentUserId: useSignedInUserId });
+const profileRoutes = createProfileRoutes({ onProfileChanged: refreshSession });
 
 function useSignedInUserId(): string | null {
   const session = useAdminSession();
@@ -67,6 +70,7 @@ export function AppRouter() {
             <CustomerOrdersPanel counterpartyId={counterpartyId} returnTo={returnTo} />
           ),
         }),
+        ...profileRoutes,
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
       ],
     },

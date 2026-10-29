@@ -1,8 +1,13 @@
 import { baseApi } from '@admin/shared/api-client';
 
 import { mapStaffAccount, mapStaffAccounts } from '../mappers/staff-account.mapper';
+import { mapAvatarUrl, toAvatarForm } from '../mappers/staff-profile.mapper';
 
-import type { CreateStaffAccountBody } from '../contracts/staff-account.contract';
+import type {
+  ChangeStaffEmailBody,
+  CreateStaffAccountBody,
+} from '../contracts/staff-account.contract';
+import type { ChangeNameBody } from '../contracts/staff-profile.contract';
 import type { CreateStaffAccountInput, StaffAccount, StaffRole } from '@admin/users/model';
 
 const root = '/api/admin/users';
@@ -53,13 +58,46 @@ export const adminUsersApi = baseApi.injectEndpoints({
         data: { password },
       }),
     }),
+    changeStaffName: build.mutation<void, { userId: string; fullName: string }>({
+      query: ({ userId, fullName }) => ({
+        url: userUrl(userId, 'name'),
+        method: 'PUT',
+        data: { fullName: fullName.trim() } satisfies ChangeNameBody,
+      }),
+      invalidatesTags: ['StaffAccounts'],
+    }),
+    changeStaffEmail: build.mutation<void, { userId: string; email: string }>({
+      query: ({ userId, email }) => ({
+        url: userUrl(userId, 'email'),
+        method: 'PUT',
+        data: { email: email.trim() } satisfies ChangeStaffEmailBody,
+      }),
+      invalidatesTags: ['StaffAccounts'],
+    }),
+    uploadStaffAvatar: build.mutation<string, { userId: string; file: Blob }>({
+      query: ({ userId, file }) => ({
+        url: userUrl(userId, 'avatar'),
+        method: 'PUT',
+        data: toAvatarForm(file),
+      }),
+      transformResponse: mapAvatarUrl,
+      invalidatesTags: ['StaffAccounts'],
+    }),
+    removeStaffAvatar: build.mutation<void, { userId: string }>({
+      query: ({ userId }) => ({ url: userUrl(userId, 'avatar'), method: 'DELETE' }),
+      invalidatesTags: ['StaffAccounts'],
+    }),
   }),
 });
 
 export const {
+  useChangeStaffEmailMutation,
+  useChangeStaffNameMutation,
   useChangeStaffRoleMutation,
   useCreateStaffAccountMutation,
   useGetStaffAccountsQuery,
+  useRemoveStaffAvatarMutation,
   useSetStaffBlockedMutation,
   useSetStaffPasswordMutation,
+  useUploadStaffAvatarMutation,
 } = adminUsersApi;

@@ -5,6 +5,7 @@ export interface SessionUser {
   email: string;
   fullName: string;
   roles: readonly SessionRole[];
+  avatarUrl: string | null;
 }
 
 /** Admin works only for staff; a customer account signed in here sees "no access". */

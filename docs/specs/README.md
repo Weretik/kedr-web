@@ -10,6 +10,7 @@
 - [Admin product list](admin/products/product-list-data-grid.md)
 - [Product browsing and “Without photo” mode](admin/products/001-read-only-product-browsing/README.md)
 - [Admin customer browsing](admin/clients/001-read-only-customers/README.md)
+- [Staff profile, avatars and header menu](admin/users/001-staff-profile-and-avatars/README.md)
 - [Admin orders and drafts](admin/orders/001-order-workspace/README.md)
 - [Admin order responsibility split](admin/orders/002-order-structure-remediation/README.md)
 - [Orders and drafts in customer details](admin/clients/002-customer-orders/README.md)

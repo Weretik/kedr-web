@@ -7,6 +7,7 @@ export const mapStaffAccount = (response: StaffAccountResponse): StaffAccount =>
   fullName: response.fullName,
   role: response.role,
   isBlocked: response.isBlocked,
+  avatarUrl: response.avatarUrl ?? null,
 });
 
 export const mapStaffAccounts = (response: StaffAccountResponse[]): StaffAccount[] =>

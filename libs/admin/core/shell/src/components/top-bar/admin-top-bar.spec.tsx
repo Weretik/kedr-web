@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { AdminTopBar } from './admin-top-bar';
 
 vi.mock('./notifications-menu', () => ({ NotificationsMenu: () => null }));
-vi.mock('./profile-menu', () => ({ ProfileMenu: () => null }));
+vi.mock('./profile/profile-menu', () => ({ ProfileMenu: () => null }));
 vi.mock('../theme/color-scheme-menu', () => ({ ColorSchemeMenu: () => null }));
 
 describe('AdminTopBar order checkout link', () => {

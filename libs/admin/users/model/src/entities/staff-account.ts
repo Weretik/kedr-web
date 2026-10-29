@@ -6,6 +6,7 @@ export interface StaffAccount {
   fullName: string;
   role: StaffRole;
   isBlocked: boolean;
+  avatarUrl: string | null;
 }
 
 export interface CreateStaffAccountInput {

@@ -21,6 +21,12 @@ export const logout = async (): Promise<void> => {
   }
 };
 
+/** Re-reads the signed-in user after they change their own profile, so the shell shows it at once. */
+export const refreshSession = async (): Promise<void> => {
+  const user = await requestCurrentUser();
+  setSessionState(user ? { status: 'authenticated', user } : { status: 'anonymous' });
+};
+
 /** Restores the session from the cookie; any API 401 later sends the user back to the login page. */
 export const initializeAdminAuth = async (): Promise<void> => {
   configureApiClient({

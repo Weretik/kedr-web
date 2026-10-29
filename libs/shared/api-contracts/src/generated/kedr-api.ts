@@ -620,9 +620,168 @@ export interface paths {
         get?: never;
         /**
          * Set a new password for a staff account
-         * @description Ends the account's existing sessions.
+         * @description Managers only; ends the account's existing sessions. An administrator account (including the caller's) returns 403 — administrators change their own password in the profile.
          */
         put: operations["setStaffPassword"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a manager's name
+         * @description Managers only; an administrator target returns 403.
+         */
+        put: operations["changeStaffName"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a manager's sign-in email
+         * @description Managers only. Ends the manager's sessions (mobile at once, browser within 5 minutes).
+         */
+        put: operations["changeStaffEmail"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/avatar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload a manager's avatar
+         * @description Managers only. Same limits as `uploadMyAvatar`.
+         */
+        put: operations["uploadStaffAvatar"];
+        post?: never;
+        /** Remove a manager's avatar */
+        delete: operations["removeStaffAvatar"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The signed-in staff account's profile
+         * @description Policy `RequireManagerRole` (Manager or Admin). Customers get 403.
+         */
+        get: operations["getMyProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change the own name */
+        put: operations["changeMyName"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/avatar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload the own avatar
+         * @description JPEG, PNG or WebP, at most 2 MB, at least 128×128 px, at most 24 megapixels. The server stores the centre square as a 256×256 WebP under a new name and deletes the previous file.
+         */
+        put: operations["uploadMyAvatar"];
+        post?: never;
+        /** Remove the own avatar */
+        delete: operations["removeMyAvatar"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change the own sign-in email (administrators)
+         * @description Policy `RequireAdminRole`. Needs the current password; a wrong one counts towards lockout. The calling browser session stays signed in; every other session ends.
+         */
+        put: operations["changeMyEmail"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change the own password (administrators)
+         * @description Policy `RequireAdminRole`. Needs the current password. The calling browser session stays signed in; every other session ends.
+         */
+        put: operations["changeMyPassword"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1141,6 +1300,11 @@ export interface components {
             email: string;
             fullName: string;
             roles: ("Admin" | "Manager" | "User")[];
+            /**
+             * Format: uri
+             * @description Public 256×256 WebP avatar on the CDN; null when the user has none
+             */
+            avatarUrl?: string | null;
         };
         MobileTokenResponse: {
             /** @example Bearer */
@@ -1161,6 +1325,11 @@ export interface components {
             fullName: string;
             role: components["schemas"]["StaffRole"];
             isBlocked: boolean;
+            /**
+             * Format: uri
+             * @description Public avatar URL; null when the account has none
+             */
+            avatarUrl?: string | null;
         };
         CreateStaffAccountRequest: {
             /** Format: email */
@@ -1169,6 +1338,46 @@ export interface components {
             role: components["schemas"]["StaffRole"];
             /** Format: password */
             password: string;
+        };
+        ChangeNameRequest: {
+            fullName: string;
+        };
+        AvatarUploadForm: {
+            /**
+             * Format: binary
+             * @description image/jpeg, image/png or image/webp, at most 2 MB
+             */
+            file: string;
+        };
+        AvatarResponse: {
+            /** Format: uri */
+            avatarUrl: string;
+        };
+        ProfileResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            fullName: string;
+            /** @enum {string} */
+            role: "Admin" | "Manager";
+            /**
+             * Format: uri
+             * @description Public 256×256 WebP; null when there is none
+             */
+            avatarUrl?: string | null;
+        };
+        ChangeOwnEmailRequest: {
+            /** Format: email */
+            email: string;
+            /** Format: password */
+            currentPassword: string;
+        };
+        ChangeOwnPasswordRequest: {
+            /** Format: password */
+            currentPassword: string;
+            /** Format: password */
+            newPassword: string;
         };
         CatalogProductsRequest: {
             categoryId?: number | null;
@@ -3025,7 +3234,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not an administrator */
+            /** @description Not an administrator, or the target is an administrator */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -3034,6 +3243,517 @@ export interface operations {
             };
             /** @description No staff account with this ID */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeStaffName: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeNameRequest"];
+            };
+        };
+        responses: {
+            /** @description Name changed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Empty or longer than 100 characters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator, or the target is an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeStaffEmail: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    email: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Email changed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid email */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator, or the target is an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Email already used */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    uploadStaffAvatar: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["AvatarUploadForm"];
+            };
+        };
+        responses: {
+            /** @description Stored */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AvatarResponse"];
+                };
+            };
+            /** @description Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator, or the target is an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request body over the upload limit */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Avatar storage is not configured */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    removeStaffAvatar: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed (also when there was none) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator, or the target is an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No staff account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMyProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Profile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResponse"];
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a staff account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeMyName: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeNameRequest"];
+            };
+        };
+        responses: {
+            /** @description Name changed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Empty or longer than 100 characters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a staff account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    uploadMyAvatar: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["AvatarUploadForm"];
+            };
+        };
+        responses: {
+            /** @description Stored */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AvatarResponse"];
+                };
+            };
+            /** @description Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a staff account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request body over the upload limit */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Avatar storage is not configured */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    removeMyAvatar: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed (also when there was none) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a staff account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeMyEmail: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeOwnEmailRequest"];
+            };
+        };
+        responses: {
+            /** @description Email changed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid email or wrong current password */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Email already used */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeMyPassword: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeOwnPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description Password changed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Wrong current password or new password too short */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
