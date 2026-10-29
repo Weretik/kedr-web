@@ -11,6 +11,7 @@ This directory contains versioned engineering documentation for Kedr Web fronten
 - [Specifications](specs/README.md) — feature specification structure and SDD templates.
 - [Implemented feature catalog](features/README.md) — index by application and brief architecture maps for each feature.
 - [Feature ideas](ideas/feature-ideas.md) — audit findings and candidate features, not yet accepted.
+- [Next.js storefront idea](ideas/storefront-nextjs/README.md) — planned rebuild of the public storefront: design, mockup, stack, and SEO plan.
 - [Workspace architecture remediation](specs/architecture/001-workspace-layers-and-boundaries/README.md) — a proposed plan to address confirmed systemic violations.
 
 ## Applications
