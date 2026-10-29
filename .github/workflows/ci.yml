@@ -43,7 +43,7 @@ jobs:
           echo "CI_SCOPE=${{ github.event_name == 'push' && 'all' || 'affected' }}" >> "$GITHUB_ENV"
           echo "NX_MODE=${{ github.event_name == 'push' && 'run-many' || 'affected' }}" >> "$GITHUB_ENV"
           export CI_SCOPE=${{ github.event_name == 'push' && 'all' || 'affected' }}
-          for project in admin-e2e admin storefront; do
+          for project in admin-e2e admin storefront site; do
             echo "$project=$(node tools/ci/run-affected.mjs --check $project)" >> "$GITHUB_OUTPUT"
           done
           npx nx show projects --affected | sed 's/^/affected: /' || true
@@ -58,6 +58,7 @@ jobs:
       - run: npm run typecheck:tests
       - run: node tools/ci/run-affected.mjs test:web
       - run: node tools/ci/run-affected.mjs test:mobile
+      - run: node tools/ci/run-affected.mjs test:site
 
       # The Playwright browser is cached by version; system libraries still come from apt.
       - name: Read Playwright version
@@ -81,3 +82,5 @@ jobs:
         run: npx nx build admin --configuration=production
       - if: steps.scope.outputs.storefront == 'true'
         run: npx nx build storefront --configuration=production
+      - if: steps.scope.outputs.site == 'true'
+        run: npx nx build site
