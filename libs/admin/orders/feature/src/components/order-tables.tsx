@@ -2,7 +2,7 @@ import { useGetWorkspaceDraftsQuery, useGetWorkspaceOrdersQuery } from '@admin/o
 import { OrderListGrid } from '@admin/orders/ui';
 import { AdminPageHeader } from '@admin/shared/ui';
 import AddIcon from '@mui/icons-material/Add';
-import { Alert, Card, IconButton, Stack, Tab, Tabs, Tooltip } from '@mui/material';
+import { Alert, Button, Card, Stack, Tab, Tabs } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -72,19 +72,9 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
       {!panelOnly && (
         <AdminPageHeader
           actions={
-            <Tooltip title="Створити замовлення">
-              <IconButton
-                aria-label="Створити замовлення"
-                onClick={() => navigate('/orders/new')}
-                sx={{
-                  bgcolor: 'primary.main',
-                  color: 'common.white',
-                  '&:hover': { bgcolor: 'primary.dark' },
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
+            <Button onClick={() => navigate('/orders/new')} startIcon={<AddIcon />} variant="contained">
+              Створити замовлення
+            </Button>
           }
           title="Замовлення"
         />

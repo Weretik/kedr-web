@@ -21,15 +21,16 @@ const darkStatusColors: Record<string, PaletteColorOptions> = {
 };
 
 /**
- * «Кедровий ліс» palette. Brand green is the primary color; text on it uses brand ink,
- * because white on #3FA435 does not reach 4.5:1 contrast for regular text.
+ * «Кедровий ліс» palette. Brand green is the primary color. In the light theme, text and icons
+ * on it are white by project decision (buttons are green with white content); in the dark
+ * theme they stay brand ink for contrast.
  */
 export const lightPalette = {
   primary: {
     light: '#E8F3E4',
     main: kedrBrand.green,
     dark: '#2A7323',
-    contrastText: kedrBrand.ink,
+    contrastText: '#FFFFFF',
   },
   secondary: { light: '#5C6159', main: kedrBrand.ink, dark: '#000000', contrastText: '#F5F4EF' },
   ...lightStatusColors,

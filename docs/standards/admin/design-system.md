@@ -31,7 +31,7 @@ Brand colors come from the logo and do not change: **green `#3FA435`** and **ink
 | Secondary text                                     | `text.secondary`       | `#5C6159` | `#A2A79D` |
 | Borders, separators                                | `divider`              | `#E5E3DB` | `#2A2E28` |
 | Accent fill (buttons, badges, chart series)        | `primary.main`         | `#3FA435` | `#3FA435` |
-| Text on accent fill                                | `primary.contrastText` | `#0F110F` | `#0F110F` |
+| Text and icons on accent fill                      | `primary.contrastText` | `#FFFFFF` | `#0F110F` |
 | Accent soft surface (active menu item, highlights) | `primary.light`        | `#E8F3E4` | `#1E3020` |
 | Accent text and links                              | `primary.dark`         | `#2A7323` | `#7BCB6F` |
 | Inverse surface                                    | `secondary.main`       | `#0F110F` | `#EEF0EA` |
@@ -98,7 +98,7 @@ Rules:
 
 Use MUI components with the theme overrides above; do not restyle them locally.
 
-- **Buttons:** one contained primary action per area; secondary actions are `outlined` (paper with a divider border) or `text`.
+- **Buttons:** one contained primary action per area. In the light theme every contained primary button is filled with `primary.main` green with white text and white icons (`primary.contrastText`); never override this locally with ink text or a custom fill. A primary action has a text label (an icon may accompany it) and no tooltip; icon-only buttons are for secondary actions and need an `aria-label`. Secondary actions are `outlined` (paper with a divider border) or `text`.
 - **Status pill:** `StatusPill` from `@admin/shared/ui`: a small pill with a dot, status `.light` background and `.main` text (`neutral` uses `action.hover` and secondary text), always with a label.
 - **Tables:** MUI X Data Grid styled by the `MuiDataGrid` theme override: 12 px uppercase column titles on `background.paper`, `divider` row lines, hover `action.hover`, brand focus outline, wrapping footer, compact pagination on phones. Do not add grid `sx` for these. Numbers are right aligned with tabular figures. Wide tables scroll inside their card.
 - **Table states:** `DataGridMessageOverlay` for empty and error rows; an error passes `onRetry`, is announced, and shows «Повторити».
