@@ -5,11 +5,17 @@ import type { MissingPhotoQuery, ProductsListQuery } from '@admin/products/model
 const booleanKeys = ['inStock', 'isSale', 'isNew'] as const;
 
 export interface ProductsUrlState {
-  mode: 'all' | 'missing' | 'site';
+  mode: ProductsListMode;
   allQuery: ProductsListQuery;
   missingQuery: MissingPhotoQuery;
   siteQuery: ProductsListQuery;
+  /** Soft-deleted products (administrators only): search and paging. */
+  deletedQuery: ProductsListQuery;
 }
+
+export type ProductsListMode = 'all' | 'missing' | 'site' | 'deleted';
+
+const listModes: readonly ProductsListMode[] = ['all', 'missing', 'site', 'deleted'];
 
 export function readProductsUrlState(params: URLSearchParams): ProductsUrlState {
   const allQuery = normalizeProductsListQuery({
@@ -32,7 +38,8 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     isSale: readBoolean(params, 'missingIsSale'),
     isNew: readBoolean(params, 'missingIsNew'),
     categoryId: readPositiveInteger(params.get('missingCategoryId'), 0) || undefined,
-    sort: (params.get('missingSort') ?? DEFAULT_PRODUCTS_LIST_QUERY.sort) as ProductsListQuery['sort'],
+    sort: (params.get('missingSort') ??
+      DEFAULT_PRODUCTS_LIST_QUERY.sort) as ProductsListQuery['sort'],
     page: readPositiveInteger(params.get('missingPage'), 1),
     pageSize: readPositiveInteger(params.get('missingPageSize'), 20),
   });
@@ -51,8 +58,18 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     pageSize: readPositiveInteger(params.get('sitePageSize'), 20),
   });
 
+  const deletedQuery = normalizeProductsListQuery({
+    ...DEFAULT_PRODUCTS_LIST_QUERY,
+    searchTerm: params.get('deletedSearchTerm') ?? undefined,
+    deleted: true,
+    page: readPositiveInteger(params.get('deletedPage'), 1),
+    pageSize: readPositiveInteger(params.get('deletedPageSize'), 20),
+  });
+  const mode = params.get('mode') as ProductsListMode | null;
+
   return {
-    mode: params.get('mode') === 'missing' || params.get('mode') === 'site' ? params.get('mode') as 'missing' | 'site' : 'all',
+    mode: mode && listModes.includes(mode) ? mode : 'all',
+    deletedQuery,
     allQuery,
     siteQuery,
     missingQuery: {
@@ -77,11 +94,21 @@ export function writeProductsUrlState(state: ProductsUrlState): URLSearchParams 
   writeQuery(params, '', all);
   writeQuery(params, 'missing', missing);
   writeQuery(params, 'site', site);
+  writeQuery(
+    params,
+    'deleted',
+    normalizeProductsListQuery({ ...state.deletedQuery, deleted: true }),
+  );
   return params;
 }
 
-function writeQuery(params: URLSearchParams, prefix: '' | 'missing' | 'site', query: ProductsListQuery) {
-  const key = (name: string) => prefix ? `${prefix}${name[0].toUpperCase()}${name.slice(1)}` : name;
+function writeQuery(
+  params: URLSearchParams,
+  prefix: '' | 'missing' | 'site' | 'deleted',
+  query: ProductsListQuery,
+) {
+  const key = (name: string) =>
+    prefix ? `${prefix}${name[0].toUpperCase()}${name.slice(1)}` : name;
   if (query.searchTerm) params.set(key('searchTerm'), query.searchTerm);
   for (const name of booleanKeys) {
     if (typeof query[name] === 'boolean') params.set(key(name), String(query[name]));

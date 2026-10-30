@@ -13,4 +13,6 @@ export interface AdminProductListItem {
   price: number | null;
   stock: number;
   quantityInPack: number;
+  /** Set only for products the 1C import soft-deleted. */
+  deletedAt: string | null;
 }

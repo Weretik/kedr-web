@@ -91,6 +91,7 @@ function mapAdminProductListItem(value: unknown): AdminProductListItem {
     price: value['price'] ?? null,
     stock: value['stock'],
     quantityInPack: value['quantityInPack'],
+    deletedAt: isString(value['deletedAt']) ? value['deletedAt'] : null,
   };
 }
 
