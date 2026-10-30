@@ -44,4 +44,4 @@ Spec files sit next to the code in each project. Focused runs:
 - `libs/admin/clients/model` (1 spec files): `npx nx run admin-clients-model:vite:test -- --run`
 - `libs/admin/clients/ui` (2 spec files): `npx nx run admin-clients-ui:vite:test -- --run`
 - `libs/admin/orders/feature` (5 spec files): `npx nx run admin-orders-feature:vite:test -- --run`
-- `libs/admin/shared/ui` (2 spec files): `npx nx run admin-shared-ui:vite:test -- --run`
+- `libs/admin/shared/ui` (5 spec files): `npx nx run admin-shared-ui:vite:test -- --run`

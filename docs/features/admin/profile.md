@@ -7,7 +7,7 @@
 - Forms only collect values. [useConfirmedChange](../../../libs/admin/users/feature/src/hooks/use-confirmed-change.ts) holds one pending change and sends it after "confirm" in [ChangeConfirmationDialog](../../../libs/admin/users/feature/src/components/change-confirmation-dialog.tsx); a photo shows a preview there.
 - [checkAvatarFile](../../../libs/admin/users/feature/src/avatar/check-avatar-file.ts) checks type, size (≤ 2 MB) and decoded size (≥ 128×128) before upload, with the rules in [avatar-file-rules](../../../libs/admin/users/model/src/validation/avatar-file-rules.ts).
 - After a change, `onProfileChanged` (the app passes `refreshSession` from `@admin/core/auth`) re-reads `me`, so the header shows the new name and photo.
-- Without a photo, [UserAvatar](../../../libs/admin/shared/ui/src/lib/user-avatar.tsx) draws the first letter of the name on one of eight colours chosen by a stable hash of the name.
+- Without a photo, [UserAvatar](../../../libs/admin/shared/ui/src/lib/user/user-avatar.tsx) draws the first letter of the name on one of eight colours chosen by a stable hash of the name.
 - Data: [profile.api](../../../libs/admin/users/data-access/src/api/profile.api.ts) (`/api/profile`, tag `StaffProfile`). Contract: [Staff profile](../../contracts/identity/profile.md).
 
 ## Architecture
@@ -41,7 +41,7 @@ libs/admin/users/
     ├── pages/profile-page.tsx  # page composition
     ├── hooks/use-profile-actions.ts, use-confirmed-change.ts  # flows
     └── avatar/  # checkAvatarFile, useAvatarChange
-libs/admin/shared/ui/src/lib/user-avatar.tsx  # photo or coloured initial
+libs/admin/shared/ui/src/lib/user/user-avatar.tsx  # photo or coloured initial
 ```
 
 ## Tests

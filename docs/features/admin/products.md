@@ -28,14 +28,21 @@ flowchart LR
 ```text
 libs/admin/products/
 ├── feature/src/products.routes.tsx               # routes and add callback
-├── feature/src/pages/products-page.tsx           # modes and list state
-├── feature/src/pages/product-details-page.tsx    # product details
+├── feature/src/pages/products-page.tsx           # list page composition
+├── feature/src/pages/product-details-page.tsx    # product details and address change
+├── feature/src/hooks/                            # list URL state, list data, slug change
+├── feature/src/url/                              # URL ↔ list query and grid filters
+├── feature/src/feedback/                         # add-to-order result → notice
 ├── data-access/src/api/admin-products.api.ts     # catalog requests
 ├── data-access/src/mappers/                     # data validation and projection
 ├── model/src/                                   # product types and parameters
-└── ui/src/                                      # table and detail blocks without HTTP
+└── ui/src/
+    ├── tables/                                  # products and deleted grids, columns, sort, cells
+    ├── tables/toolbar/                          # search, filter button, category tree picker
+    ├── tables/hooks/                            # grid columns, filter panel width
+    └── components/                              # detail blocks without HTTP
 
-libs/admin/shared/ui/src/                        # status pill, grid overlay, page and detail headers, cards
+libs/admin/shared/ui/src/lib/                    # layout/, feedback/, slug/, user/
 ```
 
 ## Tests
@@ -45,6 +52,6 @@ Spec files sit next to the code in each project. Focused runs:
 - `libs/admin/products/data-access` (3 spec files): `npx nx run admin-products-data-access:vite:test -- --run`
 - `libs/admin/products/feature` (3 spec files): `npx nx run admin-products-feature:vite:test -- --run`
 - `libs/admin/products/ui` (3 spec files): `npx nx run admin-products-ui:vite:test -- --run`
-- `libs/admin/shared/ui` (2 spec files): `npx nx run admin-shared-ui:vite:test -- --run`
+- `libs/admin/shared/ui` (5 spec files): `npx nx run admin-shared-ui:vite:test -- --run`
 
 Without tests: `admin-products-model`.

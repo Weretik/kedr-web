@@ -62,3 +62,7 @@ Staff can browse catalog categories in the Admin. An administrator edits the pub
 - Data access: mappers (tree rows, content items, save body trims empty to null).
 - UI: `ChangeSlugDialog` validation and regenerate; `FaqListEditor` add/move/remove; `CategoryContentForm` counters and read-only mode.
 - Feature: categories page hides «Видалені» for managers; details page saves content and shows the notice (mocked API).
+
+## Code audit
+
+Responsibility audit after implementation: [code-audit/audit.md](code-audit/audit.md).

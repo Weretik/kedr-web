@@ -1,14 +1,13 @@
 import { DataGridMessageOverlay } from '@admin/shared/ui';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 
-import { ProductsBooleanFilterHeader } from './cells/products-boolean-filter-header';
-import { ProductsViewActionCell } from './cells/products-view-action-cell';
-import { productCategoryPath } from './product-category-path';
-import { productsDataGridColumns } from './products-data-grid.columns';
+import { usePanelWidth } from './hooks/use-panel-width';
+import { useProductsGridColumns } from './hooks/use-products-grid-columns';
 import { toGridSortModel, toProductsListSort } from './products-data-grid.sort';
-import { ProductsGridToolbar, ProductsGridToolbarContext } from './products-grid-toolbar';
+import { ProductsGridToolbar } from './toolbar/products-grid-toolbar';
+import { ProductsGridToolbarContext } from './toolbar/products-grid-toolbar-context';
 
 import type { ProductBooleanField } from './cells/products-boolean-filter-header';
 import type {
@@ -16,15 +15,9 @@ import type {
   ProductCategoryOption,
   ProductsListSort,
 } from '@admin/products/model';
-import type {
-  GridColDef,
-  GridFilterModel,
-  GridPaginationModel,
-  GridRenderCellParams,
-} from '@mui/x-data-grid';
+import type { GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
 
 type BooleanFilterField = ProductBooleanField;
-const booleanFields: readonly string[] = ['inStock', 'isSale', 'isNew'];
 
 interface ProductsDataGridProps {
   categories?: readonly ProductCategoryOption[];
@@ -81,86 +74,16 @@ export function ProductsDataGrid({
   priceFilterable,
   sortable = true,
 }: ProductsDataGridProps) {
-  const theme = useTheme();
-  const phone = useMediaQuery(theme.breakpoints.down('sm'));
   const [panelAnchor, setPanelAnchor] = useState<HTMLDivElement | null>(null);
-  const [panelWidth, setPanelWidth] = useState<number>();
-
-  useEffect(() => {
-    const toolbar = panelAnchor?.parentElement;
-    if (!toolbar) return;
-
-    const updatePanelWidth = () => {
-      const width = toolbar.getBoundingClientRect().width;
-      if (width > 0) setPanelWidth(width);
-    };
-
-    updatePanelWidth();
-    if (typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(updatePanelWidth);
-    observer.observe(toolbar);
-    return () => observer.disconnect();
-  }, [panelAnchor]);
-  const categoriesById = useMemo(
-    () => new Map(categories.map((category) => [category.id, category])),
-    [categories],
-  );
-  const columns = useMemo<GridColDef<AdminProductListItem>[]>(
-    () => [
-      ...productsDataGridColumns.map((column) => {
-        if (column.field === 'name') return { ...column, minWidth: phone ? 140 : 180 };
-        if (column.field === 'category')
-          return {
-            ...column,
-            type: 'string' as const,
-            valueGetter: (_value: unknown, row: AdminProductListItem) =>
-              productCategoryPath(row, categoriesById),
-            renderCell: ({ value }: GridRenderCellParams<AdminProductListItem>) => (
-              <Box sx={{ overflowWrap: 'anywhere', py: 1, whiteSpace: 'normal', width: '100%' }}>
-                {value}
-              </Box>
-            ),
-          };
-        if (column.field === 'price' && !priceFilterable) return { ...column, filterable: false };
-        if (booleanFields.includes(column.field)) {
-          const field = column.field as BooleanFilterField;
-          return {
-            ...column,
-            renderHeader: () => (
-              <ProductsBooleanFilterHeader
-                field={field}
-                label={column.headerName ?? ''}
-                value={booleanFilters[field]}
-                onChange={onBooleanFilterChange}
-              />
-            ),
-          };
-        }
-        return column;
-      }),
-      {
-        align: 'center',
-        field: 'view',
-        headerAlign: 'center',
-        headerName: 'Дії',
-        sortable: false,
-        filterable: false,
-        width: onAddProduct ? 130 : 80,
-        renderCell: ({ row }) => (
-          <ProductsViewActionCell product={row} onView={onViewProduct} onAdd={onAddProduct} />
-        ),
-      },
-    ],
-    [
-      booleanFilters,
-      categoriesById,
-      onAddProduct,
-      onBooleanFilterChange,
-      onViewProduct,
-      phone,
-      priceFilterable,
-    ],
-  );
+  const panelWidth = usePanelWidth(panelAnchor);
+  const columns = useProductsGridColumns({
+    categories,
+    booleanFilters,
+    onBooleanFilterChange,
+    onViewProduct,
+    onAddProduct,
+    priceFilterable,
+  });
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
     ? () => <DataGridMessageOverlay message={errorMessage} onRetry={onRetry} />

@@ -1,8 +1,8 @@
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Box, Button, Typography } from '@mui/material';
 
-import { DetailField, DetailFieldList } from './detail-field';
-import { SectionCard } from './section-card';
+import { DetailField, DetailFieldList } from '../layout/detail-field';
+import { SectionCard } from '../layout/section-card';
 
 interface PublicAddressCardProps {
   slug: string;

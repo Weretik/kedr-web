@@ -37,7 +37,7 @@ libs/admin/categories/
 ├── model/src/                                          # types, content limits, tree order
 └── ui/src/                                             # table, cards, content form, text editor, FAQ
 
-libs/admin/shared/ui/src/lib/                           # ChangeSlugDialog, slug rule, PublicAddressCard
+libs/admin/shared/ui/src/lib/slug/                      # ChangeSlugDialog, slug rule, PublicAddressCard
 ```
 
 ## Tests

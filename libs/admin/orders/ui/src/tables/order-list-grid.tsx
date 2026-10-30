@@ -1,16 +1,13 @@
 import { DataGridMessageOverlay } from '@admin/shared/ui';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { Box, IconButton, Stack, Tooltip } from '@mui/material';
+import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { OrderGridToolbar, OrderGridToolbarContext } from './order-grid-toolbar';
-import { OrderStatusChip } from '../components/order-status-chip';
-import { PriceAdjustmentText } from '../components/price-adjustment-text';
+import { orderListColumns } from './order-list-grid.columns';
+import { toOrderApiSort, toOrderGridSortModel } from './order-list-grid.sort';
 
 import type { DraftSummary, OrderSummary } from '@admin/orders/model';
-import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
+import type { GridPaginationModel } from '@mui/x-data-grid';
 
 interface OrderListGridProps {
   mode: 'orders' | 'drafts';
@@ -36,126 +33,10 @@ interface OrderListGridProps {
   onDelete?: (row: DraftSummary) => void;
   onRetry: () => void;
 }
-const dateFormat = new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium', timeStyle: 'short' });
-const moneyFormat = new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH' });
-const apiSortToGridField: Record<string, string> = {
-  customerName: 'counterpartyName',
-  createdAt: 'createdAtUtc',
-  updatedAt: 'updatedAtUtc',
-};
-const gridFieldToApiSort: Record<string, string> = {
-  counterpartyName: 'customerName',
-  createdAtUtc: 'createdAt',
-  updatedAtUtc: 'updatedAt',
-};
 export function OrderListGrid(props: OrderListGridProps) {
   const orders = props.mode === 'orders';
-  const columns: GridColDef[] = orders
-    ? [
-        { field: 'orderNumber', headerName: 'Номер', minWidth: 150, flex: 1 },
-        ...(!props.hideCustomerColumn
-          ? [
-              {
-                field: 'counterpartyName',
-                headerName: 'Клієнт',
-                minWidth: 180,
-                flex: 1,
-              } satisfies GridColDef,
-            ]
-          : []),
-        {
-          field: 'createdAtUtc',
-          headerName: 'Створено',
-          minWidth: 180,
-          flex: 1,
-          valueFormatter: (value: string) => dateFormat.format(new Date(value)),
-        },
-        {
-          field: 'totalAmount',
-          headerName: 'Сума',
-          minWidth: 130,
-          flex: 0.7,
-          valueFormatter: (value: number) => moneyFormat.format(value),
-        },
-        {
-          field: 'adjustmentAmount',
-          headerName: 'Знижка/Націнка',
-          minWidth: 140,
-          flex: 0.7,
-          sortable: false,
-          renderCell: ({ value }) => <PriceAdjustmentText value={Number(value ?? 0)} />,
-        },
-        {
-          field: 'syncStatus',
-          headerName: '1C',
-          minWidth: 170,
-          flex: 0.8,
-          sortable: false,
-          renderCell: ({ value }) => <OrderStatusChip status={String(value ?? '')} />,
-        },
-      ]
-    : [
-        { field: 'title', headerName: 'Назва', minWidth: 180, flex: 1 },
-        { field: 'counterpartyName', headerName: 'Клієнт', minWidth: 180, flex: 1 },
-        {
-          field: 'updatedAtUtc',
-          headerName: 'Оновлено',
-          minWidth: 180,
-          flex: 1,
-          valueFormatter: (value: string) => dateFormat.format(new Date(value)),
-        },
-        { field: 'lineCount', headerName: 'Позицій', minWidth: 110, flex: 0.5, sortable: false },
-      ];
-  columns.push({
-    field: 'actions',
-    headerName: 'Дії',
-    minWidth: orders ? 76 : 144,
-    sortable: false,
-    filterable: false,
-    align: 'center',
-    headerAlign: 'center',
-    renderCell: ({ row }) => {
-      const id = orders ? (row as OrderSummary).orderId : (row as DraftSummary).draftId;
-      const label = orders ? (row as OrderSummary).orderNumber : (row as DraftSummary).title;
-      return (
-        <Stack direction="row">
-          <Tooltip title="Переглянути">
-            <IconButton
-              aria-label={`Переглянути ${label}`}
-              onClick={() => props.onView(id)}
-              size="small"
-            >
-              <VisibilityOutlinedIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          {!orders && props.onEdit && (
-            <Tooltip title="Редагувати">
-              <IconButton
-                aria-label={`Редагувати ${label}`}
-                onClick={() => props.onEdit?.(id)}
-                size="small"
-              >
-                <EditOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-          {!orders && props.onDelete && (
-            <Tooltip title="Видалити">
-              <IconButton
-                aria-label={`Видалити ${label}`}
-                onClick={() => props.onDelete?.(row as DraftSummary)}
-                size="small"
-              >
-                <DeleteOutlineIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Stack>
-      );
-    },
-  });
-  const field = apiSortToGridField[props.sort.replace(/^-/, '')] ?? props.sort.replace(/^-/, '');
-  const sortModel: GridSortModel = [{ field, sort: props.sort.startsWith('-') ? 'desc' : 'asc' }];
+  const columns = orderListColumns(props.mode, props.hideCustomerColumn, props);
+  const sortModel = toOrderGridSortModel(props.sort);
   const model: GridPaginationModel = { page: props.page - 1, pageSize: props.pageSize };
   const errorOverlay = () => (
     <DataGridMessageOverlay message="Не вдалося завантажити записи." onRetry={props.onRetry} />
@@ -192,11 +73,8 @@ export function OrderListGrid(props: OrderListGridProps) {
               filterMode="server"
               filterModel={{ items: [], quickFilterValues: props.search ? [props.search] : [] }}
               onSortModelChange={(next) => {
-                const entry = next[0];
-                if (entry?.sort)
-                  props.onSort(
-                    `${entry.sort === 'desc' ? '-' : ''}${gridFieldToApiSort[entry.field] ?? entry.field}`,
-                  );
+                const sort = toOrderApiSort(next);
+                if (sort) props.onSort(sort);
               }}
               pageSizeOptions={[10, 20, 30, 50]}
               pagination

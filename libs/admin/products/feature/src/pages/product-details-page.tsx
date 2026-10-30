@@ -12,8 +12,10 @@ import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { addProductFeedback } from '../feedback/add-product-feedback';
 import { useProductSlugChange } from '../hooks/use-product-slug-change';
 
+import type { AddProductFeedback } from '../feedback/add-product-feedback';
 import type { AddProductResult } from '../products.routes';
 
 const photoStorageUrl = 'https://images-kedr.cdn.express/~/o/products';
@@ -31,10 +33,7 @@ export function ProductDetailsPage({
   const navigate = useNavigate();
   const [notice, setNotice] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [addFeedback, setAddFeedback] = useState<{
-    message: string;
-    severity: 'info' | 'warning';
-  } | null>(null);
+  const [addFeedback, setAddFeedback] = useState<AddProductFeedback | null>(null);
   const slug = productSlug?.trim() ?? '';
   const validSlug = slug.length > 0 && slug.length <= 255 && !slug.includes('/');
   const query = useGetAdminProductDetailsQuery(slug, { skip: !validSlug });
@@ -82,27 +81,7 @@ export function ProductDetailsPage({
             photoStorageUrl={photoStorageUrl}
             onAddProduct={
               onAddProduct
-                ? (id) => {
-                    const result = onAddProduct(id);
-                    setAddFeedback(
-                      result === 'saved'
-                        ? {
-                            message: 'Товар додано до поточного набору замовлення.',
-                            severity: 'info',
-                          }
-                        : result === 'volatile'
-                          ? {
-                              message:
-                                'Товар додано лише в цій вкладці. Браузер не зберіг набір; після закриття вкладки зміни можуть зникнути.',
-                              severity: 'warning',
-                            }
-                          : {
-                              message:
-                                'Не вдалося додати товар. Перевірте ліміт позицій і кількість.',
-                              severity: 'warning',
-                            },
-                    );
-                  }
+                ? (id) => setAddFeedback(addProductFeedback(onAddProduct(id)))
                 : undefined
             }
           />
