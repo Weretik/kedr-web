@@ -30,6 +30,7 @@ describe('ProductsDataGrid responsive actions', () => {
       price: 100,
       stock: 2,
       quantityInPack: 1,
+      deletedAt: null,
     };
 
     render(
@@ -148,6 +149,7 @@ describe('ProductsDataGrid responsive actions', () => {
             price: 100,
             stock: 2,
             quantityInPack: 1,
+            deletedAt: null,
           },
         ]}
         sort="id-asc"
