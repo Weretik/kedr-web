@@ -8,6 +8,9 @@ const documentedCrossDomainFlows = new Set([
   'mobile-cart-feature->mobile-customers-data-access',
   'mobile-cart-feature->mobile-customers-model',
   'mobile-cart-feature->mobile-customers-ui',
+  'site-home-feature->site-catalog-data-access',
+  'site-home-feature->site-catalog-model',
+  'site-home-feature->site-catalog-ui',
 ]);
 
 function valueFor(tags, prefix) {

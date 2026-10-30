@@ -12,7 +12,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 New public ClassKedr storefront that replaces `apps/storefront` by the [migration plan](../../docs/specs/site/migration/README.md). Read the [site architecture](../../docs/architecture/site/README.md), the [SEO rules](../../docs/standards/site/seo-rules.md), and the [design system](../../docs/standards/site/design-system.md) before changing it.
 
-- Routes in `src/app` stay thin: read `params`, call a feature, export metadata through `@site/core/seo`.
+- Routes in `src/app` stay thin: read `params`, call a feature, export metadata through a domain `seo` library.
+- Cache Components is on: cache data in domain `data-access` with `'use cache'`, `cacheTag`, and `cacheLife`; never `export const revalidate`, `fetch(..., { next })`, `dynamicParams`, or `unstable_cache`. Read `node_modules/next/dist/docs/01-app/01-getting-started/08-caching.md` first.
 - New domain libraries: `npx nx g @nx/react:library libs/site/<domain>/<layer> --bundler=none --unitTestRunner=vitest --tags=scope:site,...`; new UI primitives: `npx shadcn@latest add <component>` from `libs/site/shared/ui`.
 - Commands: `npx nx run site:dev`, `npx nx run site:build`, `npx nx run site:typecheck`, `npm run test:site`.
 - Indexing stays off unless `SITE_ENV=production` and `SITE_INDEXING=true`.
