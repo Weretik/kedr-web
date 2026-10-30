@@ -16,6 +16,7 @@ Site-wide SEO decisions. Feature specifications apply them in their `design/seo.
 | URL type                           | Example                                       | Index                      | Canonical                   | robots.txt | Sitemap   | Links                                  |
 | ---------------------------------- | --------------------------------------------- | -------------------------- | --------------------------- | ---------- | --------- | -------------------------------------- |
 | Home                               | `/uk`                                         | yes                        | self                        | allow      | yes       | logo, footer                           |
+| Old catalog index                  | `/uk/categories`                              | no                         | —                           | —          | no        | 308 to `/uk`                           |
 | Category                           | `/uk/catalog/zamki-900002/products`           | yes                        | self (page 1 without query) | allow      | yes       | header, mega menu, footer, breadcrumbs |
 | Category page 2+                   | `?page=2`                                     | yes                        | self with `page`            | allow      | no        | pagination links                       |
 | Single-value facet landing         | `?inStock=true` is the default; whitelist TBD | whitelist only             | self                        | allow      | whitelist | filter links                           |
@@ -46,7 +47,7 @@ Site-wide SEO decisions. Feature specifications apply them in their `design/seo.
 | Page type  | Types                                                                                 | Builder                         | API fields                                         |
 | ---------- | ------------------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------------- |
 | Every page | `Organization` (+ `ContactPoint`, `PostalAddress`)                                    | `buildOrganizationJsonLd`       | `COMPANY` constants                                |
-| Home       | `WebSite` (`SearchAction` once search results are indexable-safe)                     | `buildWebSiteJsonLd`            | —                                                  |
+| Home       | `WebSite` (no `SearchAction`: Google retired the sitelinks search box in 2024)        | `buildWebSiteJsonLd`            | —                                                  |
 | Category   | `BreadcrumbList`, `ItemList`                                                          | planned `libs/site/catalog/seo` | `CategoryDetails.breadcrumbs`, `ProductPage.value` |
 | Product    | `Product` + `Offer` (`price`, `priceCurrency: UAH`, `availability`), `BreadcrumbList` | planned `libs/site/product/seo` | `ProductDetails` (needs SKU, description, brand)   |
 | Article    | `Article`                                                                             | planned `libs/site/content/seo` | static content                                     |

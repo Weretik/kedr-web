@@ -32,6 +32,7 @@
 ## Site Next.js
 
 - [Storefront migration to Next.js: plan](site/migration/README.md) and [feature inventory with SEO analysis](site/migration/feature-inventory.md)
+- [Home page](site/home/001-home-page/README.md)
 
 ## Storefront Angular
 
