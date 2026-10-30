@@ -3,16 +3,16 @@
 ## Machine contract
 
 - OpenAPI: [`products.openapi.yaml`](../openapi/catalog/products.openapi.yaml)
-- Operations: `getAdminProducts`, `getAdminProductBySlug`
+- Operations: `getAdminProducts`, `getAdminProductBySlug`, `changeAdminProductSlug`
 - Generated response: `operations['getAdminProducts']['responses'][200]['content']['application/json']`
 - Generated query: `NonNullable<operations['getAdminProducts']['parameters']['query']>`
 - Consumers: Admin products list, Mobile product catalog
 
-`GET /api/admin/products` is a temporarily anonymous internal/admin surface. This is not authorization for a public rollout. Mobile does not add an authorization bypass; production access remains a backend blocker until the API owner makes an explicit decision.
+`GET /api/admin/products` needs a staff session. `deleted=true` (soft-deleted products, newest first; the server then supports only `searchTerm` and paging) and `PUT /api/admin/products/{id}/slug` need the Admin role.
 
 ## Request projection
 
-The frontend sends only parameters defined by the generated query type: `searchTerm`, `categorySlug`, `categoryId`, `inStock`, `isSale`, `isNew`, `priceFrom`, `priceTo`, `exportToSite`, `sort`, `page`, `pageSize`. `sort` values are string OpenAPI enums (`IdAsc`, `IdDesc`, `NameAsc`, `NameDesc`, `PriceAsc`, `PriceDesc`, `CategoryAsc`, `CategoryDesc`). Changing search/filter/sort resets `page` to `1`. `categoryId` filters the selected category and all descendants; the row returns `categoryName` from Ukrainian `shortNameUk`.
+The frontend sends only parameters defined by the generated query type: `searchTerm`, `categorySlug`, `categoryId`, `inStock`, `isSale`, `isNew`, `priceFrom`, `priceTo`, `exportToSite`, `deleted`, `sort`, `page`, `pageSize`. `sort` values are string OpenAPI enums (`IdAsc`, `IdDesc`, `NameAsc`, `NameDesc`, `PriceAsc`, `PriceDesc`, `CategoryAsc`, `CategoryDesc`). Changing search/filter/sort resets `page` to `1`. `categoryId` filters the selected category and all descendants; the row returns `categoryName` from Ukrainian `shortNameUk`.
 
 ```http
 GET /api/admin/products?searchTerm=кабель&inStock=true&sort=NameAsc&page=1&pageSize=20
@@ -31,6 +31,8 @@ Admin validates the unknown response before mapping. Mobile uses the generated r
 The Admin table displays only `nameUk`. The category column builds the path from parent to child using `categoryId` and the `getAdminCategories` directory; until the directory is loaded, it shows `categoryName` from the list. If the ID is missing from the directory and `categoryName` is empty, the UI shows the category ID instead of an invented name. This does not change the transport contract or server-side sorting.
 
 Admin opens a product detail through `GET /api/admin/products/by-slug/{productSlug}` and validates the response with a runtime mapper. This operation returns both names, availability, sale, newness and publication flags, category, photo, and diagram. A link to a specific JPG is taken only from the `photo` field; the storage folder is available separately. The frontend snapshot and generated types were synchronized with backend commit `8fc8729` on 2026-10-19. The query mapper checks parameters against the generated type, and the runtime mapper validates the response before passing it to the UI.
+
+Admin changes a product slug with `PUT /api/admin/products/{id}/slug` (`{ slug }` or `{ regenerate: true }`); the response names the new slug and the details page moves to it. The former slug keeps resolving on the public site.
 
 ## Behavior and limitations
 

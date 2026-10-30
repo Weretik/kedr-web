@@ -13,6 +13,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Мій кабінет](admin/profile.md)       | `/profile`                                   | Own name, photo; Admin also email and password              |
 | [Dashboard](admin/dashboard.md)       | `/dashboard`                                 | Visual metrics are currently static                         |
 | [Products](admin/products.md)         | `/catalog`, `/catalog/:productSlug`          | List, details, and adding products to an order set          |
+| [Categories](admin/categories.md)     | `/categories`, `/categories/:categoryId`     | Tree, public address, SEO text and FAQ; Admin edits         |
 | [Customers](admin/clients.md)         | `/customers`, `/customers/:counterpartyId`   | List, details, and order tables                             |
 | [Orders and drafts](admin/orders.md)  | `/orders`, `/orders/new`, details and drafts | Lists, checkout, and draft editing                          |
 
