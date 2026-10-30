@@ -13,3 +13,6 @@ export const isStaff = (user: SessionUser): boolean =>
   user.roles.includes('Admin') || user.roles.includes('Manager');
 
 export const canManageUsers = (user: SessionUser): boolean => user.roles.includes('Admin');
+
+/** Catalog addresses, category texts, and deleted rows are for administrators only. */
+export const canEditCatalog = (user: SessionUser): boolean => user.roles.includes('Admin');

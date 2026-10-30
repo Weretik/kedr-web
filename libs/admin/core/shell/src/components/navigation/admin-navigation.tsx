@@ -1,3 +1,4 @@
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
@@ -14,6 +15,7 @@ export const adminDrawerCollapsedWidth = 84;
 const navigationItems = [
   { icon: <DashboardOutlinedIcon />, label: 'Огляд', to: '/dashboard' },
   { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
+  { icon: <AccountTreeOutlinedIcon />, label: 'Категорії', to: '/categories' },
   { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
   { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
 ];

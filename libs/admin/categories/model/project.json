@@ -1,0 +1,13 @@
+{
+  "name": "admin-categories-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/categories/model/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:categories", "type:model"],
+  "// targets": "to see all targets run: nx show project admin-categories-model --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
