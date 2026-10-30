@@ -9,3 +9,7 @@ export { SectionCard } from './lib/section-card';
 export { StatusPill } from './lib/status-pill';
 export type { StatusTone } from './lib/status-pill';
 export { avatarColorIndex, avatarInitial, UserAvatar } from './lib/user-avatar';
+export { ChangeSlugDialog } from './lib/change-slug-dialog';
+export type { ChangeSlugInput } from './lib/change-slug-dialog';
+export { slugChangeErrorMessage, slugMaxLength, validateSlug } from './lib/slug-rules';
+export { PublicAddressCard } from './lib/public-address-card';
