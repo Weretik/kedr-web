@@ -8,6 +8,8 @@ const dto: PublicProductDetailsDto = {
   categorySlug: 'category',
   id: 42,
   name: 'Товар',
+  productSlug: 'tovar',
+  updatedAt: '2026-10-30T10:00:00Z',
   photo: ' https://example.com/photo.jpg ',
   price: 123.5,
   quantityInPack: 4,

@@ -3,7 +3,9 @@ import { mapAdminCategories } from './catalog-categories.mapper';
 import type { AdminCategoryDto } from '../contracts/admin-categories.dto';
 
 const category = (overrides: Partial<AdminCategoryDto>): AdminCategoryDto => ({
+  deletedAt: null,
   id: 1,
+  isDeleted: false,
   level: 0,
   name: 'Категорія',
   parentId: null,
