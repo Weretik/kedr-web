@@ -3,6 +3,7 @@ import { localizedPath } from '@site/core/i18n';
 import { MailIcon, MapPinIcon, PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { CopyrightYear } from './copyright-year';
 import { MessengerLinks } from '../controls/messenger-links';
 import {
   CATEGORY_LINKS,
@@ -88,7 +89,7 @@ export function SiteFooter({
       </div>
       <div className="border-t border-border">
         <p className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground lg:px-6">
-          © {new Date().getFullYear()} {dictionary.copyright}
+          © <CopyrightYear /> {dictionary.copyright}
         </p>
       </div>
     </footer>

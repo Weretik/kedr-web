@@ -31,10 +31,6 @@ type ParametersOf<Operation, Key extends 'path' | 'query'> = Operation extends {
 export type SiteApiGetOptions<P extends PublicGetPath> = {
   path?: ParametersOf<GetOperation<P>, 'path'>;
   query?: ParametersOf<GetOperation<P>, 'query'>;
-  /** Cache tags such as `product:<id>`, used by backend-driven revalidation. */
-  tags?: string[];
-  /** Seconds before a time-based refresh; `false` keeps the entry until a tag is revalidated. */
-  revalidate?: number | false;
   timeoutMs?: number;
 };
 
@@ -61,7 +57,10 @@ const buildUrl = (
   return url;
 };
 
-/** Typed GET against the KedrStore OpenAPI contract, for Server Components, metadata, and sitemaps only. */
+/**
+ * Typed GET against the KedrStore OpenAPI contract, for Server Components, metadata, and sitemaps only.
+ * Caching is the caller's job: domain `data-access` wraps calls in `'use cache'` with `cacheTag` and `cacheLife`.
+ */
 export async function siteApiGet<P extends PublicGetPath>(
   template: P,
   options: SiteApiGetOptions<P> = {},
@@ -74,7 +73,6 @@ export async function siteApiGet<P extends PublicGetPath>(
     const response = await fetchImpl(url, {
       headers: { Accept: 'application/json' },
       signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS),
-      next: { tags: options.tags, revalidate: options.revalidate },
     });
 
     if (response.status === 404) return { kind: 'not-found' };

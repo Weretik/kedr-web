@@ -8,8 +8,6 @@ import { jetBrainsMono, onest } from '../fonts';
 
 import type { Metadata, Viewport } from 'next';
 
-export const dynamicParams = false;
-
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }

@@ -6,22 +6,21 @@ const jsonResponse = (status: number, body: unknown = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 describe('siteApiGet', () => {
-  it('fills path parameters, sorts the query, and passes cache tags', async () => {
+  it('fills path parameters, encodes them, and sorts the query', async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, { slug: 'locks' }));
 
     const result = await siteApiGet(
-      '/api/catalog/{lang}/categories/by-slug/{categorySlug}',
-      { path: { lang: 'uk', categorySlug: 'zamki 1' }, tags: ['category:zamki'], revalidate: 3600 },
+      '/api/catalog/{lang}/{categorySlug}/products',
+      { path: { lang: 'uk', categorySlug: 'zamki 1' }, query: { pageSize: 8, inStock: true } },
       fetchMock,
       'https://api.example.com',
     );
 
     expect(result).toEqual({ kind: 'ok', data: { slug: 'locks' } });
-    const [url, init] = fetchMock.mock.calls[0] as [URL, RequestInit & { next: unknown }];
+    const [url] = fetchMock.mock.calls[0] as [URL];
     expect(url.toString()).toBe(
-      'https://api.example.com/api/catalog/uk/categories/by-slug/zamki%201',
+      'https://api.example.com/api/catalog/uk/zamki%201/products?inStock=true&pageSize=8',
     );
-    expect(init.next).toEqual({ tags: ['category:zamki'], revalidate: 3600 });
   });
 
   it('maps 404, 410, and other failures to typed results', async () => {
