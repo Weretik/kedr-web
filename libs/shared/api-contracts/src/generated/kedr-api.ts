@@ -28,7 +28,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get one localized category, its descendants, and breadcrumbs */
+        /**
+         * Get one localized category, its descendants, breadcrumbs, counts, price range, and content
+         * @description A former slug returns 200 with `slug` set to the current slug, so the client can redirect permanently.
+         */
         get: operations["getCategoryBySlug"];
         put?: never;
         post?: never;
@@ -67,7 +70,7 @@ export interface paths {
         };
         /**
          * List public products in a category
-         * @description Returns public products of the category selected by `categorySlug` and of every descendant category at any depth; sibling branches are excluded. When `categoryId` is also supplied, it takes precedence over the slug. The category subtree and all other filters are applied before `pagedInfo.totalRecords`, sorting, and paging. An unknown valid slug or ID returns `200` with an empty page and `totalRecords = 0`.
+         * @description Returns public products of the category selected by `categorySlug` and of every descendant category at any depth; sibling branches are excluded. When `categoryId` is also supplied, it takes precedence over the slug. The category subtree and all other filters are applied before `pagedInfo.totalRecords`, sorting, and paging. A former category slug selects its category. An unknown or deleted category slug returns `404`; an unknown `categoryId` returns `200` with an empty page.
          */
         get: operations["getPublicProductsByCategorySlug"];
         put?: never;
@@ -85,7 +88,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a public product by slug */
+        /**
+         * Get a public product by slug
+         * @description A former slug returns 200 with `productSlug` set to the current slug, so the client can redirect permanently. A product of a deleted category is not public.
+         */
         get: operations["getPublicProductBySlug"];
         put?: never;
         post?: never;
@@ -122,6 +128,63 @@ export interface paths {
         /** Get one category for catalog administration */
         get: operations["getAdminCategoryById"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set or regenerate a category slug
+         * @description The previous slug moves to history and keeps resolving to this category. A slug used now or before by another category is rejected. Repeating the same request is safe.
+         */
+        put: operations["changeAdminCategorySlug"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the SEO text and FAQ of a category in every language */
+        get: operations["getAdminCategoryContent"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/content/{lang}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the SEO text and FAQ of a category in one language
+         * @description Full replacement: empty fields clear them and the FAQ list replaces the stored one. `bodyHtml` is sanitized to p, br, strong, em, ul, ol, li, h2, h3, and a[href] (http, https, or a path starting with `/`); everything else is removed. Repeating the same request is safe.
+         */
+        put: operations["saveAdminCategoryContent"];
         post?: never;
         delete?: never;
         options?: never;
@@ -202,6 +265,26 @@ export interface paths {
          */
         get: operations["getAdminProductBySlug"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{id}/slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set or regenerate a product slug
+         * @description The previous slug moves to history and keeps resolving to this product. A slug used now or before by another product is rejected. Repeating the same request is safe.
+         */
+        put: operations["changeAdminProductSlug"];
         post?: never;
         delete?: never;
         options?: never;
@@ -836,19 +919,21 @@ export interface components {
         /**
          * @example {
          *       "id": 5513,
-         *       "slug": "furnitura-5513",
+         *       "slug": "furnitura",
          *       "name": "Фурнітура",
          *       "parentId": null,
          *       "sortOrder": 0,
          *       "level": 0,
+         *       "productCount": 418,
          *       "children": [
          *         {
          *           "id": 900001,
-         *           "slug": "zavisy-900001",
+         *           "slug": "zavisy",
          *           "name": "Завіси",
          *           "parentId": 5513,
          *           "sortOrder": 0,
          *           "level": 1,
+         *           "productCount": 418,
          *           "children": []
          *         }
          *       ]
@@ -869,6 +954,8 @@ export interface components {
             level: number;
             /** @description Direct descendants, recursively using this same schema and already in display order. */
             children: components["schemas"]["CategoryTreeNode"][];
+            /** @description Active exported products in this category and all its descendants. */
+            productCount: number;
         };
         ValidationErrors: {
             [key: string]: unknown;
@@ -878,9 +965,35 @@ export interface components {
             slug: string;
             name: string;
         };
+        CategoryFaqItem: {
+            question: string;
+            /** @description Plain text. */
+            answer: string;
+        };
+        CategoryContent: {
+            seoTitle: string | null;
+            metaDescription: string | null;
+            h1: string | null;
+            /** @description Sanitized HTML; safe to render as is. */
+            bodyHtml: string | null;
+            faq: components["schemas"]["CategoryFaqItem"][];
+            /** Format: date-time */
+            updatedAt: string;
+        };
         CategoryDetails: components["schemas"]["CategoryTreeNode"] & {
             /** @description Inclusive root-to-current-category path, ordered from root to the requested category. */
             breadcrumbs: components["schemas"]["CategoryBreadcrumb"][];
+            /** @description Lowest retail price over active exported products of the category and its descendants. */
+            minPrice: number | null;
+            /** @description Highest retail price over the same products. */
+            maxPrice: number | null;
+            /** @description Admin-written content in the requested language, or null when there is none. */
+            content: components["schemas"]["CategoryContent"] | null;
+        };
+        CatalogRedirect: {
+            redirectSlug: string;
+            /** @enum {string} */
+            redirectType: "category";
         };
         PagedInfo: {
             pageNumber: number;
@@ -911,8 +1024,13 @@ export interface components {
             slug: string;
         };
         ProductDetails: {
+            /** @description 1C product code shown to customers as the article. */
             id: number;
             name: string;
+            /** @description Current slug; differs from the request when a former slug was used. */
+            productSlug: string;
+            /** Format: date-time */
+            updatedAt: string;
             photo: string;
             scheme: string;
             stock: number;
@@ -934,6 +1052,40 @@ export interface components {
             parentId: number | null;
             sortOrder: number;
             level: number;
+            isDeleted: boolean;
+            /** Format: date-time */
+            deletedAt: string | null;
+        };
+        ChangeSlugRequest: {
+            /** @description Required unless `regenerate` is true. */
+            slug?: string | null;
+            /**
+             * @description Rebuild the slug from the current name (KMU 2010 transliteration, collision suffix -2, -3, ...).
+             * @default false
+             */
+            regenerate: boolean;
+        };
+        ChangeSlugResponse: {
+            id: number;
+            slug: string;
+            previousSlug: string;
+        };
+        AdminCategoryContentItem: components["schemas"]["CategoryContent"] & {
+            /** @enum {string} */
+            language: "uk" | "ru";
+            /** @description Identity user ID of the last editor. */
+            updatedBy: string;
+        };
+        AdminCategoryContent: {
+            categoryId: number;
+            items: components["schemas"]["AdminCategoryContentItem"][];
+        };
+        SaveCategoryContentRequest: {
+            seoTitle?: string | null;
+            metaDescription?: string | null;
+            h1?: string | null;
+            bodyHtml?: string | null;
+            faq?: components["schemas"]["CategoryFaqItem"][] | null;
         };
         AdminProduct: {
             id: number;
@@ -952,6 +1104,9 @@ export interface components {
             price?: number | null;
             stock: number;
             quantityInPack: number;
+            isDeleted?: boolean;
+            /** Format: date-time */
+            deletedAt?: string | null;
         };
         AdminProductPage: {
             pagedInfo: components["schemas"]["PagedInfo"];
@@ -1523,7 +1678,9 @@ export interface components {
         PriceTypeId: number;
         PriceFrom: number;
         PriceTo: number;
-        ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc";
+        /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
+        Availability: "InStock" | "All";
+        ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc" | "AvailabilityThenName";
         Page: number;
         PageSize: number;
         "parameters-CategoryId": number;
@@ -1551,7 +1708,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Ordered forest of category roots and their recursive children; may be empty before category import. */
+            /** @description Ordered forest of category roots and their recursive children with product counts. Deleted categories and categories without exported products are omitted with their subtrees. May be empty before category import. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1575,7 +1732,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Requested category with ordered recursive children and root-to-category breadcrumbs. */
+            /** @description Requested category with ordered recursive non-empty children and root-to-category breadcrumbs. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1585,12 +1742,14 @@ export interface operations {
                 };
             };
             400: components["responses"]["ValidationError"];
-            /** @description Category not found */
+            /** @description Category not found. For a deleted category with an active ancestor the body names the nearest one; otherwise there is no body. */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CatalogRedirect"];
+                };
             };
         };
     };
@@ -1605,6 +1764,8 @@ export interface operations {
                 priceTypeId?: components["parameters"]["PriceTypeId"];
                 priceFrom?: components["parameters"]["PriceFrom"];
                 priceTo?: components["parameters"]["PriceTo"];
+                /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
+                availability?: components["parameters"]["Availability"];
                 sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
                 pageSize?: components["parameters"]["PageSize"];
@@ -1640,6 +1801,8 @@ export interface operations {
                 priceTypeId?: components["parameters"]["PriceTypeId"];
                 priceFrom?: components["parameters"]["PriceFrom"];
                 priceTo?: components["parameters"]["PriceTo"];
+                /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
+                availability?: components["parameters"]["Availability"];
                 sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
                 pageSize?: components["parameters"]["PageSize"];
@@ -1663,6 +1826,13 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
+            /** @description Unknown or deleted category slug. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     getPublicProductBySlug: {
@@ -1689,18 +1859,23 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
-            /** @description Product not found */
+            /** @description Product not found. For a deleted product whose category is active the body names that category; otherwise there is no body. */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CatalogRedirect"];
+                };
             };
         };
     };
     getAdminCategories: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description `true` lists soft-deleted categories only (flat, newest first). Admin role only. */
+                deleted?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1723,7 +1898,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager or Admin role, or `deleted=true` without the Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1776,6 +1951,147 @@ export interface operations {
             };
         };
     };
+    changeAdminCategorySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["parameters-CategoryId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSlugRequest"];
+            };
+        };
+        responses: {
+            /** @description Slug changed (or already equal). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeSlugResponse"];
+                };
+            };
+            400: components["responses"]["ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Category not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCategoryContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["parameters-CategoryId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Stored languages, possibly none. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryContent"];
+                };
+            };
+            400: components["responses"]["ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Category not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saveAdminCategoryContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["parameters-CategoryId"];
+                lang: components["parameters"]["Lang"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveCategoryContentRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved content as stored, with the sanitized body. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryContentItem"];
+                };
+            };
+            400: components["responses"]["ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Category not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getAdminProducts: {
         parameters: {
             query?: {
@@ -1788,6 +2104,8 @@ export interface operations {
                 exportToSite?: components["parameters"]["ExportToSite"];
                 priceFrom?: components["parameters"]["PriceFrom"];
                 priceTo?: components["parameters"]["PriceTo"];
+                /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin role only. */
+                deleted?: boolean;
                 sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
                 pageSize?: components["parameters"]["PageSize"];
@@ -1815,7 +2133,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager or Admin role, or `deleted=true` without the Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1939,6 +2257,54 @@ export interface operations {
                 content?: never;
             };
             /** @description Product not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeAdminProductSlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSlugRequest"];
+            };
+        };
+        responses: {
+            /** @description Slug changed (or already equal). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeSlugResponse"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found or deleted. */
             404: {
                 headers: {
                     [name: string]: unknown;

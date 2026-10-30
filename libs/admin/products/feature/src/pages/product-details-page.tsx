@@ -1,32 +1,48 @@
 import { useGetAdminProductDetailsQuery } from '@admin/products/data-access';
 import { ProductDetailsContent } from '@admin/products/ui';
 import { appConfig } from '@admin/shared/config';
-import { AdminDetailHeader, PageLoader } from '@admin/shared/ui';
+import {
+  AdminDetailHeader,
+  ChangeSlugDialog,
+  NoticeSnackbar,
+  PageLoader,
+  PublicAddressCard,
+} from '@admin/shared/ui';
 import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { addProductFeedback } from '../feedback/add-product-feedback';
+import { useProductSlugChange } from '../hooks/use-product-slug-change';
+
+import type { AddProductFeedback } from '../feedback/add-product-feedback';
 import type { AddProductResult } from '../products.routes';
 
 const photoStorageUrl = 'https://images-kedr.cdn.express/~/o/products';
+const publicPathPrefix = '/uk/product/';
 
 export function ProductDetailsPage({
+  canEditSlug = false,
   onAddProduct,
 }: {
+  canEditSlug?: boolean;
   onAddProduct?: (productId: number) => AddProductResult;
 }) {
   const { productSlug } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [notice, setNotice] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [addFeedback, setAddFeedback] = useState<{
-    message: string;
-    severity: 'info' | 'warning';
-  } | null>(null);
+  const [addFeedback, setAddFeedback] = useState<AddProductFeedback | null>(null);
   const slug = productSlug?.trim() ?? '';
   const validSlug = slug.length > 0 && slug.length <= 255 && !slug.includes('/');
   const query = useGetAdminProductDetailsQuery(slug, { skip: !validSlug });
   const error = query.error as { code?: string; status?: number } | undefined;
   const notFound = error?.code === 'NotFound' || error?.status === 404;
+  const slugChange = useProductSlugChange(query.data?.id, (newSlug) => {
+    setNotice(`Нова адреса: ${newSlug}`);
+    navigate(`/catalog/${encodeURIComponent(newSlug)}${location.search}`, { replace: true });
+  });
   const publicUrl =
     query.data?.exportToSite && query.data.productSlug.trim()
       ? `${appConfig.storefrontBaseUrl.replace(/\/$/, '')}/uk/catalog/product/${encodeURIComponent(query.data.productSlug)}`
@@ -58,39 +74,36 @@ export function ProductDetailsPage({
           Не вдалося завантажити товар. Спробуйте ще раз.
         </Alert>
       ) : query.data ? (
-        <ProductDetailsContent
-          product={query.data}
-          publicUrl={publicUrl}
-          photoStorageUrl={photoStorageUrl}
-          onAddProduct={
-            onAddProduct
-              ? (id) => {
-                  const result = onAddProduct(id);
-                  setAddFeedback(
-                    result === 'saved'
-                      ? {
-                          message: 'Товар додано до поточного набору замовлення.',
-                          severity: 'info',
-                        }
-                      : result === 'volatile'
-                        ? {
-                            message:
-                              'Товар додано лише в цій вкладці. Браузер не зберіг набір; після закриття вкладки зміни можуть зникнути.',
-                            severity: 'warning',
-                          }
-                        : {
-                            message:
-                              'Не вдалося додати товар. Перевірте ліміт позицій і кількість.',
-                            severity: 'warning',
-                          },
-                  );
-                }
-              : undefined
-          }
-        />
+        <>
+          <ProductDetailsContent
+            product={query.data}
+            publicUrl={publicUrl}
+            photoStorageUrl={photoStorageUrl}
+            onAddProduct={
+              onAddProduct
+                ? (id) => setAddFeedback(addProductFeedback(onAddProduct(id)))
+                : undefined
+            }
+          />
+          <PublicAddressCard
+            onEdit={canEditSlug ? slugChange.openDialog : undefined}
+            pathPrefix={publicPathPrefix}
+            slug={query.data.productSlug}
+          />
+          <ChangeSlugDialog
+            currentSlug={query.data.productSlug}
+            error={slugChange.error}
+            onClose={slugChange.close}
+            onSubmit={(input) => void slugChange.submit(input)}
+            open={slugChange.open}
+            pathPrefix={publicPathPrefix}
+            saving={slugChange.saving}
+          />
+        </>
       ) : (
         <Alert severity="info">Деталі товару недоступні.</Alert>
       )}
+      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
     </Stack>
   );
 }

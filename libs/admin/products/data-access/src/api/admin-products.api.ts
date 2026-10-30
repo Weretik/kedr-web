@@ -22,6 +22,13 @@ import type {
   ProductsListPage,
   ProductsListQuery,
 } from '@admin/products/model';
+import type { components } from '@shared/api-contracts';
+
+type ChangeSlugBody = components['schemas']['ChangeSlugRequest'];
+type ChangeSlugResult = components['schemas']['ChangeSlugResponse'];
+
+/** A typed address or a request to rebuild it from the name. */
+export type ProductSlugChange = { slug: string } | { regenerate: true };
 
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -60,11 +67,29 @@ export const productsApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
       transformResponse: mapAdminProductDetailsResponse,
+      providesTags: (result) => (result ? [{ type: 'Products' as const, id: result.id }] : []),
+    }),
+    changeProductSlug: build.mutation<ChangeSlugResult, { id: number; input: ProductSlugChange }>({
+      query: ({ id, input }) => ({
+        url: `/api/admin/products/${id}/slug`,
+        method: 'PUT',
+        data: ('regenerate' in input
+          ? { regenerate: true }
+          : { slug: input.slug, regenerate: false }) satisfies ChangeSlugBody,
+      }),
+      invalidatesTags: (_result, error, { id }) =>
+        error
+          ? []
+          : [
+              { type: 'Products', id },
+              { type: 'Products', id: 'LIST' },
+            ],
     }),
   }),
 });
 
 export const {
+  useChangeProductSlugMutation,
   useGetAllAdminProductsQuery,
   useGetProductsListQuery,
   useGetMissingPhotoProductsQuery,

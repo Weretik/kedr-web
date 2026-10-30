@@ -12,6 +12,7 @@ const node = (id: number, sortOrder: number, overrides: Partial<Node> = {}): Nod
   sortOrder,
   level: 0,
   children: [],
+  productCount: 0,
   ...overrides,
 });
 

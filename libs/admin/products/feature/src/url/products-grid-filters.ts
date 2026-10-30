@@ -1,7 +1,10 @@
 import type { MissingPhotoQuery, ProductsListQuery } from '@admin/products/model';
 import type { GridFilterModel } from '@mui/x-data-grid';
 
-export function toProductsGridFilterModel(query: ProductsListQuery | MissingPhotoQuery, missing: boolean): GridFilterModel {
+export function toProductsGridFilterModel(
+  query: ProductsListQuery | MissingPhotoQuery,
+  missing: boolean,
+): GridFilterModel {
   const items: GridFilterModel['items'] = [];
   if (!missing) {
     const all = query as ProductsListQuery;
@@ -16,7 +19,10 @@ export function toProductsGridFilterModel(query: ProductsListQuery | MissingPhot
   return { items, quickFilterValues: query.searchTerm ? [query.searchTerm] : [] };
 }
 
-export function fromProductsGridFilterModel(model: GridFilterModel, missing: boolean): Pick<ProductsListQuery, 'searchTerm' | 'priceFrom' | 'priceTo'> {
+export function fromProductsGridFilterModel(
+  model: GridFilterModel,
+  missing: boolean,
+): Pick<ProductsListQuery, 'searchTerm' | 'priceFrom' | 'priceTo'> {
   const result: Pick<ProductsListQuery, 'searchTerm' | 'priceFrom' | 'priceTo'> = {
     searchTerm: model.quickFilterValues?.map(String).join(' ').trim().slice(0, 100) || undefined,
     priceFrom: undefined,
@@ -28,7 +34,10 @@ export function fromProductsGridFilterModel(model: GridFilterModel, missing: boo
       if (!Number.isFinite(value) || value < 0) continue;
       if (item.operator === '>=') result.priceFrom = value;
       if (item.operator === '<=') result.priceTo = value;
-      if (item.operator === '=') { result.priceFrom = value; result.priceTo = value; }
+      if (item.operator === '=') {
+        result.priceFrom = value;
+        result.priceTo = value;
+      }
     }
   }
   return result;

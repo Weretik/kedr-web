@@ -2,9 +2,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { AdminPageHeader } from './admin-page-header';
-import { DataGridMessageOverlay } from './data-grid-message-overlay';
-import { StatusPill } from './status-pill';
+import { DataGridMessageOverlay } from './feedback/data-grid-message-overlay';
+import { StatusPill } from './feedback/status-pill';
+import { AdminPageHeader } from './layout/admin-page-header';
 
 function renderEmptyGrid(onRetry?: () => void, message = 'Товарів немає.') {
   render(

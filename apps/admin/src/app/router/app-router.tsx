@@ -1,5 +1,7 @@
+import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
 import {
+  canEditCatalog,
   canManageUsers,
   LoginPage,
   loginPath,
@@ -45,6 +47,12 @@ function AdminShellRoute({ user }: { user: SessionUser }) {
 
 const usersRoutes = createUsersRoutes({ useCurrentUserId: useSignedInUserId });
 const profileRoutes = createProfileRoutes({ onProfileChanged: refreshSession });
+const categoriesRoutes = createCategoriesRoutes({ useCanEditCatalog });
+
+function useCanEditCatalog(): boolean {
+  const session = useAdminSession();
+  return session.status === 'authenticated' && canEditCatalog(session.user);
+}
 
 function useSignedInUserId(): string | null {
   const session = useAdminSession();
@@ -63,7 +71,9 @@ export function AppRouter() {
         ...dashboardRoutes,
         ...createProductsRoutes({
           onAddProduct: (productId) => addProductToCurrentOrder(String(productId)),
+          useCanEditCatalog,
         }),
+        ...categoriesRoutes,
         ...createOrdersRoutes({ CustomerPicker }),
         ...createClientsRoutes({
           renderOrdersPanel: (counterpartyId, returnTo) => (

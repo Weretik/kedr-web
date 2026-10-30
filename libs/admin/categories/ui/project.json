@@ -1,0 +1,13 @@
+{
+  "name": "admin-categories-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/categories/ui/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:categories", "type:ui"],
+  "// targets": "to see all targets run: nx show project admin-categories-ui --web",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

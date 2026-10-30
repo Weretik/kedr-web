@@ -11,6 +11,8 @@ const adminCategorySchema = z.object({
   parentId: z.number().nullable(),
   sortOrder: z.number(),
   level: z.number(),
+  isDeleted: z.boolean().default(false),
+  deletedAt: z.string().nullable().default(null),
 });
 
 const adminCategoriesSchema = z.array(adminCategorySchema);

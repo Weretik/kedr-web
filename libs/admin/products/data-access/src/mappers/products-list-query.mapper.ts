@@ -2,7 +2,9 @@ import type { AdminProductsListParams } from '../contracts/admin-products-list.c
 import type { MissingPhotoQuery, ProductsListQuery, ProductsListSort } from '@admin/products/model';
 import type { operations } from '@shared/api-contracts';
 
-type MissingPhotoParams = NonNullable<operations['getAdminProductsWithUnavailablePhotos']['parameters']['query']>;
+type MissingPhotoParams = NonNullable<
+  operations['getAdminProductsWithUnavailablePhotos']['parameters']['query']
+>;
 
 const sortToApiValue: Record<ProductsListSort, NonNullable<AdminProductsListParams['sort']>> = {
   'id-asc': 'IdAsc',
@@ -22,6 +24,7 @@ export function mapProductsListQueryToApi(query: ProductsListQuery) {
     isSale: query.isSale,
     isNew: query.isNew,
     exportToSite: query.exportToSite,
+    deleted: query.deleted,
     categoryId: query.categoryId,
     priceFrom: query.priceFrom,
     priceTo: query.priceTo,

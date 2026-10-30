@@ -14,6 +14,8 @@ export interface ProductsListQuery {
   isSale?: boolean;
   isNew?: boolean;
   exportToSite?: boolean;
+  /** Soft-deleted products only (administrators); the server then supports search and paging only. */
+  deleted?: boolean;
   categoryId?: number;
   priceFrom?: number;
   priceTo?: number;
@@ -48,7 +50,11 @@ export function normalizeProductsListQuery(query: ProductsListQuery): ProductsLi
     isSale: typeof query.isSale === 'boolean' ? query.isSale : undefined,
     isNew: typeof query.isNew === 'boolean' ? query.isNew : undefined,
     exportToSite: typeof query.exportToSite === 'boolean' ? query.exportToSite : undefined,
-    categoryId: Number.isInteger(query.categoryId) && (query.categoryId ?? 0) > 0 ? query.categoryId : undefined,
+    deleted: query.deleted === true ? true : undefined,
+    categoryId:
+      Number.isInteger(query.categoryId) && (query.categoryId ?? 0) > 0
+        ? query.categoryId
+        : undefined,
     priceFrom: normalizePrice(query.priceFrom),
     priceTo: normalizePrice(query.priceTo),
     sort: isProductsListSort(query.sort) ? query.sort : DEFAULT_PRODUCTS_LIST_QUERY.sort,

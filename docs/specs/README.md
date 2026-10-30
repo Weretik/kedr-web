@@ -11,6 +11,7 @@
 - [Product browsing and “Without photo” mode](admin/products/001-read-only-product-browsing/README.md)
 - [Admin customer browsing](admin/clients/001-read-only-customers/README.md)
 - [Staff profile, avatars and header menu](admin/users/001-staff-profile-and-avatars/README.md)
+- [Categories: stable addresses, SEO text and FAQ](admin/categories/001-slugs-seo-content/README.md)
 - [Admin orders and drafts](admin/orders/001-order-workspace/README.md)
 - [Admin order responsibility split](admin/orders/002-order-structure-remediation/README.md)
 - [Customer prices and per-unit discount/markup](admin/orders/003-customer-prices-and-adjustments/README.md)
