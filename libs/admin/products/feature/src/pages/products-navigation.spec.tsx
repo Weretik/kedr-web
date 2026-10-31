@@ -1,9 +1,17 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { routerLinkComponents } from '@admin/shared/routing';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { fireEvent, render as renderUi, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ProductDetailsPage } from './product-details-page';
 import { ProductsPage } from './products-page';
+
+import type { ReactElement } from 'react';
+
+const linkTheme = createTheme({ components: routerLinkComponents });
+const render = (ui: ReactElement) =>
+  renderUi(<ThemeProvider theme={linkTheme}>{ui}</ThemeProvider>);
 
 const api = vi.hoisted(() => ({
   all: vi.fn(),

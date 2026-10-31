@@ -7,8 +7,8 @@ import {
 } from '@admin/users/data-access';
 import { useState } from 'react';
 
+import { useAvatarChange } from './use-avatar-change';
 import { useConfirmedChange } from './use-confirmed-change';
-import { useAvatarChange } from '../avatar/use-avatar-change';
 
 import type { StaffAccount } from '@admin/users/model';
 import type { StaffAccountAction } from '@admin/users/ui';

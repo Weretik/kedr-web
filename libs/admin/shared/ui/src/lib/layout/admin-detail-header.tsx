@@ -1,11 +1,11 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Stack, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 
 import type { ReactNode, Ref } from 'react';
 
 interface AdminDetailHeaderProps {
   backLabel: string;
+  /** In-app path; the theme's link component routes it without a page reload. */
   backTo: string;
   title: string;
   /** Page actions, aligned to the end on wide screens. */
@@ -30,11 +30,10 @@ export function AdminDetailHeader({
     >
       <Stack spacing={1} sx={{ alignItems: 'flex-start', minWidth: 0 }}>
         <Button
-          component={RouterLink}
+          href={backTo}
           size="small"
           startIcon={<ArrowBackIcon fontSize="small" />}
           sx={{ color: 'text.secondary', ml: -1, '&:hover': { color: 'text.primary' } }}
-          to={backTo}
           variant="text"
         >
           {backLabel}

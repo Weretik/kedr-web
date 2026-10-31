@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { fromProductsGridFilterModel } from '../url/products-grid-filters';
-import { readProductsUrlState, writeProductsUrlState } from '../url/products-url-state';
+import { fromProductsGridFilterModel } from '../model/products-grid-filters';
+import { readProductsUrlState, writeProductsUrlState } from '../model/products-url-state';
 
-import type { ProductsListMode, ProductsUrlState } from '../url/products-url-state';
+import type { ProductsListMode, ProductsUrlState } from '../model/products-url-state';
 import type { ProductsListQuery, ProductsListSort } from '@admin/products/model';
 import type { GridFilterModel } from '@mui/x-data-grid';
 

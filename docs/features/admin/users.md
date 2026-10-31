@@ -5,7 +5,7 @@
 - [UsersPage](../../../libs/admin/users/feature/src/pages/users-page.tsx) lists staff accounts (Admin and Manager) with photo or coloured initial, role and status, and opens dialogs to add a user, change the role, block or unblock. For **manager** rows it also changes the name, email, password and photo; admin rows do not offer these (the API answers `403`), an admin edits their own data in [Мій кабінет](profile.md).
 - [useStaffAccountActions](../../../libs/admin/users/feature/src/hooks/use-staff-account-actions.ts) holds create, role and blocking; [useStaffProfileActions](../../../libs/admin/users/feature/src/hooks/use-staff-profile-actions.ts) holds the manager edits, each confirmed in a dialog before it is sent; [staff-error-message](../../../libs/admin/users/feature/src/errors/staff-error-message.ts) turns `409` (email taken), `400` validation, and other errors into dialog messages.
 - The signed-in admin cannot demote or block their own account: the menu items are disabled and the API rejects it. A role change, blocking, a new email, or a new password ends that user's sessions (cookie within 5 minutes, mobile refresh tokens at once).
-- Client validation in [staff-account-rules](../../../libs/admin/users/model/src/validation/staff-account-rules.ts) mirrors the server: valid email, name required, password at least 8 characters.
+- Client validation in [staff-account-rules](../../../libs/admin/users/model/src/validators/staff-account-rules.ts) mirrors the server: valid email, name required, password at least 8 characters.
 - Data comes from [admin-users.api](../../../libs/admin/users/data-access/src/api/admin-users.api.ts) (`/api/admin/users`, tag `StaffAccounts`). Contract: [Staff accounts](../../contracts/identity/staff-accounts.md).
 
 ## Architecture
@@ -26,7 +26,7 @@ Dialogs --> Rules["staff-account-rules (model)"]
 libs/admin/users/
 ├── model/src/
 │   ├── entities/staff-account.ts  # StaffAccount, roles and labels
-│   └── validation/staff-account-rules.ts  # email, name, password rules
+│   └── validators/staff-account-rules.ts  # email, name, password rules
 ├── data-access/src/
 │   ├── api/admin-users.api.ts  # list, create, role, blocked, password, name, email, avatar
 │   ├── contracts/staff-account.contract.ts  # generated contract types

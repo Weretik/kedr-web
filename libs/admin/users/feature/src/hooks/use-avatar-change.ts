@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { checkAvatarFile } from './check-avatar-file';
+import { checkAvatarFile } from '../model/check-avatar-file';
 
-import type { ChangeRequest } from '../hooks/use-confirmed-change';
+import type { ChangeRequest } from './use-confirmed-change';
 
 interface AvatarChangeOptions {
   /** Who the photo is for, as the confirmation names them. */

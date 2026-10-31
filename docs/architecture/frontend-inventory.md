@@ -26,12 +26,12 @@ This document records the current workspace; it does not declare violations acce
 
 ## Applications and library groups
 
-| Application  | Composition root  | Main libraries                                                                                 |
-| ------------ | ----------------- | ---------------------------------------------------------------------------------------------- |
-| `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*` |
-| `site`       | `apps/site`       | `libs/site/{core/{config,i18n,seo,shell},shared/{ui,api-client}}`                              |
-| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,clients/*,users/*,shared/*}`                  |
-| `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                          |
+| Application  | Composition root  | Main libraries                                                                                      |
+| ------------ | ----------------- | --------------------------------------------------------------------------------------------------- |
+| `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*`      |
+| `site`       | `apps/site`       | `libs/site/{core/{config,i18n,seo,shell},shared/{ui,api-client}}`                                   |
+| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/feature,products/*,categories/*,orders/*,clients/*,users/*,shared/*}` |
+| `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                               |
 
 All libraries have a root `src/index.ts`; cross-library imports found during baseline search use aliases from `tsconfig.base.json`. No deep alias imports were found. Some barrels expose internal transport/mappers/storage; this is AF-008, not an approved public contract.
 

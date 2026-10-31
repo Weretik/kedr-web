@@ -1,12 +1,12 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 
-import { ProductsBooleanFilterHeader } from '../cells/products-boolean-filter-header';
-import { ProductsViewActionCell } from '../cells/products-view-action-cell';
-import { productCategoryPath } from '../product-category-path';
-import { productsDataGridColumns } from '../products-data-grid.columns';
+import { ProductsBooleanFilterHeader } from '../tables/cells/products-boolean-filter-header';
+import { ProductsViewActionCell } from '../tables/cells/products-view-action-cell';
+import { productCategoryPath } from '../tables/product-category-path';
+import { productsDataGridColumns } from '../tables/products-data-grid.columns';
 
-import type { ProductBooleanField } from '../cells/products-boolean-filter-header';
+import type { ProductBooleanField } from '../tables/cells/products-boolean-filter-header';
 import type { AdminProductListItem, ProductCategoryOption } from '@admin/products/model';
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 

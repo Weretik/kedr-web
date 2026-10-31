@@ -3,7 +3,7 @@ import { avatarRulesHint } from '@admin/users/model';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Alert, Button, Stack, Typography } from '@mui/material';
 
-import { AvatarPickerButton } from '../avatar/avatar-picker-button';
+import { AvatarPickerButton } from '../avatar-picker-button';
 
 import type { StaffProfile } from '@admin/users/model';
 

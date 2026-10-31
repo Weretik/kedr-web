@@ -13,7 +13,7 @@ export type {
   PageInfo,
   PricedLine,
   QuotedLine,
-} from './orders-model';
+} from './entities/orders-model';
 export {
   adjustedLine,
   formatPriceAdjustment,
@@ -22,5 +22,5 @@ export {
   minDiscountedUnitPrice,
   parsePriceAdjustment,
   priceAdjustmentTone,
-} from './price-adjustment';
-export type { ParsedPriceAdjustment, PriceAdjustmentTone } from './price-adjustment';
+} from './mappers/price-adjustment';
+export type { ParsedPriceAdjustment, PriceAdjustmentTone } from './mappers/price-adjustment';

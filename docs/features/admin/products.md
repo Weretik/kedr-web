@@ -31,15 +31,14 @@ libs/admin/products/
 ├── feature/src/pages/products-page.tsx           # list page composition
 ├── feature/src/pages/product-details-page.tsx    # product details and address change
 ├── feature/src/hooks/                            # list URL state, list data, slug change
-├── feature/src/url/                              # URL ↔ list query and grid filters
-├── feature/src/feedback/                         # add-to-order result → notice
+├── feature/src/model/                            # URL ↔ list query, grid filters, add-to-order notice
 ├── data-access/src/api/admin-products.api.ts     # catalog requests
-├── data-access/src/mappers/                     # data validation and projection
+├── data-access/src/mappers/                     # DTO → model projection
 ├── model/src/                                   # product types and parameters
 └── ui/src/
     ├── tables/                                  # products and deleted grids, columns, sort, cells
     ├── tables/toolbar/                          # search, filter button, category tree picker
-    ├── tables/hooks/                            # grid columns, filter panel width
+    ├── hooks/                                   # grid columns, filter panel width
     └── components/                              # detail blocks without HTTP
 
 libs/admin/shared/ui/src/lib/                    # layout/, feedback/, slug/, user/

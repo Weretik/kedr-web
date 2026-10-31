@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { DeletedProductsPanel } from '../components/deleted-products-panel';
 import { ProductsPageToolbar } from '../components/products-page-toolbar';
-import { addProductFeedback } from '../feedback/add-product-feedback';
 import { useProductsListData } from '../hooks/use-products-list-data';
 import { useProductsListState } from '../hooks/use-products-list-state';
-import { toProductsGridFilterModel } from '../url/products-grid-filters';
+import { addProductFeedback } from '../model/add-product-feedback';
+import { toProductsGridFilterModel } from '../model/products-grid-filters';
 
-import type { AddProductFeedback } from '../feedback/add-product-feedback';
+import type { AddProductFeedback } from '../model/add-product-feedback';
+import type { ProductsListMode } from '../model/products-url-state';
 import type { AddProductResult } from '../products.routes';
-import type { ProductsListMode } from '../url/products-url-state';
 import type { AdminProductListItem } from '@admin/products/model';
 
 const emptyMessages: Partial<Record<ProductsListMode, string>> = {

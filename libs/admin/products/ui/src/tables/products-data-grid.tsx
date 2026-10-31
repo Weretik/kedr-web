@@ -3,9 +3,9 @@ import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 
-import { usePanelWidth } from './hooks/use-panel-width';
-import { useProductsGridColumns } from './hooks/use-products-grid-columns';
 import { toGridSortModel, toProductsListSort } from './products-data-grid.sort';
+import { usePanelWidth } from '../hooks/use-panel-width';
+import { useProductsGridColumns } from '../hooks/use-products-grid-columns';
 import { ProductsGridToolbar } from './toolbar/products-grid-toolbar';
 import { ProductsGridToolbarContext } from './toolbar/products-grid-toolbar-context';
 

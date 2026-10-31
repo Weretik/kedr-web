@@ -2,25 +2,90 @@
 
 ## Libraries and dependencies
 
-- Place domain code in `libs/admin/<domain>/{model,data-access,ui,feature}`.
-- `model` contains pure TypeScript types, queries, defaults, and invariants; it does not depend on React, HTTP, or browser APIs.
-- `data-access` owns private DTOs, mappers, and RTK Query hooks; it does not contain JSX, routing, or feature-local state.
-- `ui` contains presentational components, forms, tables, and states; it does not call the API or router.
-- `feature` orchestrates pages, hooks, and local UI state; it passes domain data and callbacks to `ui`.
-- Import across libraries only through aliases and the public `src/index.ts`; deep imports are prohibited.
+- Place domain code in `libs/admin/<domain>/{model,data-access,ui,feature}`. Do not create empty libraries in advance, but once a responsibility exists, give it its layer: domain types and invariants in `model`, transport and cache in `data-access`, reusable domain presentation in `ui`, and orchestration in `feature`.
+- `model` contains pure TypeScript types, constants, queries, defaults, and invariants; it does not depend on React, HTTP, the router, or browser APIs.
+- `data-access` owns endpoints, private DTO adapters, runtime validation, mappers, and RTK Query hooks; it contains no JSX, router, or feature-local state.
+- `ui` contains presentational components, forms, tables, dialogs, and feedback states; it does not call APIs or import the router.
+- `feature` orchestrates routes, pages, hooks, and local UI state; it passes domain data and callbacks to `ui`.
+- Between libraries, import only through aliases and the public `src/index.ts`; deep imports and aliases directly to internal files are prohibited. An additional entry point is allowed only as a separate documented public contract with its own boundary check, not as a way around the root `index.ts`.
+- Public APIs export only consumer contracts. Do not export transport helpers, private DTO adapters, response parsers, or internal mappers.
+- Nx tags and `depConstraints` must enforce the same dependency direction as the documentation. A layer is not considered established until lint actually allows valid dependencies and blocks reverse dependencies.
 
-## Structure and state
+## Role folders
 
-- Give each file, component, and directory one cohesive responsibility.
-- For a new Admin feature, record a concise planned map of key files and roles in the SDD before coding; before delivery, compare it with the actual code and the [delivery rules](../shared/delivery-rules.md). Split by independent roles, not by an arbitrary line limit.
-- Group internal code by role: `components`, `pages`, `hooks`, `state`, `forms`, `tables`, `mappers`, and `contracts`.
-- Do not create catch-all directories or names such as `common`, `misc`, `helpers`, `utils`, or `types` without a domain purpose.
-- RTK Query owns server data, loading, and API errors; do not duplicate them in a reducer.
+Inside `src/`, group files by role first and use only the names below, so every domain reads the same way. A new role name needs a recorded decision in this file before use.
+
+| Library       | Role folders                                                                                                                                                                                                                                                                                                                                         |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-access` | `api/` endpoints and hooks · `contracts/` private adapters over generated DTOs · `validators/` runtime response and request validation · `mappers/` validated DTO <-> domain · `models/` technical request/cache types · `cache/` optimistic updates and cache patches · `errors/` API error -> domain error · `testing/` fixtures and request mocks |
+| `model`       | `entities/` domain types with their constants · `queries/` query parameters, defaults, invariants · `mappers/` pure domain transformations · `validators/` pure domain and form rules · `forms/` form values, defaults, form <-> domain mapping                                                                                                      |
+| `ui`          | `components/` · `tables/` (with `cells/`, `toolbar/`) · `forms/` · `dialogs/` · `details/` · `feedback/` loading, empty, error, and notice states · `hooks/` presentation-only hooks                                                                                                                                                                 |
+| `feature`     | `<domain>.routes.tsx` · `pages/` · `components/` · `dialogs/` feature-only dialogs · `hooks/` orchestration · `state/` reducers and URL or persisted client state · `model/` feature-local pure logic such as URL params and view models · `errors/` user-facing messages · `testing/`                                                               |
+| `shared/ui`   | Component-library categories: `layout/`, `feedback/`, `inputs/`, `data-display/`, `navigation/`; a cross-domain concept used by two or more domains (for example `slug/`) may have its own folder                                                                                                                                                    |
+
+## Nesting and size
+
+- Create a role folder when the role exists, even for one file.
+- Inside a role folder, add a capability subfolder (`components/quote-editor/`, `hooks/sewing-pricing/`) when it would hold two or more files or when the folder mixes independent flows. The order is always role first, then capability; never `src/<capability>/<role>/` or a capability folder directly under `src/`.
+- A large component with its own subcomponents gets its own folder inside `components/`.
+- A role or capability folder with eight or more production files is a required signal to record a `split/keep` decision in the code audit.
+- Keep each test next to its production file at the same level.
+
+```text
+libs/admin/<domain>/feature/src/
+├── <domain>.routes.tsx
+├── pages/
+│   ├── <capability-a>/
+│   │   ├── <page>.tsx
+│   │   └── <page>.spec.tsx
+│   └── <capability-b>/
+├── components/
+│   └── <capability-a>/
+├── hooks/
+│   └── <capability-a>/
+├── model/
+├── state/
+└── index.ts
+```
+
+## Forbidden names and where the code goes
+
+Do not create catch-all folders or files named `utils`, `helpers`, `common`, `misc`, `shared` (inside a domain), `types`, or `constants`.
+
+| Code                                          | Place                                                                                  |
+| --------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Status lists, limits, enums                   | `model/src/entities/` next to the type they describe                                   |
+| Pure calculation or formatting for one domain | `model/src/mappers/` or `model/src/queries/`                                           |
+| Form validation rules                         | `model/src/validators/`                                                                |
+| API response validation                       | `data-access/src/validators/`; mappers receive already validated data                  |
+| Types                                         | Next to their owner: `entities/`, `contracts/`, `models/`, or the component file       |
+| Pure helpers used by two or more domains      | `libs/admin/shared/util` (an Nx `util` library), only after the second consumer exists |
+
+## State
+
+- Server data, loading, and API errors belong to RTK Query; do not duplicate them in a reducer.
 - Keep simple feature-local state in component state; create a reducer only for related transitions or shared feature state.
-- Do not make HTTP requests or hide business rules in JSX.
+- Do not perform HTTP requests or hide business rules in JSX.
 
-## Pages and routes
+## Pages, routes, and links
 
-- A page is an orchestrator; split toolbars, tables, complex cells, and feature-only dialogs by independent responsibility.
+- A page is an orchestrator; separate toolbars, tables, complex cells, and feature-only dialogs when they have independent responsibilities.
 - Reusable dialogs and forms belong in `ui` and receive values, errors, and callbacks through props.
-- Do not change routes, guards, the global store, or theme outside the feature's explicit scope.
+- `ui` and `shared/ui` never import the router. Links use `href` (or a path passed as a prop); the application registers one router-aware link component in the MUI theme (`MuiLink` `component` and `MuiButtonBase` `LinkComponent`). Navigation after an action is a callback from `feature`.
+- Do not change routes, guards, the global store, or theme without explicit feature scope.
+
+## Admin specifics
+
+- `@admin/shared/routing` provides the router-aware `LinkBehavior` and `routerLinkComponents`. The Admin theme spreads them; page tests that render without the app pass `routerLinkComponents` to `createTheme`.
+- `no-restricted-imports` in the root `eslint.config.cjs` blocks `react-router`, `react-router-dom`, and `@admin/shared/routing` in `libs/admin/*/ui` and `libs/admin/shared/ui`.
+- `libs/admin/shared/ui` keeps the generator's `src/lib/` level: groups live in `src/lib/<category>/`.
+
+## Known deviations
+
+Existing code that does not follow these rules yet. Fix an entry when the code is next changed or in a separate remediation task; do not copy these layouts into new code.
+
+| Path under `libs/admin/`                                              | Deviation                                                  | Target                                                                                                                   |
+| --------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `core/shell/src/components/{layout,navigation,theme}/`                | Shell roles nested in `components/`                        | `layout/`, `navigation/` directly under `src/`, as in [domains](../../architecture/admin/structure/domains.md#admincore) |
+| `products/data-access`, `users/data-access`, `categories/data-access` | No runtime response validation; mappers read DTOs as typed | `validators/` with zod schemas, as in `orders` and `clients`                                                             |
+| `orders/feature/src/hooks/` (8)                                       | Eight production files                                     | `split/keep` decision in the next code audit                                                                             |

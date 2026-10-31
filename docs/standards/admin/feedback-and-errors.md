@@ -27,4 +27,4 @@ These rules keep errors and confirmations in the same place and wording on every
 
 ## Client and server checks
 
-A rule the client can check (format, range, minimum price) is checked while the manager types and again on the server; the server stays the authority and returns the same wording. Business limits live once in the model (for example `minDiscountedUnitPrice` and `adjustedPriceIssue` in [price-adjustment](../../../libs/admin/orders/model/src/price-adjustment.ts)) and match the backend constant.
+A rule the client can check (format, range, minimum price) is checked while the manager types and again on the server; the server stays the authority and returns the same wording. Business limits live once in the model (for example `minDiscountedUnitPrice` and `adjustedPriceIssue` in [price-adjustment](../../../libs/admin/orders/model/src/mappers/price-adjustment.ts)) and match the backend constant.

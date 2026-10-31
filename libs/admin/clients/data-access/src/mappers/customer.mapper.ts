@@ -1,37 +1,7 @@
-import { z } from 'zod';
+import { customerDetailSchema, customerPageSchema } from '../validators/customer.schemas';
 
 import type { CustomerDetailResponse, CustomerPageResponse } from '../contracts/customer.contract';
 import type { CustomerPage, CustomerDetail } from '@admin/clients/model';
-
-const customerListItemSchema = z.object({
-  counterpartyId: z.string().min(1).max(64),
-  name: z.string().max(300),
-  phone: z.string().max(50).nullable(),
-});
-
-const customerPageSchema = z.object({
-  pagedInfo: z.object({
-    pageNumber: z.number().int().min(1),
-    pageSize: z.number().int().min(1).max(100),
-    totalPages: z.number().int().nonnegative(),
-    totalRecords: z.number().int().nonnegative(),
-  }),
-  value: z.array(customerListItemSchema),
-});
-
-const customerDetailSchema = customerListItemSchema.extend({
-  email: z.string().max(320),
-  defaultPriceTypeId: z.number().int().min(1),
-  defaultPriceTypeName: z.string().nullable(),
-  categoryPriceTypes: z.array(
-    z.object({
-      categoryId: z.number().int().min(1),
-      categoryName: z.string().nullable(),
-      priceTypeId: z.number().int().min(1),
-      priceTypeName: z.string().nullable(),
-    }),
-  ),
-});
 
 export function mapCustomerPage(response: unknown): CustomerPage {
   const parsed = customerPageSchema.parse(response) satisfies CustomerPageResponse;

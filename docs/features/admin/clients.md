@@ -28,7 +28,8 @@ libs/admin/clients/
 ├── feature/src/pages/customers-page.tsx           # list and URL state
 ├── feature/src/pages/customer-details-page.tsx    # details and orders panel placement
 ├── data-access/src/api/admin-customers.api.ts     # list/detail requests
-├── data-access/src/mappers/customer.mapper.ts     # response validation
+├── data-access/src/validators/customer.schemas.ts # response validation (zod)
+├── data-access/src/mappers/customer.mapper.ts     # validated DTO → model
 ├── model/src/queries/customer-page-params.ts      # list parameters
 └── ui/src/                                       # table and cards without HTTP
 
