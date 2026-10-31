@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -14,16 +14,15 @@ interface CompanyStat {
   selector: 'lib-company-stats',
   imports: [NgClass],
   templateUrl: './company-stats.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './company-stats.css',
 })
 export class CompanyStats {
   private readonly translocoService = inject(TranslocoService);
-  private readonly activeLanguage = toSignal(
-    this.translocoService.langChanges$,
-    {
-      initialValue: this.translocoService.getActiveLang(),
-    },
-  );
+  private readonly activeLanguage = toSignal(this.translocoService.langChanges$, {
+    initialValue: this.translocoService.getActiveLang(),
+  });
 
   readonly sectionTitle = computed(() => {
     this.activeLanguage();

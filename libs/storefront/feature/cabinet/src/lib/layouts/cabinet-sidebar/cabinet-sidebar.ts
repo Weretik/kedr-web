@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { BadgeModule } from 'primeng/badge';
@@ -18,15 +18,10 @@ type CabinetSidebarGroup = {
 
 @Component({
   selector: 'lib-cabinet-sidebar',
-  imports: [
-    NgClass,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    BadgeModule,
-    TranslocoPipe,
-  ],
+  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet, BadgeModule, TranslocoPipe],
   templateUrl: './cabinet-sidebar.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cabinet-sidebar.css',
 })
 export class CabinetSidebar {

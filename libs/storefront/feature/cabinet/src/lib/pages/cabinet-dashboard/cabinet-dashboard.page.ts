@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
@@ -21,15 +21,10 @@ type NotificationItem = {
 
 @Component({
   selector: 'lib-cabinet-dashboard-page',
-  imports: [
-    CommonModule,
-    ButtonModule,
-    CardModule,
-    TableModule,
-    TagModule,
-    TimelineModule,
-  ],
+  imports: [CommonModule, ButtonModule, CardModule, TableModule, TagModule, TimelineModule],
   templateUrl: './cabinet-dashboard.page.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cabinet-dashboard.page.css',
 })
 export class CabinetDashboardPage {
@@ -77,9 +72,7 @@ export class CabinetDashboardPage {
     { title: 'Добавлена ТТН по заказу KDR-24065', date: '22.04.2026' },
   ];
 
-  statusSeverity(
-    status: OrderRow['status'],
-  ): 'info' | 'warn' | 'success' | 'contrast' {
+  statusSeverity(status: OrderRow['status']): 'info' | 'warn' | 'success' | 'contrast' {
     if (status === 'new') return 'info';
     if (status === 'processing') return 'warn';
     if (status === 'paid') return 'success';

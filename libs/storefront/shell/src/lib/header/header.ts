@@ -6,23 +6,17 @@ import {
   inject,
   signal,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '@shared/auth';
 import { ClipboardService, ThemeService } from '@shared/ui';
-import {
-  CartFacade,
-  CartUiFacade,
-  ProductListFacade,
-} from '@storefront/data-access';
+import { CartFacade, CartUiFacade, ProductListFacade } from '@storefront/data-access';
 import { Cart } from '@storefront/feature/cart';
 import { ProductListPageState } from '@storefront/feature/catalog';
-import {
-  LocaleNavigationService,
-  SearchHistoryService,
-} from '@storefront/util';
+import { LocaleNavigationService, SearchHistoryService } from '@storefront/util';
 import { MegaMenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenu } from 'primeng/megamenu';
@@ -54,6 +48,8 @@ import { buildMenu, type HeaderLocale } from './header.menu';
   templateUrl: './header.html',
   styleUrl: './header.css',
 
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
 })
 export class Header {
@@ -75,9 +71,7 @@ export class Header {
 
   readonly isSticky = signal(false);
   readonly hasHistory = this.history.items;
-  readonly currentLocale = signal<HeaderLocale>(
-    this.localeNavigation.getCurrentLocale(),
-  );
+  readonly currentLocale = signal<HeaderLocale>(this.localeNavigation.getCurrentLocale());
 
   constructor() {
     this.localeNavigation.saveLocale(this.currentLocale());
@@ -106,15 +100,12 @@ export class Header {
       return;
     }
 
-    this.router.navigate(
-      this.localeNavigation.localizedSegments('catalog', 'products'),
-      {
-        queryParams: {
-          search: search || null,
-          page: 1,
-        },
+    this.router.navigate(this.localeNavigation.localizedSegments('catalog', 'products'), {
+      queryParams: {
+        search: search || null,
+        page: 1,
       },
-    );
+    });
   }
 
   onSearchDraftChange(value: string, popover: Popover, event: Event): void {
@@ -154,9 +145,7 @@ export class Header {
   }
 
   openAccount(): void {
-    void this.router.navigate(
-      this.localeNavigation.localizedSegments('cabinet', 'dashboard'),
-    );
+    void this.router.navigate(this.localeNavigation.localizedSegments('cabinet', 'dashboard'));
   }
 
   async logout(): Promise<void> {
@@ -168,9 +157,7 @@ export class Header {
       // Always clear in-memory access token on client to avoid accidental re-entry.
       this.authService.forceLogout();
     }
-    await this.router.navigate(
-      this.localeNavigation.localizedSegments('login'),
-    );
+    await this.router.navigate(this.localeNavigation.localizedSegments('login'));
   }
 
   switchLocale(locale: HeaderLocale): void {
@@ -179,10 +166,7 @@ export class Header {
     this.currentLocale.set(locale);
     this.transloco.setActiveLang(locale);
     this.localeNavigation.saveLocale(locale);
-    const localizedUrl = this.localeNavigation.localizedUrlForLocale(
-      this.router.url,
-      locale,
-    );
+    const localizedUrl = this.localeNavigation.localizedUrlForLocale(this.router.url, locale);
     void this.router.navigateByUrl(localizedUrl).then((navigated) => {
       if (!navigated) {
         return;

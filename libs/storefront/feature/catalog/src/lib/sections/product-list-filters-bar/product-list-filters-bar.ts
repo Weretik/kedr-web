@@ -8,6 +8,7 @@ import {
   input,
   HostListener,
   untracked,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -70,6 +71,8 @@ type PanelMenuItemLabelPtOptions = {
     TranslocoPipe,
   ],
   templateUrl: './product-list-filters-bar.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './product-list-filters-bar.css',
 })
 export class ProductListFiltersBar {
@@ -103,10 +106,7 @@ export class ProductListFiltersBar {
         ? 'text-primary font-semibold'
         : undefined,
       onClick: (event: Event) =>
-        this.onPanelMenuLabelClick(
-          event,
-          options.context?.item as MenuItem | undefined,
-        ),
+        this.onPanelMenuLabelClick(event, options.context?.item as MenuItem | undefined),
     }),
   };
 
@@ -135,9 +135,7 @@ export class ProductListFiltersBar {
 
   private readonly syncFiltersMenu = effect(() => {
     this.activeLang();
-    const expandedState = collectExpandedState(
-      untracked(() => this.filtersMenu()),
-    );
+    const expandedState = collectExpandedState(untracked(() => this.filtersMenu()));
     this.filtersMenu.set(
       buildFiltersMenu(
         {
@@ -222,8 +220,7 @@ export class ProductListFiltersBar {
     }
 
     const command = item?.command as
-      | ((args: { originalEvent: Event; item: MenuItem | undefined }) => void)
-      | undefined;
+      ((args: { originalEvent: Event; item: MenuItem | undefined }) => void) | undefined;
     if (!command) return;
 
     event.preventDefault();
@@ -232,9 +229,7 @@ export class ProductListFiltersBar {
   }
 
   private getItemSlug(item?: MenuItem): string | null {
-    return (
-      (item as { categorySlug?: string } | undefined)?.categorySlug ?? null
-    );
+    return (item as { categorySlug?: string } | undefined)?.categorySlug ?? null;
   }
 
   private isActiveCategory(item?: MenuItem): boolean {

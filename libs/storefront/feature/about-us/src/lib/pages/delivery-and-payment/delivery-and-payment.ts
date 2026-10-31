@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -9,6 +9,8 @@ import { LocaleNavigationService } from '@storefront/util';
   selector: 'lib-delivery-and-payment',
   imports: [PageHeader, RouterLink, TranslocoPipe],
   templateUrl: './delivery-and-payment.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './delivery-and-payment.css',
 })
 export class DeliveryAndPayment {

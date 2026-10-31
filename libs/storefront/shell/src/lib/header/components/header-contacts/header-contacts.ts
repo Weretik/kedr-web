@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { Popover } from 'primeng/popover';
@@ -8,6 +8,8 @@ import { Popover } from 'primeng/popover';
   selector: 'lib-header-contacts',
   imports: [CommonModule, ButtonModule, Popover, TranslocoPipe],
   templateUrl: './header-contacts.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header-contacts.css',
 })
 export class HeaderContactsComponent {

@@ -4,10 +4,17 @@
   "sourceRoot": "libs/admin/orders/model/src",
   "projectType": "library",
   "tags": ["scope:admin", "domain:orders", "type:model"],
-  "// targets": "to see all targets run: nx show project admin-orders-model --web",
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
     }
   }
 }

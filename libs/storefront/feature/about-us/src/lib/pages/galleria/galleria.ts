@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
 import { PageHeader, PageHeaderConfig } from '@storefront/ui';
@@ -7,6 +7,8 @@ import { PageHeader, PageHeaderConfig } from '@storefront/ui';
   selector: 'lib-galleria',
   imports: [PageHeader],
   templateUrl: './galleria.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './galleria.css',
 })
 export class Galleria {

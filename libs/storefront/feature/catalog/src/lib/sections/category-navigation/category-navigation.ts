@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -34,6 +34,8 @@ const CATEGORY_IMAGE_FALLBACK = 'assets/images/categories/other.jpg';
   selector: 'lib-category-navigation',
   imports: [],
   templateUrl: './category-navigation.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './category-navigation.css',
 })
 export class CategoryNavigation {
@@ -49,24 +51,14 @@ export class CategoryNavigation {
     this.activeLang();
 
     const selectedSlug = this.categorySlug();
-    const tree = buildCatalogFiltersMenuStructure((key) =>
-      this.transloco.translate(key),
-    );
+    const tree = buildCatalogFiltersMenuStructure((key) => this.transloco.translate(key));
     const navigationGroup = this.resolveNavigationGroup(selectedSlug, tree);
-    const selectedContext = selectedSlug
-      ? this.findCategoryContext(selectedSlug, tree)
-      : null;
-    const selectedNodeChildren = selectedContext?.node.items as
-      | FilterMenuItem[]
-      | undefined;
-    const isSelectedLeafCategory =
-      !!selectedSlug && !selectedNodeChildren?.length;
+    const selectedContext = selectedSlug ? this.findCategoryContext(selectedSlug, tree) : null;
+    const selectedNodeChildren = selectedContext?.node.items as FilterMenuItem[] | undefined;
+    const isSelectedLeafCategory = !!selectedSlug && !selectedNodeChildren?.length;
 
     return navigationGroup.items
-      .filter(
-        (item): item is FilterMenuItem & { categorySlug: string } =>
-          !!item.categorySlug,
-      )
+      .filter((item): item is FilterMenuItem & { categorySlug: string } => !!item.categorySlug)
       .map((item) => {
         const isSelected = item.categorySlug === selectedSlug;
         return {
@@ -89,10 +81,7 @@ export class CategoryNavigation {
     this.pageState.goToCategory(slug);
   }
 
-  private resolveNavigationGroup(
-    slug: string | null,
-    items: FilterMenuItem[],
-  ): SiblingGroupResult {
+  private resolveNavigationGroup(slug: string | null, items: FilterMenuItem[]): SiblingGroupResult {
     if (!items.length) return { items: [], parentLabel: null };
     if (!slug) return this.getDefaultGroup(items);
 
@@ -122,10 +111,7 @@ export class CategoryNavigation {
     };
   }
 
-  private findCategoryContext(
-    slug: string,
-    items: FilterMenuItem[],
-  ): CategoryNodeContext | null {
+  private findCategoryContext(slug: string, items: FilterMenuItem[]): CategoryNodeContext | null {
     const queue: CategoryNodeContext[] = items.map((node) => ({
       node,
       siblingItems: items,
@@ -140,9 +126,7 @@ export class CategoryNavigation {
         return currentContext;
       }
 
-      const childItems = currentContext.node.items as
-        | FilterMenuItem[]
-        | undefined;
+      const childItems = currentContext.node.items as FilterMenuItem[] | undefined;
       if (!childItems?.length) continue;
 
       for (const child of childItems) {

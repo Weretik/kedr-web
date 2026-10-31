@@ -1,3 +1,4 @@
+import { nxReadySignal } from '@nx/vite/plugins/nx-ready-signal.plugin';
 import babel from '@rolldown/plugin-babel';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
@@ -17,6 +18,7 @@ export default defineConfig(({ mode }) => {
       babel({
         plugins: [['babel-plugin-react-compiler', { panicThreshold: 'none' }]],
       }),
+      nxReadySignal(),
     ],
     server: {
       host: 'localhost',

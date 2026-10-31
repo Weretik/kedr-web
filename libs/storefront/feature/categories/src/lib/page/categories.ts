@@ -5,6 +5,7 @@ import {
   computed,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -45,10 +46,7 @@ const parentTabs: ParentTab[] = [
   },
 ];
 
-const hardwareCardImages: Record<
-  keyof typeof CATALOG_HARDWARE_SECTIONS,
-  string
-> = {
+const hardwareCardImages: Record<keyof typeof CATALOG_HARDWARE_SECTIONS, string> = {
   hinges: 'assets/images/categories/hinges.jpg',
   locks: 'assets/images/categories/locks.jpg',
   handles: 'assets/images/categories/handles.jpg',
@@ -62,13 +60,11 @@ const doorCardImages: Record<keyof typeof CATALOG_DOOR_SECTIONS, string> = {
   interiorDoors: 'assets/images/home-page/Korfad.png',
 };
 
-const hardwareCards: CategoryCard[] = CATALOG_HARDWARE_ORDER.map(
-  (sectionKey) => ({
-    slug: CATALOG_HARDWARE_SECTIONS[sectionKey].slug,
-    labelKey: CATALOG_HARDWARE_SECTION_TRANSLATION_KEYS[sectionKey],
-    image: hardwareCardImages[sectionKey],
-  }),
-);
+const hardwareCards: CategoryCard[] = CATALOG_HARDWARE_ORDER.map((sectionKey) => ({
+  slug: CATALOG_HARDWARE_SECTIONS[sectionKey].slug,
+  labelKey: CATALOG_HARDWARE_SECTION_TRANSLATION_KEYS[sectionKey],
+  image: hardwareCardImages[sectionKey],
+}));
 
 const doorCards: CategoryCard[] = CATALOG_DOOR_ORDER.map((sectionKey) => ({
   slug: CATALOG_DOOR_SECTIONS[sectionKey].slug,
@@ -80,6 +76,8 @@ const doorCards: CategoryCard[] = CATALOG_DOOR_ORDER.map((sectionKey) => ({
   selector: 'lib-categories',
   imports: [RouterLink, TranslocoPipe, ButtonModule],
   templateUrl: './categories.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './categories.css',
 })
 export class Categories {
@@ -89,10 +87,7 @@ export class Categories {
 
   readonly parentTabs = parentTabs;
   readonly activeParent = signal<ParentCategory>('hardware');
-  readonly title =
-    this.localeNavigation.getCurrentLocale() === 'ru'
-      ? 'Категории'
-      : 'Категорії';
+  readonly title = this.localeNavigation.getCurrentLocale() === 'ru' ? 'Категории' : 'Категорії';
   readonly cards = computed<CategoryCard[]>(() =>
     this.activeParent() === 'hardware' ? hardwareCards : doorCards,
   );

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AccordionModule } from 'primeng/accordion';
@@ -15,16 +15,15 @@ type FaqTab = {
   standalone: true,
   imports: [AccordionModule, CommonModule, TranslocoPipe],
   templateUrl: './faq.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './faq.css',
 })
 export class Faq {
   private readonly translocoService = inject(TranslocoService);
-  private readonly activeLanguage = toSignal(
-    this.translocoService.langChanges$,
-    {
-      initialValue: this.translocoService.getActiveLang(),
-    },
-  );
+  private readonly activeLanguage = toSignal(this.translocoService.langChanges$, {
+    initialValue: this.translocoService.getActiveLang(),
+  });
 
   readonly tabs = computed<FaqTab[]>(() => {
     this.activeLanguage();

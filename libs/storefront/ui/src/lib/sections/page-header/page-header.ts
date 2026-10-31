@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from '@shared/ui';
 import { MenuItem } from 'primeng/api';
 import { Breadcrumb } from 'primeng/breadcrumb';
@@ -9,6 +9,8 @@ import { PageHeaderConfig } from './page-header.config';
   selector: 'lib-page-header',
   imports: [Breadcrumb],
   templateUrl: './page-header.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './page-header.css',
 })
 export class PageHeader {

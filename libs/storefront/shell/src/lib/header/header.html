@@ -19,22 +19,16 @@
         </a>
       </div>
       <div class="hidden lg:block">
-        <lib-header-contacts
-          (copyPhone)="copyToClipboard('+3800687135049')"
-        ></lib-header-contacts>
+        <lib-header-contacts (copyPhone)="copyToClipboard('+3800687135049')"></lib-header-contacts>
       </div>
     </div>
 
-    <div
-      class="flex-1 hidden lg:flex flex-col justify-start items-start gap-2 mx-8"
-    >
+    <div class="flex-1 hidden lg:flex flex-col justify-start items-start gap-2 mx-8">
       <lib-header-search
         [draftSearch]="pageState.draftSearch()"
         [historyItems]="hasHistory()"
         (searchRequest)="onSearch($event.value, $event.popover)"
-        (draftSearchChange)="
-          onSearchDraftChange($event.value, $event.popover, $event.event)
-        "
+        (draftSearchChange)="onSearchDraftChange($event.value, $event.popover, $event.event)"
         (showHistory)="showSearchHistory($event.popover, $event.event)"
         (useHistoryItem)="useHistoryItem($event.value, $event.popover)"
         (removeHistoryItem)="removeHistoryItem($event.value, $event.popover)"
@@ -68,9 +62,7 @@
       [draftSearch]="pageState.draftSearch()"
       [historyItems]="hasHistory()"
       (searchRequest)="onSearch($event.value, $event.popover)"
-      (draftSearchChange)="
-        onSearchDraftChange($event.value, $event.popover, $event.event)
-      "
+      (draftSearchChange)="onSearchDraftChange($event.value, $event.popover, $event.event)"
       (showHistory)="showSearchHistory($event.popover, $event.event)"
       (useHistoryItem)="useHistoryItem($event.value, $event.popover)"
       (removeHistoryItem)="removeHistoryItem($event.value, $event.popover)"
@@ -82,24 +74,24 @@
 <div
   class="card relative z-1000 bg-white/95 dark:bg-neutral-500 backdrop-blur border-b border-surface-400 dark:border-surface-600"
 >
-  <p-megaMenu [model]="items()" [pt]="megaMenuPt">
+  <p-megamenu [model]="items()" [pt]="megaMenuPt">
     <ng-template #item let-item>
       @if (item.root) {
-      <a
-        pRipple
-        [routerLink]="item.routerLink"
-        class="flex items-center cursor-pointer px-4 py-1 overflow-hidden relative font-semibold text-base uppercase"
-        style="border-radius: 2rem"
-      >
-        <i [ngClass]="item.icon"></i>
-        <span class="ml-2">{{ item.label }}</span>
+        <a
+          pRipple
+          [routerLink]="item.routerLink"
+          class="flex items-center cursor-pointer px-4 py-1 overflow-hidden relative font-semibold text-base uppercase"
+          style="border-radius: 2rem"
+        >
+          <i [ngClass]="item.icon"></i>
+          <span class="ml-2">{{ item.label }}</span>
 
-        @if (item.items?.length) {
-        <i class="pi pi-angle-down ml-2" aria-hidden="true"></i>
-        }
-      </a>
+          @if (item.items?.length) {
+            <i class="pi pi-angle-down ml-2" aria-hidden="true"></i>
+          }
+        </a>
       } @else if (item.sectionHeader) {
-      <!-- Legacy section header with image (kept for quick rollback)
+        <!-- Legacy section header with image (kept for quick rollback)
       <a
         [attr.href]="menuItemHref(item.routerLink)"
         [routerLink]="item.routerLink"
@@ -122,57 +114,57 @@
         </span>
       </a>
       -->
-      <a
-        class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
-        [routerLink]="item.routerLink"
-      >
-        <span class="inline-flex flex-col gap-1">
-          <span class="text-base text-surface-900 dark:text-surface-0">
-            {{ item.label }}
-          </span>
-        </span>
-      </a>
-      } @else if (item.catalogEntry) {
-      <a
-        class="flex items-center justify-between px-3 py-2.5 cursor-pointer mb-1 rounded-lg transition-colors hover:bg-surface-100 dark:hover:bg-surface-800"
-        [class.font-semibold]="item.catalogAll"
-        [attr.href]="menuItemHref(item.routerLink)"
-        [routerLink]="item.routerLink"
-        (click)="navigateMenuItem($event, item.routerLink)"
-      >
-        <span class="text-base leading-6 text-surface-900 dark:text-surface-0">
-          {{ item.label }}
-        </span>
-        <i class="pi pi-angle-right text-sm text-surface-500"></i>
-      </a>
-      } @else if (!item.image) {
-      <a
-        class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
-        [routerLink]="item.routerLink"
-      >
-        <span class="inline-flex flex-col gap-1">
-          <span class="text-base text-surface-900 dark:text-surface-0">
-            {{ item.label }}
-          </span>
-        </span>
-      </a>
-      } @else {
-      <div class="flex flex-col items-start gap-4">
-        <img
-          [src]="item.image"
-          [attr.alt]="'header.wholesaleLogoAlt' | transloco"
-          class="w-full"
-        />
-        <span>{{ item.subtext }}</span>
-        <p-button
-          [label]="item.label"
-          [outlined]="true"
+        <a
+          class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
           [routerLink]="item.routerLink"
-        ></p-button>
-      </div>
+        >
+          <span class="inline-flex flex-col gap-1">
+            <span class="text-base text-surface-900 dark:text-surface-0">
+              {{ item.label }}
+            </span>
+          </span>
+        </a>
+      } @else if (item.catalogEntry) {
+        <a
+          class="flex items-center justify-between px-3 py-2.5 cursor-pointer mb-1 rounded-lg transition-colors hover:bg-surface-100 dark:hover:bg-surface-800"
+          [class.font-semibold]="item.catalogAll"
+          [attr.href]="menuItemHref(item.routerLink)"
+          [routerLink]="item.routerLink"
+          (click)="navigateMenuItem($event, item.routerLink)"
+        >
+          <span class="text-base leading-6 text-surface-900 dark:text-surface-0">
+            {{ item.label }}
+          </span>
+          <i class="pi pi-angle-right text-sm text-surface-500"></i>
+        </a>
+      } @else if (!item.image) {
+        <a
+          class="flex items-center px-4 cursor-pointer mb-1.5 gap-2"
+          [routerLink]="item.routerLink"
+        >
+          <span class="inline-flex flex-col gap-1">
+            <span class="text-base text-surface-900 dark:text-surface-0">
+              {{ item.label }}
+            </span>
+          </span>
+        </a>
+      } @else {
+        <div class="flex flex-col items-start gap-4">
+          <img
+            [src]="item.image"
+            [attr.alt]="'header.wholesaleLogoAlt' | transloco"
+            class="w-full"
+          />
+          <span>{{ item.subtext }}</span>
+          <p-button
+            [label]="item.label"
+            [outlined]="true"
+            [routerLink]="item.routerLink"
+          ></p-button>
+        </div>
       }
     </ng-template>
-  </p-megaMenu>
+  </p-megamenu>
 </div>
 
 <lib-cart />

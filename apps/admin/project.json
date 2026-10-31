@@ -46,7 +46,11 @@
         "port": 4200,
         "staticFilePath": "dist/apps/admin",
         "spa": true
-      }
+      },
+      "readyWhen": {
+        "signal": true
+      },
+      "dependsOn": ["build"]
     }
   }
 }

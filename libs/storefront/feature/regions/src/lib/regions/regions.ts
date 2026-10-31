@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
@@ -12,6 +12,8 @@ import { Hero } from '../sections/hero/hero';
   selector: 'lib-regions',
   imports: [Hero, PartnersBrands, CompanyFeatures],
   templateUrl: './regions.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './regions.css',
 })
 export class Regions {
@@ -29,9 +31,7 @@ export class Regions {
   readonly locationText = computed(() => {
     this.activeLang();
     const key = this.city().toLowerCase().trim();
-    const locationKey = key
-      ? `regions.location.${key}`
-      : 'regions.location.default';
+    const locationKey = key ? `regions.location.${key}` : 'regions.location.default';
     const translated = this.transloco.translate(locationKey);
 
     if (translated !== locationKey) {

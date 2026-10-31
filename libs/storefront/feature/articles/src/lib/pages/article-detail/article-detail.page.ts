@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -12,6 +12,8 @@ import { buildBlogs } from '../article-list/article-list.data';
   selector: 'lib-article-detail.page',
   imports: [NgStyle, RouterLink, TranslocoPipe],
   templateUrl: './article-detail.page.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './article-detail.page.css',
 })
 export class ArticleDetailPage {
@@ -32,18 +34,14 @@ export class ArticleDetailPage {
     return buildBlogs(lang);
   });
 
-  readonly article = computed(() =>
-    this.blogs().find((item) => item.id === this.articleId()),
-  );
+  readonly article = computed(() => this.blogs().find((item) => item.id === this.articleId()));
 
   readonly otherArticles = computed(() => {
     const currentId = this.article()?.id;
     return this.blogs().filter((item) => item.id !== currentId);
   });
 
-  readonly paragraphs = computed(
-    () => this.article()?.content.split('\n\n').filter(Boolean) ?? [],
-  );
+  readonly paragraphs = computed(() => this.article()?.content.split('\n\n').filter(Boolean) ?? []);
 
   articleLink(id: number): string[] {
     return this.localeNavigation.localizedSegments('articles', String(id));

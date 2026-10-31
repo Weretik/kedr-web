@@ -4,10 +4,17 @@
   "sourceRoot": "libs/admin/users/ui/src",
   "projectType": "library",
   "tags": ["scope:admin", "domain:users", "type:ui"],
-  "// targets": "to see all targets run: nx show project admin-users-ui --web",
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
     }
   }
 }

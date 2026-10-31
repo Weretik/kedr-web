@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonDirective, ButtonLabel } from 'primeng/button';
@@ -14,15 +14,10 @@ interface ContactForm {
 
 @Component({
   selector: 'lib-contact-us',
-  imports: [
-    InputText,
-    FormsModule,
-    ButtonLabel,
-    ButtonDirective,
-    Textarea,
-    TranslocoPipe,
-  ],
+  imports: [InputText, FormsModule, ButtonLabel, ButtonDirective, Textarea, TranslocoPipe],
   templateUrl: './contact-us.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './contact-us.css',
 })
 export class ContactUs {

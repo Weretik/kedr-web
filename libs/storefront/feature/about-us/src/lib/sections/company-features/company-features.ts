@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -17,64 +17,47 @@ type CompanyFeaturesSectionData = {
   selector: 'lib-company-features',
   imports: [],
   templateUrl: './company-features.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './company-features.css',
 })
 export class CompanyFeatures {
   private readonly translocoService = inject(TranslocoService);
-  private readonly activeLanguage = toSignal(
-    this.translocoService.langChanges$,
-    {
-      initialValue: this.translocoService.getActiveLang(),
-    },
-  );
+  private readonly activeLanguage = toSignal(this.translocoService.langChanges$, {
+    initialValue: this.translocoService.getActiveLang(),
+  });
 
-  readonly companyFeaturesSectionData = computed<CompanyFeaturesSectionData>(
-    () => {
-      this.activeLanguage();
-      return {
-        heading: this.translocoService.translate('about.features.heading'),
-        subheading: this.translocoService.translate(
-          'about.features.subheading',
-        ),
-        items: [
-          {
-            title: this.translocoService.translate(
-              'about.features.item1.title',
-            ),
-            text: this.translocoService.translate('about.features.item1.text'),
-          },
-          {
-            title: this.translocoService.translate(
-              'about.features.item2.title',
-            ),
-            text: this.translocoService.translate('about.features.item2.text'),
-          },
-          {
-            title: this.translocoService.translate(
-              'about.features.item3.title',
-            ),
-            text: this.translocoService.translate('about.features.item3.text'),
-          },
-          {
-            title: this.translocoService.translate(
-              'about.features.item4.title',
-            ),
-            text: this.translocoService.translate('about.features.item4.text'),
-          },
-          {
-            title: this.translocoService.translate(
-              'about.features.item5.title',
-            ),
-            text: this.translocoService.translate('about.features.item5.text'),
-          },
-          {
-            title: this.translocoService.translate(
-              'about.features.item6.title',
-            ),
-            text: this.translocoService.translate('about.features.item6.text'),
-          },
-        ],
-      };
-    },
-  );
+  readonly companyFeaturesSectionData = computed<CompanyFeaturesSectionData>(() => {
+    this.activeLanguage();
+    return {
+      heading: this.translocoService.translate('about.features.heading'),
+      subheading: this.translocoService.translate('about.features.subheading'),
+      items: [
+        {
+          title: this.translocoService.translate('about.features.item1.title'),
+          text: this.translocoService.translate('about.features.item1.text'),
+        },
+        {
+          title: this.translocoService.translate('about.features.item2.title'),
+          text: this.translocoService.translate('about.features.item2.text'),
+        },
+        {
+          title: this.translocoService.translate('about.features.item3.title'),
+          text: this.translocoService.translate('about.features.item3.text'),
+        },
+        {
+          title: this.translocoService.translate('about.features.item4.title'),
+          text: this.translocoService.translate('about.features.item4.text'),
+        },
+        {
+          title: this.translocoService.translate('about.features.item5.title'),
+          text: this.translocoService.translate('about.features.item5.text'),
+        },
+        {
+          title: this.translocoService.translate('about.features.item6.title'),
+          text: this.translocoService.translate('about.features.item6.text'),
+        },
+      ],
+    };
+  });
 }

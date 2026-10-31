@@ -1,4 +1,4 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, effect, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
 import { ProductListFacade } from '@storefront/data-access';
@@ -12,6 +12,8 @@ import { ProductListFiltersBar } from '../../sections/product-list-filters-bar/p
   selector: 'lib-product-list-page',
   imports: [CategoryNavigation, ProductListFiltersBar, ProductList],
   templateUrl: './product-list.page.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './product-list.page.css',
 })
 export class ProductListPage {

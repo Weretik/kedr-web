@@ -4,10 +4,17 @@
   "sourceRoot": "libs/admin/categories/data-access/src",
   "projectType": "library",
   "tags": ["scope:admin", "domain:categories", "type:data-access"],
-  "// targets": "to see all targets run: nx show project admin-categories-data-access --web",
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
     }
   }
 }

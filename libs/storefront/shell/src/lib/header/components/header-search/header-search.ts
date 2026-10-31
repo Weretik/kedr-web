@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
@@ -28,6 +29,8 @@ type SearchDraftPayload = {
   selector: 'lib-header-search',
   imports: [CommonModule, ButtonModule, Popover, TranslocoPipe],
   templateUrl: './header-search.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header-search.css',
 })
 export class HeaderSearchComponent {

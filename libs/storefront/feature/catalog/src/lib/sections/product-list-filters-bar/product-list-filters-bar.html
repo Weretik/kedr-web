@@ -1,12 +1,13 @@
 <div class="bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-20 pt-12">
   @if (isSticky()) {
-  <div class="h-16 md:h-20 mb-6"></div>
+    <div class="h-16 md:h-20 mb-6"></div>
   }
   <div
     [class.mb-6]="!isSticky()"
     class="flex flex-col sm:flex-row justify-center items-center sm:items-center gap-4"
     [ngClass]="{
-    'fixed top-16 md:top-22 left-0 right-0 z-1000 bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-18 py-2 shadow-md': isSticky()
+      'fixed top-16 md:top-22 left-0 right-0 z-1000 bg-neutral-50 dark:bg-surface-900 px-6 md:px-12 lg:px-18 py-2 shadow-md':
+        isSticky(),
     }"
   >
     <div
@@ -23,28 +24,25 @@
         >
           {{ 'catalog.filters.allProducts' | transloco }}
         </button>
-        @if (categoryPath().length) { @for (crumb of categoryPath(); track
-        crumb.slug; let isLast = $last) {
-        <span class="mx-0.5 sm:mx-1 text-surface-500 dark:text-surface-400"
-          >&rarr;</span
-        >
-        @if (isLast) {
-        <span
-          class="text-surface-900 dark:text-surface-0"
-          [title]="crumb.label"
-        >
-          {{ crumb.label }}
-        </span>
-        } @else {
-        <button
-          type="button"
-          class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors max-w-44 sm:max-w-64 lg:max-w-88 truncate"
-          [title]="crumb.label"
-          (click)="goToCategoryBySlug(crumb.slug)"
-        >
-          {{ crumb.label }}
-        </button>
-        } } }
+        @if (categoryPath().length) {
+          @for (crumb of categoryPath(); track crumb.slug; let isLast = $last) {
+            <span class="mx-0.5 sm:mx-1 text-surface-500 dark:text-surface-400">&rarr;</span>
+            @if (isLast) {
+              <span class="text-surface-900 dark:text-surface-0" [title]="crumb.label">
+                {{ crumb.label }}
+              </span>
+            } @else {
+              <button
+                type="button"
+                class="cursor-pointer text-primary hover:text-primary-emphasis transition-colors max-w-44 sm:max-w-64 lg:max-w-88 truncate"
+                [title]="crumb.label"
+                (click)="goToCategoryBySlug(crumb.slug)"
+              >
+                {{ crumb.label }}
+              </button>
+            }
+          }
+        }
       </div>
     </div>
 
@@ -52,7 +50,7 @@
       class="flex flex-row flex-nowrap gap-1 sm:gap-4 justify-center sm:justify-start items-center w-full sm:w-auto"
     >
       <div class="hidden lg:flex flex-row gap-4 items-center">
-        <p-toggleButton
+        <p-togglebutton
           [ngModel]="draftIsSale()"
           (ngModelChange)="setSaleFilter($event)"
           [onLabel]="'catalog.filters.sale' | transloco"
@@ -60,8 +58,8 @@
           onIcon="pi pi-check"
           offIcon="pi pi-times"
           class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
-        ></p-toggleButton>
-        <p-toggleButton
+        ></p-togglebutton>
+        <p-togglebutton
           [ngModel]="draftIsNew()"
           (ngModelChange)="setNewFilter($event)"
           [onLabel]="'catalog.filters.new' | transloco"
@@ -69,8 +67,8 @@
           onIcon="pi pi-check"
           offIcon="pi pi-times"
           class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
-        ></p-toggleButton>
-        <p-toggleButton
+        ></p-togglebutton>
+        <p-togglebutton
           [ngModel]="draftInStock()"
           (ngModelChange)="setInStockFilter($event)"
           [onLabel]="'catalog.filters.inStock' | transloco"
@@ -78,7 +76,7 @@
           onIcon="pi pi-check"
           offIcon="pi pi-times"
           class="bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border shrink flex-1 sm:flex-none min-w-0"
-        ></p-toggleButton>
+        ></p-togglebutton>
       </div>
 
       <div class="grid lg:hidden grid-cols-3 gap-2 w-full">
@@ -90,9 +88,7 @@
           styleClass="w-full text-[11px] sm:text-xs px-1.5 sm:px-2 py-2"
           (click)="categoriesPopover.toggle($event)"
         >
-          <span pButtonLabel
-            >{{ 'catalog.filters.categories' | transloco }}</span
-          >
+          <span pButtonLabel>{{ 'catalog.filters.categories' | transloco }}</span>
           <i pButtonIcon class="pi pi-list"></i>
         </button>
         <p-popover #categoriesPopover class="hidden">
@@ -114,14 +110,12 @@
           styleClass="w-full text-[11px] sm:text-xs px-1.5 sm:px-2 py-2"
           (click)="paramsPopover.toggle($event)"
         >
-          <span pButtonLabel
-            >{{ 'catalog.filters.parameters' | transloco }}</span
-          >
+          <span pButtonLabel>{{ 'catalog.filters.parameters' | transloco }}</span>
           <i pButtonIcon class="pi pi-sliders-h"></i>
         </button>
         <p-popover #paramsPopover class="hidden">
           <div class="flex flex-col gap-3 p-1">
-            <p-toggleButton
+            <p-togglebutton
               [ngModel]="draftIsSale()"
               (ngModelChange)="setSaleFilter($event)"
               [onLabel]="'catalog.filters.sale' | transloco"
@@ -129,8 +123,8 @@
               onIcon="pi pi-check"
               offIcon="pi pi-times"
               class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
-            ></p-toggleButton>
-            <p-toggleButton
+            ></p-togglebutton>
+            <p-togglebutton
               [ngModel]="draftIsNew()"
               (ngModelChange)="setNewFilter($event)"
               [onLabel]="'catalog.filters.new' | transloco"
@@ -138,8 +132,8 @@
               onIcon="pi pi-check"
               offIcon="pi pi-times"
               class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
-            ></p-toggleButton>
-            <p-toggleButton
+            ></p-togglebutton>
+            <p-togglebutton
               [ngModel]="draftInStock()"
               (ngModelChange)="setInStockFilter($event)"
               [onLabel]="'catalog.filters.inStock' | transloco"
@@ -147,7 +141,7 @@
               onIcon="pi pi-check"
               offIcon="pi pi-times"
               class="w-full bg-surface-100 dark:bg-surface-800 border-surface-200 dark:border-surface-700 rounded-border"
-            ></p-toggleButton>
+            ></p-togglebutton>
           </div>
         </p-popover>
 
@@ -172,26 +166,24 @@
       </div>
     </div>
 
-    <div
-      class="hidden lg:flex flex-col justify-start items-center sm:items-start"
-    >
+    <div class="hidden lg:flex flex-col justify-start items-center sm:items-start">
       @defer (on immediate) {
-      <p-menu
-        #sortMenuDesktop
-        [model]="sortOptions()"
-        [popup]="true"
-        [appendTo]="'body'"
-      ></p-menu>
-      <button
-        type="button"
-        pButton
-        severity="secondary"
-        [outlined]="true"
-        (click)="sortMenuDesktop.toggle($event)"
-      >
-        <i pButtonIcon class="pi pi-sort-alt"></i>
-        <span pButtonLabel>{{ 'catalog.filters.sort' | transloco }}</span>
-      </button>
+        <p-menu
+          #sortMenuDesktop
+          [model]="sortOptions()"
+          [popup]="true"
+          [appendTo]="'body'"
+        ></p-menu>
+        <button
+          type="button"
+          pButton
+          severity="secondary"
+          [outlined]="true"
+          (click)="sortMenuDesktop.toggle($event)"
+        >
+          <i pButtonIcon class="pi pi-sort-alt"></i>
+          <span pButtonLabel>{{ 'catalog.filters.sort' | transloco }}</span>
+        </button>
       }
     </div>
   </div>

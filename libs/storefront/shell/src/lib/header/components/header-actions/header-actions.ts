@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -10,6 +10,8 @@ type HeaderLocale = 'uk' | 'ru';
   selector: 'lib-header-actions',
   imports: [CommonModule, ButtonModule, OverlayBadgeModule, TranslocoPipe],
   templateUrl: './header-actions.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header-actions.css',
 })
 export class HeaderActionsComponent {

@@ -4,10 +4,17 @@
   "sourceRoot": "libs/admin/categories/feature/src",
   "projectType": "library",
   "tags": ["scope:admin", "domain:categories", "type:feature"],
-  "// targets": "to see all targets run: nx show project admin-categories-feature --web",
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
     }
   }
 }

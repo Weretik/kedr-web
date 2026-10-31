@@ -1,5 +1,5 @@
 import { SlicePipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -12,6 +12,8 @@ import { Blog, buildBlogs } from './article-list.data';
   selector: 'lib-article-list.page',
   imports: [PageHeader, SlicePipe, RouterLink, TranslocoPipe],
   templateUrl: './article-list.page.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- Preserve pre-Angular-22 eager rendering during the framework migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './article-list.page.css',
 })
 export class ArticleListPage {
