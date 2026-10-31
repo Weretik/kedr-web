@@ -1,5 +1,4 @@
 import { render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
 import { AdminDetailHeader } from './admin-detail-header';
@@ -10,14 +9,12 @@ import { SectionCard } from './section-card';
 describe('AdminDetailHeader', () => {
   it('links back to the list and renders one h1 with actions', () => {
     render(
-      <MemoryRouter>
-        <AdminDetailHeader
-          actions={<button type="button">Редагувати</button>}
-          backLabel="Назад до товарів"
-          backTo="/catalog?page=2"
-          title="Деталі товару"
-        />
-      </MemoryRouter>,
+      <AdminDetailHeader
+        actions={<button type="button">Редагувати</button>}
+        backLabel="Назад до товарів"
+        backTo="/catalog?page=2"
+        title="Деталі товару"
+      />,
     );
 
     expect(screen.getByRole('link', { name: 'Назад до товарів' }).getAttribute('href')).toBe(

@@ -1,0 +1,12 @@
+{
+  "name": "admin-shared-routing",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/shared/routing/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "scope:admin-shared", "type:util"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { Alert, Button, Divider, Stack, Typography } from '@mui/material';
 
 import { CountedTextField } from './counted-text-field';
 import { FaqListEditor } from './faq-list-editor';
-import { RichTextEditor } from '../editor/rich-text-editor';
+import { RichTextEditor } from '../../components/rich-text-editor/rich-text-editor';
 
 import type { CategoryContentDraft, CategoryContentErrors } from '@admin/categories/model';
 import type { FormEvent } from 'react';

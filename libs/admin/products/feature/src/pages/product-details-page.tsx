@@ -12,10 +12,10 @@ import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { addProductFeedback } from '../feedback/add-product-feedback';
 import { useProductSlugChange } from '../hooks/use-product-slug-change';
+import { addProductFeedback } from '../model/add-product-feedback';
 
-import type { AddProductFeedback } from '../feedback/add-product-feedback';
+import type { AddProductFeedback } from '../model/add-product-feedback';
 import type { AddProductResult } from '../products.routes';
 
 const photoStorageUrl = 'https://images-kedr.cdn.express/~/o/products';

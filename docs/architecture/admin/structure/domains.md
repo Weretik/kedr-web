@@ -5,10 +5,12 @@
 ```text
 libs/admin/
 ├── core/{shell,auth,permissions}/
-├── shared/{ui,api-client,contracts,config,util,testing}/
+├── shared/{ui,routing,api-client,contracts,config,util,testing}/
 ├── products/{feature,data-access,model,ui}/
+├── categories/{feature,data-access,model,ui}/
 ├── orders/{feature,data-access,model,ui}/
 ├── clients/{feature,data-access,model,ui}/
+├── users/{feature,data-access,model,ui}/
 └── dashboard/{feature,data-access,ui}/
 ```
 
@@ -27,10 +29,13 @@ libs/admin/core/
 │   ├── layout/             # layout composition and content area
 │   ├── navigation/         # nav config, sidebar, mobile drawer
 │   ├── components/         # top bar and menus; breadcrumbs have been removed
+│   ├── providers/          # shell-level providers
 │   └── hooks/              # shell-specific React hooks
 ├── auth/src/
 │   ├── index.ts
 │   ├── api/                # auth transport / RTK Query, if introduced
+│   ├── pages/              # sign-in and no-access pages
+│   ├── routes/             # route guards and auth routes
 │   ├── session/            # session model, provider, lifecycle
 │   └── hooks/              # useAuth / useSession and other public hooks
 └── permissions/src/
@@ -57,37 +62,7 @@ Create `model` only when there is shared logic or shared types. A small domain c
 
 ## Internal domain-library structure
 
-Each library's `src/index.ts` is only its public API. Do not place internal code beside it “temporarily” or let it accumulate in a large file. Use the following folders when the corresponding role exists:
-
-```text
-libs/admin/<domain>/
-├── data-access/src/
-│   ├── index.ts
-│   ├── api/                # injectEndpoints, hooks, endpoint definitions
-│   ├── contracts/          # private transport DTO/request-response shapes
-│   ├── mappers/            # DTO <-> domain/query transformations
-│   ├── models/             # data-access-owned technical query/cache types
-│   └── validators/         # response/query validation at the API boundary
-├── model/src/
-│   ├── index.ts
-│   ├── entities/           # domain entities and value types
-│   ├── queries/            # domain query types/defaults/invariants
-│   ├── mappers/            # pure domain transformations
-│   └── validators/         # pure domain validation where needed
-├── ui/src/
-│   ├── index.ts
-│   ├── components/         # reusable presentational components
-│   ├── tables/             # table shells, columns and cells
-│   ├── forms/              # presentational forms and fields
-│   └── states/             # loading/empty/error presentational states
-└── feature/src/
-    ├── index.ts
-    ├── <domain>.routes.tsx
-    ├── pages/              # route/page composition
-    ├── components/         # feature-only composition controls
-    ├── hooks/              # feature orchestration hooks
-    └── state/              # local reducer/actions or durable client state
-```
+Each library's `src/index.ts` is only its public API. Do not place internal code beside it “temporarily” or let it accumulate in a large file. The role-folder names for each layer, the nesting order, and the forbidden catch-all names are fixed in the [code organization rules](../../../standards/admin/admin-code-organization.md#role-folders); use them when the corresponding role exists.
 
 This does not require creating every folder in advance. It requires keeping roles separate: an endpoint does not contain a DTO parser, a mapper does not contain a React component, and a table does not contain server state or routing. When an Nx boundary prohibits `data-access -> model`, data-access-owned types stay in `data-access/models`; do not weaken global module-boundary rules for a local task.
 
@@ -110,19 +85,7 @@ libs/admin/products/
 
 ## Internal feature structure
 
-Group internal modules by scenario purpose:
-
-```text
-libs/admin/products/feature/src/
-├── index.ts
-├── products.routes.tsx
-├── pages/
-├── components/
-├── hooks/
-└── state/
-```
-
-Create folders only when the corresponding code exists. If a page becomes an independent business boundary, split it into a separate feature only through a separate architecture decision.
+A feature library groups pages, components, hooks, `model/`, and `state/` by role first and capability second, as shown in the [code organization rules](../../../standards/admin/admin-code-organization.md#nesting-and-size). If a page becomes an independent business boundary, split it into a separate feature only through a separate architecture decision.
 
 ## `admin/shared`
 

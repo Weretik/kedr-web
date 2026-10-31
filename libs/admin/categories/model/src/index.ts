@@ -10,6 +10,6 @@ export {
   categoryContentLimits,
   isSameCategoryContent,
   validateCategoryContent,
-} from './content/category-content-rules';
-export type { CategoryContentErrors } from './content/category-content-rules';
-export { categoryPath, orderCategoryTree } from './tree/category-tree-order';
+} from './validators/category-content-rules';
+export type { CategoryContentErrors } from './validators/category-content-rules';
+export { categoryPath, orderCategoryTree } from './mappers/category-tree-order';

@@ -110,7 +110,8 @@
       "@admin/categories/model": ["libs/admin/categories/model/src/index.ts"],
       "@admin/categories/data-access": ["libs/admin/categories/data-access/src/index.ts"],
       "@admin/categories/ui": ["libs/admin/categories/ui/src/index.ts"],
-      "@admin/categories/feature": ["libs/admin/categories/feature/src/index.ts"]
+      "@admin/categories/feature": ["libs/admin/categories/feature/src/index.ts"],
+      "@admin/shared/routing": ["libs/admin/shared/routing/src/index.ts"]
     }
   }
 }

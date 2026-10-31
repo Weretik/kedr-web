@@ -1,3 +1,4 @@
+import { routerLinkComponents } from '@admin/shared/routing';
 import { type Components, type Theme } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { tableRowClasses } from '@mui/material/TableRow';
@@ -171,8 +172,13 @@ export const adminComponents = {
       }),
     },
   },
+  MuiButtonBase: routerLinkComponents.MuiButtonBase,
   MuiLink: {
-    defaultProps: { color: 'primary.dark', underline: 'hover' },
+    defaultProps: {
+      ...routerLinkComponents.MuiLink.defaultProps,
+      color: 'primary.dark',
+      underline: 'hover',
+    },
     styleOverrides: { root: { fontWeight: 700 } },
   },
   MuiMenu: {

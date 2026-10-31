@@ -1,7 +1,7 @@
 import { DetailField, DetailFieldList } from '@admin/shared/ui';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 
-import { RichTextEditor } from '../editor/rich-text-editor';
+import { RichTextEditor } from '../components/rich-text-editor/rich-text-editor';
 
 import type { CategoryContent } from '@admin/categories/model';
 

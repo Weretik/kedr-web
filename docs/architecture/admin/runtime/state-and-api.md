@@ -23,6 +23,7 @@ libs/admin/shared/api-client/src/
 ├── index.ts
 ├── client/        # Axios instance creation
 ├── contracts/     # ApiRequest, ApiError, auth contracts
+├── csrf/          # CSRF token read from the cookie for unsafe requests
 ├── errors/        # transport/API error normalization and tests
 ├── interceptors/  # auth header, refresh/retry, logging, and their installer
 ├── rtk-query/     # baseApi and Axios base query

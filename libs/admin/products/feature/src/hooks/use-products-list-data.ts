@@ -5,7 +5,7 @@ import {
 } from '@admin/products/data-access';
 import { useRef } from 'react';
 
-import type { ProductsListMode, ProductsUrlState } from '../url/products-url-state';
+import type { ProductsListMode, ProductsUrlState } from '../model/products-url-state';
 
 /**
  * Loads only the active tab. Each tab remembers its last total, so the pager keeps its size while the next page

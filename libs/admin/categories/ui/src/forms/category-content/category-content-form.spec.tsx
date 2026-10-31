@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CategoryContentForm } from './category-content-form';
-import { CategoryContentView } from './category-content-view';
+import { CategoryContentView } from '../../details/category-content-view';
 
 describe('CategoryContentForm', () => {
   it('counts characters and saves only when there are changes', () => {

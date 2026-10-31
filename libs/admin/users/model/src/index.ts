@@ -9,7 +9,7 @@ export {
   avatarRulesHint,
   validateAvatarDimensions,
   validateAvatarFile,
-} from './validation/avatar-file-rules';
+} from './validators/avatar-file-rules';
 export {
   maxFullNameLength,
   minStaffPasswordLength,
@@ -17,5 +17,5 @@ export {
   validateFullName,
   validateStaffAccountInput,
   validateStaffPassword,
-} from './validation/staff-account-rules';
-export type { StaffAccountFieldErrors } from './validation/staff-account-rules';
+} from './validators/staff-account-rules';
+export type { StaffAccountFieldErrors } from './validators/staff-account-rules';
