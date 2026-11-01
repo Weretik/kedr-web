@@ -30,7 +30,7 @@ Server Components by default. `'use client'` exists only in:
 - `core/shell/header/mobile-menu.tsx` — Radix Sheet;
 - `core/shell/error/error-view.tsx` — retry on the 500 page;
 - `shared/ui/sheet.tsx`;
-- `catalog/ui` — `ListingToolbar`, `ShowMore`, `CatalogTreePanel`, `MegaMenu`.
+- `catalog/ui` — `ListingToolbar`, `ResultsAnchor`, `CatalogTreePanel`, `MegaMenu`.
 
 The regions list uses `<details>` and the mega menu keeps every section's links in the server HTML (hidden until opened), so crawlers see all navigation links. The layout passes the mega menu and section links to `SiteShell` from `@site/catalog/feature`; without the API the shell uses its fixed sections. The search box is a plain GET form to `/{locale}/search?q=`.
 

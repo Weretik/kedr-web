@@ -1,5 +1,5 @@
 import { SEARCH_PATH } from '@site/catalog/model';
-import { getCatalogDictionary } from '@site/catalog/ui';
+import { ResultsAnchor, getCatalogDictionary } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { Suspense } from 'react';
 
@@ -12,7 +12,10 @@ import type { Locale } from '@site/core/i18n';
 
 type SearchPageProps = { locale: Locale; searchParams: Promise<SearchParamsRecord> };
 
-/** Search by name or SKU (`?q=`): a static frame with the form, results streamed from the URL. */
+/**
+ * Search by name or SKU (`?q=`): a static frame with the form, results streamed from the URL. A new term scrolls
+ * to the results heading, so the visitor sees that the search ran.
+ */
 export function SearchPage({ locale, searchParams }: SearchPageProps) {
   const dictionary = getCatalogDictionary(locale);
 
@@ -55,13 +58,16 @@ async function SearchResults({ locale, searchParams }: SearchPageProps) {
         </button>
       </form>
       {term ? (
-        <ProductListing
-          locale={locale}
-          path={path}
-          scope={{ searchTerm: term }}
-          searchParams={searchParams}
-          extra={{ q: term }}
-        />
+        <div className="grid gap-4">
+          <ResultsAnchor key={term}>{dictionary.searchResults(term)}</ResultsAnchor>
+          <ProductListing
+            locale={locale}
+            path={path}
+            scope={{ searchTerm: term }}
+            searchParams={searchParams}
+            extra={{ q: term }}
+          />
+        </div>
       ) : (
         <p className="text-muted-foreground">{dictionary.searchPrompt}</p>
       )}

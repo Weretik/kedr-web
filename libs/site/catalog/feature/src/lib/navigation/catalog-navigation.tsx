@@ -1,14 +1,11 @@
 import { getCatalogTree } from '@site/catalog/data-access';
-import { CATALOG_PATH, categoryPath } from '@site/catalog/model';
+import { CATALOG_PATH, CATALOG_ROOTS, categoryPath } from '@site/catalog/model';
 import { MegaMenu } from '@site/catalog/ui';
 
 import type { Locale } from '@site/core/i18n';
 import type { CatalogNavigation } from '@site/core/shell';
 
 const WHOLESALE_PATH = '/wholesale';
-
-/** Doors are a separate business line: their section closes the mega menu rail after a divider. */
-const DOORS_SLUG_PREFIX = 'dveri';
 
 /**
  * Header navigation from the category tree: the mega menu and the top-level sections. `undefined` when the
@@ -25,9 +22,8 @@ export async function getCatalogNavigation(locale: Locale): Promise<CatalogNavig
         tree={tree}
         catalogPath={CATALOG_PATH}
         wholesalePath={WHOLESALE_PATH}
-        separateIds={tree
-          .filter((section) => section.slug.startsWith(DOORS_SLUG_PREFIX))
-          .map((section) => section.id)}
+        // Doors are a separate business line: their section closes the rail after a divider.
+        separateIds={[CATALOG_ROOTS.doorsId]}
       />
     ),
     links: tree.map((section) => ({

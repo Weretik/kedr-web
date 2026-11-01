@@ -22,7 +22,6 @@ vi.mock('next/navigation', () => ({
   permanentRedirect,
   useRouter: () => ({ push: vi.fn() }),
 }));
-vi.mock('../listing/load-more', () => ({ loadMoreProducts: vi.fn() }));
 
 const category = {
   id: 9,
@@ -53,6 +52,14 @@ describe('loadCategoryOrRespond', () => {
 
     getCategory.mockResolvedValueOnce({ kind: 'not-found' });
     await expect(loadCategoryOrRespond('uk', 'missing')).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
+  it('moves «Фурнітура» to the catalog hub and never shows Cosmos', async () => {
+    getCategory.mockResolvedValueOnce({ kind: 'ok', category: { ...category, id: 5513 } });
+    await expect(loadCategoryOrRespond('uk', 'furnitura')).rejects.toThrow('REDIRECT /uk/catalog');
+
+    getCategory.mockResolvedValueOnce({ kind: 'ok', category: { ...category, id: 920000 } });
+    await expect(loadCategoryOrRespond('uk', 'kosmos')).rejects.toThrow('NEXT_NOT_FOUND');
   });
 
   it('fails loudly when the API is unavailable and never calls it for the build placeholder', async () => {

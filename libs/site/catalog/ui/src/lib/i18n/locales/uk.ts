@@ -35,9 +35,8 @@ export const uk: CatalogDictionary = {
   viewTable: 'Таблицею',
 
   summary: (from, to, total) => `Показано ${from}–${to} з ${total}`,
-  showMore: 'Показати ще',
-  loading: 'Завантаження…',
-  loadFailed: 'Не вдалося завантажити товари. Спробуйте ще раз.',
+  perPage: 'Показувати по',
+  perPageOption: (size) => `${size} товарів на сторінці`,
   pagination: 'Сторінки',
   previousPage: 'Попередня',
   nextPage: 'Наступна',
@@ -71,6 +70,7 @@ export const uk: CatalogDictionary = {
   hubIntro:
     'Завіси, замки, ручки, циліндри та інша фурнітура оптом і в роздріб зі складу в Харкові.',
   searchTitle: (term) => `Пошук: ${term}`,
+  searchResults: (term) => `Результати пошуку «${term}»`,
   searchHeading: 'Пошук товарів',
   searchPrompt: 'Введіть назву або артикул товару.',
   searchLabel: 'Назва або артикул',

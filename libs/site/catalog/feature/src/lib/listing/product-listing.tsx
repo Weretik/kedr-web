@@ -4,20 +4,18 @@ import {
   isIndexableListing,
   listingHref,
   parseListingQuery,
-  serializeListingQuery,
   withoutFilters,
 } from '@site/catalog/model';
 import { buildProductItemListJsonLd } from '@site/catalog/seo';
 import {
   ListingEmpty,
   ListingPagination,
+  ListingSummary,
   ListingToolbar,
+  PerPageLinks,
   ProductList,
-  ShowMore,
 } from '@site/catalog/ui';
 import { JsonLd } from '@site/core/seo';
-
-import { loadMoreProducts } from './load-more';
 
 import type { ProductListScope } from '@site/catalog/data-access';
 import type { SearchParamsRecord } from '@site/catalog/model';
@@ -34,7 +32,7 @@ type ProductListingProps = {
 };
 
 /**
- * Toolbar, products, «Показати ще», and page links for one listing page. It reads the URL, so it renders
+ * Toolbar, products, the shown range with the page-size choice, and page links for one listing page. It reads the URL, so it renders
  * inside `<Suspense>`; products come from the cached loader keyed by scope and normalized choices.
  */
 export async function ProductListing({
@@ -73,18 +71,17 @@ export async function ProductListing({
     );
   }
 
-  const loadPage = loadMoreProducts.bind(
-    null,
-    locale,
-    scope,
-    serializeListingQuery({ ...query, page: 1 }),
-  );
+  const from = (page.page - 1) * page.pageSize + 1;
+  const to = from + page.items.length - 1;
 
   return (
     <div className="grid gap-4">
       {toolbar}
       <ProductList locale={locale} products={page.items} view={query.view} />
-      <ShowMore locale={locale} view={query.view} page={page} loadPage={loadPage} />
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
+        <ListingSummary locale={locale} from={from} to={to} total={page.totalRecords} />
+        <PerPageLinks locale={locale} path={path} query={query} extra={extra} />
+      </div>
       <ListingPagination
         locale={locale}
         path={path}

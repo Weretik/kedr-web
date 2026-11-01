@@ -5,7 +5,9 @@ export type ListingSort = (typeof LISTING_SORTS)[number];
 export const LISTING_VIEWS = ['grid', 'table'] as const;
 export type ListingView = (typeof LISTING_VIEWS)[number];
 
-export const LISTING_PAGE_SIZE = 24;
+/** Products per page the visitor can choose; 50 is the default (owner decision 2026-11-01). */
+export const LISTING_PAGE_SIZES = [20, 50, 100] as const;
+export type ListingPageSize = (typeof LISTING_PAGE_SIZES)[number];
 
 /** Visitor choices on a listing. The URL keeps only values that differ from `DEFAULT_LISTING_QUERY`. */
 export type ListingQuery = {
@@ -17,6 +19,7 @@ export type ListingQuery = {
   priceFrom: number | null;
   priceTo: number | null;
   view: ListingView;
+  perPage: ListingPageSize;
 };
 
 export const DEFAULT_LISTING_QUERY: ListingQuery = {
@@ -28,6 +31,7 @@ export const DEFAULT_LISTING_QUERY: ListingQuery = {
   priceFrom: null,
   priceTo: null,
   view: 'grid',
+  perPage: 50,
 };
 
 /** Shape of Next.js `searchParams` and of `URLSearchParams` entries. */
@@ -52,6 +56,13 @@ const parsePrice = (value: string | undefined): number | null => {
   return Number.isFinite(price) && price >= 0 && price <= MAX_PRICE ? Math.round(price) : null;
 };
 
+const parsePerPage = (value: string | undefined): ListingPageSize => {
+  const size = Number(value);
+  return LISTING_PAGE_SIZES.includes(size as ListingPageSize)
+    ? (size as ListingPageSize)
+    : DEFAULT_LISTING_QUERY.perPage;
+};
+
 const pick = <T extends string>(values: readonly T[], value: string | undefined, fallback: T): T =>
   values.includes(value as T) ? (value as T) : fallback;
 
@@ -72,6 +83,7 @@ export function parseListingQuery(params: SearchParamsRecord): ListingQuery {
     priceFrom,
     priceTo,
     view: pick(LISTING_VIEWS, first(params['view']), DEFAULT_LISTING_QUERY.view),
+    perPage: parsePerPage(first(params['perPage'])),
   };
 }
 
@@ -91,6 +103,7 @@ export function serializeListingQuery(
   if (query.priceTo !== null) params.set('priceTo', String(query.priceTo));
   if (query.sort !== DEFAULT_LISTING_QUERY.sort) params.set('sort', query.sort);
   if (query.view !== DEFAULT_LISTING_QUERY.view) params.set('view', query.view);
+  if (query.perPage !== DEFAULT_LISTING_QUERY.perPage) params.set('perPage', String(query.perPage));
   if (query.page !== 1) params.set('page', String(query.page));
   return params.toString();
 }
@@ -105,12 +118,12 @@ export function listingHref(
   return search ? `${path}?${search}` : path;
 }
 
-/** Only the plain list and its page numbers are indexable; filters, sort, and view are not. */
+/** Only the plain list and its page numbers are indexable; filters, sort, view, and page size are not. */
 export function isIndexableListing(query: ListingQuery): boolean {
   return serializeListingQuery({ ...query, page: 1 }) === '';
 }
 
-/** Whether any filter narrows the list (sort, view, and page do not). */
+/** Whether any filter narrows the list (sort, view, page, and page size do not). */
 export function hasListingFilters(query: ListingQuery): boolean {
   return (
     query.inStock ||
@@ -127,5 +140,6 @@ export function withoutFilters(query: ListingQuery): ListingQuery {
     ...DEFAULT_LISTING_QUERY,
     sort: query.sort,
     view: query.view,
+    perPage: query.perPage,
   };
 }

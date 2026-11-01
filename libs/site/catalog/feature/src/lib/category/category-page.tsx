@@ -1,5 +1,5 @@
 import { getCatalogTree, getCategory } from '@site/catalog/data-access';
-import { categoryPath } from '@site/catalog/model';
+import { CATALOG_PATH, CATALOG_ROOTS, categoryPath } from '@site/catalog/model';
 import { buildBreadcrumbListJsonLd } from '@site/catalog/seo';
 import { Breadcrumbs, CatalogTreePanel, CategoryContent, CategoryHeader } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
@@ -23,6 +23,7 @@ type CategoryPageProps = {
 
 /**
  * Loads the category before anything streams, so a moved slug answers 308 and a missing one 404.
+ * «Фурнітура» is the whole site, so its page moves to the catalog hub; Cosmos is never shown.
  * An unavailable API throws: the visitor gets the error page with status 500, never an empty 200 page.
  */
 export async function loadCategoryOrRespond(
@@ -31,7 +32,12 @@ export async function loadCategoryOrRespond(
 ): Promise<CategoryDetails> {
   if (slug === CATEGORY_PLACEHOLDER_SLUG) notFound();
   const result = await getCategory(locale, slug);
-  if (result.kind === 'ok') return result.category;
+  if (result.kind === 'ok') {
+    if (result.category.id === CATALOG_ROOTS.hardwareId)
+      permanentRedirect(localizedPath(locale, CATALOG_PATH));
+    if (result.category.id === CATALOG_ROOTS.cosmosId) notFound();
+    return result.category;
+  }
   if (result.kind === 'moved') permanentRedirect(localizedPath(locale, categoryPath(result.slug)));
   if (result.kind === 'not-found') notFound();
   throw new Error(`Catalog API is unavailable for category "${slug}"`);

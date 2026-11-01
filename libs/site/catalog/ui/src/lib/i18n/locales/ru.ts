@@ -35,9 +35,8 @@ export const ru: CatalogDictionary = {
   viewTable: 'Таблицей',
 
   summary: (from, to, total) => `Показано ${from}–${to} из ${total}`,
-  showMore: 'Показать ещё',
-  loading: 'Загрузка…',
-  loadFailed: 'Не удалось загрузить товары. Попробуйте ещё раз.',
+  perPage: 'Показывать по',
+  perPageOption: (size) => `${size} товаров на странице`,
   pagination: 'Страницы',
   previousPage: 'Предыдущая',
   nextPage: 'Следующая',
@@ -71,6 +70,7 @@ export const ru: CatalogDictionary = {
   hubIntro:
     'Петли, замки, ручки, цилиндры и другая фурнитура оптом и в розницу со склада в Харькове.',
   searchTitle: (term) => `Поиск: ${term}`,
+  searchResults: (term) => `Результаты поиска «${term}»`,
   searchHeading: 'Поиск товаров',
   searchPrompt: 'Введите название или артикул товара.',
   searchLabel: 'Название или артикул',
