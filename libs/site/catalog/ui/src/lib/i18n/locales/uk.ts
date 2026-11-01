@@ -35,9 +35,8 @@ export const uk: CatalogDictionary = {
   viewTable: 'Таблицею',
 
   summary: (from, to, total) => `Показано ${from}–${to} з ${total}`,
-  showMore: 'Показати ще',
-  loading: 'Завантаження…',
-  loadFailed: 'Не вдалося завантажити товари. Спробуйте ще раз.',
+  perPage: 'Показувати по',
+  perPageOption: (size) => `${size} товарів на сторінці`,
   pagination: 'Сторінки',
   previousPage: 'Попередня',
   nextPage: 'Наступна',

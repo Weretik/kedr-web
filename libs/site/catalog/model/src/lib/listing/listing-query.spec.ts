@@ -20,6 +20,7 @@ describe('listing query', () => {
         priceFrom: '100,4',
         priceTo: ' ',
         view: 'table',
+        perPage: '100',
       }),
     ).toEqual({
       page: 3,
@@ -30,11 +31,12 @@ describe('listing query', () => {
       priceFrom: 100,
       priceTo: null,
       view: 'table',
+      perPage: 100,
     });
 
-    expect(parseListingQuery({ page: '0', sort: 'cheap', view: 'list', priceFrom: '-1' })).toEqual(
-      DEFAULT_LISTING_QUERY,
-    );
+    expect(
+      parseListingQuery({ page: '0', sort: 'cheap', view: 'list', priceFrom: '-1', perPage: '24' }),
+    ).toEqual(DEFAULT_LISTING_QUERY);
     expect(parseListingQuery({ page: ['2', '5'] }).page).toBe(2);
   });
 
@@ -55,7 +57,13 @@ describe('listing query', () => {
   });
 
   it('round-trips through the URL', () => {
-    const query = parseListingQuery({ inStock: 'true', priceTo: '500', view: 'table', page: '4' });
+    const query = parseListingQuery({
+      inStock: 'true',
+      priceTo: '500',
+      view: 'table',
+      perPage: '20',
+      page: '4',
+    });
     expect(
       parseListingQuery(Object.fromEntries(new URLSearchParams(serializeListingQuery(query)))),
     ).toEqual(query);
@@ -65,21 +73,24 @@ describe('listing query', () => {
     expect(isIndexableListing({ ...DEFAULT_LISTING_QUERY, page: 5 })).toBe(true);
     expect(isIndexableListing({ ...DEFAULT_LISTING_QUERY, sort: 'name' })).toBe(false);
     expect(isIndexableListing({ ...DEFAULT_LISTING_QUERY, view: 'table' })).toBe(false);
+    expect(isIndexableListing({ ...DEFAULT_LISTING_QUERY, perPage: 100 })).toBe(false);
   });
 
-  it('resets filters but keeps sort and view', () => {
+  it('resets filters but keeps sort, view, and page size', () => {
     const query = {
       ...DEFAULT_LISTING_QUERY,
       page: 3,
       inStock: true,
       sort: 'name' as const,
       view: 'table' as const,
+      perPage: 20 as const,
     };
     expect(hasListingFilters(query)).toBe(true);
     expect(withoutFilters(query)).toEqual({
       ...DEFAULT_LISTING_QUERY,
       sort: 'name',
       view: 'table',
+      perPage: 20,
     });
     expect(hasListingFilters(withoutFilters(query))).toBe(false);
   });

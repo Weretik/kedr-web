@@ -4,7 +4,7 @@ import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
 import type { Locale } from '@site/core/i18n';
 
-/** «Показано 1–48 з 312 товарів»: the range shown so far, including pages added by «Показати ще». */
+/** «Показано 51–100 з 312 товарів»: the range of the current page. */
 export function ListingSummary({
   locale,
   from,
@@ -19,7 +19,7 @@ export function ListingSummary({
   const dictionary = getCatalogDictionary(locale);
 
   return (
-    <p className="text-center text-sm text-muted-foreground" aria-live="polite">
+    <p className="text-sm text-muted-foreground">
       {dictionary.summary(from, to, pluralize(locale, total, dictionary.products))}
     </p>
   );

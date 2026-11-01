@@ -1,5 +1,3 @@
-import { LISTING_PAGE_SIZE } from '@site/catalog/model';
-
 import type { operations } from '@shared/api-contracts';
 import type { ListingQuery, ListingSort } from '@site/catalog/model';
 
@@ -30,6 +28,6 @@ export function toProductListRequest(
     priceTo: query.priceTo ?? undefined,
     sort: API_SORT[query.sort],
     page: query.page,
-    pageSize: LISTING_PAGE_SIZE,
+    pageSize: query.perPage,
   };
 }

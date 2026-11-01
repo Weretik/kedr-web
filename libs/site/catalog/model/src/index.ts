@@ -12,7 +12,7 @@ export type {
 export type { ProductListPage } from './lib/entities/product-list-page';
 export {
   DEFAULT_LISTING_QUERY,
-  LISTING_PAGE_SIZE,
+  LISTING_PAGE_SIZES,
   LISTING_SORTS,
   LISTING_VIEWS,
   hasListingFilters,
@@ -23,6 +23,7 @@ export {
   withoutFilters,
 } from './lib/listing/listing-query';
 export type {
+  ListingPageSize,
   ListingQuery,
   ListingSort,
   ListingView,

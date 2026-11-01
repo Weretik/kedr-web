@@ -22,7 +22,6 @@ vi.mock('next/navigation', () => ({
   permanentRedirect,
   useRouter: () => ({ push: vi.fn() }),
 }));
-vi.mock('../listing/load-more', () => ({ loadMoreProducts: vi.fn() }));
 
 const category = {
   id: 9,

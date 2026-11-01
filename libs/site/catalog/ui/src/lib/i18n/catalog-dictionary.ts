@@ -35,9 +35,8 @@ export type CatalogDictionary = {
   viewTable: string;
 
   summary: (from: number, to: number, total: string) => string;
-  showMore: string;
-  loading: string;
-  loadFailed: string;
+  perPage: string;
+  perPageOption: (size: number) => string;
   pagination: string;
   previousPage: string;
   nextPage: string;

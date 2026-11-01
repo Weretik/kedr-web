@@ -13,7 +13,7 @@ describe('toProductListRequest', () => {
       priceTo: undefined,
       sort: 'AvailabilityThenName',
       page: 1,
-      pageSize: 24,
+      pageSize: 50,
     });
   });
 
@@ -42,7 +42,7 @@ describe('toProductListRequest', () => {
       priceTo: 500,
       sort: 'PriceDesc',
       page: 3,
-      pageSize: 24,
+      pageSize: 50,
     });
   });
 });

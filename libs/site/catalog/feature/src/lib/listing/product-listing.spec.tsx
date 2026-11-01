@@ -9,7 +9,6 @@ vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock('next/image', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
 }));
-vi.mock('./load-more', () => ({ loadMoreProducts: { bind: () => vi.fn() } }));
 
 const product = {
   id: 7,
@@ -34,11 +33,11 @@ const renderListing = async (searchParams: Record<string, string>) =>
   );
 
 describe('ProductListing', () => {
-  it('shows products, the summary, page links, and ItemList JSON-LD on an indexable page', async () => {
+  it('shows products, the summary, page-size links, page links, and ItemList JSON-LD on an indexable page', async () => {
     getProductListPage.mockResolvedValue({
       items: [product],
       page: 1,
-      pageSize: 24,
+      pageSize: 50,
       totalPages: 2,
       totalRecords: 25,
     });
@@ -50,7 +49,13 @@ describe('ProductListing', () => {
     expect(screen.getByRole('link', { name: 'Сторінка 2' }).getAttribute('href')).toBe(
       '/uk/catalog/zavisy?page=2',
     );
-    expect(screen.getByRole('button', { name: 'Показати ще' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Показати ще' })).toBeNull();
+    expect(screen.getByRole('link', { name: '100 товарів на сторінці' }).getAttribute('href')).toBe(
+      '/uk/catalog/zavisy?perPage=100',
+    );
+    expect(
+      screen.getByRole('link', { name: '50 товарів на сторінці' }).getAttribute('aria-current'),
+    ).toBe('true');
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       'ItemList',
     );
@@ -60,7 +65,7 @@ describe('ProductListing', () => {
     getProductListPage.mockResolvedValue({
       items: [product],
       page: 1,
-      pageSize: 24,
+      pageSize: 50,
       totalPages: 1,
       totalRecords: 1,
     });
@@ -79,7 +84,7 @@ describe('ProductListing', () => {
     getProductListPage.mockResolvedValue({
       items: [],
       page: 1,
-      pageSize: 24,
+      pageSize: 50,
       totalPages: 0,
       totalRecords: 0,
     });
@@ -94,7 +99,7 @@ describe('ProductListing', () => {
     getProductListPage.mockResolvedValue({
       items: [],
       page: 9,
-      pageSize: 24,
+      pageSize: 50,
       totalPages: 2,
       totalRecords: 30,
     });
