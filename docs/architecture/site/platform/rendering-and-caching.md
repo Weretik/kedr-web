@@ -35,7 +35,6 @@ Pages and layouts are Server Components. `'use client'` is allowed only on the s
 - Results are typed outcomes: `ok`, `not-found`, `gone`, `unavailable`. Domain `data-access` maps them to models; features call `notFound()` for `not-found`.
 - Domain loaders wrap reads in `'use cache'` with `cacheTag` and `cacheLife('hours')`; a failed read returns `null` with `{ stale: 60, revalidate: 60, expire: 3600 }`, so the page stays 200, remains in the prerender, and retries within a minute (example: `getCatalogSections`). A page that cannot exist without its data (the category page) throws instead and `app/[locale]/error.tsx` answers 500 inside the site frame.
 - Cache tags: `catalog` (on every catalog entry), `catalog:categories`, `catalog:products`, `category:{slug}`, later `product:{id}`. `generateMetadata` and the page share one cached entry when they call the same loader with the same arguments.
-- «Показати ще» calls the `loadMoreProducts` Server Function, which validates its arguments and reads through the same cached loader.
 - Writes (quick order) go through a Server Action or a client call to `POST /api/orders`, never through a cached function.
 
 ## Invalidation from the backend

@@ -6,6 +6,7 @@ export type { CatalogDictionary } from './lib/i18n/catalog-dictionary';
 export { ListingEmpty } from './lib/listing/listing-empty';
 export { ListingPagination } from './lib/listing/listing-pagination';
 export { ListingToolbar } from './lib/listing/listing-toolbar';
+export { CategoryCards } from './lib/category-cards/category-cards';
 export { ListingSummary } from './lib/listing/listing-summary';
 export { PerPageLinks } from './lib/listing/per-page-links';
 export { ResultsAnchor } from './lib/listing/results-anchor';
