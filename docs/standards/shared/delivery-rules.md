@@ -35,6 +35,16 @@ A `TS-*` or `EN-*` task is ready when its dependencies are complete, its respons
 
 If the user authorizes an entire feature, phase, or set of `SC-*` scenarios, the AI proceeds through all ready task files in that scope. A separate command for each subphase is unnecessary.
 
+## Staged structure check
+
+Implement a feature in stages (one scenario, task slice, or layer at a time). After each stage, run a short structure check on the files that stage touched: split files, components, and hooks that mix responsibilities; split large visual components into smaller ones; and move crowded "dump" folders into logical folders or modules under the code organization rules. Do not leave this for the end of the feature. The check is local to changed files and is not the full code audit, which still runs only at the user's explicit request. After the last stage, do a short final pass over the whole feature.
+
+## Closing checklist
+
+Before reporting a feature complete, check each item that applies: the feature card and [feature catalog](../../features/README.md) row are created or updated; the [specification index](../../specs/README.md) row and traceability are current; the card's "Tests" section is current; the contract snapshot and generated types are synced after a backend change; loading, empty, and error states exist; the existing theme (light and dark), responsive rules, and locale are respected; architecture documentation is updated when a module, route, or boundary is added or changed; the staged structure checks are done.
+
+When changing an existing feature, open its card and the code and tests it lists before editing.
+
 ## Definition of done
 
 A new feature card in `docs/features/<app>/<module>/` briefly records its route, boundaries, state and data flow, contracts, SDD link, Mermaid diagram of verified relationships, tree of actual directories with their roles, and a “Tests” section with the Nx projects that test it and their focused run commands (or a note that none exist). Add it as one row of the flat [feature catalog](../../features/README.md); do not add per-app or per-area index pages. Update the catalog row and affected card after a substantial change to these facts; do not duplicate requirements or fields from the specification, record environment state, or create a subdirectory for a single page.
