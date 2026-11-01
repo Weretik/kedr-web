@@ -97,10 +97,10 @@ export function FilterForm({ locale, path, query, extra, onDone }: FilterFormPro
       <div className="border-t border-border pt-4">
         <fieldset className="grid gap-2">
           <legend className="mb-3 font-semibold">{dictionary.price}</legend>
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <PriceInput name="priceFrom" label={dictionary.priceFrom} value={query.priceFrom} />
             <PriceInput name="priceTo" label={dictionary.priceTo} value={query.priceTo} />
-            <Button type="submit" variant="outline" size="sm" className="h-8">
+            <Button type="submit" variant="outline" size="sm" className="col-span-2 h-8">
               {dictionary.apply}
             </Button>
           </div>

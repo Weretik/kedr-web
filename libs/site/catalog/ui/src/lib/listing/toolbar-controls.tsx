@@ -30,7 +30,7 @@ export function PriceInput({
   value: number | null;
 }) {
   return (
-    <label>
+    <label className="min-w-0">
       <span className="sr-only">{label}</span>
       <input
         type="number"
@@ -39,7 +39,7 @@ export function PriceInput({
         name={name}
         placeholder={label}
         defaultValue={value ?? ''}
-        className="h-8 w-20 rounded-md border border-border bg-background px-2 tabular-nums"
+        className="h-8 w-full min-w-0 rounded-md border border-border bg-background px-2 tabular-nums"
       />
     </label>
   );
