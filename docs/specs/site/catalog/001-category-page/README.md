@@ -23,7 +23,7 @@ Approved mockups: «Kedr: каталог и мега-меню» canvas (2026-10-
 
 - Flat addresses: `/{locale}/catalog/{slug}`, `/{locale}/product/{slug}`, hub `/{locale}/catalog`, search `/{locale}/search?q=` (`noindex`); permanent redirects from the old storefront addresses. Filtered pages are `noindex`.
 - All products are shown, products in stock first; a product without stock is «Немає в наявності».
-- Category tree panel: only the current path open (changed 2026-11-01 from «all levels expanded»), other branches open on click, state remembered, panel can be hidden. Subcategory chips only on phones; the toolbar is one thin row.
+- Category tree panel removed (owner decision 2026-11-01, as in the concept design): main sections are in the header; under the H1 with the count come category chips (subcategories, or siblings for a leaf); filters in the left column (an icon on phones), sort select and view switch above the products.
 - Mega menu: variant A (left rail with sections, subcategory columns) with category search; doors as a separate rail item.
 - No brand or coating filters (1C has no such fields). SKU (the 1C product code) on cards and in the table. 24 per page, «Показати ще», and page numbers.
 - No sign-in on the category page; retail prices only.

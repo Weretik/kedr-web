@@ -5,14 +5,16 @@ import { CategoryHeader } from './category-header';
 import { Breadcrumbs } from '../navigation/breadcrumbs';
 
 describe('category UI', () => {
-  it('shows the H1, count, and subcategory links', () => {
+  it('shows the H1, count, and category chips with the current one marked', () => {
     render(
       <CategoryHeader
         locale="uk"
         heading="Ручки"
         productCount={312}
-        subcategories={[
+        activeId={3}
+        chips={[
           { id: 2, slug: 'na-rozetsi', name: 'На розетці', productCount: 4, children: [] },
+          { id: 3, slug: 'na-planci', name: 'На планці', productCount: 6, children: [] },
         ]}
       />,
     );
@@ -21,6 +23,9 @@ describe('category UI', () => {
     expect(screen.getByText('312 товарів')).toBeTruthy();
     expect(screen.getByRole('link', { name: /На розетці/ }).getAttribute('href')).toBe(
       '/uk/catalog/na-rozetsi',
+    );
+    expect(screen.getByRole('link', { name: /На планці/ }).getAttribute('aria-current')).toBe(
+      'page',
     );
   });
 

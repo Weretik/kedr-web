@@ -1,12 +1,13 @@
 import { getCatalogTree, getCategory } from '@site/catalog/data-access';
 import { CATALOG_PATH, CATALOG_ROOTS, categoryPath } from '@site/catalog/model';
 import { buildBreadcrumbListJsonLd } from '@site/catalog/seo';
-import { Breadcrumbs, CatalogTreePanel, CategoryContent, CategoryHeader } from '@site/catalog/ui';
+import { Breadcrumbs, CategoryContent, CategoryHeader } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { categoryChips } from './category-chips';
 import { categoryCrumbs } from './category-crumbs';
 import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
@@ -43,7 +44,10 @@ export async function loadCategoryOrRespond(
   throw new Error(`Catalog API is unavailable for category "${slug}"`);
 }
 
-/** Category page: breadcrumbs, tree, header with subcategories, streamed listing, then admin text and FAQ. */
+/**
+ * Category page: breadcrumbs, the H1 with the count, category chips, then filters on the left and the streamed
+ * products on the right, then admin text and FAQ. Main sections are in the header, so there is no tree panel.
+ */
 export async function CategoryPage({ locale, slug, searchParams }: CategoryPageProps) {
   const [category, tree] = await Promise.all([
     loadCategoryOrRespond(locale, slug),
@@ -58,28 +62,22 @@ export async function CategoryPage({ locale, slug, searchParams }: CategoryPageP
         locale={locale}
         items={crumbs.map((crumb) => ({ name: crumb.name, href: crumb.path }))}
       />
-      <div className="grid gap-6 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-8">
-        {tree?.length ? (
-          <CatalogTreePanel locale={locale} tree={tree} activeId={category.id} />
-        ) : null}
-        <div className="grid min-w-0 content-start gap-6">
-          <CategoryHeader
-            locale={locale}
-            heading={category.content?.h1 ?? category.name}
-            productCount={category.productCount}
-            subcategories={category.children}
-          />
-          <Suspense fallback={<ListingSkeleton />}>
-            <ProductListing
-              locale={locale}
-              path={path}
-              scope={{ categoryId: category.id }}
-              searchParams={searchParams}
-            />
-          </Suspense>
-          {category.content && <CategoryContent locale={locale} content={category.content} />}
-        </div>
-      </div>
+      <CategoryHeader
+        locale={locale}
+        heading={category.content?.h1 ?? category.name}
+        productCount={category.productCount}
+        chips={categoryChips(category.children, category.id, tree)}
+        activeId={category.id}
+      />
+      <Suspense fallback={<ListingSkeleton />}>
+        <ProductListing
+          locale={locale}
+          path={path}
+          scope={{ categoryId: category.id }}
+          searchParams={searchParams}
+        />
+      </Suspense>
+      {category.content && <CategoryContent locale={locale} content={category.content} />}
       <JsonLd data={buildBreadcrumbListJsonLd(crumbs)} />
     </div>
   );

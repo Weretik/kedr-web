@@ -9,7 +9,7 @@ vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }));
 describe('ListingToolbar', () => {
   beforeEach(() => push.mockClear());
 
-  it('applies a flag at once and starts from page 1', () => {
+  it('sorts from page 1 and switches the view through the URL', () => {
     render(
       <ListingToolbar
         locale="uk"
@@ -18,9 +18,36 @@ describe('ListingToolbar', () => {
       />,
     );
 
+    fireEvent.change(screen.getByRole('combobox', { name: 'Сортування' }), {
+      target: { value: 'price-asc' },
+    });
+    expect(push).toHaveBeenCalledWith('/uk/catalog/ruchky?sort=price-asc', { scroll: false });
+    expect(screen.getByRole('link', { name: 'Таблицею' }).getAttribute('href')).toBe(
+      '/uk/catalog/ruchky?view=table&page=3',
+    );
+  });
+
+  it('applies a flag at once, keeps sort, view, and page size, and starts from page 1', () => {
+    render(
+      <ListingToolbar
+        locale="uk"
+        path="/uk/catalog/ruchky"
+        query={{
+          ...DEFAULT_LISTING_QUERY,
+          page: 3,
+          sort: 'name',
+          view: 'table',
+          perPage: 100,
+        }}
+      />,
+    );
+
     fireEvent.click(screen.getByRole('checkbox', { name: 'Тільки в наявності' }));
 
-    expect(push).toHaveBeenCalledWith('/uk/catalog/ruchky?inStock=true', { scroll: false });
+    expect(push).toHaveBeenCalledWith(
+      '/uk/catalog/ruchky?inStock=true&sort=name&view=table&perPage=100',
+      { scroll: false },
+    );
   });
 
   it('applies the price range on submit and keeps the search term', () => {
@@ -42,20 +69,20 @@ describe('ListingToolbar', () => {
     });
   });
 
-  it('offers a reset link and view links only through the URL', () => {
+  it('opens the filters from an icon and offers a filter reset', () => {
     render(
       <ListingToolbar
         locale="ru"
         path="/ru/catalog/ruchky"
-        query={{ ...DEFAULT_LISTING_QUERY, isSale: true, sort: 'price-asc' }}
+        query={{ ...DEFAULT_LISTING_QUERY, isSale: true, sort: 'price-asc', page: 2 }}
       />,
     );
 
+    const filters = screen.getByRole('button', { name: 'Фильтры' });
+    fireEvent.click(filters);
+    expect(filters.getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByRole('link', { name: 'Сбросить фильтры' }).getAttribute('href')).toBe(
       '/ru/catalog/ruchky?sort=price-asc',
-    );
-    expect(screen.getByRole('link', { name: 'Таблицей' }).getAttribute('href')).toBe(
-      '/ru/catalog/ruchky?isSale=true&sort=price-asc&view=table',
     );
   });
 });

@@ -40,5 +40,5 @@ No `FAQPage`: Google shows FAQ rich results only for government and health sites
 ## Content and performance
 
 - H1, breadcrumbs, subcategory links, tree links, SEO text, and FAQ are in the static HTML; product cards stream in the same response.
-- LCP is the first product photo; photos are `next/image` with fixed aspect ratio; only the tree panel, toolbar, «Показати ще», and mega menu are client code.
+- LCP is the first product photo; photos are `next/image` with fixed aspect ratio; only the listing controls and mega menu are client code.
 - The sitemap lists the hub and every category in the tree for both languages.

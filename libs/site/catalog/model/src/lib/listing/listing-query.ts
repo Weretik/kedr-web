@@ -31,7 +31,7 @@ export const DEFAULT_LISTING_QUERY: ListingQuery = {
   priceFrom: null,
   priceTo: null,
   view: 'grid',
-  perPage: 50,
+  perPage: 20,
 };
 
 /** Shape of Next.js `searchParams` and of `URLSearchParams` entries. */

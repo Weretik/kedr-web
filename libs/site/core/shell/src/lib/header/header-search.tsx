@@ -7,13 +7,20 @@ import { SHELL_PATHS } from '../navigation/site-navigation';
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { Locale } from '@site/core/i18n';
 
-type HeaderSearchProps = { locale: Locale; dictionary: ShellDictionary; className?: string };
+type HeaderSearchProps = {
+  locale: Locale;
+  dictionary: ShellDictionary;
+  className?: string;
+  /** Tells apart the field ids when the page has a second search form, such as the condensed header's. */
+  idSuffix?: string;
+};
 
 /**
  * Plain GET form to the search page with `?q=`, so it works without JavaScript. Suggestions and the `/` shortcut
  * come with the search feature.
  */
-export function HeaderSearch({ locale, dictionary, className }: HeaderSearchProps) {
+export function HeaderSearch({ locale, dictionary, className, idSuffix }: HeaderSearchProps) {
+  const id = idSuffix ? `site-search-${locale}-${idSuffix}` : `site-search-${locale}`;
   return (
     <form
       role="search"
@@ -21,7 +28,7 @@ export function HeaderSearch({ locale, dictionary, className }: HeaderSearchProp
       method="get"
       className={cn('relative', className)}
     >
-      <label htmlFor={`site-search-${locale}`} className="sr-only">
+      <label htmlFor={id} className="sr-only">
         {dictionary.searchLabel}
       </label>
       <SearchIcon
@@ -29,7 +36,7 @@ export function HeaderSearch({ locale, dictionary, className }: HeaderSearchProp
         strokeWidth={1.75}
       />
       <input
-        id={`site-search-${locale}`}
+        id={id}
         name="q"
         type="search"
         placeholder={dictionary.searchPlaceholder}

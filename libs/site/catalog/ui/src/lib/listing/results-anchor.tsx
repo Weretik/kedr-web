@@ -18,7 +18,11 @@ export function ResultsAnchor({ children }: { children: ReactNode }) {
 
   return (
     // The sticky header covers the top of the viewport; the margin keeps the heading below it.
-    <h2 ref={ref} tabIndex={-1} className="scroll-mt-44 text-lg font-semibold outline-none">
+    <h2
+      ref={ref}
+      tabIndex={-1}
+      className="scroll-mt-40 text-lg md:scroll-mt-20 font-semibold outline-none"
+    >
       {children}
     </h2>
   );
