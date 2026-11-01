@@ -47,12 +47,6 @@ export type CatalogDictionary = {
   toFirstPage: string;
   unavailable: string;
 
-  treeTitle: string;
-  hideTree: string;
-  showTree: string;
-  expand: (name: string) => string;
-  collapse: (name: string) => string;
-
   catalog: string;
   catalogMenu: string;
   searchCategories: string;

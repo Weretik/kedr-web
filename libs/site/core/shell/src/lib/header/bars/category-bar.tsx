@@ -2,13 +2,14 @@ import { localizedPath } from '@site/core/i18n';
 import Link from 'next/link';
 
 import { SHELL_PATHS } from '../../navigation/site-navigation';
+import { CompactActions } from '../compact-actions';
 import { RegionsMenu } from '../menus/regions-menu';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
 import type { ShellLink } from '../../navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
 
-/** Third header row (desktop): catalog sections, regions, and cooperation. */
+/** Third header row (desktop): catalog sections, regions, cooperation, and the compact search and cart. */
 export function CategoryBar({
   locale,
   dictionary,
@@ -22,7 +23,7 @@ export function CategoryBar({
     <div className="hidden border-t border-border md:block">
       <nav
         aria-label={dictionary.categoriesNav}
-        className="mx-auto flex h-11 max-w-[90rem] items-center gap-1 px-4 text-sm lg:px-6"
+        className="relative mx-auto flex h-11 max-w-[90rem] items-center gap-1 px-4 text-sm lg:px-6"
       >
         {links.map((link) => (
           <Link
@@ -41,6 +42,7 @@ export function CategoryBar({
           >
             {dictionary.wholesale}
           </Link>
+          <CompactActions locale={locale} dictionary={dictionary} />
         </div>
       </nav>
     </div>

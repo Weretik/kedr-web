@@ -9,8 +9,8 @@ import { useCallback, useId, useMemo, useRef, useState } from 'react';
 
 import { MegaMenuSearchResults } from './mega-menu-search';
 import { MegaMenuSection } from './mega-menu-section';
-import { useDismiss } from './use-dismiss';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
+import { useDismiss } from '../popover/use-dismiss';
 
 import type { CatalogTreeNode } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';

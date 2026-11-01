@@ -47,12 +47,6 @@ export const uk: CatalogDictionary = {
   toFirstPage: 'До першої сторінки',
   unavailable: 'Товари тимчасово не завантажилися. Оновіть сторінку трохи пізніше.',
 
-  treeTitle: 'Категорії',
-  hideTree: 'Сховати категорії',
-  showTree: 'Показати категорії',
-  expand: (name) => `Розгорнути «${name}»`,
-  collapse: (name) => `Згорнути «${name}»`,
-
   catalog: 'Каталог',
   catalogMenu: 'Каталог товарів',
   searchCategories: 'Пошук категорії',

@@ -26,7 +26,7 @@
 
 ## Server and client boundary
 
-Pages and layouts are Server Components. `'use client'` is allowed only on the smallest interactive leaf (theme and language controls, phone copy, mobile menu, catalog toolbar, «Показати ще», tree panel, mega menu, later add-to-cart and gallery). Client components receive mapped `model` props and never import `data-access` or `site-shared-api-client` (the latter imports `server-only`, so such an import fails the build). Personal data (session, cart) lives only in client islands and private routes, never in shared HTML cache. Indexable pages do not read `cookies()` or `headers()`.
+Pages and layouts are Server Components. `'use client'` is allowed only on the smallest interactive leaf (theme and language controls, phone copy, mobile menu, catalog filters and toolbar, collapsing header, mega menu, later add-to-cart and gallery). Client components receive mapped `model` props and never import `data-access` or `site-shared-api-client` (the latter imports `server-only`, so such an import fails the build). Personal data (session, cart) lives only in client islands and private routes, never in shared HTML cache. Indexable pages do not read `cookies()` or `headers()`.
 
 ## Data access
 

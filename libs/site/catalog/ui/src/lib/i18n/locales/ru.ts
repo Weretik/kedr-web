@@ -47,12 +47,6 @@ export const ru: CatalogDictionary = {
   toFirstPage: 'На первую страницу',
   unavailable: 'Товары временно не загрузились. Обновите страницу чуть позже.',
 
-  treeTitle: 'Категории',
-  hideTree: 'Скрыть категории',
-  showTree: 'Показать категории',
-  expand: (name) => `Развернуть «${name}»`,
-  collapse: (name) => `Свернуть «${name}»`,
-
   catalog: 'Каталог',
   catalogMenu: 'Каталог товаров',
   searchCategories: 'Поиск категории',

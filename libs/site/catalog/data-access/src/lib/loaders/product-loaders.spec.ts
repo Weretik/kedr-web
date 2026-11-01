@@ -36,7 +36,7 @@ describe('getProductListPage', () => {
       query: expect.objectContaining({
         categoryId: 9,
         page: 2,
-        pageSize: 50,
+        pageSize: 20,
         sort: 'AvailabilityThenName',
       }),
     });

@@ -74,10 +74,19 @@ describe('loadCategoryOrRespond', () => {
 });
 
 describe('CategoryPage', () => {
-  it('renders breadcrumbs, the admin H1, tree, text, and breadcrumb JSON-LD before the listing', async () => {
+  it('renders breadcrumbs, the admin H1, sibling chips, text, and breadcrumb JSON-LD before the listing', async () => {
     getCategory.mockResolvedValue({ kind: 'ok', category });
     getCatalogTree.mockResolvedValue([
-      { id: 9, slug: 'ruchky', name: 'Ручки', productCount: 2, children: [] },
+      {
+        id: 1,
+        slug: 'furnitura-dlia-dverei',
+        name: 'Фурнітура для дверей',
+        productCount: 5,
+        children: [
+          { id: 9, slug: 'ruchky', name: 'Ручки', productCount: 2, children: [] },
+          { id: 10, slug: 'zamky', name: 'Замки', productCount: 3, children: [] },
+        ],
+      },
     ]);
     getProductListPage.mockReturnValue(new Promise(() => undefined));
 
@@ -85,7 +94,10 @@ describe('CategoryPage', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: 'Дверні ручки' })).toBeTruthy();
     expect(screen.getByRole('navigation', { name: 'Ви тут' }).textContent).toContain('Каталог');
-    expect(screen.getByRole('navigation', { name: 'Категорії' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Замки/ }).getAttribute('href')).toBe(
+      '/uk/catalog/zamky',
+    );
+    expect(screen.getByRole('link', { name: /Ручки/ }).getAttribute('aria-current')).toBe('page');
     expect(screen.getByText('Опис')).toBeTruthy();
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       'BreadcrumbList',

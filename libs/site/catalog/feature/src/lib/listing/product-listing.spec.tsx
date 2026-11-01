@@ -33,11 +33,11 @@ const renderListing = async (searchParams: Record<string, string>) =>
   );
 
 describe('ProductListing', () => {
-  it('shows products, the summary, page-size links, page links, and ItemList JSON-LD on an indexable page', async () => {
+  it('shows filters, sort, products, the summary, page-size links, page links, and ItemList JSON-LD on an indexable page', async () => {
     getProductListPage.mockResolvedValue({
       items: [product],
       page: 1,
-      pageSize: 50,
+      pageSize: 20,
       totalPages: 2,
       totalRecords: 25,
     });
@@ -49,12 +49,13 @@ describe('ProductListing', () => {
     expect(screen.getByRole('link', { name: 'Сторінка 2' }).getAttribute('href')).toBe(
       '/uk/catalog/zavisy?page=2',
     );
-    expect(screen.queryByRole('button', { name: 'Показати ще' })).toBeNull();
+    expect(screen.getByRole('complementary', { name: 'Фільтри' })).toBeTruthy();
+    expect(screen.getByRole('combobox', { name: 'Сортування' })).toBeTruthy();
     expect(screen.getByRole('link', { name: '100 товарів на сторінці' }).getAttribute('href')).toBe(
       '/uk/catalog/zavisy?perPage=100',
     );
     expect(
-      screen.getByRole('link', { name: '50 товарів на сторінці' }).getAttribute('aria-current'),
+      screen.getByRole('link', { name: '20 товарів на сторінці' }).getAttribute('aria-current'),
     ).toBe('true');
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       'ItemList',
@@ -65,7 +66,7 @@ describe('ProductListing', () => {
     getProductListPage.mockResolvedValue({
       items: [product],
       page: 1,
-      pageSize: 50,
+      pageSize: 20,
       totalPages: 1,
       totalRecords: 1,
     });
@@ -84,7 +85,7 @@ describe('ProductListing', () => {
     getProductListPage.mockResolvedValue({
       items: [],
       page: 1,
-      pageSize: 50,
+      pageSize: 20,
       totalPages: 0,
       totalRecords: 0,
     });
@@ -99,7 +100,7 @@ describe('ProductListing', () => {
     getProductListPage.mockResolvedValue({
       items: [],
       page: 9,
-      pageSize: 50,
+      pageSize: 20,
       totalPages: 2,
       totalRecords: 30,
     });
