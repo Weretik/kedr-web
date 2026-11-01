@@ -21,17 +21,18 @@ type CatalogTreePanelProps = {
 
 /**
  * Category tree beside the listing. Desktop shows it until the visitor hides it; phones open it with a button.
- * Branches collapse one by one; both choices are remembered in this browser.
+ * Only the path to the current category is open, so the panel shows its parents, siblings, and children;
+ * other branches open one by one. Both choices are remembered in this browser.
  */
 export function CatalogTreePanel({ locale, tree, activeId = null }: CatalogTreePanelProps) {
   const dictionary = getCatalogDictionary(locale);
-  const { collapsed, hidden, toggleBranch, toggleHidden } = useTreeState();
+  const { expanded, hidden, toggleBranch, toggleHidden } = useTreeState();
   const [mobileOpen, setMobileOpen] = useState(false);
   const activePath = useMemo(
     () => new Set(activeId === null ? [] : ancestorIds(tree, activeId)),
     [tree, activeId],
   );
-  const collapsedSet = useMemo(() => new Set(collapsed), [collapsed]);
+  const expandedSet = useMemo(() => new Set(expanded), [expanded]);
   const ToggleIcon = hidden ? PanelLeftOpenIcon : PanelLeftCloseIcon;
 
   return (
@@ -68,7 +69,7 @@ export function CatalogTreePanel({ locale, tree, activeId = null }: CatalogTreeP
           nodes={tree}
           activeId={activeId}
           activePath={activePath}
-          collapsed={collapsedSet}
+          expanded={expandedSet}
           onToggle={toggleBranch}
           dictionary={dictionary}
         />

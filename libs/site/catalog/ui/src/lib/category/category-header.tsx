@@ -32,7 +32,8 @@ export function CategoryHeader({
         </span>
       </div>
       {subcategories.length > 0 && (
-        <nav aria-label={dictionary.subcategories}>
+        // Desktop shows subcategories in the tree panel; the chips are for phones, where the tree is closed.
+        <nav aria-label={dictionary.subcategories} className="lg:hidden">
           <ul className="flex flex-wrap gap-2">
             {subcategories.map((child) => (
               <li key={child.id}>
