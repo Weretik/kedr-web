@@ -52,7 +52,7 @@ export async function ProductListing({
   const frame = (content: ReactNode) => (
     <div className="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8">
       <aside aria-label={dictionary.filters} className="hidden lg:block">
-        <FilterForm dictionary={dictionary} path={path} query={query} extra={extra ?? {}} />
+        <FilterForm locale={locale} path={path} query={query} extra={extra ?? {}} />
       </aside>
       <div className="grid min-w-0 content-start gap-4">
         <ListingToolbar locale={locale} path={path} query={query} extra={extra} />
