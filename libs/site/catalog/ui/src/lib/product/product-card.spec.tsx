@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ProductGrid } from './product-grid';
 import { ProductList } from './product-list';
@@ -6,7 +6,9 @@ import { ProductList } from './product-list';
 import type { ProductSummary } from '@site/catalog/model';
 
 vi.mock('next/image', () => ({
-  default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
+  default: ({ src, alt, onError }: { src: string; alt: string; onError?: () => void }) => (
+    <img src={src} alt={alt} onError={onError} />
+  ),
 }));
 
 const product: ProductSummary = {
@@ -40,6 +42,14 @@ describe('ProductGrid', () => {
 
     expect(screen.queryByRole('img')).toBeNull();
     expect(screen.getByText('Цена по запросу')).toBeTruthy();
+  });
+
+  it('falls back to the placeholder when the photo is missing on the CDN', () => {
+    render(<ProductGrid locale="uk" products={[product]} />);
+
+    fireEvent.error(screen.getByRole('img', { name: 'Завіса AGB' }));
+
+    expect(screen.queryByRole('img')).toBeNull();
   });
 });
 

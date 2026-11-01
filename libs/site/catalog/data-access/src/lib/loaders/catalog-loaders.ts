@@ -6,12 +6,9 @@ import { cacheLife, cacheTag } from 'next/cache';
 import { CATALOG_CACHE_TAGS, FAILURE_LIFE } from '../cache-tags';
 import { mapCatalogSections } from '../mappers/catalog-sections.mapper';
 import { mapSiteCatalogTree } from '../mappers/category-tree.mapper';
-import { mapProductSummary } from '../mappers/product-summary.mapper';
 
-import type { CatalogSection, CatalogTreeNode, ProductSummary } from '@site/catalog/model';
+import type { CatalogSection, CatalogTreeNode } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
-
-const IN_STOCK_LIMIT = 8;
 
 /** Category tree for menus and the catalog index; `null` when the API is unavailable. */
 export async function getCatalogSections(locale: Locale): Promise<CatalogSection[] | null> {
@@ -41,22 +38,4 @@ export async function getCatalogTree(locale: Locale): Promise<CatalogTreeNode[] 
 
   cacheLife('hours');
   return mapSiteCatalogTree(result.data);
-}
-
-/** Newest products in stock at retail price; `null` when the API is unavailable. */
-export async function getInStockProducts(locale: Locale): Promise<ProductSummary[] | null> {
-  'use cache';
-  cacheTag(CATALOG_CACHE_TAGS.all, CATALOG_CACHE_TAGS.products);
-
-  const result = await siteApiGet('/api/catalog/{lang}/products', {
-    path: { lang: locale },
-    query: { inStock: true, sort: 'IdDesc', page: 1, pageSize: IN_STOCK_LIMIT },
-  });
-  if (result.kind !== 'ok') {
-    cacheLife(FAILURE_LIFE);
-    return null;
-  }
-
-  cacheLife('hours');
-  return result.data.value.map(mapProductSummary);
 }

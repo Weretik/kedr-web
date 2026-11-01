@@ -1,9 +1,8 @@
 import { productPath } from '@site/catalog/model';
 import { localizedPath } from '@site/core/i18n';
-import { PackageIcon } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
+import { ProductPhoto } from './product-photo';
 import { ProductPrice } from './product-price';
 import { StockLabel } from './stock-label';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
@@ -48,21 +47,13 @@ export function ProductTable({
             <tr key={product.id} className="border-t border-border">
               <td className="px-3 py-2">
                 <div className="relative size-20 overflow-hidden rounded-lg bg-muted">
-                  {product.photoUrl ? (
-                    <Image
-                      src={product.photoUrl}
-                      alt=""
-                      fill
-                      sizes="5rem"
-                      className="object-contain p-1.5"
-                    />
-                  ) : (
-                    <PackageIcon
-                      aria-hidden
-                      className="absolute inset-0 m-auto size-7 text-muted-foreground/60"
-                      strokeWidth={1.75}
-                    />
-                  )}
+                  <ProductPhoto
+                    src={product.photoUrl}
+                    alt=""
+                    sizes="5rem"
+                    className="p-1.5"
+                    iconClassName="size-7"
+                  />
                 </div>
               </td>
               <td className="px-3 py-2 font-medium">
