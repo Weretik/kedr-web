@@ -21,13 +21,13 @@ describe('CatalogIndex', () => {
 
     const locks = screen.getByRole('heading', { name: 'Замки' }).closest('li') as HTMLElement;
     const links = within(locks).getAllByRole('link');
-    expect(links[0]?.getAttribute('href')).toBe('/uk/catalog/zamki-900002/products');
+    expect(links[0]?.getAttribute('href')).toBe('/uk/catalog/zamki-900002');
     expect(within(locks).getByRole('link', { name: 'Підкатегорія 8' }).getAttribute('href')).toBe(
-      '/uk/catalog/child-8/products',
+      '/uk/catalog/child-8',
     );
     expect(within(locks).queryByRole('link', { name: 'Підкатегорія 9' })).toBeNull();
     expect(within(locks).getByRole('link', { name: 'Усі 12 →' }).getAttribute('href')).toBe(
-      '/uk/catalog/zamki-900002/products',
+      '/uk/catalog/zamki-900002',
     );
   });
 

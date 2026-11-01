@@ -5,6 +5,7 @@ Locales and localized paths for `apps/site`. Framework-neutral: no React, no Nex
 - `LOCALES`, `DEFAULT_LOCALE`, `isLocale` — `uk` (default) and `ru`.
 - `LOCALE_LANGUAGE_TAGS`, `OPEN_GRAPH_LOCALES` — `uk-UA`/`ru-UA` for `hreflang` and `<html lang>`, `uk_UA`/`ru_UA` for Open Graph.
 - `localizedPath`, `localizedPaths`, `stripLocale`, `switchLocalePath` — the only way to build site links; paths have no trailing slash.
+- `pluralize(locale, count, forms)` — a count with the Ukrainian or Russian word form (`312 товарів`).
 
 UI text lives with its owner (for example the shell dictionary in `site-core-shell`), not here.
 

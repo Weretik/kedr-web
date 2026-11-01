@@ -16,19 +16,21 @@ import Link from 'next/link';
 import { CopyPhoneButton } from '../../controls/copy-phone-button';
 import { LocaleSwitch } from '../../controls/locale-switch';
 import { ThemeToggle } from '../../controls/theme-toggle';
-import { CATEGORY_LINKS, INFO_LINKS, SHELL_PATHS } from '../../navigation/site-navigation';
+import { INFO_LINKS, SHELL_PATHS } from '../../navigation/site-navigation';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
+import type { ShellLink } from '../../navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
 
 type MobileMenuProps = {
   locale: Locale;
   dictionary: ShellDictionary;
   phone: { display: string; e164: string };
+  categoryLinks: readonly ShellLink[];
 };
 
 /** Phone and tablet menu in a side sheet: catalog sections, information pages, contacts, language, and theme. */
-export function MobileMenu({ locale, dictionary, phone }: MobileMenuProps) {
+export function MobileMenu({ locale, dictionary, phone, categoryLinks }: MobileMenuProps) {
   const item = (key: string, path: string, label: string) => (
     <li key={key}>
       <SheetClose asChild>
@@ -53,7 +55,8 @@ export function MobileMenu({ locale, dictionary, phone }: MobileMenuProps) {
         <SheetTitle>{dictionary.menuTitle}</SheetTitle>
         <SheetDescription>{dictionary.city}</SheetDescription>
         <ul>
-          {CATEGORY_LINKS.map((link) => item(link.key, link.path, dictionary.categories[link.key]))}
+          {item('catalog', SHELL_PATHS.catalog, dictionary.allCategories)}
+          {categoryLinks.map((link) => item(link.key, link.path, link.label))}
           {item('wholesale', SHELL_PATHS.wholesale, dictionary.wholesale)}
         </ul>
         <ul className="border-t border-border pt-3">

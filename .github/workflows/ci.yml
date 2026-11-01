@@ -48,7 +48,7 @@ jobs:
           done
           npx nx show projects --affected | sed 's/^/affected: /' || true
 
-      - run: npm ls --all
+      - run: node tools/ci/check-dependency-tree.mjs
       - run: npm run security:audit
       - run: npm run contracts:check
       - run: npm run docs:check

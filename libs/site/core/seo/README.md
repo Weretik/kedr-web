@@ -2,7 +2,7 @@
 
 Site-wide SEO builders for `apps/site`. Route files call them; features add their own builders in a domain `seo` library. Rules: [SEO architecture](../../../../docs/architecture/site/platform/seo-architecture.md) and [SEO rules](../../../../docs/standards/site/seo-rules.md).
 
-- `metadata/` — `buildRootMetadata` (URL base, title template, site robots), `buildPageMetadata` (self canonical, `hreflang` with `x-default`, Open Graph, robots), `buildRobotsMeta`.
+- `metadata/` — `buildRootMetadata` (URL base, title template, site robots), `buildPageMetadata` (self canonical with an optional page query such as `?page=2`, `hreflang` with `x-default`, Open Graph, robots), `buildRobotsMeta`.
 - `json-ld/` — `JsonLd` (safe server rendering), `buildOrganizationJsonLd`, `buildWebSiteJsonLd`.
 - `crawling/` — `buildRobotsFile` (everything blocked until indexing is enabled) and `buildSitemapEntries`.
 

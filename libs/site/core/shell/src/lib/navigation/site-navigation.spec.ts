@@ -2,9 +2,9 @@ import { CATEGORY_LINKS, INFO_LINKS, REGION_SLUGS } from './site-navigation';
 import { getShellDictionary } from '../i18n/shell-dictionary';
 
 describe('site navigation', () => {
-  it('keeps the current storefront category URLs', () => {
-    expect(CATEGORY_LINKS.map((link) => link.path)).toContain('/catalog/zamki-900002/products');
-    expect(CATEGORY_LINKS.map((link) => link.path)).toContain('/catalog/dveri-7226/products');
+  it('uses flat category URLs for the fallback sections', () => {
+    expect(CATEGORY_LINKS.map((link) => link.path)).toContain('/catalog/zamki-900002');
+    expect(CATEGORY_LINKS.map((link) => link.path)).toContain('/catalog/dveri-7226');
   });
 
   it('has a label for every link and region in both languages', () => {

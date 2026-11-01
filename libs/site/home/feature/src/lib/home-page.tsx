@@ -1,5 +1,5 @@
 import { getCatalogSections, getInStockProducts } from '@site/catalog/data-access';
-import { ALL_PRODUCTS_PATH } from '@site/catalog/model';
+import { CATALOG_PATH, SEARCH_PATH } from '@site/catalog/model';
 import { CatalogIndex, ProductGrid } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd, buildWebSiteJsonLd } from '@site/core/seo';
@@ -20,7 +20,7 @@ import type { Locale } from '@site/core/i18n';
  */
 export async function HomePage({ locale }: { locale: Locale }) {
   const dictionary = getHomeDictionary(locale);
-  const allProducts = localizedPath(locale, ALL_PRODUCTS_PATH);
+  const allProducts = localizedPath(locale, CATALOG_PATH);
   const [sections, products] = await Promise.all([
     getCatalogSections(locale),
     getInStockProducts(locale),
@@ -29,7 +29,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
   return (
     <>
       <div className="grid gap-8 py-4 lg:grid-cols-[minmax(0,1fr)_24rem] lg:py-10">
-        <HomeHero locale={locale} dictionary={dictionary} searchAction={allProducts} />
+        <HomeHero
+          locale={locale}
+          dictionary={dictionary}
+          searchAction={localizedPath(locale, SEARCH_PATH)}
+        />
         <WholesalePanel locale={locale} dictionary={dictionary} />
       </div>
 

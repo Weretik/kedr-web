@@ -3,3 +3,4 @@ export { getShellDictionary } from './lib/i18n/shell-dictionary';
 export type { ShellDictionary } from './lib/i18n/shell-dictionary';
 export { SiteShell } from './lib/site-shell';
 export { NotFoundView } from './lib/not-found/not-found-view';
+export type { CatalogNavigation, ShellLink } from './lib/navigation/catalog-navigation';

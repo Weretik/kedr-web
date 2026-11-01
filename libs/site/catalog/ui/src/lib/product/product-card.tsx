@@ -4,7 +4,8 @@ import { PackageIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { formatPrice } from '../format/price';
+import { ProductPrice } from './product-price';
+import { StockLabel } from './stock-label';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
 import type { ProductSummary } from '@site/catalog/model';
@@ -13,7 +14,7 @@ import type { Locale } from '@site/core/i18n';
 // Two columns on phones, three on tablets, four on desktops inside the 80rem container.
 const PHOTO_SIZES = '(min-width: 1024px) 18rem, (min-width: 640px) 33vw, 50vw';
 
-/** Product tile: photo or placeholder, badges, name link, and retail price. */
+/** Product tile: photo or placeholder, badges, name link, SKU, stock state, and retail price. */
 export function ProductCard({ locale, product }: { locale: Locale; product: ProductSummary }) {
   const dictionary = getCatalogDictionary(locale);
   const href = localizedPath(locale, productPath(product.slug));
@@ -54,17 +55,14 @@ export function ProductCard({ locale, product }: { locale: Locale; product: Prod
           {product.name}
         </Link>
       </h3>
+      <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <span>
+          {dictionary.sku} {product.sku}
+        </span>
+        <StockLabel inStock={product.inStock} dictionary={dictionary} />
+      </p>
       <p className="mt-auto pt-2 text-base font-semibold">
-        {product.price === null ? (
-          <span className="text-sm font-normal text-muted-foreground">
-            {dictionary.priceOnRequest}
-          </span>
-        ) : (
-          <>
-            <span className="sr-only">{dictionary.retailPrice}: </span>
-            {formatPrice(product.price, locale)}
-          </>
-        )}
+        <ProductPrice price={product.price} locale={locale} dictionary={dictionary} />
       </p>
     </article>
   );

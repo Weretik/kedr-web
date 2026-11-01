@@ -15,10 +15,12 @@ describe('mapProductSummary', () => {
   it('maps list items to summaries', () => {
     expect(mapProductSummary(item)).toEqual({
       id: 7,
+      sku: 7,
       slug: 'zavisa-agb',
       name: 'Завіса AGB',
       price: 245.5,
       photoUrl: 'https://images-kedr.cdn.express/~/o/products/7.jpg',
+      inStock: true,
       isNew: true,
       isSale: false,
     });

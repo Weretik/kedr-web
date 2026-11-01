@@ -1,4 +1,4 @@
-import { getCatalogSections, getInStockProducts } from './catalog-loaders';
+import { getCatalogSections, getCatalogTree, getInStockProducts } from './catalog-loaders';
 
 const { siteApiGet, cacheLife, cacheTag } = vi.hoisted(() => ({
   siteApiGet: vi.fn(),
@@ -40,5 +40,28 @@ describe('catalog loaders', () => {
       query: { inStock: true, sort: 'IdDesc', page: 1, pageSize: 8 },
     });
     expect(cacheTag).toHaveBeenCalledWith('catalog', 'catalog:products');
+  });
+
+  it('maps the whole tree with counts', async () => {
+    siteApiGet.mockResolvedValue({
+      kind: 'ok',
+      data: [
+        {
+          id: 1,
+          slug: 'a',
+          name: 'A',
+          parentId: null,
+          sortOrder: 1,
+          level: 0,
+          productCount: 4,
+          children: [],
+        },
+      ],
+    });
+
+    expect(await getCatalogTree('uk')).toEqual([
+      { id: 1, slug: 'a', name: 'A', productCount: 4, children: [] },
+    ]);
+    expect(cacheTag).toHaveBeenCalledWith('catalog', 'catalog:categories');
   });
 });

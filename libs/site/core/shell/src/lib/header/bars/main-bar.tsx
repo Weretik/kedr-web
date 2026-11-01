@@ -11,13 +11,28 @@ import { CatalogMenu } from '../menus/catalog-menu';
 import { MobileMenu } from '../menus/mobile-menu';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
+import type { ShellLink } from '../../navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
+import type { ReactNode } from 'react';
+
+type MainBarProps = {
+  locale: Locale;
+  dictionary: ShellDictionary;
+  categoryLinks: readonly ShellLink[];
+  /** Mega menu from the catalog domain; the fallback dropdown is used without it. */
+  catalogMenu?: ReactNode;
+};
 
 /** Second header row: logo, catalog, search, phone with messengers, cabinet, and cart. */
-export function MainBar({ locale, dictionary }: { locale: Locale; dictionary: ShellDictionary }) {
+export function MainBar({ locale, dictionary, categoryLinks, catalogMenu }: MainBarProps) {
   return (
     <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 lg:flex-nowrap lg:gap-5 lg:px-6">
-      <MobileMenu locale={locale} dictionary={dictionary} phone={COMPANY.phone} />
+      <MobileMenu
+        locale={locale}
+        dictionary={dictionary}
+        phone={COMPANY.phone}
+        categoryLinks={categoryLinks}
+      />
       <Link href={localizedPath(locale)} aria-label={dictionary.homeAria} className="shrink-0">
         <Image
           src="/assets/logo/main-logo.svg"
@@ -28,7 +43,9 @@ export function MainBar({ locale, dictionary }: { locale: Locale; dictionary: Sh
         />
       </Link>
       <div className="hidden md:block">
-        <CatalogMenu locale={locale} dictionary={dictionary} />
+        {catalogMenu ?? (
+          <CatalogMenu locale={locale} dictionary={dictionary} links={categoryLinks} />
+        )}
       </div>
       <HeaderSearch
         locale={locale}

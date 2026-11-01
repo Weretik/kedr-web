@@ -28,6 +28,22 @@ describe('buildPageMetadata', () => {
     expect(metadata.robots).toEqual({ index: true, follow: true });
   });
 
+  it('keeps a page query in the canonical and alternates', () => {
+    const metadata = buildPageMetadata(
+      { locale: 'uk', path: '/catalog/ruchky', search: '?page=2', title: 'Ручки', description: '' },
+      production,
+    );
+
+    expect(metadata.alternates).toEqual({
+      canonical: '/uk/catalog/ruchky?page=2',
+      languages: {
+        'uk-UA': '/uk/catalog/ruchky?page=2',
+        'ru-UA': '/ru/catalog/ruchky?page=2',
+        'x-default': '/uk/catalog/ruchky?page=2',
+      },
+    });
+  });
+
   it('uses noindex, follow for non-indexable pages', () => {
     const metadata = buildPageMetadata(
       { locale: 'uk', path: '/checkout', title: 'Кошик', description: '', indexable: false },

@@ -20,10 +20,12 @@ export function toProductPhotoUrl(photo: string | null | undefined): string | nu
 export function mapProductSummary(item: ProductListItem): ProductSummary {
   return {
     id: item.id,
+    sku: item.id,
     slug: item.productSlug,
     name: item.name.trim(),
     price: typeof item.price === 'number' && item.price > 0 ? item.price : null,
     photoUrl: toProductPhotoUrl(item.photo),
+    inStock: item.inStock,
     isNew: item.isNew,
     isSale: item.isSale,
   };

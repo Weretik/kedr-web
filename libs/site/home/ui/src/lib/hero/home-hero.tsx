@@ -6,7 +6,7 @@ import type { Locale } from '@site/core/i18n';
 type HomeHeroProps = {
   locale: Locale;
   dictionary: HomeDictionary;
-  /** Localized all-products listing that receives `?search=`. */
+  /** Localized search page that receives `?q=`. */
   searchAction: string;
 };
 
@@ -38,7 +38,7 @@ export function HomeHero({ locale, dictionary, searchAction }: HomeHeroProps) {
           />
           <input
             id={inputId}
-            name="search"
+            name="q"
             type="search"
             required
             placeholder={dictionary.searchPlaceholder}

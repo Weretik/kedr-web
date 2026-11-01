@@ -1,3 +1,4 @@
+import { getCatalogNavigation } from '@site/catalog/feature';
 import { LOCALES, LOCALE_LANGUAGE_TAGS, isLocale } from '@site/core/i18n';
 import { JsonLd, buildOrganizationJsonLd, buildRootMetadata } from '@site/core/seo';
 import { SiteShell, ThemeProvider } from '@site/core/shell';
@@ -27,6 +28,7 @@ export const viewport: Viewport = {
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  const catalogNavigation = await getCatalogNavigation(locale);
 
   return (
     <html
@@ -36,7 +38,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
     >
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
-          <SiteShell locale={locale}>{children}</SiteShell>
+          <SiteShell locale={locale} catalogNavigation={catalogNavigation}>
+            {children}
+          </SiteShell>
         </ThemeProvider>
         <JsonLd data={buildOrganizationJsonLd(locale)} />
       </body>

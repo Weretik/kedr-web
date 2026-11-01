@@ -10,14 +10,14 @@ import type { Locale } from '@site/core/i18n';
 type HeaderSearchProps = { locale: Locale; dictionary: ShellDictionary; className?: string };
 
 /**
- * Plain GET form to the catalog with `?search=`, the parameter the current storefront uses, so it works without
- * JavaScript. Suggestions and the `/` shortcut come with the search feature.
+ * Plain GET form to the search page with `?q=`, so it works without JavaScript. Suggestions and the `/` shortcut
+ * come with the search feature.
  */
 export function HeaderSearch({ locale, dictionary, className }: HeaderSearchProps) {
   return (
     <form
       role="search"
-      action={localizedPath(locale, SHELL_PATHS.catalog)}
+      action={localizedPath(locale, SHELL_PATHS.search)}
       method="get"
       className={cn('relative', className)}
     >
@@ -30,7 +30,7 @@ export function HeaderSearch({ locale, dictionary, className }: HeaderSearchProp
       />
       <input
         id={`site-search-${locale}`}
-        name="search"
+        name="q"
         type="search"
         placeholder={dictionary.searchPlaceholder}
         autoComplete="off"

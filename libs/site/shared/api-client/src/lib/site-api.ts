@@ -38,6 +38,15 @@ type Fetch = typeof fetch;
 
 const DEFAULT_TIMEOUT_MS = 10_000;
 
+const readJsonBody = async (response: Response): Promise<unknown> => {
+  if (!response.headers.get('Content-Type')?.includes('json')) return undefined;
+  try {
+    return await response.json();
+  } catch {
+    return undefined;
+  }
+};
+
 const buildUrl = (
   template: string,
   options: { path?: object; query?: object },
@@ -75,7 +84,10 @@ export async function siteApiGet<P extends PublicGetPath>(
       signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS),
     });
 
-    if (response.status === 404) return { kind: 'not-found' };
+    if (response.status === 404) {
+      const body = await readJsonBody(response);
+      return body === undefined ? { kind: 'not-found' } : { kind: 'not-found', body };
+    }
     if (response.status === 410) return { kind: 'gone' };
     if (!response.ok) return { kind: 'unavailable', status: response.status };
 
