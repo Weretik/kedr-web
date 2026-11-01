@@ -1,3 +1,5 @@
+import { isHiddenCategoryId } from '@site/catalog/model';
+
 import { mapCatalogTree } from './category-tree.mapper';
 
 import type { components } from '@shared/api-contracts';
@@ -38,7 +40,7 @@ export function mapCategoryDetails(category: ApiCategoryDetails): CategoryDetail
     name: category.name.trim(),
     productCount: category.productCount,
     breadcrumbs: category.breadcrumbs
-      .filter((crumb) => crumb.slug.trim() && crumb.name.trim())
+      .filter((crumb) => crumb.slug.trim() && crumb.name.trim() && !isHiddenCategoryId(crumb.id))
       .map((crumb) => ({ id: crumb.id, slug: crumb.slug, name: crumb.name.trim() })),
     children: mapCatalogTree(category.children),
     minPrice: price(category.minPrice),

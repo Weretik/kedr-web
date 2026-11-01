@@ -1,4 +1,4 @@
-import { bySortOrder, hasRoute } from './category-tree.mapper';
+import { bySortOrder, hasRoute, siteTopLevel } from './category-tree.mapper';
 
 import type { components } from '@shared/api-contracts';
 import type { CatalogCategory, CatalogSection } from '@site/catalog/model';
@@ -11,11 +11,13 @@ const toCategory = (node: CategoryTreeNode): CatalogCategory => ({
   name: node.name.trim(),
 });
 
-/** Top-level categories with their direct children, in display order; nodes without a slug or name are dropped. */
+/**
+ * The site's top-level sections ({@link siteTopLevel}) with their direct children, in display order; nodes without
+ * a slug or name are dropped.
+ */
 export function mapCatalogSections(tree: readonly CategoryTreeNode[]): CatalogSection[] {
-  return tree
+  return siteTopLevel(tree)
     .filter(hasRoute)
-    .sort(bySortOrder)
     .map((node) => ({
       ...toCategory(node),
       children: node.children.filter(hasRoute).sort(bySortOrder).map(toCategory),

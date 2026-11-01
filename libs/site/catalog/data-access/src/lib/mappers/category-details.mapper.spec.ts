@@ -33,8 +33,9 @@ const details = {
     },
   ],
   breadcrumbs: [
-    { id: 1, slug: 'furnitura', name: ' Фурнітура ' },
+    { id: 5513, slug: 'furnitura', name: ' Фурнітура ' },
     { id: 0, slug: '', name: 'broken' },
+    { id: 1, slug: 'zamky', name: ' Замки ' },
     { id: 9, slug: 'zavisy', name: 'Завіси' },
   ],
   minPrice: 0,
@@ -43,14 +44,14 @@ const details = {
 };
 
 describe('mapCategoryDetails', () => {
-  it('maps a category with trimmed text, valid breadcrumbs, children, and positive prices', () => {
+  it('maps a category with trimmed text, valid breadcrumbs without «Фурнітура», children, and positive prices', () => {
     expect(mapCategoryDetails(details)).toEqual({
       id: 9,
       slug: 'zavisy',
       name: 'Завіси',
       productCount: 42,
       breadcrumbs: [
-        { id: 1, slug: 'furnitura', name: 'Фурнітура' },
+        { id: 1, slug: 'zamky', name: 'Замки' },
         { id: 9, slug: 'zavisy', name: 'Завіси' },
       ],
       children: [{ id: 10, slug: 'dvernye', name: 'Дверні', productCount: 5, children: [] }],

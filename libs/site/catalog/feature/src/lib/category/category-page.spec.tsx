@@ -55,6 +55,14 @@ describe('loadCategoryOrRespond', () => {
     await expect(loadCategoryOrRespond('uk', 'missing')).rejects.toThrow('NEXT_NOT_FOUND');
   });
 
+  it('moves «Фурнітура» to the catalog hub and never shows Cosmos', async () => {
+    getCategory.mockResolvedValueOnce({ kind: 'ok', category: { ...category, id: 5513 } });
+    await expect(loadCategoryOrRespond('uk', 'furnitura')).rejects.toThrow('REDIRECT /uk/catalog');
+
+    getCategory.mockResolvedValueOnce({ kind: 'ok', category: { ...category, id: 920000 } });
+    await expect(loadCategoryOrRespond('uk', 'kosmos')).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
   it('fails loudly when the API is unavailable and never calls it for the build placeholder', async () => {
     getCategory.mockResolvedValueOnce({ kind: 'unavailable' });
     await expect(loadCategoryOrRespond('uk', 'ruchky')).rejects.toThrow(

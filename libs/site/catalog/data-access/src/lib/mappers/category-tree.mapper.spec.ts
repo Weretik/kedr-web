@@ -1,4 +1,4 @@
-import { mapCatalogTree } from './category-tree.mapper';
+import { mapCatalogTree, mapSiteCatalogTree } from './category-tree.mapper';
 
 const node = (id: number, sortOrder: number, overrides: Record<string, unknown> = {}) => ({
   id,
@@ -34,5 +34,18 @@ describe('mapCatalogTree', () => {
     ]);
 
     expect(tree).toEqual([]);
+  });
+});
+
+describe('mapSiteCatalogTree', () => {
+  it('replaces «Фурнітура» with its sections, keeps doors after them, and drops Cosmos', () => {
+    const tree = mapSiteCatalogTree([
+      node(920000, 2),
+      node(7226, 1, { children: [node(910001, 0)] }),
+      node(5513, 0, { children: [node(900002, 1), node(900001, 0)] }),
+    ]);
+
+    expect(tree.map((item) => item.id)).toEqual([900001, 900002, 7226]);
+    expect(tree[2].children.map((item) => item.id)).toEqual([910001]);
   });
 });
