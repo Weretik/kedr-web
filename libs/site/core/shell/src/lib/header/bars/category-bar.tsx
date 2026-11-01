@@ -22,7 +22,7 @@ export function CategoryBar({
     <div className="hidden border-t border-border md:block">
       <nav
         aria-label={dictionary.categoriesNav}
-        className="mx-auto flex h-11 max-w-7xl items-center gap-1 px-4 text-sm lg:px-6"
+        className="mx-auto flex h-11 max-w-[90rem] items-center gap-1 px-4 text-sm lg:px-6"
       >
         {links.map((link) => (
           <Link

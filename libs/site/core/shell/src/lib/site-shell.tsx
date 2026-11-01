@@ -26,7 +26,7 @@ export function SiteShell({ locale, catalogNavigation, children }: SiteShellProp
         {dictionary.skipToContent}
       </a>
       <SiteHeader locale={locale} dictionary={dictionary} catalogNavigation={catalogNavigation} />
-      <main id="content" className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 lg:px-6">
+      <main id="content" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 lg:px-6">
         {children}
       </main>
       <SiteFooter locale={locale} dictionary={dictionary} />

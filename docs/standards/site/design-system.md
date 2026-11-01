@@ -29,6 +29,7 @@ Green text on white uses `brand-text`, not `brand`: `#3FA435` on white fails WCA
 ## Type, shape, icons, motion
 
 - Fonts: Onest for the interface (Cyrillic), JetBrains Mono only for SKUs and codes; both through `next/font`.
+- Layout: content is centred and capped at 1440 px (`max-w-[90rem]`) in the header bars, `<main>`, and footer; side gutters 16 px, 24 px from `lg`.
 - Radii: 8 px for fields and buttons, 10–16 px for cards and panels (`--radius: 0.625rem`).
 - Icons: lucide, stroke width 1.75, one system. No brand icons from CDNs.
 - Motion: subtle (dropdowns open smoothly, «У кошик» briefly turns into «Додано», cart counter bumps); everything respects `prefers-reduced-motion`.
