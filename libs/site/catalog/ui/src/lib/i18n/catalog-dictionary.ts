@@ -69,6 +69,7 @@ export type CatalogDictionary = {
   hubTitle: string;
   hubIntro: string;
   searchTitle: (term: string) => string;
+  searchResults: (term: string) => string;
   searchHeading: string;
   searchPrompt: string;
   searchLabel: string;

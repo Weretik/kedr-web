@@ -70,6 +70,7 @@ export const uk: CatalogDictionary = {
   hubIntro:
     'Завіси, замки, ручки, циліндри та інша фурнітура оптом і в роздріб зі складу в Харкові.',
   searchTitle: (term) => `Пошук: ${term}`,
+  searchResults: (term) => `Результати пошуку «${term}»`,
   searchHeading: 'Пошук товарів',
   searchPrompt: 'Введіть назву або артикул товару.',
   searchLabel: 'Назва або артикул',

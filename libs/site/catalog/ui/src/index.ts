@@ -8,6 +8,7 @@ export { ListingPagination } from './lib/listing/listing-pagination';
 export { ListingToolbar } from './lib/listing/listing-toolbar';
 export { ListingSummary } from './lib/listing/listing-summary';
 export { PerPageLinks } from './lib/listing/per-page-links';
+export { ResultsAnchor } from './lib/listing/results-anchor';
 export { Breadcrumbs } from './lib/navigation/breadcrumbs';
 export type { Crumb } from './lib/navigation/breadcrumbs';
 export { MegaMenu } from './lib/navigation/mega-menu';

@@ -70,6 +70,7 @@ export const ru: CatalogDictionary = {
   hubIntro:
     'Петли, замки, ручки, цилиндры и другая фурнитура оптом и в розницу со склада в Харькове.',
   searchTitle: (term) => `Поиск: ${term}`,
+  searchResults: (term) => `Результаты поиска «${term}»`,
   searchHeading: 'Поиск товаров',
   searchPrompt: 'Введите название или артикул товара.',
   searchLabel: 'Название или артикул',
