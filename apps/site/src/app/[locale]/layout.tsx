@@ -36,7 +36,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
       className={`${onest.variable} ${jetBrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-dvh flex-col">
+      {/* Browser extensions (Grammarly and similar) add attributes to <body> before React hydrates. */}
+      <body className="flex min-h-dvh flex-col" suppressHydrationWarning>
         <ThemeProvider>
           <SiteShell locale={locale} catalogNavigation={catalogNavigation}>
             {children}

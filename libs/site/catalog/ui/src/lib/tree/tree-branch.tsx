@@ -27,7 +27,7 @@ export function TreeBranch(props: TreeBranchProps) {
   const { locale, nodes, activeId, activePath, collapsed, onToggle, dictionary, depth = 0 } = props;
 
   return (
-    <ul className={cn('grid gap-0.5', depth > 0 && 'ml-3 border-l border-border pl-2')}>
+    <ul className={cn('grid grid-cols-1 gap-0.5', depth > 0 && 'ml-3 border-l border-border pl-2')}>
       {nodes.map((node) => {
         const hasChildren = node.children.length > 0;
         const open = hasChildren && (activePath.has(node.id) || !collapsed.has(node.id));
@@ -61,7 +61,7 @@ export function TreeBranch(props: TreeBranchProps) {
                   !current && activePath.has(node.id) && 'font-medium',
                 )}
               >
-                <span className="truncate">{node.name}</span>
+                <span className="min-w-0 break-words">{node.name}</span>
                 <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                   {node.productCount}
                 </span>
