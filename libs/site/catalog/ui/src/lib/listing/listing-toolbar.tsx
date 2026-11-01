@@ -41,13 +41,7 @@ export function ListingToolbar({ locale, path, query, extra = NO_EXTRA }: Listin
           panelClassName="right-auto left-0 w-72"
         >
           {(close) => (
-            <FilterForm
-              dictionary={dictionary}
-              path={path}
-              query={query}
-              extra={extra}
-              onDone={close}
-            />
+            <FilterForm locale={locale} path={path} query={query} extra={extra} onDone={close} />
           )}
         </ToolbarPopover>
       </div>

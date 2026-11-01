@@ -14,13 +14,14 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { Flag, PriceInput } from './toolbar-controls';
+import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
-import type { CatalogDictionary } from '../i18n/catalog-dictionary';
 import type { ListingQuery } from '@site/catalog/model';
+import type { Locale } from '@site/core/i18n';
 import type { FormEvent } from 'react';
 
 type FilterFormProps = {
-  dictionary: CatalogDictionary;
+  locale: Locale;
   path: string;
   query: ListingQuery;
   extra: Record<string, string>;
@@ -48,7 +49,9 @@ const nextQuery = (form: HTMLFormElement, query: ListingQuery): ListingQuery => 
  * Filters of a listing: the left column on desktop and the filter panel on phones. Stock, sale, and new flags and the price range. A GET form that keeps the other choices in hidden fields, so it
  * also works without JavaScript; with JavaScript flags apply at once and the price on «Застосувати».
  */
-export function FilterForm({ dictionary, path, query, extra, onDone }: FilterFormProps) {
+export function FilterForm({ locale, path, query, extra, onDone }: FilterFormProps) {
+  // The dictionary holds functions, which cannot cross from a Server Component, so it is read here.
+  const dictionary = getCatalogDictionary(locale);
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const kept = new URLSearchParams(
