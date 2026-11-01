@@ -5,9 +5,9 @@
 - **Hero:** the page's only H1, a lead paragraph, and a GET search form to `/{locale}/search?q=`.
 - **Wholesale panel:** four partner benefits, «Стати партнером» to `/{locale}/wholesale`, and a call link.
 - **Catalog index:** top-level categories from `GET /api/catalog/{lang}/categories` with up to eight subcategory links each and an «all» link to `/{locale}/catalog/{slug}`; a notice with a link to the catalog hub when the API is unavailable.
-- **In stock:** up to eight newest in-stock products from `GET /api/catalog/{lang}/products` (photo or placeholder, badges, retail price or «price on request»); hidden when there is no data.
+- **No products** on the home page (owner decision 2026-11-01); the catalog index leads to them.
 - **Facts** and **WebSite JSON-LD**; title, description, canonical, `hreflang`, and Open Graph from [home seo](../../../libs/site/home/seo/src/lib/home-metadata.ts).
-- **Caching:** loaders use `'use cache'`, tags `catalog`, `catalog:categories`, `catalog:products`, and `cacheLife('hours')`; a failed read is cached for a minute and retried in the background. `/{locale}/categories` redirects permanently to the home page.
+- **Caching:** loaders use `'use cache'`, tags `catalog` and `catalog:categories`, and `cacheLife('hours')`; a failed read is cached for a minute and retried in the background. `/{locale}/categories` redirects permanently to the home page.
 
 ## Architecture
 
@@ -16,7 +16,7 @@ flowchart LR
 Route["app/[locale]/page.tsx"] --> Seo["home/seo: buildHomeMetadata"]
 Route --> Feature["home/feature: HomePage"]
 Feature --> HomeUi["home/ui: hero, wholesale, facts"]
-Feature --> CatalogUi["catalog/ui: CatalogIndex, ProductGrid"]
+Feature --> CatalogUi["catalog/ui: CatalogIndex"]
 Feature --> Data["catalog/data-access: use cache loaders"]
 Data --> Api["shared/api-client: siteApiGet"]
 Data --> Model["catalog/model"]

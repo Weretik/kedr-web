@@ -1,6 +1,6 @@
-import { getCatalogSections, getInStockProducts } from '@site/catalog/data-access';
+import { getCatalogSections } from '@site/catalog/data-access';
 import { CATALOG_PATH, SEARCH_PATH } from '@site/catalog/model';
-import { CatalogIndex, ProductGrid } from '@site/catalog/ui';
+import { CatalogIndex } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd, buildWebSiteJsonLd } from '@site/core/seo';
 import {
@@ -15,16 +15,13 @@ import {
 import type { Locale } from '@site/core/i18n';
 
 /**
- * Home page body: hero with search, wholesale panel, catalog index, products in stock, and facts.
+ * Home page body: hero with search, wholesale panel, catalog index, and facts. Products are not shown here (owner decision 2026-11-01).
  * Catalog data is cached (`'use cache'`), so the whole page is part of the prerendered shell.
  */
 export async function HomePage({ locale }: { locale: Locale }) {
   const dictionary = getHomeDictionary(locale);
   const allProducts = localizedPath(locale, CATALOG_PATH);
-  const [sections, products] = await Promise.all([
-    getCatalogSections(locale),
-    getInStockProducts(locale),
-  ]);
+  const sections = await getCatalogSections(locale);
 
   return (
     <>
@@ -52,16 +49,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
           />
         )}
       </HomeSection>
-
-      {products?.length ? (
-        <HomeSection
-          id="home-in-stock"
-          title={dictionary.inStockTitle}
-          action={{ href: allProducts, label: dictionary.inStockAll }}
-        >
-          <ProductGrid locale={locale} products={products} />
-        </HomeSection>
-      ) : null}
 
       <HomeSection id="home-facts" title={dictionary.factsTitle}>
         <HomeFacts dictionary={dictionary} />

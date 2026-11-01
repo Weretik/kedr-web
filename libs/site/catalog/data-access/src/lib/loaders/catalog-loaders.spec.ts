@@ -1,4 +1,4 @@
-import { getCatalogSections, getCatalogTree, getInStockProducts } from './catalog-loaders';
+import { getCatalogSections, getCatalogTree } from './catalog-loaders';
 
 const { siteApiGet, cacheLife, cacheTag } = vi.hoisted(() => ({
   siteApiGet: vi.fn(),
@@ -29,17 +29,6 @@ describe('catalog loaders', () => {
 
     expect(await getCatalogSections('uk')).toBeNull();
     expect(cacheLife).toHaveBeenCalledWith({ stale: 60, revalidate: 60, expire: 3600 });
-  });
-
-  it('requests the newest in-stock products', async () => {
-    siteApiGet.mockResolvedValue({ kind: 'ok', data: { pagedInfo: {}, value: [] } });
-
-    expect(await getInStockProducts('uk')).toEqual([]);
-    expect(siteApiGet).toHaveBeenCalledWith('/api/catalog/{lang}/products', {
-      path: { lang: 'uk' },
-      query: { inStock: true, sort: 'IdDesc', page: 1, pageSize: 8 },
-    });
-    expect(cacheTag).toHaveBeenCalledWith('catalog', 'catalog:products');
   });
 
   it('maps the whole tree with counts', async () => {

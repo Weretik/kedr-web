@@ -1,9 +1,8 @@
 import { productPath } from '@site/catalog/model';
 import { localizedPath } from '@site/core/i18n';
-import { PackageIcon } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
+import { ProductPhoto } from './product-photo';
 import { ProductPrice } from './product-price';
 import { StockLabel } from './stock-label';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
@@ -22,21 +21,13 @@ export function ProductCard({ locale, product }: { locale: Locale; product: Prod
   return (
     <article className="group relative flex h-full flex-col rounded-xl border border-border p-3">
       <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
-        {product.photoUrl ? (
-          <Image
-            src={product.photoUrl}
-            alt={product.name}
-            fill
-            sizes={PHOTO_SIZES}
-            className="object-contain p-3"
-          />
-        ) : (
-          <PackageIcon
-            aria-hidden
-            className="absolute inset-0 m-auto size-10 text-muted-foreground/60"
-            strokeWidth={1.75}
-          />
-        )}
+        <ProductPhoto
+          src={product.photoUrl}
+          alt={product.name}
+          sizes={PHOTO_SIZES}
+          className="p-3"
+          iconClassName="size-10"
+        />
         <div className="absolute top-2 left-2 flex gap-1">
           {product.isNew && (
             <span className="rounded bg-brand px-1.5 py-0.5 text-xs font-medium text-brand-foreground">
