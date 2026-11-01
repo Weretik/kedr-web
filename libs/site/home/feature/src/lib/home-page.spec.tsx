@@ -22,10 +22,12 @@ describe('HomePage', () => {
     getInStockProducts.mockResolvedValue([
       {
         id: 7,
+        sku: 7,
         slug: 'zavisa-agb',
         name: 'Завіса AGB',
         price: 245,
         photoUrl: null,
+        inStock: true,
         isNew: false,
         isSale: false,
       },
@@ -38,7 +40,10 @@ describe('HomePage', () => {
       screen.getByRole('heading', { level: 2, name: 'Каталог дверної фурнітури' }),
     ).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Замки' }).getAttribute('href')).toBe(
-      '/uk/catalog/zamki-900002/products',
+      '/uk/catalog/zamki-900002',
+    );
+    expect(screen.getByRole('search', { name: 'Пошук товару' }).getAttribute('action')).toBe(
+      '/uk/search',
     );
     expect(screen.getByRole('heading', { level: 2, name: 'Є на складі' })).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Завіса AGB' })).toBeTruthy();

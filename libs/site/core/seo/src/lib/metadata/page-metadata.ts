@@ -12,6 +12,8 @@ export type PageMetadataInput = {
   locale: Locale;
   /** Locale-free path of the page, for example `/wholesale`. */
   path: string;
+  /** Query that identifies the page itself and stays in the canonical, for example `?page=2`. */
+  search?: string;
   title: string;
   description: string;
   /** `false` for private, utility, or duplicate pages: they get `noindex, follow`. */
@@ -35,13 +37,13 @@ export function buildPageMetadata(
   input: PageMetadataInput,
   config: SiteConfig = siteConfig,
 ): Metadata {
-  const { locale, path, title, description, indexable = true } = input;
-  const canonical = buildCanonicalPath(locale, path);
+  const { locale, path, search = '', title, description, indexable = true } = input;
+  const canonical = buildCanonicalPath(locale, path, search);
 
   return {
     title,
     description,
-    alternates: { canonical, languages: buildLanguageAlternates(path) },
+    alternates: { canonical, languages: buildLanguageAlternates(path, search) },
     robots: buildRobotsMeta(config, indexable),
     openGraph: {
       type: 'website',

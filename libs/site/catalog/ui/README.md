@@ -1,10 +1,13 @@
 # site-catalog-ui
 
-Presentational catalog components for the Next.js site (Server Components, no data fetching). See the [site design system](../../../../docs/standards/site/design-system.md).
+Presentational catalog components for the Next.js site; no data fetching. Server Components except the client leaves marked below. See the [site design system](../../../../docs/standards/site/design-system.md).
 
-- `CatalogIndex` — top-level categories with up to eight subcategory links each and an «all» link.
-- `ProductGrid` — product tiles with a `next/image` photo or placeholder, badges, and retail price or «price on request».
-
-Internal: `ProductCard`, `formatPrice` (UAH), and the `uk`/`ru` catalog dictionary.
+- `catalog-index/` — `CatalogIndex`: sections with up to eight subcategory links each.
+- `category/` — `CategoryHeader` (H1, count, subcategory links), `CategoryContent` (admin HTML and FAQ in `<details>`).
+- `product/` — `ProductGrid`, `ProductList` (grid or table), card and table row with SKU, stock, badges, and price.
+- `listing/` — `ListingToolbar` (client: flags, price, sort, view; a GET form that also works without JavaScript), `ListingPagination`, `ShowMore` (client: «Показати ще» and the shown range), `ListingEmpty`.
+- `tree/` — `CatalogTreePanel` (client: collapsible tree, hide/show, state in `localStorage` key `kedr-site:catalog-tree`).
+- `navigation/` — `MegaMenu` (client: section rail, subcategory columns, category search; every link in the HTML), `Breadcrumbs`.
+- `i18n/` — `getCatalogDictionary`: interface text in `uk` and `ru` (`locales/`).
 
 Tests: `npx nx run site-catalog-ui:vite:test -- --run`.

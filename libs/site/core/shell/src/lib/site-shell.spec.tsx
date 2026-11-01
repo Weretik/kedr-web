@@ -19,10 +19,31 @@ describe('SiteShell', () => {
       within(header).getByRole('link', { name: 'Написать в Telegram' }).getAttribute('href'),
     ).toBe('https://t.me/+380687135049');
     expect(within(header).getAllByRole('link', { name: 'Замки' })[0]?.getAttribute('href')).toBe(
-      '/ru/catalog/zamki-900002/products',
+      '/ru/catalog/zamki-900002',
     );
-    expect(within(header).getByRole('search')).toBeTruthy();
+    expect(within(header).getByRole('search').getAttribute('action')).toBe('/ru/search');
     expect(screen.getByRole('main').textContent).toContain('Страница');
+  });
+
+  it('uses the catalog navigation passed by the layout', () => {
+    render(
+      <SiteShell
+        locale="uk"
+        catalogNavigation={{
+          menu: <button type="button">Мега-меню</button>,
+          links: [{ key: '1', path: '/catalog/ruchky', label: 'Ручки' }],
+        }}
+      >
+        content
+      </SiteShell>,
+    );
+
+    const header = screen.getByRole('banner');
+    expect(within(header).getByRole('button', { name: 'Мега-меню' })).toBeTruthy();
+    expect(within(header).getAllByRole('link', { name: 'Ручки' })[0]?.getAttribute('href')).toBe(
+      '/uk/catalog/ruchky',
+    );
+    expect(within(header).queryByRole('link', { name: 'Замки' })).toBeNull();
   });
 
   it('switches language on the same page', () => {

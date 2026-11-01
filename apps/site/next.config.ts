@@ -29,6 +29,28 @@ const nextConfig: NextConfig = {
       { source: '/', destination: '/uk', permanent: true },
       // The Angular storefront served the same catalog index at /categories; the home page replaces it.
       { source: '/:locale(uk|ru)/categories', destination: '/:locale', permanent: true },
+      // Old catalog addresses of the Angular storefront; the category page then redirects former slugs.
+      {
+        source: '/:locale(uk|ru)/catalog/products',
+        has: [{ type: 'query', key: 'search', value: '(?<term>.+)' }],
+        destination: '/:locale/search?q=:term',
+        permanent: true,
+      },
+      {
+        source: '/:locale(uk|ru)/catalog/products',
+        destination: '/:locale/catalog',
+        permanent: true,
+      },
+      {
+        source: '/:locale(uk|ru)/catalog/product/:slug',
+        destination: '/:locale/product/:slug',
+        permanent: true,
+      },
+      {
+        source: '/:locale(uk|ru)/catalog/:slug/products',
+        destination: '/:locale/catalog/:slug',
+        permanent: true,
+      },
     ];
   },
 };

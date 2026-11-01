@@ -8,7 +8,7 @@ const normalizePath = (path: string): string => {
   return trimmed ? `/${trimmed}` : '';
 };
 
-/** Builds a site path such as `/uk/catalog/products` from a locale-free path; the home page is `/uk`. */
+/** Builds a site path such as `/uk/catalog/ruchky` from a locale-free path; the home page is `/uk`. */
 export function localizedPath(locale: Locale, path = '/'): string {
   return `/${locale}${normalizePath(path)}`;
 }

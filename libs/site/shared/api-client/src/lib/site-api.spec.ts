@@ -32,9 +32,25 @@ describe('siteApiGet', () => {
         'https://api.example.com',
       );
 
-    expect(await call(404)).toEqual({ kind: 'not-found' });
+    expect(await call(404)).toEqual({ kind: 'not-found', body: {} });
     expect(await call(410)).toEqual({ kind: 'gone' });
     expect(await call(503)).toEqual({ kind: 'unavailable', status: 503 });
+  });
+
+  it('keeps the JSON body of a 404 and ignores an empty one', async () => {
+    const call = (response: Response) =>
+      siteApiGet(
+        '/api/catalog/{lang}/categories',
+        { path: { lang: 'uk' } },
+        vi.fn().mockResolvedValue(response),
+        'https://api.example.com',
+      );
+
+    expect(await call(jsonResponse(404, { redirectSlug: 'zamky' }))).toEqual({
+      kind: 'not-found',
+      body: { redirectSlug: 'zamky' },
+    });
+    expect(await call(new Response(null, { status: 404 }))).toEqual({ kind: 'not-found' });
   });
 
   it('reports a network error as unavailable', async () => {

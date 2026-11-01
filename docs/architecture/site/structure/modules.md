@@ -46,24 +46,26 @@ Enforced by `@nx/enforce-module-boundaries` in `eslint.config.cjs` (`scope:site`
 
 Paths marked **exists** are in the code; the rest are planned by the [migration plan](../../../specs/site/migration/README.md) and are created with `npx nx g @nx/react:library libs/site/<domain>/<layer>`.
 
-| Path                                                                  | Role                                                                    | Status               |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------- |
-| `apps/site/src/app/[locale]/layout.tsx`                               | `<html lang>`, fonts, theme, shell, Organization JSON-LD, root metadata | exists               |
-| `apps/site/src/app/[locale]/page.tsx`                                 | Home route: home metadata and `HomePage`                                | exists               |
-| `apps/site/src/proxy.ts`                                              | 404 rewrite for paths without a locale                                  | exists               |
-| `apps/site/src/app/[locale]/not-found.tsx`, `global-not-found.tsx`    | 404 for `notFound()` calls and for unmatched URLs                       | exists               |
-| `apps/site/src/app/robots.ts`, `sitemap.ts`                           | Crawling files from `core/seo` builders                                 | exists               |
-| `apps/site/src/app/[locale]/catalog/[categorySlug]/products/page.tsx` | Category listing route                                                  | planned (step 3)     |
-| `apps/site/src/app/[locale]/catalog/products/page.tsx`                | All products and search results (`noindex, follow` with a query)        | planned (step 3)     |
-| `apps/site/src/app/[locale]/catalog/product/[productSlug]/page.tsx`   | Product page route                                                      | planned (step 4)     |
-| `apps/site/src/app/[locale]/(content)/*/page.tsx`                     | About, delivery, returns, gallery, legal, contacts, wholesale           | planned (step 6)     |
-| `apps/site/src/app/[locale]/articles/**`, `region/[city]/page.tsx`    | Articles and regional landings                                          | planned (step 6)     |
-| `apps/site/src/app/[locale]/(private)/{checkout,cabinet,login}`       | `noindex`, dynamic, never shared-cached                                 | planned (steps 5, 7) |
-| `apps/site/src/app/api/revalidate/route.ts`                           | Protected webhook for backend cache invalidation                        | planned (step 8)     |
-| `libs/site/catalog/{model,data-access,ui}`                            | Category tree, product summaries, catalog index, product cards          | exists (step 2)      |
-| `libs/site/catalog/{seo,feature}`, listings in model and data-access  | Listings, URL filter model, ItemList/Breadcrumb JSON-LD                 | planned (step 3)     |
-| `libs/site/home/{ui,seo,feature}`                                     | Home page blocks, metadata, composition                                 | exists (step 2)      |
-| `libs/site/product/{model,data-access,seo,ui,feature}`                | Product page, gallery, Product/Offer JSON-LD                            | planned (step 4)     |
-| `libs/site/cart/{model,ui,feature}`                                   | Client cart island, quick order form                                    | planned (step 5)     |
-| `libs/site/content/{model,seo,ui,feature}`                            | Static content pages, articles, regions                                 | planned (step 6)     |
-| `libs/site/account/{data-access,ui,feature}`                          | Sign-in and cabinet (cookie session, client side)                       | planned (step 7)     |
+| Path                                                               | Role                                                                        | Status               |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------- | -------------------- |
+| `apps/site/src/app/[locale]/layout.tsx`                            | `<html lang>`, fonts, theme, shell, Organization JSON-LD, root metadata     | exists               |
+| `apps/site/src/app/[locale]/page.tsx`                              | Home route: home metadata and `HomePage`                                    | exists               |
+| `apps/site/src/proxy.ts`                                           | 404 rewrite for paths without a locale                                      | exists               |
+| `apps/site/src/app/[locale]/not-found.tsx`, `global-not-found.tsx` | 404 for `notFound()` calls and for unmatched URLs                           | exists               |
+| `apps/site/src/app/robots.ts`, `sitemap.ts`                        | Crawling files from `core/seo` builders                                     | exists               |
+| `apps/site/src/app/[locale]/catalog/page.tsx`                      | Catalog hub route                                                           | exists (step 3)      |
+| `apps/site/src/app/[locale]/catalog/[slug]/page.tsx`               | Category route: static params, metadata, `CategoryPage`                     | exists (step 3)      |
+| `apps/site/src/app/[locale]/search/page.tsx`                       | Search route (`noindex, follow`)                                            | exists (step 3)      |
+| `apps/site/src/app/[locale]/error.tsx`                             | 500 inside the site frame when page data fails                              | exists (step 3)      |
+| `apps/site/src/app/[locale]/product/[slug]/page.tsx`               | Product page route                                                          | planned (step 4)     |
+| `apps/site/src/app/[locale]/(content)/*/page.tsx`                  | About, delivery, returns, gallery, legal, contacts, wholesale               | planned (step 6)     |
+| `apps/site/src/app/[locale]/articles/**`, `region/[city]/page.tsx` | Articles and regional landings                                              | planned (step 6)     |
+| `apps/site/src/app/[locale]/(private)/{checkout,cabinet,login}`    | `noindex`, dynamic, never shared-cached                                     | planned (steps 5, 7) |
+| `apps/site/src/app/api/revalidate/route.ts`                        | Protected webhook for backend cache invalidation                            | planned (step 8)     |
+| `libs/site/catalog/{model,data-access,ui}`                         | Tree, category, listing URL model, loaders, cards, toolbar, tree, mega menu | exists (steps 2, 3)  |
+| `libs/site/catalog/{seo,feature}`                                  | Catalog metadata and JSON-LD; category, hub, search pages, navigation       | exists (step 3)      |
+| `libs/site/home/{ui,seo,feature}`                                  | Home page blocks, metadata, composition                                     | exists (step 2)      |
+| `libs/site/product/{model,data-access,seo,ui,feature}`             | Product page, gallery, Product/Offer JSON-LD                                | planned (step 4)     |
+| `libs/site/cart/{model,ui,feature}`                                | Client cart island, quick order form                                        | planned (step 5)     |
+| `libs/site/content/{model,seo,ui,feature}`                         | Static content pages, articles, regions                                     | planned (step 6)     |
+| `libs/site/account/{data-access,ui,feature}`                       | Sign-in and cabinet (cookie session, client side)                           | planned (step 7)     |

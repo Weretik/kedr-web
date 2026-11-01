@@ -6,7 +6,7 @@ export type RegionSlug = keyof ShellDictionary['regionNames'];
 
 export type NavLink<Key extends string> = { key: Key; path: string };
 
-const catalogPath = (slug: string) => `/catalog/${slug}/products`;
+const catalogPath = (slug: string) => `/catalog/${slug}`;
 
 /** Top bar links; the same pages as in the current storefront header. Paths are locale-free. */
 export const INFO_LINKS: readonly NavLink<InfoLinkKey>[] = [
@@ -25,8 +25,9 @@ export const LEGAL_LINKS: readonly NavLink<InfoLinkKey>[] = [
 ];
 
 /**
- * Catalog sections in the category row. Slugs are the current category slugs, so URLs stay the same.
- * The catalog feature replaces this list with the category tree from the API and adds the mega menu.
+ * Fallback catalog sections for the category row and mobile menu when the category tree is unavailable.
+ * The app layout normally passes the sections from the API through `CatalogNavigation`; a former slug here
+ * still reaches the right page through the category's permanent redirect.
  */
 export const CATEGORY_LINKS: readonly NavLink<CategoryKey>[] = [
   { key: 'hinges', path: catalogPath('zavisi-900001') },
@@ -67,7 +68,8 @@ export const REGION_SLUGS: readonly RegionSlug[] = [
 export const regionPath = (slug: RegionSlug) => `/region/${slug}`;
 
 export const SHELL_PATHS = {
-  catalog: '/catalog/products',
+  catalog: '/catalog',
+  search: '/search',
   wholesale: '/wholesale',
   cabinet: '/cabinet',
   cart: '/checkout',

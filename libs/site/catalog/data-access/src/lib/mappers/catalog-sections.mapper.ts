@@ -1,12 +1,9 @@
+import { bySortOrder, hasRoute } from './category-tree.mapper';
+
 import type { components } from '@shared/api-contracts';
 import type { CatalogCategory, CatalogSection } from '@site/catalog/model';
 
 type CategoryTreeNode = components['schemas']['CategoryTreeNode'];
-
-const bySortOrder = (a: CategoryTreeNode, b: CategoryTreeNode) =>
-  a.sortOrder - b.sortOrder || a.id - b.id;
-
-const hasRoute = (node: CategoryTreeNode) => node.slug.trim() !== '' && node.name.trim() !== '';
 
 const toCategory = (node: CategoryTreeNode): CatalogCategory => ({
   id: node.id,

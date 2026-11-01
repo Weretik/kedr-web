@@ -3,15 +3,13 @@ import 'server-only';
 import { siteApiGet } from '@site/shared/api-client';
 import { cacheLife, cacheTag } from 'next/cache';
 
-import { CATALOG_CACHE_TAGS } from '../cache-tags';
+import { CATALOG_CACHE_TAGS, FAILURE_LIFE } from '../cache-tags';
 import { mapCatalogSections } from '../mappers/catalog-sections.mapper';
+import { mapCatalogTree } from '../mappers/category-tree.mapper';
 import { mapProductSummary } from '../mappers/product-summary.mapper';
 
-import type { CatalogSection, ProductSummary } from '@site/catalog/model';
+import type { CatalogSection, CatalogTreeNode, ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
-
-// A failed read is cached briefly and retried in the background, but still prerendered (expire ≥ 5 minutes).
-const FAILURE_LIFE = { stale: 60, revalidate: 60, expire: 3600 };
 
 const IN_STOCK_LIMIT = 8;
 
@@ -28,6 +26,21 @@ export async function getCatalogSections(locale: Locale): Promise<CatalogSection
 
   cacheLife('hours');
   return mapCatalogSections(result.data);
+}
+
+/** The whole category tree with counts for the tree panel, mega menu, and sitemap; `null` when unavailable. */
+export async function getCatalogTree(locale: Locale): Promise<CatalogTreeNode[] | null> {
+  'use cache';
+  cacheTag(CATALOG_CACHE_TAGS.all, CATALOG_CACHE_TAGS.categories);
+
+  const result = await siteApiGet('/api/catalog/{lang}/categories', { path: { lang: locale } });
+  if (result.kind !== 'ok') {
+    cacheLife(FAILURE_LIFE);
+    return null;
+  }
+
+  cacheLife('hours');
+  return mapCatalogTree(result.data);
 }
 
 /** Newest products in stock at retail price; `null` when the API is unavailable. */

@@ -1,0 +1,50 @@
+# Site catalog: category page, hub, search, and mega menu
+
+**Entry points:** [category route](../../../apps/site/src/app/[locale]/catalog/[slug]/page.tsx) renders [CategoryPage](../../../libs/site/catalog/feature/src/lib/category/category-page.tsx); [hub route](../../../apps/site/src/app/[locale]/catalog/page.tsx) renders `CatalogHubPage`; [search route](../../../apps/site/src/app/[locale]/search/page.tsx) renders `SearchPage`; the [locale layout](../../../apps/site/src/app/[locale]/layout.tsx) passes `getCatalogNavigation` to the shell. Specification: [001 — Site category page](../../specs/site/catalog/001-category-page/README.md).
+
+- **Category `/{locale}/catalog/{slug}`:** breadcrumbs, H1 (admin H1 or name) with the product count, subcategory links, the tree panel, the listing, then the admin SEO text and FAQ. The category loads before streaming: a former slug or a deleted category answers 308 to the current or parent slug, an unknown slug 404, an unavailable API 500 inside the site frame ([error.tsx](../../../apps/site/src/app/[locale]/error.tsx)).
+- **Listing:** 24 products per page, in stock first; card or table row with photo, SKU (1C code), name, stock, badges, and retail price. Toolbar: «Тільки в наявності», «Акція», «Новинки», price range, sort, grid or table. Every choice is in the URL through the [listing model](../../../libs/site/catalog/model/src/lib/listing/listing-query.ts); the toolbar is a GET form that also works without JavaScript. Page numbers are links; «Показати ще» appends pages through the [loadMoreProducts](../../../libs/site/catalog/feature/src/lib/listing/load-more.ts) Server Function and updates «Показано 1–48 з …». Empty and failed results say so and offer a way back.
+- **Tree panel:** the whole tree with counts, every level expanded in the HTML; branches collapse, the panel hides on desktop and opens from «Категорії» on phones; choices stay in `localStorage` (`kedr-site:catalog-tree`). The path to the current category never collapses.
+- **Mega menu:** the header «Каталог» button opens a rail of sections (doors last after a divider), the hovered section's subcategories with their children and «Усі товари розділу», a category search over the whole tree, and links to the hub and «Співпраця». All links are in the server HTML. The category row and phone menu list the live sections, or the fixed ones when the API is down.
+- **Hub `/{locale}/catalog`** lists sections with subcategories; **search `/{locale}/search?q=`** (header and home forms) lists products by name or SKU with the same toolbar and is never indexed.
+- **SEO:** [catalog seo](../../../libs/site/catalog/seo/src/index.ts) builds titles and descriptions (admin text first), self canonical for page 1 and `?page=N`, `noindex, follow` with the page 1 canonical for filters, sort, view, and pages past the end; `BreadcrumbList` and `ItemList` JSON-LD. The sitemap lists the hub and every category. Old storefront addresses redirect permanently in [next.config.ts](../../../apps/site/next.config.ts).
+- **Caching:** tree, category, and product pages use `'use cache'` with tags `catalog`, `catalog:categories`, `category:{slug}`, `catalog:products` and `cacheLife('hours')`; failures are cached for a minute. Top-level sections are prerendered; other categories render on first request.
+
+## Architecture
+
+```mermaid
+flowchart LR
+Route["app/[locale]/catalog/[slug]/page.tsx"] --> Feature["catalog/feature: CategoryPage, ProductListing"]
+Route --> Routing["catalog/feature: static params, metadata"]
+Routing --> Seo["catalog/seo"]
+Layout["app/[locale]/layout.tsx"] --> Nav["catalog/feature: getCatalogNavigation"] --> Shell["core/shell: SiteShell"]
+Feature --> Ui["catalog/ui: header, toolbar, tree, list, mega menu"]
+Feature --> Action["loadMoreProducts (Server Function)"]
+Feature --> Data["catalog/data-access: use cache loaders"]
+Action --> Data
+Data --> Api["shared/api-client: siteApiGet"]
+Ui --> Model["catalog/model: listing URL, tree helpers"]
+Data --> Model
+```
+
+## Code structure
+
+```text
+apps/site/src/app/[locale]/
+├── catalog/page.tsx, catalog/[slug]/page.tsx, search/page.tsx  # thin routes
+└── error.tsx  # 500 inside the site frame
+libs/site/catalog/
+├── model/src/lib/  # entities/, paths/, listing/ (URL model), tree/ (search, ancestors)
+├── data-access/src/lib/  # loaders/ (catalog, category, product), mappers/, requests/, cache-tags.ts
+├── ui/src/lib/  # category/, listing/, product/, tree/, navigation/, catalog-index/, i18n/locales/
+├── seo/src/lib/  # metadata/ (category, hub, search, texts), json-ld/
+└── feature/src/lib/  # category/, listing/ (incl. load-more), hub/, search/, navigation/, routing/
+libs/site/core/shell/src/lib/navigation/catalog-navigation.ts  # CatalogNavigation prop and fallback
+```
+
+## Tests
+
+- `npx nx run site-catalog-feature:vite:test -- --run` (also `site-catalog-model`, `site-catalog-data-access`, `site-catalog-ui`, `site-catalog-seo`, `site-core-shell`), or `npm run test:site`.
+- `npx nx run site:build`: the route table shows the category, hub, and search routes as partial prerender.
+
+Related: [site shell](shell.md), [site home page](home.md), [SEO architecture](../../architecture/site/platform/seo-architecture.md).
