@@ -14,9 +14,10 @@ type TreeBranchProps = {
   locale: Locale;
   nodes: readonly CatalogTreeNode[];
   activeId: number | null;
-  /** The active category and its ancestors: highlighted and never collapsed. */
+  /** The active category and its ancestors: always open. */
   activePath: ReadonlySet<number>;
-  collapsed: ReadonlySet<number>;
+  /** Other branches the visitor opened. */
+  expanded: ReadonlySet<number>;
   onToggle: (id: number) => void;
   dictionary: CatalogDictionary;
   depth?: number;
@@ -24,13 +25,13 @@ type TreeBranchProps = {
 
 /** One level of the tree; collapsed children stay in the HTML (hidden), so every link is crawlable. */
 export function TreeBranch(props: TreeBranchProps) {
-  const { locale, nodes, activeId, activePath, collapsed, onToggle, dictionary, depth = 0 } = props;
+  const { locale, nodes, activeId, activePath, expanded, onToggle, dictionary, depth = 0 } = props;
 
   return (
-    <ul className={cn('grid gap-0.5', depth > 0 && 'ml-3 border-l border-border pl-2')}>
+    <ul className={cn('grid grid-cols-1 gap-0.5', depth > 0 && 'ml-3 border-l border-border pl-2')}>
       {nodes.map((node) => {
         const hasChildren = node.children.length > 0;
-        const open = hasChildren && (activePath.has(node.id) || !collapsed.has(node.id));
+        const open = hasChildren && (activePath.has(node.id) || expanded.has(node.id));
         const current = node.id === activeId;
 
         return (
@@ -61,7 +62,7 @@ export function TreeBranch(props: TreeBranchProps) {
                   !current && activePath.has(node.id) && 'font-medium',
                 )}
               >
-                <span className="truncate">{node.name}</span>
+                <span className="min-w-0 break-words">{node.name}</span>
                 <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                   {node.productCount}
                 </span>

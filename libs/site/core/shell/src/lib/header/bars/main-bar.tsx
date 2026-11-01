@@ -26,7 +26,7 @@ type MainBarProps = {
 /** Second header row: logo, catalog, search, phone with messengers, cabinet, and cart. */
 export function MainBar({ locale, dictionary, categoryLinks, catalogMenu }: MainBarProps) {
   return (
-    <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 lg:flex-nowrap lg:gap-5 lg:px-6">
+    <div className="mx-auto flex max-w-[90rem] flex-wrap items-center gap-3 px-4 py-3 lg:flex-nowrap lg:gap-5 lg:px-6">
       <MobileMenu
         locale={locale}
         dictionary={dictionary}

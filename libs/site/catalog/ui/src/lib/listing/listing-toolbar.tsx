@@ -69,7 +69,7 @@ export function ListingToolbar({ locale, path, query, extra = {} }: ListingToolb
       aria-label={dictionary.filters}
       aria-busy={pending}
       className={cn(
-        'flex flex-wrap items-end gap-x-5 gap-y-3 rounded-xl border border-border p-3 text-sm',
+        'flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-border pb-3 text-sm',
         pending && 'opacity-70',
       )}
     >
@@ -85,21 +85,24 @@ export function ListingToolbar({ locale, path, query, extra = {} }: ListingToolb
         <Flag name="isNew" label={dictionary.onlyNew} checked={query.isNew} />
       </fieldset>
 
-      <fieldset className="flex items-end gap-2">
-        <legend className="mb-1 text-xs text-muted-foreground">{dictionary.price}</legend>
+      <fieldset className="flex items-center gap-2">
+        <legend className="sr-only">{dictionary.price}</legend>
+        <span aria-hidden className="text-muted-foreground">
+          {dictionary.price}
+        </span>
         <PriceInput name="priceFrom" label={dictionary.priceFrom} value={query.priceFrom} />
         <PriceInput name="priceTo" label={dictionary.priceTo} value={query.priceTo} />
-        <Button type="submit" variant="outline" size="sm" className="h-9">
+        <Button type="submit" variant="outline" size="sm" className="h-8">
           {dictionary.apply}
         </Button>
       </fieldset>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-xs text-muted-foreground">{dictionary.sort}</span>
+      <label className="flex items-center gap-2">
+        <span className="text-muted-foreground">{dictionary.sort}</span>
         <select
           name="sort"
           defaultValue={query.sort}
-          className="h-9 rounded-md border border-border bg-background px-2"
+          className="h-8 rounded-md border border-border bg-background px-2"
         >
           {LISTING_SORTS.map((sort) => (
             <option key={sort} value={sort}>

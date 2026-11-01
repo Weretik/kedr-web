@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 /** Where the tree panel keeps the visitor's choices between pages and visits. */
 export const TREE_STORAGE_KEY = 'kedr-site:catalog-tree';
 
-type StoredTree = { collapsed: number[]; hidden: boolean };
+type StoredTree = { expanded: number[]; hidden: boolean };
 
 const read = (): StoredTree | null => {
   try {
@@ -14,7 +14,7 @@ const read = (): StoredTree | null => {
     ) as Partial<StoredTree> | null;
     if (!value) return null;
     return {
-      collapsed: Array.isArray(value.collapsed) ? value.collapsed.filter(Number.isInteger) : [],
+      expanded: Array.isArray(value.expanded) ? value.expanded.filter(Number.isInteger) : [],
       hidden: value.hidden === true,
     };
   } catch {
@@ -31,11 +31,12 @@ const write = (value: StoredTree) => {
 };
 
 /**
- * Collapsed branches and panel visibility. The server and the first client render show everything expanded
- * and visible, so the HTML holds every link; saved choices apply right after hydration.
+ * Branches the visitor opened beyond the current path, and panel visibility. The server and the first client
+ * render show only the current path open; collapsed branches stay in the HTML (hidden), so every link is
+ * crawlable. Saved choices apply right after hydration.
  */
 export function useTreeState() {
-  const [state, setState] = useState<StoredTree>({ collapsed: [], hidden: false });
+  const [state, setState] = useState<StoredTree>({ expanded: [], hidden: false });
 
   useEffect(() => {
     const stored = read();
@@ -54,9 +55,9 @@ export function useTreeState() {
     (id: number) =>
       update((current) => ({
         ...current,
-        collapsed: current.collapsed.includes(id)
-          ? current.collapsed.filter((other) => other !== id)
-          : [...current.collapsed, id],
+        expanded: current.expanded.includes(id)
+          ? current.expanded.filter((other) => other !== id)
+          : [...current.expanded, id],
       })),
     [update],
   );
@@ -66,5 +67,5 @@ export function useTreeState() {
     [update],
   );
 
-  return { collapsed: state.collapsed, hidden: state.hidden, toggleBranch, toggleHidden };
+  return { expanded: state.expanded, hidden: state.hidden, toggleBranch, toggleHidden };
 }

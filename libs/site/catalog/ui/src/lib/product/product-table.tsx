@@ -26,7 +26,7 @@ export function ProductTable({
       <table className="w-full min-w-[36rem] text-sm">
         <thead className="bg-muted text-left text-xs text-muted-foreground">
           <tr>
-            <th scope="col" className="w-16 px-3 py-2 font-medium">
+            <th scope="col" className="w-28 px-3 py-2 font-medium">
               <span className="sr-only">{dictionary.table.photo}</span>
             </th>
             <th scope="col" className="px-3 py-2 font-medium">
@@ -47,19 +47,19 @@ export function ProductTable({
           {products.map((product) => (
             <tr key={product.id} className="border-t border-border">
               <td className="px-3 py-2">
-                <div className="relative size-12 overflow-hidden rounded-md bg-muted">
+                <div className="relative size-20 overflow-hidden rounded-lg bg-muted">
                   {product.photoUrl ? (
                     <Image
                       src={product.photoUrl}
                       alt=""
                       fill
-                      sizes="3rem"
-                      className="object-contain p-1"
+                      sizes="5rem"
+                      className="object-contain p-1.5"
                     />
                   ) : (
                     <PackageIcon
                       aria-hidden
-                      className="absolute inset-0 m-auto size-5 text-muted-foreground/60"
+                      className="absolute inset-0 m-auto size-7 text-muted-foreground/60"
                       strokeWidth={1.75}
                     />
                   )}

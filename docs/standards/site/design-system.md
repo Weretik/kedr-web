@@ -19,16 +19,17 @@ Visual rules for `apps/site`. Source: the owner-approved concept (2026-10-26) in
 | `muted-foreground`               | `#5C6459`             | `#9AA296`             | secondary text                                  |
 | `border`                         | `#E3E6DF`             | `#242823`             | lines                                           |
 | `primary` / `primary-foreground` | `#0F110F` / `#FAFBF8` | `#EDEFEA` / `#0F110F` | main buttons (ink)                              |
-| `brand` / `brand-foreground`     | `#3FA435` / `#0F110F` | same                  | logo green: «Каталог», availability, cart count |
+| `brand` / `brand-foreground`     | `#3FA435` / `#FFFFFF` | same                  | logo green: «Каталог», availability, cart count |
 | `brand-text`                     | `#2A7323`             | `#7DD06F`             | green text on neutral background («Співпраця»)  |
 | `warning`                        | `#94600A`             | `#E8AE45`             | low stock                                       |
 | `ring`                           | `#3FA435` at 45%      | same                  | focus                                           |
 
-Green text on white uses `brand-text`, not `brand`: `#3FA435` on white fails WCAG AA for body text. Text on a green fill is ink (`brand-foreground`).
+Green text on white uses `brand-text`, not `brand`: `#3FA435` on white fails WCAG AA for body text. Text and icons on a green fill are white (`brand-foreground`, owner decision 2026-11-01). White on `#3FA435` is about 3:1, so green fills carry only short medium-weight labels and icons, never body text.
 
 ## Type, shape, icons, motion
 
 - Fonts: Onest for the interface (Cyrillic), JetBrains Mono only for SKUs and codes; both through `next/font`.
+- Layout: content is centred and capped at 1440 px (`max-w-[90rem]`) in the header bars, `<main>`, and footer; side gutters 16 px, 24 px from `lg`.
 - Radii: 8 px for fields and buttons, 10–16 px for cards and panels (`--radius: 0.625rem`).
 - Icons: lucide, stroke width 1.75, one system. No brand icons from CDNs.
 - Motion: subtle (dropdowns open smoothly, «У кошик» briefly turns into «Додано», cart counter bumps); everything respects `prefers-reduced-motion`.

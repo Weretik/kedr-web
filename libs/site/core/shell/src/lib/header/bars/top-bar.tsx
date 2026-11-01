@@ -13,7 +13,7 @@ import type { Locale } from '@site/core/i18n';
 export function TopBar({ locale, dictionary }: { locale: Locale; dictionary: ShellDictionary }) {
   return (
     <div className="hidden border-b border-border bg-muted/60 md:block">
-      <div className="mx-auto flex h-10 max-w-7xl items-center gap-6 px-4 text-xs text-muted-foreground lg:px-6">
+      <div className="mx-auto flex h-10 max-w-[90rem] items-center gap-6 px-4 text-xs text-muted-foreground lg:px-6">
         <span className="flex items-center gap-1.5">
           <MapPinIcon className="size-3.5" strokeWidth={1.75} />
           {dictionary.city}

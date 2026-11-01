@@ -52,7 +52,7 @@ export function SiteFooter({
 
   return (
     <footer className="mt-16 border-t border-border bg-muted/60">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:px-6">
+      <div className="mx-auto grid max-w-[90rem] gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:px-6">
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>
             <h2 className="mb-3 text-sm font-semibold">{column.title}</h2>
@@ -88,7 +88,7 @@ export function SiteFooter({
         </address>
       </div>
       <div className="border-t border-border">
-        <p className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground lg:px-6">
+        <p className="mx-auto max-w-[90rem] px-4 py-4 text-xs text-muted-foreground lg:px-6">
           © <CopyrightYear /> {dictionary.copyright}
         </p>
       </div>

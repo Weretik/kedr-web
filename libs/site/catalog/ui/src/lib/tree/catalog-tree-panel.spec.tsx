@@ -23,36 +23,34 @@ const tree = [
 describe('CatalogTreePanel', () => {
   beforeEach(() => window.localStorage.clear());
 
-  it('renders every level expanded with the current category marked', () => {
-    render(<CatalogTreePanel locale="uk" tree={tree} activeId={2} />);
+  it('opens only the path to the current category, keeping other branches in the HTML', () => {
+    const { container } = render(<CatalogTreePanel locale="uk" tree={tree} activeId={2} />);
 
     const current = screen.getByRole('link', { name: /На розетці/ });
     expect(current.getAttribute('href')).toBe('/uk/catalog/na-rozetsi');
     expect(current.getAttribute('aria-current')).toBe('page');
-    expect(screen.getByRole('link', { name: /Врізні/ })).toBeTruthy();
+    expect(screen.queryByRole('link', { name: /Врізні/ })).toBeNull();
+    expect(container.querySelector('a[href="/uk/catalog/vrizni"]')).toBeTruthy();
   });
 
-  it('collapses a branch and remembers it, but never the path to the current category', () => {
+  it('opens another branch and remembers it', () => {
     render(<CatalogTreePanel locale="uk" tree={tree} activeId={2} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Згорнути «Замки»' }));
-    expect(screen.queryByRole('link', { name: /Врізні/ })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Розгорнути «Замки»' }));
+    expect(screen.getByRole('link', { name: /Врізні/ })).toBeTruthy();
     expect(JSON.parse(window.localStorage.getItem(TREE_STORAGE_KEY) ?? '{}')).toEqual({
-      collapsed: [3],
+      expanded: [3],
       hidden: false,
     });
-
-    fireEvent.click(screen.getByRole('button', { name: 'Згорнути «Ручки»' }));
-    expect(screen.getByRole('link', { name: /На розетці/ })).toBeTruthy();
   });
 
   it('restores saved choices after hydration', () => {
-    window.localStorage.setItem(TREE_STORAGE_KEY, JSON.stringify({ collapsed: [3], hidden: true }));
+    window.localStorage.setItem(TREE_STORAGE_KEY, JSON.stringify({ expanded: [3], hidden: true }));
     render(<CatalogTreePanel locale="ru" tree={tree} />);
 
     expect(
       screen.getByRole('button', { name: 'Показать категории' }).getAttribute('aria-expanded'),
     ).toBe('false');
-    expect(screen.getByRole('button', { name: 'Развернуть «Замки»' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Свернуть «Замки»' })).toBeTruthy();
   });
 });

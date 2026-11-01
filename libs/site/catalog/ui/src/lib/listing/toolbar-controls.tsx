@@ -30,7 +30,7 @@ export function PriceInput({
   value: number | null;
 }) {
   return (
-    <label className="flex flex-col gap-1">
+    <label>
       <span className="sr-only">{label}</span>
       <input
         type="number"
@@ -39,7 +39,7 @@ export function PriceInput({
         name={name}
         placeholder={label}
         defaultValue={value ?? ''}
-        className="h-9 w-24 rounded-md border border-border bg-background px-2 tabular-nums"
+        className="h-8 w-20 rounded-md border border-border bg-background px-2 tabular-nums"
       />
     </label>
   );
