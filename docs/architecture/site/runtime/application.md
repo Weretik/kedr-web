@@ -24,12 +24,15 @@ Cache Components is on, so `dynamicParams` is not allowed. `generateStaticParams
 
 ## Client islands
 
+Contacts update (2026-11-02): `/uk/contacts` and `/ru/contacts` use `app/[locale]/contacts/page.tsx` → `content/feature: ContactsPage`, metadata from `content/seo`. Body content is static server-rendered; the existing parent layout provides locale params and shell. `app/sitemap.ts` adds `getContactsSitemapPages()` alongside home/catalog. See [contacts](../../../features/site/contacts.md).
+
 Server Components by default. `'use client'` exists only in:
 
 - `core/shell/controls/` — `ThemeProvider`, `ThemeToggle`, `LocaleSwitch` (needs `usePathname`), `CopyPhoneButton`;
 - `core/shell/header/mobile-menu.tsx` — Radix Sheet;
 - `core/shell/error/error-view.tsx` — retry on the 500 page;
 - `shared/ui/sheet.tsx`;
+- `content/ui/src/lib/contacts/copy-phone-button.tsx` — pending/success/error clipboard control; all other contacts content is server-rendered;
 - `catalog/ui` — `ListingToolbar`, `FilterForm`, `ResultsAnchor`, `MegaMenu`.
 
 The regions list uses `<details>` and the mega menu keeps every section's links in the server HTML (hidden until opened), so crawlers see all navigation links. The layout passes the mega menu and section links to `SiteShell` from `@site/catalog/feature`; without the API the shell uses its fixed sections. The search box is a plain GET form to `/{locale}/search?q=`.

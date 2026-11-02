@@ -1,8 +1,8 @@
 # Site architecture (Next.js storefront)
 
 **Code:** `apps/site` and `libs/site/*`
-**Status:** shell only (layout, header, footer, themes, languages, SEO baseline, API client). No storefront features yet; the Angular [Storefront](../storefront/README.md) still serves `classkedr.com.ua`.
-**Checked:** 2026-10-29 against `apps/site/src/app`, `apps/site/next.config.ts`, `libs/site/*/project.json`, and `next build` output.
+**Status:** shell, home, catalog, and contacts implemented; the Angular [Storefront](../storefront/README.md) still serves `classkedr.com.ua`.
+**Contacts update:** 2026-11-02 against route/library source, focused tests, typecheck and project boundaries; no production build or browser verification in this change.
 
 ## Purpose and boundary
 
@@ -14,11 +14,11 @@
 apps/site/src/app (thin routes, metadata exports)
   -> libs/site/core/shell (header, footer, theme, language)  -> libs/site/shared/ui
   -> libs/site/core/seo (metadata, robots, sitemap, JSON-LD) -> core/config, core/i18n
-  -> [planned] libs/site/<domain>/{feature,seo,ui,data-access,model}
+  -> libs/site/<domain>/{feature,seo,ui,data-access,model} (layers as needed)
        data-access -> libs/site/shared/api-client (server-only fetch) -> @shared/api-contracts
 ```
 
-Arrows point from consumer to dependency. Domains are planned; today the route files call only `core`.
+Arrows point from consumer to dependency. Implemented domains are `home`, `catalog`, and `content` (contacts); product, cart, and account remain in the migration plan.
 
 ## Where to read more
 
@@ -29,12 +29,13 @@ Arrows point from consumer to dependency. Domains are planned; today the route f
 - [ADR](adr/0001-nextjs-public-site.md) — why Next.js App Router replaces the Angular storefront.
 - Standards: [SEO rules](../../standards/site/seo-rules.md) and [design system](../../standards/site/design-system.md).
 - Feature card: [Site shell](../../features/site/shell.md).
+- [Contacts](../../features/site/contacts.md) — static public channels, clipboard client island, metadata and sitemap.
 
 ## Current and target state
 
 | Area     | Now                                                                               | Target                                                     | Source                                                     |
 | -------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
-| Pages    | `/uk`, `/ru` placeholder home, 404, `robots.txt`, `sitemap.xml`                   | All storefront pages with the same URLs                    | [Migration plan](../../specs/site/migration/README.md)     |
+| Pages    | Localized home, catalog/search, contacts, 404, `robots.txt`, `sitemap.xml`        | All storefront pages with the same URLs                    | [Migration plan](../../specs/site/migration/README.md)     |
 | Indexing | Off everywhere (`SITE_INDEXING` unset): `noindex, nofollow`, robots `Disallow: /` | On only in production after cutover                        | [SEO architecture](platform/seo-architecture.md)           |
-| Data     | API client ready, no domain calls                                                 | Catalog and product data from `/api/catalog/{lang}/*`      | [Rendering and caching](platform/rendering-and-caching.md) |
+| Data     | Catalog reads through domain data-access; contacts from `COMPANY`                 | Catalog and product data from `/api/catalog/{lang}/*`      | [Rendering and caching](platform/rendering-and-caching.md) |
 | Hosting  | Not deployed                                                                      | `[NEEDS CLARIFICATION: Vercel or Cloudflare via OpenNext]` | Migration plan, step 0                                     |

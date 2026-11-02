@@ -34,6 +34,7 @@
 
 - [Storefront migration to Next.js: plan](site/migration/README.md) and [feature inventory with SEO analysis](site/migration/feature-inventory.md)
 - [Home page](site/home/001-home-page/README.md)
+- [Contacts page](site/content/001-contacts/README.md) — СДД согласована, реализовано; unit/component и статические проверки, без browser/HTTP-прогона (2026-11-02).
 
 ## Storefront Angular
 

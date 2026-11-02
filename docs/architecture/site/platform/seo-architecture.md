@@ -13,22 +13,23 @@ Site-wide SEO decisions. Feature specifications apply them in their `design/seo.
 
 ## URL and index policy
 
-| URL type                       | Example                                                                                     | Index                 | Canonical        | robots.txt | Sitemap | Links                                               |
-| ------------------------------ | ------------------------------------------------------------------------------------------- | --------------------- | ---------------- | ---------- | ------- | --------------------------------------------------- |
-| Home                           | `/uk`                                                                                       | yes                   | self             | allow      | yes     | logo, footer                                        |
-| Old catalog index              | `/uk/categories`                                                                            | no                    | —                | —          | no      | 308 to `/uk`                                        |
-| Catalog hub                    | `/uk/catalog`                                                                               | yes                   | self             | allow      | yes     | mega menu, home, breadcrumbs                        |
-| Category                       | `/uk/catalog/ruchky`                                                                        | yes                   | self             | allow      | yes     | header, mega menu, tree, breadcrumbs, subcategories |
-| Category page 2+               | `?page=2`                                                                                   | yes                   | self with `page` | allow      | no      | pagination links                                    |
-| Filters, sort, view            | `?inStock=true&sort=price-asc&view=table`                                                   | no, `noindex, follow` | category page 1  | allow      | no      | toolbar; `rel="nofollow"` on view links             |
-| Page past the end              | `?page=99`                                                                                  | no, `noindex, follow` | category page 1  | allow      | no      | —                                                   |
-| Search                         | `/uk/search?q=…`                                                                            | no, `noindex, follow` | `/uk/search`     | allow      | no      | header and home search forms                        |
-| Old catalog addresses          | `/uk/catalog/{slug}/products`, `/uk/catalog/products?search=`, `/uk/catalog/product/{slug}` | —                     | —                | —          | no      | 308 to the flat addresses                           |
-| Product                        | `/uk/product/{slug}`                                                                        | yes                   | self             | allow      | yes     | listings, related                                   |
-| Content                        | `/uk/delivery-and-payment`                                                                  | yes                   | self             | allow      | yes     | top bar, footer                                     |
-| Region landing                 | `/uk/region/kyiv`                                                                           | yes, if unique text   | self             | allow      | yes     | regions menu                                        |
-| Cart, checkout, cabinet, login | `/uk/checkout`                                                                              | no                    | —                | disallow   | no      | `rel="nofollow"`                                    |
-| 404                            | any unknown                                                                                 | no                    | —                | —          | no      | —                                                   |
+| URL type                       | Example                                                                                     | Index                           | Canonical          | robots.txt | Sitemap | Links                                               |
+| ------------------------------ | ------------------------------------------------------------------------------------------- | ------------------------------- | ------------------ | ---------- | ------- | --------------------------------------------------- |
+| Home                           | `/uk`                                                                                       | yes                             | self               | allow      | yes     | logo, footer                                        |
+| Old catalog index              | `/uk/categories`                                                                            | no                              | —                  | —          | no      | 308 to `/uk`                                        |
+| Catalog hub                    | `/uk/catalog`                                                                               | yes                             | self               | allow      | yes     | mega menu, home, breadcrumbs                        |
+| Category                       | `/uk/catalog/ruchky`                                                                        | yes                             | self               | allow      | yes     | header, mega menu, tree, breadcrumbs, subcategories |
+| Category page 2+               | `?page=2`                                                                                   | yes                             | self with `page`   | allow      | no      | pagination links                                    |
+| Filters, sort, view            | `?inStock=true&sort=price-asc&view=table`                                                   | no, `noindex, follow`           | category page 1    | allow      | no      | toolbar; `rel="nofollow"` on view links             |
+| Page past the end              | `?page=99`                                                                                  | no, `noindex, follow`           | category page 1    | allow      | no      | —                                                   |
+| Search                         | `/uk/search?q=…`                                                                            | no, `noindex, follow`           | `/uk/search`       | allow      | no      | header and home search forms                        |
+| Old catalog addresses          | `/uk/catalog/{slug}/products`, `/uk/catalog/products?search=`, `/uk/catalog/product/{slug}` | —                               | —                  | —          | no      | 308 to the flat addresses                           |
+| Product                        | `/uk/product/{slug}`                                                                        | yes                             | self               | allow      | yes     | listings, related                                   |
+| Content                        | `/uk/delivery-and-payment`                                                                  | yes                             | self               | allow      | yes     | top bar, footer                                     |
+| Contacts                       | `/uk/contacts`, `/ru/contacts`                                                              | yes under site production flags | self without query | allow      | yes     | top bar, mobile menu, footer                        |
+| Region landing                 | `/uk/region/kyiv`                                                                           | yes, if unique text             | self               | allow      | yes     | regions menu                                        |
+| Cart, checkout, cabinet, login | `/uk/checkout`                                                                              | no                              | —                  | disallow   | no      | `rel="nofollow"`                                    |
+| 404                            | any unknown                                                                                 | no                              | —                  | —          | no      | —                                                   |
 
 - URL model owner: `libs/site/catalog/model` (`listing/listing-query.ts`) parses, normalizes, and serializes `page`, `sort`, `inStock`, `isSale`, `isNew`, `priceFrom`, `priceTo`, and `view`; defaults are omitted, so equal choices give one URL. The search term is `q`. Flat category and product addresses are an owner decision of 2026-10-30 ([category page SEO design](../../../specs/site/catalog/001-category-page/design/seo.md)).
 - Status codes: unknown slug 404; a former category slug 308 to the current one; removed product 410 once the API reports it; empty filter result 200 with `noindex`; catalog API down 500 inside the site frame; never "not found" with 200.
@@ -46,14 +47,16 @@ Site-wide SEO decisions. Feature specifications apply them in their `design/seo.
 
 ## Structured data inventory
 
-| Page type  | Types                                                                                 | Builder                         | API fields                                         |
-| ---------- | ------------------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------------- |
-| Every page | `Organization` (+ `ContactPoint`, `PostalAddress`)                                    | `buildOrganizationJsonLd`       | `COMPANY` constants                                |
-| Home       | `WebSite` (no `SearchAction`: Google retired the sitelinks search box in 2024)        | `buildWebSiteJsonLd`            | —                                                  |
-| Category   | `BreadcrumbList`, `ItemList`                                                          | planned `libs/site/catalog/seo` | `CategoryDetails.breadcrumbs`, `ProductPage.value` |
-| Product    | `Product` + `Offer` (`price`, `priceCurrency: UAH`, `availability`), `BreadcrumbList` | planned `libs/site/product/seo` | `ProductDetails` (needs SKU, description, brand)   |
-| Article    | `Article`                                                                             | planned `libs/site/content/seo` | static content                                     |
-| Contacts   | `LocalBusiness` / `Store`                                                             | planned                         | address and hours (owner to provide)               |
+| Page type  | Types                                                                                 | Builder                         | API fields                                          |
+| ---------- | ------------------------------------------------------------------------------------- | ------------------------------- | --------------------------------------------------- |
+| Every page | `Organization` (+ `ContactPoint`, `PostalAddress`)                                    | `buildOrganizationJsonLd`       | `COMPANY` constants                                 |
+| Home       | `WebSite` (no `SearchAction`: Google retired the sitelinks search box in 2024)        | `buildWebSiteJsonLd`            | —                                                   |
+| Category   | `BreadcrumbList`, `ItemList`                                                          | planned `libs/site/catalog/seo` | `CategoryDetails.breadcrumbs`, `ProductPage.value`  |
+| Product    | `Product` + `Offer` (`price`, `priceCurrency: UAH`, `availability`), `BreadcrumbList` | planned `libs/site/product/seo` | `ProductDetails` (needs SKU, description, brand)    |
+| Article    | `Article`                                                                             | planned `libs/site/content/seo` | static content                                      |
+| Contacts   | `ContactPage`, `BreadcrumbList`                                                       | `libs/site/content/seo`         | Static copy, locale paths, existing Organization ID |
+
+Contacts (2026-11-02) use the existing layout's `Organization` with public `COMPANY` facts. `LocalBusiness` / `Store` remains future work after the owner supplies a full address and hours; no such fields are invented for the current page.
 
 All JSON-LD is rendered on the server with `JsonLd`, which escapes `<`, `>`, and `&`.
 
@@ -71,7 +74,7 @@ All JSON-LD is rendered on the server with `JsonLd`, which escapes `<`, `>`, and
 
 ## Sitemaps and robots
 
-- One `sitemap.xml` now (home only). From step 3: a sitemap index split by type (`categories`, `products`, `content`) with `generateSitemaps`; each file under 50,000 URLs.
+- One `sitemap.xml` now (home, catalog hub/categories, contacts). A future sitemap index can split by type (`categories`, `products`, `content`) with `generateSitemaps`; each file under 50,000 URLs.
 - `lastModified`: from the API once it exposes `updatedAt` for products and categories; omitted until then.
 - `robots.txt` (indexing on): allow `/`, disallow `/api/` and `/{locale}/checkout|cabinet|login`, `Sitemap:` absolute URL.
 

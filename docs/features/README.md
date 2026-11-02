@@ -38,11 +38,12 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site/src/app/[locale]/layout.tsx). Features move here from the Angular storefront by the [migration plan](../specs/site/migration/README.md). See [Site architecture](../architecture/site/README.md).
 
-| Feature                         | Route or entry                                                      | Status                                                                                           |
-| ------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [Site shell](site/shell.md)     | all `/uk` and `/ru` routes, `robots`, `sitemap`                     | Header, footer, themes, languages, SEO base                                                      |
-| [Site home page](site/home.md)  | `/uk`, `/ru`                                                        | Hero with search, wholesale panel, catalog index and in-stock products from the API              |
-| [Site catalog](site/catalog.md) | `/{locale}/catalog`, `/{locale}/catalog/{slug}`, `/{locale}/search` | Category page with tree, filters, pages, «Показати ще», SEO text and FAQ; hub; search; mega menu |
+| Feature                           | Route or entry                                                      | Status                                                                                           |
+| --------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [Site shell](site/shell.md)       | all `/uk` and `/ru` routes, `robots`, `sitemap`                     | Header, footer, themes, languages, SEO base                                                      |
+| [Site home page](site/home.md)    | `/uk`, `/ru`                                                        | Hero with search, wholesale panel, catalog index and in-stock products from the API              |
+| [Site contacts](site/contacts.md) | `/uk/contacts`, `/ru/contacts`                                      | Sales phone, copy, messengers, email, location, wholesale checklist, metadata and sitemap        |
+| [Site catalog](site/catalog.md)   | `/{locale}/catalog`, `/{locale}/catalog/{slug}`, `/{locale}/search` | Category page with tree, filters, pages, «Показати ще», SEO text and FAQ; hub; search; mega menu |
 
 ## Storefront Angular
 
