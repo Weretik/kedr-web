@@ -1,0 +1,8 @@
+{
+  "name": "site-content-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/site/content/feature/src",
+  "projectType": "library",
+  "tags": ["scope:site", "domain:content", "type:feature"],
+  "targets": {}
+}

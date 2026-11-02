@@ -114,7 +114,10 @@
       "@admin/categories/data-access": ["libs/admin/categories/data-access/src/index.ts"],
       "@admin/categories/ui": ["libs/admin/categories/ui/src/index.ts"],
       "@admin/categories/feature": ["libs/admin/categories/feature/src/index.ts"],
-      "@admin/shared/routing": ["libs/admin/shared/routing/src/index.ts"]
+      "@admin/shared/routing": ["libs/admin/shared/routing/src/index.ts"],
+      "@site/content/ui": ["./libs/site/content/ui/src/index.ts"],
+      "@site/content/seo": ["./libs/site/content/seo/src/index.ts"],
+      "@site/content/feature": ["./libs/site/content/feature/src/index.ts"]
     }
   }
 }

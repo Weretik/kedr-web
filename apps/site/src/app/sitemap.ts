@@ -1,9 +1,14 @@
 import { getCatalogSitemapPages } from '@site/catalog/feature';
+import { getContactsSitemapPages } from '@site/content/feature';
 import { buildSitemapEntries } from '@site/core/seo';
 
 import type { MetadataRoute } from 'next';
 
-/** Home, catalog hub, and every category in both languages. Each migrated feature adds its own entries. */
+/** Home, catalog, categories, and contacts in both languages. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  return buildSitemapEntries([{ path: '/' }, ...(await getCatalogSitemapPages())]);
+  return buildSitemapEntries([
+    { path: '/' },
+    ...(await getCatalogSitemapPages()),
+    ...getContactsSitemapPages(),
+  ]);
 }
