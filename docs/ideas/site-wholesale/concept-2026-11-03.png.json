@@ -1,0 +1,85 @@
+{
+  "title": "Співпраця — концепт сторінки для оптових покупців",
+  "project": "Kedr",
+  "repository": "E:/RiderProjects/kedr-web",
+  "application": "apps/site",
+  "intendedRoute": "/{locale}/wholesale",
+  "status": "concept; pending owner feedback; no production implementation",
+  "createdOn": "2026-11-03",
+  "generatedWith": "built-in image_gen",
+  "approved": false,
+  "views": ["desktop-light", "desktop-dark", "mobile-light", "mobile-dark"],
+  "locale": "uk; production also requires equivalent ru dictionary",
+  "interactions": {
+    "primary": {
+      "label": "Написати менеджеру",
+      "href": "https://t.me/+380687135049"
+    },
+    "secondary": {
+      "label": "Переглянути каталог",
+      "href": "/{locale}/catalog"
+    },
+    "phone": {
+      "label": "(068) 713-50-49",
+      "href": "tel:+380687135049"
+    },
+    "viber": "viber://chat?number=%2B380687135049",
+    "email": "kedr.class19@gmail.com",
+    "anchors": ["Для бізнесу", "Що обговоримо", "Як почати"]
+  },
+  "contentSequence": [
+    "Breadcrumb, H1, short wholesale introduction, contact and catalog actions",
+    "For wholesale buyers and discussion topics",
+    "Three steps: contact, clarify items and quantity, agree order/payment/delivery",
+    "Conversation checklist and contact card",
+    "Existing Site shell and footer"
+  ],
+  "constraints": [
+    "Retain existing design system and shell; use Onest and Lucide during implementation.",
+    "No invented minimum order, discounts, reserve, response-time or delivery-time promises.",
+    "No fitting or repair services.",
+    "Both themes use ink/inverse main CTA; brand green remains an accent.",
+    "Raster is a composition reference; exact typography, color values, accessibility, localization and working navigation belong to semantic implementation.",
+    "No application/browser/manual/E2E checks were run; only the generated concept was inspected.",
+    "No existing repository files changed."
+  ],
+  "sourceDocuments": [
+    "AGENTS.md",
+    "apps/site/AGENTS.md",
+    "docs/features/README.md",
+    "docs/features/site/shell.md",
+    "docs/architecture/site/README.md",
+    "docs/standards/site/design-system.md",
+    "apps/site/src/app/global.css",
+    "libs/site/core/config/src/lib/company.ts",
+    "libs/site/core/shell/src/lib/navigation/site-navigation.ts",
+    "libs/site/core/shell/src/lib/i18n/shell-dictionary.ts",
+    "libs/site/content/ui/src/lib/contacts/contacts-wholesale.tsx"
+  ],
+  "sourceImages": [
+    {
+      "role": "Owner-provided composition/style reference",
+      "path": "C:/Users/D5F0~1/AppData/Local/Temp/codex-clipboard-c3c1a187-b3b7-445b-a81e-e39b0b14c0e8.png"
+    },
+    {
+      "role": "Actual repository logo; converted without artwork changes for the reference input",
+      "path": "apps/site/public/assets/logo/main-logo.svg"
+    }
+  ],
+  "review": {
+    "content": "Verified contact details, no unsupported commercial claims.",
+    "design": "Verified composition, CTA theme hierarchy, responsive stacking against documented rules.",
+    "refinement": "Restored Ukrainian navigation including Інше/Завіси, Про компанію, and ordinary mobile footer link groups."
+  },
+  "prompts": [
+    {
+      "kind": "initial",
+      "prompt": "Use case: ui-mockup. Create a polished high-resolution landscape review board for the new ClassKedr Next.js public wholesale information page, “Співпраця”. Four clean full-page views side by side: desktop light, desktop dark, mobile light, mobile dark. Desktop views wider than phone views. All interface copy is Ukrainian; no device hardware, browser controls or perspective. Each view is a real legible website, not a poster.\n\nReference image 1 supplies the owner's approved compact information-page composition, restrained green accents, fine borders and desktop/mobile treatment. Carry the look and density, but replace the returns-page content with cooperation content. Reference image 2 is the actual Class KEDR logo from the repository: preserve this recognizable artwork in the header rather than inventing a logo.\n\nUse the established project world: Onest Cyrillic sans, white #FFFFFF / near-black #0C0D0C surfaces, ink #0F110F / warm-white #EDEFEA text, brand green #3FA435, green text #2A7323 light / #7DD06F dark, pale green panels #EAF5E7 / #15241A, subtle neutral borders and 8–12px radii. The main contact CTA is ink in light mode and off-white in dark mode. Only “Каталог” uses a solid green button. No neon, gradients, giant decorative icons or product illustrations.\n\nKeep the real compact shell: city “Україна, м. Харків”, informational links, UA/RU and theme toggle; logo, Каталог, search, (068) 713-50-49, messenger icons, account, cart; category row ending Регіони and Співпраця. Mobile shell has menu, logo, account, cart, then a search row.\n\nPage sequence:\n1. Breadcrumb “Головна / Співпраця”. H1 “Співпраця”. Intro “Дверна фурнітура для вашого бізнесу. Обговоріть замовлення та умови співпраці з менеджером.” Primary CTA “Написати менеджеру” with outward arrow; secondary “Переглянути каталог”. Compact green anchor links “Для бізнесу”, “Що обговоримо”, “Як почати”.\n2. Two quiet bordered information panels in a desktop row. Left heading “Для оптових покупців”, short text “Для магазинів фурнітури, продавців дверей та гуртових закупівель.” Supporting compact rows “Асортимент — дверна фурнітура”, “Формат — опт і роздріб”, “Зв’язок — телефон і месенджери”. Right heading “Що обговоримо”, three separated rows “Товари — позиції та артикули”, “Замовлення — кількість і наявність”, “Умови — ціни, оплату та доставку”. Small consistent outline shop/list icons.\n3. Pale green band “Як почати співпрацю” with three numbered steps: “Зверніться — Телефон або месенджер”; “Уточніть деталі — Асортимент і кількість”; “Узгодьте замовлення — Оплату та доставку”. Horizontal on desktop, vertical on phone.\n4. Bottom desktop pair: “Підготуйте до розмови” with short bullets “Артикули або назви товарів”, “Орієнтовну кількість”, “Місто доставки”, then green links “Доставка та оплата” and “Повернення та обмін”. Adjacent contact card “Обговорімо ваш запит”, phone, Telegram / Viber, and clear contact button. Phone stacks these blocks.\n5. Quiet footer with logo, catalog/company/buyers/contact columns; actual email kedr.class19@gmail.com and copyright ClassKedr. Mobile footer compact.\n\nMaintain the exact same content and hierarchy between themes, proper mobile readable type and tap targets. Do not invent minimum order, discounts, delivery deadlines, services, testimonials or performance claims. Make this look like a credible detailed page from the same product as the first reference."
+    },
+    {
+      "kind": "targeted refinement",
+      "prompt": "Edit the supplied ClassKedr wholesale-page concept board with only these precise project-conformity fixes. Preserve the four-panel layout, all main page blocks, typography, spacing, correct contacts, actual logo artwork, both themes, CTAs and mobile reflow. Do not redesign the page.\n\n1. Ensure every interface label is Ukrainian. Replace ALL four occurrences of “Прочее” (both desktop category rows and both desktop catalog footers) with “Інше”. Replace “Петлі” with the project's exact category name “Завіси” in desktop category rows and footer lists. The desktop category sequence is “Завіси  Замки  Ручки  Циліндри  Міжкімнатні механізми  Інше  Двері  Регіони  Співпраця”.\n2. Restore the missing “Про компанію” link in BOTH desktop top information bars. Preserve city, UA / RU and sun/moon toggles. The information links are “Про компанію”, “Доставка та оплата”, “Повернення та обмін”, “Галерея та відео”, “Статті”, “Контакти”. If required place the information links on a compact centered second line, as the actual site does, and adjust both desktop views identically.\n3. At the bottom of BOTH mobile views, replace the accordion group headings and plus signs with the current site's ordinary stacked footer link groups. These are simple headings followed by text links, NOT expandable controls. Preserve logo and “Дверна фурнітура оптом”. The footer groups are Каталог, Компанія, Покупцям, Контакти. Show flat links and the verified phone/email in a compact readable arrangement. The mobile footer may naturally continue below the captured bottom edge; do not shrink or delete any of the cooperation-page content above to fit it.\n\nKeep all other wording and visual decisions unchanged. Maintain crisp readable Ukrainian text. This is a narrowly corrected version of the same concept, not a new option."
+    }
+  ],
+  "generatedOriginal": "C:/Users/Віталій/.codex/generated_images/01a19eef-94e5-7ca0-998c-7e8a0546fe78/exec-345f1150-8875-49aa-932c-fe1fdb0f94e3.png"
+}
