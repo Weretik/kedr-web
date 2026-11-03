@@ -1,0 +1,49 @@
+Use case: ui-mockup.
+Create a polished high-fidelity visual design concept for the public-offer legal page of the Ukrainian ClassKedr door-hardware wholesale storefront. Use the attached returns-page image as a VISUAL REFERENCE: inherit its quiet ClassKedr identity, layout density, thin borders, typography and green accents. Replace the returns-page content and composition with a readable legal-document composition, preserving the storefront shell. This is a design presentation, not final legal text.
+
+OUTPUT: one exceptionally crisp large landscape board, ideally 3840 by 2560, with FOUR aligned flat website views left to right: desktop LIGHT (wide), desktop DARK (equally wide), mobile LIGHT (narrow), mobile DARK (equally narrow). Arrange as two desktop columns about 34% each and two mobile columns about 13% each with even restrained gutters on a light gray presentation background. No devices, no perspective, no decorative scenery. All four views use Ukrainian so theme and responsive layout can be compared directly. Tiny labels outside the views: "DESKTOP / LIGHT", "DESKTOP / DARK", "MOBILE / LIGHT", "MOBILE / DARK". Show a designed upper-page excerpt of this long document, with a clear continuation at the lower edge; do not fake the complete legal contract or force microscopic full-page text. The two desktop panels and two mobile panels should be internally consistent at their different scales. Prioritize excellent readable Cyrillic, generous legal-text leading, sober document hierarchy, useful navigation.
+
+EXACT DESIGN SYSTEM:
+Onest font, neutral neo-grotesk with excellent Cyrillic. H1 48px desktop / 32px mobile, body 16px and line-height 1.65 at nominal viewport scale. Light background #FFFFFF, text #0F110F, secondary #5C6459, muted #F4F5F2, border #E3E6DF. Dark background #0C0D0C, text #EDEFEA, secondary #9AA296, muted #161815, border #242823. Brand green #3FA435 only for logo detail and "Каталог" button. Green text on neutral backgrounds #2A7323 light and #7DD06F dark. No gradients, glows, heavy shadows or decorative hero illustration. Cards have 10–14px radii and subtle 1px borders. Fields/buttons 8px radius. Main call-to-action ink black on light, off-white on dark. All icons simple Lucide line icons, stroke 1.75.
+
+STOREFRONT HEADER MUST KEEP ITS INFORMATION:
+Desktop three-row header. Top compact neutral bar includes "Україна, м. Харків", centered info links "Про компанію", "Доставка та оплата", "Повернення", "Галерея", "Статті", "Контакти"; right "UA / RU" and a small sun/moon sliding switch with NO text label. Main row has existing ClassKedr wordmark ("Class" green, "Kedr" ink/off-white), green grid-icon "Каталог" button, wide search "Пошук за артикулом або назвою", phone "(068) 713-50-49", small copy/Telegram/Viber/map line controls, account and cart icons. Category row: "Завіси", "Замки", "Ручки", "Циліндри", "Міжкімнатні механізми", "Інше", "Двері", "Регіони", "Співпраця". Main bar sticky as conceptual interaction. Mobile header is hamburger, wordmark, account, cart with a full-width search on a separate row, like reference; avoid desktop navigation compressed into mobile.
+
+PAGE:
+Small breadcrumb with home icon, chevron and "Публічна оферта".
+Large heading "Публічна оферта".
+Subheading exact: "Публічна оферта та правила користування сайтом (змішаний договір)".
+A restrained outlined printer button "Друкувати" aligned to the right of desktop title area, and below subtitle on mobile. No invented update date, legal seller name, bank numbers, tax number, badges, checkboxes, accept button, or downloadable-PDF claim.
+
+Desktop content grid: left navigation rail about 28%, right actual reading column about 65%, with a generous gap. Rail starts a subtle bordered panel "Зміст документа", seven numbered anchor rows wrapping naturally. Active item 1 is a light neutral green-tinted row with a narrow green edge and green text, not a bright green filled button.
+Use these exact numbered section labels in the contents:
+"1. Загальні положення та преамбула"
+"2. Правила користування сайтом"
+"3. Ціна та оплата"
+"4. Доставка та відповідальність"
+"5. Повернення товару"
+"6. Персональні дані"
+"7. Прикінцеві положення"
+Under contents, two quiet text links "Доставка та оплата ↗" and "Повернення та обмін ↗".
+Below that a compact contact panel: "Потрібна допомога?", phone "(068) 713-50-49", email "kedr.class19@gmail.com", main ink button "Зателефонувати". Dark version main button is off-white with dark text. This contact panel must be identical in wording across themes.
+
+Reading column: a calm document on the page surface, NO cards around each paragraph, NO table of marketing benefits. Clear numbered H2 section titles in sentence case, fine horizontal rules between major sections, small clause numbers in the text. The page continues below the captured excerpt. Render first section and second section generously, and the beginning of the third near the lower boundary, so the typography remains readable. ALL seven sections are available in the contents even though the screenshot is an upper-page excerpt.
+Use these exact source excerpts without paraphrasing:
+H2 "1. Загальні положення та преамбула"
+"1.1. Цей документ є змішаним договором, що включає умови використання інформаційних сервісів Сайту (Угода користувача) та умови купівлі-продажу товарів дистанційним способом (Публічна оферта)."
+"1.2. Адміністрація сайту (Власник домену) надає виключно технічну платформу для ознайомлення з асортиментом товарів торгової марки ClassKedr та формування попередніх заявок."
+"1.2.1. У межах цього змішаного договору Власник домену (Адміністрація) забезпечує інформаційну доступність Сайту. У разі, якщо Власник домену та Продавець є однією і тією ж особою, експертне консультування та супровід угоди здійснюються ним у статусі Продавця в межах договору купівлі-продажу."
+"1.3. Акцептом (прийняттям) цього Договору є будь-яке використання Сайту Користувачем, а в частині купівлі-продажу — натискання кнопки «Оформити замовлення»."
+H2 "2. Правила користування сайтом"
+Small secondary line "(Угода користувача)"
+"2.1. Весь контент (фотографії, тексти, логотипи, дизайн), розміщений на Сайті, є інтелектуальною власністю Адміністрації або її партнерів. Копіювання контенту без письмового дозволу заборонено."
+"2.2. Користувач зобов’язується не використовувати Сайт для поширення спаму, порушення прав третіх осіб або втручання в роботу програмного коду (Angular-компонентів тощо)."
+"2.3. Адміністрація не несе відповідальності за тимчасову технічну недоступність Сайту або некоректне відображення даних через помилки у програмному забезпеченні Користувача."
+H2 "3. Ціна та оплата"
+"3.1. Ціни на Сайті є орієнтовними. Остаточна вартість Товару фіксується Продавцем у момент надання реквізитів."
+Show beginning of section3 if space permits; never squash type to fit.
+
+MOBILE:
+Same title/subtitle/print action. Replace left rail with a full-width native disclosure bar "Зміст документа" with a list icon and down chevron. Show it COLLAPSED in both mobile theme views, then the legal text in a single column. Do not hide the legal text inside accordions. The screenshot naturally shows the beginning of the first section and ends with visible continued text at bottom. Maintain readable body typography, 16px side gutters, proper line breaks, no horizontal overflow, no floating contact button covering text. Contact block belongs after the full document on mobile and is not required to be visible in this upper-page excerpt.
+
+Aim for the reference image's familiar visual family but refined legal-reading layout. Flat UI screenshot, premium precise composition. No gray skeleton lines, no Lorem Ipsum, no English inside the product UI, no erroneous contact email from the reference. No illustration or product imagery. The result should feel ready for a real Next.js + shadcn/ui implementation under the existing design system.

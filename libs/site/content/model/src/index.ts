@@ -31,3 +31,8 @@ export type {
   RequisitesCopyLabels,
   RequisitesDictionary,
 } from './lib/requisites-types';
+export { getPublicOfferDictionary } from './lib/public-offer/public-offer-dictionary';
+export type {
+  PublicOfferDictionary,
+  PublicOfferSection,
+} from './lib/public-offer/public-offer-types';

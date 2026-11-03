@@ -1,0 +1,362 @@
+@media print {
+  /* Cached Activity trees stay in the DOM. Ignore a hidden host or ancestor before applying any print rule. */
+  :global(html):has(
+    .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+  ),
+  :global(body):has(
+    .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+  ) {
+    color-scheme: light !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  :global(body):has(
+    .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+  ) {
+    display: block !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Only the shop frame is a direct body child; the offer's own header stays visible. */
+  :global(body):has(
+      .page:not(
+        [hidden],
+        [hidden] *,
+        [style*='display:none'],
+        [style*='display:none'] *,
+        [style*='display: none'],
+        [style*='display: none'] *
+      )
+    )
+    > :global(header),
+  :global(body):has(
+      .page:not(
+        [hidden],
+        [hidden] *,
+        [style*='display:none'],
+        [style*='display:none'] *,
+        [style*='display: none'],
+        [style*='display: none'] *
+      )
+    )
+    > :global(footer),
+  :global(body):has(
+      .page:not(
+        [hidden],
+        [hidden] *,
+        [style*='display:none'],
+        [style*='display:none'] *,
+        [style*='display: none'],
+        [style*='display: none'] *
+      )
+    )
+    > :global(a[href='#content']),
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-breadcrumb],
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-actions],
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-navigation],
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-contact],
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    button,
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    noscript {
+    display: none !important;
+  }
+
+  :global(body):has(
+      .page:not(
+        [hidden],
+        [hidden] *,
+        [style*='display:none'],
+        [style*='display:none'] *,
+        [style*='display: none'],
+        [style*='display: none'] *
+      )
+    )
+    > :global(main),
+  .page:not(
+    [hidden],
+    [hidden] *,
+    [style*='display:none'],
+    [style*='display:none'] *,
+    [style*='display: none'],
+    [style*='display: none'] *
+  ),
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-layout],
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-document] {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .page:not(
+    [hidden],
+    [hidden] *,
+    [style*='display:none'],
+    [style*='display:none'] *,
+    [style*='display: none'],
+    [style*='display: none'] *
+  ) {
+    color: #000 !important;
+    background: #fff !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    * {
+    color: inherit !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-layout] {
+    margin-top: 1.5rem !important;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    > header {
+    break-inside: avoid-page;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    > header
+    > div {
+    display: block;
+    margin-top: 0;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    h1,
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    h2 {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    h1 {
+    font-size: 20pt;
+    line-height: 1.2;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    h2 {
+    font-size: 14pt;
+    line-height: 1.4;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-document],
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-document]
+    > section {
+    break-inside: auto;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-document]
+    > section {
+    border-color: #aaa;
+    scroll-margin-top: 0;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    p {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .page:not(
+      [hidden],
+      [hidden] *,
+      [style*='display:none'],
+      [style*='display:none'] *,
+      [style*='display: none'],
+      [style*='display: none'] *
+    )
+    [data-offer-note] {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+  }
+}

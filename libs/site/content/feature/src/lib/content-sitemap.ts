@@ -8,5 +8,6 @@ export const CONTENT_SITEMAP_PAGES = [
   { path: '/requisites' },
   { path: '/wholesale' },
   { path: '/articles' },
+  { path: '/public-offer' },
   ...Object.values(ARTICLE_SLUGS).map((slug) => ({ path: articlePath(slug) })),
 ] as const;

@@ -14,3 +14,4 @@ export { ArticleContent } from './lib/articles/article-content';
 export { WholesaleContent } from './lib/wholesale/wholesale-content';
 export type { WholesaleContentProps } from './lib/wholesale/wholesale-content';
 export { RequisitesContent } from './lib/requisites/requisites-content';
+export { PublicOfferContent } from './lib/public-offer/public-offer-content';

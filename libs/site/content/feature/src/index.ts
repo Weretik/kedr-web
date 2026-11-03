@@ -10,3 +10,4 @@ export {
 } from './lib/articles/article-page';
 export { WholesalePage } from './lib/wholesale-page';
 export { RequisitesPage } from './lib/requisites-page';
+export { PublicOfferPage } from './lib/public-offer-page';

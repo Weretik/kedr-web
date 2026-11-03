@@ -114,3 +114,33 @@ it('publishes one requisites URL per locale with reciprocal alternates and prese
     }
   }
 });
+it('publishes the public offer once per locale with alternates and preserves existing content', () => {
+  const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
+  const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
+  const offers = entries.filter(({ url }) => new URL(url).pathname.endsWith('/public-offer'));
+  expect(offers.map(({ url }) => url)).toEqual([
+    'https://classkedr.com.ua/uk/public-offer',
+    'https://classkedr.com.ua/ru/public-offer',
+  ]);
+  for (const entry of offers) {
+    expect(entry.alternates?.languages).toEqual({
+      'uk-UA': 'https://classkedr.com.ua/uk/public-offer',
+      'ru-UA': 'https://classkedr.com.ua/ru/public-offer',
+    });
+    expect(entry.lastModified).toBeUndefined();
+    expect(new URL(entry.url).search).toBe('');
+    expect(new URL(entry.url).hash).toBe('');
+  }
+  expect(new Set(entries.map(({ url }) => url)).size).toBe(entries.length);
+  for (const locale of ['uk', 'ru']) {
+    for (const path of [
+      '/delivery-and-payment',
+      '/returns-exchanges',
+      '/contacts',
+      '/wholesale',
+      '/articles',
+    ]) {
+      expect(entries.some(({ url }) => url.endsWith('/' + locale + path))).toBe(true);
+    }
+  }
+});
