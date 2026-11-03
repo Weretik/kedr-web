@@ -1,9 +1,33 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { requiredTagErrors, validateProjectBoundary } from './project-boundary-rules.mjs';
 
 const project = (name, ...tags) => ({ name, tags });
+
+const siteProject = (path) =>
+  JSON.parse(
+    readFileSync(new URL(`../../libs/site/${path}/project.json`, import.meta.url), 'utf8'),
+  );
+const contentSeo = siteProject('content/seo');
+
+for (const path of ['core/config', 'core/i18n', 'core/seo']) {
+  const target = siteProject(path);
+  test(`allows content SEO to depend on ${target.name}`, () => {
+    assert.equal(validateProjectBoundary(contentSeo, target), null);
+  });
+}
+
+for (const path of ['content/feature', 'content/ui', 'content/model', 'core/shell']) {
+  const target = siteProject(path);
+  test(`rejects content SEO depending on ${target.name}`, () => {
+    assert.ok(
+      validateProjectBoundary(contentSeo, target),
+      `${contentSeo.name} -> ${target.name} must be rejected`,
+    );
+  });
+}
 
 test('accepts documented downward dependencies', () => {
   assert.equal(

@@ -13,11 +13,18 @@ const documentedCrossDomainFlows = new Set([
   'site-home-feature->site-catalog-ui',
 ]);
 
+// This content SEO library uses only the core public APIs selected in the contacts SDD.
+const contentSeoCoreDependencies = new Set(['site-core-config', 'site-core-i18n', 'site-core-seo']);
+
 function valueFor(tags, prefix) {
   return tags.find((tag) => tag.startsWith(prefix))?.slice(prefix.length);
 }
 
 export function validateProjectBoundary(source, target) {
+  if (source.name === 'site-content-seo' && !contentSeoCoreDependencies.has(target.name)) {
+    return `${source.name} cannot depend on ${target.name}; content SEO uses only core config, i18n, and SEO`;
+  }
+
   const sourceTags = source.tags ?? [];
   const targetTags = target.tags ?? [];
   const sourceType = valueFor(sourceTags, 'type:');
