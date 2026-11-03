@@ -10,3 +10,5 @@ export { buildRequisitesMetadata } from './lib/requisites-metadata';
 export { buildRequisitesBreadcrumbJsonLd } from './lib/requisites-json-ld';
 export { buildPublicOfferMetadata } from './lib/public-offer-metadata';
 export { buildPublicOfferBreadcrumbJsonLd } from './lib/public-offer-json-ld';
+export { buildPrivacyMetadata } from './lib/privacy-metadata';
+export { buildPrivacyBreadcrumbJsonLd } from './lib/privacy-json-ld';

@@ -1,0 +1,48 @@
+{
+  "changed": [
+    {
+      "file": "libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx",
+      "before": "f10aae7bcee032a9fe0b7498869a34c61abe28c975bb9d29af3313d5d9079972",
+      "after": "5a68c3d7673c2fe05cd8d6685289387ff11c41b2f0a4b721972b51c32d9ce049",
+      "changed": true
+    },
+    {
+      "file": "libs/site/content/ui/src/lib/privacy/privacy-content.tsx",
+      "before": "4b0a5f7550fe4463f181e5f913c26f47424851ec8bbebd47a5b8504b039bb15c",
+      "after": "11f82d37b4c0dc46ac7a842b849ee19f8d0e00f96967fbb6843939548d37aa6f",
+      "changed": true
+    },
+    {
+      "file": "libs/site/content/model/src/lib/privacy-dictionary.ts",
+      "before": "8da8557e3b802d4c41464b9e2adfdf178b46af6c80e83a84ca5464dbc38053e3",
+      "after": "e3ba42ceb75fee7800721912d01582d822e0b77c11bd4f7432a66e978d868f87",
+      "changed": true
+    },
+    {
+      "file": "libs/site/content/model/src/lib/privacy-policy-sections.spec.ts",
+      "before": "14a8a20dd48f6543605cf5c09277588426c64b7866be6f580cb5eb61ddae905a",
+      "after": "ef62adceb8494f8ee7514291930d4f582b4999ce1a4e29982224027adc74cb8f",
+      "changed": true
+    }
+  ],
+  "eslint": {
+    "files": 19,
+    "errors": 0,
+    "warnings": 0,
+    "problems": []
+  },
+  "testTypes": {
+    "layer": "ui",
+    "roots": ["libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx"],
+    "errors": [],
+    "configErrors": [],
+    "otherLayerResults": "unchanged; model/seo/feature passed in initial audit"
+  },
+  "regression": {
+    "command": "node node_modules/vitest/vitest.mjs run --config libs/site/content/ui/vite.config.mts src/lib/privacy/privacy-content.spec.tsx",
+    "exit": 0,
+    "stdout": "\n RUN  v5.0.5 E:/RiderProjects/kedr-web/libs/site/content/ui\n\n ✓ |site-content-ui| src/lib/privacy/privacy-content.spec.tsx (12 tests) 6094ms\n   ✓ privacy policy: uk (6)\n     ✓ shows one localized H1 and a home breadcrumb in the same language 1989ms\n     ✓ keeps three sourced summary items before the complete document 699ms\n     ✓ renders all eight headings, 15 paragraphs and 11 list items in initial server HTML 1034ms\n     ✓ provides native collapsed contents, eight valid destinations per variant and unique IDs 428ms\n     ✓ uses the same configured contacts in the complete policy and native email action 609ms\n   ✓ privacy policy: ru (6)\n     ✓ provides native collapsed contents, eight valid destinations per variant and unique IDs 428ms\n\n Test Files  1 passed (1)\n      Tests  12 passed (12)\n   Start at  20:02:16\n   Duration  35.73s (environment 49%, import 26%, tests 17%, transform 7%, worker 1%)\n\n",
+    "stderr": ""
+  },
+  "newRuntimeResponsibilities": false
+}

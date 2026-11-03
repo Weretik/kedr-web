@@ -1,0 +1,221 @@
+{
+  "files": 20,
+  "actualEdges": [
+    {
+      "source": "site-content-ui",
+      "target": "site-shared-ui"
+    },
+    {
+      "source": "site-content-ui",
+      "target": "site-content-model"
+    },
+    {
+      "source": "site-content-ui",
+      "target": "site-core-i18n"
+    },
+    {
+      "source": "site-content-ui",
+      "target": "site-core-config"
+    },
+    {
+      "source": "site-content-feature",
+      "target": "site-content-model"
+    },
+    {
+      "source": "site-content-feature",
+      "target": "site-content-seo"
+    },
+    {
+      "source": "site-content-feature",
+      "target": "site-content-ui"
+    },
+    {
+      "source": "site-content-feature",
+      "target": "site-core-config"
+    },
+    {
+      "source": "site-content-feature",
+      "target": "site-core-seo"
+    },
+    {
+      "source": "site-content-feature",
+      "target": "site-core-i18n"
+    },
+    {
+      "source": "site",
+      "target": "site-content-feature"
+    },
+    {
+      "source": "site",
+      "target": "site-content-seo"
+    },
+    {
+      "source": "site",
+      "target": "site-core-i18n"
+    },
+    {
+      "source": "site-content-model",
+      "target": "site-core-i18n"
+    },
+    {
+      "source": "site-content-seo",
+      "target": "site-core-seo"
+    },
+    {
+      "source": "site-content-seo",
+      "target": "site-core-config"
+    },
+    {
+      "source": "site-content-seo",
+      "target": "site-core-i18n"
+    }
+  ],
+  "boundaryErrors": [],
+  "negativeCases": [
+    {
+      "source": "site-content-ui",
+      "target": "site-content-feature",
+      "rejected": true,
+      "reason": "site-content-ui (ui) cannot depend upward on feature project site-content-feature"
+    },
+    {
+      "source": "site-content-seo",
+      "target": "site-content-model",
+      "rejected": true,
+      "reason": "site-content-seo cannot depend on site-content-model; content SEO uses only core config, i18n, and SEO"
+    },
+    {
+      "source": "site-content-model",
+      "target": "site-catalog-model",
+      "rejected": true,
+      "reason": "site-content-model (model:content) cannot depend on site-catalog-model (domain:catalog)"
+    }
+  ],
+  "eslint": {
+    "errors": 5,
+    "warnings": 1,
+    "problems": [
+      {
+        "file": "libs/site/content/ui/src/lib/privacy/privacy-content.tsx",
+        "errors": 1,
+        "warnings": 0,
+        "messages": [
+          {
+            "line": 8,
+            "column": 1,
+            "ruleId": "import/order",
+            "message": "`./privacy-content.module.css` import should occur before import of `./privacy-header`",
+            "severity": 2
+          }
+        ]
+      },
+      {
+        "file": "libs/site/content/ui/src/lib/privacy/privacy-content.module.css",
+        "errors": 0,
+        "warnings": 1,
+        "messages": [
+          {
+            "ruleId": null,
+            "message": "File ignored because no matching configuration was supplied.",
+            "severity": 1
+          }
+        ]
+      },
+      {
+        "file": "libs/site/content/model/src/lib/privacy-dictionary.ts",
+        "errors": 3,
+        "warnings": 0,
+        "messages": [
+          {
+            "line": 1,
+            "column": 1,
+            "ruleId": "import/order",
+            "message": "There should be at least one empty line between import groups",
+            "severity": 2
+          },
+          {
+            "line": 1,
+            "column": 1,
+            "ruleId": "import/order",
+            "message": "`@site/core/i18n` type import should occur after type import of `./privacy-types`",
+            "severity": 2
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "ruleId": "import/order",
+            "message": "There should be at least one empty line between import groups",
+            "severity": 2
+          }
+        ]
+      },
+      {
+        "file": "libs/site/content/model/src/lib/privacy-policy-sections.spec.ts",
+        "errors": 1,
+        "warnings": 0,
+        "messages": [
+          {
+            "line": 2,
+            "column": 1,
+            "ruleId": "import/order",
+            "message": "There should be at least one empty line between import groups",
+            "severity": 2
+          }
+        ]
+      }
+    ]
+  },
+  "testTypes": [
+    {
+      "layer": "model",
+      "roots": ["libs/site/content/model/src/lib/privacy-policy-sections.spec.ts"],
+      "errors": []
+    },
+    {
+      "layer": "ui",
+      "roots": ["libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx"],
+      "errors": [
+        {
+          "code": 2345,
+          "file": "libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx",
+          "line": 128,
+          "message": "Argument of type 'Element' is not assignable to parameter of type 'HTMLElement'.\n  Type 'Element' is missing the following properties from type 'HTMLElement': accessKey, accessKeyLabel, autocapitalize, autocorrect, and 131 more."
+        },
+        {
+          "code": 2345,
+          "file": "libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx",
+          "line": 132,
+          "message": "Argument of type 'Element' is not assignable to parameter of type 'HTMLElement'.\n  Type 'Element' is missing the following properties from type 'HTMLElement': accessKey, accessKeyLabel, autocapitalize, autocorrect, and 131 more."
+        },
+        {
+          "code": 2345,
+          "file": "libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx",
+          "line": 136,
+          "message": "Argument of type 'Element' is not assignable to parameter of type 'HTMLElement'.\n  Type 'Element' is missing the following properties from type 'HTMLElement': accessKey, accessKeyLabel, autocapitalize, autocorrect, and 131 more."
+        },
+        {
+          "code": 2345,
+          "file": "libs/site/content/ui/src/lib/privacy/privacy-content.spec.tsx",
+          "line": 140,
+          "message": "Argument of type 'Element' is not assignable to parameter of type 'HTMLElement'.\n  Type 'Element' is missing the following properties from type 'HTMLElement': accessKey, accessKeyLabel, autocapitalize, autocorrect, and 131 more."
+        }
+      ]
+    },
+    {
+      "layer": "seo",
+      "roots": [
+        "libs/site/content/seo/src/lib/privacy-metadata.spec.ts",
+        "libs/site/content/seo/src/lib/privacy-json-ld.spec.ts"
+      ],
+      "errors": []
+    },
+    {
+      "layer": "feature",
+      "roots": [
+        "libs/site/content/feature/src/lib/privacy-page.spec.tsx",
+        "libs/site/content/feature/src/lib/content-sitemap.spec.ts"
+      ],
+      "errors": []
+    }
+  ]
+}

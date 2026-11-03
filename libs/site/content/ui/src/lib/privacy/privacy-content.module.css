@@ -1,0 +1,14 @@
+/* Selection follows the native fragment, never viewport scroll position. */
+.page:not(:has([data-privacy-heading]:target)) .contentsLink[data-first='true'],
+.page:has([id='privacy-general']:target) .contentsLink[href='#privacy-general'],
+.page:has([id='privacy-data']:target) .contentsLink[href='#privacy-data'],
+.page:has([id='privacy-purpose']:target) .contentsLink[href='#privacy-purpose'],
+.page:has([id='privacy-sharing']:target) .contentsLink[href='#privacy-sharing'],
+.page:has([id='privacy-storage']:target) .contentsLink[href='#privacy-storage'],
+.page:has([id='privacy-rights']:target) .contentsLink[href='#privacy-rights'],
+.page:has([id='privacy-changes']:target) .contentsLink[href='#privacy-changes'],
+.page:has([id='privacy-contact']:target) .contentsLink[href='#privacy-contact'] {
+  background-color: var(--brand-soft);
+  color: var(--brand-text);
+  font-weight: 600;
+}

@@ -144,3 +144,36 @@ it('publishes the public offer once per locale with alternates and preserves exi
     }
   }
 });
+it('publishes the complete privacy policy once per locale and preserves all existing pages', () => {
+  const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
+  const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
+  const policy = entries.filter(({ url }) => new URL(url).pathname.endsWith('/privacy-policy'));
+
+  expect(policy.map(({ url }) => url)).toEqual([
+    'https://classkedr.com.ua/uk/privacy-policy',
+    'https://classkedr.com.ua/ru/privacy-policy',
+  ]);
+  for (const entry of policy) {
+    expect(entry.alternates?.languages).toEqual({
+      'uk-UA': 'https://classkedr.com.ua/uk/privacy-policy',
+      'ru-UA': 'https://classkedr.com.ua/ru/privacy-policy',
+    });
+    expect(entry.lastModified).toBeUndefined();
+    expect(new URL(entry.url).search).toBe('');
+    expect(new URL(entry.url).hash).toBe('');
+  }
+  expect(new Set(entries.map(({ url }) => url)).size).toBe(entries.length);
+  for (const locale of ['uk', 'ru']) {
+    for (const slug of [
+      'delivery-and-payment',
+      'returns-exchanges',
+      'contacts',
+      'requisites',
+      'wholesale',
+      'articles',
+      'public-offer',
+    ]) {
+      expect(entries.some(({ url }) => url.endsWith('/' + locale + '/' + slug))).toBe(true);
+    }
+  }
+});

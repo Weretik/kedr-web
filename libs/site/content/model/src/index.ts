@@ -36,3 +36,13 @@ export type {
   PublicOfferDictionary,
   PublicOfferSection,
 } from './lib/public-offer/public-offer-types';
+export { getPrivacyDictionary } from './lib/privacy-dictionary';
+export type {
+  PrivacyDictionary,
+  PrivacySectionId,
+  PrivacyPolicyBindings,
+  PrivacyInline,
+  PrivacyPolicyBlock,
+  PrivacyPolicySection,
+  PrivacySummaryItem,
+} from './lib/privacy-types';
