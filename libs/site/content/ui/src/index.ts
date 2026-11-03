@@ -6,3 +6,4 @@ export { OrderSteps } from './lib/delivery-payment/order-steps';
 export { ImportantTerms } from './lib/delivery-payment/important-terms';
 export { DeliveryContact } from './lib/delivery-payment/delivery-contact';
 export { ReturnsContent } from './lib/returns/returns-content';
+export { ContactsContent } from './lib/contacts/contacts-content';
