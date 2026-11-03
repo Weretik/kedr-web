@@ -22,3 +22,12 @@ export { getArticlesDictionary } from './lib/articles/articles-dictionary';
 export type { ArticlesDictionary } from './lib/articles/articles-dictionary';
 export { getWholesaleDictionary } from './lib/wholesale-dictionary';
 export type { WholesaleCompanyDetails, WholesaleDictionary } from './lib/wholesale-types';
+export { getRequisitesDictionary } from './lib/requisites-dictionary';
+export { formatRequisitesCopy } from './lib/requisites-copy';
+export type {
+  RequisitesValues,
+  RequisitesDetails,
+  RequisitesFieldLabels,
+  RequisitesCopyLabels,
+  RequisitesDictionary,
+} from './lib/requisites-types';

@@ -85,3 +85,32 @@ it('publishes one wholesale URL per language and preserves existing content with
     }
   }
 });
+it('publishes one requisites URL per locale with reciprocal alternates and preserves migrated pages', () => {
+  const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
+  const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
+  const requisites = entries.filter(({ url }) => url.endsWith('/requisites'));
+
+  expect(requisites.map(({ url }) => url)).toEqual([
+    'https://classkedr.com.ua/uk/requisites',
+    'https://classkedr.com.ua/ru/requisites',
+  ]);
+  for (const entry of requisites) {
+    expect(entry.alternates?.languages).toEqual({
+      'uk-UA': 'https://classkedr.com.ua/uk/requisites',
+      'ru-UA': 'https://classkedr.com.ua/ru/requisites',
+    });
+    expect(entry.lastModified).toBeUndefined();
+  }
+  expect(new Set(entries.map(({ url }) => url)).size).toBe(entries.length);
+  for (const locale of ['uk', 'ru']) {
+    for (const slug of [
+      'delivery-and-payment',
+      'returns-exchanges',
+      'contacts',
+      'wholesale',
+      'articles',
+    ]) {
+      expect(entries.some(({ url }) => url.endsWith('/' + locale + '/' + slug))).toBe(true);
+    }
+  }
+});

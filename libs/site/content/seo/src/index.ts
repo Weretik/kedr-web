@@ -6,3 +6,5 @@ export { buildArticlesMetadata, buildArticleMetadata } from './lib/articles/arti
 export { buildArticlesBreadcrumbJsonLd, buildArticleJsonLd } from './lib/articles/articles-json-ld';
 export { buildWholesaleMetadata } from './lib/wholesale-metadata';
 export { buildWholesaleBreadcrumbJsonLd } from './lib/wholesale-json-ld';
+export { buildRequisitesMetadata } from './lib/requisites-metadata';
+export { buildRequisitesBreadcrumbJsonLd } from './lib/requisites-json-ld';
