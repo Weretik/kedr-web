@@ -8,7 +8,10 @@ import type { MetadataRoute } from 'next';
 export const PRIVATE_PATHS = ['/checkout', '/cabinet', '/login'] as const;
 
 /** robots.txt: blocks everything until indexing is enabled, then only private pages and the API. */
-export function buildRobotsFile(config: SiteConfig = siteConfig): MetadataRoute.Robots {
+export function buildRobotsFile(
+  config: SiteConfig = siteConfig,
+  additionalSitemapUrls: readonly string[] = [],
+): MetadataRoute.Robots {
   if (!config.indexingEnabled) {
     return { rules: { userAgent: '*', disallow: '/' } };
   }
@@ -22,6 +25,8 @@ export function buildRobotsFile(config: SiteConfig = siteConfig): MetadataRoute.
         ...LOCALES.flatMap((locale) => PRIVATE_PATHS.map((path) => localizedPath(locale, path))),
       ],
     },
-    sitemap: `${config.siteUrl}/sitemap.xml`,
+    sitemap: additionalSitemapUrls.length
+      ? [...new Set([`${config.siteUrl}/sitemap.xml`, ...additionalSitemapUrls])]
+      : `${config.siteUrl}/sitemap.xml`,
   };
 }

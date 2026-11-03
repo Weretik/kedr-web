@@ -10,6 +10,7 @@ const documentedCrossDomainFlows = new Set([
   'mobile-cart-feature->mobile-customers-ui',
   'site-home-feature->site-catalog-data-access',
   'site-home-feature->site-catalog-model',
+  'site-product-feature->site-catalog-model',
   'site-home-feature->site-catalog-ui',
   'site-content-feature->site-catalog-data-access',
   'site-content-feature->site-catalog-model',

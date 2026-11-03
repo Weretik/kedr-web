@@ -36,3 +36,17 @@ describe('sitemap entries', () => {
     });
   });
 });
+
+describe('product sitemap discovery', () => {
+  it('advertises the existing root and unique supplied product shard URLs', () => {
+    const root = 'https://classkedr.com.ua/sitemap.xml';
+    const product = 'https://classkedr.com.ua/product/sitemap/0.xml';
+    expect(buildRobotsFile(production, [root, product, product]).sitemap).toEqual([root, product]);
+  });
+
+  it('keeps preview blocked even if extra sitemap descriptors are supplied', () => {
+    expect(buildRobotsFile(preview, ['https://classkedr.com.ua/product/sitemap/0.xml'])).toEqual({
+      rules: { userAgent: '*', disallow: '/' },
+    });
+  });
+});

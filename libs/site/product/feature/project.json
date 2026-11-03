@@ -1,0 +1,20 @@
+{
+  "name": "site-product-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/site/product/feature/src",
+  "projectType": "library",
+  "tags": ["scope:site", "domain:product", "type:feature"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

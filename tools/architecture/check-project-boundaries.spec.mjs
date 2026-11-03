@@ -110,3 +110,21 @@ for (const sourcePath of ['content/ui', 'content/model']) {
 test('rejects wholesale content feature importing catalog feature', () => {
   assert.ok(validateProjectBoundary(wholesaleContentFeature, siteProject('catalog/feature')));
 });
+
+// The product page consumes only the shared catalog root/path policy.
+test('product detail boundary allows the documented model policy flow', () => {
+  assert.equal(
+    validateProjectBoundary(siteProject('product/feature'), siteProject('catalog/model')),
+    null,
+  );
+});
+for (const sourcePath of ['product/ui', 'product/model', 'product/data-access']) {
+  test(`product detail boundary rejects ${sourcePath} importing catalog model`, () => {
+    assert.ok(validateProjectBoundary(siteProject(sourcePath), siteProject('catalog/model')));
+  });
+}
+test('product detail boundary rejects product feature importing catalog feature', () => {
+  assert.ok(
+    validateProjectBoundary(siteProject('product/feature'), siteProject('catalog/feature')),
+  );
+});

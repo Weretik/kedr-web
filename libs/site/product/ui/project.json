@@ -1,0 +1,7 @@
+{
+  "name": "site-product-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/site/product/ui/src",
+  "projectType": "library",
+  "tags": ["scope:site", "domain:product", "type:ui"]
+}
