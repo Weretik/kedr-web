@@ -37,7 +37,7 @@ Green text on white uses `brand-text`, not `brand`: `#3FA435` on white fails WCA
 
 ## Header (all of it stays)
 
-1. Top bar (desktop): «Україна, м. Харків», about, delivery and payment, returns, gallery, articles, contacts, UA/RU, theme.
+1. Top bar (desktop): city left, information links centered across the entire header, language and a sun/moon sliding switch without a visible theme caption right. Below xl, information links occupy a centered second row. Content: «Україна, м. Харків», about, delivery and payment, returns, gallery, articles, contacts, UA/RU, theme.
 2. Main bar: logo, «Каталог» (green) with the catalog menu, search by SKU or name, phone (068) 713-50-49 with copy, Telegram, Viber, map, «Кабінет», cart. Sticky.
 3. Category bar (desktop): Завіси, Замки, Ручки, Циліндри, Міжкімнатні механізми, Інше, Двері, «Регіони», «Співпраця».
 4. Phone: menu in a side sheet, search on its own row, cabinet and cart as icons.

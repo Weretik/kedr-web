@@ -1,0 +1,11 @@
+/* next-themes suppresses page-wide transitions during theme changes.
+   Keep just this knob's positional feedback animated. */
+.thumb {
+  transition: translate 180ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none !important;
+  }
+}
