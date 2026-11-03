@@ -1,2 +1,5 @@
-/** Static content descriptors expanded into both locales by core SEO. */
-export const CONTENT_SITEMAP_PAGES = [{ path: '/returns-exchanges' }] as const;
+/** Public content routes; core/seo expands these descriptors into both language versions. */
+export const CONTENT_SITEMAP_PAGES = [
+  { path: '/delivery-and-payment' },
+  { path: '/returns-exchanges' },
+] as const;
