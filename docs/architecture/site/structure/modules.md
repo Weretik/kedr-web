@@ -6,25 +6,25 @@ All projects were created with Nx generators (`@nx/next:application`, `@nx/react
 
 ## Projects
 
-| Project                    | Path                            | Tags                                                  | Role                                                                                  |
-| -------------------------- | ------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `site`                     | `apps/site`                     | `scope:site`, `type:app`                              | Next.js routes, metadata exports, `robots.ts`, `sitemap.ts`, global CSS tokens, fonts |
-| `site-core-config`         | `libs/site/core/config`         | `scope:site`, `scope:site-shared`, `type:util`        | `siteConfig` from environment, `COMPANY` facts; the only reader of `process.env`      |
-| `site-core-i18n`           | `libs/site/core/i18n`           | `scope:site`, `scope:site-shared`, `type:util`        | Locales, language tags, localized path builders                                       |
-| `site-core-seo`            | `libs/site/core/seo`            | `scope:site`, `scope:site-shared`, `type:core`        | Metadata, robots, sitemap, and JSON-LD builders                                       |
-| `site-core-shell`          | `libs/site/core/shell`          | `scope:site`, `scope:site-shared`, `type:shell`       | Header, footer, theme, language switch, shell dictionary                              |
-| `site-shared-ui`           | `libs/site/shared/ui`           | `scope:site`, `scope:site-shared`, `type:ui`          | shadcn/ui primitives (`Button`, `Sheet`, `cn`)                                        |
-| `site-shared-api-client`   | `libs/site/shared/api-client`   | `scope:site`, `scope:site-shared`, `type:data-access` | Server-only typed `fetch` over the public catalog API                                 |
-| `site-catalog-model`       | `libs/site/catalog/model`       | `scope:site`, `domain:catalog`, `type:model`          | Catalog section and product summary types, locale-free catalog URLs                   |
-| `site-catalog-data-access` | `libs/site/catalog/data-access` | `scope:site`, `domain:catalog`, `type:data-access`    | Cached category tree and product reads (`'use cache'`), DTO mappers, cache tags       |
-| `site-catalog-ui`          | `libs/site/catalog/ui`          | `scope:site`, `domain:catalog`, `type:ui`             | Catalog index, product card and grid, price formatting                                |
-| `site-home-ui`             | `libs/site/home/ui`             | `scope:site`, `domain:home`, `type:ui`                | Home hero with search, wholesale panel, facts, section frame, home copy               |
-| `site-home-seo`            | `libs/site/home/seo`            | `scope:site`, `domain:home`, `type:util`              | Home metadata                                                                         |
-| `site-home-feature`        | `libs/site/home/feature`        | `scope:site`, `domain:home`, `type:feature`           | Home page composition and WebSite JSON-LD                                             |
-| `site-content-model`       | `libs/site/content/model`       | `scope:site`, `domain:content`, `type:model`          | Typed returns copy and complete existing policy                                       |
-| `site-content-ui`          | `libs/site/content/ui`          | `scope:site`, `domain:content`, `type:ui`             | Static information page blocks and localized return blocks                            |
-| `site-content-seo`         | `libs/site/content/seo`         | `scope:site`, `domain:content`, `type:util`           | Localized content metadata through core/seo                                           |
-| `site-content-feature`     | `libs/site/content/feature`     | `scope:site`, `domain:content`, `type:feature`        | Server content-page composition and public sitemap descriptors                        |
+| Project                    | Path                            | Tags                                                  | Role                                                                                                |
+| -------------------------- | ------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `site`                     | `apps/site`                     | `scope:site`, `type:app`                              | Next.js routes, metadata exports, `robots.ts`, `sitemap.ts`, global CSS tokens, fonts               |
+| `site-core-config`         | `libs/site/core/config`         | `scope:site`, `scope:site-shared`, `type:util`        | `siteConfig` from environment, `COMPANY` facts; the only reader of `process.env`                    |
+| `site-core-i18n`           | `libs/site/core/i18n`           | `scope:site`, `scope:site-shared`, `type:util`        | Locales, language tags, localized path builders                                                     |
+| `site-core-seo`            | `libs/site/core/seo`            | `scope:site`, `scope:site-shared`, `type:core`        | Metadata, robots, sitemap, and JSON-LD builders                                                     |
+| `site-core-shell`          | `libs/site/core/shell`          | `scope:site`, `scope:site-shared`, `type:shell`       | Header, footer, theme, language switch, shell dictionary                                            |
+| `site-shared-ui`           | `libs/site/shared/ui`           | `scope:site`, `scope:site-shared`, `type:ui`          | shadcn/ui primitives (`Button`, `Sheet`, `cn`)                                                      |
+| `site-shared-api-client`   | `libs/site/shared/api-client`   | `scope:site`, `scope:site-shared`, `type:data-access` | Server-only typed `fetch` over the public catalog API                                               |
+| `site-catalog-model`       | `libs/site/catalog/model`       | `scope:site`, `domain:catalog`, `type:model`          | Catalog section and product summary types, locale-free catalog URLs                                 |
+| `site-catalog-data-access` | `libs/site/catalog/data-access` | `scope:site`, `domain:catalog`, `type:data-access`    | Cached category tree and product reads (`'use cache'`), DTO mappers, cache tags                     |
+| `site-catalog-ui`          | `libs/site/catalog/ui`          | `scope:site`, `domain:catalog`, `type:ui`             | Catalog index, product card and grid, price formatting                                              |
+| `site-home-ui`             | `libs/site/home/ui`             | `scope:site`, `domain:home`, `type:ui`                | Home hero/search, wholesale, company blocks, results, brands, FAQ, section frame and localized copy |
+| `site-home-seo`            | `libs/site/home/seo`            | `scope:site`, `domain:home`, `type:util`              | Home metadata                                                                                       |
+| `site-home-feature`        | `libs/site/home/feature`        | `scope:site`, `domain:home`, `type:feature`           | Home page composition and WebSite JSON-LD                                                           |
+| `site-content-model`       | `libs/site/content/model`       | `scope:site`, `domain:content`, `type:model`          | Typed returns copy and complete existing policy                                                     |
+| `site-content-ui`          | `libs/site/content/ui`          | `scope:site`, `domain:content`, `type:ui`             | Static information page blocks and localized return blocks                                          |
+| `site-content-seo`         | `libs/site/content/seo`         | `scope:site`, `domain:content`, `type:util`           | Localized content metadata through core/seo                                                         |
+| `site-content-feature`     | `libs/site/content/feature`     | `scope:site`, `domain:content`, `type:feature`        | Server content-page composition and public sitemap descriptors                                      |
 
 Import aliases are `@site/<path>` from `tsconfig.base.json`, for example `@site/core/seo`. Import only through a library's `src/index.ts`.
 

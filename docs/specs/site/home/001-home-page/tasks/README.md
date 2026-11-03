@@ -11,3 +11,7 @@
 | TS-005 | Home SEO: metadata builder                                                                      | `libs/site/home/seo`                                                                                               | —              | unit tests                                      |
 | TS-006 | Home feature and route: compose page, JSON-LD, `/categories` redirect, image host               | `libs/site/home/feature`, `apps/site`                                                                              | TS-002…TS-005  | component test, build, `curl`                   |
 | TS-007 | Docs: feature card, catalog, architecture, migration plan status; audit                         | `docs/**`                                                                                                          | TS-006         | `npm run docs:check`, `architecture:boundaries` |
+
+- [TS-008 — Home company concept](TS-008-company-concept.md): SC-011/SC-012, existing home UI/feature and local assets.
+
+- [TS-009 — Home as the company page](TS-009-company-home.md): SC-013/SC-014, shared navigation, overview anchor and permanent redirect.

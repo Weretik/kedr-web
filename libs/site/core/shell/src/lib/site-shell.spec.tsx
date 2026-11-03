@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 
 import { SiteShell } from './site-shell';
 
@@ -6,6 +6,31 @@ vi.mock('next/navigation', () => ({ usePathname: () => '/ru/wholesale' }));
 vi.mock('./footer/copyright-year', () => ({ CopyrightYear: () => '2026' }));
 
 describe('SiteShell', () => {
+  it.each([
+    ['uk', 'Про компанію', 'Відкрити меню'],
+    ['ru', 'О компании', 'Открыть меню'],
+  ] as const)(
+    'links to the home company section from every menu in %s',
+    (locale, label, openMenu) => {
+      render(<SiteShell locale={locale}>content</SiteShell>);
+
+      const expectedHref = `/${locale}#about-company`;
+      const header = screen.getByRole('banner');
+      const footer = screen.getByRole('contentinfo');
+      expect(within(header).getByRole('link', { name: label }).getAttribute('href')).toBe(
+        expectedHref,
+      );
+      expect(within(footer).getByRole('link', { name: label }).getAttribute('href')).toBe(
+        expectedHref,
+      );
+
+      fireEvent.click(within(header).getByRole('button', { name: openMenu }));
+      expect(
+        within(screen.getByRole('dialog')).getByRole('link', { name: label }).getAttribute('href'),
+      ).toBe(expectedHref);
+    },
+  );
+
   it('renders the header contacts, catalog sections, and localized links', () => {
     render(
       <SiteShell locale="ru">

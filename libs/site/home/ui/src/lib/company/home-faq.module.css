@@ -1,0 +1,49 @@
+/* Keep native disclosure semantics; animate the content slot in supporting browsers. */
+@supports selector(details::details-content) and (transition-behavior: allow-discrete) {
+  .item::details-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 200ms ease,
+      opacity 200ms ease,
+      content-visibility 200ms ease allow-discrete;
+  }
+
+  .item[open]::details-content {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+.plus,
+.minus {
+  transition:
+    transform 200ms ease,
+    opacity 200ms ease;
+}
+
+.minus {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.item[open] .plus {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
+}
+
+.item[open] .minus {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item::details-content,
+  .plus,
+  .minus {
+    transition: none;
+  }
+}

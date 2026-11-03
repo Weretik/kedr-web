@@ -4,12 +4,13 @@ Site-wide rules: [SEO architecture](../../../../../architecture/site/platform/se
 
 ## URL and index policy
 
-| URL type      | Example          | Index                                    | Canonical | robots.txt            | Sitemap              | Links                         |
-| ------------- | ---------------- | ---------------------------------------- | --------- | --------------------- | -------------------- | ----------------------------- |
-| Home          | `/uk`, `/ru`     | index after cutover (preview: `noindex`) | self      | allow (after cutover) | yes, with alternates | header logo, footer, 404 page |
-| Old duplicate | `/uk/categories` | —                                        | —         | —                     | no                   | permanent redirect to `/uk`   |
-| Bare root     | `/`              | —                                        | —         | —                     | no                   | 308 to `/uk` (step 1)         |
-| Unknown       | `/xx`            | `noindex`                                | —         | —                     | no                   | 404                           |
+| URL type       | Example                                  | Index                                    | Canonical | robots.txt            | Sitemap              | Links                                                      |
+| -------------- | ---------------------------------------- | ---------------------------------------- | --------- | --------------------- | -------------------- | ---------------------------------------------------------- |
+| Home           | `/uk`, `/ru`                             | index after cutover (preview: `noindex`) | self      | allow (after cutover) | yes, with alternates | header logo, footer, 404 page                              |
+| Old duplicate  | `/uk/categories`                         | —                                        | —         | —                     | no                   | permanent redirect to `/uk`                                |
+| Former company | `/uk/about-company`, `/ru/about-company` | —                                        | —         | —                     | no                   | 308 to `/uk` or `/ru`; menus link to home `#about-company` |
+| Bare root      | `/`                                      | —                                        | —         | —                     | no                   | 308 to `/uk` (step 1)                                      |
+| Unknown        | `/xx`                                    | `noindex`                                | —         | —                     | no                   | 404                                                        |
 
 ## Metadata
 

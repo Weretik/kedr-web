@@ -14,8 +14,6 @@ export type HomeDictionary = {
   catalogTitle: string;
   catalogAll: string;
   catalogUnavailable: string;
-  factsTitle: string;
-  facts: readonly { title: string; text: string }[];
 };
 
 const DICTIONARIES: Record<Locale, HomeDictionary> = {
@@ -39,18 +37,6 @@ const DICTIONARIES: Record<Locale, HomeDictionary> = {
     catalogAll: 'Усі товари',
     catalogUnavailable:
       'Каталог тимчасово не завантажився. Спробуйте відкрити список усіх товарів.',
-    factsTitle: 'Чому Class Kedr',
-    facts: [
-      {
-        title: 'Завжди на складі',
-        text: 'Ходові позиції в наявності, відвантаження без очікування.',
-      },
-      {
-        title: 'Оптом і в роздріб',
-        text: 'Ціни для партнерів і зручні замовлення від однієї штуки.',
-      },
-      { title: 'Доставка по Україні', text: 'Відправляємо Новою поштою в будь-яке місто.' },
-    ],
   },
   ru: {
     heading: 'Дверная фурнитура оптом и в розницу',
@@ -71,12 +57,6 @@ const DICTIONARIES: Record<Locale, HomeDictionary> = {
     catalogTitle: 'Каталог дверной фурнитуры',
     catalogAll: 'Все товары',
     catalogUnavailable: 'Каталог временно не загрузился. Попробуйте открыть список всех товаров.',
-    factsTitle: 'Почему Class Kedr',
-    facts: [
-      { title: 'Всегда на складе', text: 'Ходовые позиции в наличии, отгрузка без ожидания.' },
-      { title: 'Оптом и в розницу', text: 'Цены для партнеров и удобные заказы от одной штуки.' },
-      { title: 'Доставка по Украине', text: 'Отправляем Новой почтой в любой город.' },
-    ],
   },
 };
 

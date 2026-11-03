@@ -30,3 +30,17 @@ Out of scope: the mega menu and category pages (step 3), product pages (step 4),
 - **SC-008** Given the build, then `/uk` and `/ru` are prerendered, catalog data functions use `'use cache'` with `cacheLife('hours')` and the `catalog` tag. (R-007)
 - **SC-009** Given `/uk/categories`, then the response is a permanent redirect to `/uk`. (R-008)
 - **SC-010** Given `/xx` or `/foo/bar`, then the response is 404 with the not-found heading and `noindex`. (R-009)
+
+## Company concept — owner decision 2026-11-03
+
+- **R-010** Below the existing catalog, both home locales show the approved company overview, four partner support items, six advantages, company results, six original brand logos, and six FAQ answers. Existing hero, catalog, SEO and API failure behavior remain supported.
+- **R-011** Results use the Storefront CompanyStats source: 15+ years, 15 000+ units of product, 50 000+ equipped properties, 1 000+ project shipments per year. No dynamic increments or invented figures.
+- **R-012** The first FAQ answer is expanded initially; visitors can open and close answers with native keyboard controls, including before JavaScript loads. Manager contact uses the company's configured phone. Disclosure and the plus/minus indicator transition gently over 200 ms; reduced-motion disables transitions. Browsers without the CSS content-slot animation retain native disclosure.
+- **SC-011** Given either home language and even an unavailable catalog, when the page loads, then all company sections, six benefits, six brands and the four sourced results appear in that language. Component test.
+- **SC-012** Given the FAQ, when the page loads, then all six questions and answers are in the HTML, the first answer is expanded, and the manager call link uses the company phone. Visitors can toggle answers with the native disclosure control. Component markup check; browser behavior is native and requires no custom handler.
+
+## Home as the company page — owner decision 2026-11-03
+
+- **R-013** The home is also the company page. Header, mobile menu and footer company links target the same-language home overview at #about-company. Old localized /about-company addresses redirect permanently (308) to the corresponding home; canonical and sitemap contain only the home URL.
+- **SC-013** Given either language and any page, when the visitor follows the company link from the header, phone menu or footer, then it targets that language's home company overview. Component checks for both languages and the anchor target.
+- **SC-014** Given /uk/about-company or /ru/about-company, when requested, then the maintained Next.js redirect map resolves permanently to /uk or /ru respectively. No duplicate company route, canonical or sitemap entry exists. Configuration assertions and existing SEO tests.

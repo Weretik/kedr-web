@@ -5,7 +5,12 @@ import { localizedPath } from '@site/core/i18n';
 import { JsonLd, buildWebSiteJsonLd } from '@site/core/seo';
 import {
   CatalogUnavailable,
-  HomeFacts,
+  HomeCompany,
+  HomeAdvantages,
+  HomeResults,
+  HomeBrands,
+  HomeFaq,
+  getCompanyDictionary,
   HomeHero,
   HomeSection,
   WholesalePanel,
@@ -15,11 +20,12 @@ import {
 import type { Locale } from '@site/core/i18n';
 
 /**
- * Home page body: hero with search, wholesale panel, catalog index, and facts. Products are not shown here (owner decision 2026-11-01).
+ * Home page body: hero with search, wholesale panel, catalog index, and company concept. Products are not shown here (owner decision 2026-11-01).
  * Catalog data is cached (`'use cache'`), so the whole page is part of the prerendered shell.
  */
 export async function HomePage({ locale }: { locale: Locale }) {
   const dictionary = getHomeDictionary(locale);
+  const companyDictionary = getCompanyDictionary(locale);
   const allProducts = localizedPath(locale, CATALOG_PATH);
   const sections = await getCatalogSections(locale);
 
@@ -50,9 +56,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
         )}
       </HomeSection>
 
-      <HomeSection id="home-facts" title={dictionary.factsTitle}>
-        <HomeFacts dictionary={dictionary} />
-      </HomeSection>
+      <HomeCompany dictionary={companyDictionary} />
+      <HomeAdvantages dictionary={companyDictionary} />
+      <HomeResults dictionary={companyDictionary} />
+      <HomeBrands dictionary={companyDictionary} />
+      <HomeFaq dictionary={companyDictionary} />
 
       <JsonLd data={buildWebSiteJsonLd(locale)} />
     </>

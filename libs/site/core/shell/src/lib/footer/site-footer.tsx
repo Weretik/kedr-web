@@ -15,7 +15,10 @@ import {
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { Locale } from '@site/core/i18n';
 
-type FooterColumn = { title: string; links: { key: string; path: string; label: string }[] };
+type FooterColumn = {
+  title: string;
+  links: { key: string; path: string; label: string; hash?: string }[];
+};
 
 /** Footer with catalog, company, and buyer links plus contacts; all links are crawlable. */
 export function SiteFooter({
@@ -59,7 +62,10 @@ export function SiteFooter({
             <ul className="grid gap-2 text-sm text-muted-foreground">
               {column.links.map((link) => (
                 <li key={link.key}>
-                  <Link href={localizedPath(locale, link.path)} className="hover:text-foreground">
+                  <Link
+                    href={{ pathname: localizedPath(locale, link.path), hash: link.hash }}
+                    className="hover:text-foreground"
+                  >
                     {link.label}
                   </Link>
                 </li>

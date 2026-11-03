@@ -37,7 +37,7 @@
 - [Returns and exchanges](site/content/001-returns-exchanges/README.md) — implemented 2026-11-03; responsibility audit/refactoring completed, findings verified
 
 - [Storefront migration to Next.js: plan](site/migration/README.md) and [feature inventory with SEO analysis](site/migration/feature-inventory.md)
-- [Home page](site/home/001-home-page/README.md)
+- [Home page](site/home/001-home-page/README.md) — implemented; company concept and FAQ added 2026-11-03
 
 ## Storefront Angular
 

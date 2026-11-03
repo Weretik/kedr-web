@@ -22,7 +22,7 @@ export function TopBar({ locale, dictionary }: { locale: Locale; dictionary: She
           {INFO_LINKS.map((link) => (
             <Link
               key={link.key}
-              href={localizedPath(locale, link.path)}
+              href={{ pathname: localizedPath(locale, link.path), hash: link.hash }}
               className="hover:text-foreground"
             >
               {dictionary.links[link.key]}

@@ -4,13 +4,13 @@ type InfoLinkKey = keyof ShellDictionary['links'];
 type CategoryKey = keyof ShellDictionary['categories'];
 export type RegionSlug = keyof ShellDictionary['regionNames'];
 
-export type NavLink<Key extends string> = { key: Key; path: string };
+export type NavLink<Key extends string> = { key: Key; path: string; hash?: string };
 
 const catalogPath = (slug: string) => `/catalog/${slug}`;
 
 /** Top bar links; the same pages as in the current storefront header. Paths are locale-free. */
 export const INFO_LINKS: readonly NavLink<InfoLinkKey>[] = [
-  { key: 'aboutCompany', path: '/about-company' },
+  { key: 'aboutCompany', path: '/', hash: 'about-company' },
   { key: 'deliveryAndPayment', path: '/delivery-and-payment' },
   { key: 'returnsExchanges', path: '/returns-exchanges' },
   { key: 'gallery', path: '/galleria' },

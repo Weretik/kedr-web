@@ -69,3 +69,24 @@ All new libraries are created with `npx nx g @nx/react:library` and trimmed like
 - Lint, typecheck, and tests for every new and changed site project; `npm run architecture:boundaries`, `npm run docs:check`.
 - `npx nx build site` route table, then `curl` against `next start` for the scenarios in [SEO design](seo.md). The API is not reachable from the cloud environment, so the unavailable state is verified there; the loaded state is covered by component tests.
 - No browser or E2E checks without the owner's separate permission.
+
+## Company concept implementation (2026-11-03)
+
+The supplied concept adds company content after the catalog on the existing home, without a new route or library. All blocks remain server-rendered. Native details/summary provide FAQ disclosure with the first item open and a shared name for exclusive opening. Tailwind v4 uses existing theme tokens, Onest, lucide stroke 1.75, and responsive one/two/three column grids. The partner panel applies the existing dark theme locally. Logos are original local Storefront assets rendered by next/image.
+
+| File under libs/site/home/ui/src/lib | Role                                          | Status |
+| ------------------------------------ | --------------------------------------------- | ------ |
+| i18n/company-dictionary.ts           | Ukrainian/Russian company copy, typed content | new    |
+| company/home-company.tsx             | Overview and partner support panel            | new    |
+| company/home-advantages.tsx          | Six hardware advantage cards                  | new    |
+| company/home-results.tsx             | Four results sourced from Storefront          | new    |
+| company/home-brands.tsx              | Six local brand images                        | new    |
+| company/home-faq.tsx                 | Native FAQ and configured manager phone       | new    |
+
+Home feature composes these blocks through the existing home/ui public API. apps/site/public/assets/brands owns copied logo files; no imports from Angular code. No module, API, cache, URL, or SEO boundary changes.
+
+### FAQ motion (owner-approved, 2026-11-03)
+
+home/ui/src/lib/company/home-faq.module.css owns scoped 200ms grid-row/opacity transitions on ::details-content and transform/opacity for the plus/minus icons. The content-slot transition includes content-visibility with allow-discrete so answers remain painted while closing. A single min-height:0 overflow-hidden wrapper enables intrinsic-height grid animation. Feature detection preserves native disclosure in older browsers; prefers-reduced-motion disables all local transitions. No client component, event handler, height measurement, timer or dependency is added. The native name group and initial open item stay in the server HTML.
+
+References: [browser guidance](https://developer.chrome.com/blog/styling-details), [MDN content slot](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::details-content).

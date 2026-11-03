@@ -31,11 +31,11 @@ type MobileMenuProps = {
 
 /** Phone and tablet menu in a side sheet: catalog sections, information pages, contacts, language, and theme. */
 export function MobileMenu({ locale, dictionary, phone, categoryLinks }: MobileMenuProps) {
-  const item = (key: string, path: string, label: string) => (
+  const item = (key: string, path: string, label: string, hash?: string) => (
     <li key={key}>
       <SheetClose asChild>
         <Link
-          href={localizedPath(locale, path)}
+          href={{ pathname: localizedPath(locale, path), hash }}
           className="block rounded-md px-2 py-2 text-sm hover:bg-muted"
         >
           {label}
@@ -60,7 +60,9 @@ export function MobileMenu({ locale, dictionary, phone, categoryLinks }: MobileM
           {item('wholesale', SHELL_PATHS.wholesale, dictionary.wholesale)}
         </ul>
         <ul className="border-t border-border pt-3">
-          {INFO_LINKS.map((link) => item(link.key, link.path, dictionary.links[link.key]))}
+          {INFO_LINKS.map((link) =>
+            item(link.key, link.path, dictionary.links[link.key], link.hash),
+          )}
         </ul>
         <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-border pt-4">
           <CopyPhoneButton
