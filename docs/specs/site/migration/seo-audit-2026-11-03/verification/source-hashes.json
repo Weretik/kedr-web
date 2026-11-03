@@ -1,0 +1,122 @@
+{
+  "capturedAt": "2026-11-03T17:16:38.328Z",
+  "note": "Hashes after runtime collection in a mutable working tree; not a guarantee of one immutable commit.",
+  "files": [
+    {
+      "path": "apps/site/next.config.ts",
+      "sha256": "ab5b810ed712779fd0f7d8a8d5a3f5a781524e2a4604b9e58299429c1e118f2f"
+    },
+    {
+      "path": "apps/site/article-redirects.ts",
+      "sha256": "df0bbb3f52ed585ece08b580b7220fc83ea57f2b322b28e4ad5abeca16d4dec4"
+    },
+    {
+      "path": "apps/site/src/app/sitemap.ts",
+      "sha256": "754caa5db61f9cf50c47c720d380f6bb7e612e8f2d8cb7e5225e2c43fc8d963c"
+    },
+    {
+      "path": "apps/site/src/app/robots.ts",
+      "sha256": "ca66e70305deb78f62d65282f30e1c5107b2547726d1adac678f9085a0b96c27"
+    },
+    {
+      "path": "apps/site/src/app/[locale]/layout.tsx",
+      "sha256": "2c6ca3eae1ef98fa1288752396f7ca101ab04533be082ccf4f005dc481e462a0"
+    },
+    {
+      "path": "libs/site/core/config/src/lib/site-config.ts",
+      "sha256": "4bad448d4c4099e2705c8db1d6853ec5b66d4866b23a48d7328ae438dfd66120"
+    },
+    {
+      "path": "libs/site/core/seo/src/lib/metadata/page-metadata.ts",
+      "sha256": "8937329ff1faae05aabf65aef233d10426fc4135c00ba432a8946445576684ea"
+    },
+    {
+      "path": "libs/site/core/seo/src/lib/metadata/alternates.ts",
+      "sha256": "394c1179939d6139f4a1b27ff334110c1c8423ad758f9b66355d9c8bd1e2e3f0"
+    },
+    {
+      "path": "libs/site/core/seo/src/lib/metadata/robots-policy.ts",
+      "sha256": "26754984e02e3b088fb9dfbbcbc550c13821564938ca5287eef17f8e790601bd"
+    },
+    {
+      "path": "libs/site/core/seo/src/lib/crawling/robots-file.ts",
+      "sha256": "1a0cfb97bc5b75bbf56130be444ec20b6a053ac1cb00b50c3659d9e7c1b4715f"
+    },
+    {
+      "path": "libs/site/core/seo/src/lib/crawling/sitemap-entries.ts",
+      "sha256": "35b9dcd53093e28255018e6d87c1f59d5e4f15a2b0eea44d46daf7d4847da833"
+    },
+    {
+      "path": "libs/site/catalog/feature/src/lib/routing/category-routing.ts",
+      "sha256": "74ec3ffe44127bb2a67faaa51e5e50467526cb1279d5da8d3b6cd87ee073e59a"
+    },
+    {
+      "path": "libs/site/catalog/feature/src/lib/category/category-page.tsx",
+      "sha256": "75874efc29b5112d50c8c9f9277d078ebf5d866753bc92d5df767d0f3e1fcbfc"
+    },
+    {
+      "path": "libs/site/catalog/feature/src/lib/listing/product-listing.tsx",
+      "sha256": "ed51f583e6ddab84b2c662141014ae6a526ea95311788bf208ae1eb4db84cfdf"
+    },
+    {
+      "path": "libs/site/catalog/data-access/src/lib/loaders/product-loaders.ts",
+      "sha256": "f4de5b766ac7165c6a88b4c58b5ef3ebdde339353eae38cb839df67ea9448a2c"
+    },
+    {
+      "path": "libs/site/catalog/seo/src/lib/metadata/category-metadata.ts",
+      "sha256": "b20a5e151e832ce8395bcecd3bbfe27dfe21cb41cf3e5521f9b0a37312b99ba1"
+    },
+    {
+      "path": "libs/site/catalog/ui/src/lib/product/product-card.tsx",
+      "sha256": "44758be472eeee2761c710da44487b52a0b6a77d458edb459b9b838c873a9e7a"
+    },
+    {
+      "path": "libs/site/catalog/seo/src/lib/json-ld/catalog-json-ld.ts",
+      "sha256": "256eab68d1f0c64b9df9df573040982e6d9cfd924353965bbb2d8b57fe5c5104"
+    },
+    {
+      "path": "libs/site/core/shell/src/lib/navigation/site-navigation.ts",
+      "sha256": "328d0d344f87b7e36aed7461d9b85c06fbc51a1e6fc9aa1097dafea84cd480be"
+    },
+    {
+      "path": "libs/site/content/feature/src/lib/content-sitemap.ts",
+      "sha256": "3283f1bba49885aec26e95b0f6409b6121df2a250ab7772b43ad4c3c4a8e180e"
+    },
+    {
+      "path": "libs/site/content/data-access/src/lib/articles-source.ts",
+      "sha256": "abcc7d1f6944b99bf625063163c16e9db021e6e77c6cb0dc98baeaaf2ffca032"
+    },
+    {
+      "path": "libs/site/content/data-access/src/lib/articles.ts",
+      "sha256": "a2d06b9c833ec7b111772ded3da7bbcdce8bb5792836851877f09a9efd1f65fd"
+    },
+    {
+      "path": "libs/site/content/ui/src/lib/articles/article-content.tsx",
+      "sha256": "e0e05daf90343db3e71fed092afacb9052d7b9c7475a4240c55791df9f4420e1"
+    },
+    {
+      "path": "docs/standards/site/seo-rules.md",
+      "sha256": "45f98a74c2269dc7a1e841c6e25c70359c960cecc69d349a8f168e4d41ff8b5d"
+    },
+    {
+      "path": "docs/architecture/site/platform/seo-architecture.md",
+      "sha256": "56795ecb8d358e1b81c52978fac2860fa20380fe72418e919275790b5633ee75"
+    },
+    {
+      "path": "apps/site/src/app/[locale]/(content)/galleria/page.tsx",
+      "sha256": "1074c0a0448870b8850dd6b6f7af8c04aa9d36d635929390c38c0b233510f55d"
+    },
+    {
+      "path": "libs/site/content/feature/src/lib/gallery-page.tsx",
+      "sha256": "2b54bb93cea3074e43df6ae87945d96f7eef7c937353fc2d8d74af5d4144b339"
+    },
+    {
+      "path": "libs/site/content/seo/src/lib/gallery-metadata.ts",
+      "sha256": "a0b171bc787afe182c2ddcc483de0bb65568e3440a8e17c63edb04fffef740c5"
+    },
+    {
+      "path": "libs/site/content/seo/src/lib/gallery-json-ld.ts",
+      "sha256": "4c167d8e48671e2645f999162e25d432651b57752de7b414b8b4fedb8654f928"
+    }
+  ]
+}

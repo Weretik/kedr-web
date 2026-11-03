@@ -1,0 +1,39 @@
+[
+  { "path": "/ru/catalog", "group": "public" },
+  { "path": "/ru/returns-exchanges", "group": "public" },
+  { "path": "/ru/contacts", "group": "public" },
+  { "path": "/uk/search", "group": "utility" },
+  { "path": "/ru/search?q=замок", "group": "utility" },
+  { "path": "/uk/catalog/zavisi-900001?page=2", "group": "alias-query" },
+  { "path": "/ru/catalog/zavisi-900001?page=2", "group": "alias-query" },
+  { "path": "/uk/catalog/dveri-7226", "group": "navigation-target" },
+  { "path": "/ru/catalog/dveri-7226", "group": "navigation-target" },
+  {
+    "path": "/uk/catalog/kedr-zavisy-nakladni-metelyky-dlia-mizhkimnatnykh-dverei",
+    "group": "leaf-category"
+  },
+  {
+    "path": "/ru/catalog/kedr-zavisy-nakladni-metelyky-dlia-mizhkimnatnykh-dverei",
+    "group": "leaf-category"
+  },
+  { "path": "/uk/catalog/tovary-vyvedennye-yz-assortymenta", "group": "review-category" },
+  { "path": "/uk/catalog/zamina-kedr-class", "group": "review-category" },
+  {
+    "path": "/uk/catalog/zavisy?page=9999",
+    "group": "catalog-variant",
+    "raw": "uk-empty-pagination"
+  },
+  {
+    "path": "/uk/catalog/zavisy?priceFrom=9999999",
+    "group": "catalog-variant",
+    "raw": "uk-empty-filter"
+  },
+  { "path": "/uk/region/lvivska-oblast", "group": "route-status" },
+  { "path": "/ru/cabinet", "group": "route-status" },
+  { "path": "/ru/checkout", "group": "route-status" },
+  { "path": "/images/articles/Article_3.jpg", "group": "image-asset" },
+  { "path": "/assets/logo/main-logo.svg", "group": "image-asset" },
+  { "path": "/uk/galleria", "group": "route-status" },
+  { "path": "/ru/galleria", "group": "route-status" },
+  { "path": "/sitemap.xml", "group": "discovery" }
+]

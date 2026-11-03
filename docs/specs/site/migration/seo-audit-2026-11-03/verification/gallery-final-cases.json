@@ -1,0 +1,5 @@
+[
+  { "path": "/uk/galleria", "group": "route-status" },
+  { "path": "/ru/galleria", "group": "route-status" },
+  { "path": "/sitemap.xml", "group": "discovery" }
+]

@@ -1,0 +1,620 @@
+{
+  "generatedAt": "2026-11-03T17:16:38.244Z",
+  "origin": "http://localhost:3000",
+  "latestRecords": 177,
+  "distinctRequestedUrls": 175,
+  "errors": [],
+  "statusCounts": {
+    "200": 161,
+    "404": 16
+  },
+  "sitemap": {
+    "scope": "Audited canonical URL union from the earlier complete sitemap and the final sitemap with gallery; actual latest XML count is separate.",
+    "urlCount": 120,
+    "latestXmlUrlCount": 34,
+    "latestXmlCheckedAt": "2026-11-03T17:13:11.441Z",
+    "missingFromLatestXml": [
+      "https://classkedr.com.ua/uk/catalog/zavisy",
+      "https://classkedr.com.ua/ru/catalog/zavisy",
+      "https://classkedr.com.ua/uk/catalog/kedr-zavisy-nakladni-metelyky-dlia-mizhkimnatnykh-dverei",
+      "https://classkedr.com.ua/ru/catalog/kedr-zavisy-nakladni-metelyky-dlia-mizhkimnatnykh-dverei",
+      "https://classkedr.com.ua/uk/catalog/kedr-zavisy-vvertni-ta-kovpachky-do-nykh-pryvarni-zavisy",
+      "https://classkedr.com.ua/ru/catalog/kedr-zavisy-vvertni-ta-kovpachky-do-nykh-pryvarni-zavisy",
+      "https://classkedr.com.ua/uk/catalog/kedr-zavisy-vrizni-dlia-mizhkimnatnykh-dverei",
+      "https://classkedr.com.ua/ru/catalog/kedr-zavisy-vrizni-dlia-mizhkimnatnykh-dverei",
+      "https://classkedr.com.ua/uk/catalog/zamky",
+      "https://classkedr.com.ua/ru/catalog/zamky",
+      "https://classkedr.com.ua/uk/catalog/kedr-zamky-navisni-ta-velozamky",
+      "https://classkedr.com.ua/ru/catalog/kedr-zamky-navisni-ta-velozamky",
+      "https://classkedr.com.ua/uk/catalog/kedr-komplekty-zamky-z-ruchkamy",
+      "https://classkedr.com.ua/ru/catalog/kedr-komplekty-zamky-z-ruchkamy",
+      "https://classkedr.com.ua/uk/catalog/kedr-zamky-nakladni",
+      "https://classkedr.com.ua/ru/catalog/kedr-zamky-nakladni",
+      "https://classkedr.com.ua/uk/catalog/kedr-zamky-suvaldni-ta-z-khrestoobr-kliuchem",
+      "https://classkedr.com.ua/ru/catalog/kedr-zamky-suvaldni-ta-z-khrestoobr-kliuchem",
+      "https://classkedr.com.ua/uk/catalog/kedr-zamky-vrizni-pid-tsylindr",
+      "https://classkedr.com.ua/ru/catalog/kedr-zamky-vrizni-pid-tsylindr",
+      "https://classkedr.com.ua/uk/catalog/ruchky",
+      "https://classkedr.com.ua/ru/catalog/ruchky",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-na-rozettsi-seriia-kevlar",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-na-rozettsi-seriia-kevlar",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-na-rozettsi-seriia-standart-r-08-r-10",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-na-rozettsi-seriia-standart-r-08-r-10",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-na-rozettsi-seriia-ekonom-hroz-06-hroz-07",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-na-rozettsi-seriia-ekonom-hroz-06-hroz-07",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-na-rozettsi-seriia-premium-genrich",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-na-rozettsi-seriia-premium-genrich",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-na-rozettsi-seriia-ultra",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-na-rozettsi-seriia-ultra",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-z-nerzhaviiky",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-z-nerzhaviiky",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-knoby",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-knoby",
+      "https://classkedr.com.ua/uk/catalog/tsylindry",
+      "https://classkedr.com.ua/ru/catalog/tsylindry",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-brass-key-latun",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-brass-key-latun",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-smart",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-smart",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-gwk",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-gwk",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-zink-pid-shtok",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-zink-pid-shtok",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-zink",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-zink",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-zink-plk",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-zink-plk",
+      "https://classkedr.com.ua/uk/catalog/kedr-tsylindry-serii-alu",
+      "https://classkedr.com.ua/ru/catalog/kedr-tsylindry-serii-alu",
+      "https://classkedr.com.ua/uk/catalog/mizhkimnatni-mekhanizmy",
+      "https://classkedr.com.ua/ru/catalog/mizhkimnatni-mekhanizmy",
+      "https://classkedr.com.ua/uk/catalog/kedr-mizhkimnatni-mekhanizmy-z-mahnitnoiu-zashchipkoiu",
+      "https://classkedr.com.ua/ru/catalog/kedr-mizhkimnatni-mekhanizmy-z-mahnitnoiu-zashchipkoiu",
+      "https://classkedr.com.ua/uk/catalog/kedr-mizhkimnatni-zaskochky-zasuvky",
+      "https://classkedr.com.ua/ru/catalog/kedr-mizhkimnatni-zaskochky-zasuvky",
+      "https://classkedr.com.ua/uk/catalog/kedr-mizhkimnatni-mekhanizmy-z-metalevoiu-zashchipkoiu",
+      "https://classkedr.com.ua/ru/catalog/kedr-mizhkimnatni-mekhanizmy-z-metalevoiu-zashchipkoiu",
+      "https://classkedr.com.ua/uk/catalog/kedr-mizhkimnatni-mekhanizmy-z-kevlarovoiu-zashchipkoiu",
+      "https://classkedr.com.ua/ru/catalog/kedr-mizhkimnatni-mekhanizmy-z-kevlarovoiu-zashchipkoiu",
+      "https://classkedr.com.ua/uk/catalog/inshe",
+      "https://classkedr.com.ua/ru/catalog/inshe",
+      "https://classkedr.com.ua/uk/catalog/kedr-bronenakladky-na-tsylindr-ta-nakladky-na-suvaldni-zamky",
+      "https://classkedr.com.ua/ru/catalog/kedr-bronenakladky-na-tsylindr-ta-nakladky-na-suvaldni-zamky",
+      "https://classkedr.com.ua/uk/catalog/kedr-ushchilniuvach",
+      "https://classkedr.com.ua/ru/catalog/kedr-ushchilniuvach",
+      "https://classkedr.com.ua/uk/catalog/kedr-vidbiinyky",
+      "https://classkedr.com.ua/ru/catalog/kedr-vidbiinyky",
+      "https://classkedr.com.ua/uk/catalog/kedr-ruchky-na-plantsi",
+      "https://classkedr.com.ua/ru/catalog/kedr-ruchky-na-plantsi",
+      "https://classkedr.com.ua/uk/catalog/kedr-komplektuiuchi",
+      "https://classkedr.com.ua/ru/catalog/kedr-komplektuiuchi",
+      "https://classkedr.com.ua/uk/catalog/kedr-zasuvky-i-shpinhalety-dlia-vkhidnykh-ta-mizhkimnatnykh-dverei",
+      "https://classkedr.com.ua/ru/catalog/kedr-zasuvky-i-shpinhalety-dlia-vkhidnykh-ta-mizhkimnatnykh-dverei",
+      "https://classkedr.com.ua/uk/catalog/kedr-rozsuvni-systemy",
+      "https://classkedr.com.ua/ru/catalog/kedr-rozsuvni-systemy",
+      "https://classkedr.com.ua/uk/catalog/kedr-dotiahuvachi",
+      "https://classkedr.com.ua/ru/catalog/kedr-dotiahuvachi",
+      "https://classkedr.com.ua/uk/catalog/kedr-vichka-dverni",
+      "https://classkedr.com.ua/ru/catalog/kedr-vichka-dverni",
+      "https://classkedr.com.ua/uk/catalog/zamina-kedr-class",
+      "https://classkedr.com.ua/ru/catalog/zamina-kedr-class",
+      "https://classkedr.com.ua/uk/catalog/tovary-vyvedennye-yz-assortymenta",
+      "https://classkedr.com.ua/ru/catalog/tovary-vyvedennye-yz-assortymenta"
+    ],
+    "uniqueUrlCount": 120,
+    "checked": 120,
+    "unchecked": [],
+    "non200": [],
+    "canonicalMismatch": [],
+    "missingTitle": [],
+    "missingDescription": [],
+    "missingH1": []
+  },
+  "invalidJsonLd": [],
+  "duplicateCanonicalTitles": [],
+  "duplicateCanonicalDescriptions": [
+    {
+      "value": "Завіси, замки, ручки, циліндри та міжкімнатні механізми оптом і в роздріб. Склад у Харкові, доставка по Україні.",
+      "urls": ["/uk", "/uk/catalog"]
+    },
+    {
+      "value": "Петли, замки, ручки, цилиндры и межкомнатные механизмы оптом и в розницу. Склад в Харькове, доставка по Украине.",
+      "urls": ["/ru", "/ru/catalog"]
+    }
+  ],
+  "localeErrors": [],
+  "languagePairs": [
+    {
+      "uk": "/uk",
+      "ru": "/ru",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog",
+      "ru": "/ru/catalog",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/zavisy",
+      "ru": "/ru/catalog/zavisy",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zavisy-nakladni-metelyky-dlia-mizhkimnatnykh-dverei",
+      "ru": "/ru/catalog/kedr-zavisy-nakladni-metelyky-dlia-mizhkimnatnykh-dverei",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zavisy-vvertni-ta-kovpachky-do-nykh-pryvarni-zavisy",
+      "ru": "/ru/catalog/kedr-zavisy-vvertni-ta-kovpachky-do-nykh-pryvarni-zavisy",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zavisy-vrizni-dlia-mizhkimnatnykh-dverei",
+      "ru": "/ru/catalog/kedr-zavisy-vrizni-dlia-mizhkimnatnykh-dverei",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/zamky",
+      "ru": "/ru/catalog/zamky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zamky-navisni-ta-velozamky",
+      "ru": "/ru/catalog/kedr-zamky-navisni-ta-velozamky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-komplekty-zamky-z-ruchkamy",
+      "ru": "/ru/catalog/kedr-komplekty-zamky-z-ruchkamy",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zamky-nakladni",
+      "ru": "/ru/catalog/kedr-zamky-nakladni",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zamky-suvaldni-ta-z-khrestoobr-kliuchem",
+      "ru": "/ru/catalog/kedr-zamky-suvaldni-ta-z-khrestoobr-kliuchem",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zamky-vrizni-pid-tsylindr",
+      "ru": "/ru/catalog/kedr-zamky-vrizni-pid-tsylindr",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/ruchky",
+      "ru": "/ru/catalog/ruchky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-na-rozettsi-seriia-kevlar",
+      "ru": "/ru/catalog/kedr-ruchky-na-rozettsi-seriia-kevlar",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-na-rozettsi-seriia-standart-r-08-r-10",
+      "ru": "/ru/catalog/kedr-ruchky-na-rozettsi-seriia-standart-r-08-r-10",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-na-rozettsi-seriia-ekonom-hroz-06-hroz-07",
+      "ru": "/ru/catalog/kedr-ruchky-na-rozettsi-seriia-ekonom-hroz-06-hroz-07",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-na-rozettsi-seriia-premium-genrich",
+      "ru": "/ru/catalog/kedr-ruchky-na-rozettsi-seriia-premium-genrich",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-na-rozettsi-seriia-ultra",
+      "ru": "/ru/catalog/kedr-ruchky-na-rozettsi-seriia-ultra",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-z-nerzhaviiky",
+      "ru": "/ru/catalog/kedr-ruchky-z-nerzhaviiky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-knoby",
+      "ru": "/ru/catalog/kedr-ruchky-knoby",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/tsylindry",
+      "ru": "/ru/catalog/tsylindry",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-brass-key-latun",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-brass-key-latun",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-smart",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-smart",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-gwk",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-gwk",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-zink-pid-shtok",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-zink-pid-shtok",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-zink",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-zink",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-zink-plk",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-zink-plk",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-tsylindry-serii-alu",
+      "ru": "/ru/catalog/kedr-tsylindry-serii-alu",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/mizhkimnatni-mekhanizmy",
+      "ru": "/ru/catalog/mizhkimnatni-mekhanizmy",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-mizhkimnatni-mekhanizmy-z-mahnitnoiu-zashchipkoiu",
+      "ru": "/ru/catalog/kedr-mizhkimnatni-mekhanizmy-z-mahnitnoiu-zashchipkoiu",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-mizhkimnatni-zaskochky-zasuvky",
+      "ru": "/ru/catalog/kedr-mizhkimnatni-zaskochky-zasuvky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-mizhkimnatni-mekhanizmy-z-metalevoiu-zashchipkoiu",
+      "ru": "/ru/catalog/kedr-mizhkimnatni-mekhanizmy-z-metalevoiu-zashchipkoiu",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-mizhkimnatni-mekhanizmy-z-kevlarovoiu-zashchipkoiu",
+      "ru": "/ru/catalog/kedr-mizhkimnatni-mekhanizmy-z-kevlarovoiu-zashchipkoiu",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/inshe",
+      "ru": "/ru/catalog/inshe",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-bronenakladky-na-tsylindr-ta-nakladky-na-suvaldni-zamky",
+      "ru": "/ru/catalog/kedr-bronenakladky-na-tsylindr-ta-nakladky-na-suvaldni-zamky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ushchilniuvach",
+      "ru": "/ru/catalog/kedr-ushchilniuvach",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-vidbiinyky",
+      "ru": "/ru/catalog/kedr-vidbiinyky",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-ruchky-na-plantsi",
+      "ru": "/ru/catalog/kedr-ruchky-na-plantsi",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-komplektuiuchi",
+      "ru": "/ru/catalog/kedr-komplektuiuchi",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-zasuvky-i-shpinhalety-dlia-vkhidnykh-ta-mizhkimnatnykh-dverei",
+      "ru": "/ru/catalog/kedr-zasuvky-i-shpinhalety-dlia-vkhidnykh-ta-mizhkimnatnykh-dverei",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-rozsuvni-systemy",
+      "ru": "/ru/catalog/kedr-rozsuvni-systemy",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-dotiahuvachi",
+      "ru": "/ru/catalog/kedr-dotiahuvachi",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/kedr-vichka-dverni",
+      "ru": "/ru/catalog/kedr-vichka-dverni",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/zamina-kedr-class",
+      "ru": "/ru/catalog/zamina-kedr-class",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/catalog/tovary-vyvedennye-yz-assortymenta",
+      "ru": "/ru/catalog/tovary-vyvedennye-yz-assortymenta",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/delivery-and-payment",
+      "ru": "/ru/delivery-and-payment",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/returns-exchanges",
+      "ru": "/ru/returns-exchanges",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/contacts",
+      "ru": "/ru/contacts",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/requisites",
+      "ru": "/ru/requisites",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/wholesale",
+      "ru": "/ru/wholesale",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles",
+      "ru": "/ru/articles",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/public-offer",
+      "ru": "/ru/public-offer",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/privacy-policy",
+      "ru": "/ru/privacy-policy",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles/zamina-dvernoi-furnitury",
+      "ru": "/ru/articles/zamina-dvernoi-furnitury",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles/postachannia-dlia-vyrobnykiv-dverei",
+      "ru": "/ru/articles/postachannia-dlia-vyrobnykiv-dverei",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles/zamak-chy-aliuminii",
+      "ru": "/ru/articles/zamak-chy-aliuminii",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles/prykhovani-petli",
+      "ru": "/ru/articles/prykhovani-petli",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles/vrizna-bronenakladka",
+      "ru": "/ru/articles/vrizna-bronenakladka",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/articles/zvukoizoliatsiia-dverei",
+      "ru": "/ru/articles/zvukoizoliatsiia-dverei",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    },
+    {
+      "uk": "/uk/galleria",
+      "ru": "/ru/galleria",
+      "reciprocal": true,
+      "self": true,
+      "xDefault": true
+    }
+  ],
+  "browserMatches": [
+    {
+      "path": "/uk",
+      "httpAvailable": true,
+      "titleMatches": true,
+      "canonicalMatches": true,
+      "langMatches": true,
+      "h1Matches": true
+    },
+    {
+      "path": "/uk/catalog/zavisy?page=2",
+      "httpAvailable": true,
+      "titleMatches": true,
+      "canonicalMatches": true,
+      "langMatches": true,
+      "h1Matches": true
+    },
+    {
+      "path": "/ru/articles/zamak-chy-aliuminii",
+      "httpAvailable": true,
+      "titleMatches": true,
+      "canonicalMatches": true,
+      "langMatches": true,
+      "h1Matches": true
+    },
+    {
+      "path": "/uk/public-offer",
+      "httpAvailable": true,
+      "titleMatches": true,
+      "canonicalMatches": true,
+      "langMatches": true,
+      "h1Matches": true
+    },
+    {
+      "path": "/ru/public-offer",
+      "httpAvailable": true,
+      "titleMatches": true,
+      "canonicalMatches": true,
+      "langMatches": true,
+      "h1Matches": true
+    },
+    {
+      "path": "/uk/privacy-policy",
+      "httpAvailable": true,
+      "titleMatches": true,
+      "canonicalMatches": true,
+      "langMatches": true,
+      "h1Matches": true
+    }
+  ],
+  "queryVariantRobotsNote": "All observed local pages intentionally noindex/nofollow; production builder policy is separately unit-tested. Do not interpret these values as live production behavior.",
+  "contentCountNote": "Raw main words are pre-execution streamed DOM text, not full rendered content and not a quality threshold.",
+  "tests": {
+    "core": {
+      "files": 3,
+      "passed": 12,
+      "exitCode": 0
+    },
+    "catalog": {
+      "files": 1,
+      "passed": 5,
+      "exitCode": 0
+    }
+  },
+  "limitations": [
+    "existing next dev server, mutable working tree",
+    "no production build/hosting crawl",
+    "no GSC property available via connector",
+    "no field CWV or production laboratory measurement",
+    "no API failure injection",
+    "not every linked product checked; product route remains unimplemented"
+  ]
+}

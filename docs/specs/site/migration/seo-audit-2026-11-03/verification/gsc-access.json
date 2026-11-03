@@ -1,0 +1,9 @@
+{
+  "auditDate": "2026-11-03",
+  "operation": "search_console_list_sites",
+  "result": {
+    "sites": []
+  },
+  "isError": false,
+  "meaning": "No properties available through the connected account. This does not establish whether an owner has GSC elsewhere or whether the live site is indexed."
+}

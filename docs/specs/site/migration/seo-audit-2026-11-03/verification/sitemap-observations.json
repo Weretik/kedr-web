@@ -1,0 +1,20 @@
+[
+  {
+    "checkedAt": "2026-11-03T16:49:47.044Z",
+    "status": 200,
+    "locCount": 118,
+    "source": "sitemap-before-gallery.xml"
+  },
+  {
+    "checkedAt": "2026-11-03T17:10:03.070Z",
+    "status": 200,
+    "locCount": 34,
+    "source": "sitemap-partial.xml"
+  },
+  {
+    "checkedAt": "2026-11-03T17:13:11.441Z",
+    "status": 200,
+    "locCount": 34,
+    "source": "sitemap-partial.xml"
+  }
+]

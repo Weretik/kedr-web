@@ -32,6 +32,20 @@
 
 ## Site Next.js
 
+- [Product details / Карточка товара](site/product/001-product-details/README.md) — stage4A implemented 2026-11-03; product158 tests, core5, boundaries27 fixtures and scoped type/lint checks pass; full purchase blocked EN-002/TS-005; build/HTTP/browser unrun.
+
+- [Privacy policy / Политика конфиденциальности](site/content/001-privacy-policy/README.md) — implemented and architecture-audited 2026-11-03; AF-001/AF-002 verified, test typing/import groups fixed; focused checks passed; HTTP/browser/build unrun.
+
+- [Gallery: photos and video](site/content/001-gallery/README.md) — implemented locally 2026-11-03; 7 videos, photo support/next-stage content, 112 focused cases and app/spec types passed; HTTP/browser/build unrun.
+
+- [Public offer](site/content/001-public-offer/README.md) — implemented and architecture-audited 2026-11-03; AF-001–AF-003 verified, DOM ownership corrected; focused checks passed; browser/HTTP/build unrun.
+
+- [Requisites / Реквізити](site/content/001-requisites/README.md) — implemented and architecture-audited 2026-11-03; AF-001 verified, Support split, fresh source/test types and 23 regression tests; EN-002 publication gate open.
+
+- [Articles: list, search and reading](site/content/001-articles/README.md) — implemented and function-audited 2026-11-03; AF-001/AF-002 verified; temporary source, paging/details/301; focused/source checks complete.
+
+- [Wholesale — дверна фурнітура оптом](site/content/001-wholesale/README.md) — implemented и architecture-audited 2026-11-03; AF-001/AF-002 verified; automated/source checks complete; build/HTTP/browser unrun.
+
 - [Contacts](site/content/001-contacts/README.md) — implemented and architecture-audited 2026-11-03; six findings verified, UI extraction and focused checks complete; HTTP/browser/build unrun
 
 - [Delivery and payment](site/content/001-delivery-payment/README.md) — implemented and audited 2026-11-03; localized delivery/payment and sitemap

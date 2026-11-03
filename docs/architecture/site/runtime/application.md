@@ -24,13 +24,15 @@ Cache Components is on, so `dynamicParams` is not allowed. `generateStaticParams
 
 ## Client islands
 
-Server Components by default. `'use client'` exists only in:
+Server Components by default. The main client entry points include:
 
 - `core/shell/controls/` — `ThemeProvider`, `ThemeToggle`, `LocaleSwitch` (needs `usePathname`), `CopyPhoneButton`;
 - `core/shell/header/mobile-menu.tsx` — Radix Sheet;
 - `core/shell/error/error-view.tsx` — retry on the 500 page;
-- `shared/ui/sheet.tsx`;
-- `catalog/ui` — `ListingToolbar`, `FilterForm`, `ResultsAnchor`, `MegaMenu`.
+- `shared/ui/{sheet,dialog}.tsx` — domain-neutral Radix overlay primitives;
+- `catalog/ui` — `ListingToolbar`, `FilterForm`, `ResultsAnchor`, `MegaMenu`;
+- `content/ui/src/lib/gallery/gallery-browser.tsx` — the local filter/portion/selection session;
+- `content/ui/src/lib/gallery/media-image.tsx` — isolated image loading/error/retry. `MediaViewer` and `VideoFrame` are imported by the gallery client entry point; the page, source, heading, and SEO stay server-owned. See the [gallery feature](../../../features/site/gallery.md).
 
 The regions list uses `<details>` and the mega menu keeps every section's links in the server HTML (hidden until opened), so crawlers see all navigation links. The layout passes the mega menu and section links to `SiteShell` from `@site/catalog/feature`; without the API the shell uses its fixed sections. The search box is a plain GET form to `/{locale}/search?q=`.
 

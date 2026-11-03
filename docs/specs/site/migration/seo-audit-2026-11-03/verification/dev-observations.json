@@ -1,0 +1,42 @@
+{
+  "note": "Observed during the mutable local next dev audit. Retries recovered; do not treat as production latency or Core Web Vitals.",
+  "retries": [
+    {
+      "url": "/ru/catalog",
+      "time": "2026-11-03T16:33:16.749Z",
+      "error": "Timeout 55 s"
+    },
+    {
+      "url": "/ru/returns-exchanges",
+      "time": "2026-11-03T16:34:12.239Z",
+      "error": "Timeout 55 s"
+    },
+    {
+      "url": "/ru/contacts",
+      "time": "2026-11-03T16:34:12.347Z",
+      "error": "Timeout 55 s"
+    },
+    {
+      "url": "/ru/search?q=замок",
+      "time": "2026-11-03T16:42:20.858Z",
+      "error": "fetch failed"
+    },
+    {
+      "url": "/uk/search",
+      "time": "2026-11-03T16:42:21.895Z",
+      "error": "fetch failed"
+    },
+    {
+      "url": "/uk/search",
+      "time": "2026-11-03T16:47:18.470Z",
+      "error": "fetch failed"
+    }
+  ],
+  "browserWarning": {
+    "source": ".playwright-cli/console-2026-11-03T16-27-09-274Z.log:137",
+    "timeSinceConsoleStartMs": 733891,
+    "image": "/assets/categories/handles.jpg",
+    "observation": "Next dev detected this image as an LCP candidate and advised eager loading when above the fold.",
+    "meaning": "Candidate for production measurement, not an observed failure of production CWV."
+  }
+}

@@ -1,0 +1,11 @@
+
+ RUN  v5.0.5 E:/RiderProjects/kedr-web/libs/site/core/seo
+
+ ✓ |site-core-seo| src/lib/json-ld/json-ld.spec.tsx (4 tests) 42ms
+ ✓ |site-core-seo| src/lib/metadata/page-metadata.spec.ts (5 tests) 15ms
+ ✓ |site-core-seo| src/lib/crawling/crawling.spec.ts (3 tests) 24ms
+
+ Test Files  3 passed (3)
+      Tests  12 passed (12)
+   Start at  18:52:55
+   Duration  13.92s (environment 97%, transform 1%, import 1%, worker 1%)

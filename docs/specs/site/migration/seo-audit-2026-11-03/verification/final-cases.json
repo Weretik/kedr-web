@@ -1,0 +1,7 @@
+[
+  { "path": "/uk/search", "group": "utility" },
+  { "path": "/uk/search?q=", "group": "utility" },
+  { "path": "/ru/search", "group": "utility" },
+  { "path": "/uk/public-offer", "group": "public" },
+  { "path": "/ru/public-offer", "group": "public" }
+]

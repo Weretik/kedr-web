@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-03T17:17:52.617Z",
+  "markdownFiles": [
+    "E:/RiderProjects/kedr-web/docs/specs/site/migration/seo-audit-2026-11-03/README.md",
+    "E:/RiderProjects/kedr-web/docs/specs/site/migration/seo-audit-2026-11-03/pages.md",
+    "E:/RiderProjects/kedr-web/docs/specs/site/migration/seo-audit-2026-11-03/verification/README.md",
+    "E:/RiderProjects/kedr-web/docs/specs/site/migration/README.md"
+  ],
+  "localLinksChecked": 43,
+  "projectDocsCheckExit": 0,
+  "prettierExit": 0,
+  "canonicalUrlsChecked": 120,
+  "latestXmlUrlCount": 34,
+  "categoriesMissingFromLatestXml": 86,
+  "knownSitemapFinding": "SEO-005, degradation observed in local dev; not a production measurement",
+  "languagePairs": 60,
+  "browserComparisons": 6,
+  "sourceUnitPassed": 17,
+  "errors": []
+}
