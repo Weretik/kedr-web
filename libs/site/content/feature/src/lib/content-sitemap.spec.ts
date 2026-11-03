@@ -42,3 +42,24 @@ it('publishes one contacts URL per locale without invented dates and preserves m
     expect(entries.some(({ url }) => url.endsWith(`/${locale}/returns-exchanges`))).toBe(true);
   }
 });
+
+it('publishes the article list and six slug articles per locale, without IDs, query or invented dates', () => {
+  const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
+  const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
+  const articles = entries.filter(({ url }) => new URL(url).pathname.includes('/articles'));
+  expect(articles).toHaveLength(14);
+  for (const locale of ['uk', 'ru']) {
+    expect(
+      articles.filter(({ url }) => new URL(url).pathname.startsWith(`/${locale}/articles`)),
+    ).toHaveLength(7);
+    expect(articles.some(({ url }) => url.endsWith(`/${locale}/articles`))).toBe(true);
+  }
+  expect(new Set(articles.map(({ url }) => url)).size).toBe(14);
+  for (const entry of articles) {
+    expect(new URL(entry.url).search).toBe('');
+    expect(entry.url).not.toMatch(/\/articles\/\d+$/);
+    expect(entry.lastModified).toBeUndefined();
+    expect(entry.alternates?.languages).toHaveProperty('uk-UA');
+    expect(entry.alternates?.languages).toHaveProperty('ru-UA');
+  }
+});

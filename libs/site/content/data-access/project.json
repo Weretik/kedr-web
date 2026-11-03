@@ -1,0 +1,13 @@
+{
+  "name": "site-content-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/site/content/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:site", "domain:content", "type:data-access"],
+  "// targets": "to see all targets run: nx show project site-content-data-access --web",
+  "targets": {
+    "vite:test": {
+      "inputs": ["...", "{workspaceRoot}/apps/site/public/images/gallery/**/*"]
+    }
+  }
+}

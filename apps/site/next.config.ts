@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import { articleRedirects } from './article-redirects';
+
 import type { NextConfig } from 'next';
 
 // Nx libraries live outside the app folder, so the workspace root is the build and tracing root.
@@ -26,6 +28,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...articleRedirects,
       { source: '/', destination: '/uk', permanent: true },
       // The Angular storefront served the same catalog index at /categories; the home page replaces it.
       { source: '/:locale(uk|ru)/categories', destination: '/:locale', permanent: true },
