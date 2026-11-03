@@ -16,6 +16,7 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
+      "@site/content/model": ["libs/site/content/model/src/index.ts"],
       "react-native": ["node_modules/react-native/types_generated/index.d.ts"],
       "expo-router/react-navigation": [
         "node_modules/expo-router/build/react-navigation/index.d.ts"
