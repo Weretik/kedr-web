@@ -29,6 +29,8 @@ const nextConfig: NextConfig = {
       { source: '/', destination: '/uk', permanent: true },
       // The Angular storefront served the same catalog index at /categories; the home page replaces it.
       { source: '/:locale(uk|ru)/categories', destination: '/:locale', permanent: true },
+      // Company content lives on the localized home page; keep the old public addresses working.
+      { source: '/:locale(uk|ru)/about-company', destination: '/:locale', permanent: true },
       // Old catalog addresses of the Angular storefront; the category page then redirects former slugs.
       {
         source: '/:locale(uk|ru)/catalog/products',
