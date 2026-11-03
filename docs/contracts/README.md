@@ -64,9 +64,9 @@ A detailed consumer projection is needed only for operations with status `used`,
 | Catalog categories | `getCategoryBySlug`                     | `GET /api/catalog/{lang}/categories/by-slug/{categorySlug}` | anonymous                    | —                          | not consumed |
 | Catalog categories | `getAdminCategories`                    | `GET /api/categories`                                       | staff (Manager or Admin)     | Mobile, Admin              | used         |
 | Catalog categories | `getAdminCategoryById`                  | `GET /api/categories/{id}`                                  | staff (Manager or Admin)     | —                          | not consumed |
-| Catalog products   | `getPublicProducts`                     | `GET /api/catalog/{lang}/products`                          | anonymous                    | Storefront                 | used         |
+| Catalog products   | `getPublicProducts`                     | `GET /api/catalog/{lang}/products`                          | anonymous                    | Storefront, Site           | used         |
 | Catalog products   | `getPublicProductsByCategorySlug`       | `GET /api/catalog/{lang}/{categorySlug}/products`           | anonymous                    | Storefront                 | used         |
-| Catalog products   | `getPublicProductBySlug`                | `GET /api/catalog/{lang}/product/{productSlug}`             | anonymous                    | Storefront, Mobile         | used         |
+| Catalog products   | `getPublicProductBySlug`                | `GET /api/catalog/{lang}/product/{productSlug}`             | anonymous                    | Storefront, Mobile, Site   | used         |
 | Catalog products   | `getAdminProducts`                      | `GET /api/admin/products`                                   | staff (Manager or Admin)     | Admin, Mobile              | used         |
 | Catalog products   | `getAdminProductBySlug`                 | `GET /api/admin/products/by-slug/{productSlug}`             | staff (Manager or Admin)     | Admin                      | used         |
 | Catalog products   | `getAllAdminProducts`                   | `GET /api/admin/products/all`                               | staff (Manager or Admin)     | —                          | not consumed |
