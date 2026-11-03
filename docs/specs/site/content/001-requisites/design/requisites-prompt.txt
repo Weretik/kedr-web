@@ -1,0 +1,51 @@
+Use case: ui-mockup.
+Primary request: Produce one polished, high-fidelity UI concept board for the public ClassKedr Next.js storefront page "Реквізити / Реквизиты", matching the attached reference screenshot very closely in layout density and visual identity. This is a DESIGN CONCEPT, not a payment form.
+Input image role: the recent user screenshot is a visual reference only (returns page, four web artboards). Replace the page body with the requisites concept described below. Preserve the recognizable ClassKedr shell and restrained visual style; follow current tokens below where they differ from the old screenshot.
+
+Composition: a high-resolution wide board around 3200 x 2048, on a pale neutral gray background, showing FOUR fully visible flat web-page artboards side by side: desktop Ukrainian light, desktop Russian dark, mobile Ukrainian light, mobile Russian dark. Follow the reference's relative widths (two broad desktops and two narrow phones), desktop widths around 1100 UI pixels, phone width 390 UI pixels. No physical devices, browser address bars, skew, perspective or decorative background. Consistent alignment and comfortable small gaps. All content readable, sharp Cyrillic, exact numbers. Desktop pages and mobile pages must each show their complete own content through footer, without clipping. A discreet board caption above each: "Desktop · UA · Light", "Desktop · RU · Dark", "Mobile · UA · Light", "Mobile · RU · Dark".
+
+Established design system:
+- Onest Cyrillic sans for all interface text; JetBrains Mono ONLY for IBAN, registration number and codes. Strong clear headings; desktop H1 around 36px, mobile around 30px; body 14–16px.
+- Light: page #FFFFFF, text #0F110F, muted #F4F5F2, muted text #5C6459, border #E3E6DF, cards #FFFFFF.
+- Dark: page #0C0D0C, text #EDEFEA, muted #161815, muted text #9AA296, border #242823, cards #111311.
+- Brand fill/icons #3FA435 with white labels. Green TEXT/link color MUST be #2A7323 in light and #7DD06F in dark. Soft green informational band #EAF5E7 light and #15241A dark.
+- Main primary buttons are ink #0F110F with off-white text in LIGHT, and OFF-WHITE #EDEFEA with dark #0F110F text in DARK. This explicitly supersedes the old screenshot's dark-green call button. Catalog button stays brand green with white.
+- Panels have 1px thin borders, 12–14px radii, no shadows or gradients. Fields/buttons radius 8px. Lucide-style thin line icons, stroke 1.75. Calm practical information page, no illustrations.
+
+Shared shell:
+Desktop: slim top bar: city "Україна, м. Харків" / "Украина, г. Харьков", centered links "Про компанію", "Доставка та оплата", "Повернення", "Галерея", "Статті", "Контакти" (RU equivalent), UA/RU and sun/moon switch right.
+Main header: ClassKedr wordmark with Class green and Kedr current foreground, green "Каталог" button, search field, phone "(068) 713-50-49", cabinet/cart line icons. Keep compact messenger/map affordances if space permits.
+Category row: "Завіси / Петли", "Замки", "Ручки", "Циліндри / Цилиндры", "Міжкімнатні механізми / Межкомнатные механизмы", "Інше / Прочее", "Двері / Двери", "Регіони / Регионы", "Співпраця / Сотрудничество".
+Mobile: compact menu/wordmark/account/cart row and search on its own row, as the reference.
+Footer: compact ClassKedr wordmark, descriptor "Дверна фурнітура оптом" / "Дверная фурнитура оптом", buyers/company/contact columns on desktop and compact stacked equivalent on mobile. Contact phone "(068) 713-50-49" and the EXACT current project email "kedr.class19@gmail.com", NOT the outdated email in the screenshot. Copyright. Add "Реквізити / Реквизиты" as a company footer link.
+
+Page body, Ukrainian:
+1) Home line icon breadcrumb "/ Реквізити".
+2) H1 "Реквізити".
+3) Short intro "Офіційні дані адміністрації сайту ClassKedr." On a second line if needed "Реквізити для оплати замовлення уточнюйте у менеджера."
+4) Underlined green anchor links "Адміністрація", "Банківські реквізити", "Оплата".
+5) Two balanced bordered panels side by side on desktop, stacked in same order on mobile. 16–24px gaps. Left heading with green Building2 line icon: "Адміністрація сайту". A definition list of exact source-backed information with subtle dividers:
+"Найменування" -> "ФОП Овчинников Максим Володимирович"
+"Код" -> "2689400771"
+"Виписка" -> "№ 24800170000032534"
+The full name must wrap naturally without shrinking. Preserve the Ukrainian original legal name unchanged in ALL four artboards.
+Right heading with green Landmark line icon: "Банківські реквізити". IBAN is prominent readable mono data with label "IBAN" and separate copy line icon:
+"UA303052990000026007025905216"
+Then definition rows "Банк" -> "ПриватБанк", "МФО" -> "305299".
+At bottom of bank panel, a primary button with copy line icon and label "Скопіювати всі реквізити". It is not a pay button. Do not invent QR codes, download documents, amounts or bank details.
+On phone, give IBAN its own full-width line, or intentional visual wrap between characters if needed, always exact original sequence; it must never cause horizontal scrolling or overlap the copy button. Tap targets visually at least 44px.
+6) Below the panels a quiet full-width soft-green information band with an Info line icon, heading "Перед оплатою замовлення", and text "Погодьте з менеджером наявність, остаточну суму та реквізити для вашого замовлення." Underlined link "Доставка та оплата".
+7) A lower support row: at left simple heading "Правова інформація" and two underlined links "Публічна оферта", "Політика конфіденційності". At right a compact bordered manager card "Маєте запитання?", green phone line icon, bold "(068) 713-50-49", primary full-width button "Зателефонувати". Mobile stacks these blocks with contact full width.
+8) Footer after generous but compact section separation.
+
+Russian translations for dark artboards, same hierarchy and identical numeric data:
+"Реквизиты"
+"Официальные данные администрации сайта ClassKedr."
+"Реквизиты для оплаты заказа уточняйте у менеджера."
+Anchors "Администрация", "Банковские реквизиты", "Оплата".
+Panel "Администрация сайта": "Наименование", keep EXACT official Ukrainian name "ФОП Овчинников Максим Володимирович"; "Код"; "Выписка". Same numbers.
+Panel "Банковские реквизиты": "IBAN", "Банк", "ПриватБанк", "МФО"; button "Скопировать все реквизиты".
+Band "Перед оплатой заказа", "Согласуйте с менеджером наличие, окончательную сумму и реквизиты для вашего заказа.", link "Доставка и оплата".
+Support "Правовая информация", "Публичная оферта", "Политика конфиденциальности", manager "Есть вопросы?", "Позвонить".
+
+Constraints: One coherent precise concept, direct continuation of existing reference and project design system. All legal data above are sourced from the existing repository for conceptual layout, not a new claim that these details apply to every seller/order. Do not add VAT/tax status, addresses, trading hours, seals, badges, discounts, lock/payment security promises, progress steps, extra marketing, giant hero blank space, decorative gradients, invented content or fictional financial digits. Correct layout and readable meaningful Cyrillic matter more than ornamental fidelity. Render exactly the specified strings and numbers.
