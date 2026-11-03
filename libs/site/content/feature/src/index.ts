@@ -12,3 +12,4 @@ export { WholesalePage } from './lib/wholesale-page';
 export { RequisitesPage } from './lib/requisites-page';
 export { PublicOfferPage } from './lib/public-offer-page';
 export { PrivacyPage } from './lib/privacy-page';
+export { GalleryPage } from './lib/gallery-page';

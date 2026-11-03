@@ -63,6 +63,7 @@ it('publishes the article list and six slug articles per locale, without IDs, qu
     expect(entry.alternates?.languages).toHaveProperty('ru-UA');
   }
 });
+
 it('publishes one wholesale URL per language and preserves existing content without invented dates', () => {
   const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
   const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
@@ -85,6 +86,7 @@ it('publishes one wholesale URL per language and preserves existing content with
     }
   }
 });
+
 it('publishes one requisites URL per locale with reciprocal alternates and preserves migrated pages', () => {
   const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
   const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
@@ -114,6 +116,7 @@ it('publishes one requisites URL per locale with reciprocal alternates and prese
     }
   }
 });
+
 it('publishes the public offer once per locale with alternates and preserves existing content', () => {
   const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
   const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
@@ -144,6 +147,7 @@ it('publishes the public offer once per locale with alternates and preserves exi
     }
   }
 });
+
 it('publishes the complete privacy policy once per locale and preserves all existing pages', () => {
   const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
   const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
@@ -174,6 +178,30 @@ it('publishes the complete privacy policy once per locale and preserves all exis
       'public-offer',
     ]) {
       expect(entries.some(({ url }) => url.endsWith('/' + locale + '/' + slug))).toBe(true);
+    }
+  }
+});
+it('publishes one gallery URL per locale, preserves existing content and invents no media dates', () => {
+  const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
+  const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
+  const gallery = entries.filter(({ url }) => new URL(url).pathname.endsWith('/galleria'));
+  expect(gallery.map(({ url }) => url)).toEqual([
+    'https://classkedr.com.ua/uk/galleria',
+    'https://classkedr.com.ua/ru/galleria',
+  ]);
+  for (const entry of gallery) {
+    expect(entry.alternates?.languages).toEqual({
+      'uk-UA': 'https://classkedr.com.ua/uk/galleria',
+      'ru-UA': 'https://classkedr.com.ua/ru/galleria',
+    });
+    expect(entry.lastModified).toBeUndefined();
+    expect(new URL(entry.url).search).toBe('');
+    expect(new URL(entry.url).hash).toBe('');
+  }
+  expect(new Set(entries.map(({ url }) => url)).size).toBe(entries.length);
+  for (const locale of ['uk', 'ru']) {
+    for (const route of ['/contacts', '/articles', '/public-offer', '/wholesale', '/requisites']) {
+      expect(entries.some(({ url }) => url.endsWith('/' + locale + route))).toBe(true);
     }
   }
 });

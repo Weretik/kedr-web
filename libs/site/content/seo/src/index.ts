@@ -12,3 +12,5 @@ export { buildPublicOfferMetadata } from './lib/public-offer-metadata';
 export { buildPublicOfferBreadcrumbJsonLd } from './lib/public-offer-json-ld';
 export { buildPrivacyMetadata } from './lib/privacy-metadata';
 export { buildPrivacyBreadcrumbJsonLd } from './lib/privacy-json-ld';
+export { buildGalleryMetadata } from './lib/gallery-metadata';
+export { buildGalleryBreadcrumbJsonLd } from './lib/gallery-json-ld';

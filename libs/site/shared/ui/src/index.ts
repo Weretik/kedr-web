@@ -9,3 +9,11 @@ export {
   SheetTitle,
   SheetTrigger,
 } from './lib/sheet';
+export {
+  Dialog,
+  DialogTrigger,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from './lib/dialog';

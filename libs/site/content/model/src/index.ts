@@ -46,3 +46,19 @@ export type {
   PrivacyPolicySection,
   PrivacySummaryItem,
 } from './lib/privacy-types';
+export type {
+  GalleryFilter,
+  GalleryImage,
+  GalleryMedia,
+  GalleryPhoto,
+  GalleryVideo,
+} from './lib/gallery/gallery-types';
+export {
+  GALLERY_BATCH_SIZE,
+  INITIAL_GALLERY_COUNT,
+  filterGalleryMedia,
+  getInitialGalleryCount,
+  getNextGalleryCount,
+} from './lib/gallery/gallery-filter';
+export { getGalleryDictionary } from './lib/gallery/gallery-dictionary';
+export type { GalleryDictionary } from './lib/gallery/gallery-dictionary';
