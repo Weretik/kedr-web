@@ -1,0 +1,57 @@
+{
+  "checkedOn": "2026-11-03",
+  "source": "Project graph refreshed through createProjectGraphAsync after the repair",
+  "targets": [
+    {
+      "name": "site-content-ui",
+      "command": "eslint .",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/eslint.config.cjs",
+        "{workspaceRoot}/libs/site/content/ui/eslint.config.cjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    },
+    {
+      "name": "site-content-seo",
+      "command": "eslint .",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/eslint.config.cjs",
+        "{workspaceRoot}/libs/site/content/seo/eslint.config.cjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    },
+    {
+      "name": "site-content-feature",
+      "command": "eslint .",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/eslint.config.cjs",
+        "{workspaceRoot}/libs/site/content/feature/eslint.config.cjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  ],
+  "boundaryChecks": {
+    "featureToUi": "allowed",
+    "uiToFeature": "blocked",
+    "coreToDomain": "blocked"
+  },
+  "rootTsconfig": "Handled by the installed native selective TsConfiguration hasher; intentionally not an explicit ESLint plugin file input"
+}

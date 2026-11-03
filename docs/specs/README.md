@@ -32,6 +32,8 @@
 
 ## Site Next.js
 
+- [Delivery and payment](site/content/001-delivery-payment/README.md) — implemented and audited 2026-11-03; localized delivery/payment and sitemap
+
 - [Returns and exchanges](site/content/001-returns-exchanges/README.md) — implemented 2026-11-03; responsibility audit/refactoring completed, findings verified
 
 - [Storefront migration to Next.js: plan](site/migration/README.md) and [feature inventory with SEO analysis](site/migration/feature-inventory.md)

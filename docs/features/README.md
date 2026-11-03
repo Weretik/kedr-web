@@ -42,6 +42,7 @@ The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site
 | -------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | [Site shell](site/shell.md)                        | all `/uk` and `/ru` routes, `robots`, `sitemap`                     | Header, footer, themes, languages, SEO base                                                      |
 | [Site home page](site/home.md)                     | `/uk`, `/ru`                                                        | Hero with search, wholesale panel, catalog index and in-stock products from the API              |
+| [Delivery and payment](site/delivery-payment.md)   | `/{locale}/delivery-and-payment`                                    | Sourced UK/RU terms, ordering steps, contact, themes/responsive layout, metadata and sitemap     |
 | [Returns and exchanges](site/returns-exchanges.md) | `/{locale}/returns-exchanges`                                       | UK/RU conditions, warranty, full policy, process, phone, native FAQ, metadata and sitemap        |
 | [Site catalog](site/catalog.md)                    | `/{locale}/catalog`, `/{locale}/catalog/{slug}`, `/{locale}/search` | Category page with tree, filters, pages, «Показати ще», SEO text and FAQ; hub; search; mega menu |
 

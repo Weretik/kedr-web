@@ -62,6 +62,7 @@ Paths marked **exists** are in the code; the rest are planned by the [migration 
 | `apps/site/src/app/[locale]/search/page.tsx`                       | Search route (`noindex, follow`)                                            | exists (step 3)                         |
 | `apps/site/src/app/[locale]/error.tsx`                             | 500 inside the site frame when page data fails                              | exists (step 3)                         |
 | `apps/site/src/app/[locale]/product/[slug]/page.tsx`               | Product page route                                                          | planned (step 4)                        |
+| `apps/site/src/app/[locale]/delivery-and-payment/page.tsx`         | Static sourced delivery/payment page                                        | exists (content)                        |
 | `apps/site/src/app/[locale]/(content)/returns-exchanges/page.tsx`  | Returns/exchanges server page and metadata                                  | exists                                  |
 | `apps/site/src/app/[locale]/(content)/*/page.tsx`                  | About, delivery, returns, gallery, legal, contacts, wholesale               | planned (step 6)                        |
 | `apps/site/src/app/[locale]/articles/**`, `region/[city]/page.tsx` | Articles and regional landings                                              | planned (step 6)                        |
