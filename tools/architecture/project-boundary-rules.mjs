@@ -11,6 +11,9 @@ const documentedCrossDomainFlows = new Set([
   'site-home-feature->site-catalog-data-access',
   'site-home-feature->site-catalog-model',
   'site-home-feature->site-catalog-ui',
+  'site-content-feature->site-catalog-data-access',
+  'site-content-feature->site-catalog-model',
+  'site-content-feature->site-catalog-ui',
 ]);
 
 // This content SEO library uses only the core public APIs selected in the contacts SDD.

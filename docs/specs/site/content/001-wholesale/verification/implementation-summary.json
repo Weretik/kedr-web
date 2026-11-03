@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-03",
+  "scope": "wholesale implementation; automated/source only",
+  "tasksCompleted": ["EN-001", "TS-001", "TS-002", "TS-003", "TS-004", "TS-005", "TS-006"],
+  "focusedTests": {
+    "catalogCards": 3,
+    "contentUi": 8,
+    "contentSeo": 7,
+    "contentFeatureSitemap": 18,
+    "total": 36
+  },
+  "boundaryFixtures": 22,
+  "actualGraphProjects": 103,
+  "siteTypecheck": "passed; next typegen + tsc",
+  "sourceFilesReviewed": 27,
+  "markdownFilesChecked": 30,
+  "relativeLinksChecked": 250,
+  "scenarioRowsTraced": 17,
+  "scopedDiffCheckExitCode": 0,
+  "errors": [],
+  "concurrentOutsideTaskNewEntryCount": 39,
+  "buildHttpBrowserVisualE2e": "not run",
+  "deployed": false
+}

@@ -1,0 +1,227 @@
+{
+  "date": "2026-11-03",
+  "scope": "001-wholesale architecture audit and local remediation",
+  "findings": [
+    {
+      "id": "AF-001",
+      "severity": "medium",
+      "status": "verified",
+      "owner": "site-catalog-ui",
+      "task": "TS-007",
+      "path": "libs/site/catalog/ui/project.json",
+      "beforeLintInputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ],
+      "afterInferredLintInputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/eslint.config.cjs",
+        "{workspaceRoot}/libs/site/catalog/ui/eslint.config.cjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ],
+      "metadataCommand": "node node_modules/nx/dist/bin/nx.js show project site-catalog-ui --json",
+      "metadataExitCode": 0,
+      "finalManifestSha256": "8058b6036af512742c2afe7f083bec330c88e61a926421e786f082453fea2d3f"
+    },
+    {
+      "id": "AF-002",
+      "severity": "medium",
+      "status": "verified",
+      "owner": "wholesale integration and verification",
+      "task": "TS-007",
+      "evidence": "specTypechecks"
+    }
+  ],
+  "nxEnvironment": {
+    "NX_DAEMON": "false",
+    "NX_ISOLATE_PLUGINS": "false",
+    "NX_NO_CLOUD": "true",
+    "NX_TUI": "false",
+    "NX_CACHE_PROJECT_GRAPH": "false",
+    "NX_FORCE_REUSE_CACHED_GRAPH": "false"
+  },
+  "checks": [
+    {
+      "name": "scoped-lint",
+      "command": "node node_modules/eslint/bin/eslint.js tools/architecture/project-boundary-rules.mjs tools/architecture/check-project-boundaries.spec.mjs libs/site/catalog/ui/src/lib/category-cards/category-cards.tsx libs/site/catalog/ui/src/lib/category-cards/category-cards.spec.tsx libs/site/content/model/src/lib/wholesale-types.ts libs/site/content/model/src/lib/wholesale-dictionary.ts libs/site/content/model/src/index.ts libs/site/content/ui/src/lib/wholesale/wholesale-content.tsx libs/site/content/ui/src/lib/wholesale/wholesale-hero.tsx libs/site/content/ui/src/lib/wholesale/wholesale-assortment.tsx libs/site/content/ui/src/lib/wholesale/wholesale-company.tsx libs/site/content/ui/src/lib/wholesale/wholesale-steps.tsx libs/site/content/ui/src/lib/wholesale/wholesale-faq.tsx libs/site/content/ui/src/lib/wholesale/wholesale-contact.tsx libs/site/content/ui/src/lib/wholesale/wholesale-content.spec.tsx libs/site/content/ui/src/index.ts libs/site/content/seo/src/lib/wholesale-metadata.ts libs/site/content/seo/src/lib/wholesale-metadata.spec.ts libs/site/content/seo/src/lib/wholesale-json-ld.ts libs/site/content/seo/src/lib/wholesale-json-ld.spec.ts libs/site/content/seo/src/index.ts libs/site/content/feature/src/lib/wholesale-page.tsx libs/site/content/feature/src/lib/wholesale-page.spec.tsx libs/site/content/feature/src/lib/content-sitemap.ts libs/site/content/feature/src/lib/content-sitemap.spec.ts libs/site/content/feature/src/index.ts apps/site/src/app/[locale]/(content)/wholesale/page.tsx",
+      "exitCode": 0
+    },
+    {
+      "name": "catalog-cards-regression",
+      "command": "node node_modules/nx/dist/bin/nx.js run site-catalog-ui:vite:test --output-style=static -- --run src/lib/category-cards/category-cards.spec.tsx",
+      "exitCode": 0
+    },
+    {
+      "name": "boundary-fixtures",
+      "command": "node --test tools/architecture/check-project-boundaries.spec.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "actual-graph",
+      "command": "node tools/architecture/check-project-boundaries.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "site-source-types",
+      "command": "node node_modules/nx/dist/bin/nx.js run site:typecheck --output-style=static",
+      "exitCode": 0
+    }
+  ],
+  "specTypechecks": [
+    {
+      "scope": "content/ui",
+      "command": "node node_modules/typescript/bin/tsc -p libs/site/content/ui/tsconfig.spec.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "scope": "catalog/ui",
+      "command": "node node_modules/typescript/bin/tsc -p libs/site/catalog/ui/tsconfig.spec.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "scope": "content/seo",
+      "command": "node node_modules/typescript/bin/tsc -p libs/site/content/seo/tsconfig.spec.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "scope": "content/feature",
+      "command": "node node_modules/typescript/bin/tsc -p libs/site/content/feature/tsconfig.spec.json --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "inventory": [
+    {
+      "directory": "libs/site/content/model/src/lib",
+      "directProductionCount": 12,
+      "productionFiles": [
+        "contacts-dictionary.ts",
+        "contacts-types.ts",
+        "requisites-copy.ts",
+        "requisites-dictionary.ts",
+        "requisites-types.ts",
+        "returns-dictionary.ts",
+        "returns-policy-copy.ts",
+        "returns-policy-sections.ts",
+        "returns-summary-copy.ts",
+        "returns-types.ts",
+        "wholesale-dictionary.ts",
+        "wholesale-types.ts"
+      ],
+      "childDirectories": ["articles", "public-offer"]
+    },
+    {
+      "directory": "libs/site/content/seo/src/lib",
+      "directProductionCount": 10,
+      "productionFiles": [
+        "contacts-json-ld.ts",
+        "contacts-metadata.ts",
+        "delivery-payment-metadata.ts",
+        "public-offer-json-ld.ts",
+        "public-offer-metadata.ts",
+        "requisites-json-ld.ts",
+        "requisites-metadata.ts",
+        "returns-metadata.ts",
+        "wholesale-json-ld.ts",
+        "wholesale-metadata.ts"
+      ],
+      "childDirectories": ["articles"]
+    },
+    {
+      "directory": "libs/site/content/feature/src/lib",
+      "directProductionCount": 7,
+      "productionFiles": [
+        "contacts-page.tsx",
+        "content-sitemap.ts",
+        "delivery-payment-page.tsx",
+        "public-offer-page.tsx",
+        "requisites-page.tsx",
+        "returns-page.tsx",
+        "wholesale-page.tsx"
+      ],
+      "childDirectories": ["articles"]
+    },
+    {
+      "directory": "libs/site/content/ui/src/lib",
+      "directProductionCount": 0,
+      "productionFiles": [],
+      "childDirectories": [
+        "articles",
+        "contacts",
+        "delivery-payment",
+        "i18n",
+        "public-offer",
+        "requisites",
+        "returns",
+        "wholesale"
+      ]
+    },
+    {
+      "directory": "libs/site/content/ui/src/lib/wholesale",
+      "directProductionCount": 7,
+      "productionFiles": [
+        "wholesale-assortment.tsx",
+        "wholesale-company.tsx",
+        "wholesale-contact.tsx",
+        "wholesale-content.tsx",
+        "wholesale-faq.tsx",
+        "wholesale-hero.tsx",
+        "wholesale-steps.tsx"
+      ],
+      "childDirectories": []
+    },
+    {
+      "directory": "libs/site/catalog/ui/src/lib",
+      "directProductionCount": 0,
+      "productionFiles": [],
+      "childDirectories": [
+        "catalog-index",
+        "category",
+        "category-cards",
+        "format",
+        "i18n",
+        "listing",
+        "navigation",
+        "popover",
+        "product"
+      ]
+    },
+    {
+      "directory": "libs/site/catalog/ui/src/lib/category-cards",
+      "directProductionCount": 2,
+      "productionFiles": ["category-cards.tsx", "category-images.ts"],
+      "childDirectories": []
+    }
+  ],
+  "priorDeliveryEvidence": {
+    "file": "../verification/seo-verification.md",
+    "focusedTests": 36,
+    "boundaryFixtures": 22,
+    "rerunAllDuringAudit": false
+  },
+  "unrun": [
+    "production build",
+    "real HTTP and final head",
+    "browser/manual/visual/E2E",
+    "deployment",
+    "repository-wide suites"
+  ],
+  "documentation": {
+    "date": "2026-11-03",
+    "markdownFilesChecked": 28,
+    "relativeLinksChecked": 225,
+    "scenarioRowsTraced": 17,
+    "scopedDiffCheckExitCode": 0,
+    "errors": [],
+    "method": "Scoped Node validator: final newline and trailing-whitespace checks for wholesale SDD Markdown plus spec index; local Markdown target existence (anchors excluded); preservation of 17 scenario rows; manifest hash; git diff --check on audit-owned paths. Untracked Markdown is checked directly by fs.",
+    "command": "node C:/Users/Віталій/.codex/visualizations/2026/11/03/01a19eef-94e5-7ca0-998c-7e8a0546fe78/wholesale-audit/validate-audit-docs.cjs"
+  }
+}

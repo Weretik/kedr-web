@@ -1,0 +1,295 @@
+{
+  "title": "Class Kedr — Дверна фурнітура оптом",
+  "version": 2,
+  "date": "2026-11-03",
+  "project": "Kedr",
+  "repository": "E:/RiderProjects/kedr-web",
+  "application": "apps/site",
+  "intendedRoute": "/{locale}/wholesale",
+  "status": "proposed visual concept; awaiting owner feedback; no production implementation",
+  "approved": false,
+  "ownerDecisions": {
+    "purpose": "Organic discovery for buying/ordering door hardware wholesale, followed by qualified manager contact.",
+    "wholesaleTerms": "Do not publish detailed wholesale purchase conditions. Buyer contacts manager to learn prices, availability and specific purchase details. No invented minimums, discounts, payment rules or delivery guarantees.",
+    "sourceOfFacts": "Use existing Class Kedr Storefront and the documented Site equivalents; editorial presentation and layout may be new.",
+    "originalConcept": "Keep previous files. This v2 replaces the generic cooperation-page direction and applies the SEO audit with the latest owner comment.",
+    "earlierAuditQuestions": "Do not treat missing public wholesale conditions as a blocker. The owner explicitly selected manager contact rather than publishing those conditions."
+  },
+  "views": [
+    {
+      "file": "concept-v2-desktop-2026-11-03.png",
+      "type": "desktop",
+      "themes": ["light", "dark"],
+      "locale": "uk"
+    },
+    {
+      "file": "concept-v2-mobile-2026-11-03.png",
+      "type": "mobile",
+      "themes": ["light", "dark"],
+      "locale": "uk"
+    }
+  ],
+  "generatedWith": "built-in image_gen",
+  "userPath": "Search entry → understand door hardware wholesale offer → browse real categories → contact Class Kedr manager with items/quantity → agree order.",
+  "composition": [
+    {
+      "block": "Hero",
+      "content": "Product-specific H1, concise assortment introduction, wholesale-terms CTA, catalog CTA, actual phone and messengers."
+    },
+    {
+      "block": "Assortment",
+      "content": "Six existing category links with supplied repository category photo assets; no invented products, stock counts or prices."
+    },
+    {
+      "block": "About Class Kedr",
+      "content": "Wholesale and retail, Kharkiv, assistance selecting hardware, warehouse programme with availability checked by manager."
+    },
+    {
+      "block": "Order steps",
+      "content": "Choose goods, send request, agree order with manager."
+    },
+    {
+      "block": "FAQ",
+      "content": "How to learn prices/terms, what to prepare, help selecting hardware. Short visible answers."
+    },
+    {
+      "block": "Final contact",
+      "content": "Phone and manager CTA, delivery/returns links, reuse existing Site shell/footer."
+    }
+  ],
+  "facts": [
+    {
+      "claim": "Door hardware wholesale and retail.",
+      "sources": [
+        "apps/storefront/src/app/localization/translations/wholesale.translation.ts",
+        "libs/site/home/ui/src/lib/i18n/home-dictionary.ts"
+      ]
+    },
+    {
+      "claim": "Kharkiv location and confirmed contact details.",
+      "sources": ["libs/site/core/config/src/lib/company.ts"]
+    },
+    {
+      "claim": "Help selecting hardware by door type and technical parameters.",
+      "sources": [
+        "apps/storefront/src/app/localization/translations/about.translation.ts",
+        "apps/storefront/src/app/localization/translations/wholesale.translation.ts",
+        "libs/site/home/ui/src/lib/i18n/company-dictionary.ts"
+      ]
+    },
+    {
+      "claim": "Warehouse programme; specific availability clarified by manager.",
+      "sources": [
+        "apps/storefront/src/app/localization/translations/wholesale.translation.ts",
+        "libs/site/home/ui/src/lib/i18n/company-dictionary.ts"
+      ]
+    },
+    {
+      "claim": "Six actual category image mappings.",
+      "sources": ["libs/site/catalog/ui/src/lib/category-cards/category-images.ts"]
+    }
+  ],
+  "excludedClaims": [
+    "Wholesale minimum amount/quantity or package multiples",
+    "Discounts, numeric wholesale prices or price tiers",
+    "Guaranteed stock, reservation, response or delivery times",
+    "Unsupported years, customer counts, product counts or shipment metrics",
+    "Official distributor/manufacturer status",
+    "Partner door brands presented as hardware brands",
+    "Fitting, installation or repair services"
+  ],
+  "contacts": {
+    "phoneDisplay": "(068) 713-50-49",
+    "phoneHref": "tel:+380687135049",
+    "telegram": "https://t.me/+380687135049",
+    "viber": "viber://chat?number=%2B380687135049",
+    "email": "kedr.class19@gmail.com"
+  },
+  "content": {
+    "uk": {
+      "h1": "Дверна фурнітура оптом",
+      "lead": "Завіси, замки, ручки, циліндри та міжкімнатні механізми для ваших закупівель. Обирайте товари, а оптові умови уточнюйте у менеджера Class Kedr.",
+      "primaryCta": "Дізнатися оптові умови",
+      "secondaryCta": "Переглянути каталог",
+      "categoryHeading": "Асортимент дверної фурнітури",
+      "categoryLead": "Оберіть розділ і підготуйте список товарів для запиту.",
+      "categories": [
+        "Завіси",
+        "Замки",
+        "Ручки",
+        "Циліндри",
+        "Міжкімнатні механізми",
+        "Інша фурнітура"
+      ],
+      "companyHeading": "Class Kedr — фурнітура для вашого бізнесу",
+      "companyText": "Постачаємо дверну фурнітуру для магазинів, виробників дверей і роздрібних покупців. Допомагаємо зорієнтуватися в асортименті та погодити потрібні позиції.",
+      "facts": ["Оптом і в роздріб", "м. Харків", "Допомога з підбором"],
+      "selection": "Підбір фурнітури — враховуємо тип дверей і технічні параметри.",
+      "warehouse": "Складська програма — наявність потрібних позицій уточнює менеджер.",
+      "orderHeading": "Як замовити фурнітуру оптом",
+      "steps": [
+        {
+          "title": "Оберіть товари",
+          "text": "Знайдіть позиції в каталозі."
+        },
+        {
+          "title": "Надішліть запит",
+          "text": "Артикули або назви й кількість."
+        },
+        {
+          "title": "Узгодьте замовлення",
+          "text": "Деталі закупівлі з менеджером."
+        }
+      ],
+      "faqHeading": "Питання оптових покупців",
+      "faq": [
+        {
+          "q": "Як дізнатися оптові ціни та умови?",
+          "a": "Зверніться до менеджера телефоном, у Telegram або Viber."
+        },
+        {
+          "q": "Що підготувати для звернення?",
+          "a": "Артикули або назви товарів, орієнтовну кількість і місто доставки."
+        },
+        {
+          "q": "Чи допомагаєте з підбором фурнітури?",
+          "a": "Так. Підготуйте тип дверей, розміри або фото потрібної деталі."
+        }
+      ],
+      "contactHeading": "Обговорімо вашу закупівлю",
+      "finalCta": "Зв’язатися з менеджером"
+    },
+    "ru": {
+      "h1": "Дверная фурнитура оптом",
+      "lead": "Петли, замки, ручки, цилиндры и межкомнатные механизмы для ваших закупок. Выбирайте товары, а оптовые условия уточняйте у менеджера Class Kedr.",
+      "primaryCta": "Узнать оптовые условия",
+      "secondaryCta": "Посмотреть каталог",
+      "categoryHeading": "Ассортимент дверной фурнитуры",
+      "categoryLead": "Выберите раздел и подготовьте список товаров для запроса.",
+      "categories": [
+        "Петли",
+        "Замки",
+        "Ручки",
+        "Цилиндры",
+        "Межкомнатные механизмы",
+        "Прочая фурнитура"
+      ],
+      "companyHeading": "Class Kedr — фурнитура для вашего бизнеса",
+      "companyText": "Поставляем дверную фурнитуру для магазинов, производителей дверей и розничных покупателей. Помогаем сориентироваться в ассортименте и согласовать нужные позиции.",
+      "facts": ["Оптом и в розницу", "г. Харьков", "Помощь с подбором"],
+      "selection": "Подбор фурнитуры — учитываем тип дверей и технические параметры.",
+      "warehouse": "Складская программа — наличие нужных позиций уточняет менеджер.",
+      "orderHeading": "Как заказать фурнитуру оптом",
+      "steps": [
+        {
+          "title": "Выберите товары",
+          "text": "Найдите позиции в каталоге."
+        },
+        {
+          "title": "Отправьте запрос",
+          "text": "Артикулы или названия и количество."
+        },
+        {
+          "title": "Согласуйте заказ",
+          "text": "Детали закупки с менеджером."
+        }
+      ],
+      "faqHeading": "Вопросы оптовых покупателей",
+      "faq": [
+        {
+          "q": "Как узнать оптовые цены и условия?",
+          "a": "Свяжитесь с менеджером по телефону, в Telegram или Viber."
+        },
+        {
+          "q": "Что подготовить для обращения?",
+          "a": "Артикулы или названия товаров, примерное количество и город доставки."
+        },
+        {
+          "q": "Помогаете с подбором фурнитуры?",
+          "a": "Да. Подготовьте тип дверей, размеры или фото нужной детали."
+        }
+      ],
+      "contactHeading": "Обсудим вашу закупку",
+      "finalCta": "Связаться с менеджером"
+    }
+  },
+  "seoDirection": {
+    "menuLabels": {
+      "uk": "Співпраця",
+      "ru": "Сотрудничество"
+    },
+    "pageTitles": {
+      "uk": "Дверна фурнітура оптом — замовити | Class Kedr",
+      "ru": "Дверная фурнитура оптом — заказать | Class Kedr"
+    },
+    "titleImplementation": "The domain passes the title without the brand; the existing core template adds | Class Kedr once.",
+    "descriptions": {
+      "uk": "Дверна фурнітура оптом у Class Kedr: завіси, замки, ручки, циліндри та міжкімнатні механізми. Перегляньте каталог і дізнайтеся оптові умови у менеджера.",
+      "ru": "Дверная фурнитура оптом в Class Kedr: петли, замки, ручки, цилиндры и межкомнатные механизмы. Посмотрите каталог и узнайте оптовые условия у менеджера."
+    },
+    "localeRoutes": ["/uk/wholesale", "/ru/wholesale"],
+    "implementationNeeds": "Future semantic server-rendered implementation with localized metadata, self canonicals, reciprocal alternates, sitemap and real category links, preserving the existing indexing gate.",
+    "currentScope": "Concept only. No ranking improvement, indexing state or rendered HTML checks claimed."
+  },
+  "categoryPhotos": [
+    {
+      "label": "Завіси",
+      "path": "apps/site/public/assets/categories/hinges.jpg"
+    },
+    {
+      "label": "Замки",
+      "path": "apps/site/public/assets/categories/locks.jpg"
+    },
+    {
+      "label": "Ручки",
+      "path": "apps/site/public/assets/categories/handles.jpg"
+    },
+    {
+      "label": "Циліндри",
+      "path": "apps/site/public/assets/categories/cylinders.jpg"
+    },
+    {
+      "label": "Міжкімнатні механізми",
+      "path": "apps/site/public/assets/categories/interior-mechanisms.jpg"
+    },
+    {
+      "label": "Інша фурнітура",
+      "path": "apps/site/public/assets/categories/other.jpg"
+    }
+  ],
+  "designReferences": [
+    "docs/standards/site/design-system.md",
+    "apps/site/src/app/global.css",
+    "apps/site/public/assets/logo/main-logo.svg",
+    "docs/ideas/site-wholesale/seo-audit-2026-11-03.md"
+  ],
+  "designNotes": [
+    "Project Onest typography, brand green and ink/inverse CTA direction; light/dark and desktop/mobile hierarchy.",
+    "Category assets referenced from repository; raster render is a composition reference, not a replacement for exact native assets or live catalog data.",
+    "Use existing Site header/footer in production; exact dimensions, colors, accessible targets and controls must follow current components.",
+    "No browser/app/manual/E2E checks were run; inspection was limited to the requested generated concept."
+  ],
+  "review": {
+    "content": "Independent agent confirmed actual categories, correct contacts, no invented wholesale conditions or statistics.",
+    "design": "Independent agent confirmed SEO-first hierarchy, theme CTA hierarchy and owner-comment adherence.",
+    "mobile": "Root inspected natural wrapping, two-column category grid, stacked steps/FAQ and equal content between themes."
+  },
+  "prompts": [
+    {
+      "kind": "desktop composition",
+      "prompt": "Create the revised SEO-first Class Kedr wholesale page concept as a high-resolution review image containing TWO full desktop webpage views side by side, LIGHT and DARK, equal width. No phone views in this image, no device or browser mockup, no commentary around the pages. Aim for a large square/tall canvas so all page sections and Ukrainian copy stay readable.\n\nReference image 1 is the previous Class Kedr concept. It supplies the REAL Class KEDR logo and established project shell, typography, colors and component character ONLY. Replace its old contact-page composition and content with the richer SEO page below. Images 2–5 are the real category photos: hinges, locks, handles, cylinders. Use those four actual photos in the matching category cards on white photo areas. For the two categories without supplied photos in this pass (interior mechanisms and other hardware), use simple neutral outline category icons. Do not invent product pictures, brands, prices or counts.\n\nKeep project visual law: Onest Cyrillic sans, light #FFFFFF/ink #0F110F and dark #0C0D0C/text #EDEFEA; green #3FA435 for Каталог, green text #2A7323 light/#7DD06F dark; pale green #EAF5E7/#15241A panels, fine borders and 8–12px radii, consistent thin Lucide icons. Main contact CTA is ink light theme and off-white dark theme. Calm commercial information page, no gradients or decorative hero artwork.\n\nRetain the complete compact shell: city Україна, м. Харків; links Про компанію, Доставка та оплата, Повернення та обмін, Галерея та відео, Статті, Контакти; UA/RU and theme switch. Main bar actual logo, green Каталог, search, (068) 713-50-49, Telegram/Viber, account/cart. Category row: Завіси, Замки, Ручки, Циліндри, Міжкімнатні механізми, Інше, Двері, Регіони, Співпраця. All labels Ukrainian, never Прочее.\n\nPage composition in reading order:\n1. Breadcrumb Головна / Співпраця. Strong H1 “Дверна фурнітура оптом”. Lead “Завіси, замки, ручки, циліндри та міжкімнатні механізми для ваших закупівель. Обирайте товари, а оптові умови уточнюйте у менеджера Class Kedr.” Two clear actions “Дізнатися оптові умови” and “Переглянути каталог”. Compact nearby contact panel “Обговорімо ваше замовлення”, actual phone, Telegram / Viber, small note “Наявність і деталі закупівлі — у менеджера”. No form.\n2. “Асортимент дверної фурнітури”, short “Оберіть розділ і підготуйте список товарів для запиту”. Six category links in a 3-column by 2-row grid, each with its supplied photograph (or neutral icon for the last two), category label and small arrow: Завіси; Замки; Ручки; Циліндри; Міжкімнатні механізми; Інша фурнітура. Compact, credible, not large product tiles.\n3. “Class Kedr — фурнітура для вашого бізнесу”. Text “Постачаємо дверну фурнітуру для магазинів, виробників дверей і роздрібних покупців. Допомагаємо зорієнтуватися в асортименті та погодити потрібні позиції.” Quiet fact row “Оптом і в роздріб” / “м. Харків” / “Допомога з підбором”. Below, two concise points: “Підбір фурнітури — враховуємо тип дверей і технічні параметри”; “Складська програма — наявність потрібних позицій уточнює менеджер”. Small “Більше про компанію” link.\n4. Pale green horizontal three-step band “Як замовити фурнітуру оптом”: “Оберіть товари — знайдіть позиції в каталозі”; “Надішліть запит — артикули або назви й кількість”; “Узгодьте замовлення — деталі закупівлі з менеджером”.\n5. “Питання оптових покупців”, three readable compact FAQ rows with SHORT VISIBLE answers, not closed accordion-only:\n“Як дізнатися оптові ціни та умови?” → “Зверніться до менеджера телефоном, у Telegram або Viber.”\n“Що підготувати для звернення?” → “Артикули або назви товарів, орієнтовну кількість і місто доставки.”\n“Чи допомагаєте з підбором фурнітури?” → “Так. Підготуйте тип дверей, розміри або фото потрібної деталі.”\n6. Final compact contact band “Обговорімо вашу закупівлю”, phone (068) 713-50-49 and “Зв’язатися з менеджером”. Links Доставка та оплата / Повернення та обмін.\n7. Existing quiet footer: actual logo, catalog/company/buyers/contact groups, email kedr.class19@gmail.com, © Class Kedr.\n\nBoth themes have identical hierarchy and content. Only verified Class Kedr facts; NEVER minimum orders, discounts, public wholesale terms/prices, reserve promises, delivery deadlines, quantified business claims, fake testimonials or installation/repair services. This is a complete richer page with real assortment and contact-based wholesale inquiry."
+    },
+    {
+      "kind": "replace two category placeholders with supplied real photos",
+      "prompt": "Edit ONLY TWO category photo areas in the supplied revised Class Kedr SEO concept board. Image 1 is the target board with two desktop themes. Image 2 is the real repository photo for “Міжкімнатні механізми”. Image 3 is the real repository photo for “Інша фурнітура”.\n\nIn BOTH the light and dark page views, replace the placeholder outline icon in the “Міжкімнатні механізми” category card with image 2, and replace the placeholder outline icon in the “Інша фурнітура” card with image 3. Fit the actual supplied category photographs on the same small white photo areas used by the other four cards, preserving their proportions and product groups. Preserve every category label and arrow.\n\nMake no other changes: keep exactly the same board size, two equal desktop views, complete page, Ukrainian text, logo, all six card sizes, hierarchy, contacts, colors, CTA, FAQ, steps and footer. Do not rewrite content, invent products, add prices, add wholesale conditions, or move regions. This is a precise replacement of the last two neutral placeholders with actual existing catalogue photographs."
+    },
+    {
+      "kind": "mobile companion",
+      "prompt": "Create the MOBILE responsive companion of the supplied revised Class Kedr wholesale SEO page. Show ONLY TWO long full mobile webpage captures side by side: LIGHT on the left, DARK on the right. Portrait high-resolution board, approximately 1600×3600, each webpage a natural 390px-wide phone viewport before scaling. No phone hardware, browser chrome, desktop views, labels or explanatory notes outside the website. Extend the page height enough to show readable content through the real footer; do not miniaturize the type to squeeze it.\n\nThe supplied desktop board is the authoritative reference for the actual Class KEDR logo, project colors, Onest Cyrillic typography, SIX real category photo collages, all Ukrainian copy, section order and footer facts. Reflow that exact concept into mobile, preserving the product identity and content. White/ink light mode, near-black/off-white dark mode, restrained green #3FA435 with readable green text #2A7323/#7DD06F, ink primary CTA light/off-white primary CTA dark, fine borders, 8–12px radii. Category photos stay on small white grounds. No new photos or products.\n\nMobile layout:\n- Compact header: menu, actual logo, account, cart, then search on its own row. No desktop navigation rows.\n- Breadcrumb “Головна / Співпраця”.\n- H1 “Дверна фурнітура оптом”, wrapping naturally over two lines. Preserve the desktop introduction about hinges/locks/handles/cylinders/interior mechanisms and learning wholesale terms from Class Kedr manager.\n- Full-width main CTA “Дізнатися оптові умови” and secondary “Переглянути каталог”, stacked. Compact contact area with (068) 713-50-49, Telegram / Viber and the existing availability/terms note.\n- “Асортимент дверної фурнітури”, short explanation, SIX category cards in TWO columns and THREE rows, all with the same real collages from desktop, labels and arrows: Завіси, Замки, Ручки, Циліндри, Міжкімнатні механізми, Інша фурнітура. Do not omit or repeat any category.\n- “Class Kedr — фурнітура для вашого бізнесу”, same short company paragraph and facts “Оптом і в роздріб”, “м. Харків”, “Допомога з підбором”. Same two compact explanations: technical-parameter selection and warehouse programme with availability clarified by manager. Keep “Більше про компанію”.\n- Pale green “Як замовити фурнітуру оптом”, steps vertically: Оберіть товари → Надішліть запит → Узгодьте замовлення, same short descriptions.\n- “Питання оптових покупців”: three stacked questions WITH short answers visible: how learn wholesale prices/terms → contact manager via phone/Telegram/Viber; what prepare → articles/names, quantity, delivery city; help selecting → door type, measurements/photo. Each question above its answer, avoid narrow desktop table columns.\n- “Обговорімо вашу закупівлю”, phone and full-width “Зв’язатися з менеджером”, delivery/returns links.\n- Existing simple stacked footer groups with logo and verified phone/email kedr.class19@gmail.com; no accordion plus buttons or invented functionality.\n\nBoth mobile themes must have equal page content, readable type, comfortable spacing and tap targets. Preserve exact known Class Kedr facts. No minimum order, discounts, prices, wholesale rules, guaranteed stock/response/delivery times, statistics or installation/repair services. Wholesale terms are learned from the manager."
+    }
+  ],
+  "generatedSources": {
+    "desktop": "C:/Users/Віталій/.codex/generated_images/01a19eef-94e5-7ca0-998c-7e8a0546fe78/exec-0c2cf7de-fb1e-4f0b-b95b-6406d49c37cc.png",
+    "mobile": "C:/Users/Віталій/.codex/generated_images/01a19eef-94e5-7ca0-998c-7e8a0546fe78/exec-4ab3cc5e-4a9a-47f5-9231-0a27188da144.png"
+  }
+}

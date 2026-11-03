@@ -8,3 +8,4 @@ export {
   generateArticleMetadata,
   getArticleStaticParams,
 } from './lib/articles/article-page';
+export { WholesalePage } from './lib/wholesale-page';

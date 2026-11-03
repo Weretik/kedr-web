@@ -20,3 +20,5 @@ export {
 export { buildArticlesListing } from './lib/articles/articles-listing';
 export { getArticlesDictionary } from './lib/articles/articles-dictionary';
 export type { ArticlesDictionary } from './lib/articles/articles-dictionary';
+export { getWholesaleDictionary } from './lib/wholesale-dictionary';
+export type { WholesaleCompanyDetails, WholesaleDictionary } from './lib/wholesale-types';

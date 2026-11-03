@@ -89,3 +89,24 @@ test('requires scope and type tags', () => {
     'missing type:* tag',
   ]);
 });
+
+// Wholesale composition may consume only documented catalog public layers.
+const wholesaleContentFeature = siteProject('content/feature');
+for (const targetPath of ['catalog/data-access', 'catalog/model', 'catalog/ui']) {
+  const target = siteProject(targetPath);
+  test(`allows wholesale content feature to depend on ${target.name}`, () => {
+    assert.equal(validateProjectBoundary(wholesaleContentFeature, target), null);
+  });
+}
+for (const sourcePath of ['content/ui', 'content/model']) {
+  for (const targetPath of ['catalog/data-access', 'catalog/model', 'catalog/ui']) {
+    const source = siteProject(sourcePath);
+    const target = siteProject(targetPath);
+    test(`rejects wholesale non-feature dependency ${source.name} -> ${target.name}`, () => {
+      assert.ok(validateProjectBoundary(source, target));
+    });
+  }
+}
+test('rejects wholesale content feature importing catalog feature', () => {
+  assert.ok(validateProjectBoundary(wholesaleContentFeature, siteProject('catalog/feature')));
+});

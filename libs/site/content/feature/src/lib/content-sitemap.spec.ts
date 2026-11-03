@@ -63,3 +63,25 @@ it('publishes the article list and six slug articles per locale, without IDs, qu
     expect(entry.alternates?.languages).toHaveProperty('ru-UA');
   }
 });
+it('publishes one wholesale URL per language and preserves existing content without invented dates', () => {
+  const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
+  const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
+  const wholesale = entries.filter(({ url }) => url.endsWith('/wholesale'));
+  expect(wholesale.map(({ url }) => url)).toEqual([
+    'https://classkedr.com.ua/uk/wholesale',
+    'https://classkedr.com.ua/ru/wholesale',
+  ]);
+  for (const entry of wholesale) {
+    expect(entry.lastModified).toBeUndefined();
+    expect(entry.alternates?.languages).toEqual({
+      'uk-UA': 'https://classkedr.com.ua/uk/wholesale',
+      'ru-UA': 'https://classkedr.com.ua/ru/wholesale',
+    });
+  }
+  expect(new Set(entries.map(({ url }) => url)).size).toBe(entries.length);
+  for (const locale of ['uk', 'ru']) {
+    for (const slug of ['delivery-and-payment', 'returns-exchanges', 'contacts', 'articles']) {
+      expect(entries.some(({ url }) => url.endsWith(`/${locale}/${slug}`))).toBe(true);
+    }
+  }
+});

@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-03",
+  "scope": "documentation-only",
+  "markdownFiles": 24,
+  "relativeLinksChecked": 142,
+  "ruleCount": 16,
+  "scenarioCount": 17,
+  "implementationTasks": 6,
+  "enablerTasks": 1,
+  "taskDAG": "acyclic",
+  "allScenariosTraced": true,
+  "existingCategorySpec": true,
+  "errors": [],
+  "implementationTests": "not run",
+  "buildHttpBrowser": "not run"
+}
