@@ -1,0 +1,1532 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;650;700;750&display=swap');
+
+  #kedr-contacts-concept {
+    --kc-bg: light-dark(#ffffff, #0c0d0c);
+    --kc-fg: light-dark(#0f110f, #edefea);
+    --kc-muted: light-dark(#f4f5f2, #161815);
+    --kc-secondary: light-dark(#5c6459, #9aa296);
+    --kc-line: light-dark(#e3e6df, #242823);
+    --kc-panel: light-dark(#ffffff, #111311);
+    --kc-ink: light-dark(#0f110f, #edefea);
+    --kc-on-ink: light-dark(#fafbf8, #0f110f);
+    --kc-green: #3fa435;
+    --kc-on-green: #ffffff;
+    --kc-green-text: light-dark(#2a7323, #7dd06f);
+    --kc-green-soft: light-dark(#eaf5e7, #15241a);
+    color-scheme: light dark;
+    color: var(--kc-fg);
+    font-family: 'Onest', 'Segoe UI', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    min-width: 0;
+    width: 100%;
+    position: relative;
+  }
+  #kedr-contacts-concept[data-theme='light'] {
+    color-scheme: light;
+  }
+  #kedr-contacts-concept[data-theme='dark'] {
+    color-scheme: dark;
+  }
+  #kedr-contacts-concept * {
+    box-sizing: border-box;
+  }
+  #kedr-contacts-concept [hidden] {
+    display: none !important;
+  }
+  #kedr-contacts-concept .kc-store {
+    container: kedr / inline-size;
+    width: 100%;
+    margin-inline: auto;
+    background: var(--kc-bg);
+    color: var(--kc-fg);
+    border: 1px solid var(--kc-line);
+    border-radius: 12px;
+  }
+  #kedr-contacts-concept[data-device='phone'] .kc-store {
+    max-width: 390px;
+  }
+  #kedr-contacts-concept a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #kedr-contacts-concept button,
+  #kedr-contacts-concept input {
+    font: inherit;
+  }
+  #kedr-contacts-concept button {
+    color: inherit;
+  }
+  #kedr-contacts-concept button,
+  #kedr-contacts-concept a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  #kedr-contacts-concept :is(a, button, input, summary):focus-visible {
+    outline: 3px solid rgb(63 164 53 / 0.45);
+    outline-offset: 3px;
+  }
+  #kedr-contacts-concept ::selection {
+    background: var(--kc-green-soft);
+    color: var(--kc-fg);
+  }
+  #kedr-contacts-concept h1,
+  #kedr-contacts-concept h2,
+  #kedr-contacts-concept h3,
+  #kedr-contacts-concept p {
+    margin: 0;
+    color: inherit;
+  }
+  #kedr-contacts-concept .kc-icon {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    stroke-width: 1.75;
+  }
+  #kedr-contacts-concept .kc-skip {
+    position: absolute;
+    z-index: 10;
+    top: 12px;
+    left: 16px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--kc-ink);
+    color: var(--kc-on-ink);
+  }
+  #kedr-contacts-concept .kc-skip:not(:focus) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-wrap {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+  #kedr-contacts-concept .kc-top {
+    border-bottom: 1px solid var(--kc-line);
+    border-radius: 12px 12px 0 0;
+    background: var(--kc-muted);
+  }
+  #kedr-contacts-concept .kc-top-inner {
+    min-height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    font-size: 11px;
+  }
+  #kedr-contacts-concept .kc-city {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    color: var(--kc-secondary);
+  }
+  #kedr-contacts-concept .kc-city .kc-icon {
+    width: 14px;
+    height: 14px;
+  }
+  #kedr-contacts-concept .kc-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 17px;
+  }
+  #kedr-contacts-concept .kc-info span {
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-info [aria-current] {
+    font-weight: 700;
+  }
+  #kedr-contacts-concept .kc-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  #kedr-contacts-concept .kc-lang {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  #kedr-contacts-concept .kc-lang button {
+    border: 0;
+    padding: 4px 2px;
+    background: transparent;
+    color: var(--kc-secondary);
+    font-size: 11px;
+  }
+  #kedr-contacts-concept .kc-lang button[aria-current='true'] {
+    color: var(--kc-fg);
+    font-weight: 700;
+  }
+  #kedr-contacts-concept .kc-theme {
+    min-width: 44px;
+    min-height: 28px;
+    border-radius: 20px;
+    background: var(--kc-bg);
+    border: 1px solid var(--kc-line);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #kedr-contacts-concept .kc-theme .kc-icon {
+    width: 15px;
+    height: 15px;
+  }
+  #kedr-contacts-concept .kc-mainbar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-block: 20px;
+  }
+  #kedr-contacts-concept .kc-logo {
+    font-size: 25px;
+    font-weight: 750;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-logo span {
+    color: var(--kc-green-text);
+  }
+  #kedr-contacts-concept .kc-catalog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    padding-inline: 13px;
+    border-radius: 8px;
+    background: var(--kc-green);
+    color: var(--kc-on-green);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  #kedr-contacts-concept .kc-search {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--kc-line);
+    border-radius: 8px;
+    background: var(--kc-muted);
+    color: var(--kc-secondary);
+    padding: 9px 12px;
+    font-size: 12px;
+    flex: 1;
+    min-width: 100px;
+  }
+  #kedr-contacts-concept .kc-search span {
+    flex: 1;
+  }
+  #kedr-contacts-concept .kc-search kbd {
+    border: 1px solid var(--kc-line);
+    font: inherit;
+    padding-inline: 5px;
+    border-radius: 4px;
+  }
+  #kedr-contacts-concept .kc-header-phone {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 650;
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-phone-tools {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  #kedr-contacts-concept .kc-header-messengers {
+    display: flex;
+    gap: 5px;
+    margin-left: 2px;
+  }
+  #kedr-contacts-concept .kc-header-messengers a {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--kc-line);
+    border-radius: 50%;
+    color: var(--kc-secondary);
+  }
+  #kedr-contacts-concept .kc-header-messengers .kc-icon {
+    width: 16px;
+    height: 16px;
+  }
+  #kedr-contacts-concept .kc-tools {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  #kedr-contacts-concept .kc-tools > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-mobile-menu {
+    display: none;
+    position: relative;
+  }
+  #kedr-contacts-concept .kc-mobile-menu summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    min-width: 28px;
+  }
+  #kedr-contacts-concept .kc-mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  #kedr-contacts-concept .kc-mobile-drawer {
+    position: absolute;
+    z-index: 5;
+    top: 48px;
+    left: -4px;
+    padding: 20px;
+    min-width: 250px;
+    background: var(--kc-panel);
+    border: 1px solid var(--kc-line);
+    border-radius: 12px;
+    display: grid;
+    gap: 16px;
+  }
+  #kedr-contacts-concept .kc-mobile-drawer .kc-settings {
+    border-top: 1px solid var(--kc-line);
+    padding-top: 12px;
+    justify-content: space-between;
+  }
+  #kedr-contacts-concept .kc-categories {
+    border-bottom: 1px solid var(--kc-line);
+  }
+  #kedr-contacts-concept .kc-categories-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 45px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  #kedr-contacts-concept .kc-categories-inner > span {
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-partners-nav {
+    color: var(--kc-green-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #kedr-contacts-concept .kc-content {
+    padding-top: 27px;
+    padding-bottom: 44px;
+  }
+  #kedr-contacts-concept .kc-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--kc-secondary);
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  #kedr-contacts-concept .kc-breadcrumb .kc-icon {
+    width: 15px;
+    height: 15px;
+  }
+  #kedr-contacts-concept .kc-intro h1 {
+    font-size: 38px;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    font-weight: 750;
+  }
+  #kedr-contacts-concept .kc-intro p {
+    margin-top: 11px;
+    max-width: 68ch;
+    font-size: 15px;
+    color: var(--kc-secondary);
+  }
+  #kedr-contacts-concept .kc-jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-top: 18px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  #kedr-contacts-concept .kc-jumps a {
+    color: var(--kc-green-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  #kedr-contacts-concept .kc-contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 27px;
+  }
+  #kedr-contacts-concept .kc-panel {
+    border: 1px solid var(--kc-line);
+    border-radius: 12px;
+    background: var(--kc-panel);
+  }
+  #kedr-contacts-concept .kc-phone-panel {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #kedr-contacts-concept .kc-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  #kedr-contacts-concept .kc-section-heading .kc-icon {
+    width: 23px;
+    height: 23px;
+    color: var(--kc-green-text);
+  }
+  #kedr-contacts-concept .kc-phone-number-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 21px;
+  }
+  #kedr-contacts-concept .kc-phone-number {
+    font-size: clamp(25px, 3vw, 34px);
+    font-weight: 750;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-copy {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 7px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--kc-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #kedr-contacts-concept .kc-phone-caption {
+    color: var(--kc-secondary);
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  #kedr-contacts-concept .kc-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 10px 19px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.4;
+    background: var(--kc-ink);
+    color: var(--kc-on-ink);
+  }
+  #kedr-contacts-concept .kc-phone-panel > .kc-action {
+    width: 100%;
+    margin-top: 17px;
+  }
+  #kedr-contacts-concept .kc-action-outline {
+    border-color: var(--kc-line);
+    color: var(--kc-fg);
+    background: var(--kc-panel);
+  }
+  #kedr-contacts-concept .kc-messengers {
+    padding: 24px 24px 4px;
+  }
+  #kedr-contacts-concept .kc-messengers h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  #kedr-contacts-concept .kc-channel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 0;
+    min-height: 64px;
+  }
+  #kedr-contacts-concept .kc-channel + .kc-channel {
+    border-top: 1px solid var(--kc-line);
+  }
+  #kedr-contacts-concept .kc-channel > .kc-icon:first-child {
+    color: var(--kc-green-text);
+    width: 21px;
+    height: 21px;
+  }
+  #kedr-contacts-concept .kc-channel-content {
+    flex: 1;
+    min-width: 0;
+  }
+  #kedr-contacts-concept .kc-channel-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+  }
+  #kedr-contacts-concept .kc-channel-caption {
+    display: block;
+    color: var(--kc-secondary);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+    margin-top: 1px;
+  }
+  #kedr-contacts-concept .kc-channel > .kc-icon:last-child {
+    color: var(--kc-secondary);
+    width: 16px;
+    height: 16px;
+  }
+  #kedr-contacts-concept .kc-location {
+    margin-top: 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 25px;
+    gap: 28px;
+    align-items: center;
+  }
+  #kedr-contacts-concept .kc-location-main p {
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  #kedr-contacts-concept .kc-location-main .kc-action {
+    margin-top: 18px;
+  }
+  #kedr-contacts-concept .kc-visit {
+    padding: 6px 0 6px 28px;
+    border-left: 1px solid var(--kc-line);
+  }
+  #kedr-contacts-concept .kc-visit h3 {
+    font-size: 16px;
+    font-weight: 650;
+  }
+  #kedr-contacts-concept .kc-visit p {
+    margin-top: 7px;
+    color: var(--kc-secondary);
+    max-width: 34ch;
+    font-size: 14px;
+  }
+  #kedr-contacts-concept .kc-inline-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--kc-green-text);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-top: 13px;
+  }
+  #kedr-contacts-concept .kc-inline-link .kc-icon {
+    width: 15px;
+    height: 15px;
+  }
+  #kedr-contacts-concept .kc-wholesale {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    border-radius: 12px;
+    background: var(--kc-green-soft);
+    margin-top: 26px;
+    padding: 25px;
+  }
+  #kedr-contacts-concept .kc-wholesale h2 {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+  #kedr-contacts-concept .kc-wholesale p {
+    margin-top: 7px;
+    font-size: 13px;
+    color: var(--kc-secondary);
+    max-width: 52ch;
+  }
+  #kedr-contacts-concept .kc-wholesale .kc-action {
+    flex-shrink: 0;
+  }
+  #kedr-contacts-concept .kc-help {
+    margin-top: 29px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 38px;
+    align-items: start;
+  }
+  #kedr-contacts-concept .kc-help h2 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  #kedr-contacts-concept .kc-help p {
+    color: var(--kc-secondary);
+    font-size: 13px;
+    margin-top: 7px;
+    max-width: 52ch;
+  }
+  #kedr-contacts-concept .kc-help-links {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding-top: 4px;
+  }
+  #kedr-contacts-concept .kc-help-links a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--kc-green-text);
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  #kedr-contacts-concept .kc-help-links .kc-icon {
+    width: 17px;
+    height: 17px;
+  }
+  #kedr-contacts-concept .kc-footer {
+    background: var(--kc-muted);
+    border-top: 1px solid var(--kc-line);
+    border-radius: 0 0 12px 12px;
+  }
+  #kedr-contacts-concept .kc-footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.15fr;
+    gap: 24px;
+    padding-top: 31px;
+    padding-bottom: 28px;
+  }
+  #kedr-contacts-concept .kc-footer h2 {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 11px;
+  }
+  #kedr-contacts-concept .kc-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 6px;
+    color: var(--kc-secondary);
+    font-size: 11px;
+  }
+  #kedr-contacts-concept .kc-footer address {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    font-style: normal;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  #kedr-contacts-concept .kc-footer address h2 {
+    margin-bottom: 5px;
+  }
+  #kedr-contacts-concept .kc-footer address a,
+  #kedr-contacts-concept .kc-footer address span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #kedr-contacts-concept .kc-footer address a:first-of-type {
+    font-weight: 650;
+  }
+  #kedr-contacts-concept .kc-footer address a:not(:first-of-type),
+  #kedr-contacts-concept .kc-footer address span {
+    color: var(--kc-secondary);
+  }
+  #kedr-contacts-concept .kc-footer .kc-icon {
+    width: 13px;
+    height: 13px;
+  }
+  #kedr-contacts-concept .kc-copyright {
+    border-top: 1px solid var(--kc-line);
+    font-size: 10px;
+    color: var(--kc-secondary);
+    padding-block: 13px;
+  }
+  #kedr-contacts-concept .kc-status {
+    min-height: 18px;
+    color: var(--kc-green-text);
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  #kedr-contacts-concept .kc-header-status {
+    position: absolute;
+    top: 34px;
+    right: 0;
+    z-index: 4;
+    margin: 0;
+    padding: 7px 11px;
+    background: var(--kc-panel);
+    border: 1px solid var(--kc-line);
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  #kedr-contacts-concept .kc-header-status:empty {
+    display: none;
+  }
+  #kedr-contacts-concept .kc-copy:hover {
+    background: var(--kc-muted);
+    color: var(--kc-fg);
+  }
+  #kedr-contacts-concept .kc-channel:hover .kc-channel-title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  #kedr-contacts-concept .kc-action:hover {
+    filter: brightness(0.92);
+  }
+  @container kedr (max-width: 1279px) {
+    #kedr-contacts-concept .kc-phone-tools {
+      display: none;
+    }
+  }
+  @container kedr (max-width: 1100px) {
+    #kedr-contacts-concept .kc-top-inner {
+      flex-wrap: wrap;
+      gap: 7px 14px;
+      padding-block: 8px;
+    }
+    #kedr-contacts-concept .kc-top .kc-info {
+      order: 3;
+      width: 100%;
+      padding-top: 6px;
+      padding-bottom: 3px;
+    }
+    #kedr-contacts-concept .kc-mainbar {
+      gap: 13px;
+    }
+    #kedr-contacts-concept .kc-tools {
+      gap: 10px;
+    }
+  }
+  @container kedr (max-width: 780px) {
+    #kedr-contacts-concept .kc-wrap {
+      padding-inline: 16px;
+    }
+    #kedr-contacts-concept .kc-mainbar {
+      gap: 12px;
+    }
+    #kedr-contacts-concept .kc-header-phone {
+      font-size: 11px;
+    }
+    #kedr-contacts-concept .kc-header-phone .kc-icon {
+      display: none;
+    }
+    #kedr-contacts-concept .kc-logo {
+      font-size: 23px;
+    }
+    #kedr-contacts-concept .kc-categories-inner {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 12px 18px;
+      padding-block: 12px;
+    }
+    #kedr-contacts-concept .kc-search {
+      font-size: 11px;
+    }
+    #kedr-contacts-concept .kc-search kbd {
+      display: none;
+    }
+    #kedr-contacts-concept .kc-phone-panel,
+    #kedr-contacts-concept .kc-messengers {
+      padding: 20px;
+    }
+    #kedr-contacts-concept .kc-messengers {
+      padding-bottom: 3px;
+    }
+    #kedr-contacts-concept .kc-contact-grid {
+      gap: 16px;
+    }
+    #kedr-contacts-concept .kc-phone-number {
+      font-size: 27px;
+    }
+    #kedr-contacts-concept .kc-footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @container kedr (max-width: 600px) {
+    #kedr-contacts-concept .kc-top,
+    #kedr-contacts-concept .kc-catalog,
+    #kedr-contacts-concept .kc-categories,
+    #kedr-contacts-concept .kc-header-phone {
+      display: none;
+    }
+    #kedr-contacts-concept .kc-mainbar {
+      flex-wrap: wrap;
+      gap: 0 12px;
+      padding-top: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--kc-line);
+    }
+    #kedr-contacts-concept .kc-mobile-menu {
+      display: block;
+    }
+    #kedr-contacts-concept .kc-logo {
+      flex: 1;
+      font-size: 23px;
+    }
+    #kedr-contacts-concept .kc-tools {
+      gap: 12px;
+    }
+    #kedr-contacts-concept .kc-tool-label {
+      display: none;
+    }
+    #kedr-contacts-concept .kc-tools > :is(span, a) {
+      min-height: 40px;
+      min-width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #kedr-contacts-concept .kc-search {
+      flex: 1 0 100%;
+      order: 5;
+      margin-top: 9px;
+      min-height: 40px;
+      font-size: 12px;
+    }
+    #kedr-contacts-concept .kc-content {
+      padding-top: 19px;
+      padding-bottom: 30px;
+    }
+    #kedr-contacts-concept .kc-breadcrumb {
+      margin-bottom: 15px;
+      font-size: 11px;
+    }
+    #kedr-contacts-concept .kc-intro h1 {
+      font-size: 30px;
+    }
+    #kedr-contacts-concept .kc-intro p {
+      font-size: 14px;
+      line-height: 1.55;
+      margin-top: 9px;
+    }
+    #kedr-contacts-concept .kc-jumps {
+      font-size: 12px;
+      gap: 8px 19px;
+      margin-top: 16px;
+    }
+    #kedr-contacts-concept .kc-contact-grid {
+      grid-template-columns: 1fr;
+      margin-top: 22px;
+      gap: 14px;
+    }
+    #kedr-contacts-concept .kc-phone-panel {
+      padding: 20px;
+    }
+    #kedr-contacts-concept .kc-section-heading,
+    #kedr-contacts-concept .kc-messengers h2 {
+      font-size: 19px;
+    }
+    #kedr-contacts-concept .kc-phone-number-row {
+      margin-top: 21px;
+      gap: 4px;
+    }
+    #kedr-contacts-concept .kc-phone-number {
+      font-size: clamp(25px, 7.1cqw, 31px);
+    }
+    #kedr-contacts-concept .kc-phone-panel > .kc-action {
+      margin-top: 20px;
+    }
+    #kedr-contacts-concept .kc-location {
+      grid-template-columns: 1fr;
+      padding: 20px;
+      gap: 20px;
+      margin-top: 18px;
+    }
+    #kedr-contacts-concept .kc-location-main .kc-action {
+      width: 100%;
+    }
+    #kedr-contacts-concept .kc-visit {
+      border-left: 0;
+      border-top: 1px solid var(--kc-line);
+      padding: 18px 0 0;
+    }
+    #kedr-contacts-concept .kc-visit p {
+      font-size: 13px;
+    }
+    #kedr-contacts-concept .kc-wholesale {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 17px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    #kedr-contacts-concept .kc-wholesale h2 {
+      font-size: 20px;
+    }
+    #kedr-contacts-concept .kc-help {
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    #kedr-contacts-concept .kc-help-links {
+      gap: 13px;
+    }
+    #kedr-contacts-concept .kc-footer-grid {
+      gap: 24px 20px;
+      padding-top: 25px;
+      padding-bottom: 24px;
+    }
+    #kedr-contacts-concept .kc-footer h2 {
+      font-size: 12px;
+    }
+    #kedr-contacts-concept .kc-footer ul,
+    #kedr-contacts-concept .kc-footer address {
+      font-size: 11px;
+    }
+    #kedr-contacts-concept .kc-footer address {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (pointer: coarse) {
+    #kedr-contacts-concept .kc-copy,
+    #kedr-contacts-concept .kc-theme,
+    #kedr-contacts-concept .kc-lang button,
+    #kedr-contacts-concept .kc-mobile-menu summary,
+    #kedr-contacts-concept .kc-tools > :is(a, span) {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    #kedr-contacts-concept .kc-jumps a,
+    #kedr-contacts-concept .kc-help-links a,
+    #kedr-contacts-concept .kc-inline-link {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+</style>
+
+<div
+  id="kedr-contacts-concept"
+  data-device="responsive"
+  data-theme="auto"
+  lang="uk"
+  aria-label="Концепт сторінки Контакти Class Kedr"
+>
+  <a class="kc-skip" href="#kc-content" data-copy="skip">Перейти до вмісту</a>
+  <div class="kc-store">
+    <header>
+      <div class="kc-top">
+        <div class="kc-wrap kc-top-inner">
+          <span class="kc-city"
+            ><i class="kc-icon" data-lucide="map-pin" aria-hidden="true"></i
+            ><span data-copy="city">Україна, м. Харків</span></span
+          >
+          <nav class="kc-info" aria-label="Інформаційні сторінки">
+            <span data-copy="about">Про компанію</span
+            ><span data-copy="delivery">Доставка та оплата</span
+            ><span data-copy="returns">Повернення та обмін</span
+            ><span data-copy="gallery">Галерея</span><span data-copy="articles">Статті</span
+            ><span data-copy="contacts" aria-current="page">Контакти</span>
+          </nav>
+          <div class="kc-settings">
+            <div class="kc-lang" aria-label="Мова">
+              <button type="button" data-locale="uk" aria-current="true" aria-label="Українська">
+                UA</button
+              ><span aria-hidden="true">/</span
+              ><button type="button" data-locale="ru" aria-label="Русский">RU</button>
+            </div>
+            <button type="button" class="kc-theme" data-toggle-theme aria-label="Змінити тему">
+              <i class="kc-icon" data-lucide="sun-moon" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="kc-wrap kc-mainbar">
+        <details class="kc-mobile-menu">
+          <summary aria-label="Меню">
+            <i class="kc-icon" data-lucide="menu" aria-hidden="true"></i>
+          </summary>
+          <div class="kc-mobile-drawer">
+            <strong data-copy="contacts">Контакти</strong>
+            <a href="#kc-connect" data-copy="jumpConnect">Зв’язок</a>
+            <a href="#kc-location" data-copy="jumpLocation">Де ми</a>
+            <a href="#kc-wholesale" data-copy="jumpWholesale">Співпраця</a>
+            <div class="kc-settings">
+              <div class="kc-lang" aria-label="Мова">
+                <button type="button" data-locale="uk" aria-current="true" aria-label="Українська">
+                  UA</button
+                ><span aria-hidden="true">/</span
+                ><button type="button" data-locale="ru" aria-label="Русский">RU</button>
+              </div>
+              <button type="button" class="kc-theme" data-toggle-theme aria-label="Змінити тему">
+                <i class="kc-icon" data-lucide="sun-moon" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </details>
+        <div class="kc-logo" aria-label="Class Kedr"><span>Class</span> Kedr</div>
+        <span class="kc-catalog"
+          ><i class="kc-icon" data-lucide="layout-grid" aria-hidden="true"></i
+          ><span data-copy="catalog">Каталог</span></span
+        >
+        <div class="kc-search" aria-label="Пошук у шапці сайту">
+          <i class="kc-icon" data-lucide="search" aria-hidden="true"></i
+          ><span data-copy="search">Пошук за артикулом або назвою</span><kbd>/</kbd>
+        </div>
+        <div class="kc-phone-tools" data-phone-block>
+          <a class="kc-header-phone" href="tel:+380687135049"
+            ><i class="kc-icon" data-lucide="phone" aria-hidden="true"></i>(068) 713-50-49</a
+          >
+          <button
+            type="button"
+            class="kc-copy"
+            data-copy-phone
+            aria-label="Скопіювати номер телефону"
+          >
+            <i class="kc-icon" data-lucide="copy" aria-hidden="true"></i>
+          </button>
+          <div class="kc-header-messengers">
+            <a
+              href="https://t.me/+380687135049"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Telegram"
+              ><i class="kc-icon" data-lucide="send" aria-hidden="true"></i></a
+            ><a href="viber://chat?number=%2B380687135049" aria-label="Viber"
+              ><i class="kc-icon" data-lucide="message-circle" aria-hidden="true"></i></a
+            ><a
+              href="https://maps.app.goo.gl/D2rH3HcaxLfxik5H6"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-map-label
+              aria-label="Відкрити на карті"
+              ><i class="kc-icon" data-lucide="map-pin" aria-hidden="true"></i
+            ></a>
+          </div>
+          <p
+            class="kc-status kc-header-status"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></p>
+        </div>
+        <div class="kc-tools">
+          <span aria-label="Кабінет"
+            ><i class="kc-icon" data-lucide="user-round" aria-hidden="true"></i
+            ><span class="kc-tool-label" data-copy="cabinetLabel">Кабінет</span></span
+          ><span aria-label="Кошик"
+            ><i class="kc-icon" data-lucide="shopping-cart" aria-hidden="true"></i
+            ><span class="kc-tool-label" data-copy="cartLabel">Кошик</span></span
+          >
+        </div>
+      </div>
+      <div class="kc-categories">
+        <nav class="kc-wrap kc-categories-inner" aria-label="Категорії">
+          <span data-copy="hinges">Завіси</span><span data-copy="locks">Замки</span
+          ><span data-copy="handles">Ручки</span><span data-copy="cylinders">Циліндри</span
+          ><span data-copy="mechanisms">Міжкімнатні механізми</span
+          ><span data-copy="other">Інше</span><span data-copy="doors">Двері</span
+          ><span data-copy="regions">Регіони</span
+          ><a class="kc-partners-nav" href="#kc-wholesale"
+            ><i class="kc-icon" data-lucide="handshake" aria-hidden="true"></i
+            ><span data-copy="jumpWholesale">Співпраця</span></a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main class="kc-wrap kc-content" id="kc-content">
+      <nav class="kc-breadcrumb" aria-label="Хлібні крихти">
+        <i class="kc-icon" data-lucide="house" aria-hidden="true"></i
+        ><span aria-hidden="true">/</span
+        ><span data-copy="contacts" aria-current="page">Контакти</span>
+      </nav>
+      <div class="kc-intro">
+        <h1 data-copy="contacts">Контакти</h1>
+        <p data-copy="intro">
+          Запитайте про наявність, замовлення або співпрацю — оберіть зручний спосіб зв’язку.
+        </p>
+        <nav class="kc-jumps" aria-label="Розділи сторінки">
+          <a href="#kc-connect" data-copy="jumpConnect">Зв’язок</a
+          ><a href="#kc-location" data-copy="jumpLocation">Де ми</a
+          ><a href="#kc-wholesale" data-copy="jumpWholesale">Співпраця</a>
+        </nav>
+      </div>
+
+      <section class="kc-contact-grid" id="kc-connect" aria-label="Способи зв’язку">
+        <div class="kc-panel kc-phone-panel" data-phone-block>
+          <h2 class="kc-section-heading">
+            <i class="kc-icon" data-lucide="phone" aria-hidden="true"></i
+            ><span data-copy="sales">Відділ продажу</span>
+          </h2>
+          <div class="kc-phone-number-row">
+            <a class="kc-phone-number" href="tel:+380687135049">(068) 713-50-49</a
+            ><button
+              type="button"
+              class="kc-copy"
+              data-copy-phone
+              aria-label="Скопіювати номер телефону"
+            >
+              <i class="kc-icon" data-lucide="copy" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="kc-phone-caption" data-copy="phoneCaption">
+            Дверна фурнітура оптом і в роздріб.
+          </p>
+          <p class="kc-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          <a href="tel:+380687135049" class="kc-action"
+            ><i class="kc-icon" data-lucide="phone" aria-hidden="true"></i
+            ><span data-copy="call">Зателефонувати</span></a
+          >
+        </div>
+        <div class="kc-panel kc-messengers">
+          <h2 data-copy="write">Напишіть нам</h2>
+          <a
+            class="kc-channel"
+            href="https://t.me/+380687135049"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><i class="kc-icon" data-lucide="send" aria-hidden="true"></i
+            ><span class="kc-channel-content"
+              ><span class="kc-channel-title">Telegram</span
+              ><span class="kc-channel-caption" data-copy="telegramCaption"
+                >Перейти до чату</span
+              ></span
+            ><i class="kc-icon" data-lucide="arrow-up-right" aria-hidden="true"></i
+          ></a>
+          <a class="kc-channel" href="viber://chat?number=%2B380687135049"
+            ><i class="kc-icon" data-lucide="message-circle" aria-hidden="true"></i
+            ><span class="kc-channel-content"
+              ><span class="kc-channel-title">Viber</span
+              ><span class="kc-channel-caption" data-copy="viberCaption"
+                >Відкрити у застосунку</span
+              ></span
+            ><i class="kc-icon" data-lucide="arrow-up-right" aria-hidden="true"></i
+          ></a>
+          <a class="kc-channel" href="mailto:kedr.class19@gmail.com"
+            ><i class="kc-icon" data-lucide="mail" aria-hidden="true"></i
+            ><span class="kc-channel-content"
+              ><span class="kc-channel-title" data-copy="email">Електронна пошта</span
+              ><span class="kc-channel-caption">kedr.class19@gmail.com</span></span
+            ><i class="kc-icon" data-lucide="arrow-up-right" aria-hidden="true"></i
+          ></a>
+        </div>
+      </section>
+
+      <section class="kc-panel kc-location" id="kc-location" aria-labelledby="kc-location-heading">
+        <div class="kc-location-main">
+          <h2 class="kc-section-heading" id="kc-location-heading">
+            <i class="kc-icon" data-lucide="map-pin" aria-hidden="true"></i
+            ><span data-copy="findUs">Як нас знайти</span>
+          </h2>
+          <p data-copy="city">Україна, м. Харків</p>
+          <a
+            class="kc-action kc-action-outline"
+            href="https://maps.app.goo.gl/D2rH3HcaxLfxik5H6"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><span data-copy="openMap">Відкрити на карті</span
+            ><i class="kc-icon" data-lucide="arrow-up-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <div class="kc-visit">
+          <h3 data-copy="visitTitle">Плануєте візит?</h3>
+          <p data-copy="visitCopy">Уточніть у менеджера адресу та зручний час перед поїздкою.</p>
+          <a class="kc-inline-link" href="tel:+380687135049"
+            ><span data-copy="contactManager">Зв’язатися з менеджером</span
+            ><i class="kc-icon" data-lucide="arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+      </section>
+
+      <section class="kc-wholesale" id="kc-wholesale" aria-labelledby="kc-wholesale-heading">
+        <div>
+          <h2 id="kc-wholesale-heading" data-copy="wholesaleTitle">Співпраця для вашого бізнесу</h2>
+          <p data-copy="wholesaleCopy">
+            Працюєте з дверною фурнітурою? Обговоріть замовлення та умови співпраці з менеджером.
+          </p>
+        </div>
+        <a
+          class="kc-action"
+          href="https://t.me/+380687135049"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><span data-copy="writeManager">Написати менеджеру</span
+          ><i class="kc-icon" data-lucide="arrow-up-right" aria-hidden="true"></i
+        ></a>
+      </section>
+
+      <section class="kc-help" aria-labelledby="kc-help-heading">
+        <div>
+          <h2 id="kc-help-heading" data-copy="beforeContact">Перед зверненням</h2>
+          <p data-copy="prepare">
+            Підготуйте артикул товару або номер замовлення — це допоможе уточнити ваше питання.
+          </p>
+        </div>
+        <nav class="kc-help-links" aria-label="Корисна інформація">
+          <a
+            href="https://classkedr.com.ua/uk/delivery-and-payment"
+            data-localized-route="delivery-and-payment"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><i class="kc-icon" data-lucide="truck" aria-hidden="true"></i
+            ><span data-copy="delivery">Доставка та оплата</span></a
+          ><a
+            href="https://classkedr.com.ua/uk/returns-exchanges"
+            data-localized-route="returns-exchanges"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><i class="kc-icon" data-lucide="undo-2" aria-hidden="true"></i
+            ><span data-copy="returns">Повернення та обмін</span></a
+          >
+        </nav>
+      </section>
+    </main>
+
+    <footer class="kc-footer">
+      <div class="kc-wrap kc-footer-grid">
+        <div>
+          <h2 data-copy="catalog">Каталог</h2>
+          <ul>
+            <li data-copy="hinges">Завіси</li>
+            <li data-copy="locks">Замки</li>
+            <li data-copy="handles">Ручки</li>
+            <li data-copy="cylinders">Циліндри</li>
+            <li data-copy="mechanisms">Міжкімнатні механізми</li>
+            <li data-copy="other">Інше</li>
+            <li data-copy="doors">Двері</li>
+          </ul>
+        </div>
+        <div>
+          <h2 data-copy="company">Компанія</h2>
+          <ul>
+            <li data-copy="about">Про компанію</li>
+            <li data-copy="gallery">Галерея</li>
+            <li data-copy="articles">Статті</li>
+            <li data-copy="contacts">Контакти</li>
+            <li data-copy="jumpWholesale">Співпраця</li>
+          </ul>
+        </div>
+        <div>
+          <h2 data-copy="buyers">Покупцям</h2>
+          <ul>
+            <li data-copy="delivery">Доставка та оплата</li>
+            <li data-copy="returns">Повернення та обмін</li>
+            <li data-copy="offer">Публічна оферта</li>
+            <li data-copy="privacy">Політика конфіденційності</li>
+            <li data-copy="requisites">Реквізити</li>
+          </ul>
+        </div>
+        <address>
+          <h2 data-copy="contacts">Контакти</h2>
+          <a href="tel:+380687135049"
+            ><i class="kc-icon" data-lucide="phone" aria-hidden="true"></i>(068) 713-50-49</a
+          ><a href="mailto:kedr.class19@gmail.com"
+            ><i class="kc-icon" data-lucide="mail" aria-hidden="true"></i>kedr.class19@gmail.com</a
+          ><span
+            ><i class="kc-icon" data-lucide="map-pin" aria-hidden="true"></i
+            ><span data-copy="city">Україна, м. Харків</span></span
+          ><a href="https://t.me/+380687135049" target="_blank" rel="noopener noreferrer"
+            >Telegram</a
+          ><a href="viber://chat?number=%2B380687135049">Viber</a>
+        </address>
+      </div>
+      <p class="kc-wrap kc-copyright" data-copy="copyright">
+        © 2026 Class Kedr. Усі права захищені.
+      </p>
+    </footer>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.getElementById('kedr-contacts-concept');
+    if (!root) return;
+    const translations = {
+      uk: {
+        city: 'Україна, м. Харків',
+        about: 'Про компанію',
+        delivery: 'Доставка та оплата',
+        returns: 'Повернення та обмін',
+        gallery: 'Галерея',
+        articles: 'Статті',
+        contacts: 'Контакти',
+        catalog: 'Каталог',
+        search: 'Пошук за артикулом або назвою',
+        hinges: 'Завіси',
+        locks: 'Замки',
+        handles: 'Ручки',
+        cylinders: 'Циліндри',
+        mechanisms: 'Міжкімнатні механізми',
+        other: 'Інше',
+        doors: 'Двері',
+        regions: 'Регіони',
+        jumpWholesale: 'Співпраця',
+        jumpConnect: 'Зв’язок',
+        jumpLocation: 'Де ми',
+        intro:
+          'Запитайте про наявність, замовлення або співпрацю — оберіть зручний спосіб зв’язку.',
+        sales: 'Відділ продажу',
+        phoneCaption: 'Дверна фурнітура оптом і в роздріб.',
+        call: 'Зателефонувати',
+        write: 'Напишіть нам',
+        telegramCaption: 'Перейти до чату',
+        viberCaption: 'Відкрити у застосунку',
+        email: 'Електронна пошта',
+        findUs: 'Як нас знайти',
+        openMap: 'Відкрити на карті',
+        visitTitle: 'Плануєте візит?',
+        visitCopy: 'Уточніть у менеджера адресу та зручний час перед поїздкою.',
+        contactManager: 'Зв’язатися з менеджером',
+        wholesaleTitle: 'Співпраця для вашого бізнесу',
+        wholesaleCopy:
+          'Працюєте з дверною фурнітурою? Обговоріть замовлення та умови співпраці з менеджером.',
+        writeManager: 'Написати менеджеру',
+        beforeContact: 'Перед зверненням',
+        prepare:
+          'Підготуйте артикул товару або номер замовлення — це допоможе уточнити ваше питання.',
+        company: 'Компанія',
+        buyers: 'Покупцям',
+        offer: 'Публічна оферта',
+        privacy: 'Політика конфіденційності',
+        requisites: 'Реквізити',
+        copyright: '© 2026 Class Kedr. Усі права захищені.',
+        copied: 'Номер скопійовано',
+        copyFallback: 'Номер телефону: +380687135049',
+        copyLabel: 'Скопіювати номер телефону',
+        themeLabel: 'Змінити тему',
+        menuLabel: 'Меню',
+        cabinetLabel: 'Кабінет',
+        cartLabel: 'Кошик',
+        langLabel: 'Мова',
+        breadcrumbLabel: 'Хлібні крихти',
+        sectionsLabel: 'Розділи сторінки',
+        channelsLabel: 'Способи зв’язку',
+        helpLabel: 'Корисна інформація',
+        infoLabel: 'Інформаційні сторінки',
+        categoryLabel: 'Категорії',
+        searchLabel: 'Пошук у шапці сайту',
+        conceptLabel: 'Концепт сторінки Контакти Class Kedr',
+      },
+      ru: {
+        city: 'Украина, г. Харьков',
+        about: 'О компании',
+        delivery: 'Доставка и оплата',
+        returns: 'Возврат и обмен',
+        gallery: 'Галерея',
+        articles: 'Статьи',
+        contacts: 'Контакты',
+        catalog: 'Каталог',
+        search: 'Поиск по артикулу или названию',
+        hinges: 'Петли',
+        locks: 'Замки',
+        handles: 'Ручки',
+        cylinders: 'Цилиндры',
+        mechanisms: 'Межкомнатные механизмы',
+        other: 'Прочее',
+        doors: 'Двери',
+        regions: 'Регионы',
+        jumpWholesale: 'Сотрудничество',
+        jumpConnect: 'Связь',
+        jumpLocation: 'Где мы',
+        intro: 'Спросите о наличии, заказах или сотрудничестве — выберите удобный способ связи.',
+        sales: 'Отдел продаж',
+        phoneCaption: 'Дверная фурнитура оптом и в розницу.',
+        call: 'Позвонить',
+        write: 'Напишите нам',
+        telegramCaption: 'Перейти в чат',
+        viberCaption: 'Открыть в приложении',
+        email: 'Электронная почта',
+        findUs: 'Как нас найти',
+        openMap: 'Открыть на карте',
+        visitTitle: 'Планируете визит?',
+        visitCopy: 'Уточните у менеджера адрес и удобное время перед поездкой.',
+        contactManager: 'Связаться с менеджером',
+        wholesaleTitle: 'Сотрудничество для вашего бизнеса',
+        wholesaleCopy:
+          'Работаете с дверной фурнитурой? Обсудите заказ и условия сотрудничества с менеджером.',
+        writeManager: 'Написать менеджеру',
+        beforeContact: 'Перед обращением',
+        prepare: 'Подготовьте артикул товара или номер заказа — это поможет уточнить ваш вопрос.',
+        company: 'Компания',
+        buyers: 'Покупателям',
+        offer: 'Публичная оферта',
+        privacy: 'Политика конфиденциальности',
+        requisites: 'Реквизиты',
+        copyright: '© 2026 Class Kedr. Все права защищены.',
+        copied: 'Номер скопирован',
+        copyFallback: 'Номер телефона: +380687135049',
+        copyLabel: 'Скопировать номер телефона',
+        themeLabel: 'Изменить тему',
+        menuLabel: 'Меню',
+        cabinetLabel: 'Кабинет',
+        cartLabel: 'Корзина',
+        langLabel: 'Язык',
+        breadcrumbLabel: 'Хлебные крошки',
+        sectionsLabel: 'Разделы страницы',
+        channelsLabel: 'Способы связи',
+        helpLabel: 'Полезная информация',
+        infoLabel: 'Информационные страницы',
+        categoryLabel: 'Категории',
+        searchLabel: 'Поиск в шапке сайта',
+        conceptLabel: 'Концепт страницы Контакты Class Kedr',
+      },
+    };
+    const saved = globalThis.openai?.widgetState;
+    const remembered = saved?.privateContent?.kedrContacts || {};
+    const state = {
+      theme: ['auto', 'light', 'dark'].includes(remembered.theme) ? remembered.theme : 'auto',
+      locale: remembered.locale === 'ru' ? 'ru' : 'uk',
+      device: remembered.device === 'phone' ? 'phone' : 'responsive',
+    };
+    const statuses = root.querySelectorAll('.kc-status');
+    translations.uk.skip = 'Перейти до вмісту';
+    translations.ru.skip = 'Перейти к содержимому';
+    const setLabel = (selector, label) =>
+      root
+        .querySelectorAll(selector)
+        .forEach((element) => element.setAttribute('aria-label', label));
+    function render() {
+      const t = translations[state.locale];
+      root.dataset.theme = state.theme;
+      root.dataset.device = state.device;
+      root.lang = state.locale;
+      root.setAttribute('aria-label', t.conceptLabel);
+      root.querySelectorAll('[data-copy]').forEach((element) => {
+        element.textContent = t[element.dataset.copy];
+      });
+      root.querySelectorAll('[data-locale]').forEach((button) => {
+        button.setAttribute(
+          'aria-current',
+          button.dataset.locale === state.locale ? 'true' : 'false',
+        );
+      });
+      root.querySelectorAll('[data-localized-route]').forEach((link) => {
+        link.href = `https://classkedr.com.ua/${state.locale}/${link.dataset.localizedRoute}`;
+      });
+      setLabel('[data-copy-phone]', t.copyLabel);
+      setLabel('[data-map-label]', t.openMap);
+      setLabel('[data-toggle-theme]', t.themeLabel);
+      setLabel('.kc-mobile-menu summary', t.menuLabel);
+      setLabel('.kc-tools > span:first-child', t.cabinetLabel);
+      setLabel('.kc-tools > span:last-child', t.cartLabel);
+      setLabel('.kc-lang', t.langLabel);
+      setLabel('.kc-breadcrumb', t.breadcrumbLabel);
+      setLabel('.kc-jumps', t.sectionsLabel);
+      setLabel('.kc-contact-grid', t.channelsLabel);
+      setLabel('.kc-help-links', t.helpLabel);
+      setLabel('.kc-info', t.infoLabel);
+      setLabel('.kc-categories-inner', t.categoryLabel);
+      setLabel('.kc-search', t.searchLabel);
+      statuses.forEach((status) => {
+        status.textContent = '';
+      });
+    }
+    function persist() {
+      const snapshot = { theme: state.theme, locale: state.locale, device: state.device };
+      globalThis.openai
+        ?.setWidgetState?.({
+          modelContent: { kedrContacts: snapshot },
+          privateContent: { kedrContacts: snapshot },
+        })
+        ?.catch(() => {});
+    }
+    root.querySelectorAll('[data-locale]').forEach((button) =>
+      button.addEventListener('click', () => {
+        state.locale = button.dataset.locale;
+        render();
+        persist();
+      }),
+    );
+    root.querySelectorAll('[data-toggle-theme]').forEach((button) =>
+      button.addEventListener('click', () => {
+        const currentlyDark =
+          state.theme === 'dark' ||
+          (state.theme === 'auto' &&
+            globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches);
+        state.theme = currentlyDark ? 'light' : 'dark';
+        render();
+        persist();
+      }),
+    );
+    root.querySelectorAll('[data-copy-phone]').forEach((button) =>
+      button.addEventListener('click', async () => {
+        const status = button.closest('[data-phone-block]').querySelector('.kc-status');
+        try {
+          if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+          await navigator.clipboard.writeText('+380687135049');
+          status.textContent = translations[state.locale].copied;
+        } catch {
+          status.textContent = translations[state.locale].copyFallback;
+        }
+      }),
+    );
+    root.querySelectorAll('.kc-mobile-drawer a').forEach((link) =>
+      link.addEventListener('click', () => {
+        root.querySelector('.kc-mobile-menu').open = false;
+      }),
+    );
+    globalThis.addEventListener('openai:set_globals', (event) => {
+      const next = event.detail?.globals?.widgetState?.privateContent?.kedrContacts;
+      if (!next) return;
+      state.theme = ['auto', 'light', 'dark'].includes(next.theme) ? next.theme : state.theme;
+      state.locale = ['uk', 'ru'].includes(next.locale) ? next.locale : state.locale;
+      state.device = ['responsive', 'phone'].includes(next.device) ? next.device : state.device;
+      render();
+    });
+    render();
+    if (globalThis.Tweak) {
+      const tweak = new Tweak({
+        container: root,
+        onChange: () => {
+          render();
+          persist();
+        },
+      });
+      tweak.addSelect(state, 'device', {
+        label: 'Формат',
+        options: [
+          { label: 'Адаптивний', value: 'responsive' },
+          { label: 'Телефон · 390 px', value: 'phone' },
+        ],
+      });
+      tweak.addSelect(state, 'theme', {
+        label: 'Тема',
+        options: [
+          { label: 'Як у застосунку', value: 'auto' },
+          { label: 'Світла', value: 'light' },
+          { label: 'Темна', value: 'dark' },
+        ],
+      });
+      tweak.addSelect(state, 'locale', {
+        label: 'Мова',
+        options: [
+          { label: 'Українська', value: 'uk' },
+          { label: 'Русский', value: 'ru' },
+        ],
+      });
+    }
+  })();
+</script>

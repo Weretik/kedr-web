@@ -1,0 +1,32 @@
+# Трассировка
+
+| Правила             | Сценарий | Задача                                                                                                                    | Планируемое доказательство                                                                         | Статус                     |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------- |
+| R-001…R-003         | SC-001   | [TS-001](tasks/TS-001-contact-copy.md), [TS-003](tasks/TS-003-contact-ui.md), [TS-005](tasks/TS-005-route-integration.md) | contacts-content.spec.tsx, contacts-page.spec.tsx                                                  | verified: automated/source |
+| R-004               | SC-002   | [TS-003](tasks/TS-003-contact-ui.md)                                                                                      | contacts-content.spec.tsx: две tel-ссылки                                                          | verified: automated/source |
+| R-004, R-010        | SC-003   | [TS-002](tasks/TS-002-clipboard.md)                                                                                       | contacts-copy-phone-button.spec.tsx: success                                                       | verified: automated/source |
+| R-004, R-010        | SC-004   | [TS-002](tasks/TS-002-clipboard.md)                                                                                       | тот же spec: rejection/unavailable/retry без навигации                                             | verified: automated/source |
+| R-003, R-005        | SC-005   | [TS-003](tasks/TS-003-contact-ui.md)                                                                                      | contacts-content.spec.tsx: письменные каналы                                                       | verified: automated/source |
+| R-003, R-006        | SC-006   | [TS-003](tasks/TS-003-contact-ui.md)                                                                                      | contacts-content.spec.tsx: город/map/визит                                                         | verified: automated/source |
+| R-007               | SC-007   | [TS-003](tasks/TS-003-contact-ui.md)                                                                                      | contacts-content.spec.tsx: B2B/help links                                                          | verified: automated/source |
+| R-008               | SC-008   | [TS-001](tasks/TS-001-contact-copy.md), [TS-003](tasks/TS-003-contact-ui.md), [TS-005](tasks/TS-005-route-integration.md) | UK/RU component output + source integration locale switch                                          | verified: automated/source |
+| R-009               | SC-009   | [TS-003](tasks/TS-003-contact-ui.md), [TS-006](tasks/TS-006-verification-handoff.md)                                      | Source review tokens/breakpoints; browser evidence только по разрешению                            | verified: automated/source |
+| R-010               | SC-010   | [TS-002](tasks/TS-002-clipboard.md), [TS-003](tasks/TS-003-contact-ui.md)                                                 | component semantics/keyboard/feedback + source skip/focus                                          | verified: automated/source |
+| R-011, R-012        | SC-011   | [TS-004](tasks/TS-004-contact-seo.md), [TS-005](tasks/TS-005-route-integration.md)                                        | contacts-metadata.spec.ts, contacts-page.spec.tsx; [HTTP record](verification/seo-verification.md) | verified: automated/source |
+| R-001, R-008, R-012 | SC-012   | [TS-005](tasks/TS-005-route-integration.md)                                                                               | locale guard source + [HTTP 404 record](verification/seo-verification.md)                          | verified: automated/source |
+| R-013               | SC-013   | [TS-004](tasks/TS-004-contact-seo.md), [TS-005](tasks/TS-005-route-integration.md)                                        | contacts-json-ld.spec.ts, contacts-page.spec.tsx, source layout                                    | verified: automated/source |
+| R-012, R-014        | SC-014   | [TS-004](tasks/TS-004-contact-seo.md), [TS-005](tasks/TS-005-route-integration.md)                                        | contacts-metadata.spec.ts, content-sitemap.spec.ts                                                 | verified: automated/source |
+
+Итоговые evidence записаны в [TS-006](tasks/TS-006-verification-handoff.md) и [verification](verification/seo-verification.md). Test paths заданы в design/frontend.md и фактической feature card. Для SC-009 подтверждено только source wiring; для SC-011/SC-012/SC-013 фактический HTTP/head/status остаётся unrun. Статус verified относится к названному automated/source уровню, не к production release. `EN-*` не потребовались.
+
+## Архитектурный аудит 2026-11-03
+
+| Связь                                 | Владелец / итоговая задача                           | Fresh evidence                                         | Статус   |
+| ------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------ | -------- |
+| AF-001 → SC-003/004/010               | TS-002, [TS-007](tasks/TS-007-audit-verification.md) | mutation4fail, final UI 36/36, spec types/lint         | verified |
+| AF-002 → SC-011/013/014               | TS-004, TS-007                                       | boundary fixtures 12/12, graph 102                     | verified |
+| AF-003, AF-006 → source/config checks | TS-001, TS-007                                       | inferred lint inputs, model/scoped lint                | verified |
+| AF-004 → SC-009                       | TS-003, TS-007                                       | existing foreground token, UI regression/source review | verified |
+| AF-005 → SC-014                       | TS-005, TS-007                                       | feature spec tsc, feature 9/9                          | verified |
+
+[Audit report](code-audit/audit.md). Запрошенный structural extraction header/help/sales/messengers сохраняет существующие SC; отдельные UI snapshots не добавлялись.

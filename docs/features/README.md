@@ -38,13 +38,14 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site/src/app/[locale]/layout.tsx). Features move here from the Angular storefront by the [migration plan](../specs/site/migration/README.md). See [Site architecture](../architecture/site/README.md).
 
-| Feature                                            | Route or entry                                                      | Status                                                                                           |
-| -------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [Site shell](site/shell.md)                        | all `/uk` and `/ru` routes, `robots`, `sitemap`                     | Header, footer, themes, languages, SEO base                                                      |
-| [Site home page](site/home.md)                     | `/uk`, `/ru`                                                        | Home and company page (`#about-company`); hero/search, catalog, results, brands and FAQ (uk/ru)  |
-| [Delivery and payment](site/delivery-payment.md)   | `/{locale}/delivery-and-payment`                                    | Sourced UK/RU terms, ordering steps, contact, themes/responsive layout, metadata and sitemap     |
-| [Returns and exchanges](site/returns-exchanges.md) | `/{locale}/returns-exchanges`                                       | UK/RU conditions, warranty, full policy, process, phone, native FAQ, metadata and sitemap        |
-| [Site catalog](site/catalog.md)                    | `/{locale}/catalog`, `/{locale}/catalog/{slug}`, `/{locale}/search` | Category page with tree, filters, pages, «Показати ще», SEO text and FAQ; hub; search; mega menu |
+| Feature                                            | Route or entry                                                      | Status                                                                                                               |
+| -------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| [Site shell](site/shell.md)                        | all `/uk` and `/ru` routes, `robots`, `sitemap`                     | Header with centered top links and sun/moon switch, footer, languages, SEO base                                      |
+| [Site home page](site/home.md)                     | `/uk`, `/ru`                                                        | Home and company page (`#about-company`); hero/search, catalog, results, brands and FAQ (uk/ru)                      |
+| [Delivery and payment](site/delivery-payment.md)   | `/{locale}/delivery-and-payment`                                    | Sourced UK/RU terms, ordering steps, contact, themes/responsive layout, metadata and sitemap                         |
+| [Returns and exchanges](site/returns-exchanges.md) | `/{locale}/returns-exchanges`                                       | UK/RU conditions, warranty, full policy, process, phone, native FAQ, metadata and sitemap                            |
+| [Contacts](site/contacts.md)                       | `/{locale}/contacts`                                                | UK/RU phone, clipboard feedback, messengers/email/map, cooperation, server HTML, metadata/BreadcrumbList and sitemap |
+| [Site catalog](site/catalog.md)                    | `/{locale}/catalog`, `/{locale}/catalog/{slug}`, `/{locale}/search` | Category page with tree, filters, pages, «Показати ще», SEO text and FAQ; hub; search; mega menu                     |
 
 ## Storefront Angular
 

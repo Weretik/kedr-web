@@ -32,9 +32,13 @@
 
 ## Site Next.js
 
+- [Contacts](site/content/001-contacts/README.md) — implemented and architecture-audited 2026-11-03; six findings verified, UI extraction and focused checks complete; HTTP/browser/build unrun
+
 - [Delivery and payment](site/content/001-delivery-payment/README.md) — implemented and audited 2026-11-03; localized delivery/payment and sitemap
 
 - [Returns and exchanges](site/content/001-returns-exchanges/README.md) — implemented 2026-11-03; responsibility audit/refactoring completed, findings verified
+
+- [Centered top navigation and theme switch](site/shell/001-top-bar-controls/README.md) — implemented and audited 2026-11-03
 
 - [Storefront migration to Next.js: plan](site/migration/README.md) and [feature inventory with SEO analysis](site/migration/feature-inventory.md)
 - [Home page](site/home/001-home-page/README.md) — implemented; company concept and FAQ added 2026-11-03
