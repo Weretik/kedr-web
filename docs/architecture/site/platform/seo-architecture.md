@@ -71,7 +71,7 @@ All JSON-LD is rendered on the server with `JsonLd`, which escapes `<`, `>`, and
 
 ## Sitemaps and robots
 
-- One `sitemap.xml` now (home only). From step 3: a sitemap index split by type (`categories`, `products`, `content`) with `generateSitemaps`; each file under 50,000 URLs.
+- One `sitemap.xml` now includes home, catalog and the migrated returns content page in both languages. From step 3: a sitemap index split by type (`categories`, `products`, `content`) with `generateSitemaps`; each file under 50,000 URLs.
 - `lastModified`: from the API once it exposes `updatedAt` for products and categories; omitted until then.
 - `robots.txt` (indexing on): allow `/`, disallow `/api/` and `/{locale}/checkout|cabinet|login`, `Sitemap:` absolute URL.
 
@@ -88,3 +88,5 @@ From KedrStore for full SEO (record each in the matching feature SDD and the [co
 3. "Removed" status for products (410) and a redirect target when a slug changes.
 4. Category description and SEO text per locale.
 5. Revalidation webhook calls on catalog import and product or category changes.
+
+Returns/exchanges metadata is owned by content/seo. The preserved `/{locale}/returns-exchanges` route uses the same self canonical, reciprocal language alternates and indexing gate, and is listed in CONTENT_SITEMAP_PAGES. The shell already links to the route; complete policy text remains server HTML.

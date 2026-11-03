@@ -1,0 +1,10 @@
+# Traceability
+
+| Scenarios                                         | Tasks          | Planned tests                                                                 | Evidence / status                                                                                         |
+| ------------------------------------------------- | -------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| SC-001, SC-002, SC-003, SC-004                    | TS-001, TS-002 | content UI/feature component tests                                            | [TS-002](tasks/TS-002-returns-ui.md) — verified (focused automated/source evidence)                       |
+| SC-005, SC-006                                    | TS-001, TS-002 | full-policy preservation and native FAQ markup                                | [TS-002](tasks/TS-002-returns-ui.md) — verified (focused automated/source evidence)                       |
+| SC-007                                            | TS-002, TS-004 | token and responsive code review                                              | [TS-004](tasks/TS-004-verification-docs.md) — verified (focused automated/source evidence)                |
+| SC-008, SC-010                                    | TS-003         | content SEO metadata tests; locale route review                               | [TS-003](tasks/TS-003-seo-route.md) — verified (focused automated/source evidence)                        |
+| SC-009                                            | TS-003         | content sitemap composition test                                              | [TS-003](tasks/TS-003-seo-route.md) — verified (focused automated/source evidence)                        |
+| SC-001…SC-010 (behavior preserved); AF-001…AF-004 | TS-005         | Existing UI regression, complete policy invariant, source/test types and lint | [TS-005](tasks/TS-005-audit-refactoring.md) — verified (10 tests, lint, source/test types and boundaries) |
