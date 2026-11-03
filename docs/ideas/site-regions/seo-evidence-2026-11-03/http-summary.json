@@ -1,0 +1,128 @@
+[
+  {
+    "Id": "uk-kyiv",
+    "Url": "https://classkedr.com.ua/uk/region/kyiv",
+    "FinalUrl": "https://classkedr.com.ua/uk/region/kyiv/",
+    "Status": 200,
+    "ContentLength": 191813,
+    "Title": "Class Kedr",
+    "H1": [
+      "Class Kedr   замовити оптом фурнітуру та двері в Києві"
+    ],
+    "Canonical": [
+      "<link rel=\"canonical\" href=\"https://classkedr.com.ua/uk/region/kyiv\">"
+    ],
+    "Alternates": [
+      "<link rel=\"alternate\" hreflang=\"uk-UA\" href=\"https://classkedr.com.ua/uk/region/kyiv\">",
+      "<link rel=\"alternate\" hreflang=\"ru-UA\" href=\"https://classkedr.com.ua/ru/region/kyiv\">",
+      "<link rel=\"alternate\" hreflang=\"x-default\" href=\"https://classkedr.com.ua/uk/region/kyiv\">"
+    ],
+    "Meta": [],
+    "BodyTextLength": 2527,
+    "BodyPreview": "(068) 713-50-49 UK RU 0 Каталог Всі категорії Завіси Замки Ручки Циліндри Міжкімнатні механізми Інше Інформація Про нас Про компанію Доставка та оплата Повернення та обмін Галерея та відео Статті Контакти Регіони Вінницька область Волинська область Дніпропетровська область Житомирська область Закарпатська область Запорізька область Івано-Франківська область Київська область Кіровоградська область Львівська область Миколаївська область Одеська обл",
+    "RegionLocCount": 0,
+    "Snapshot": "uk-kyiv.html",
+    "Error": null
+  },
+  {
+    "Id": "ru-kyiv",
+    "Url": "https://classkedr.com.ua/ru/region/kyiv",
+    "FinalUrl": "https://classkedr.com.ua/ru/region/kyiv/",
+    "Status": 200,
+    "ContentLength": 191876,
+    "Title": "Class Kedr",
+    "H1": [
+      "Class Kedr   заказать оптом фурнитуру и двери в Киеве"
+    ],
+    "Canonical": [
+      "<link rel=\"canonical\" href=\"https://classkedr.com.ua/ru/region/kyiv\">"
+    ],
+    "Alternates": [
+      "<link rel=\"alternate\" hreflang=\"uk-UA\" href=\"https://classkedr.com.ua/uk/region/kyiv\">",
+      "<link rel=\"alternate\" hreflang=\"ru-UA\" href=\"https://classkedr.com.ua/ru/region/kyiv\">",
+      "<link rel=\"alternate\" hreflang=\"x-default\" href=\"https://classkedr.com.ua/uk/region/kyiv\">"
+    ],
+    "Meta": [],
+    "BodyTextLength": 2571,
+    "BodyPreview": "(068) 713-50-49 UK RU 0 Каталог Все категории Петли Замки Ручки Цилиндры Межкомнатные механизмы Другое Информация О нас О компании Доставка и оплата Возврат и обмен Галерея и видео Статьи Контакты Регионы Винницкая область Волынская область Днепропетровская область Житомирская область Закарпатская область Запорожская область Ивано-Франковская область Киевская область Кировоградская область Львовская область Николаевская область Одесская область П",
+    "RegionLocCount": 0,
+    "Snapshot": "ru-kyiv.html",
+    "Error": null
+  },
+  {
+    "Id": "uk-lviv",
+    "Url": "https://classkedr.com.ua/uk/region/lvivska-oblast",
+    "FinalUrl": "https://classkedr.com.ua/uk/region/lvivska-oblast/",
+    "Status": 200,
+    "ContentLength": 191869,
+    "Title": "Class Kedr",
+    "H1": [
+      "Class Kedr   замовити оптом фурнітуру та двері у Львівській області"
+    ],
+    "Canonical": [
+      "<link rel=\"canonical\" href=\"https://classkedr.com.ua/uk/region/lvivska-oblast\">"
+    ],
+    "Alternates": [
+      "<link rel=\"alternate\" hreflang=\"uk-UA\" href=\"https://classkedr.com.ua/uk/region/lvivska-oblast\">",
+      "<link rel=\"alternate\" hreflang=\"ru-UA\" href=\"https://classkedr.com.ua/ru/region/lvivska-oblast\">",
+      "<link rel=\"alternate\" hreflang=\"x-default\" href=\"https://classkedr.com.ua/uk/region/lvivska-oblast\">"
+    ],
+    "Meta": [],
+    "BodyTextLength": 2553,
+    "BodyPreview": "(068) 713-50-49 UK RU 0 Каталог Всі категорії Завіси Замки Ручки Циліндри Міжкімнатні механізми Інше Інформація Про нас Про компанію Доставка та оплата Повернення та обмін Галерея та відео Статті Контакти Регіони Вінницька область Волинська область Дніпропетровська область Житомирська область Закарпатська область Запорізька область Івано-Франківська область Київська область Кіровоградська область Львівська область Миколаївська область Одеська обл",
+    "RegionLocCount": 0,
+    "Snapshot": "uk-lviv.html",
+    "Error": null
+  },
+  {
+    "Id": "uk-unknown",
+    "Url": "https://classkedr.com.ua/uk/region/audit-region-not-found-20261103",
+    "FinalUrl": "https://classkedr.com.ua/uk/region/audit-region-not-found-20261103",
+    "Status": 200,
+    "ContentLength": 598,
+    "Title": "Redirecting",
+    "H1": [],
+    "Canonical": [],
+    "Alternates": [],
+    "Meta": [],
+    "BodyTextLength": 18,
+    "BodyPreview": "Redirecting to /uk",
+    "RegionLocCount": 0,
+    "Snapshot": "uk-unknown.html",
+    "Error": null
+  },
+  {
+    "Id": "robots",
+    "Url": "https://classkedr.com.ua/robots.txt",
+    "FinalUrl": "https://classkedr.com.ua/robots.txt",
+    "Status": 200,
+    "ContentLength": 2907,
+    "Title": "Redirecting",
+    "H1": [],
+    "Canonical": [],
+    "Alternates": [],
+    "Meta": [],
+    "BodyTextLength": 2584,
+    "BodyPreview": "# As a condition of accessing this website, you agree to abide by the following # content signals: # (a) If a Content-Signal = yes, you may collect content for the corresponding # use. # (b) If a Content-Signal = no, you may not collect content for the # corresponding use. # (c) If the website operator does not include a Content-Signal for a # corresponding use, the website operator neither grants nor restricts # permission via Content-Signal wit",
+    "RegionLocCount": 0,
+    "Snapshot": "robots.txt",
+    "Error": null
+  },
+  {
+    "Id": "sitemap",
+    "Url": "https://classkedr.com.ua/sitemap.xml",
+    "FinalUrl": "https://classkedr.com.ua/sitemap.xml",
+    "Status": 200,
+    "ContentLength": 598,
+    "Title": "Redirecting",
+    "H1": [],
+    "Canonical": [],
+    "Alternates": [],
+    "Meta": [],
+    "BodyTextLength": 18,
+    "BodyPreview": "Redirecting to /uk",
+    "RegionLocCount": 0,
+    "Snapshot": "sitemap.xml",
+    "Error": null
+  }
+]

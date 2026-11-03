@@ -1,0 +1,12 @@
+{
+  "ComparedFiles": [
+    "uk-kyiv.html",
+    "uk-lviv.html"
+  ],
+  "Normalization": "Strip script/style/tags from main, HTML-decode and collapse whitespace; replace в Києві and у Львівській області with [LOCATION]",
+  "KyivMainCharacters": 1414,
+  "LvivMainCharacters": 1440,
+  "KyivLocationMentions": 2,
+  "LvivLocationMentions": 2,
+  "NormalizedTextEqual": true
+}

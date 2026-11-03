@@ -1,0 +1,14 @@
+Date: Tue, 03 Nov 2026 09:26:57 GMT
+Connection: keep-alive
+Referrer-Policy: strict-origin-when-cross-origin
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Nn2kSHHOxa9Q8lvgjud73iPNV571d%2BomFde38QVc8VnKZiywQzQKDbBJH3zwfgzw6sI5BRXEWcCQcu88K6Scq2moDT9YqN8Q%2B4uiAXXh%2BVMMvtPJooLmQrFNIz04UssZO1UX"}]}
+Location: /uk/region/kyiv/
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Access-Control-Allow-Origin: *
+Server-Timing: cfCacheStatus;desc="DYNAMIC", cfEdge;dur=31,cfOrigin;dur=44
+Server: cloudflare
+cf-cache-status: DYNAMIC
+CF-RAY: a54a57224ab33263-VIE
+Alt-Svc: h3=":443"
+Content-Length: 0
+

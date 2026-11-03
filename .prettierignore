@@ -9,3 +9,6 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 libs/shared/api-contracts/src/generated/
+
+# Preserve captured HTTP evidence as received.
+docs/ideas/site-regions/seo-evidence-2026-11-03/

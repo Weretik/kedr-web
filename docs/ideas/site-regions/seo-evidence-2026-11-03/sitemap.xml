@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting</title>
+    <meta http-equiv="refresh" content="0; url=/uk">
+  </head>
+  <body>
+    <pre>Redirecting to <a href="/uk">/uk</a></pre>
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"42a87d5a3e3c4d03924b8219cfe5f5ab","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
