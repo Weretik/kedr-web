@@ -47,7 +47,6 @@ describe('home company concept', () => {
       'uk',
       'Про Class Kedr',
       'Як допомагаємо партнерам',
-      'Фурнітура для ваших завдань',
       'Досвід та результати',
       'Бренди, з якими працюємо',
       'Часті запитання',
@@ -57,7 +56,6 @@ describe('home company concept', () => {
       'ru',
       'О Class Kedr',
       'Как помогаем партнёрам',
-      'Фурнитура для ваших задач',
       'Опыт и результаты',
       'Бренды, с которыми работаем',
       'Частые вопросы',
@@ -68,7 +66,7 @@ describe('home company concept', () => {
     async (locale, ...labels) => {
       getCatalogSections.mockResolvedValue(null);
       await renderHome(locale);
-      for (const label of labels.slice(0, 6)) {
+      for (const label of labels.slice(0, 5)) {
         expect(screen.getByRole('heading', { level: 2, name: label })).toBeTruthy();
       }
       expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
@@ -81,8 +79,6 @@ describe('home company concept', () => {
       expect(screen.getByRole('region', { name: labels[0] }).id).toBe('about-company');
       const support = screen.getByRole('complementary', { name: labels[1] });
       expect(within(support).getAllByRole('listitem')).toHaveLength(4);
-      const advantages = screen.getByRole('region', { name: labels[2] });
-      expect(within(advantages).getAllByRole('listitem')).toHaveLength(6);
       const faq = document.querySelectorAll('details[name="home-faq"]');
       expect(faq).toHaveLength(6);
       expect(faq[0].hasAttribute('open')).toBe(true);
@@ -91,7 +87,7 @@ describe('home company concept', () => {
         expect(item.querySelector('summary')?.textContent?.trim()).toBeTruthy();
         expect(item.querySelector('p')?.textContent?.trim()).toBeTruthy();
       }
-      expect(screen.getByRole('link', { name: labels[6] }).getAttribute('href')).toBe(
+      expect(screen.getByRole('link', { name: labels[5] }).getAttribute('href')).toBe(
         'tel:+380687135049',
       );
     },

@@ -18,6 +18,7 @@ export {
   serializeArticlesQuery,
 } from './lib/articles/articles-query';
 export { buildArticlesListing } from './lib/articles/articles-listing';
+export { ARTICLES_TOOLS_MIN_TOTAL, showArticlesTools } from './lib/articles/articles-tools';
 export { getArticlesDictionary } from './lib/articles/articles-dictionary';
 export type { ArticlesDictionary } from './lib/articles/articles-dictionary';
 export { getWholesaleDictionary } from './lib/wholesale-dictionary';

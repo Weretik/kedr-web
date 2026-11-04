@@ -1,6 +1,6 @@
 import { COMPANY, siteConfig } from '@site/core/config';
 import { LOCALES, LOCALE_LANGUAGE_TAGS, OPEN_GRAPH_LOCALES } from '@site/core/i18n';
-import { buildPageMetadata } from '@site/core/seo';
+import { DEFAULT_OG_IMAGE, buildPageMetadata } from '@site/core/seo';
 
 import { absoluteProductUrl, canonicalProductUrl } from '../urls/product-seo-urls';
 
@@ -44,7 +44,7 @@ export function buildProductMetadata(
       alternateLocale: LOCALES.filter(
         (locale) => locale !== input.locale && input.languagePaths[locale],
       ).map((locale) => OPEN_GRAPH_LOCALES[locale]),
-      ...(images.length ? { images } : {}),
+      images: images.length ? images : [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: images.length ? 'summary_large_image' : 'summary',

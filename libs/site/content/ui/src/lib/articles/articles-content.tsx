@@ -1,4 +1,9 @@
-import { ARTICLES_PATH, articlesHref, getArticlesDictionary } from '@site/content/model';
+import {
+  ARTICLES_PATH,
+  articlesHref,
+  getArticlesDictionary,
+  showArticlesTools,
+} from '@site/content/model';
 import { localizedPath } from '@site/core/i18n';
 import Link from 'next/link';
 
@@ -10,34 +15,40 @@ import { ArticlesSearchForm } from './articles-search-form';
 import type { ArticlesListing } from '@site/content/model';
 import type { Locale } from '@site/core/i18n';
 
-/** Server list body; its feature renders ArticlesHeader outside the Suspense boundary. */
+/**
+ * Server list body; its feature renders ArticlesHeader outside the Suspense boundary. A short list shows only the
+ * cards: search, page size, and paging appear from 20 articles or once the visitor has chosen any of them.
+ */
 export function ArticlesContent({ locale, listing }: { locale: Locale; listing: ArticlesListing }) {
   const dictionary = getArticlesDictionary(locale);
   const path = localizedPath(locale, ARTICLES_PATH);
   const { query } = listing;
+  const tools = showArticlesTools(listing);
 
   return (
     <div className="min-w-0 space-y-5">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-3">
-        <ArticlesSearchForm locale={locale} path={path} query={query} />
-        <p
-          aria-live="polite"
-          aria-atomic="true"
-          className="min-w-0 text-xs text-muted-foreground sm:text-sm md:col-span-2 md:col-start-1 md:row-start-2"
-        >
-          {dictionary.found(listing.total)}
-        </p>
-        <ArticlesPageSizeSelect
-          path={path}
-          query={query}
-          labels={{
-            pageSizeLabel: dictionary.pageSizeLabel,
-            pageSizeCaption: dictionary.pageSizeCaption,
-            applyPageSize: dictionary.applyPageSize,
-            updating: dictionary.updating,
-          }}
-        />
-      </div>
+      {tools && (
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-3">
+          <ArticlesSearchForm locale={locale} path={path} query={query} />
+          <p
+            aria-live="polite"
+            aria-atomic="true"
+            className="min-w-0 text-xs text-muted-foreground sm:text-sm md:col-span-2 md:col-start-1 md:row-start-2"
+          >
+            {dictionary.found(listing.total)}
+          </p>
+          <ArticlesPageSizeSelect
+            path={path}
+            query={query}
+            labels={{
+              pageSizeLabel: dictionary.pageSizeLabel,
+              pageSizeCaption: dictionary.pageSizeCaption,
+              applyPageSize: dictionary.applyPageSize,
+              updating: dictionary.updating,
+            }}
+          />
+        </div>
+      )}
       <div id="articles-results" className="scroll-mt-40 md:scroll-mt-20">
         {listing.items.length ? (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -64,7 +75,7 @@ export function ArticlesContent({ locale, listing }: { locale: Locale; listing: 
           </section>
         )}
       </div>
-      <ArticlesPagination locale={locale} listing={listing} />
+      {tools && <ArticlesPagination locale={locale} listing={listing} />}
     </div>
   );
 }

@@ -8,6 +8,14 @@ import type { SiteConfig } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { Metadata } from 'next';
 
+/** Shared preview for links to pages without their own picture (1200×630, in `apps/site/public`). */
+export const DEFAULT_OG_IMAGE = {
+  url: '/assets/og/kedr-og.jpg',
+  width: 1200,
+  height: 630,
+  alt: COMPANY.name,
+} as const;
+
 export type PageMetadataInput = {
   locale: Locale;
   /** Locale-free path of the page, for example `/wholesale`. */
@@ -28,7 +36,11 @@ export function buildRootMetadata(locale: Locale, config: SiteConfig = siteConfi
     applicationName: COMPANY.name,
     robots: buildRobotsMeta(config, true),
     formatDetection: { telephone: false },
-    openGraph: { siteName: COMPANY.name, locale: OPEN_GRAPH_LOCALES[locale] },
+    openGraph: {
+      siteName: COMPANY.name,
+      locale: OPEN_GRAPH_LOCALES[locale],
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }
 
@@ -55,6 +67,7 @@ export function buildPageMetadata(
       alternateLocale: LOCALES.filter((other) => other !== locale).map(
         (other) => OPEN_GRAPH_LOCALES[other],
       ),
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

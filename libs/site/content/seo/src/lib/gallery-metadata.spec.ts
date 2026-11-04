@@ -1,5 +1,5 @@
 import { createSiteConfig } from '@site/core/config';
-import { buildRootMetadata } from '@site/core/seo';
+import { DEFAULT_OG_IMAGE, buildRootMetadata } from '@site/core/seo';
 
 import { buildGalleryMetadata } from './gallery-metadata';
 
@@ -52,6 +52,7 @@ describe('gallery metadata', () => {
         description: page.description,
         locale: page.ogLocale,
         alternateLocale: [page.otherOgLocale],
+        images: [DEFAULT_OG_IMAGE],
       });
       expect(metadata.robots).toEqual({ index: true, follow: true });
       expect(metadata.twitter).toBeUndefined();

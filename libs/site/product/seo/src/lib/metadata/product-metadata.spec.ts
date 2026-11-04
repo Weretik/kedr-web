@@ -1,4 +1,5 @@
 import { createSiteConfig } from '@site/core/config';
+import { DEFAULT_OG_IMAGE } from '@site/core/seo';
 
 import { buildProductMetadata } from './product-metadata';
 import { productSeoFixture as input } from '../../test/product-seo.fixture';
@@ -45,13 +46,13 @@ describe('product metadata', () => {
     expect(metadata.title).toContain(input.sku);
   });
 
-  it('does not create x-default or an image for missing source data', () => {
+  it('does not create x-default and uses the shared preview without product photos', () => {
     const metadata = buildProductMetadata(
       { ...input, locale: 'ru', images: [], languagePaths: { ru: '/ru/product/handle-7' } },
       production,
     );
     expect(metadata.alternates?.languages).not.toHaveProperty('x-default');
-    expect(metadata.openGraph).not.toHaveProperty('images');
+    expect(metadata.openGraph).toMatchObject({ images: [DEFAULT_OG_IMAGE] });
     expect(metadata.twitter).toMatchObject({ card: 'summary' });
   });
 

@@ -1,4 +1,5 @@
 import { createSiteConfig } from '@site/core/config';
+import { DEFAULT_OG_IMAGE } from '@site/core/seo';
 
 import { buildArticleMetadata, buildArticlesMetadata } from './articles-metadata';
 
@@ -134,9 +135,9 @@ describe('article detail metadata', () => {
     },
   );
 
-  it('omits the Open Graph image when the article has no source cover', () => {
+  it('falls back to the shared preview when the article has no source cover', () => {
     expect(
       buildArticleMetadata('uk', { ...article, image: null }, production).openGraph,
-    ).not.toHaveProperty('images');
+    ).toMatchObject({ images: [DEFAULT_OG_IMAGE] });
   });
 });

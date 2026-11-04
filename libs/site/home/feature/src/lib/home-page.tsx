@@ -6,7 +6,6 @@ import { JsonLd, buildWebSiteJsonLd } from '@site/core/seo';
 import {
   CatalogUnavailable,
   HomeCompany,
-  HomeAdvantages,
   HomeResults,
   HomeBrands,
   HomeFaq,
@@ -20,7 +19,7 @@ import {
 import type { Locale } from '@site/core/i18n';
 
 /**
- * Home page body: hero with search, wholesale panel, catalog index, and company concept. Products are not shown here (owner decision 2026-11-01).
+ * Home page body: hero with search (desktop; phones use the header search), wholesale panel, catalog index, company and partner support, results, brands, and FAQ. Products are not shown here (owner decision 2026-11-01).
  * Catalog data is cached (`'use cache'`), so the whole page is part of the prerendered shell.
  */
 export async function HomePage({ locale }: { locale: Locale }) {
@@ -57,7 +56,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
       </HomeSection>
 
       <HomeCompany dictionary={companyDictionary} />
-      <HomeAdvantages dictionary={companyDictionary} />
       <HomeResults dictionary={companyDictionary} />
       <HomeBrands dictionary={companyDictionary} />
       <HomeFaq dictionary={companyDictionary} />
