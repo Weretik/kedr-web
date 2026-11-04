@@ -1,6 +1,6 @@
 import { useGetCompanyContactsQuery } from '@admin/company/data-access';
 import { CompanyContactsForm } from '@admin/company/ui';
-import { AdminPageHeader, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
+import { AdminPageHeader, ChangedNote, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
@@ -28,16 +28,19 @@ export function CompanyContactsPage() {
           Не вдалося завантажити контакти. Спробуйте ще раз.
         </Alert>
       ) : (
-        <CompanyContactsForm
-          dirty={editor.dirty}
-          draft={editor.draft}
-          errors={editor.errors}
-          onChange={editor.change}
-          onReset={editor.reset}
-          onSave={() => void editor.save()}
-          saveError={editor.saveError}
-          saving={editor.saving}
-        />
+        <>
+          {query.data ? <ChangedNote at={query.data.updatedAt} by={query.data.updatedBy} /> : null}
+          <CompanyContactsForm
+            dirty={editor.dirty}
+            draft={editor.draft}
+            errors={editor.errors}
+            onChange={editor.change}
+            onReset={editor.reset}
+            onSave={() => void editor.save()}
+            saveError={editor.saveError}
+            saving={editor.saving}
+          />
+        </>
       )}
       <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
     </Stack>

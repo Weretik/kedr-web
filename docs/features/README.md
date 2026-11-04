@@ -21,6 +21,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Company requisites](admin/company-requisites.md) | `/company-requisites`                                | ФОП, code, IBAN, bank, МФО with change history; Admins only                              |
 | [Site documents](admin/documents.md)              | `/documents`, `/documents/:kind`                     | Offer, privacy, returns, delivery UK/RU; editions; all staff                             |
 | [Site gallery](admin/gallery.md)                  | `/gallery`                                           | Photos from the media library and YouTube videos by link; order, UK/RU titles; all staff |
+| [Оновити сайт зараз](admin/site-refresh.md)       | top bar, all routes                                  | Drops the site content and catalogue cache now; all staff                                |
 | [Customers](admin/clients.md)                     | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                                                          |
 | [Orders and drafts](admin/orders.md)              | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                                                       |
 

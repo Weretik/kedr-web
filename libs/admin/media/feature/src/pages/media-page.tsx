@@ -16,9 +16,11 @@ import { useEffect, useState } from 'react';
 
 import { MediaFilesToolbar } from '../components/media-files-toolbar';
 import { MediaFoldersCard } from '../components/media-folders-card';
+import { MediaScopeBar } from '../components/media-scope-bar';
 import { useMediaFileActions } from '../hooks/use-media-file-actions';
 import { useMediaFilesQuery } from '../hooks/use-media-files-query';
 import { useMediaFolderActions } from '../hooks/use-media-folder-actions';
+import { useMediaFolderExpansion } from '../hooks/use-media-folder-expansion';
 import { useMediaSelection } from '../hooks/use-media-selection';
 import { useMediaUploads } from '../hooks/use-media-uploads';
 
@@ -39,6 +41,7 @@ export function MediaPage({ canDelete }: MediaPageProps) {
   const folders = useGetMediaFoldersQuery();
   const files = useGetMediaFilesQuery(filesQuery.query);
   const tree = folders.data ?? emptyTree;
+  const expansion = useMediaFolderExpansion(tree.folders, filesQuery.scope);
   const selection = useMediaSelection();
   const folderActions = useMediaFolderActions({
     scope: filesQuery.scope,
@@ -110,17 +113,19 @@ export function MediaPage({ canDelete }: MediaPageProps) {
           alignItems: 'start',
           display: 'grid',
           gap: 3,
-          gridTemplateColumns: { xs: '1fr', md: '280px minmax(0, 1fr)' },
+          gridTemplateColumns: { xs: '1fr', md: '320px minmax(0, 1fr)' },
         }}
       >
         <MediaFoldersCard
           error={folders.isError}
+          expandedIds={expansion.expandedIds}
           loading={folders.isLoading}
           onCreateChild={(parent) => folderActions.openCreate(parent.id)}
           onDelete={canDelete ? folderActions.openDelete : undefined}
           onEdit={folderActions.openEdit}
           onRetry={() => folders.refetch()}
           onSelect={filesQuery.setScope}
+          onToggle={expansion.toggle}
           scope={filesQuery.scope}
           tree={folders.data}
         />
@@ -131,6 +136,13 @@ export function MediaPage({ canDelete }: MediaPageProps) {
             targetLabel={targetLabel}
           >
             <Stack spacing={2}>
+              <MediaScopeBar
+                folders={tree.folders}
+                includeSubfolders={filesQuery.includeSubfolders}
+                onIncludeSubfoldersChange={filesQuery.setIncludeSubfolders}
+                onSelect={filesQuery.setScope}
+                scope={filesQuery.scope}
+              />
               <MediaFilesToolbar
                 onClearSelection={selection.clear}
                 onMove={fileActions.moving.show}

@@ -21,6 +21,7 @@ const contacts: CompanyContacts = {
   cityUk: 'Харків',
   cityRu: 'Харьков',
   updatedAt: '2026-11-04T10:00:00Z',
+  updatedBy: 'manager@classkedr.com.ua',
 };
 
 const field = (name: string) => screen.getByRole('textbox', { name });
@@ -74,6 +75,12 @@ describe('CompanyContactsPage', () => {
 
     expect(await screen.findByText('Сервер не прийняв це значення. Перевірте його.')).toBeTruthy();
     expect(screen.getByRole('alert').textContent).toContain('Сервер не прийняв дані');
+  });
+
+  it('shows who saved the contacts last', () => {
+    render(<CompanyContactsPage />);
+
+    expect(screen.getByText(/^Змінено: .* · manager@classkedr\.com\.ua$/)).toBeTruthy();
   });
 
   it('offers a retry when loading fails', () => {

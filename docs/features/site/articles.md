@@ -8,7 +8,7 @@ Query owner: content/model, `q`, `pageSize`, `page`. Defaults omitted, input bou
 
 ## Джерело та межі
 
-Статті зберігаються в модулі Content KedrStore (схема `content`); шість матеріалів старого storefront перенесено туди міграцією разом з обкладинками. Сайт читає публічний API `GET /api/content/{lang}/articles` і `/{lang}/articles/{slug}` у server-only [article-loaders.ts](../../../libs/site/content/data-access/src/lib/articles/article-loaders.ts) з тегами `content`, `content:articles`, `article:{slug}` і життям 5/10 хв (збій — 1 хв). Обкладинка — абсолютний URL API (`/api/content/articles/{id}/cover?v=…`, immutable), дозволений у `next.config.ts` images. Пошук у списку йде по заголовку й короткому опису: список API не віддає тексти. Недоступний API дає 500, невідомий slug — 404; при збої під час build пререндериться placeholder-slug, що відповідає 404. Статті редагують в адмінці ([Admin Articles](../admin/articles.md)).
+Статті зберігаються в модулі Content KedrStore (схема `content`); шість матеріалів старого storefront перенесено туди міграцією разом з обкладинками. Сайт читає публічний API `GET /api/content/{lang}/articles` і `/{lang}/articles/{slug}` у server-only [article-loaders.ts](../../../libs/site/content/data-access/src/lib/articles/article-loaders.ts) з тегами `content`, `content:articles`, `article:{slug}` і життям 5/10 хв (збій — 1 хв). Обкладинка — `coverUrl` з CDN (`images-kedr.cdn.express/articles/…`); у шести старих статей, поки обкладинку не замінять, — абсолютний URL API (`/api/content/articles/{id}/cover?v=…`, immutable). Обидва хости дозволені в `next.config.ts` images. Пошук у списку йде по заголовку й короткому опису: список API не віддає тексти. Недоступний API дає 500, невідомий slug — 404; при збої під час build пререндериться placeholder-slug, що відповідає 404. Статті редагують в адмінці ([Admin Articles](../admin/articles.md)).
 
 List metadata/BreadcrumbList, detail metadata/Article graph делегують core SEO; actual q і nondefault size noindex, search має self canonical без hreflang; звичайні сторінки та detail — self canonical/UK-RU/x-default. Production gate збережений. Sitemap додає список і кожну опубліковану статтю обома мовами з API ([article-sitemap.ts](../../../libs/site/content/feature/src/lib/articles/article-sitemap.ts)), без query/ID/вигаданих дат зміни.
 
@@ -51,7 +51,7 @@ libs/site/content/
     article-page-window.spec.ts             # bounded page-window assertions
   data-access/src/lib/articles/
     article-cache.ts                        # cache tags and lifetimes
-    article.mapper.ts                       # API DTO → Article, absolute cover URL
+    article.mapper.ts                       # API DTO → Article, CDN or absolute legacy cover URL
     article-loaders.ts                      # getArticles/getArticle (ok | not-found | unavailable)
     article-loaders.spec.ts                 # mapping, 404 and failure handling
   ui/src/lib/articles/

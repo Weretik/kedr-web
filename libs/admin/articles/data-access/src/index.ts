@@ -3,7 +3,7 @@ export {
   useDeleteArticleMutation,
   useGetAdminArticleQuery,
   useGetAdminArticlesQuery,
-  useRemoveArticleCoverMutation,
+  useMoveLegacyArticleCoversMutation,
   useUpdateArticleMutation,
   useUploadArticleCoverMutation,
 } from './api/admin-articles.api';

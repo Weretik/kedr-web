@@ -45,13 +45,15 @@ CartRuntime passes Server Component children through its provider and supplies t
 
 ## Invalidation from the backend
 
-| Event                           | Tags              | Sender        | Handler                                 | Protection           |
-| ------------------------------- | ----------------- | ------------- | --------------------------------------- | -------------------- |
-| Catalog import from 1C finished | `catalog`         | KedrStore job | `app/api/revalidate/route.ts` (planned) | shared secret header |
-| Product changed or removed      | `product:{id}`    | KedrStore     | same                                    | same                 |
-| Category changed                | `category:{slug}` | KedrStore     | same                                    | same                 |
+`POST /api/revalidate` ([route](../../../../apps/site/src/app/api/revalidate/route.ts), handler in `@site/core/revalidation`) expires cache tags at once: `revalidateTag(tag, { expire: 0 })`, so the next request reads the API again. It needs the `x-revalidate-secret` header equal to `KEDR_REVALIDATE_SECRET` (constant-time compare) and the body `{ "tags": [...] }` with only `content` and `catalog`; it answers 200 `{ revalidated }`, 400 for other tags, 401 for a wrong secret and 503 when the secret is not set. `proxy.ts` leaves `/api/` alone.
 
-`[NEEDS CLARIFICATION: KedrStore has no revalidation webhook yet; until then pages use time-based revalidation]`.
+| Event                           | Tags                               | Sender                                           | Status                                                       |
+| ------------------------------- | ---------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| «Оновити сайт зараз» in Admin   | `content`, `catalog`               | KedrStore `POST /api/admin/content/site-refresh` | implemented                                                  |
+| Catalog import from 1C finished | `catalog`                          | KedrStore job                                    | planned                                                      |
+| Product or category changed     | `product:{sku}`, `category:{slug}` | KedrStore                                        | planned (the route accepts only `content` and `catalog` now) |
+
+Without a call, pages keep the time-based life above (hours; content ten minutes).
 
 ## Performance budgets
 

@@ -3,6 +3,8 @@ import type { MediaFolder } from '../entities/media-folder';
 export interface MediaFolderNode extends MediaFolder {
   children: MediaFolderNode[];
   depth: number;
+  /** Files in this folder and in all its subfolders. */
+  totalFileCount: number;
 }
 
 const byName = (a: MediaFolder, b: MediaFolder) => a.name.localeCompare(b.name, 'uk');
@@ -21,7 +23,12 @@ export function buildFolderTree(folders: readonly MediaFolder[]): MediaFolderNod
       .sort(byName)
       .map((folder) => {
         const next = new Set(seen).add(folder.id);
-        return { ...folder, depth, children: build(folder.id, depth + 1, next) };
+        const children = build(folder.id, depth + 1, next);
+        const totalFileCount = children.reduce(
+          (sum, child) => sum + child.totalFileCount,
+          folder.fileCount,
+        );
+        return { ...folder, depth, children, totalFileCount };
       });
   return build(null, 0, new Set());
 }
@@ -57,4 +64,37 @@ export function folderPath(folders: readonly MediaFolder[], folderId: number | n
     current = current.parentId === null ? undefined : byId.get(current.parentId);
   }
   return path;
+}
+
+/** IDs of the folders above this one, from the root down; the folder itself is not included. */
+export function folderAncestorIds(folders: readonly MediaFolder[], folderId: number): number[] {
+  const byId = new Map(folders.map((folder) => [folder.id, folder]));
+  const result: number[] = [];
+  const seen = new Set<number>([folderId]);
+  let parentId = byId.get(folderId)?.parentId ?? null;
+  while (parentId !== null && !seen.has(parentId) && byId.has(parentId)) {
+    seen.add(parentId);
+    result.unshift(parentId);
+    parentId = byId.get(parentId)?.parentId ?? null;
+  }
+  return result;
+}
+
+/**
+ * Folders whose name contains the search, with the folders above them; a matching folder keeps all
+ * its subfolders. An empty search keeps the whole tree.
+ */
+export function filterFolderTree(
+  nodes: readonly MediaFolderNode[],
+  search: string,
+): MediaFolderNode[] {
+  const needle = search.trim().toLocaleLowerCase('uk');
+  if (!needle) return [...nodes];
+  const visit = (list: readonly MediaFolderNode[]): MediaFolderNode[] =>
+    list.flatMap((node) => {
+      if (node.name.toLocaleLowerCase('uk').includes(needle)) return [node];
+      const children = visit(node.children);
+      return children.length > 0 ? [{ ...node, children }] : [];
+    });
+  return visit(nodes);
 }

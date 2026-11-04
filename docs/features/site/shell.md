@@ -48,7 +48,7 @@ libs/site/core/shell/src/lib/
 ├── navigation/  # site-navigation.ts locale-free paths and fallback sections; catalog-navigation.ts prop type
 └── i18n/shell-dictionary.ts  # uk and ru text
 
-libs/site/core/{config,i18n,seo}/  # environment and company facts, locales and paths, SEO builders
+libs/site/core/{config,i18n,seo,revalidation}/  # environment and company facts, locales and paths, SEO builders, cache refresh request
 libs/site/shared/{ui,api-client}/  # shadcn primitives, server-only fetch
 ```
 

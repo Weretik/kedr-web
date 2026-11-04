@@ -8,6 +8,8 @@ export interface CompanyContacts {
   cityUk: string;
   cityRu: string;
   updatedAt: string;
+  /** Who saved the contacts last; null for the row the migration created. */
+  updatedBy: string | null;
 }
 
 /** Field limits shared with the backend. */

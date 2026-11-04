@@ -34,6 +34,7 @@ export function articleErrorMessage(error: unknown): string {
 export function articleCoverErrorMessage(error: unknown): string {
   const apiError = asApiError(error);
   if (apiError.status === 413) return 'Файл більший за 10 МБ.';
+  if (apiError.status === 503) return 'Сховище фото (CDN) зараз недоступне. Спробуйте пізніше.';
   const reason = fieldMessages(apiError, 'file').join(' ');
   if (/10 MB/.test(reason)) return 'Файл більший за 10 МБ.';
   if (/at least/.test(reason)) return 'Зображення має бути не вужче за 600 px.';

@@ -131,6 +131,12 @@ describe('LegalDocumentEditorPage', () => {
     expect(within(screen.getByRole('dialog')).queryByLabelText('Редакція від')).toBeNull();
   });
 
+  it('shows who published the edition on the site', () => {
+    open('public-offer');
+
+    expect(screen.getByText(/^Опубліковано: .* · seed$/)).toBeTruthy();
+  });
+
   it('keeps Publish off until something changes', () => {
     open('returns-policy');
 

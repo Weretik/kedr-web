@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -14,7 +14,8 @@ const api = vi.hoisted(() => ({
   update: vi.fn(),
   remove: vi.fn(),
   upload: vi.fn(),
-  removeCover: vi.fn(),
+  moveLegacy: vi.fn(),
+  mediaFiles: vi.fn(),
 }));
 
 vi.mock('@admin/articles/data-access', () => ({
@@ -24,8 +25,10 @@ vi.mock('@admin/articles/data-access', () => ({
   useUpdateArticleMutation: () => [api.update, { isLoading: false }],
   useDeleteArticleMutation: () => [api.remove, { isLoading: false }],
   useUploadArticleCoverMutation: () => [api.upload, { isLoading: false }],
-  useRemoveArticleCoverMutation: () => [api.removeCover, { isLoading: false }],
+  useMoveLegacyArticleCoversMutation: () => [api.moveLegacy, { isLoading: false }],
 }));
+
+vi.mock('@admin/media/data-access', () => ({ useGetMediaFilesQuery: api.mediaFiles }));
 
 const article: Article = {
   id: 7,
@@ -33,7 +36,9 @@ const article: Article = {
   publishedOn: '2026-03-24',
   isPublished: true,
   coverUrl: null,
+  coverMediaFileId: null,
   updatedAt: '2026-11-04T10:00:00Z',
+  updatedBy: 'manager@classkedr.com.ua',
   texts: {
     uk: { title: 'Як обрати завіси', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
     ru: { title: 'Как выбрать петли', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
@@ -63,12 +68,20 @@ describe('article pages', () => {
   beforeEach(() => {
     Object.values(api).forEach((mock) => mock.mockReset());
     api.list.mockReturnValue({
-      data: [{ ...article, title: article.texts.uk.title, isPublished: false }],
+      data: [
+        { ...article, title: article.texts.uk.title, isPublished: false, hasLegacyCover: false },
+      ],
       isError: false,
       isFetching: false,
       refetch: vi.fn(),
     });
     api.one.mockReturnValue({ data: article, isError: false, isLoading: false, refetch: vi.fn() });
+    api.mediaFiles.mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
   });
 
   it('lists articles with a draft mark and a link to a new one', () => {
@@ -81,11 +94,27 @@ describe('article pages', () => {
     );
   });
 
+  it('offers to move legacy covers only while some remain', async () => {
+    expect(renderAt('/articles').queryByRole('button', { name: 'Перенести в CDN' })).toBeNull();
+    cleanup();
+
+    api.list.mockReturnValue({
+      data: [{ ...article, title: article.texts.uk.title, hasLegacyCover: true }],
+      isError: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+    api.moveLegacy.mockReturnValue(resolved(6));
+    renderAt('/articles');
+    expect(screen.getByText(/Старих обкладинок поза CDN: 1/)).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: 'Перенести в CDN' }));
+    await waitFor(() => expect(screen.getByText('Перенесено в CDN обкладинок: 6.')).toBeDefined());
+  });
+
   it('checks a new article before sending and opens it after creation', async () => {
     api.create.mockReturnValue(resolved(article));
     renderAt('/articles/new');
     expect(api.one).toHaveBeenLastCalledWith(Number.NaN, { skip: true });
-    expect(screen.getByText('Обкладинку можна додати після створення статті.')).toBeDefined();
 
     fireEvent.click(screen.getByRole('button', { name: 'Створити статтю' }));
     expect(api.create).not.toHaveBeenCalled();
@@ -128,6 +157,25 @@ describe('article pages', () => {
     });
     expect(api.upload).not.toHaveBeenCalled();
     expect(screen.getByText('Оберіть зображення JPEG, PNG або WebP.')).toBeDefined();
+  });
+
+  it('creates a new article together with an uploaded cover', async () => {
+    api.upload.mockReturnValue(
+      resolved({ mediaFileId: 31, url: 'https://cdn.example.test/articles/c.webp' }),
+    );
+    api.create.mockReturnValue(resolved(article));
+    const { container } = renderAt('/articles/new');
+    const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(input, {
+      target: { files: [new File(['x'], 'c.png', { type: 'image/png' })] },
+    });
+    await waitFor(() =>
+      expect(screen.getByRole('img', { name: 'Обкладинка статті' }).getAttribute('src')).toBe(
+        'https://cdn.example.test/articles/c.webp',
+      ),
+    );
+    expect(api.upload).toHaveBeenCalledTimes(1);
+    expect(api.create).not.toHaveBeenCalled();
   });
 
   it('translates a server cover reason', async () => {

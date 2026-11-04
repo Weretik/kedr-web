@@ -9,7 +9,12 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { articleErrorMessage, articleSlugServerError } from '../errors/article-error-message';
 
-import type { Article, ArticleDraft, ArticleDraftErrors } from '@admin/articles/model';
+import type {
+  Article,
+  ArticleCover,
+  ArticleDraft,
+  ArticleDraftErrors,
+} from '@admin/articles/model';
 
 /**
  * Draft of a new article (`stored` is `null`) or of a loaded one. Validates before sending; a taken address
@@ -45,6 +50,14 @@ export function useArticleEditor(
     if (errors) setErrors(validate(next));
   };
 
+  /** Applies to the latest draft, so text typed while a cover uploads is kept. */
+  const changeCover = (cover: ArticleCover | null) => {
+    setDraft((previous) => {
+      const base = previous ?? baseline;
+      return base ? { ...base, cover } : previous;
+    });
+  };
+
   const reset = () => {
     setDraft(undefined);
     setErrors(undefined);
@@ -73,6 +86,7 @@ export function useArticleEditor(
 
   return {
     change,
+    changeCover,
     dirty,
     draft: current,
     errors,

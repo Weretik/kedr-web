@@ -3,6 +3,7 @@ export { AdminDetailHeader } from './lib/layout/admin-detail-header';
 export { AdminPageHeader } from './lib/layout/admin-page-header';
 export { DataGridMessageOverlay } from './lib/feedback/data-grid-message-overlay';
 export { DetailField, DetailFieldList } from './lib/layout/detail-field';
+export { ChangedNote, formatChanged } from './lib/feedback/changed-note';
 export { NoticeSnackbar } from './lib/feedback/notice-snackbar';
 export { PageIssues } from './lib/feedback/page-issues';
 export { PageLoader } from './lib/layout/page-loader';
