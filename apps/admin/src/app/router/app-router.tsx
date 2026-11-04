@@ -1,3 +1,4 @@
+import { articlesRoutes } from '@admin/articles/feature';
 import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
 import {
@@ -80,6 +81,7 @@ export function AppRouter() {
             <CustomerOrdersPanel counterpartyId={counterpartyId} returnTo={returnTo} />
           ),
         }),
+        ...articlesRoutes,
         ...profileRoutes,
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
       ],

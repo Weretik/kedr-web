@@ -7,8 +7,11 @@ import type { paths } from '@shared/api-contracts';
 
 type GetPath = { [P in keyof paths]: paths[P] extends { get: unknown } ? P : never }[keyof paths];
 
-/** Public catalog read paths; the anonymous order mutation has its own fixed server-only transport. */
-export type PublicGetPath = Extract<GetPath, `/api/catalog/${string}`>;
+/** Public catalog and content read paths; the anonymous order mutation has its own fixed server-only transport. */
+export type PublicGetPath = Extract<
+  GetPath,
+  `/api/catalog/${string}` | `/api/content/{lang}/${string}`
+>;
 
 type GetOperation<P extends GetPath> = paths[P] extends { get: infer Operation }
   ? Operation

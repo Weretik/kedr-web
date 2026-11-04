@@ -1,4 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@mui/material';
 
 interface Props {
   open: boolean;
@@ -26,12 +33,7 @@ export function SaveDraftDialog({
   const titleMissing = !title.trim();
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="sm"
-      onClose={saving ? undefined : onClose}
-      open={open}
-    >
+    <Dialog fullWidth maxWidth="sm" onClose={saving ? undefined : onClose} open={open}>
       <DialogTitle>Зберегти як чернетку</DialogTitle>
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
         <TextField
@@ -55,7 +57,9 @@ export function SaveDraftDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={saving} onClick={onClose}>Скасувати</Button>
+        <Button disabled={saving} onClick={onClose}>
+          Скасувати
+        </Button>
         <Button disabled={!ready || titleMissing || saving} onClick={onSave} variant="contained">
           Зберегти
         </Button>

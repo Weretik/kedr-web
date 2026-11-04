@@ -3,7 +3,8 @@ export type { ReturnsDictionary, ReturnsRow, ReturnsPolicySection } from './lib/
 export { getContactsDictionary } from './lib/contacts-dictionary';
 export type { ContactsDictionary, ContactsDetails } from './lib/contacts-types';
 export { ARTICLE_PAGE_SIZES, DEFAULT_ARTICLES_QUERY } from './lib/articles/article-types';
-export { ARTICLE_SLUGS, ARTICLES_PATH, articlePath } from './lib/articles/article-routes';
+export { ARTICLES_PATH, articlePath } from './lib/articles/article-routes';
+export { articlePlainText } from './lib/articles/article-text';
 export { articlePageNumbers } from './lib/articles/article-page-window';
 export type {
   Article,

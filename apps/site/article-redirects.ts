@@ -1,6 +1,6 @@
 /**
  * Deployment redirect map for the six migrated Angular article IDs.
- * Keep destinations in sync with ARTICLE_SLUGS; list and sitemap use only slugs.
+ * The articles live in the KedrStore Content module with the same ids and slugs; list and sitemap use only slugs.
  */
 const LEGACY_ARTICLE_SLUGS: Readonly<Record<string, string>> = {
   '1': 'zamina-dvernoi-furnitury',

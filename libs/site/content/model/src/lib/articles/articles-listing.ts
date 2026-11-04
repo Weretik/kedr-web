@@ -1,3 +1,4 @@
+import { articlePlainText } from './article-text';
 import { normalizeArticleSearch, parseArticlesQuery } from './articles-query';
 
 import type { Article, ArticlesListing, ArticlesQuery } from './article-types';
@@ -15,7 +16,9 @@ export function buildArticlesListing(
   const term = normalized.q.toLocaleLowerCase();
   const found = term
     ? articles.filter((article) =>
-        normalizeArticleSearch([article.title, ...article.paragraphs].join(' '))
+        normalizeArticleSearch(
+          [article.title, article.excerpt, articlePlainText(article.bodyHtml)].join(' '),
+        )
           .toLocaleLowerCase()
           .includes(term),
       )

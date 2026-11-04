@@ -2,12 +2,12 @@ import {
   useGetWorkspaceDraftQuery,
   useUpdateWorkspaceDraftMutation,
 } from '@admin/orders/data-access';
+import { withNotice } from '@admin/shared/routing';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useCustomerPrices } from './use-customer-prices';
 import { useOrderQuote } from './use-order-quote';
-import { withNotice } from './use-route-notice';
 import {
   clearDraftEditSession,
   readDraftEditSession,

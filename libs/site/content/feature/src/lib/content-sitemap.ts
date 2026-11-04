@@ -1,5 +1,3 @@
-import { ARTICLE_SLUGS, articlePath } from '@site/content/model';
-
 /** Public content routes; core/seo expands these descriptors into both language versions. */
 export const CONTENT_SITEMAP_PAGES = [
   { path: '/delivery-and-payment' },
@@ -11,5 +9,4 @@ export const CONTENT_SITEMAP_PAGES = [
   { path: '/articles' },
   { path: '/public-offer' },
   { path: '/privacy-policy' },
-  ...Object.values(ARTICLE_SLUGS).map((slug) => ({ path: articlePath(slug) })),
 ] as const;

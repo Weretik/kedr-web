@@ -29,7 +29,7 @@ function exampleListing(total = 6, choices: Partial<ArticlesQuery> = {}): Articl
     slug: `example-${index + 1}`,
     title: `Тестова стаття ${index + 1}`,
     excerpt: `Короткий опис матеріалу ${index + 1}.`,
-    paragraphs: [`Повний текст матеріалу ${index + 1}.`, 'Останній абзац джерела.'],
+    bodyHtml: `<p>Повний текст матеріалу ${index + 1}.</p><h2>Підзаголовок</h2><p>Останній абзац джерела.</p>`,
     image: `/images/articles/Article_${index + 1}.jpg`,
     publishedAt: '2026-03-24',
   }));
@@ -256,7 +256,9 @@ it.each(['uk', 'ru'] as const)(
     const article = exampleListing(1).items[0];
     const { container } = render(<ArticleContent locale={locale} article={article} />);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(article.title);
-    for (const paragraph of article.paragraphs) expect(screen.getByText(paragraph)).toBeDefined();
+    for (const text of ['Повний текст матеріалу 1.', 'Останній абзац джерела.'])
+      expect(screen.getByText(text)).toBeDefined();
+    expect(screen.getByRole('heading', { level: 2, name: 'Підзаголовок' })).toBeDefined();
     expect(container.querySelector('time')?.getAttribute('dateTime')).toBe('2026-03-24');
     const back = screen.getByRole('link', {
       name: locale === 'uk' ? 'До всіх статей' : 'Ко всем статьям',

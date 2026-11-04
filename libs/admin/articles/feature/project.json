@@ -1,0 +1,20 @@
+{
+  "name": "admin-articles-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/articles/feature/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:articles", "type:feature"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

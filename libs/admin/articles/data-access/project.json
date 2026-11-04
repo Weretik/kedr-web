@@ -1,0 +1,20 @@
+{
+  "name": "admin-articles-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/articles/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:articles", "type:data-access"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

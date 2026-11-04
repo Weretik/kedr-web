@@ -62,11 +62,11 @@ export function ArticleContent({ locale, article }: { locale: Locale; article: A
             sizes="(min-width: 768px) 70ch, 100vw"
           />
         </div>
-        <div className="space-y-5 text-base leading-8 break-words">
-          {article.paragraphs.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
+        {/* Sanitized by the backend when an admin saves the article, so it is rendered as is. */}
+        <div
+          className="space-y-5 text-base leading-8 break-words [&_a]:text-brand-text [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground [&_h2]:pt-2 [&_h2]:text-2xl [&_h2]:leading-snug [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ul]:list-disc [&_ul]:space-y-2"
+          dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
+        />
         <Link
           href={listPath}
           className={`inline-flex items-center gap-2 font-medium text-brand-text underline underline-offset-4 ${linkClass}`}

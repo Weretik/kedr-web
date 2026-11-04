@@ -1,10 +1,14 @@
-/** Public content model. Full texts remain on the server; client controls receive only query choices. */
+/**
+ * Public content model. Full texts remain on the server; client controls receive only query choices.
+ * `bodyHtml` is sanitized by the backend when an admin saves it, so it is rendered as is.
+ */
 export type Article = {
   id: number;
   slug: string;
   title: string;
   excerpt: string;
-  paragraphs: readonly string[];
+  bodyHtml: string;
+  /** Absolute cover URL, or `null` when the article has no cover. */
   image: string | null;
   publishedAt: string;
 };

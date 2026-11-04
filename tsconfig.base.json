@@ -127,7 +127,11 @@
       "@site/cart/data-access": ["./libs/site/cart/data-access/src/index.ts"],
       "@site/cart/ui": ["./libs/site/cart/ui/src/index.ts"],
       "@site/cart/seo": ["./libs/site/cart/seo/src/index.ts"],
-      "@site/cart/feature": ["./libs/site/cart/feature/src/index.ts"]
+      "@site/cart/feature": ["./libs/site/cart/feature/src/index.ts"],
+      "@admin/articles/model": ["./libs/admin/articles/model/src/index.ts"],
+      "@admin/articles/data-access": ["./libs/admin/articles/data-access/src/index.ts"],
+      "@admin/articles/ui": ["./libs/admin/articles/ui/src/index.ts"],
+      "@admin/articles/feature": ["./libs/admin/articles/feature/src/index.ts"]
     }
   }
 }

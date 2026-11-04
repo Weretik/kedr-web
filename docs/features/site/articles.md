@@ -8,16 +8,16 @@ Query owner: content/model, `q`, `pageSize`, `page`. Defaults omitted, input bou
 
 ## Джерело та межі
 
-Користувач явно погодив тимчасовий перенос шести реальних UK/RU матеріалів зі старого storefront. 36 параграфів і шість JPG збережені (integrity tests + SHA-256). Джерело immutable, синхронне й server-only у content/data-access; UI/Next не імпортують Angular. Демо-набори 26/51 існують тільки у тестах. БД/admin/API і заміна source — наступний окремий етап [міграції](../../specs/site/migration/README.md).
+Статті зберігаються в модулі Content KedrStore (схема `content`); шість матеріалів старого storefront перенесено туди міграцією разом з обкладинками. Сайт читає публічний API `GET /api/content/{lang}/articles` і `/{lang}/articles/{slug}` у server-only [article-loaders.ts](../../../libs/site/content/data-access/src/lib/articles/article-loaders.ts) з тегами `content`, `content:articles`, `article:{slug}` і життям 5/10 хв (збій — 1 хв). Обкладинка — абсолютний URL API (`/api/content/articles/{id}/cover?v=…`, immutable), дозволений у `next.config.ts` images. Пошук у списку йде по заголовку й короткому опису: список API не віддає тексти. Недоступний API дає 500, невідомий slug — 404; при збої під час build пререндериться placeholder-slug, що відповідає 404. Статті редагують в адмінці ([Admin Articles](../admin/articles.md)).
 
-List metadata/BreadcrumbList, detail metadata/Article graph делегують core SEO; actual q і nondefault size noindex, search має self canonical без hreflang; звичайні сторінки та detail — self canonical/UK-RU/x-default. Production gate збережений. Sitemap додає 14 локалізованих URL (список + 6 деталей), без query/ID/вигаданих дат зміни.
+List metadata/BreadcrumbList, detail metadata/Article graph делегують core SEO; actual q і nondefault size noindex, search має self canonical без hreflang; звичайні сторінки та detail — self canonical/UK-RU/x-default. Production gate збережений. Sitemap додає список і кожну опубліковану статтю обома мовами з API ([article-sitemap.ts](../../../libs/site/content/feature/src/lib/articles/article-sitemap.ts)), без query/ID/вигаданих дат зміни.
 
 ## Structure diagram
 
 ```mermaid
 flowchart LR
   Route["apps/site: list + slug routes"] --> Feature["content/feature: server composition + Suspense"]
-  Feature --> Source["content/data-access: server-only six articles"]
+  Feature --> Source["content/data-access: server-only Content API loaders + cache tags"]
   Source --> Model["content/model: types + slug identities"]
   Feature --> Model
   Feature --> UI["content/ui: list + reading"]
@@ -37,22 +37,23 @@ apps/site/
   src/app/[locale]/(content)/articles/
     page.tsx                                # thin list + metadata
     [slug]/page.tsx                          # thin detail + parent-locale SSG
-  public/images/articles/Article_1.jpg…6.jpg  # exact covers
 libs/site/content/
   model/src/lib/articles/
     article-types.ts                        # typed Article/query/result and defaults
     articles-query.ts                       # query normalization and href
-    article-routes.ts                       # list path, slug identities, detail href
+    article-routes.ts                       # list path, detail href
+    article-text.ts                         # plain text of body HTML
     article-page-window.ts                  # bounded pager window
     articles-listing.ts                      # full-source filter, page/clamp/range
     articles-dictionary.ts                  # UK/RU presentation strings
     articles.spec.ts                        # query/listing characterization
     article-routes.spec.ts                  # escaped detail path assertion
     article-page-window.spec.ts             # bounded page-window assertions
-  data-access/src/lib/
-    articles-source.ts                      # confirmed six localized materials
-    articles.ts                             # getArticles/getArticle
-    articles.spec.ts                        # content/image integrity and lookup
+  data-access/src/lib/articles/
+    article-cache.ts                        # cache tags and lifetimes
+    article.mapper.ts                       # API DTO → Article, absolute cover URL
+    article-loaders.ts                      # getArticles/getArticle (ok | not-found | unavailable)
+    article-loaders.spec.ts                 # mapping, 404 and failure handling
   ui/src/lib/articles/
     articles-header.tsx                     # static breadcrumbs/H1/intro
     articles-content.tsx                    # server list body
@@ -61,7 +62,7 @@ libs/site/content/
     articles-pagination.tsx                 # range + links/disabled boundaries
     article-card.tsx                        # one card/one link
     article-cover.tsx                       # 16:9 image/fallback
-    article-content.tsx                     # full article reading
+    article-content.tsx                     # full article reading (sanitized server HTML)
     articles-loading.tsx                    # Suspense status
     articles-content.spec.tsx               # UI/interaction/locale tests
   seo/src/lib/articles/
@@ -73,8 +74,9 @@ libs/site/content/
   feature/src/lib/
     articles/articles-page.tsx              # request query under Suspense
     articles/article-page.tsx               # detail / metadata / static params
-    articles/articles-page.spec.tsx         # real-source server integration
-    content-sitemap.ts                      # existing + article descriptors
+    articles/articles-page.spec.tsx         # server composition with mocked loaders
+    articles/article-sitemap.ts             # published articles for the sitemap
+    content-sitemap.ts                      # static content pages
     content-sitemap.spec.ts                 # sitemap integration
 ```
 
