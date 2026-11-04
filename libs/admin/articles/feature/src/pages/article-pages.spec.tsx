@@ -152,7 +152,8 @@ describe('article pages', () => {
     renderAt('/articles/7');
     fireEvent.click(screen.getByRole('button', { name: 'Видалити' }));
     expect(screen.getByText(/«Як обрати завіси» зникне з сайту/)).toBeDefined();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Видалити' }).at(-1)!);
+    const deleteButtons = screen.getAllByRole('button', { name: 'Видалити' });
+    fireEvent.click(deleteButtons[deleteButtons.length - 1]);
     await waitFor(() => expect(screen.getByTestId('location').textContent).toBe('/articles'));
     expect(api.remove).toHaveBeenCalledWith(7);
   });
