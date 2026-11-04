@@ -17,3 +17,5 @@ export {
   DialogTitle,
   DialogDescription,
 } from './lib/dialog';
+export { FaqList } from './lib/faq-list';
+export type { FaqListItem } from './lib/faq-list';

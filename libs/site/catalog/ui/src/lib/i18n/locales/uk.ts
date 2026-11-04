@@ -66,6 +66,9 @@ export const uk: CatalogDictionary = {
   home: 'Головна',
   subcategories: 'Підкатегорії',
   faqTitle: 'Питання та відповіді',
+  aboutCategory: 'Про категорію',
+  readMore: 'Читати повністю',
+  readLess: 'Згорнути',
   hubTitle: 'Каталог дверної фурнітури',
   hubIntro:
     'Завіси, замки, ручки, циліндри та інша фурнітура оптом і в роздріб зі складу в Харкові.',
