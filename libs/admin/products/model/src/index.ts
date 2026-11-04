@@ -1,6 +1,15 @@
 export type { AdminProductListItem } from './entities/admin-product-list-item';
 export type { ProductCategoryOption } from './entities/product-category-option';
 export type { ProductDetails } from './entities/product-details';
+export type { ProductMedia, ProductMediaChange, ProductMediaItem } from './entities/product-media';
+export {
+  addPhotos,
+  movePhoto,
+  productMaxPhotos,
+  removePhoto,
+  setScheme,
+  toProductMediaChange,
+} from './entities/product-media';
 export type { ProductsListPage } from './queries/products-list-page';
 export type { MissingPhotoQuery } from './queries/missing-photo-query';
 export {

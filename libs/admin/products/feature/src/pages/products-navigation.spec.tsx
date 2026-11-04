@@ -29,6 +29,10 @@ vi.mock('@admin/products/data-access', () => ({
   useChangeProductSlugMutation: () => [api.changeSlug, { isLoading: false }],
 }));
 
+vi.mock('../components/product-media-section', () => ({
+  ProductMediaSection: () => <p>Фото та схема</p>,
+}));
+
 vi.mock('@admin/products/ui', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@admin/products/ui')>()),
   DeletedProductsDataGrid: () => <p>Видалені товари</p>,

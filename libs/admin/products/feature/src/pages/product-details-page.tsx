@@ -12,6 +12,7 @@ import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { ProductMediaSection } from '../components/product-media-section';
 import { useProductSlugChange } from '../hooks/use-product-slug-change';
 import { addProductFeedback } from '../model/add-product-feedback';
 
@@ -85,6 +86,7 @@ export function ProductDetailsPage({
                 : undefined
             }
           />
+          <ProductMediaSection productId={query.data.id} />
           <PublicAddressCard
             onEdit={canEditSlug ? slugChange.openDialog : undefined}
             pathPrefix={publicPathPrefix}

@@ -70,7 +70,9 @@ export function ProductImageCard({
             sx={{ alignItems: 'center', color: 'text.secondary', p: 2, textAlign: 'center' }}
           >
             <ImageNotSupportedOutlinedIcon aria-hidden="true" />
-            <Typography variant="body2">Фото товару недоступне</Typography>
+            <Typography variant="body2">
+              {src ? 'Фото товару недоступне' : 'Фото не додано'}
+            </Typography>
           </Stack>
         </Box>
       )}

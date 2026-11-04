@@ -1,10 +1,5 @@
 import type { AdminProductsListParams } from '../contracts/admin-products-list.contract';
 import type { MissingPhotoQuery, ProductsListQuery, ProductsListSort } from '@admin/products/model';
-import type { operations } from '@shared/api-contracts';
-
-type MissingPhotoParams = NonNullable<
-  operations['getAdminProductsWithUnavailablePhotos']['parameters']['query']
->;
 
 const sortToApiValue: Record<ProductsListSort, NonNullable<AdminProductsListParams['sort']>> = {
   'id-asc': 'IdAsc',
@@ -34,8 +29,10 @@ export function mapProductsListQueryToApi(query: ProductsListQuery) {
   } satisfies AdminProductsListParams;
 }
 
+/** «Без фото» is the ordinary list with `withoutPhoto=true`: products without a linked photo. */
 export function mapMissingPhotoQueryToApi(query: MissingPhotoQuery) {
   return {
+    withoutPhoto: true,
     searchTerm: query.searchTerm?.trim().slice(0, 100) || undefined,
     inStock: query.inStock,
     isSale: query.isSale,
@@ -45,5 +42,5 @@ export function mapMissingPhotoQueryToApi(query: MissingPhotoQuery) {
     sort: sortToApiValue[query.sort],
     page: query.page,
     pageSize: query.pageSize,
-  } satisfies MissingPhotoParams;
+  } satisfies AdminProductsListParams;
 }
