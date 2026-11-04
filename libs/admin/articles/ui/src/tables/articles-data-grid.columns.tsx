@@ -1,4 +1,4 @@
-import { formatChanged, StatusPill } from '@admin/shared/ui';
+import { formatChanged } from '@admin/shared/ui';
 import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupportedOutlined';
 import { Box, Typography } from '@mui/material';
 
@@ -72,15 +72,6 @@ const publishedOnColumn: GridColDef<ArticleSummary> = {
   valueFormatter: (value: string) => formatArticleDate(value),
 };
 
-const statusColumn: GridColDef<ArticleSummary> = {
-  field: 'isPublished',
-  headerName: 'На сайті',
-  minWidth: 140,
-  // Only a draft gets a mark; a published article needs none.
-  renderCell: ({ row }) =>
-    row.isPublished ? null : <StatusPill label="Чернетка" tone="neutral" />,
-};
-
 const changedColumn: GridColDef<ArticleSummary> = {
   field: 'updatedAt',
   headerName: 'Змінено',
@@ -101,6 +92,5 @@ export const articlesColumns: GridColDef<ArticleSummary>[] = [
   coverColumn,
   titleColumn,
   publishedOnColumn,
-  statusColumn,
   changedColumn,
 ];

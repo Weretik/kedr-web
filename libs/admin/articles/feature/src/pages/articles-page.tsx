@@ -2,17 +2,18 @@ import {
   useGetAdminArticlesQuery,
   useMoveLegacyArticleCoversMutation,
 } from '@admin/articles/data-access';
-import { ArticlesDataGrid } from '@admin/articles/ui';
+import { filterArticlesByPublication } from '@admin/articles/model';
+import { ArticlePublicationToggle, ArticlesDataGrid } from '@admin/articles/ui';
 import { useRouteNotice } from '@admin/shared/routing';
 import { AdminPageHeader, NoticeSnackbar } from '@admin/shared/ui';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { Alert, Button, Card, Stack, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { articleCoverErrorMessage } from '../errors/article-error-message';
 
-import type { ArticleSummary } from '@admin/articles/model';
+import type { ArticlePublicationFilter, ArticleSummary } from '@admin/articles/model';
 
 /** Site articles, newest first; drafts are marked. */
 export function ArticlesPage() {
@@ -20,6 +21,11 @@ export function ArticlesPage() {
   const query = useGetAdminArticlesQuery();
   const routeNotice = useRouteNotice();
   const [moveLegacyCovers, moving] = useMoveLegacyArticleCoversMutation();
+  const [publication, setPublication] = useState<ArticlePublicationFilter>('all');
+  const rows = useMemo(
+    () => filterArticlesByPublication(query.data ?? [], publication),
+    [query.data, publication],
+  );
   const [notice, setNotice] = useState<string | null>(null);
   const [moveError, setMoveError] = useState<string | null>(null);
   const legacyCount = (query.data ?? []).filter((article) => article.hasLegacyCover).length;
@@ -72,13 +78,14 @@ export function ArticlesPage() {
           )}
         </Alert>
       )}
+      <ArticlePublicationToggle onChange={setPublication} value={publication} />
       <Card sx={{ overflow: 'hidden' }} variant="outlined">
         <ArticlesDataGrid
           error={query.isError}
           loading={query.isFetching}
           onOpen={open}
           onRetry={() => query.refetch()}
-          rows={query.data ?? []}
+          rows={rows}
         />
       </Card>
       <NoticeSnackbar message={routeNotice.notice} onClose={routeNotice.close} />
