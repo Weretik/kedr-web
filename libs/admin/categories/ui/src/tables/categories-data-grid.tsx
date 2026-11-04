@@ -1,49 +1,32 @@
 import { DataGridMessageOverlay } from '@admin/shared/ui';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from 'react';
 
-import { categoriesColumns } from './categories-data-grid.columns';
+import { deletedCategoriesColumns } from './categories-data-grid.columns';
 import { CategoriesGridToolbar } from './categories-grid-toolbar';
 
 import type { AdminCategory } from '@admin/categories/model';
 
 interface CategoriesDataGridProps {
-  mode: 'active' | 'deleted';
   rows: readonly AdminCategory[];
   loading: boolean;
   error: boolean;
   onRetry: () => void;
-  onView: (category: AdminCategory) => void;
-  /** Administrators only: the pencil opens the edit panel over the list. */
-  onEdit?: (category: AdminCategory) => void;
 }
 
-/** Category tree in display order with client-side search over name and address. */
-export function CategoriesDataGrid({
-  error,
-  loading,
-  mode,
-  onEdit,
-  onRetry,
-  onView,
-  rows,
-}: CategoriesDataGridProps) {
-  const columns = useMemo(() => categoriesColumns(mode, onView, onEdit), [mode, onView, onEdit]);
-  const emptyMessage = mode === 'deleted' ? 'Видалених категорій немає.' : 'Категорій немає.';
-
+/** Categories the 1C import soft-deleted, newest first, with client-side search. */
+export function CategoriesDataGrid({ error, loading, onRetry, rows }: CategoriesDataGridProps) {
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
         autoHeight
-        columns={columns}
+        columns={deletedCategoriesColumns}
         disableColumnFilter
         disableColumnMenu
         disableRowSelectionOnClick
         getRowHeight={() => 'auto'}
         initialState={{ pagination: { paginationModel: { pageSize: 50 } } }}
         loading={loading}
-        onRowClick={mode === 'active' ? ({ row }) => onView(row) : undefined}
         pageSizeOptions={[25, 50, 100]}
         rows={error ? [] : [...rows]}
         showToolbar
@@ -55,11 +38,10 @@ export function CategoriesDataGrid({
                 onRetry={onRetry}
               />
             ) : (
-              <DataGridMessageOverlay message={emptyMessage} />
+              <DataGridMessageOverlay message="Видалених категорій немає." />
             ),
           toolbar: CategoriesGridToolbar,
         }}
-        sx={{ '& .MuiDataGrid-row': { cursor: mode === 'active' ? 'pointer' : 'default' } }}
       />
     </Box>
   );

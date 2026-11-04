@@ -106,28 +106,93 @@ describe('categories pages', () => {
     expect(within(panel).getAllByLabelText('Заголовок H1').length).toBe(2);
   });
 
-  it('opens the same panel from the pencil in the list', () => {
-    render(
-      <MemoryRouter initialEntries={['/categories']}>
-        <CategoriesPage canEdit canSeeDeleted />
-      </MemoryRouter>,
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: 'Редагувати категорію Завіси' }));
-
-    expect(screen.getByRole('dialog', { name: 'Редагування категорії' })).toBeTruthy();
-    expect(api.one).toHaveBeenLastCalledWith(5, { skip: false });
-  });
-
-  it('shows no pencil to managers', () => {
+  it('shows the tree and the first category, then selects a subcategory', () => {
+    const child: AdminCategory = {
+      ...category,
+      id: 6,
+      level: 1,
+      nameUk: 'Врізні завіси',
+      parentId: 5,
+      slug: 'vrizni-zavisy',
+    };
+    api.list.mockReturnValue({
+      data: [category, child],
+      isError: false,
+      isFetching: false,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
     render(
       <MemoryRouter initialEntries={['/categories']}>
         <CategoriesPage canSeeDeleted={false} />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('button', { name: 'Переглянути категорію Завіси' })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Редагувати категорію Завіси' })).toBeNull();
+    const overview = screen.getByRole('article', { name: 'Завіси' });
+    expect(within(overview).getAllByText('Немає тексту')).toHaveLength(2);
+    expect(within(overview).queryByRole('button', { name: 'Редагувати' })).toBeNull();
+    expect(screen.getByRole('treeitem', { name: /Завіси/ }).getAttribute('aria-selected')).toBe(
+      'true',
+    );
+
+    fireEvent.click(within(overview).getByRole('button', { name: 'Врізні завіси' }));
+
+    expect(screen.getByRole('article', { name: 'Врізні завіси' })).toBeTruthy();
+    expect(api.content).toHaveBeenLastCalledWith(6, { skip: false });
+  });
+
+  it('finds a category by its Russian name and keeps its parent in the tree', () => {
+    const child: AdminCategory = {
+      ...category,
+      id: 6,
+      level: 1,
+      nameRu: 'Врезные петли',
+      nameUk: 'Врізні завіси',
+      parentId: 5,
+      slug: 'vrizni-zavisy',
+    };
+    const other: AdminCategory = {
+      ...category,
+      id: 7,
+      nameRu: 'Замки',
+      nameUk: 'Замки',
+      slug: 'zamky',
+      sortOrder: 1,
+    };
+    api.list.mockReturnValue({
+      data: [category, child, other],
+      isError: false,
+      isFetching: false,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+    render(
+      <MemoryRouter initialEntries={['/categories']}>
+        <CategoriesPage canSeeDeleted={false} />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Пошук категорій' }), {
+      target: { value: 'врезные' },
+    });
+
+    const tree = screen.getByRole('tree', { name: 'Категорії' });
+    expect(within(tree).getByText('Завіси')).toBeTruthy();
+    expect(within(tree).getByText('Врізні завіси')).toBeTruthy();
+    expect(within(tree).queryByText('Замки')).toBeNull();
+  });
+
+  it('opens the edit panel from the overview for administrators', () => {
+    render(
+      <MemoryRouter initialEntries={['/categories?category=5']}>
+        <CategoriesPage canEdit canSeeDeleted />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
+
+    expect(screen.getByRole('dialog', { name: 'Редагування категорії' })).toBeTruthy();
+    expect(api.one).toHaveBeenLastCalledWith(5, { skip: false });
   });
 
   it('saves the Ukrainian text of an administrator and keeps the Russian tab', async () => {
