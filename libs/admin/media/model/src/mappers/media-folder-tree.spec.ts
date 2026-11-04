@@ -1,4 +1,10 @@
-import { buildFolderTree, folderAndDescendantIds, folderPath } from './media-folder-tree';
+import {
+  buildFolderTree,
+  filterFolderTree,
+  folderAncestorIds,
+  folderAndDescendantIds,
+  folderPath,
+} from './media-folder-tree';
 
 const folders = [
   { id: 1, parentId: null, name: 'Товари', fileCount: 2 },
@@ -21,5 +27,23 @@ describe('media folder tree', () => {
     expect([...folderAndDescendantIds(folders, 1)].sort()).toEqual([1, 2, 3]);
     expect(folderPath(folders, 3)).toEqual(['Товари', 'Акції', 'Літо']);
     expect(folderPath(folders, null)).toEqual([]);
+  });
+
+  it('counts files together with all subfolders', () => {
+    const products = buildFolderTree(folders)[2];
+    expect(products.totalFileCount).toBe(3);
+    expect(products.children[0].totalFileCount).toBe(1);
+  });
+
+  it('finds the folders above a folder', () => {
+    expect(folderAncestorIds(folders, 3)).toEqual([1, 2]);
+    expect(folderAncestorIds(folders, 1)).toEqual([]);
+  });
+
+  it('keeps matching folders with their parents and drops the rest', () => {
+    const found = filterFolderTree(buildFolderTree(folders), 'літ');
+    expect(found.map((node) => node.name)).toEqual(['Товари']);
+    expect(found[0].children[0].children.map((node) => node.name)).toEqual(['Літо']);
+    expect(filterFolderTree(buildFolderTree(folders), ' ').length).toBe(3);
   });
 });

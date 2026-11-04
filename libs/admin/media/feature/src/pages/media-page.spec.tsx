@@ -82,6 +82,41 @@ describe('MediaPage', () => {
     );
   });
 
+  it('keeps subfolders closed, counts them in the total, and shows a folder with its subfolders', () => {
+    window.localStorage.clear();
+    api.folders.mockReturnValue({
+      data: {
+        ...tree,
+        folders: [...tree.folders, { id: 3, parentId: 1, name: 'Двері', fileCount: 4 }],
+      },
+      isError: false,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+    render(<MediaPage canDelete={false} />);
+
+    expect(screen.queryByText('Двері')).toBeNull();
+    const products = screen.getByRole('button', { name: /^Товари/ });
+    expect(products.textContent).toContain('5');
+    fireEvent.click(screen.getByRole('button', { name: 'Розгорнути «Товари»' }));
+    expect(screen.getByText('Двері')).toBeDefined();
+
+    fireEvent.click(products);
+    expect(api.files).toHaveBeenLastCalledWith(
+      expect.objectContaining({ scope: { kind: 'folder', folderId: 1 }, includeSubfolders: true }),
+    );
+    fireEvent.click(screen.getByRole('switch', { name: 'Разом з підпапками' }));
+    expect(api.files).toHaveBeenLastCalledWith(
+      expect.objectContaining({ scope: { kind: 'folder', folderId: 1 }, includeSubfolders: false }),
+    );
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Знайти папку' }), {
+      target: { value: 'схем' },
+    });
+    expect(screen.queryByRole('button', { name: /^Товари/ })).toBeNull();
+    expect(screen.getByRole('button', { name: /^Схеми/ })).toBeDefined();
+  });
+
   it('uploads pictures to the chosen folder and skips a file that is not a picture', async () => {
     api.upload.mockReturnValue(resolved(file));
     const { container } = render(<MediaPage canDelete={false} />);

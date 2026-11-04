@@ -1652,7 +1652,7 @@ export interface paths {
         };
         /**
          * A page of files by name
-         * @description `folderId` limits the list to one folder, `inRoot=true` to files outside any folder; with neither, the whole library. `search` matches the display name (case-insensitive contains).
+         * @description `folderId` limits the list to one folder, `inRoot=true` to files outside any folder; with neither, the whole library. `includeSubfolders=true` (only with `folderId`) also returns the files of all its subfolders. `search` matches the display name (case-insensitive contains).
          */
         get: operations["getAdminMediaFiles"];
         put?: never;
@@ -7596,6 +7596,7 @@ export interface operations {
                 search?: string;
                 page?: number;
                 pageSize?: number;
+                includeSubfolders?: boolean;
             };
             header?: never;
             path?: never;
