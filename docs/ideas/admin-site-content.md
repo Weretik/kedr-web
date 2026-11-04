@@ -1,0 +1,33 @@
+# What else to manage from the Admin (audit 2026-11-04)
+
+Articles and category texts are already edited in the Admin and stored in KedrStore (Content and Catalog modules). This audit lists the site content that is still hard-coded in `libs/site/**` and proposes what to move next. Nothing here is implemented; each item needs the owner's go.
+
+## Found in code
+
+| Content                                        | Where it lives now                                                                                                                                                             | Used on                                                                                                | Changes how often                            |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| Sales phone, email, messengers, map link       | [company.ts](../../libs/site/core/config/src/lib/company.ts) `COMPANY`                                                                                                         | Header, footer, contacts, cart, wholesale, delivery, home FAQ, Organization JSON-LD (25 files read it) | Rarely, but must change everywhere at once   |
+| Phone and email inside the privacy policy text | [privacy-policy-copy.ts](../../libs/site/content/model/src/lib/privacy-policy-copy.ts) (UK and RU, typed by hand)                                                              | Privacy policy                                                                                         | Drifts from `COMPANY` when the phone changes |
+| Requisites (ФОП, code, extract, IBAN, bank)    | [company-requisites.ts](../../libs/site/core/config/src/lib/company-requisites.ts)                                                                                             | Requisites page, copy buttons                                                                          | Rarely; a wrong IBAN costs money             |
+| Public offer                                   | [public-offer-source-copy.ts](../../libs/site/content/model/src/lib/public-offer/public-offer-source-copy.ts) (121 lines, UK/RU)                                               | Public offer page                                                                                      | Legal edits, needs a version date            |
+| Privacy policy, returns and exchanges          | [privacy-policy-copy.ts](../../libs/site/content/model/src/lib/privacy-policy-copy.ts), [returns-policy-copy.ts](../../libs/site/content/model/src/lib/returns-policy-copy.ts) | Legal pages                                                                                            | Legal edits                                  |
+| Delivery and payment terms                     | [delivery-payment-dictionary.ts](../../libs/site/content/ui/src/lib/i18n/delivery-payment-dictionary.ts)                                                                       | Delivery page                                                                                          | When carriers or payment change              |
+| Gallery (8 photos)                             | [gallery-source.ts](../../libs/site/content/data-access/src/lib/gallery-source.ts), `apps/site/public/images/gallery`                                                          | Gallery page                                                                                           | New photos                                   |
+| Home FAQ, brands, hero                         | [home-dictionary.ts](../../libs/site/home/ui/src/lib/i18n/home-dictionary.ts), [company-dictionary.ts](../../libs/site/home/ui/src/lib/i18n/company-dictionary.ts)             | Home                                                                                                   | Marketing edits                              |
+| Wholesale offer text                           | [wholesale-dictionary.ts](../../libs/site/content/model/src/lib/wholesale-dictionary.ts)                                                                                       | «Співпраця»                                                                                            | Commercial terms                             |
+
+## Proposal, in order
+
+1. **«Контакти компанії» (one settings card).** Sales phone, email, Telegram, Viber, map link, city, working hours. One record in the Content module (`content.site_settings`), public `GET /api/content/settings` cached with tag `content:settings`, the site reads it in `core/config` instead of `COMPANY`. The legal texts insert the phone and email from the same record (placeholders `{phone}`, `{email}`) so they never drift. Highest value: the phone is on every page and in JSON-LD.
+2. **«Реквізити».** The same settings record, separate Admin card, Admin role only (money). The site requisites page and copy buttons read it; a change is logged with who and when.
+3. **«Документи»: оферта, політика конфіденційності, повернення.** One editable document per page and language with the shared rich text editor, a «Редакція від» date shown on the site, and the previous versions kept read-only (a legal text must be traceable). Delivery and payment terms can be a fourth document of the same kind.
+4. **«Галерея».** Photo list with upload, order, captions, and categories, stored like article covers (WebP in the database, versioned URL). The covers code in Content already does the image work.
+5. **Home blocks (later).** Home FAQ and brands as small lists in the Admin; the hero stays in code (design, not content).
+
+Not worth moving: UI labels and buttons in dictionaries (they are interface, not content), SEO title templates (rules, not texts), and the region pages (now redirected to «Співпраця»).
+
+## Shared design
+
+- All of it lives in the existing Content module (schema `content`), with `CanManageContent` for texts and an Admin-only policy for requisites. No new module.
+- The site keeps a code fallback for contacts and requisites: if the API is down during a build or request, it uses the last values in code, so the phone never disappears. Legal documents answer 500 rather than show an empty offer.
+- The site picks a change up within its cache lifetime (a few minutes), as articles do now; instant on-demand revalidation can come later.
