@@ -3,7 +3,7 @@ import {
   useGetCompanyRequisitesQuery,
 } from '@admin/company/data-access';
 import { CompanyRequisitesForm, CompanyRequisitesHistory } from '@admin/company/ui';
-import { AdminPageHeader, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
+import { AdminPageHeader, ChangedNote, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
@@ -18,6 +18,8 @@ export function CompanyRequisitesPage() {
     setNotice('Реквізити збережено. Сайт покаже їх протягом 10 хвилин.'),
   );
 
+  const lastChange = history.data?.[0];
+
   return (
     <Stack component="section" spacing={3}>
       <AdminPageHeader title="Реквізити" />
@@ -25,6 +27,7 @@ export function CompanyRequisitesPage() {
         Дані для оплати на сторінці «Реквізити» сайту і в кнопках копіювання. Змінювати можуть лише
         адміністратори; кожне збереження потрапляє в історію.
       </Typography>
+      {lastChange ? <ChangedNote at={lastChange.changedAt} by={lastChange.changedBy} /> : null}
       {query.isLoading ? (
         <PageLoader label="Завантаження реквізитів" />
       ) : query.isError || !editor.draft ? (

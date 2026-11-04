@@ -12,7 +12,13 @@ import {
   PublishLegalDocumentDialog,
   legalDocumentSiteState,
 } from '@admin/documents/ui';
-import { AdminDetailHeader, NoticeSnackbar, PageLoader, SectionCard } from '@admin/shared/ui';
+import {
+  AdminDetailHeader,
+  ChangedNote,
+  NoticeSnackbar,
+  PageLoader,
+  SectionCard,
+} from '@admin/shared/ui';
 import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -46,6 +52,7 @@ function LegalDocumentEditor({ kind }: { kind: LegalDocumentKind }) {
     );
 
   const draftInfo = editor.overview.draft;
+  const published = editor.overview.published;
   const confirmPublish = async (effectiveFrom: string) => {
     setPublishError(undefined);
     try {
@@ -71,6 +78,9 @@ function LegalDocumentEditor({ kind }: { kind: LegalDocumentKind }) {
     <>
       <Stack spacing={0.5}>
         <Typography variant="body2">{legalDocumentSiteState(editor.overview)}</Typography>
+        {published?.publishedAt ? (
+          <ChangedNote at={published.publishedAt} by={published.publishedBy} label="Опубліковано" />
+        ) : null}
         <Typography color={draftInfo ? 'warning.main' : 'text.secondary'} variant="body2">
           {draftInfo
             ? `Є неопублікована чернетка: збережено ${new Date(draftInfo.updatedAt).toLocaleString('uk-UA')}, ${draftInfo.updatedBy}. Відвідувачі бачать текст, що на сайті.`

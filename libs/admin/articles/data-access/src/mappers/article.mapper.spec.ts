@@ -21,6 +21,7 @@ describe('article mapper', () => {
 
     expect(mapped.coverUrl).toBe('https://api.example.test/api/content/articles/7/cover?v=2');
     expect(mapped.texts.ru.title).toBe('Петли');
+    expect(mapped.updatedBy).toBeNull();
     expect(toCoverUrl(null)).toBeNull();
   });
 

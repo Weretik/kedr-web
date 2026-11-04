@@ -1,0 +1,20 @@
+{
+  "name": "admin-site-refresh-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/site-refresh/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:site-refresh", "type:data-access"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

@@ -8,12 +8,19 @@ import { ProfileMenu } from './profile/profile-menu';
 import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
 import { ColorSchemeMenu } from '../theme/color-scheme-menu';
 
+import type { ReactNode } from 'react';
+
 interface AdminTopBarProps {
+  actions?: ReactNode;
   onOpenNavigation: () => void;
   currentOrderPositionCount: number;
 }
 
-export function AdminTopBar({ onOpenNavigation, currentOrderPositionCount }: AdminTopBarProps) {
+export function AdminTopBar({
+  actions,
+  onOpenNavigation,
+  currentOrderPositionCount,
+}: AdminTopBarProps) {
   const title = useAdminShellUser()?.isAdmin ? 'Кабінет адміністратора' : 'Кабінет менеджера';
 
   return (
@@ -52,6 +59,7 @@ export function AdminTopBar({ onOpenNavigation, currentOrderPositionCount }: Adm
           {title}
         </Typography>
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          {actions}
           <Tooltip title="Поточне замовлення">
             <IconButton
               aria-label={`Відкрити оформлення замовлення, позицій: ${currentOrderPositionCount}`}

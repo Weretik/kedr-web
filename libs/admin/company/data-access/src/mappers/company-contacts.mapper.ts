@@ -6,7 +6,8 @@ import type { SaveCompanyContactsBody } from '../contracts/company-contacts.cont
 import type { CompanyContacts, CompanyContactsDraft } from '@admin/company/model';
 
 export function mapCompanyContacts(response: unknown): CompanyContacts {
-  return companyContactsSchema.parse(response);
+  const contacts = companyContactsSchema.parse(response);
+  return { ...contacts, updatedBy: contacts.updatedBy ?? null };
 }
 
 /** Trimmed values; phones in `+380…` form whatever way they were typed. */

@@ -10,4 +10,5 @@ export const companyContactsSchema = z.object({
   cityUk: z.string(),
   cityRu: z.string(),
   updatedAt: z.string(),
+  updatedBy: z.string().nullish(),
 });

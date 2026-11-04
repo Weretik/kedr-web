@@ -27,6 +27,8 @@ export interface ArticleSummary {
   /** Absolute cover URL with the cover version, or `null` without a cover. */
   coverUrl: string | null;
   updatedAt: string;
+  /** Who saved last; null for articles saved before this was recorded. */
+  updatedBy: string | null;
 }
 
 export interface Article {
@@ -36,5 +38,6 @@ export interface Article {
   isPublished: boolean;
   coverUrl: string | null;
   updatedAt: string;
+  updatedBy: string | null;
   texts: Record<ArticleLanguage, ArticleText>;
 }
