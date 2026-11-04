@@ -236,6 +236,12 @@ module.exports = [
               onlyDependOnLibsWithTags: ['type:core', 'scope:mobile-shared', 'scope:shared'],
             },
 
+            // The Site core shell receives domain components through app-owned slots.
+            {
+              allSourceTags: ['scope:site-shared', 'type:shell'],
+              onlyDependOnLibsWithTags: ['scope:site-shared', 'scope:shared'],
+            },
+
             // Site core (SEO builders) uses only site utilities (config, i18n) and shared libraries.
             {
               allSourceTags: ['scope:site', 'type:core'],

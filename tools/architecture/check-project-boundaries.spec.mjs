@@ -128,3 +128,29 @@ test('product detail boundary rejects product feature importing catalog feature'
     validateProjectBoundary(siteProject('product/feature'), siteProject('catalog/feature')),
   );
 });
+
+// Cart navigation consumes one product path policy; presentation and features stay isolated.
+test('cart feature may map product destinations through the public product model', () => {
+  assert.equal(
+    validateProjectBoundary(siteProject('cart/feature'), siteProject('product/model')),
+    null,
+  );
+});
+test('cart presentation may not own product model policy', () => {
+  assert.ok(validateProjectBoundary(siteProject('cart/ui'), siteProject('product/model')));
+});
+test('cart cannot import another domain feature', () => {
+  assert.ok(validateProjectBoundary(siteProject('cart/feature'), siteProject('product/feature')));
+});
+
+// The Site core shell receives domain nodes through slots, never imports them.
+for (const layer of ['model', 'data-access', 'ui', 'seo', 'feature']) {
+  test(`Site core shell rejects cart/${layer}`, () => {
+    assert.ok(validateProjectBoundary(siteProject('core/shell'), siteProject(`cart/${layer}`)));
+  });
+}
+for (const targetPath of ['core/config', 'core/i18n', 'shared/ui']) {
+  test(`Site core shell retains its neutral dependency ${targetPath}`, () => {
+    assert.equal(validateProjectBoundary(siteProject('core/shell'), siteProject(targetPath)), null);
+  });
+}

@@ -1,3 +1,4 @@
+import { CartHeaderAction, CartRuntime } from '@site/cart/feature';
 import { getCatalogNavigation } from '@site/catalog/feature';
 import { LOCALES, LOCALE_LANGUAGE_TAGS, isLocale } from '@site/core/i18n';
 import { JsonLd, buildOrganizationJsonLd, buildRootMetadata } from '@site/core/seo';
@@ -39,9 +40,16 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
       {/* Browser extensions (Grammarly and similar) add attributes to <body> before React hydrates. */}
       <body className="flex min-h-dvh flex-col" suppressHydrationWarning>
         <ThemeProvider>
-          <SiteShell locale={locale} catalogNavigation={catalogNavigation}>
-            {children}
-          </SiteShell>
+          <CartRuntime locale={locale}>
+            <SiteShell
+              locale={locale}
+              catalogNavigation={catalogNavigation}
+              cartAction={<CartHeaderAction locale={locale} />}
+              compactCartAction={<CartHeaderAction locale={locale} compact />}
+            >
+              {children}
+            </SiteShell>
+          </CartRuntime>
         </ThemeProvider>
         <JsonLd data={buildOrganizationJsonLd(locale)} />
       </body>

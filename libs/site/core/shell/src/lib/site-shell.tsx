@@ -10,11 +10,20 @@ type SiteShellProps = {
   locale: Locale;
   /** Catalog sections and mega menu from the catalog domain; fixed sections are used without it. */
   catalogNavigation?: CatalogNavigation;
+  /** App-composed cart controls; the shell keeps its localized links when omitted. */
+  cartAction?: ReactNode;
+  compactCartAction?: ReactNode;
   children: ReactNode;
 };
 
 /** Page frame for every localized route: skip link, header, main content, and footer. */
-export function SiteShell({ locale, catalogNavigation, children }: SiteShellProps) {
+export function SiteShell({
+  locale,
+  catalogNavigation,
+  cartAction,
+  compactCartAction,
+  children,
+}: SiteShellProps) {
   const dictionary = getShellDictionary(locale);
 
   return (
@@ -25,7 +34,13 @@ export function SiteShell({ locale, catalogNavigation, children }: SiteShellProp
       >
         {dictionary.skipToContent}
       </a>
-      <SiteHeader locale={locale} dictionary={dictionary} catalogNavigation={catalogNavigation} />
+      <SiteHeader
+        locale={locale}
+        dictionary={dictionary}
+        catalogNavigation={catalogNavigation}
+        cartAction={cartAction}
+        compactCartAction={compactCartAction}
+      />
       <main id="content" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 lg:px-6">
         {children}
       </main>

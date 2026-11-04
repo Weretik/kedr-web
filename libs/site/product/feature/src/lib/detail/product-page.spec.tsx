@@ -19,6 +19,65 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('server product composition', () => {
+  it('calls the external purchase renderer with normalized facts and forwards only its node', async () => {
+    vi.mocked(getProductDetails).mockResolvedValue({ kind: 'ok', product: productFixture });
+    const renderPurchaseAction = vi.fn(() => <button type="button">External purchase</button>);
+
+    const page = await ProductPage({
+      locale: 'uk',
+      slug: productFixture.slug,
+      renderPurchaseAction,
+    });
+    const html = renderToStaticMarkup(page);
+
+    expect(renderPurchaseAction).toHaveBeenCalledExactlyOnceWith({
+      productId: '7',
+      title: productFixture.name,
+      unitPrice: 245.5,
+      currency: 'UAH',
+      slug: productFixture.slug,
+      imageUrl: productFixture.media[0]!.url,
+      available: true,
+    });
+    expect(html).toContain('External purchase');
+    expect(page.props.children[0].props).not.toHaveProperty('renderPurchaseAction');
+  });
+
+  it.each([
+    { price: null, inStock: true },
+    { price: 245.5, inStock: false },
+    { price: null, inStock: false },
+  ])('preserves contact behavior for price=$price and stock=$inStock', async (facts) => {
+    vi.mocked(getProductDetails).mockResolvedValue({
+      kind: 'ok',
+      product: { ...productFixture, ...facts },
+    });
+    const renderPurchaseAction = vi.fn(() => <button type="button">External purchase</button>);
+
+    const html = renderToStaticMarkup(
+      await ProductPage({ locale: 'uk', slug: productFixture.slug, renderPurchaseAction }),
+    );
+
+    expect(renderPurchaseAction).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ productId: '7', unitPrice: facts.price, available: false }),
+    );
+    expect(html).not.toContain('External purchase');
+    expect(html).toContain('href="/uk/contacts"');
+  });
+
+  it('keeps the existing disabled purchase fallback when the external renderer declines', async () => {
+    vi.mocked(getProductDetails).mockResolvedValue({ kind: 'ok', product: productFixture });
+    const html = renderToStaticMarkup(
+      await ProductPage({
+        locale: 'uk',
+        slug: productFixture.slug,
+        renderPurchaseAction: () => null,
+      }),
+    );
+
+    expect(html).toMatch(/<button[^>]*disabled[^>]*>[\s\S]*?У кошик/);
+  });
+
   it('uses catalog root policy and one visible canonical breadcrumb trail', () => {
     const product = {
       ...productFixture,

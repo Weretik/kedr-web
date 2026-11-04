@@ -12,6 +12,7 @@ import { SHELL_PATHS } from '../navigation/site-navigation';
 
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { Locale } from '@site/core/i18n';
+import type { ReactNode } from 'react';
 
 const iconButton = 'grid size-9 place-items-center rounded-md hover:bg-muted';
 
@@ -22,9 +23,11 @@ const iconButton = 'grid size-9 place-items-center rounded-md hover:bg-muted';
 export function CompactActions({
   locale,
   dictionary,
+  cartAction,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
+  cartAction?: ReactNode;
 }) {
   const condensed = useHeaderCondensed();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -63,15 +66,17 @@ export function CompactActions({
             <SearchIcon className="size-4" strokeWidth={1.75} />
           )}
         </button>
-        <Link
-          href={localizedPath(locale, SHELL_PATHS.cart)}
-          rel="nofollow"
-          aria-label={dictionary.cart}
-          title={dictionary.cart}
-          className={iconButton}
-        >
-          <ShoppingCartIcon className="size-4" strokeWidth={1.75} />
-        </Link>
+        {cartAction ?? (
+          <Link
+            href={localizedPath(locale, SHELL_PATHS.cart)}
+            rel="nofollow"
+            aria-label={dictionary.cart}
+            title={dictionary.cart}
+            className={iconButton}
+          >
+            <ShoppingCartIcon className="size-4" strokeWidth={1.75} />
+          </Link>
+        )}
       </div>
       {open && (
         <div

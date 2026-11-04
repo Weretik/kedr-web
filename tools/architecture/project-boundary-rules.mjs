@@ -11,6 +11,7 @@ const documentedCrossDomainFlows = new Set([
   'site-home-feature->site-catalog-data-access',
   'site-home-feature->site-catalog-model',
   'site-product-feature->site-catalog-model',
+  'site-cart-feature->site-product-model',
   'site-home-feature->site-catalog-ui',
   'site-content-feature->site-catalog-data-access',
   'site-content-feature->site-catalog-model',
@@ -35,6 +36,15 @@ export function validateProjectBoundary(source, target) {
   const targetType = valueFor(targetTags, 'type:');
   const sourceDomain = valueFor(sourceTags, 'domain:');
   const targetDomain = valueFor(targetTags, 'domain:');
+
+  if (
+    sourceType === 'shell' &&
+    sourceTags.includes('scope:site-shared') &&
+    targetDomain &&
+    targetDomain !== 'core'
+  ) {
+    return `${source.name} (Site core shell) cannot depend on domain project ${target.name}; inject a node through a shell slot`;
+  }
 
   if (sourceType === 'core' && targetDomain && targetDomain !== 'core') {
     return `${source.name} (core) cannot depend on domain project ${target.name}`;

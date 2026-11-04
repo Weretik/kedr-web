@@ -7,6 +7,7 @@ import { resolveCategoryLinks } from '../navigation/catalog-navigation';
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { CatalogNavigation } from '../navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
+import type { ReactNode } from 'react';
 
 /**
  * Three-row header with everything the current storefront header has. On desktop only the category row stays on
@@ -16,10 +17,14 @@ export function SiteHeader({
   locale,
   dictionary,
   catalogNavigation,
+  cartAction,
+  compactCartAction,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
   catalogNavigation?: CatalogNavigation;
+  cartAction?: ReactNode;
+  compactCartAction?: ReactNode;
 }) {
   const categoryLinks = resolveCategoryLinks(dictionary, catalogNavigation);
 
@@ -34,11 +39,17 @@ export function SiteHeader({
             dictionary={dictionary}
             categoryLinks={categoryLinks}
             catalogMenu={catalogNavigation?.menu}
+            cartAction={cartAction}
           />
         </>
       }
     >
-      <CategoryBar locale={locale} dictionary={dictionary} links={categoryLinks} />
+      <CategoryBar
+        locale={locale}
+        dictionary={dictionary}
+        links={categoryLinks}
+        compactCartAction={compactCartAction}
+      />
       <div className="border-b border-border" />
     </CollapsingHeader>
   );

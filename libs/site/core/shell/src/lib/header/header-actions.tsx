@@ -7,6 +7,7 @@ import { SHELL_PATHS } from '../navigation/site-navigation';
 
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { Locale } from '@site/core/i18n';
+import type { ReactNode } from 'react';
 
 /**
  * Cabinet and cart entry points. They are plain links in the shell; the account and cart features add the session
@@ -15,9 +16,11 @@ import type { Locale } from '@site/core/i18n';
 export function HeaderActions({
   locale,
   dictionary,
+  cartAction,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
+  cartAction?: ReactNode;
 }) {
   return (
     <div className="flex items-center gap-1">
@@ -31,16 +34,18 @@ export function HeaderActions({
           <span className="hidden sm:inline">{dictionary.cabinet}</span>
         </Link>
       </Button>
-      <Button asChild variant="outline" size="sm" className="h-10 px-2 sm:px-3">
-        <Link
-          href={localizedPath(locale, SHELL_PATHS.cart)}
-          rel="nofollow"
-          aria-label={dictionary.cart}
-        >
-          <ShoppingCartIcon strokeWidth={1.75} />
-          <span className="hidden sm:inline">{dictionary.cart}</span>
-        </Link>
-      </Button>
+      {cartAction ?? (
+        <Button asChild variant="outline" size="sm" className="h-10 px-2 sm:px-3">
+          <Link
+            href={localizedPath(locale, SHELL_PATHS.cart)}
+            rel="nofollow"
+            aria-label={dictionary.cart}
+          >
+            <ShoppingCartIcon strokeWidth={1.75} />
+            <span className="hidden sm:inline">{dictionary.cart}</span>
+          </Link>
+        </Button>
+      )}
     </div>
   );
 }

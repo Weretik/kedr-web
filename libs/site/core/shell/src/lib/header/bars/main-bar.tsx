@@ -21,10 +21,17 @@ type MainBarProps = {
   categoryLinks: readonly ShellLink[];
   /** Mega menu from the catalog domain; the fallback dropdown is used without it. */
   catalogMenu?: ReactNode;
+  cartAction?: ReactNode;
 };
 
 /** Second header row: logo, catalog, search, phone with messengers, cabinet, and cart. */
-export function MainBar({ locale, dictionary, categoryLinks, catalogMenu }: MainBarProps) {
+export function MainBar({
+  locale,
+  dictionary,
+  categoryLinks,
+  catalogMenu,
+  cartAction,
+}: MainBarProps) {
   return (
     <div className="mx-auto flex max-w-[90rem] flex-wrap items-center gap-3 px-4 py-3 lg:flex-nowrap lg:gap-5 lg:px-6">
       <MobileMenu
@@ -61,7 +68,7 @@ export function MainBar({ locale, dictionary, categoryLinks, catalogMenu }: Main
         <MessengerLinks dictionary={dictionary} />
       </div>
       <div className="ml-auto lg:ml-0">
-        <HeaderActions locale={locale} dictionary={dictionary} />
+        <HeaderActions locale={locale} dictionary={dictionary} cartAction={cartAction} />
       </div>
     </div>
   );

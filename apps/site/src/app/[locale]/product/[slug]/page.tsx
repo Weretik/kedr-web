@@ -1,3 +1,4 @@
+import { renderCartPurchaseAction } from '@site/cart/feature';
 import { isLocale } from '@site/core/i18n';
 import { ProductPage, getProductMetadata, getProductStaticParams } from '@site/product/feature';
 import { notFound } from 'next/navigation';
@@ -19,5 +20,11 @@ export async function generateMetadata({ params }: ProductRouteProps): Promise<M
 export default async function Page({ params }: ProductRouteProps) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  return <ProductPage locale={locale} slug={slug} />;
+  return (
+    <ProductPage
+      locale={locale}
+      slug={slug}
+      renderPurchaseAction={renderCartPurchaseAction.bind(null, locale)}
+    />
+  );
 }

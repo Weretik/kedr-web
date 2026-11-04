@@ -27,8 +27,10 @@ flowchart LR
   F --> U["product/ui"] --> M
   F --> SEO["product/seo: local input"] --> CoreSEO["core/seo"]
   F --> CatalogModel["catalog/model: root policy, разрешённый flow"]
-  F -. "после EN-002, разрешённый flow" .-> Cart["cart/ui + cart/model public API"]
-  Layout["app composition"] -. "после EN-002" .-> CartFeature["cart/feature: provider / header slot"]
+  Route["app product route"] --> Cart["cart/feature server renderer"]
+  Route --> F
+  F --> Handoff["server callback -> serializable descriptor"]
+  Layout["app composition"] --> CartFeature["cart/feature: runtime / generic shell slots"]
   Layout --> Shell["core/shell: принимает slot"]
 ```
 
@@ -40,44 +42,44 @@ SEO принимает собственный input от feature и не имп�
 
 ## Планируемая карта файлов
 
-Карта сверена с реализацией4A. Строки exists реализованы; cart adapter/quantity control остаются planned до EN-002. Имена тестов задают планируемые проверки рядом с владельцем.
+Карта сверена с реализацией4A. Строки exists реализованы; Cart4B реализована2026-11-04 через app server callback и cart-owned quantity/controller, без product→cart imports. Имена тестов задают планируемые проверки рядом с владельцем.
 
-| Путь                                                                                               | Состояние                 | Одна ответственность                                                                 |
-| -------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------ |
-| `libs/site/product/{model,data-access,ui,seo,feature}/{project.json,vite.config.mts,src/index.ts}` | exists EN-001             | generated boundaries, public APIs и focused targets                                  |
-| `model/src/lib/entities/product-details.ts`                                                        | exists                    | mapped product/media types                                                           |
-| `model/src/lib/results/product-result.ts`                                                          | exists                    | доменные результаты чтения                                                           |
-| `model/src/lib/purchase/purchase-policy.ts` + `.spec.ts`                                           | exists TS-001             | derived action mode и положительное количество                                       |
-| `model/src/lib/paths/product-paths.ts` + `.spec.ts`                                                | exists TS-001             | canonical product path без генерации slug; category path остаётся catalog model      |
-| `data-access/src/lib/contracts/{product.dto.ts,product-redirect.parser.ts}`                        | exists TS-002, AF-002     | private generated projections и unknown redirect-body parser                         |
-| `data-access/src/lib/mappers/product-details.mapper.ts` + `.spec.ts`                               | exists TS-002             | DTO → model, independent price/stock/media normalization                             |
-| `data-access/src/lib/loaders/product-details-loader.ts` + `.spec.ts`                               | exists TS-002             | cached lookup и mapping HTTP outcomes                                                |
-| `data-access/src/lib/cache-tags.ts`                                                                | exists TS-002             | product tags и failure lifetime                                                      |
-| `data-access/src/lib/crawling/product-index-loader.ts` + `.spec.ts`                                | exists TS-008             | bounded paged public listing snapshot для sitemap/seed                               |
-| `ui/src/lib/gallery/product-gallery.tsx` + `.spec.tsx`                                             | exists TS-003             | выбор media, локальные отказы, zoom                                                  |
-| `ui/src/lib/gallery/product-media.tsx`                                                             | exists TS-003             | реальный image и fallback одного URL                                                 |
-| `ui/src/lib/detail/product-detail-view.tsx`                                                        | exists TS-004             | серверная раскладка первого экрана и секций                                          |
-| `ui/src/lib/identity/product-identity.tsx`                                                         | exists TS-004             | H1, SKU, category, наличие                                                           |
-| `ui/src/lib/identity/sku-copy-button.tsx` + `.spec.tsx`                                            | exists TS-004             | clipboard leaf с честным результатом                                                 |
-| `ui/src/lib/purchase/product-purchase-panel.tsx` + `.spec.tsx`                                     | exists TS-004             | server price/pack и action slot/contact mode                                         |
-| `ui/src/lib/purchase/product-quantity-control.tsx`                                                 | planned TS-005            | quantity leaf по cart policy                                                         |
-| `ui/src/lib/details/product-facts.tsx`                                                             | exists TS-004             | таблица только доступных фактов                                                      |
-| `ui/src/lib/service/product-service-links.tsx`                                                     | exists TS-004             | условия, опт, помощь, реальные destinations                                          |
-| `ui/src/lib/i18n/{product-dictionary.ts,locales/uk.ts,locales/ru.ts}`                              | exists TS-004             | типизированный UI copy                                                               |
-| `seo/src/lib/inputs/product-seo-input.ts`                                                          | exists TS-006             | собственный SEO input без импорта model                                              |
-| `seo/src/lib/metadata/product-metadata.ts` + `.spec.ts`                                            | exists TS-006             | metadata, confirmed alternates, OG                                                   |
-| `seo/src/lib/json-ld/{product-json-ld,product-breadcrumb-json-ld}.ts` + `.spec.ts`                 | exists TS-006             | правдивые Product/Offer/BreadcrumbList                                               |
-| `feature/src/lib/detail/product-page.tsx` + `.spec.tsx`                                            | exists TS-007             | загрузка, HTTP outcome, server composition                                           |
-| `feature/src/lib/detail/product-crumbs.ts`                                                         | exists TS-007             | один видимый breadcrumb trail для UI и SEO                                           |
-| `feature/src/lib/mapping/product-category-href.ts` + `.spec.ts`                                    | exists TS-004/007, AF-001 | catalog categoryPath → localized ready categoryHref; UI не конструирует route policy |
-| `feature/src/lib/mapping/product-seo-input.ts`                                                     | exists TS-006             | model → SEO input                                                                    |
-| `feature/src/lib/routing/product-routing.ts` + `.spec.ts`                                          | exists TS-007             | metadata/static params/current locale route resolution                               |
-| `feature/src/lib/purchase/product-cart-boundary.tsx` + `.spec.tsx`                                 | planned TS-005            | adapter к готовому cart public API                                                   |
-| `feature/src/lib/crawling/product-sitemap.ts` + `.spec.ts`                                         | exists TS-008             | localized entries, shards и sitemap URLs                                             |
-| `apps/site/src/app/[locale]/product/[slug]/page.tsx`                                               | exists TS-007             | thin route: params и feature exports                                                 |
-| `apps/site/src/app/product/sitemap.ts`                                                             | exists TS-008             | thin metadata route с generateSitemaps                                               |
-| `apps/site/src/app/robots.ts`                                                                      | exists, changed TS-008    | app composition передаёт product sitemap URLs в core builder                         |
-| `libs/site/core/seo/src/lib/crawling/robots-file.ts`, `crawling.spec.ts`                           | exists, changed TS-008    | optional sitemap URLs без импорта domain, прежние defaults                           |
+| Путь                                                                                               | Состояние                          | Одна ответственность                                                                 |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------ |
+| `libs/site/product/{model,data-access,ui,seo,feature}/{project.json,vite.config.mts,src/index.ts}` | exists EN-001                      | generated boundaries, public APIs и focused targets                                  |
+| `model/src/lib/entities/product-details.ts`                                                        | exists                             | mapped product/media types                                                           |
+| `model/src/lib/results/product-result.ts`                                                          | exists                             | доменные результаты чтения                                                           |
+| `model/src/lib/purchase/purchase-policy.ts` + `.spec.ts`                                           | exists TS-001                      | derived action mode и положительное количество                                       |
+| `model/src/lib/paths/product-paths.ts` + `.spec.ts`                                                | exists TS-001                      | canonical product path без генерации slug; category path остаётся catalog model      |
+| `data-access/src/lib/contracts/{product.dto.ts,product-redirect.parser.ts}`                        | exists TS-002, AF-002              | private generated projections и unknown redirect-body parser                         |
+| `data-access/src/lib/mappers/product-details.mapper.ts` + `.spec.ts`                               | exists TS-002                      | DTO → model, independent price/stock/media normalization                             |
+| `data-access/src/lib/loaders/product-details-loader.ts` + `.spec.ts`                               | exists TS-002                      | cached lookup и mapping HTTP outcomes                                                |
+| `data-access/src/lib/cache-tags.ts`                                                                | exists TS-002                      | product tags и failure lifetime                                                      |
+| `data-access/src/lib/crawling/product-index-loader.ts` + `.spec.ts`                                | exists TS-008                      | bounded paged public listing snapshot для sitemap/seed                               |
+| `ui/src/lib/gallery/product-gallery.tsx` + `.spec.tsx`                                             | exists TS-003                      | выбор media, локальные отказы, zoom                                                  |
+| `ui/src/lib/gallery/product-media.tsx`                                                             | exists TS-003                      | реальный image и fallback одного URL                                                 |
+| `ui/src/lib/detail/product-detail-view.tsx`                                                        | exists TS-004                      | серверная раскладка первого экрана и секций                                          |
+| `ui/src/lib/identity/product-identity.tsx`                                                         | exists TS-004                      | H1, SKU, category, наличие                                                           |
+| `ui/src/lib/identity/sku-copy-button.tsx` + `.spec.tsx`                                            | exists TS-004                      | clipboard leaf с честным результатом                                                 |
+| `ui/src/lib/purchase/product-purchase-panel.tsx` + `.spec.tsx`                                     | exists TS-004                      | server price/pack и action slot/contact mode                                         |
+| `libs/site/cart/ui/src/lib/purchase/cart-purchase-control.tsx`                                     | implemented via cart TS-005/009    | cart-owned quantity leaf1–1000                                                       |
+| `ui/src/lib/details/product-facts.tsx`                                                             | exists TS-004                      | таблица только доступных фактов                                                      |
+| `ui/src/lib/service/product-service-links.tsx`                                                     | exists TS-004                      | условия, опт, помощь, реальные destinations                                          |
+| `ui/src/lib/i18n/{product-dictionary.ts,locales/uk.ts,locales/ru.ts}`                              | exists TS-004                      | типизированный UI copy                                                               |
+| `seo/src/lib/inputs/product-seo-input.ts`                                                          | exists TS-006                      | собственный SEO input без импорта model                                              |
+| `seo/src/lib/metadata/product-metadata.ts` + `.spec.ts`                                            | exists TS-006                      | metadata, confirmed alternates, OG                                                   |
+| `seo/src/lib/json-ld/{product-json-ld,product-breadcrumb-json-ld}.ts` + `.spec.ts`                 | exists TS-006                      | правдивые Product/Offer/BreadcrumbList                                               |
+| `feature/src/lib/detail/product-page.tsx` + `.spec.tsx`                                            | exists TS-007                      | загрузка, HTTP outcome, server composition                                           |
+| `feature/src/lib/detail/product-crumbs.ts`                                                         | exists TS-007                      | один видимый breadcrumb trail для UI и SEO                                           |
+| `feature/src/lib/mapping/product-category-href.ts` + `.spec.ts`                                    | exists TS-004/007, AF-001          | catalog categoryPath → localized ready categoryHref; UI не конструирует route policy |
+| `feature/src/lib/mapping/product-seo-input.ts`                                                     | exists TS-006                      | model → SEO input                                                                    |
+| `feature/src/lib/routing/product-routing.ts` + `.spec.ts`                                          | exists TS-007                      | metadata/static params/current locale route resolution                               |
+| `feature/src/lib/detail/product-purchase-descriptor.ts` + `.spec.ts`; `product-page.tsx`           | implemented via cart EN-003/TS-009 | server-only descriptor/callback handoff; app injects cart renderer                   |
+| `feature/src/lib/crawling/product-sitemap.ts` + `.spec.ts`                                         | exists TS-008                      | localized entries, shards и sitemap URLs                                             |
+| `apps/site/src/app/[locale]/product/[slug]/page.tsx`                                               | exists TS-007                      | thin route: params и feature exports                                                 |
+| `apps/site/src/app/product/sitemap.ts`                                                             | exists TS-008                      | thin metadata route с generateSitemaps                                               |
+| `apps/site/src/app/robots.ts`                                                                      | exists, changed TS-008             | app composition передаёт product sitemap URLs в core builder                         |
+| `libs/site/core/seo/src/lib/crawling/robots-file.ts`, `crawling.spec.ts`                           | exists, changed TS-008             | optional sitemap URLs без импорта domain, прежние defaults                           |
 
 В путях без `libs/site/product/` этот префикс подразумевается до app/core строк. Тесты для pure model/mapper/SEO — unit, loader/routing/cart boundary — focused integration, галерея/purchase/clipboard — component. Gallery, clipboard, quantity/cart adapter — client leaves; цена, наличие, факты, сервис и structured data — server.
 
@@ -98,3 +100,7 @@ SEO принимает собственный input от feature и не имп�
 ## Архитектурный аудит реализации
 
 После реализации4A по запросу пользователя выполнен [scoped audit](../code-audit/audit.md). AF-001 вынес category destination в feature, AF-002 выделил private contracts, AF-003 синхронизировал consumer projection. Решения split/keep, source evidence и свежие проверки записаны в отчёте; новых междоменных разрешений и зависимостей не добавлено.
+
+## Cart4B — 2026-11-04
+
+Исходный product-local adapter/quantity plan заменён app composition: серверный callback ProductPage исполняет renderCartPurchaseAction; cart client controller получает serializable descriptor и общий document owner. Дополнительных boundary flows нет. [Product TS-005](../tasks/TS-005-cart-integration.md), [cart evidence](../../../cart/001-cart-checkout/verification/implementation.md). Исторические4A результаты выше не перепрогонялись целиком.
