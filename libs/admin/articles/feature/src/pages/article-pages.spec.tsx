@@ -84,11 +84,14 @@ describe('article pages', () => {
     });
   });
 
-  it('lists articles with a draft mark and a link to a new one', () => {
+  it('lists articles, filters drafts and published ones, and links to a new one', () => {
     renderAt('/articles');
     expect(screen.getByRole('heading', { level: 1, name: 'Статті' })).toBeDefined();
     expect(screen.getByText('Як обрати завіси')).toBeDefined();
-    expect(screen.getByText('Чернетка')).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: 'Опубліковані' }));
+    expect(screen.queryByText('Як обрати завіси')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Чернетки' }));
+    expect(screen.getByText('Як обрати завіси')).toBeDefined();
     expect(screen.getByRole('link', { name: 'Нова стаття' }).getAttribute('href')).toBe(
       '/articles/new',
     );
@@ -115,6 +118,7 @@ describe('article pages', () => {
     api.create.mockReturnValue(resolved(article));
     renderAt('/articles/new');
     expect(api.one).toHaveBeenLastCalledWith(Number.NaN, { skip: true });
+    expect(screen.queryByRole('textbox', { name: 'Адреса (slug)' })).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Створити статтю' }));
     expect(api.create).not.toHaveBeenCalled();

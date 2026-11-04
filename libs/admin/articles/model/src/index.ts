@@ -16,3 +16,5 @@ export {
   articleCoverMaxBytes,
   articleCoverRulesHint,
 } from './validators/article-cover-rules';
+export { filterArticlesByPublication } from './filters/article-publication-filter';
+export type { ArticlePublicationFilter } from './filters/article-publication-filter';

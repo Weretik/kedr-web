@@ -17,7 +17,7 @@ describe('ArticleForm', () => {
   it('builds the address from the title for a new article and saves on submit', () => {
     const onSave = vi.fn();
     render(<ArticleForm {...props} draft={newArticleDraft()} onSave={onSave} />);
-    expect(screen.getByText(/Порожньо — з українського заголовка/)).toBeDefined();
+    expect(screen.queryByRole('textbox', { name: 'Адреса (slug)' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Скасувати зміни' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Створити статтю' }));
     expect(onSave).toHaveBeenCalledOnce();

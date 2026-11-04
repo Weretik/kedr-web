@@ -11,7 +11,10 @@ interface ArticleSettingsFieldsProps {
   onChange: (patch: Partial<ArticleDraft>) => void;
 }
 
-/** Address, date, and visibility: shared by both languages. */
+/**
+ * Address, date, and visibility: shared by both languages. A new article has no address field: the server builds it
+ * from the Ukrainian title; it can be changed afterwards when editing.
+ */
 export function ArticleSettingsFields({
   draft,
   errors,
@@ -20,18 +23,16 @@ export function ArticleSettingsFields({
 }: ArticleSettingsFieldsProps) {
   return (
     <Stack spacing={2}>
-      <CountedTextField
-        error={errors?.slug}
-        hint={
-          isNew
-            ? 'Адреса на сайті: /uk/articles/… Порожньо — з українського заголовка.'
-            : 'Адреса на сайті: /uk/articles/… Після зміни старі посилання перестануть працювати.'
-        }
-        label="Адреса (slug)"
-        maxLength={articleLimits.slug}
-        onChange={(slug) => onChange({ slug })}
-        value={draft.slug}
-      />
+      {isNew ? null : (
+        <CountedTextField
+          error={errors?.slug}
+          hint="Адреса на сайті: /uk/articles/… Після зміни старі посилання перестануть працювати."
+          label="Адреса (slug)"
+          maxLength={articleLimits.slug}
+          onChange={(slug) => onChange({ slug })}
+          value={draft.slug}
+        />
+      )}
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
