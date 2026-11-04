@@ -24,7 +24,7 @@ type MainBarProps = {
   cartAction?: ReactNode;
 };
 
-/** Second header row: logo, catalog, search, phone with messengers, cabinet, and cart. */
+/** Second header row: logo, catalog, search, phone with messengers, and cart. */
 export function MainBar({
   locale,
   dictionary,

@@ -18,12 +18,21 @@ export type ProductPageProps = {
   slug: string;
   /** Executed on the server; only the returned node reaches the detail view. */
   renderPurchaseAction?: (descriptor: ProductPurchaseDescriptor) => ReactNode;
+  /** One-tap add for the phone buy bar, from the same owner as `renderPurchaseAction`. */
+  renderStickyPurchaseAction?: (descriptor: ProductPurchaseDescriptor) => ReactNode;
 };
 
 /** Resolve identity/status before rendering, preserving the existing public site shell. */
-export async function ProductPage({ locale, slug, renderPurchaseAction }: ProductPageProps) {
+export async function ProductPage({
+  locale,
+  slug,
+  renderPurchaseAction,
+  renderStickyPurchaseAction,
+}: ProductPageProps) {
   const product = await loadProductOrRespond(locale, slug);
-  const purchaseAction = renderPurchaseAction?.(productPurchaseDescriptor(product));
+  const descriptor = productPurchaseDescriptor(product);
+  const purchaseAction = renderPurchaseAction?.(descriptor);
+  const stickyPurchaseAction = renderStickyPurchaseAction?.(descriptor);
   const crumbs = productCrumbs(locale, product);
   const languagePaths = await getProductLanguagePaths(locale, product);
   const seo = productSeoInput(locale, product, crumbs, languagePaths);
@@ -35,6 +44,7 @@ export async function ProductPage({ locale, slug, renderPurchaseAction }: Produc
         categoryHref={productCategoryHref(locale, product)}
         breadcrumbs={crumbs}
         purchaseAction={purchaseAction}
+        stickyPurchaseAction={stickyPurchaseAction}
       />
       <JsonLd data={[buildProductJsonLd(seo), buildProductBreadcrumbJsonLd(seo)]} />
     </>

@@ -9,12 +9,22 @@ import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
 import type { ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
+import type { ReactNode } from 'react';
 
 // Two columns on phones, three on tablets, four on desktops inside the 80rem container.
 const PHOTO_SIZES = '(min-width: 1024px) 18rem, (min-width: 640px) 33vw, 50vw';
 
-/** Product tile: photo or placeholder, badges, name link, SKU, stock state, and retail price. */
-export function ProductCard({ locale, product }: { locale: Locale; product: ProductSummary }) {
+/** Product tile: photo or placeholder, badges, name link, SKU, stock state, retail price, and cart action. */
+export function ProductCard({
+  locale,
+  product,
+  action,
+}: {
+  locale: Locale;
+  product: ProductSummary;
+  /** Add-to-cart control from the cart domain; it sits above the card link. */
+  action?: ReactNode;
+}) {
   const dictionary = getCatalogDictionary(locale);
   const href = localizedPath(locale, productPath(product.slug));
 
@@ -52,9 +62,12 @@ export function ProductCard({ locale, product }: { locale: Locale; product: Prod
         </span>
         <StockLabel inStock={product.inStock} dictionary={dictionary} />
       </p>
-      <p className="mt-auto pt-2 text-base font-semibold">
-        <ProductPrice price={product.price} locale={locale} dictionary={dictionary} />
-      </p>
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
+        <p className="text-base font-semibold">
+          <ProductPrice price={product.price} locale={locale} dictionary={dictionary} />
+        </p>
+        {action}
+      </div>
     </article>
   );
 }

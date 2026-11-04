@@ -1,4 +1,4 @@
-import { renderCartPurchaseAction } from '@site/cart/feature';
+import { renderCartPurchaseAction, renderCartQuickAddAction } from '@site/cart/feature';
 import { isLocale } from '@site/core/i18n';
 import { ProductPage, getProductMetadata, getProductStaticParams } from '@site/product/feature';
 import { notFound } from 'next/navigation';
@@ -25,6 +25,7 @@ export default async function Page({ params }: ProductRouteProps) {
       locale={locale}
       slug={slug}
       renderPurchaseAction={renderCartPurchaseAction.bind(null, locale)}
+      renderStickyPurchaseAction={renderCartQuickAddAction.bind(null, locale)}
     />
   );
 }

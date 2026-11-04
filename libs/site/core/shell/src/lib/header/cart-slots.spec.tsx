@@ -39,7 +39,7 @@ describe('SiteShell cart action slots', () => {
         expect(link.getAttribute('href')).toBe(`/${target}/checkout`);
         expect(link.getAttribute('rel')).toBe('nofollow');
       }
-      expect(header.querySelector(`a[href="/${locale}/cabinet"]`)).not.toBeNull();
+      expect(header.querySelector(`a[href="/${locale}/cabinet"]`)).toBeNull();
       expect(within(header).getByRole('search').getAttribute('action')).toBe(`/${locale}/search`);
       expect(screen.getByRole('main').textContent).toContain('checkout content');
     },

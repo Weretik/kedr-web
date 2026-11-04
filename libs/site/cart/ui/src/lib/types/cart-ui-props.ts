@@ -60,6 +60,13 @@ export type CartHeaderButtonProps = {
   onOpen: (opener: HTMLButtonElement) => void;
 };
 
+export type CartQuickAddButtonProps = {
+  locale: Locale;
+  title: string;
+  onAdd: (opener: HTMLElement) => void;
+  disabled: boolean;
+};
+
 export type CartPurchaseControlProps = {
   locale: Locale;
   quantity: number;

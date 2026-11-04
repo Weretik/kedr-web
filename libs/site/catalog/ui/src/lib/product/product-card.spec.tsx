@@ -33,7 +33,7 @@ describe('ProductGrid', () => {
     expect(screen.getByRole('img', { name: 'Завіса AGB' })).toBeTruthy();
     expect(screen.getByText('Новинка')).toBeTruthy();
     expect(screen.getByText(/245,50 грн/)).toBeTruthy();
-    expect(screen.getByText('Арт. 7')).toBeTruthy();
+    expect(screen.getByText('Артикул 7')).toBeTruthy();
     expect(screen.getByText('В наявності')).toBeTruthy();
   });
 

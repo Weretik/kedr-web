@@ -10,7 +10,6 @@ import type {
 } from './checkout-types';
 import type { CartLine } from '../cart/cart-types';
 
-
 export function buildCheckoutCommand(
   draft: CheckoutDraft,
   lines: readonly CartLine[],

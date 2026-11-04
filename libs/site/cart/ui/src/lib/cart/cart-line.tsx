@@ -72,7 +72,7 @@ export function CartLine({ locale, line, disabled, onChangeQuantity, onRemove }:
             )}
           </h3>
           <p className="mt-1 font-mono text-xs text-muted-foreground [overflow-wrap:anywhere]">
-            ID: {line.variantId}
+            {copy.sku} {line.variantId}
           </p>
           <div className="mt-3 flex min-w-0 flex-wrap items-start gap-2.5">
             <CartQuantity

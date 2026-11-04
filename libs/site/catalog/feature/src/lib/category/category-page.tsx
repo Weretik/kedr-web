@@ -13,6 +13,7 @@ import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 import { CATEGORY_PLACEHOLDER_SLUG } from '../routing/category-routing';
 
+import type { RenderListingPurchaseAction } from '../listing/listing-purchase';
 import type { CategoryDetails, SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 
@@ -20,6 +21,7 @@ type CategoryPageProps = {
   locale: Locale;
   slug: string;
   searchParams: Promise<SearchParamsRecord>;
+  renderPurchaseAction?: RenderListingPurchaseAction;
 };
 
 function toQueryString(params: SearchParamsRecord): string {
@@ -63,7 +65,12 @@ export async function loadCategoryOrRespond(
  * Category page: breadcrumbs, the H1 with the count, category chips, then filters on the left and the streamed
  * products on the right, then admin text and FAQ. Main sections are in the header, so there is no tree panel.
  */
-export async function CategoryPage({ locale, slug, searchParams }: CategoryPageProps) {
+export async function CategoryPage({
+  locale,
+  slug,
+  searchParams,
+  renderPurchaseAction,
+}: CategoryPageProps) {
   const [category, tree] = await Promise.all([
     loadCategoryOrRespond(locale, slug, searchParams),
     getCatalogTree(locale),
@@ -90,6 +97,7 @@ export async function CategoryPage({ locale, slug, searchParams }: CategoryPageP
           path={path}
           scope={{ categoryId: category.id }}
           searchParams={searchParams}
+          renderPurchaseAction={renderPurchaseAction}
         />
       </Suspense>
       {category.content && <CategoryContent locale={locale} content={category.content} />}

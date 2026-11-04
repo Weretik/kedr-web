@@ -2,7 +2,6 @@ import type { ShellDictionary } from '../i18n/shell-dictionary';
 
 type InfoLinkKey = keyof ShellDictionary['links'];
 type CategoryKey = keyof ShellDictionary['categories'];
-export type RegionSlug = keyof ShellDictionary['regionNames'];
 
 export type NavLink<Key extends string> = { key: Key; path: string; hash?: string };
 
@@ -39,38 +38,9 @@ export const CATEGORY_LINKS: readonly NavLink<CategoryKey>[] = [
   { key: 'doors', path: catalogPath('dveri-7226') },
 ];
 
-export const REGION_SLUGS: readonly RegionSlug[] = [
-  'vinnytska-oblast',
-  'volynska-oblast',
-  'dnipropetrovska-oblast',
-  'zhytomyrska-oblast',
-  'zakarpatska-oblast',
-  'zaporizka-oblast',
-  'ivano-frankivska-oblast',
-  'kyivska-oblast',
-  'kirovohradska-oblast',
-  'lvivska-oblast',
-  'mykolaivska-oblast',
-  'odeska-oblast',
-  'poltavska-oblast',
-  'rivnenska-oblast',
-  'sumska-oblast',
-  'ternopilska-oblast',
-  'kharkivska-oblast',
-  'khersonska-oblast',
-  'khmelnytska-oblast',
-  'cherkaska-oblast',
-  'chernihivska-oblast',
-  'chernivetska-oblast',
-  'kyiv',
-];
-
-export const regionPath = (slug: RegionSlug) => `/region/${slug}`;
-
 export const SHELL_PATHS = {
   catalog: '/catalog',
   search: '/search',
   wholesale: '/wholesale',
-  cabinet: '/cabinet',
   cart: '/checkout',
 } as const;

@@ -3,14 +3,13 @@ import Link from 'next/link';
 
 import { SHELL_PATHS } from '../../navigation/site-navigation';
 import { CompactActions } from '../compact-actions';
-import { RegionsMenu } from '../menus/regions-menu';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
 import type { ShellLink } from '../../navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
-/** Third header row (desktop): catalog sections, regions, cooperation, and the compact search and cart. */
+/** Third header row (desktop): catalog sections, cooperation, and the compact search and cart. */
 export function CategoryBar({
   locale,
   dictionary,
@@ -38,7 +37,6 @@ export function CategoryBar({
           </Link>
         ))}
         <div className="ml-auto flex items-center gap-1">
-          <RegionsMenu locale={locale} dictionary={dictionary} />
           <Link
             href={localizedPath(locale, SHELL_PATHS.wholesale)}
             className="rounded-md px-2 py-1.5 font-medium text-brand-text hover:bg-muted"
