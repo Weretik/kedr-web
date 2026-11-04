@@ -1,4 +1,4 @@
-import { HomeFaqDialog, HomeFaqList, RemoveHomeItemDialog } from '@admin/home-content/ui';
+import { HomeFaqList, HomeFaqPanel, RemoveHomeItemDialog } from '@admin/home-content/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -65,7 +65,7 @@ export function HomeFaqSection({ items, loading, onNotice }: HomeFaqSectionProps
         reordering={actions.reordering}
       />
       {dialog.kind === 'edit' ? (
-        <HomeFaqDialog
+        <HomeFaqPanel
           error={error}
           initial={dialog.item?.texts}
           key={dialog.item?.id ?? 'new'}

@@ -2,9 +2,9 @@ import { AdminPageHeader, PageLoader } from '@admin/shared/ui';
 import { useGetMyProfileQuery } from '@admin/users/data-access';
 import { validateFullName } from '@admin/users/model';
 import {
-  ChangeEmailDialog,
-  ChangePasswordDialog,
-  EditTextDialog,
+  ChangeEmailPanel,
+  ChangePasswordPanel,
+  EditTextPanel,
   ProfileDetailsCard,
   ProfilePhotoCard,
 } from '@admin/users/ui';
@@ -63,7 +63,7 @@ export default function ProfilePage({ onProfileChanged }: ProfilePageProps) {
         />
         <ProfileDetailsCard onEdit={actions.openDialog} profile={profile} />
       </Box>
-      <EditTextDialog
+      <EditTextPanel
         initialValue={profile.fullName}
         label="Імʼя"
         onClose={actions.closeDialog}
@@ -72,13 +72,13 @@ export default function ProfilePage({ onProfileChanged }: ProfilePageProps) {
         title="Змінити імʼя"
         validate={validateFullName}
       />
-      <ChangeEmailDialog
+      <ChangeEmailPanel
         currentEmail={profile.email}
         onClose={actions.closeDialog}
         onSubmit={actions.submitEmail}
         open={actions.dialog === 'email'}
       />
-      <ChangePasswordDialog
+      <ChangePasswordPanel
         onClose={actions.closeDialog}
         onSubmit={actions.submitPassword}
         open={actions.dialog === 'password'}

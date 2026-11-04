@@ -29,7 +29,7 @@ const profileActionTypes: ReadonlySet<StaffAccountAction['type']> = new Set([
 export const isStaffProfileAction = (action: StaffAccountAction): action is StaffProfileAction =>
   profileActionTypes.has(action.type);
 
-type EditDialog = { account: StaffAccount; field: 'name' | 'email' | 'password' } | null;
+type EditPanel = { account: StaffAccount; field: 'name' | 'email' | 'password' } | null;
 
 /** A manager's name, email, password and photo, edited by an admin; every change is confirmed. */
 export function useStaffProfileActions(onSuccess: (message: string) => void) {
@@ -40,17 +40,17 @@ export function useStaffProfileActions(onSuccess: (message: string) => void) {
   const [removeAvatar] = useRemoveStaffAvatarMutation();
   const confirmation = useConfirmedChange(onSuccess);
   const avatar = useAvatarChange();
-  const [editDialog, setEditDialog] = useState<EditDialog>(null);
+  const [editPanel, setEditPanel] = useState<EditPanel>(null);
 
   const start = (account: StaffAccount, action: StaffProfileAction) => {
     avatar.clearFileError();
     switch (action.type) {
       case 'changeName':
-        return setEditDialog({ account, field: 'name' });
+        return setEditPanel({ account, field: 'name' });
       case 'changeEmail':
-        return setEditDialog({ account, field: 'email' });
+        return setEditPanel({ account, field: 'email' });
       case 'setPassword':
-        return setEditDialog({ account, field: 'password' });
+        return setEditPanel({ account, field: 'password' });
       case 'uploadAvatar':
         return void avatar.choose(action.file, {
           subject: account.fullName || account.email,
@@ -71,9 +71,9 @@ export function useStaffProfileActions(onSuccess: (message: string) => void) {
 
   /** The edit form collected a valid value; ask to confirm it before saving. */
   const submitEdit = (value: string) => {
-    if (!editDialog) return;
-    const { account, field } = editDialog;
-    setEditDialog(null);
+    if (!editPanel) return;
+    const { account, field } = editPanel;
+    setEditPanel(null);
 
     if (field === 'name') {
       if (value === account.fullName) return;
@@ -105,9 +105,9 @@ export function useStaffProfileActions(onSuccess: (message: string) => void) {
   };
 
   return {
-    closeEdit: () => setEditDialog(null),
+    closeEdit: () => setEditPanel(null),
     confirmation,
-    editDialog,
+    editPanel,
     fileError: avatar.fileError,
     clearFileError: avatar.clearFileError,
     start,

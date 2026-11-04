@@ -1,13 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { CreateStaffDialog } from './create-staff-dialog';
+import { CreateStaffPanel } from './create-staff-panel';
 
-describe('CreateStaffDialog', () => {
+describe('CreateStaffPanel', () => {
   it('checks the fields before sending', () => {
     const onSubmit = vi.fn();
     render(
-      <CreateStaffDialog
+      <CreateStaffPanel
         error={null}
         onClose={vi.fn()}
         onSubmit={onSubmit}
@@ -26,7 +26,7 @@ describe('CreateStaffDialog', () => {
     const onSubmit = vi.fn().mockResolvedValue(true);
     const onClose = vi.fn();
     render(
-      <CreateStaffDialog
+      <CreateStaffPanel
         error={null}
         onClose={onClose}
         onSubmit={onSubmit}

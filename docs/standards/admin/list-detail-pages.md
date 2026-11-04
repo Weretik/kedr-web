@@ -28,7 +28,7 @@
 - **Size and phones.** The panel is 560 px wide, 640 px from `lg`, and full width on phones. It uses the theme surface, divider, and motion; no local tokens.
 - **Dialogs stay only for short questions**: confirmations of a destructive step, picking files from the library, or a preview. A centered dialog with an edit form is not used for new work. A long document with its own versions (articles, legal documents) may keep its full editor page.
 
-Shared parts: `AdminEditPanel` (panel frame), `SlugEditCard` (address block of a catalog item), `RowEditAction` (pencil in a table). Current panels: [categories](../../features/admin/categories.md) and [products](../../features/admin/products.md). Older screens that still edit in dialogs (gallery, home FAQ and brands, user names) move to the panel when they are next changed.
+Shared parts: `AdminEditPanel` (panel frame; `actions` pins «Скасувати»/«Зберегти» to the bottom and `onSubmit` makes the whole panel one form), `SlugEditCard` (address block of a catalog item), `RowEditAction` (pencil in a table). Current panels: [categories](../../features/admin/categories.md), [products](../../features/admin/products.md), [gallery](../../features/admin/gallery.md) (video, titles), [home page](../../features/admin/home-content.md) (FAQ, brands), [users](../../features/admin/users.md) (new user, name, email, password) and [profile](../../features/admin/profile.md).
 
 ## Before a new feature
 

@@ -1,5 +1,5 @@
 export { GalleryGrid } from './cards/gallery-grid';
-export { AddVideoDialog } from './dialogs/add-video-dialog';
-export type { YoutubeLinkState } from './dialogs/add-video-dialog';
-export { EditGalleryItemDialog } from './dialogs/edit-gallery-item-dialog';
+export { AddVideoPanel } from './panels/add-video-panel';
+export type { YoutubeLinkState } from './panels/add-video-panel';
+export { EditGalleryItemPanel } from './panels/edit-gallery-item-panel';
 export { RemoveGalleryItemDialog } from './dialogs/remove-gallery-item-dialog';

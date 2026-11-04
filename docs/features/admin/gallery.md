@@ -4,8 +4,8 @@
 
 - The [grid](../../../libs/admin/gallery/ui/src/cards/gallery-grid.tsx) shows every card in site order: number, «Фото» or «Відео», picture or YouTube poster, the Ukrainian title or «Без назви». Cards move by drag and drop or the arrow buttons; the new order is shown at once and rolled back with a message if saving fails.
 - «Додати фото» opens the [media picker](../../../libs/admin/gallery/feature/src/components/media-picker-dialog.tsx): folder, search, a page of library files without the ones already in the gallery. Files can be uploaded from the computer or dropped into it; uploaded files come back selected. Up to 100 photos go to the end in the order they were picked. The gallery keeps only the file IDs, so a renamed or moved file stays in place; a deleted file shows a warning and the site hides that card.
-- «Додати відео» opens the [video dialog](../../../libs/admin/gallery/ui/src/dialogs/add-video-dialog.tsx): paste any YouTube link (watch, youtu.be, shorts, embed or the bare ID). The poster and YouTube's title appear and fill both titles; they can be changed or translated before adding. A video already in the gallery is refused. If YouTube does not answer, the title is typed by hand.
-- The pencil opens [titles and captions](../../../libs/admin/gallery/ui/src/dialogs/edit-gallery-item-dialog.tsx) in both languages (title up to 150, caption up to 500 characters; empty means none). Removing a card keeps the photo in the media library.
+- «Додати відео» opens the [video panel](../../../libs/admin/gallery/ui/src/panels/add-video-panel.tsx) on the right: paste any YouTube link (watch, youtu.be, shorts, embed or the bare ID). The poster and YouTube's title appear and fill both titles; they can be changed or translated before adding. A video already in the gallery is refused. If YouTube does not answer, the title is typed by hand.
+- The pencil opens [titles and captions](../../../libs/admin/gallery/ui/src/panels/edit-gallery-item-panel.tsx) in the right edit panel, in both languages (title up to 150, caption up to 500 characters; empty means none). Removing a card keeps the photo in the media library.
 - The site shows changes within ten minutes (its cache life).
 
 ## Architecture
@@ -21,7 +21,7 @@ flowchart LR
     Actions --> Api[gallery data access]
     Link --> Api
     Api --> Model[gallery model]
-    Page --> UI[grid, cards, video/edit/remove dialogs]
+    Page --> UI[grid, cards, video and edit panels, remove dialog]
 ```
 
 The feature uses the media library through its public `data-access`, `model` and `ui` entries (documented flows in `tools/architecture/project-boundary-rules.mjs`).
@@ -37,7 +37,8 @@ libs/admin/gallery/
 ├── data-access/src/{contracts,validators,mappers}/
 ├── ui/src/cards/                               # grid with drag and drop, card
 ├── ui/src/forms/gallery-texts-fields.tsx       # uk/ru title and caption
-├── ui/src/dialogs/                             # add video, edit texts, remove
+├── ui/src/panels/                              # add video, edit texts (right edit panel)
+├── ui/src/dialogs/                             # remove confirmation
 └── feature/src/                                # galleryRoutes, page, media picker, hooks, error messages
 ```
 

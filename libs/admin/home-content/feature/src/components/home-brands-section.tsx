@@ -1,5 +1,5 @@
 import { homeBrandDraftFrom } from '@admin/home-content/model';
-import { HomeBrandDialog, HomeBrandGrid, RemoveHomeItemDialog } from '@admin/home-content/ui';
+import { HomeBrandGrid, HomeBrandPanel, RemoveHomeItemDialog } from '@admin/home-content/ui';
 import { mediaAcceptedTypes } from '@admin/media/model';
 import { MediaPickerDialog } from '@admin/media/ui';
 import AddIcon from '@mui/icons-material/Add';
@@ -73,7 +73,7 @@ export function HomeBrandsSection({ brands, loading, onNotice }: HomeBrandsSecti
         reordering={actions.reordering}
       />
       {dialog.kind === 'edit' ? (
-        <HomeBrandDialog
+        <HomeBrandPanel
           accept={accept}
           error={logo.issue ?? error}
           initial={dialog.brand ? homeBrandDraftFrom(dialog.brand) : undefined}

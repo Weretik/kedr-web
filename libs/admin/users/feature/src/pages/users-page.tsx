@@ -1,12 +1,12 @@
 import { AdminPageHeader } from '@admin/shared/ui';
 import { useGetStaffAccountsQuery } from '@admin/users/data-access';
-import { ConfirmActionDialog, CreateStaffDialog, StaffAccountsTable } from '@admin/users/ui';
+import { ConfirmActionDialog, CreateStaffPanel, StaffAccountsTable } from '@admin/users/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { Alert, Button, Card, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
 import { ChangeConfirmationDialog } from '../components/change-confirmation-dialog';
-import { StaffEditDialogs } from '../components/staff-edit-dialogs';
+import { StaffEditPanels } from '../components/staff-edit-panels';
 import { SuccessSnackbar } from '../components/success-snackbar';
 import { useStaffAccountActions } from '../hooks/use-staff-account-actions';
 import { isStaffProfileAction, useStaffProfileActions } from '../hooks/use-staff-profile-actions';
@@ -62,15 +62,15 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
           onRetry={() => void accountsQuery.refetch()}
         />
       </Card>
-      <CreateStaffDialog
+      <CreateStaffPanel
         error={actions.error}
         onClose={actions.closeDialogs}
         onSubmit={actions.submitCreate}
         open={actions.isCreateOpen}
         submitting={actions.creating}
       />
-      <StaffEditDialogs
-        editDialog={profileActions.editDialog}
+      <StaffEditPanels
+        editPanel={profileActions.editPanel}
         onClose={profileActions.closeEdit}
         onSubmit={profileActions.submitEdit}
       />
