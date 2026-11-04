@@ -1,7 +1,7 @@
 import type { CompanyContacts } from '../entities/company-contacts';
 
 /** Editable fields of the contacts, as typed by the user. */
-export type CompanyContactsDraft = Omit<CompanyContacts, 'updatedAt'>;
+export type CompanyContactsDraft = Omit<CompanyContacts, 'updatedAt' | 'updatedBy'>;
 
 export const companyContactsFields = [
   'salesPhone',

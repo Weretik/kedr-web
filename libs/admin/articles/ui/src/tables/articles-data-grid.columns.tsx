@@ -1,4 +1,4 @@
-import { StatusPill } from '@admin/shared/ui';
+import { formatChanged, StatusPill } from '@admin/shared/ui';
 import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupportedOutlined';
 import { Box, Typography } from '@mui/material';
 
@@ -81,9 +81,26 @@ const statusColumn: GridColDef<ArticleSummary> = {
     row.isPublished ? null : <StatusPill label="Чернетка" tone="neutral" />,
 };
 
+const changedColumn: GridColDef<ArticleSummary> = {
+  field: 'updatedAt',
+  headerName: 'Змінено',
+  flex: 1,
+  minWidth: 200,
+  renderCell: ({ row }) => (
+    <Typography
+      color="text.secondary"
+      sx={{ overflowWrap: 'anywhere', py: 1, whiteSpace: 'normal' }}
+      variant="body2"
+    >
+      {formatChanged(row.updatedAt, row.updatedBy)}
+    </Typography>
+  ),
+};
+
 export const articlesColumns: GridColDef<ArticleSummary>[] = [
   coverColumn,
   titleColumn,
   publishedOnColumn,
   statusColumn,
+  changedColumn,
 ];

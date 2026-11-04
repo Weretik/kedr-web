@@ -12,6 +12,7 @@ export const adminArticleSummarySchema = z.object({
   isPublished: z.boolean(),
   coverPath,
   updatedAt: z.string(),
+  updatedBy: z.string().nullish(),
 });
 
 export const adminArticleListSchema = z.array(adminArticleSummarySchema);
@@ -23,6 +24,7 @@ export const adminArticleSchema = z.object({
   isPublished: z.boolean(),
   coverPath,
   updatedAt: z.string(),
+  updatedBy: z.string().nullish(),
   texts: z
     .array(z.object({ language, title: z.string(), excerpt: z.string(), bodyHtml: z.string() }))
     .length(2),

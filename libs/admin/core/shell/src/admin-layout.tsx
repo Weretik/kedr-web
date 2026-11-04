@@ -12,6 +12,8 @@ import { sidebarColors } from './components/navigation/sidebar-colors';
 import { useNavigationCollapsed } from './components/navigation/use-navigation-collapsed';
 import { AdminTopBar } from './components/top-bar/admin-top-bar';
 
+import type { ReactNode } from 'react';
+
 const pageEnter = keyframes`
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }
@@ -19,6 +21,8 @@ const pageEnter = keyframes`
 
 interface AdminLayoutProps {
   currentOrderPositionCount?: number;
+  /** Domain buttons for the top bar, given by the app (the shell does not import domains). */
+  topBarActions?: ReactNode;
 }
 
 const drawerPaperSx = {
@@ -39,7 +43,7 @@ const drawerPaperSx = {
   },
 } as const;
 
-export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps) {
+export function AdminLayout({ currentOrderPositionCount = 0, topBarActions }: AdminLayoutProps) {
   const { pathname } = useLocation();
   const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
   const { isCollapsed, toggleCollapsed } = useNavigationCollapsed();
@@ -99,6 +103,7 @@ export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps)
       >
         <AdminTopBar
           currentOrderPositionCount={currentOrderPositionCount}
+          actions={topBarActions}
           onOpenNavigation={() => setIsMobileNavigationOpen(true)}
         />
         <Box component="main">
