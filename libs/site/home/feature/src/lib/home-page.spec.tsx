@@ -2,9 +2,15 @@ import { render, screen, within } from '@testing-library/react';
 
 import { HomePage } from './home-page';
 
-const { getCatalogSections } = vi.hoisted(() => ({ getCatalogSections: vi.fn() }));
+const { getCatalogSections, getHomeBlocks } = vi.hoisted(() => ({
+  getCatalogSections: vi.fn(),
+  getHomeBlocks: vi.fn(),
+}));
 
 vi.mock('@site/catalog/data-access', () => ({ getCatalogSections }));
+vi.mock('@site/home/data-access', () => ({ getHomeBlocks }));
+
+beforeEach(() => getHomeBlocks.mockResolvedValue({ kind: 'unavailable' }));
 vi.mock('@site/shared/company', () => ({
   getCompanyContacts: vi.fn(async () => ({
     phone: { display: '(067) 111-22-33', e164: '+380671112233' },
@@ -43,6 +49,42 @@ describe('HomePage', () => {
 
     expect(screen.getByRole('status').textContent).toContain('Каталог временно не загрузился');
     expect(screen.getByRole('heading', { level: 2, name: 'Опыт и результаты' })).toBeTruthy();
+  });
+});
+
+describe('home blocks from the admin', () => {
+  it('shows the FAQ and brands edited in the admin', async () => {
+    getCatalogSections.mockResolvedValue(null);
+    getHomeBlocks.mockResolvedValue({
+      kind: 'ok',
+      faq: [{ question: 'Чи є доставка?', answer: 'Так, Новою поштою.' }],
+      brands: [
+        {
+          name: 'Apecs',
+          src: 'https://images-kedr.cdn.express/brands/apecs.webp',
+          width: 320,
+          height: 128,
+        },
+      ],
+    });
+
+    await renderHome('uk');
+
+    const faq = document.querySelectorAll('details[name="home-faq"]');
+    expect(faq).toHaveLength(1);
+    expect(faq[0].querySelector('summary')?.textContent).toContain('Чи є доставка?');
+    expect(screen.getByRole('img', { name: 'Apecs' })).toBeTruthy();
+    expect(screen.queryByRole('img', { name: 'Korfad' })).toBeNull();
+  });
+
+  it('hides an empty FAQ and keeps the built-in logos while no brand is added', async () => {
+    getCatalogSections.mockResolvedValue(null);
+    getHomeBlocks.mockResolvedValue({ kind: 'ok', faq: [], brands: [] });
+
+    await renderHome('uk');
+
+    expect(screen.queryByRole('heading', { level: 2, name: 'Часті запитання' })).toBeNull();
+    expect(screen.getByRole('img', { name: 'Korfad' })).toBeTruthy();
   });
 });
 

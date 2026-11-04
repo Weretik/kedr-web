@@ -1410,6 +1410,174 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the home page FAQ and brands in one language
+         * @description Public, in site order. A brand whose logo file was deleted from the library is left out. An empty `brands` list means the admin has not added any.
+         */
+        get: operations["getPublicHomeBlocks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the home page FAQ and brands
+         * @description Requires `CanManageContent` (Manager or Admin).
+         */
+        get: operations["getAdminHomeBlocks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/faq": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a question to the end of the FAQ
+         * @description Requires `CanManageContent`. All four texts are required.
+         */
+        post: operations["createAdminHomeFaqItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/faq/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the texts of a question
+         * @description Requires `CanManageContent`.
+         */
+        put: operations["updateAdminHomeFaqItem"];
+        post?: never;
+        /**
+         * Remove a question
+         * @description Requires `CanManageContent`.
+         */
+        delete: operations["deleteAdminHomeFaqItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/faq/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all questions
+         * @description Requires `CanManageContent`. `ids` must hold every current question exactly once, first shown first; a list built from a stale page answers 409.
+         */
+        put: operations["reorderAdminHomeFaq"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/brands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a brand to the end of the list
+         * @description Requires `CanManageContent`. The logo must be a media library file.
+         */
+        post: operations["createAdminHomeBrand"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/brands/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a brand's name or logo
+         * @description Requires `CanManageContent`.
+         */
+        put: operations["updateAdminHomeBrand"];
+        post?: never;
+        /**
+         * Remove a brand
+         * @description Requires `CanManageContent`. The logo stays in the media library.
+         */
+        delete: operations["deleteAdminHomeBrand"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/brands/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all brands
+         * @description Requires `CanManageContent`. `ids` must hold every current brand exactly once; a stale list answers 409.
+         */
+        put: operations["reorderAdminHomeBrands"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/media/folders": {
         parameters: {
             query?: never;
@@ -2507,6 +2675,67 @@ export interface components {
         ReorderGalleryRequest: {
             ids: number[];
         };
+        PublicHomeBlocks: {
+            faq: {
+                question: string;
+                answer: string;
+            }[];
+            brands: {
+                name: string;
+                /** Format: uri */
+                logoUrl: string;
+                /** Format: int32 */
+                width: number | null;
+                /** Format: int32 */
+                height: number | null;
+            }[];
+        };
+        AdminHomeFaqItem: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            position: number;
+            questionUk: string;
+            questionRu: string;
+            answerUk: string;
+            answerRu: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminHomeBrand: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            position: number;
+            name: string;
+            /** Format: int64 */
+            logoMediaFileId: number;
+            /** @description CDN URL; null when the file is gone. */
+            logoUrl: string | null;
+            logoFileName: string | null;
+            /** @description The logo file was deleted; the site hides this brand. */
+            logoMissing: boolean;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminHomeBlocks: {
+            faq: components["schemas"]["AdminHomeFaqItem"][];
+            brands: components["schemas"]["AdminHomeBrand"][];
+        };
+        HomeFaqItemRequest: {
+            questionUk: string;
+            questionRu: string;
+            answerUk: string;
+            answerRu: string;
+        };
+        ReorderHomeRequest: {
+            ids: number[];
+        };
+        HomeBrandRequest: {
+            name: string;
+            /** Format: int64 */
+            logoMediaFileId: number;
+        };
         MediaFolderItem: {
             /** Format: int64 */
             id: number;
@@ -2649,6 +2878,15 @@ export interface components {
                 "application/json": components["schemas"]["AdminGalleryItem"][];
             };
         };
+        /** @description Both lists in site order. */
+        HomeBlocks: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["AdminHomeBlocks"];
+            };
+        };
         /** @description Invalid input; each error names its field (`name`, `parentId`, `folderId`, `fileName`, `file`, …). */
         Invalid: {
             headers: {
@@ -2688,6 +2926,7 @@ export interface components {
         Kind: components["schemas"]["LegalDocumentKind"];
         VersionId: number;
         ItemId: number;
+        RowId: number;
         Id: number;
     };
     requestBodies: never;
@@ -6694,6 +6933,385 @@ export interface operations {
                 content?: never;
             };
             /** @description The list does not match the current gallery. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublicHomeBlocks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Both lists. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicHomeBlocks"];
+                };
+            };
+            /** @description The language is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminHomeBlocks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminHomeFaqItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeFaqItemRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description A text is missing or over its limit. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminHomeFaqItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["RowId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeFaqItemRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description A text is missing or over its limit. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such question. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminHomeFaqItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["RowId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such question. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reorderAdminHomeFaq: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderHomeRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description A repeated or invalid ID. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The list does not match the current FAQ. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminHomeBrand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeBrandRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description No name, a name over 100 characters, or a logo that is not in the media library. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminHomeBrand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["RowId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeBrandRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description No name, a name over 100 characters, or a logo that is not in the media library. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such brand. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminHomeBrand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["RowId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such brand. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reorderAdminHomeBrands: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderHomeRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["HomeBlocks"];
+            /** @description A repeated or invalid ID. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The list does not match the current brands. */
             409: {
                 headers: {
                     [name: string]: unknown;

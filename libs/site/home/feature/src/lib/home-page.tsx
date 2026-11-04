@@ -3,8 +3,11 @@ import { CATALOG_PATH, SEARCH_PATH } from '@site/catalog/model';
 import { CatalogIndex } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd, buildWebSiteJsonLd } from '@site/core/seo';
+import { getHomeBlocks } from '@site/home/data-access';
 import {
   CatalogUnavailable,
+  DEFAULT_HOME_BRANDS,
+  defaultHomeFaq,
   HomeCompany,
   HomeResults,
   HomeBrands,
@@ -20,17 +23,21 @@ import { getCompanyContacts } from '@site/shared/company';
 import type { Locale } from '@site/core/i18n';
 
 /**
- * Home page body: hero with search (desktop; phones use the header search), wholesale panel, catalog index, company and partner support, results, brands, and FAQ. Products are not shown here (owner decision 2026-11-01).
+ * Home page body: hero with search (desktop; phones use the header search), wholesale panel, catalog index, company and partner support, results, brands, and FAQ (brands and FAQ are edited in the admin). Products are not shown here (owner decision 2026-11-01).
  * Catalog data is cached (`'use cache'`), so the whole page is part of the prerendered shell.
  */
 export async function HomePage({ locale }: { locale: Locale }) {
   const dictionary = getHomeDictionary(locale);
   const companyDictionary = getCompanyDictionary(locale);
   const allProducts = localizedPath(locale, CATALOG_PATH);
-  const [sections, { phone }] = await Promise.all([
+  const [sections, { phone }, blocks] = await Promise.all([
     getCatalogSections(locale),
     getCompanyContacts(),
+    getHomeBlocks(locale),
   ]);
+  // FAQ and brands come from the admin; the texts and logos in code cover an API outage (and an empty brand list).
+  const faq = blocks.kind === 'ok' ? blocks.faq : defaultHomeFaq(companyDictionary);
+  const brands = blocks.kind === 'ok' && blocks.brands.length ? blocks.brands : DEFAULT_HOME_BRANDS;
 
   return (
     <>
@@ -61,8 +68,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
       <HomeCompany dictionary={companyDictionary} phone={phone} />
       <HomeResults dictionary={companyDictionary} />
-      <HomeBrands dictionary={companyDictionary} />
-      <HomeFaq dictionary={companyDictionary} phone={phone} />
+      <HomeBrands dictionary={companyDictionary} brands={brands} />
+      <HomeFaq dictionary={companyDictionary} items={faq} phone={phone} />
 
       <JsonLd data={buildWebSiteJsonLd(locale)} />
     </>

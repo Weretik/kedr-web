@@ -148,7 +148,12 @@
       "@admin/gallery/model": ["./libs/admin/gallery/model/src/index.ts"],
       "@admin/gallery/data-access": ["./libs/admin/gallery/data-access/src/index.ts"],
       "@admin/gallery/ui": ["./libs/admin/gallery/ui/src/index.ts"],
-      "@admin/gallery/feature": ["./libs/admin/gallery/feature/src/index.ts"]
+      "@admin/gallery/feature": ["./libs/admin/gallery/feature/src/index.ts"],
+      "@site/home/data-access": ["./libs/site/home/data-access/src/index.ts"],
+      "@admin/home-content/model": ["./libs/admin/home-content/model/src/index.ts"],
+      "@admin/home-content/data-access": ["./libs/admin/home-content/data-access/src/index.ts"],
+      "@admin/home-content/ui": ["./libs/admin/home-content/ui/src/index.ts"],
+      "@admin/home-content/feature": ["./libs/admin/home-content/feature/src/index.ts"]
     }
   }
 }
