@@ -124,7 +124,12 @@
       "@site/product/data-access": ["./libs/site/product/data-access/src/index.ts"],
       "@site/product/ui": ["./libs/site/product/ui/src/index.ts"],
       "@site/product/seo": ["./libs/site/product/seo/src/index.ts"],
-      "@site/product/feature": ["./libs/site/product/feature/src/index.ts"]
+      "@site/product/feature": ["./libs/site/product/feature/src/index.ts"],
+      "@site/cart/model": ["./libs/site/cart/model/src/index.ts"],
+      "@site/cart/data-access": ["./libs/site/cart/data-access/src/index.ts"],
+      "@site/cart/ui": ["./libs/site/cart/ui/src/index.ts"],
+      "@site/cart/seo": ["./libs/site/cart/seo/src/index.ts"],
+      "@site/cart/feature": ["./libs/site/cart/feature/src/index.ts"]
     }
   }
 }
