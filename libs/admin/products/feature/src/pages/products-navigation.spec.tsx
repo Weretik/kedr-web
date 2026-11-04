@@ -1,6 +1,6 @@
 import { routerLinkComponents } from '@admin/shared/routing';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { fireEvent, render as renderUi, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render as renderUi, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -183,6 +183,35 @@ describe('products navigation context', () => {
     expect(screen.getByTestId('location').textContent).not.toContain('missingPage=3');
   });
 
+  it('edits photos for everyone and the address for administrators in the side panel', () => {
+    const renderDetails = (canEditSlug: boolean) =>
+      render(
+        <MemoryRouter initialEntries={['/catalog/cable']}>
+          <Routes>
+            <Route
+              element={<ProductDetailsPage canEditSlug={canEditSlug} />}
+              path="/catalog/:productSlug"
+            />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+    const { unmount } = renderDetails(false);
+    expect(screen.queryByText('Фото та схема')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
+    let panel = screen.getByRole('dialog', { name: 'Редагування товару' });
+    expect(within(panel).getByText('Фото та схема')).toBeTruthy();
+    expect(within(panel).queryByRole('textbox', { name: /^Адреса/ })).toBeNull();
+    unmount();
+
+    renderDetails(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
+    panel = screen.getByRole('dialog', { name: 'Редагування товару' });
+    expect(
+      (within(panel).getByRole('textbox', { name: /^Адреса/ }) as HTMLInputElement).value,
+    ).toBe('cable');
+  });
+
   it('shows the missing-product state for the normalized 404 error', () => {
     api.details.mockReturnValue({
       error: { code: 'NotFound', status: 404 },
@@ -289,7 +318,7 @@ describe('products navigation context', () => {
     expect(screen.getByText('Видалені товари')).toBeTruthy();
   });
 
-  it('moves to the new address after an administrator changes it', async () => {
+  it('moves to the new address after an administrator changes it in the panel', async () => {
     api.changeSlug.mockReturnValue({
       unwrap: () => Promise.resolve({ id: 7, slug: 'kabel', previousSlug: 'cable' }),
     });
@@ -303,7 +332,7 @@ describe('products navigation context', () => {
     );
 
     expect(screen.getByText('/uk/product/cable')).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: 'Змінити' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
     fireEvent.click(screen.getByRole('button', { name: 'Згенерувати з назви' }));
 
     await waitFor(() => expect(screen.getByTestId('location').textContent).toBe('/catalog/kabel'));

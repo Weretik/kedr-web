@@ -63,6 +63,7 @@
     "@mui/x-charts": "^9.17.0",
     "@mui/x-data-grid": "^9.17.0",
     "@mui/x-date-pickers": "9.17.0",
+    "@mui/x-tree-view": "^9.17.0",
     "@ngrx/operators": "^22.0.1",
     "@ngrx/signals": "^22.0.1",
     "@primeuix/themes": "^3.1.0",

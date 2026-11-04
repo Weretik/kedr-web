@@ -4,6 +4,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { tableRowClasses } from '@mui/material/TableRow';
 
 import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-tree-view/themeAugmentation';
 
 import { adminMotion } from './motion';
 
@@ -93,6 +94,20 @@ export const adminComponents = {
   },
   MuiChip: {
     styleOverrides: { root: { borderRadius: 999, fontWeight: 700 } },
+  },
+  MuiTreeItem: {
+    styleOverrides: {
+      // The selected item looks like the active navigation item: soft green surface, accent text.
+      content: ({ theme }) => ({
+        borderRadius: 10,
+        paddingBottom: theme.spacing(0.75),
+        paddingTop: theme.spacing(0.75),
+        '&[data-selected], &[data-selected]:hover, &[data-selected][data-focused]': {
+          backgroundColor: (theme.vars ?? theme).palette.primary.light,
+          color: (theme.vars ?? theme).palette.primary.dark,
+        },
+      }),
+    },
   },
   MuiDataGrid: {
     styleOverrides: {

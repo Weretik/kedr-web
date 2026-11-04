@@ -1896,6 +1896,10 @@ export interface components {
             isDeleted: boolean;
             /** Format: date-time */
             deletedAt: string | null;
+            /** @description Active products of the category and all its descendants, on the site or not. Filled in the active list (`deleted=false`) only; `null` elsewhere. */
+            productCount?: number | null;
+            /** @description Languages that have at least one site text field or FAQ item, sorted. Filled in the active list only; `null` elsewhere. */
+            filledContentLanguages?: ("uk" | "ru")[] | null;
         };
         ChangeSlugRequest: {
             /** @description Required unless `regenerate` is true. */

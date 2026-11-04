@@ -1,5 +1,4 @@
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { DetailField, DetailFieldList } from '../layout/detail-field';
 import { SectionCard } from '../layout/section-card';
@@ -8,23 +7,12 @@ interface PublicAddressCardProps {
   slug: string;
   /** Public path before the slug, for example `/uk/catalog/`. */
   pathPrefix: string;
-  /** Shown only to administrators. */
-  onEdit?: () => void;
 }
 
-/** Public site address of a catalog item; administrators change it. */
-export function PublicAddressCard({ onEdit, pathPrefix, slug }: PublicAddressCardProps) {
+/** Read-only public site address of a catalog item; it is changed in the edit panel. */
+export function PublicAddressCard({ pathPrefix, slug }: PublicAddressCardProps) {
   return (
-    <SectionCard
-      action={
-        onEdit ? (
-          <Button onClick={onEdit} size="small" startIcon={<EditOutlinedIcon />}>
-            Змінити
-          </Button>
-        ) : undefined
-      }
-      title="Адреса на сайті"
-    >
+    <SectionCard title="Адреса на сайті">
       <DetailFieldList>
         <DetailField
           label="Адреса"

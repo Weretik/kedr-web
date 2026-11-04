@@ -1,3 +1,4 @@
+export { AdminEditPanel } from './lib/layout/admin-edit-panel';
 export { AdminDetailHeader } from './lib/layout/admin-detail-header';
 export { AdminPageHeader } from './lib/layout/admin-page-header';
 export { DataGridMessageOverlay } from './lib/feedback/data-grid-message-overlay';
@@ -10,9 +11,10 @@ export { SectionCard } from './lib/layout/section-card';
 export { StatusPill } from './lib/feedback/status-pill';
 export type { StatusTone } from './lib/feedback/status-pill';
 export { avatarColorIndex, avatarInitial, UserAvatar } from './lib/user/user-avatar';
-export { ChangeSlugDialog } from './lib/slug/change-slug-dialog';
-export type { ChangeSlugInput } from './lib/slug/change-slug-dialog';
+export { SlugEditCard } from './lib/slug/slug-edit-card';
+export type { ChangeSlugInput } from './lib/slug/slug-edit-card';
 export { slugChangeErrorMessage, slugMaxLength, validateSlug } from './lib/slug/slug-rules';
 export { PublicAddressCard } from './lib/slug/public-address-card';
 export { CountedTextField } from './lib/inputs/counted-text-field';
 export { RichTextEditor } from './lib/inputs/rich-text-editor/rich-text-editor';
+export { RowEditAction } from './lib/table/row-edit-action';

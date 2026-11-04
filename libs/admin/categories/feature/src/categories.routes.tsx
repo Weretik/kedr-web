@@ -14,7 +14,8 @@ export function createCategoriesRoutes({
   useCanEditCatalog,
 }: CategoriesRouteOptions): RouteObject[] {
   function CategoriesRoute() {
-    return <CategoriesPage canSeeDeleted={useCanEditCatalog()} />;
+    const canEdit = useCanEditCatalog();
+    return <CategoriesPage canEdit={canEdit} canSeeDeleted={canEdit} />;
   }
 
   function CategoryDetailsRoute() {

@@ -1,19 +1,13 @@
 import { useGetAdminProductDetailsQuery } from '@admin/products/data-access';
 import { ProductDetailsContent } from '@admin/products/ui';
 import { appConfig } from '@admin/shared/config';
-import {
-  AdminDetailHeader,
-  ChangeSlugDialog,
-  NoticeSnackbar,
-  PageLoader,
-  PublicAddressCard,
-} from '@admin/shared/ui';
+import { AdminDetailHeader, NoticeSnackbar, PageLoader, PublicAddressCard } from '@admin/shared/ui';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { ProductMediaSection } from '../components/product-media-section';
-import { useProductSlugChange } from '../hooks/use-product-slug-change';
+import { ProductEditPanel } from '../components/product-edit-panel';
 import { addProductFeedback } from '../model/add-product-feedback';
 
 import type { AddProductFeedback } from '../model/add-product-feedback';
@@ -22,6 +16,7 @@ import type { AddProductResult } from '../products.routes';
 const photoStorageUrl = 'https://images-kedr.cdn.express/~/o/products';
 const publicPathPrefix = '/uk/product/';
 
+/** Read-only product page; «Редагувати» opens the edit panel with photos and the address. */
 export function ProductDetailsPage({
   canEditSlug = false,
   onAddProduct,
@@ -33,6 +28,7 @@ export function ProductDetailsPage({
   const location = useLocation();
   const navigate = useNavigate();
   const [notice, setNotice] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [addFeedback, setAddFeedback] = useState<AddProductFeedback | null>(null);
   const slug = productSlug?.trim() ?? '';
@@ -40,10 +36,10 @@ export function ProductDetailsPage({
   const query = useGetAdminProductDetailsQuery(slug, { skip: !validSlug });
   const error = query.error as { code?: string; status?: number } | undefined;
   const notFound = error?.code === 'NotFound' || error?.status === 404;
-  const slugChange = useProductSlugChange(query.data?.id, (newSlug) => {
+  const onSlugChanged = (newSlug: string) => {
     setNotice(`Нова адреса: ${newSlug}`);
     navigate(`/catalog/${encodeURIComponent(newSlug)}${location.search}`, { replace: true });
-  });
+  };
   const publicUrl =
     query.data?.exportToSite && query.data.productSlug.trim()
       ? `${appConfig.storefrontBaseUrl.replace(/\/$/, '')}/uk/catalog/product/${encodeURIComponent(query.data.productSlug)}`
@@ -58,6 +54,17 @@ export function ProductDetailsPage({
       <AdminDetailHeader
         backLabel="Назад до товарів"
         backTo={`/catalog${location.search}`}
+        actions={
+          query.data ? (
+            <Button
+              onClick={() => setEditing(true)}
+              startIcon={<EditOutlinedIcon />}
+              variant="contained"
+            >
+              Редагувати
+            </Button>
+          ) : undefined
+        }
         headingRef={headingRef}
         title="Деталі товару"
       />
@@ -86,20 +93,13 @@ export function ProductDetailsPage({
                 : undefined
             }
           />
-          <ProductMediaSection productId={query.data.id} />
-          <PublicAddressCard
-            onEdit={canEditSlug ? slugChange.openDialog : undefined}
-            pathPrefix={publicPathPrefix}
-            slug={query.data.productSlug}
-          />
-          <ChangeSlugDialog
-            currentSlug={query.data.productSlug}
-            error={slugChange.error}
-            onClose={slugChange.close}
-            onSubmit={(input) => void slugChange.submit(input)}
-            open={slugChange.open}
-            pathPrefix={publicPathPrefix}
-            saving={slugChange.saving}
+          <PublicAddressCard pathPrefix={publicPathPrefix} slug={query.data.productSlug} />
+          <ProductEditPanel
+            canEditSlug={canEditSlug}
+            onClose={() => setEditing(false)}
+            onSlugChanged={onSlugChanged}
+            open={editing}
+            product={query.data}
           />
         </>
       ) : (
