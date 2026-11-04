@@ -45,21 +45,24 @@ export function categoryAncestorIds(
 }
 
 /**
- * Keeps the categories whose Ukrainian or Russian name or address contains the term, together with
- * their ancestors, so a found row is always shown in its place in the tree.
+ * Keeps the categories whose Ukrainian or Russian name or address contains the term (and that pass
+ * `keep`, when given), together with their ancestors, so a found row is always shown in its place.
  */
 export function filterCategoryTree(
   tree: readonly CategoryTreeNode[],
   term: string,
+  keep?: (category: AdminCategory) => boolean,
 ): { tree: CategoryTreeNode[]; matchIds: Set<number> } {
   const needle = term.trim().toLocaleLowerCase('uk');
   const matchIds = new Set<number>();
-  if (!needle) return { matchIds, tree: [...tree] };
+  if (!needle && !keep) return { matchIds, tree: [...tree] };
 
   const matches = (category: AdminCategory) =>
-    [category.nameUk, category.nameRu, category.slug].some((value) =>
-      value.toLocaleLowerCase('uk').includes(needle),
-    );
+    (!keep || keep(category)) &&
+    (!needle ||
+      [category.nameUk, category.nameRu, category.slug].some((value) =>
+        value.toLocaleLowerCase('uk').includes(needle),
+      ));
 
   const visit = (node: CategoryTreeNode): CategoryTreeNode | null => {
     const children = node.children

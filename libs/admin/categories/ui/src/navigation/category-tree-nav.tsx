@@ -1,17 +1,22 @@
+import { missingContentLanguages } from '@admin/categories/model';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import {
   Alert,
   Box,
   Button,
   Card,
+  Chip,
   InputAdornment,
   Skeleton,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
+
+import { contentProblemLabel } from './content-problem-label';
 
 import type { CategoryTreeNode } from '@admin/categories/model';
 
@@ -27,39 +32,63 @@ interface CategoryTreeNavProps {
   onSearchChange: (value: string) => void;
   onExpandedChange: (ids: string[]) => void;
   onSelect: (categoryId: number) => void;
+  /** Categories with a missing language; the filter chip shows only when it is above zero. */
+  missingTextCount: number;
+  onlyMissingText: boolean;
+  onOnlyMissingTextChange: (value: boolean) => void;
 }
 
 function TreeNodes({ nodes }: { nodes: readonly CategoryTreeNode[] }) {
-  return nodes.map(({ category, children }) => (
-    <TreeItem
-      itemId={String(category.id)}
-      key={category.id}
-      label={
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', minWidth: 0, py: 0.25 }}>
-          <Typography
-            component="span"
-            sx={{ fontWeight: category.level === 0 ? 700 : 500, overflowWrap: 'anywhere' }}
-            variant="body2"
-          >
-            {category.nameUk}
-          </Typography>
-          {children.length > 0 ? (
+  return nodes.map(({ category, children }) => {
+    const problem = contentProblemLabel(missingContentLanguages(category));
+    return (
+      <TreeItem
+        itemId={String(category.id)}
+        key={category.id}
+        label={
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', minWidth: 0, py: 0.25 }}>
             <Typography
-              aria-label={`${children.length} підкатегорій`}
-              color="text.secondary"
               component="span"
-              sx={{ fontVariantNumeric: 'tabular-nums', ml: 'auto' }}
-              variant="caption"
+              sx={{ fontWeight: category.level === 0 ? 700 : 500, overflowWrap: 'anywhere' }}
+              variant="body2"
             >
-              {children.length}
+              {category.nameUk}
             </Typography>
-          ) : null}
-        </Stack>
-      }
-    >
-      {children.length > 0 ? <TreeNodes nodes={children} /> : null}
-    </TreeItem>
-  ));
+            {problem ? (
+              <Tooltip title={problem}>
+                <Box
+                  aria-label={problem}
+                  component="span"
+                  role="img"
+                  sx={{
+                    alignSelf: 'center',
+                    bgcolor: 'error.main',
+                    borderRadius: '50%',
+                    flex: 'none',
+                    height: 8,
+                    width: 8,
+                  }}
+                />
+              </Tooltip>
+            ) : null}
+            {category.productCount !== null ? (
+              <Typography
+                aria-label={`${category.productCount} товарів`}
+                color="text.secondary"
+                component="span"
+                sx={{ fontVariantNumeric: 'tabular-nums', ml: 'auto !important', pl: 1 }}
+                variant="caption"
+              >
+                {category.productCount}
+              </Typography>
+            ) : null}
+          </Stack>
+        }
+      >
+        {children.length > 0 ? <TreeNodes nodes={children} /> : null}
+      </TreeItem>
+    );
+  });
 }
 
 /** Left side of «Категорії»: search and the 1C tree; a click selects, the arrow expands. */
@@ -74,6 +103,9 @@ export function CategoryTreeNav({
   search,
   selectedId,
   tree,
+  missingTextCount,
+  onlyMissingText,
+  onOnlyMissingTextChange,
 }: CategoryTreeNavProps) {
   return (
     <Card component="nav" aria-label="Дерево категорій" sx={{ minWidth: 0 }} variant="outlined">
@@ -95,6 +127,17 @@ export function CategoryTreeNav({
           }}
           value={search}
         />
+        {missingTextCount > 0 || onlyMissingText ? (
+          <Chip
+            aria-pressed={onlyMissingText}
+            color={onlyMissingText ? 'error' : 'default'}
+            label={`Без тексту · ${missingTextCount}`}
+            onClick={() => onOnlyMissingTextChange(!onlyMissingText)}
+            size="small"
+            sx={{ mt: 1.5 }}
+            variant={onlyMissingText ? 'filled' : 'outlined'}
+          />
+        ) : null}
       </Box>
       <Box sx={{ maxHeight: { md: 'calc(100vh - 260px)' }, overflowY: 'auto', p: 1 }}>
         {loading ? (
@@ -109,7 +152,7 @@ export function CategoryTreeNav({
           </Alert>
         ) : tree.length === 0 ? (
           <Typography color="text.secondary" sx={{ p: 2 }} variant="body2">
-            {search.trim() ? 'Нічого не знайдено.' : 'Категорій немає.'}
+            {search.trim() || onlyMissingText ? 'Нічого не знайдено.' : 'Категорій немає.'}
           </Typography>
         ) : (
           <SimpleTreeView

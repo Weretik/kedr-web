@@ -16,6 +16,8 @@ const category = (overrides: Partial<AdminCategory>): AdminCategory => ({
   sortOrder: 0,
   sourceKey: '1',
   sourceName: '',
+  productCount: null,
+  filledLanguages: null,
   ...overrides,
 });
 

@@ -16,6 +16,8 @@ const category = (overrides: Partial<AdminCategory>): AdminCategory => ({
   sortOrder: 0,
   sourceKey: '1',
   sourceName: '',
+  productCount: null,
+  filledLanguages: null,
   ...overrides,
 });
 
@@ -58,5 +60,15 @@ describe('filterCategoryTree', () => {
     expect(filterCategoryTree(tree, 'ZAVISY').tree.map((node) => node.category.id)).toEqual([4]);
     expect(filterCategoryTree(tree, '  ').tree).toHaveLength(3);
     expect(filterCategoryTree(tree, 'немає').tree).toEqual([]);
+  });
+
+  it('applies an extra condition with or without a search term', () => {
+    const tree = buildCategoryTree(rows);
+    const onlyNakladni = (row: AdminCategory) => row.id === 3;
+
+    const filtered = filterCategoryTree(tree, '', onlyNakladni);
+    expect(filtered.tree.map((node) => node.category.id)).toEqual([1]);
+    expect(filtered.tree[0].children.map((node) => node.category.id)).toEqual([3]);
+    expect(filterCategoryTree(tree, 'zavisy', onlyNakladni).tree).toEqual([]);
   });
 });

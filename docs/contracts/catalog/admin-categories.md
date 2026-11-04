@@ -10,17 +10,17 @@ All operations need a staff session (Manager or Admin). `deleted=true`, the slug
 
 ## Operations used
 
-| Operation                  | Request                                                                   | Client use                                                                                   |
-| -------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `getAdminCategories`       | `GET /api/categories[?deleted=true]`                                      | Tree rows (depth-first, unpaged); `deleted=true` lists soft-deleted rows newest first        |
-| `getAdminCategoryById`     | `GET /api/categories/{id}`                                                | Details page; `404` for an unknown or deleted category                                       |
-| `changeAdminCategorySlug`  | `PUT /api/categories/{id}/slug` with `{ slug }` or `{ regenerate: true }` | Address dialog; a taken slug returns a `slug` validation error                               |
-| `getAdminCategoryContent`  | `GET /api/categories/{id}/content`                                        | Stored languages; missing languages are shown empty                                          |
-| `saveAdminCategoryContent` | `PUT /api/categories/{id}/content/{uk\|ru}`                               | Full replacement of one language; empty fields go as `null`, the response replaces the cache |
+| Operation                  | Request                                                                   | Client use                                                                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `getAdminCategories`       | `GET /api/categories[?deleted=true]`                                      | Tree rows (depth-first, unpaged) with product counts and filled text languages; `deleted=true` lists soft-deleted rows newest first without them |
+| `getAdminCategoryById`     | `GET /api/categories/{id}`                                                | Details page; `404` for an unknown or deleted category                                                                                           |
+| `changeAdminCategorySlug`  | `PUT /api/categories/{id}/slug` with `{ slug }` or `{ regenerate: true }` | Address dialog; a taken slug returns a `slug` validation error                                                                                   |
+| `getAdminCategoryContent`  | `GET /api/categories/{id}/content`                                        | Stored languages; missing languages are shown empty                                                                                              |
+| `saveAdminCategoryContent` | `PUT /api/categories/{id}/content/{uk\|ru}`                               | Full replacement of one language; empty fields go as `null`, the response replaces the cache                                                     |
 
 ## Consumer mapping
 
-- `@admin/categories/data-access` maps rows to `AdminCategory` (`shortNameUk`/`shortNameRu` as names, `name` as the 1C name, `productTypeIdOneC` as the 1C key) and content to `CategoryContent` per language with empty strings for `null`. The text editor's empty `<p></p>` is sent as `null`. The server sanitizes `bodyHtml`; the Admin shows it back through the editor schema, not as raw HTML.
+- `@admin/categories/data-access` maps rows to `AdminCategory` (`shortNameUk`/`shortNameRu` as names, `name` as the 1C name, `productTypeIdOneC` as the 1C key, `productCount` and `filledContentLanguages` as `productCount`/`filledLanguages`, `null` when the server leaves them out) and content to `CategoryContent` per language with empty strings for `null`. The text editor's empty `<p></p>` is sent as `null`. The server sanitizes `bodyHtml`; the Admin shows it back through the editor schema, not as raw HTML.
 - `@admin/products/data-access` converts the list to category options with ID, Ukrainian name, depth, and search text built from ancestor names.
 - `@mobile/catalog/data-access` builds the tree by `parentId`, sorts siblings by `sortOrder`, then `id`, and ignores `isDeleted`/`deletedAt` (the default list has no deleted rows).
 

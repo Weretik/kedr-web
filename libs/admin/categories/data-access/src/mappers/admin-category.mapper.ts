@@ -14,6 +14,10 @@ export function mapAdminCategory(dto: AdminCategoryDto): AdminCategory {
     level: dto.level,
     isDeleted: dto.isDeleted ?? false,
     deletedAt: dto.deletedAt ?? null,
+    productCount: dto.productCount ?? null,
+    filledLanguages: dto.filledContentLanguages
+      ? dto.filledContentLanguages.filter((language) => language === 'uk' || language === 'ru')
+      : null,
   };
 }
 

@@ -3,6 +3,7 @@ import {
   buildCategoryTree,
   categoryAncestorIds,
   filterCategoryTree,
+  missingContentLanguages,
 } from '@admin/categories/model';
 import { CategoryOverviewCard, CategoryTreeNav } from '@admin/categories/ui';
 import { NoticeSnackbar } from '@admin/shared/ui';
@@ -23,6 +24,9 @@ interface CategoryExplorerProps {
   onRetry: () => void;
   canEdit: boolean;
 }
+
+const hasMissingText = (category: AdminCategory) =>
+  (missingContentLanguages(category)?.length ?? 0) > 0;
 
 const collectIds = (nodes: readonly CategoryTreeNode[], into: string[] = []) => {
   for (const node of nodes) {
@@ -45,6 +49,7 @@ export function CategoryExplorer({
 }: CategoryExplorerProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
+  const [onlyMissingText, setOnlyMissingText] = useState(false);
   const [expanded, setExpanded] = useState<string[] | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -52,7 +57,12 @@ export function CategoryExplorer({
 
   const byId = useMemo(() => new Map(categories.map((row) => [row.id, row])), [categories]);
   const tree = useMemo(() => buildCategoryTree(categories), [categories]);
-  const filtered = useMemo(() => filterCategoryTree(tree, search), [tree, search]);
+  const filtered = useMemo(
+    () => filterCategoryTree(tree, search, onlyMissingText ? hasMissingText : undefined),
+    [tree, search, onlyMissingText],
+  );
+  const missingTextCount = useMemo(() => categories.filter(hasMissingText).length, [categories]);
+  const filtering = Boolean(search.trim()) || onlyMissingText;
 
   const requestedId = Number(searchParams.get('category'));
   const selected = byId.get(requestedId) ?? tree[0]?.category;
@@ -62,9 +72,7 @@ export function CategoryExplorer({
   );
 
   // Until the person expands or collapses something, the path to the selected category is open.
-  const expandedIds = search.trim()
-    ? collectIds(filtered.tree)
-    : (expanded ?? ancestorIds.map(String));
+  const expandedIds = filtering ? collectIds(filtered.tree) : (expanded ?? ancestorIds.map(String));
 
   const contentQuery = useGetCategoryContentQuery(selected?.id ?? 0, { skip: !selected });
 
@@ -109,8 +117,11 @@ export function CategoryExplorer({
         error={error}
         expandedIds={expandedIds}
         loading={loading}
+        missingTextCount={missingTextCount}
+        onOnlyMissingTextChange={setOnlyMissingText}
+        onlyMissingText={onlyMissingText}
         onExpandedChange={(ids) => {
-          if (!search.trim()) setExpanded(ids);
+          if (!filtering) setExpanded(ids);
         }}
         onRetry={onRetry}
         onSearchChange={setSearch}

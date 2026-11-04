@@ -114,10 +114,7 @@ paths:
             schema: { $ref: '#/components/schemas/HomeBrandRequest' }
       responses:
         '200': { $ref: '#/components/responses/HomeBlocks' }
-        '400':
-          {
-            description: 'No name, a name over 100 characters, or a logo that is not in the media library.',
-          }
+        '400': { description: 'No name, a name over 100 characters, or a logo that is not in the media library.' }
         '401': { description: Not signed in. }
         '403': { description: Not a Manager or Admin. }
   /api/admin/content/home/brands/{id}:
@@ -135,10 +132,7 @@ paths:
             schema: { $ref: '#/components/schemas/HomeBrandRequest' }
       responses:
         '200': { $ref: '#/components/responses/HomeBlocks' }
-        '400':
-          {
-            description: 'No name, a name over 100 characters, or a logo that is not in the media library.',
-          }
+        '400': { description: 'No name, a name over 100 characters, or a logo that is not in the media library.' }
         '401': { description: Not signed in. }
         '403': { description: Not a Manager or Admin. }
         '404': { description: No such brand. }
@@ -244,8 +238,7 @@ components:
         logoMediaFileId: { type: integer, format: int64 }
         logoUrl: { type: [string, 'null'], description: CDN URL; null when the file is gone. }
         logoFileName: { type: [string, 'null'] }
-        logoMissing:
-          { type: boolean, description: The logo file was deleted; the site hides this brand. }
+        logoMissing: { type: boolean, description: The logo file was deleted; the site hides this brand. }
         updatedAt: { type: string, format: date-time }
     HomeFaqItemRequest:
       type: object

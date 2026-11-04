@@ -36,6 +36,8 @@ const category: AdminCategory = {
   sortOrder: 0,
   sourceKey: '000005513',
   sourceName: 'Завіси (1С)',
+  productCount: 12,
+  filledLanguages: [],
 };
 
 const renderDetails = (canEdit: boolean) =>
@@ -179,6 +181,39 @@ describe('categories pages', () => {
     const tree = screen.getByRole('tree', { name: 'Категорії' });
     expect(within(tree).getByText('Завіси')).toBeTruthy();
     expect(within(tree).getByText('Врізні завіси')).toBeTruthy();
+    expect(within(tree).queryByText('Замки')).toBeNull();
+  });
+
+  it('shows product counts and keeps only categories without texts on request', () => {
+    const filled: AdminCategory = {
+      ...category,
+      filledLanguages: ['uk', 'ru'],
+      id: 7,
+      nameUk: 'Замки',
+      productCount: 30,
+      slug: 'zamky',
+      sortOrder: 1,
+    };
+    api.list.mockReturnValue({
+      data: [category, filled],
+      isError: false,
+      isFetching: false,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+    render(
+      <MemoryRouter initialEntries={['/categories']}>
+        <CategoriesPage canSeeDeleted={false} />
+      </MemoryRouter>,
+    );
+
+    const tree = screen.getByRole('tree', { name: 'Категорії' });
+    expect(within(tree).getByLabelText('12 товарів')).toBeTruthy();
+    expect(within(tree).getByRole('img', { name: 'Немає тексту' })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Без тексту · 1' }));
+
+    expect(within(tree).getByText('Завіси')).toBeTruthy();
     expect(within(tree).queryByText('Замки')).toBeNull();
   });
 

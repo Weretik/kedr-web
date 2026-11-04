@@ -1,4 +1,5 @@
 export type { AdminCategory } from './entities/admin-category';
+export { missingContentLanguages } from './entities/admin-category';
 export {
   contentLanguages,
   emptyCategoryContent,

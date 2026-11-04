@@ -141,6 +141,16 @@ export function CategoryOverviewCard({
           }
         />
         <DetailField label="Ключ 1С · ID" value={`${category.sourceKey} · ${category.id}`} />
+        {category.productCount !== null ? (
+          <DetailField
+            label="Товарів (з підкатегоріями)"
+            value={
+              <Box component="span" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+                {category.productCount}
+              </Box>
+            }
+          />
+        ) : null}
       </DetailFieldList>
 
       <Stack spacing={1}>
