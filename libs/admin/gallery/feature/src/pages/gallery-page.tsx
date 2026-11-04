@@ -1,7 +1,7 @@
 import { useGetGalleryQuery } from '@admin/gallery/data-access';
 import {
-  AddVideoDialog,
-  EditGalleryItemDialog,
+  AddVideoPanel,
+  EditGalleryItemPanel,
   GalleryGrid,
   RemoveGalleryItemDialog,
 } from '@admin/gallery/ui';
@@ -108,7 +108,7 @@ export function GalleryPage() {
           open
         />
       ) : null}
-      <AddVideoDialog
+      <AddVideoPanel
         error={dialog.kind === 'video' ? error : undefined}
         link={youtube.link}
         linkState={youtube.state}
@@ -121,7 +121,7 @@ export function GalleryPage() {
         texts={youtube.texts}
       />
       {dialog.kind === 'edit' ? (
-        <EditGalleryItemDialog
+        <EditGalleryItemPanel
           error={error}
           item={dialog.item}
           key={dialog.item.id}
