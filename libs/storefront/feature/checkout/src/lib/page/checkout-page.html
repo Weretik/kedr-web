@@ -8,11 +8,7 @@
           <span>{{ 'checkout.form.sectionTitle' | transloco }}</span>
         </div>
 
-        <form
-          [formGroup]="form"
-          (ngSubmit)="submit()"
-          class="flex flex-col gap-4"
-        >
+        <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
           <div class="flex flex-col gap-1">
             <p-inputgroup>
               <p-inputgroup-addon>
@@ -25,15 +21,11 @@
                   formControlName="firstName"
                   [invalid]="isInvalid('firstName')"
                 />
-                <label for="on_firstName">{{
-                  'checkout.form.name' | transloco
-                }}</label>
+                <label for="on_firstName">{{ 'checkout.form.name' | transloco }}</label>
               </p-floatlabel>
             </p-inputgroup>
             @if (isInvalid('firstName')) {
-            <small class="text-red-500 ml-1"
-              >{{ getErrorMessage('firstName') }}</small
-            >
+              <small class="text-red-500 ml-1">{{ getErrorMessage('firstName') }}</small>
             }
           </div>
 
@@ -50,15 +42,11 @@
                   mask="+38 (099) 999-99-99"
                   placeholder="+38 (0__) ___-__-__"
                 />
-                <label for="on_phone">{{
-                  'checkout.form.phone' | transloco
-                }}</label>
+                <label for="on_phone">{{ 'checkout.form.phone' | transloco }}</label>
               </p-floatlabel>
             </p-inputgroup>
             @if (isInvalid('phone')) {
-            <small class="text-red-500 ml-1"
-              >{{ getErrorMessage('phone') }}</small
-            >
+              <small class="text-red-500 ml-1">{{ getErrorMessage('phone') }}</small>
             }
           </div>
 
@@ -70,9 +58,7 @@
     </div>
 
     <div class="flex-1 flex flex-col gap-8">
-      <div
-        class="text-surface-900 dark:text-surface-0 text-xl font-semibold leading-tight"
-      >
+      <div class="text-surface-900 dark:text-surface-0 text-xl font-semibold leading-tight">
         {{ 'checkout.cart.title' | transloco }}
       </div>
 
@@ -82,71 +68,79 @@
 
       <div class="flex flex-col gap-12">
         @for (item of cart.lines(); track item.variantId; let index = $index) {
-        <div
-          class="flex gap-4 cursor-pointer hover:border-primary transition-colors border border-transparent rounded"
-          [routerLink]="productLink(item.snapshot.slug)"
-        >
-          <img
-            class="w-25 h-25 rounded-lg object-cover shrink-0"
-            [src]="item.snapshot.imageUrl"
-            [alt]="item.snapshot.title"
-          />
-          <div class="flex-1 flex flex-col justify-between">
-            <div class="flex flex-col gap-2">
-              <div class="flex gap-2">
-                <div
-                  class="flex-1 text-surface-900 dark:text-surface-0 text-base font-medium leading-tight"
-                >
-                  {{ item.snapshot.title }}
-                </div>
-                <div
-                  class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
-                >
-                  {{ (item.snapshot.unitPrice * item.quantity).toFixed(2) }}
-                  {{ 'catalog.currency' | transloco }}
-                </div>
-              </div>
+          <div
+            class="flex gap-4 cursor-pointer hover:border-primary transition-colors border border-transparent rounded"
+            [routerLink]="productLink(item.snapshot.slug)"
+          >
+            @if (item.snapshot.imageUrl) {
+              <img
+                class="w-25 h-25 rounded-lg object-cover shrink-0"
+                [src]="item.snapshot.imageUrl"
+                [alt]="item.snapshot.title"
+              />
+            } @else {
               <div
-                class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight"
+                class="w-25 h-25 rounded-lg shrink-0 bg-surface-100 dark:bg-surface-800 flex items-center justify-center"
               >
-                {{ item.variantId }}
+                <i class="pi pi-image text-2xl text-surface-400" aria-hidden="true"></i>
               </div>
-            </div>
-            <div class="flex justify-between items-center">
-              <p-inputnumber
-                [ngModel]="item.quantity"
-                (ngModelChange)="cart.setQty(item.variantId, $event)"
-                [showButtons]="true"
-                [buttonLayout]="'horizontal'"
-                [step]="1"
-                [min]="1"
-                [max]="99"
-                [inputStyleClass]="'w-10!'"
-                class="w-12!"
-                size="small"
-                (click)="$event.stopPropagation()"
-              >
-                <ng-template #incrementbuttonicon>
-                  <span class="pi pi-plus"></span>
-                </ng-template>
-                <ng-template #decrementbuttonicon>
-                  <span class="pi pi-minus"></span>
-                </ng-template>
-              </p-inputnumber>
-              <button
-                pButton
-                severity="secondary"
-                [text]="true"
-                [rounded]="true"
-                size="small"
-                class="text-surface-500 dark:text-surface-400 hover:text-red-500"
-                (click)="cart.remove(item.variantId); $event.stopPropagation()"
-              >
-                <i pButtonIcon class="pi pi-trash"></i>
-              </button>
+            }
+            <div class="flex-1 flex flex-col justify-between">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2">
+                  <div
+                    class="flex-1 text-surface-900 dark:text-surface-0 text-base font-medium leading-tight"
+                  >
+                    {{ item.snapshot.title }}
+                  </div>
+                  <div
+                    class="text-surface-900 dark:text-surface-0 text-base font-semibold leading-tight"
+                  >
+                    {{ (item.snapshot.unitPrice * item.quantity).toFixed(2) }}
+                    {{ 'catalog.currency' | transloco }}
+                  </div>
+                </div>
+                <div
+                  class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight"
+                >
+                  {{ item.variantId }}
+                </div>
+              </div>
+              <div class="flex justify-between items-center">
+                <p-inputnumber
+                  [ngModel]="item.quantity"
+                  (ngModelChange)="cart.setQty(item.variantId, $event)"
+                  [showButtons]="true"
+                  [buttonLayout]="'horizontal'"
+                  [step]="1"
+                  [min]="1"
+                  [max]="99"
+                  [inputStyleClass]="'w-10!'"
+                  class="w-12!"
+                  size="small"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ng-template #incrementbuttonicon>
+                    <span class="pi pi-plus"></span>
+                  </ng-template>
+                  <ng-template #decrementbuttonicon>
+                    <span class="pi pi-minus"></span>
+                  </ng-template>
+                </p-inputnumber>
+                <button
+                  pButton
+                  severity="secondary"
+                  [text]="true"
+                  [rounded]="true"
+                  size="small"
+                  class="text-surface-500 dark:text-surface-400 hover:text-red-500"
+                  (click)="cart.remove(item.variantId); $event.stopPropagation()"
+                >
+                  <i pButtonIcon class="pi pi-trash"></i>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
         }
       </div>
 
@@ -155,9 +149,7 @@
       </div>
 
       <div class="flex gap-6">
-        <div
-          class="flex-1 text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight"
-        >
+        <div class="flex-1 text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">
           {{ 'checkout.cart.total' | transloco }}
         </div>
         <div
@@ -182,9 +174,9 @@
     <div>{{ 'checkout.dialog.subtitle' | transloco }}</div>
 
     @if (orderId()) {
-    <div class="font-semibold">
-      {{ 'checkout.dialog.orderNumber' | transloco }} <code>{{ orderId() }}</code>
-    </div>
+      <div class="font-semibold">
+        {{ 'checkout.dialog.orderNumber' | transloco }} <code>{{ orderId() }}</code>
+      </div>
     }
 
     <div class="flex justify-end mt-3">

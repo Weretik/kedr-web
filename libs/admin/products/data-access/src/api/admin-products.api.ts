@@ -6,10 +6,8 @@ import {
   mapAdminProductsListResponse,
   mapAllAdminProductsResponse,
 } from '../mappers/admin-products-list.mapper';
-import {
-  mapAdminProductDetailsResponse,
-  mapMissingPhotoProductsResponse,
-} from '../mappers/product-read.mapper';
+import { mapProductMedia, toSetProductMediaBody } from '../mappers/product-media.mapper';
+import { mapAdminProductDetailsResponse } from '../mappers/product-read.mapper';
 import {
   mapMissingPhotoQueryToApi,
   mapProductsListQueryToApi,
@@ -19,6 +17,8 @@ import type {
   MissingPhotoQuery,
   AdminProductListItem,
   ProductDetails,
+  ProductMedia,
+  ProductMediaChange,
   ProductsListPage,
   ProductsListQuery,
 } from '@admin/products/model';
@@ -54,12 +54,13 @@ export const productsApi = baseApi.injectEndpoints({
       transformResponse: mapAdminProductCategories,
     }),
     getMissingPhotoProducts: build.query<ProductsListPage, MissingPhotoQuery>({
+      providesTags: [{ type: 'Products', id: 'LIST' }],
       query: (query) => ({
-        url: '/api/admin/products/missing-photos',
+        url: '/api/admin/products',
         method: 'GET',
         params: mapMissingPhotoQueryToApi(query),
       }),
-      transformResponse: mapMissingPhotoProductsResponse,
+      transformResponse: mapAdminProductsListResponse,
     }),
     getAdminProductDetails: build.query<ProductDetails, string>({
       query: (slug) => ({
@@ -68,6 +69,40 @@ export const productsApi = baseApi.injectEndpoints({
       }),
       transformResponse: mapAdminProductDetailsResponse,
       providesTags: (result) => (result ? [{ type: 'Products' as const, id: result.id }] : []),
+    }),
+    getProductMedia: build.query<ProductMedia, number>({
+      query: (productId) => ({ url: `/api/admin/products/${productId}/media`, method: 'GET' }),
+      transformResponse: mapProductMedia,
+      providesTags: (_result, _error, productId) => [
+        { type: 'Products', id: `media-${productId}` },
+      ],
+    }),
+    /** Replaces the whole set; the details and lists refresh because the list photo can change. */
+    setProductMedia: build.mutation<
+      ProductMedia,
+      { productId: number; change: ProductMediaChange }
+    >({
+      query: ({ productId, change }) => ({
+        url: `/api/admin/products/${productId}/media`,
+        method: 'PUT',
+        data: toSetProductMediaBody(change),
+      }),
+      transformResponse: mapProductMedia,
+      async onQueryStarted({ productId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(productsApi.util.upsertQueryData('getProductMedia', productId, data));
+        } catch {
+          // The page shows the error from the mutation result.
+        }
+      },
+      invalidatesTags: (_result, error, { productId }) =>
+        error
+          ? []
+          : [
+              { type: 'Products', id: productId },
+              { type: 'Products', id: 'LIST' },
+            ],
     }),
     changeProductSlug: build.mutation<ChangeSlugResult, { id: number; input: ProductSlugChange }>({
       query: ({ id, input }) => ({
@@ -95,4 +130,6 @@ export const {
   useGetMissingPhotoProductsQuery,
   useGetAdminProductDetailsQuery,
   useGetAdminProductCategoriesQuery,
+  useGetProductMediaQuery,
+  useSetProductMediaMutation,
 } = productsApi;

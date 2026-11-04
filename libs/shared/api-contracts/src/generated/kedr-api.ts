@@ -232,26 +232,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/products/missing-photos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List active products whose latest photo check is unavailable
-         * @description Policy CanManageProducts. Reads persisted photo-check state only and does not contact the CDN while handling the request.
-         */
-        get: operations["getAdminProductsWithUnavailablePhotos"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/admin/products/by-slug/{productSlug}": {
         parameters: {
             query?: never;
@@ -285,6 +265,32 @@ export interface paths {
          * @description The previous slug moves to history and keeps resolving to this product. A slug used now or before by another product is rejected. Repeating the same request is safe.
          */
         put: operations["changeAdminProductSlug"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * Get the photos and the scheme linked to a product
+         * @description Policies CanManageProducts and CanManageMedia (Manager and Admin). Photos come in gallery order; file names are read from the media library.
+         */
+        get: operations["getAdminProductMedia"];
+        /**
+         * Replace the photos and the scheme of a product
+         * @description Replaces the whole set with media library files: up to 20 photos in order (the first is the list photo) and an optional scheme. A file can appear once. Every ID must exist in the library.
+         */
+        put: operations["setAdminProductMedia"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1260,6 +1266,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/gallery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the site gallery in one language
+         * @description Public, in site order. A video's `imageUrl` is YouTube's poster (480×360); a photo's is its CDN URL, with `width`/`height` when the library knows them. A photo whose library file was deleted is left out.
+         */
+        get: operations["getPublicGallery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the gallery cards with previews
+         * @description Requires `CanManageContent` (Manager or Admin).
+         */
+        get: operations["getAdminGallery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add media-library photos to the end of the gallery
+         * @description Requires `CanManageContent`. Up to 100 file IDs in the order to add; a photo already in the gallery is skipped. A file that is not in the library answers 400 and nothing is added.
+         */
+        post: operations["addAdminGalleryPhotos"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/videos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a YouTube video by its link to the end of the gallery
+         * @description Requires `CanManageContent`. `url` may be a watch, youtu.be, shorts, embed or live link, or the bare 11-character ID.
+         */
+        post: operations["addAdminGalleryVideo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/youtube-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Resolve a pasted YouTube link before adding it
+         * @description Requires `CanManageContent`. `title` is what YouTube's public oEmbed gives, or `null` when it does not answer (private or deleted video, network error).
+         */
+        get: operations["previewAdminGalleryYoutubeVideo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the title and caption of a card
+         * @description Requires `CanManageContent`. Empty or missing values are stored as none.
+         */
+        put: operations["updateAdminGalleryItem"];
+        post?: never;
+        /**
+         * Remove a card from the gallery
+         * @description Requires `CanManageContent`. The picture stays in the media library.
+         */
+        delete: operations["deleteAdminGalleryItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all cards
+         * @description Requires `CanManageContent`. `ids` must hold every current card exactly once, first shown first; a list built from a stale page answers 409.
+         */
+        put: operations["reorderAdminGallery"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/media/folders": {
         parameters: {
             query?: never;
@@ -1486,6 +1636,7 @@ export interface components {
             id: number;
             name: string;
             productSlug: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
             categoryId?: number | null;
             inStock: boolean;
@@ -1510,8 +1661,12 @@ export interface components {
             productSlug: string;
             /** Format: date-time */
             updatedAt: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
+            /** @description Scheme URL; an empty string when the product has no scheme. */
             scheme: string;
+            /** @description All photo URLs in gallery order; the first equals photo. */
+            photos: string[];
             stock: number;
             categoryName: string;
             categorySlug: string;
@@ -1571,6 +1726,7 @@ export interface components {
             nameUk: string;
             nameRu: string;
             productSlug: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
             categoryId?: number | null;
             /** @description Ukrainian short category name; empty when the reference is unavailable. */
@@ -1591,26 +1747,14 @@ export interface components {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: components["schemas"]["AdminProduct"][];
         };
-        MissingProductPhoto: components["schemas"]["AdminProduct"] & {
-            /** @constant */
-            photoAvailable: false;
-            /** @enum {string} */
-            photoStatus: "Missing" | "InvalidContentType" | "CheckFailed";
-            /** Format: date-time */
-            photoCheckedAtUtc: string;
-            photoHttpStatusCode: number | null;
-        };
-        MissingProductPhotoPage: {
-            pagedInfo: components["schemas"]["PagedInfo"];
-            value: components["schemas"]["MissingProductPhoto"][];
-        };
         AdminProductDetails: {
             id: number;
             nameUk: string;
             nameRu: string;
             productSlug: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
-            /** @description Stored scheme URL; the API does not probe media availability. */
+            /** @description Scheme URL; an empty string when the product has no scheme. */
             scheme: string;
             categoryId: number;
             categoryName: string;
@@ -1621,6 +1765,29 @@ export interface components {
             price: number | null;
             stock: number;
             quantityInPack: number;
+        };
+        ProductMediaItem: {
+            /**
+             * Format: int64
+             * @description Media library file ID.
+             */
+            id: number;
+            url: string;
+            /** @description Library display name; empty if the file was deleted and the link is not yet dropped. */
+            fileName: string;
+        };
+        ProductMedia: {
+            productId: number;
+            photos: components["schemas"]["ProductMediaItem"][];
+            scheme: components["schemas"]["ProductMediaItem"] | null;
+        };
+        SetProductMediaRequest: {
+            photoIds: number[];
+            /**
+             * Format: int64
+             * @description Must not be one of photoIds.
+             */
+            schemeId?: number | null;
         };
         CreateOrderLineRequest: {
             productId: string;
@@ -2274,6 +2441,72 @@ export interface components {
             /** Format: date */
             effectiveFrom: string;
         };
+        /** @enum {string} */
+        GalleryItemKind: "photo" | "video";
+        PublicGalleryItem: {
+            /** Format: int64 */
+            id: number;
+            kind: components["schemas"]["GalleryItemKind"];
+            title: string | null;
+            caption: string | null;
+            /** Format: uri */
+            imageUrl: string;
+            /** Format: int32 */
+            width: number | null;
+            /** Format: int32 */
+            height: number | null;
+            /** @description Set only for a video. */
+            youtubeId: string | null;
+        };
+        AdminGalleryItem: {
+            /** Format: int64 */
+            id: number;
+            kind: components["schemas"]["GalleryItemKind"];
+            /**
+             * Format: int64
+             * @description Set only for a photo.
+             */
+            mediaFileId: number | null;
+            /** @description Set only for a video. */
+            youtubeId: string | null;
+            /** Format: int32 */
+            position: number;
+            titleUk: string | null;
+            titleRu: string | null;
+            captionUk: string | null;
+            captionRu: string | null;
+            /** @description Poster or CDN URL; null for a photo whose file is gone. */
+            previewUrl: string | null;
+            /** @description Library file name of a photo. */
+            fileName: string | null;
+            /** @description A photo whose library file was deleted; the site hides it. */
+            fileMissing: boolean;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AddGalleryPhotosRequest: {
+            mediaFileIds: number[];
+        };
+        GalleryTexts: {
+            titleUk?: string | null;
+            titleRu?: string | null;
+            captionUk?: string | null;
+            captionRu?: string | null;
+        };
+        AddGalleryVideoRequest: components["schemas"]["GalleryTexts"] & {
+            /** @description A YouTube link or the bare 11-character video ID. */
+            url: string;
+        };
+        YoutubePreview: {
+            youtubeId: string;
+            title: string | null;
+            /** Format: uri */
+            thumbnailUrl: string;
+            alreadyInGallery: boolean;
+        };
+        ReorderGalleryRequest: {
+            ids: number[];
+        };
         MediaFolderItem: {
             /** Format: int64 */
             id: number;
@@ -2407,6 +2640,15 @@ export interface components {
                 };
             };
         };
+        /** @description The whole gallery in site order. */
+        Gallery: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["AdminGalleryItem"][];
+            };
+        };
         /** @description Invalid input; each error names its field (`name`, `parentId`, `folderId`, `fileName`, `file`, …). */
         Invalid: {
             headers: {
@@ -2445,6 +2687,7 @@ export interface components {
         ArticleId: number;
         Kind: components["schemas"]["LegalDocumentKind"];
         VersionId: number;
+        ItemId: number;
         Id: number;
     };
     requestBodies: never;
@@ -2860,6 +3103,8 @@ export interface operations {
                 exportToSite?: components["parameters"]["ExportToSite"];
                 priceFrom?: components["parameters"]["PriceFrom"];
                 priceTo?: components["parameters"]["PriceTo"];
+                /** @description `true` lists only products without a linked photo (`photo` is an empty string). */
+                withoutPhoto?: boolean;
                 /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin role only. */
                 deleted?: boolean;
                 sort?: components["parameters"]["ProductSort"];
@@ -2916,51 +3161,6 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProduct"][];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductsWithUnavailablePhotos: {
-        parameters: {
-            query?: {
-                searchTerm?: components["parameters"]["SearchTerm"];
-                categoryId?: components["parameters"]["CategoryId"];
-                inStock?: components["parameters"]["AdminInStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                exportToSite?: components["parameters"]["ExportToSite"];
-                sort?: components["parameters"]["ProductSort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Unavailable product-photo page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MissingProductPhotoPage"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -3054,6 +3254,98 @@ export interface operations {
                 content?: never;
             };
             /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminProductMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Product media set */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductMedia"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminProductMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductMediaRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved set */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductMedia"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6098,6 +6390,310 @@ export interface operations {
                 content?: never;
             };
             /** @description The edition is already published or archived. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublicGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The gallery cards. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicGalleryItem"][];
+                };
+            };
+            /** @description The language is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    addAdminGalleryPhotos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGalleryPhotosRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description No IDs, more than 100, or a file that is not in the media library. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    addAdminGalleryVideo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGalleryVideoRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description Not a YouTube video link, or a text over its limit. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The video is already in the gallery. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    previewAdminGalleryYoutubeVideo: {
+        parameters: {
+            query: {
+                url: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The video ID, poster and title. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["YoutubePreview"];
+                };
+            };
+            /** @description Not a YouTube video link. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminGalleryItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ItemId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GalleryTexts"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description A text over its limit. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such card. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminGalleryItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ItemId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such card. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reorderAdminGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderGalleryRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description A repeated or invalid ID. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The list does not match the current gallery. */
             409: {
                 headers: {
                     [name: string]: unknown;

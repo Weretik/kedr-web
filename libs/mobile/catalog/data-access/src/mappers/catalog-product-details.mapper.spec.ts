@@ -11,6 +11,7 @@ const dto: PublicProductDetailsDto = {
   productSlug: 'tovar',
   updatedAt: '2026-10-30T10:00:00Z',
   photo: ' https://example.com/photo.jpg ',
+  photos: [' https://example.com/photo.jpg '],
   price: 123.5,
   quantityInPack: 4,
   scheme: '',

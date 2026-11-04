@@ -5,7 +5,6 @@ import { buildMissingPhotoProductsRequest } from './missing-photo-products.reque
 import { mapAdminCategories } from '../mappers/catalog-categories.mapper';
 import { mapPublicProductDetails } from '../mappers/catalog-product-details.mapper';
 import { mapAdminProductPage } from '../mappers/catalog-products.mapper';
-import { mapMissingPhotoProductPage } from '../mappers/missing-photo-products.mapper';
 import { mergeCatalogPages } from '../pagination/catalog-pages';
 import { toCatalogProductsParams } from '../queries/catalog-query.mapper';
 import { toProductDetailsRequest } from '../queries/product-details-query.mapper';
@@ -65,7 +64,7 @@ export const catalogApi = baseApi.injectEndpoints({
           ...context,
           queryArgs: { ...queryArgs, page: undefined },
         }),
-      transformResponse: (response: unknown) => mapMissingPhotoProductPage(response),
+      transformResponse: (response: unknown) => mapAdminProductPage(response),
     }),
   }),
 });

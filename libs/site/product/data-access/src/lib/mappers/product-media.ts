@@ -21,13 +21,22 @@ function toMediaUrl(value: unknown): string | null {
   }
 }
 
-/** Photo and scheme are independent; a fragment does not identify a different image fetch. */
-export function mapProductMedia(photo: unknown, scheme: unknown): ProductMediaItem[] {
+/**
+ * Gallery photos in the stated order, then the scheme. `photos` is the linked list; an older backend sends only
+ * `photo`, which then stands alone. A fragment does not identify a different image fetch, so duplicates are dropped.
+ */
+export function mapProductMedia(
+  photos: unknown,
+  photo: unknown,
+  scheme: unknown,
+): ProductMediaItem[] {
+  const photoValues = Array.isArray(photos) && photos.length > 0 ? photos : [photo];
   const result: ProductMediaItem[] = [];
-  for (const [kind, value] of [
-    ['photo', photo],
+  const entries: Array<readonly ['photo' | 'scheme', unknown]> = [
+    ...photoValues.map((value) => ['photo', value] as const),
     ['scheme', scheme],
-  ] as const) {
+  ];
+  for (const [kind, value] of entries) {
     const url = toMediaUrl(value);
     if (url && !result.some((item) => item.url === url)) result.push({ kind, url });
   }

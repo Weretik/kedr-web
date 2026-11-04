@@ -33,12 +33,12 @@ paths:
     $ref: ./catalog/products.openapi.yaml#/paths/~1api~1admin~1products
   /api/admin/products/all:
     $ref: ./catalog/products.openapi.yaml#/paths/~1api~1admin~1products~1all
-  /api/admin/products/missing-photos:
-    $ref: ./catalog/products.openapi.yaml#/paths/~1api~1admin~1products~1missing-photos
   /api/admin/products/by-slug/{productSlug}:
     $ref: ./catalog/products.openapi.yaml#/paths/~1api~1admin~1products~1by-slug~1{productSlug}
   /api/admin/products/{id}/slug:
     $ref: ./catalog/products.openapi.yaml#/paths/~1api~1admin~1products~1{id}~1slug
+  /api/admin/products/{id}/media:
+    $ref: ./catalog/products.openapi.yaml#/paths/~1api~1admin~1products~1{id}~1media
   /api/orders:
     $ref: ./catalog/orders.openapi.yaml#/paths/~1api~1orders
   /api/admin/orders:
@@ -138,6 +138,20 @@ paths:
     $ref: ./content/documents.openapi.yaml#/paths/~1api~1admin~1content~1documents~1versions~1{id}
   /api/admin/content/documents/versions/{id}/publish:
     $ref: ./content/documents.openapi.yaml#/paths/~1api~1admin~1content~1documents~1versions~1{id}~1publish
+  /api/content/{lang}/gallery:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1content~1{lang}~1gallery
+  /api/admin/content/gallery:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1admin~1content~1gallery
+  /api/admin/content/gallery/photos:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1admin~1content~1gallery~1photos
+  /api/admin/content/gallery/videos:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1admin~1content~1gallery~1videos
+  /api/admin/content/gallery/youtube-preview:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1admin~1content~1gallery~1youtube-preview
+  /api/admin/content/gallery/items/{id}:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1admin~1content~1gallery~1items~1{id}
+  /api/admin/content/gallery/order:
+    $ref: ./content/gallery.openapi.yaml#/paths/~1api~1admin~1content~1gallery~1order
   /api/admin/media/folders:
     $ref: ./media/media.openapi.yaml#/paths/~1api~1admin~1media~1folders
   /api/admin/media/folders/{id}:

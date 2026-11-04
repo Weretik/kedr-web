@@ -39,8 +39,7 @@ paths:
         '400': { $ref: '#/components/responses/Invalid' }
         '401': { description: Not signed in. }
         '403': { description: Not a Manager or Admin. }
-        '409':
-          { description: A folder with this name (case-insensitive) already exists in the parent. }
+        '409': { description: A folder with this name (case-insensitive) already exists in the parent. }
   /api/admin/media/folders/{id}:
     put:
       operationId: updateAdminMediaFolder
@@ -89,11 +88,7 @@ paths:
         - { name: inRoot, in: query, schema: { type: boolean, default: false } }
         - { name: search, in: query, schema: { type: string, maxLength: 200 } }
         - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
-        - {
-            name: pageSize,
-            in: query,
-            schema: { type: integer, minimum: 1, maximum: 200, default: 60 },
-          }
+        - { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 60 } }
       responses:
         '200':
           description: The page.
@@ -119,13 +114,7 @@ paths:
               required: [file]
               properties:
                 file: { type: string, format: binary }
-                folderId:
-                  {
-                    type: integer,
-                    format: int64,
-                    minimum: 1,
-                    description: Omit for the library root.,
-                  }
+                folderId: { type: integer, format: int64, minimum: 1, description: Omit for the library root. }
       responses:
         '200':
           description: The new file.
@@ -255,36 +244,18 @@ components:
       required: [name]
       properties:
         name: { type: string, minLength: 1, maxLength: 100 }
-        parentId:
-          {
-            type: [integer, 'null'],
-            format: int64,
-            minimum: 1,
-            description: '`null` = library root.',
-          }
+        parentId: { type: [integer, 'null'], format: int64, minimum: 1, description: '`null` = library root.' }
     UpdateMediaFileRequest:
       type: object
       required: [fileName]
       properties:
         fileName: { type: string, minLength: 1, maxLength: 200 }
-        folderId:
-          {
-            type: [integer, 'null'],
-            format: int64,
-            minimum: 1,
-            description: '`null` = library root.',
-          }
+        folderId: { type: [integer, 'null'], format: int64, minimum: 1, description: '`null` = library root.' }
     MoveMediaFilesRequest:
       type: object
       required: [fileIds]
       properties:
-        fileIds:
-          {
-            type: array,
-            minItems: 1,
-            maxItems: 500,
-            items: { type: integer, format: int64, minimum: 1 },
-          }
+        fileIds: { type: array, minItems: 1, maxItems: 500, items: { type: integer, format: int64, minimum: 1 } }
         folderId: { type: [integer, 'null'], format: int64, minimum: 1 }
     MediaFolderItem:
       type: object
@@ -308,16 +279,10 @@ components:
         id: { type: integer, format: int64 }
         folderId: { type: [integer, 'null'], format: int64 }
         fileName: { type: string, description: 'Display name, not the CDN file name.' }
-        url:
-          {
-            type: string,
-            format: uri,
-            examples: ['https://images-kedr.cdn.express/products/731.jpg'],
-          }
+        url: { type: string, format: uri, examples: ['https://images-kedr.cdn.express/products/731.jpg'] }
         contentType: { type: string, examples: [image/jpeg] }
         sizeBytes: { type: integer, format: int64 }
-        width:
-          { type: [integer, 'null'], description: Unknown for files registered by the CDN sync. }
+        width: { type: [integer, 'null'], description: Unknown for files registered by the CDN sync. }
         height: { type: [integer, 'null'] }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }

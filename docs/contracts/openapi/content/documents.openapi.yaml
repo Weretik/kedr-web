@@ -83,10 +83,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/LegalDocumentVersion' }
-        '400':
-          {
-            description: 'Invalid texts, or nothing is published and no texts were given (`texts`).',
-          }
+        '400': { description: 'Invalid texts, or nothing is published and no texts were given (`texts`).' }
         '401': { description: Not signed in. }
         '403': { description: Not a Manager or Admin. }
         '404': { description: Unknown kind. }
@@ -167,8 +164,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/LegalDocumentVersion' }
-        '400':
-          { description: '`effectiveFrom` is earlier than the date of the edition on the site.' }
+        '400': { description: '`effectiveFrom` is earlier than the date of the edition on the site.' }
         '401': { description: Not signed in. }
         '403': { description: Not a Manager or Admin. }
         '404': { description: No such edition. }

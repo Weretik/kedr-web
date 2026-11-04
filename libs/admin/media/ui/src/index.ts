@@ -7,4 +7,5 @@ export { ConfirmMediaDeleteDialog } from './dialogs/confirm-media-delete-dialog'
 export { MediaFolderDialog } from './dialogs/media-folder-dialog';
 export type { MediaFolderDialogValue } from './dialogs/media-folder-dialog';
 export { MoveMediaFilesDialog } from './dialogs/move-media-files-dialog';
+export { MediaPickerDialog } from './dialogs/media-picker-dialog';
 export { MediaFolderSelect } from './forms/media-folder-select';

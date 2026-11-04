@@ -92,7 +92,9 @@ export class ProductPage {
 
     if (!product) return [];
 
-    return [product.photo, product.scheme];
+    const photos = product.photos?.length ? product.photos : [product.photo];
+
+    return [...photos, product.scheme].filter((url) => !!url);
   });
   public selectedImageIndex: number = 0;
   public quantity = signal<number>(1);

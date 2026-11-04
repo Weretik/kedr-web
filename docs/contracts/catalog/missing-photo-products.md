@@ -1,48 +1,30 @@
-# Products with unavailable photos consumer contract
+# Products without a photo consumer contract
 
 ## Machine contract
 
 - OpenAPI: [`products.openapi.yaml`](../openapi/catalog/products.openapi.yaml)
-- Operation: `getAdminProductsWithUnavailablePhotos`
-- Generated response:
-  `operations['getAdminProductsWithUnavailablePhotos']['responses'][200]['content']['application/json']`
-- Generated query:
-  `NonNullable<operations['getAdminProductsWithUnavailablePhotos']['parameters']['query']>`
-- Consumers: Mobile Profile missing-photo products section, Admin products list
+- Operation: `getAdminProducts` with the query flag `withoutPhoto=true`
+- Generated response: `operations['getAdminProducts']['responses'][200]['content']['application/json']`
+- Generated query: `NonNullable<operations['getAdminProducts']['parameters']['query']>`
+- Consumers: Mobile Profile «Без фото» section, Admin products «Без фото» tab
 
-`GET /api/admin/products/missing-photos` is a temporarily anonymous internal admin surface. Mobile does not add an authorization bypass; production access remains subject to the backend rollout policy.
+The former `GET /api/admin/products/missing-photos` and its photo check were removed by the backend (Media 001, stage 3). A product without a photo is now one without a linked library photo: its `photo` is an empty string. Staff access (Manager or Admin) is required, like the rest of `/api/admin/products`.
 
 ## Request projection
 
-The client sends only the generated `page` and `pageSize` query parameters. Both are page-based: `page >= 1`, `1 <= pageSize <= 100`; provider defaults are `page=1` and `pageSize=20`.
-
-Admin additionally sends `searchTerm`, `inStock`, `isSale`, `isNew`, `exportToSite`, `categoryId`, and `sort`. The backend applies them to the complete set of products without an available photo before calculating `totalRecords` and paginating. For each boolean flag, Admin sends `true`, `false`, or omits the parameter.
-
-In the Admin “Без фото” tab, the table uses the same Ukrainian product label and category path from `getAdminCategories` as the ordinary list.
-
-The frontend snapshot and generated types were synchronized with backend commit `8fc8729` on 2026-10-19; the query mapper checks parameters against the generated type.
+Mobile sends `page`, `pageSize=20`, and `withoutPhoto=true`. Admin sends the same flag together with its usual search, filters, sorting, and paging; the backend applies all of them before paging.
 
 ```http
-GET /api/admin/products/missing-photos?page=1&pageSize=20
+GET /api/admin/products?page=1&pageSize=20&withoutPhoto=true
 Accept: application/json
 ```
 
 ## Consumer mapping
 
-Mobile validates the generated page at runtime inside `@mobile/catalog/data-access` and maps it to the existing `CatalogPage` and `CatalogProduct` domain projection:
-
-- `id`, localized `nameUk`/`nameRu`, `productSlug`, `inStock`, and `price` use the same mapping as the admin-products catalog response;
-- `imageUrl` is always `null` because membership in this operation is the authoritative unavailable-photo decision; the client does not re-check `photo`, `photoAvailable`, `photoStatus`, or HTTP status fields;
-- photo-check diagnostic fields remain private transport data and are not exported to feature/UI.
-
-The stable `productSlug` enables the existing Mobile product-details route.
+The response is an ordinary admin product page, so both clients reuse their admin product mappers: Mobile maps it to `CatalogPage` with `imageUrl: null` for an empty `photo`; Admin shows the same table as in “Усі товари”.
 
 ## Behavior and limitations
 
-- Pagination is page-based and uses `pagedInfo`; page 1 replaces the cached list and later pages merge by product ID without duplicates.
-- Cache identity is separate from the ordinary admin-products catalog query.
-- Pull-to-refresh requests page 1; load-more is offered only while `pageNumber < totalPages`.
-- A next-page failure preserves cached rows and exposes explicit retry.
-- The operation returns only active products whose persisted latest photo check is unavailable; Mobile trusts that membership and never contacts the CDN to verify it.
-- `photoStatus`, check timestamp, and HTTP status are not presented by this feature.
-- Transport errors are normalized through the shared Mobile API client.
+- Pagination is page-based and uses `pagedInfo`; Mobile caches this list apart from the ordinary catalog query, page 1 replaces it and later pages merge by product ID.
+- A product leaves the list as soon as a photo is linked to it on the Admin product page or by the CDN sync run.
+- Transport errors are normalized through each client's shared API layer.
