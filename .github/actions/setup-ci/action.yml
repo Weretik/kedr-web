@@ -1,0 +1,44 @@
+name: Set up CI job
+description: Node, cached node_modules, Nx base/head commits, check scope, and the Nx task cache of this job.
+
+inputs:
+  cache-name:
+    description: Name of the Nx task cache; each job keeps its own.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+
+    # node_modules is restored whole while package-lock.json is unchanged; npm ci runs only on a miss.
+    - uses: actions/cache@v4
+      id: node-modules
+      with:
+        path: node_modules
+        key: node-modules-${{ runner.os }}-${{ hashFiles('.nvmrc', 'package-lock.json') }}
+    - if: steps.node-modules.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm ci
+
+    # Pull requests check only the projects their changes affect; pushes to main check everything.
+    - uses: nrwl/nx-set-shas@v4
+      with:
+        main-branch-name: main
+    - name: Choose check scope
+      shell: bash
+      run: |
+        echo "CI_SCOPE=${{ github.event_name == 'push' && 'all' || 'affected' }}" >> "$GITHUB_ENV"
+        echo "NX_MODE=${{ github.event_name == 'push' && 'run-many' || 'affected' }}" >> "$GITHUB_ENV"
+
+    # Nx keeps its task cache and its database under ~/.nx. Restoring it lets unchanged
+    # projects replay lint, typecheck, test, and build results from earlier runs of this
+    # branch or of main instead of running them again.
+    - uses: actions/cache@v4
+      with:
+        path: ~/.nx
+        key: nx-${{ runner.os }}-${{ inputs.cache-name }}-${{ github.sha }}
+        restore-keys: |
+          nx-${{ runner.os }}-${{ inputs.cache-name }}-

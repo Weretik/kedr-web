@@ -4,7 +4,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { AdminNavigation } from './admin-navigation';
 import { AdminShellSessionProvider } from '../../providers/admin-shell-session-provider';
 
-const renderNavigation = (canManageUsers: boolean, path = '/') =>
+const renderNavigation = (
+  canManageUsers: boolean,
+  path = '/',
+  groupCounts?: Record<string, number>,
+) =>
   render(
     <MemoryRouter initialEntries={[path]}>
       <AdminShellSessionProvider
@@ -19,7 +23,7 @@ const renderNavigation = (canManageUsers: boolean, path = '/') =>
           roleLabel: 'Роль',
         }}
       >
-        <AdminNavigation />
+        <AdminNavigation groupCounts={groupCounts} />
       </AdminShellSessionProvider>
     </MemoryRouter>,
   );
@@ -65,5 +69,16 @@ describe('AdminNavigation by role', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Продаж' }));
     expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
+  });
+
+  it('marks a closed block that holds the current page and shows a counter only above zero', () => {
+    renderNavigation(true, '/catalog', { catalog: 0, sales: 12 });
+
+    expect(screen.queryByRole('img', { name: 'Тут поточна сторінка' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Каталог' }));
+
+    expect(screen.getByRole('img', { name: 'Тут поточна сторінка' })).toBeTruthy();
+    expect(screen.getByText('12')).toBeTruthy();
+    expect(screen.queryByText('0')).toBeNull();
   });
 });

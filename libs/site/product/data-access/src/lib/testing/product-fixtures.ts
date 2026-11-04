@@ -7,7 +7,9 @@ import type {
 export const photoUrl = 'https://images-kedr.cdn.express/~/o/products/731.jpg';
 export const schemeUrl = 'https://images-kedr.cdn.express/~/o/schemes/731.jpg';
 
+/** `photos` follows an overridden `photo` unless the test sets it, as the backend keeps them in step. */
 export const detailsFixture = (overrides: Partial<ApiProductDetails> = {}): ApiProductDetails => ({
+  photos: overrides.photo === undefined ? [photoUrl] : overrides.photo ? [overrides.photo] : [],
   id: 731,
   name: ' Ручка на розеті ',
   productSlug: 'ruchka-731',

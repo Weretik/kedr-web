@@ -93,6 +93,22 @@ describe('mapProductDetails', () => {
     ]);
   });
 
+  it('shows every linked photo in gallery order before the scheme', () => {
+    const second = 'https://images-kedr.cdn.express/~/o/products/731-2.jpg';
+    expect(mapProductDetails(detailsFixture({ photos: [photoUrl, second] }))?.media).toEqual([
+      { kind: 'photo', url: photoUrl },
+      { kind: 'photo', url: second },
+      { kind: 'scheme', url: schemeUrl },
+    ]);
+  });
+
+  it('falls back to the single photo when the gallery list is empty', () => {
+    expect(mapProductDetails(detailsFixture({ photos: [] }))?.media).toEqual([
+      { kind: 'photo', url: photoUrl },
+      { kind: 'scheme', url: schemeUrl },
+    ]);
+  });
+
   it('omits broken category links and retains unique original breadcrumbs', () => {
     expect(
       mapProductDetails(
