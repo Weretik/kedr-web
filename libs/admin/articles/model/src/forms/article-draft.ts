@@ -1,12 +1,14 @@
 import { articleLanguages } from '../entities/article';
 
-import type { Article, ArticleLanguage, ArticleText } from '../entities/article';
+import type { Article, ArticleCover, ArticleLanguage, ArticleText } from '../entities/article';
 
 /** Editable fields of an article; an empty slug on a new article means "build it from the Ukrainian title". */
 export interface ArticleDraft {
   slug: string;
   publishedOn: string;
   isPublished: boolean;
+  /** Saved together with the article; `null` means no cover. */
+  cover: ArticleCover | null;
   texts: Record<ArticleLanguage, ArticleText>;
 }
 
@@ -18,6 +20,7 @@ export function newArticleDraft(today: Date = new Date()): ArticleDraft {
     slug: '',
     publishedOn: today.toISOString().slice(0, 10),
     isPublished: false,
+    cover: null,
     texts: { uk: emptyText(), ru: emptyText() },
   };
 }
@@ -27,6 +30,10 @@ export function articleToDraft(article: Article): ArticleDraft {
     slug: article.slug,
     publishedOn: article.publishedOn,
     isPublished: article.isPublished,
+    cover:
+      article.coverMediaFileId !== null || article.coverUrl !== null
+        ? { mediaFileId: article.coverMediaFileId, url: article.coverUrl }
+        : null,
     texts: { uk: { ...article.texts.uk }, ru: { ...article.texts.ru } },
   };
 }
@@ -37,6 +44,8 @@ export function isSameArticleDraft(a: ArticleDraft, b: ArticleDraft): boolean {
     a.slug === b.slug &&
     a.publishedOn === b.publishedOn &&
     a.isPublished === b.isPublished &&
+    a.cover?.mediaFileId === b.cover?.mediaFileId &&
+    a.cover?.url === b.cover?.url &&
     articleLanguages.every((language) => {
       const left = a.texts[language];
       const right = b.texts[language];

@@ -14,7 +14,7 @@ const api = vi.hoisted(() => ({
   update: vi.fn(),
   remove: vi.fn(),
   upload: vi.fn(),
-  removeCover: vi.fn(),
+  mediaFiles: vi.fn(),
 }));
 
 vi.mock('@admin/articles/data-access', () => ({
@@ -24,8 +24,9 @@ vi.mock('@admin/articles/data-access', () => ({
   useUpdateArticleMutation: () => [api.update, { isLoading: false }],
   useDeleteArticleMutation: () => [api.remove, { isLoading: false }],
   useUploadArticleCoverMutation: () => [api.upload, { isLoading: false }],
-  useRemoveArticleCoverMutation: () => [api.removeCover, { isLoading: false }],
 }));
+
+vi.mock('@admin/media/data-access', () => ({ useGetMediaFilesQuery: api.mediaFiles }));
 
 const article: Article = {
   id: 7,
@@ -33,6 +34,7 @@ const article: Article = {
   publishedOn: '2026-03-24',
   isPublished: true,
   coverUrl: null,
+  coverMediaFileId: null,
   updatedAt: '2026-11-04T10:00:00Z',
   updatedBy: 'manager@classkedr.com.ua',
   texts: {
@@ -70,6 +72,12 @@ describe('article pages', () => {
       refetch: vi.fn(),
     });
     api.one.mockReturnValue({ data: article, isError: false, isLoading: false, refetch: vi.fn() });
+    api.mediaFiles.mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
   });
 
   it('lists articles with a draft mark and a link to a new one', () => {
@@ -86,7 +94,6 @@ describe('article pages', () => {
     api.create.mockReturnValue(resolved(article));
     renderAt('/articles/new');
     expect(api.one).toHaveBeenLastCalledWith(Number.NaN, { skip: true });
-    expect(screen.getByText('Обкладинку можна додати після створення статті.')).toBeDefined();
 
     fireEvent.click(screen.getByRole('button', { name: 'Створити статтю' }));
     expect(api.create).not.toHaveBeenCalled();
@@ -129,6 +136,25 @@ describe('article pages', () => {
     });
     expect(api.upload).not.toHaveBeenCalled();
     expect(screen.getByText('Оберіть зображення JPEG, PNG або WebP.')).toBeDefined();
+  });
+
+  it('creates a new article together with an uploaded cover', async () => {
+    api.upload.mockReturnValue(
+      resolved({ mediaFileId: 31, url: 'https://cdn.example.test/articles/c.webp' }),
+    );
+    api.create.mockReturnValue(resolved(article));
+    const { container } = renderAt('/articles/new');
+    const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(input, {
+      target: { files: [new File(['x'], 'c.png', { type: 'image/png' })] },
+    });
+    await waitFor(() =>
+      expect(screen.getByRole('img', { name: 'Обкладинка статті' }).getAttribute('src')).toBe(
+        'https://cdn.example.test/articles/c.webp',
+      ),
+    );
+    expect(api.upload).toHaveBeenCalledTimes(1);
+    expect(api.create).not.toHaveBeenCalled();
   });
 
   it('translates a server cover reason', async () => {

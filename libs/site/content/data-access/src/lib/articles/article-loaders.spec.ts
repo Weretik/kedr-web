@@ -18,6 +18,7 @@ const summary = {
   excerpt: 'Коротко.',
   publishedOn: '2026-03-24',
   coverPath: '/api/content/articles/4/cover?v=2',
+  coverUrl: null,
   updatedAt: '2026-11-04T00:00:00Z',
 };
 
@@ -27,7 +28,16 @@ describe('article loaders', () => {
   it('maps the published list with absolute cover URLs and tags it', async () => {
     siteApiGet.mockResolvedValue({
       kind: 'ok',
-      data: [summary, { ...summary, id: 5, coverPath: null }],
+      data: [
+        summary,
+        { ...summary, id: 5, coverPath: null },
+        {
+          ...summary,
+          id: 6,
+          coverPath: null,
+          coverUrl: 'https://images-kedr.cdn.express/articles/a.webp',
+        },
+      ],
     });
 
     const articles = await getArticles('uk');
@@ -46,6 +56,7 @@ describe('article loaders', () => {
         publishedAt: '2026-03-24',
       },
       expect.objectContaining({ id: 5, image: null }),
+      expect.objectContaining({ id: 6, image: 'https://images-kedr.cdn.express/articles/a.webp' }),
     ]);
     expect(cacheTag).toHaveBeenCalledWith('content', 'content:articles');
   });
