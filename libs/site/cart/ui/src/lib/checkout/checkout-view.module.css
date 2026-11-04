@@ -1,0 +1,21 @@
+.container {
+  container: checkout / inline-size;
+  min-width: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.layout > * {
+  min-width: 0;
+}
+
+@container checkout (min-width: 720px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  }
+}
