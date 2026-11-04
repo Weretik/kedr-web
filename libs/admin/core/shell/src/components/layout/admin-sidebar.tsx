@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
 import { AdminNavigation } from '../navigation/admin-navigation';
+import { sidebarColors } from '../navigation/sidebar-colors';
 
 interface AdminSidebarProps {
   currentOrderPositionCount: number;
@@ -26,31 +27,14 @@ function AdminLogo({ isCollapsed }: { isCollapsed: boolean }) {
       />
     );
 
+  // The drawer is dark in both color schemes, so only the on-dark logo is used.
   return (
-    <>
-      <Box
-        alt="Логотип Class Kedr"
-        component="img"
-        src="/assets/logo/main-logo.svg"
-        sx={(theme) => ({
-          display: 'block',
-          height,
-          width: 'auto',
-          ...theme.applyStyles('dark', { display: 'none' }),
-        })}
-      />
-      <Box
-        alt="Логотип Class Kedr"
-        component="img"
-        src="/assets/logo/main-logo-on-dark.svg"
-        sx={(theme) => ({
-          display: 'none',
-          height,
-          width: 'auto',
-          ...theme.applyStyles('dark', { display: 'block' }),
-        })}
-      />
-    </>
+    <Box
+      alt="Логотип Class Kedr"
+      component="img"
+      src="/assets/logo/main-logo-on-dark.svg"
+      sx={{ display: 'block', height, width: 'auto' }}
+    />
   );
 }
 
@@ -90,9 +74,9 @@ export function AdminSidebar({
             component="span"
             sx={{
               border: 1,
-              borderColor: 'divider',
+              borderColor: sidebarColors.border,
               borderRadius: '6px',
-              color: 'text.secondary',
+              color: sidebarColors.text,
               lineHeight: 1.6,
               px: 0.75,
             }}
@@ -109,7 +93,7 @@ export function AdminSidebar({
         {isCollapsed ? null : (
           <Box
             sx={{
-              bgcolor: 'primary.light',
+              bgcolor: sidebarColors.activeBackground,
               borderRadius: '16px',
               display: 'flex',
               flexDirection: 'column',
@@ -125,12 +109,16 @@ export function AdminSidebar({
                 justifyContent: 'space-between',
               }}
             >
-              <Typography component="span" sx={{ color: 'primary.dark' }} variant="subtitle2">
+              <Typography
+                component="span"
+                sx={{ color: sidebarColors.activeText }}
+                variant="subtitle2"
+              >
                 Поточне замовлення
               </Typography>
               <Typography
                 component="span"
-                sx={{ color: 'primary.dark', fontWeight: 700 }}
+                sx={{ color: sidebarColors.activeText, fontWeight: 700 }}
                 variant="caption"
               >
                 позицій: {currentOrderPositionCount}
@@ -163,10 +151,11 @@ export function AdminSidebar({
                 />
               }
               sx={{
-                color: 'text.secondary',
+                color: sidebarColors.text,
                 justifyContent: isCollapsed ? 'center' : 'flex-start',
                 minWidth: 0,
                 px: 1.5,
+                '&:hover': { bgcolor: sidebarColors.hover, color: sidebarColors.textStrong },
                 '& .MuiButton-startIcon': { m: isCollapsed ? 0 : undefined },
               }}
             >
