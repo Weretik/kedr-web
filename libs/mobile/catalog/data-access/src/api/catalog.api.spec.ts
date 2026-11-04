@@ -27,8 +27,8 @@ describe('getMissingPhotoProducts endpoint', () => {
 
     expect(endpoint.query({ page: 2 })).toEqual({
       method: 'GET',
-      params: { page: 2, pageSize: 20 },
-      url: '/api/admin/products/missing-photos',
+      params: { page: 2, pageSize: 20, withoutPhoto: true },
+      url: '/api/admin/products',
     });
 
     const mapped = endpoint.transformResponse(validResponse());
@@ -90,10 +90,6 @@ function validResponse() {
         nameRu: 'Кабель',
         nameUk: 'Кабель',
         photo: '',
-        photoAvailable: false,
-        photoCheckedAtUtc: '2026-10-05T10:00:00.000Z',
-        photoHttpStatusCode: null,
-        photoStatus: 'Missing',
         price: 120,
         productSlug: 'kabel-12',
         quantityInPack: 1,

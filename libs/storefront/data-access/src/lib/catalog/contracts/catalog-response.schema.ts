@@ -30,6 +30,7 @@ const productDetailsSchema = z.object({
   name: z.string(),
   photo: z.string(),
   scheme: z.string(),
+  photos: z.array(z.string()).optional(),
   stock: z.number(),
   categoryName: z.string(),
   categorySlug: z.string(),

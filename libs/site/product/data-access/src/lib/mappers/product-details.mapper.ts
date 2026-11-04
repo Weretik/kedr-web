@@ -63,7 +63,7 @@ export function mapProductDetails(product: ApiProductDetails): ProductDetails | 
     categoryName: typeof product.categoryName === 'string' ? product.categoryName.trim() : '',
     categorySlug: isValidProductSlug(product.categorySlug) ? product.categorySlug : null,
     breadcrumbs: mapBreadcrumbs(product.breadcrumbs),
-    media: mapProductMedia(product.photo, product.scheme),
+    media: mapProductMedia(product.photos, product.photo, product.scheme),
     updatedAt: sourceDate(product.updatedAt),
   };
 }
