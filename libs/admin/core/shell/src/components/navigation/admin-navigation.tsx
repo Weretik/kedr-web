@@ -1,3 +1,4 @@
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
@@ -24,6 +25,12 @@ const navigationItems = [
   { icon: <ContactPhoneOutlinedIcon />, label: 'Контакти', to: '/company-contacts' },
 ];
 
+const requisitesNavigationItem = {
+  icon: <AccountBalanceOutlinedIcon />,
+  label: 'Реквізити',
+  to: '/company-requisites',
+};
+
 const usersNavigationItem = {
   icon: <ManageAccountsOutlinedIcon />,
   label: 'Користувачі',
@@ -38,8 +45,12 @@ interface AdminNavigationProps {
 export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNavigationProps) {
   const location = useLocation();
   const user = useAdminShellUser();
-  // Hidden for managers; the route itself also shows "no access".
-  const items = user?.canManageUsers ? [...navigationItems, usersNavigationItem] : navigationItems;
+  // Hidden for managers; the routes themselves also show "no access".
+  const items = [
+    ...navigationItems,
+    ...(user?.isAdmin ? [requisitesNavigationItem] : []),
+    ...(user?.canManageUsers ? [usersNavigationItem] : []),
+  ];
 
   return (
     <Box aria-label="Основна навігація" component="nav" sx={{ px: 2 }}>

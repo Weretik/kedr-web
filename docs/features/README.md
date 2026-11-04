@@ -6,18 +6,19 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 [AppRouter](../../apps/admin/src/app/router/app-router.tsx) opens `/login` and assembles the other routes inside `AdminLayout` behind the staff session guard. See [Admin architecture](../architecture/admin/README.md).
 
-| Feature                                       | Route or entry                                       | Status                                                        |
-| --------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
-| [Session and shell](admin/session.md)         | `/login`, all routes                                 | Cookie sign-in, role guards, layout, navigation               |
-| [Users](admin/users.md)                       | `/users`                                             | Admin only: staff accounts, roles, block, managers' profile   |
-| [Мій кабінет](admin/profile.md)               | `/profile`                                           | Own name, photo; Admin also email and password                |
-| [Dashboard](admin/dashboard.md)               | `/dashboard`                                         | Visual metrics are currently static                           |
-| [Products](admin/products.md)                 | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set            |
-| [Categories](admin/categories.md)             | `/categories`, `/categories/:categoryId`             | Tree, public address, SEO text and FAQ; Admin edits           |
-| [Articles](admin/articles.md)                 | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit            |
-| [Company contacts](admin/company-contacts.md) | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit |
-| [Customers](admin/clients.md)                 | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                               |
-| [Orders and drafts](admin/orders.md)          | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                            |
+| Feature                                           | Route or entry                                       | Status                                                        |
+| ------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
+| [Session and shell](admin/session.md)             | `/login`, all routes                                 | Cookie sign-in, role guards, layout, navigation               |
+| [Users](admin/users.md)                           | `/users`                                             | Admin only: staff accounts, roles, block, managers' profile   |
+| [Мій кабінет](admin/profile.md)                   | `/profile`                                           | Own name, photo; Admin also email and password                |
+| [Dashboard](admin/dashboard.md)                   | `/dashboard`                                         | Visual metrics are currently static                           |
+| [Products](admin/products.md)                     | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set            |
+| [Categories](admin/categories.md)                 | `/categories`, `/categories/:categoryId`             | Tree, public address, SEO text and FAQ; Admin edits           |
+| [Articles](admin/articles.md)                     | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit            |
+| [Company contacts](admin/company-contacts.md)     | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit |
+| [Company requisites](admin/company-requisites.md) | `/company-requisites`                                | ФОП, code, IBAN, bank, МФО with change history; Admins only   |
+| [Customers](admin/clients.md)                     | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                               |
+| [Orders and drafts](admin/orders.md)              | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                            |
 
 ## Mobile React Native
 
