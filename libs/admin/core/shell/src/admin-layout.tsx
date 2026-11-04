@@ -8,6 +8,7 @@ import {
   adminDrawerCollapsedWidth,
   adminDrawerWidth,
 } from './components/navigation/admin-navigation';
+import { sidebarColors } from './components/navigation/sidebar-colors';
 import { useNavigationCollapsed } from './components/navigation/use-navigation-collapsed';
 import { AdminTopBar } from './components/top-bar/admin-top-bar';
 
@@ -21,9 +22,9 @@ interface AdminLayoutProps {
 }
 
 const drawerPaperSx = {
-  bgcolor: 'background.paper',
+  bgcolor: sidebarColors.background,
   borderRight: 1,
-  borderColor: 'divider',
+  borderColor: sidebarColors.border,
   boxSizing: 'border-box',
 } as const;
 
