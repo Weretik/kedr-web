@@ -42,7 +42,7 @@ Do not edit the YAML snapshot or generated TypeScript manually. To update them: 
 - Catalog:
   - [Public products](catalog/public-products.md)
   - [Admin products](catalog/admin-products.md)
-  - [Products with unavailable photos](catalog/missing-photo-products.md)
+  - [Products without a photo](catalog/missing-photo-products.md)
   - [Admin categories](catalog/admin-categories.md)
   - [Quick order](catalog/quick-order.md)
 - Media:
@@ -60,69 +60,70 @@ A detailed consumer projection is needed only for operations with status `used`,
 
 ## Operation registry
 
-| Backend module     | `operationId`                           | Method/path                                                 | Access                       | Consumers                  | Status       |
-| ------------------ | --------------------------------------- | ----------------------------------------------------------- | ---------------------------- | -------------------------- | ------------ |
-| Catalog categories | `getCategoryTree`                       | `GET /api/catalog/{lang}/categories`                        | anonymous                    | —                          | not consumed |
-| Catalog categories | `getCategoryBySlug`                     | `GET /api/catalog/{lang}/categories/by-slug/{categorySlug}` | anonymous                    | —                          | not consumed |
-| Catalog categories | `getAdminCategories`                    | `GET /api/categories`                                       | staff (Manager or Admin)     | Mobile, Admin              | used         |
-| Catalog categories | `getAdminCategoryById`                  | `GET /api/categories/{id}`                                  | staff (Manager or Admin)     | —                          | not consumed |
-| Catalog products   | `getPublicProducts`                     | `GET /api/catalog/{lang}/products`                          | anonymous                    | Storefront, Site           | used         |
-| Catalog products   | `getPublicProductsByCategorySlug`       | `GET /api/catalog/{lang}/{categorySlug}/products`           | anonymous                    | Storefront                 | used         |
-| Catalog products   | `getPublicProductBySlug`                | `GET /api/catalog/{lang}/product/{productSlug}`             | anonymous                    | Storefront, Mobile, Site   | used         |
-| Catalog products   | `getAdminProducts`                      | `GET /api/admin/products`                                   | staff (Manager or Admin)     | Admin, Mobile              | used         |
-| Catalog products   | `getAdminProductBySlug`                 | `GET /api/admin/products/by-slug/{productSlug}`             | staff (Manager or Admin)     | Admin                      | used         |
-| Catalog products   | `getAllAdminProducts`                   | `GET /api/admin/products/all`                               | staff (Manager or Admin)     | —                          | not consumed |
-| Catalog products   | `getAdminProductsWithUnavailablePhotos` | `GET /api/admin/products/missing-photos`                    | staff (Manager or Admin)     | Mobile, Admin              | used         |
-| Quick order        | `createQuickOrder`                      | `POST /api/orders`                                          | anonymous                    | Storefront                 | used         |
-| Identity           | `loginCookieSession`                    | `POST /api/auth/cookie/login`                               | anonymous, rate-limited      | Admin, Storefront          | used         |
-| Identity           | `logoutCookieSession`                   | `POST /api/auth/cookie/logout`                              | session cookie + CSRF header | Admin, Storefront          | used         |
-| Identity           | `loginMobile`                           | `POST /api/auth/mobile/login`                               | anonymous, rate-limited      | Mobile                     | used         |
-| Identity           | `refreshMobile`                         | `POST /api/auth/mobile/refresh`                             | anonymous, rate-limited      | Mobile                     | used         |
-| Identity           | `logoutMobile`                          | `POST /api/auth/mobile/logout`                              | bearer                       | Mobile                     | used         |
-| Identity           | `getCurrentSession`                     | `GET /api/auth/session/me`                                  | session cookie or bearer     | Admin, Storefront, Mobile  | used         |
-| Identity users     | `getStaffAccounts`                      | `GET /api/admin/users`                                      | Admin                        | Admin                      | used         |
-| Identity users     | `createStaffAccount`                    | `POST /api/admin/users`                                     | Admin                        | Admin                      | used         |
-| Identity users     | `changeStaffRole`                       | `PUT /api/admin/users/{userId}/role`                        | Admin                        | Admin                      | used         |
-| Identity users     | `setStaffBlocked`                       | `PUT /api/admin/users/{userId}/blocked`                     | Admin                        | Admin                      | used         |
-| Identity users     | `setStaffPassword`                      | `PUT /api/admin/users/{userId}/password`                    | Admin                        | Admin                      | used         |
-| Identity users     | `changeStaffName`                       | `PUT /api/admin/users/{userId}/name`                        | Admin                        | Admin                      | used         |
-| Identity users     | `changeStaffEmail`                      | `PUT /api/admin/users/{userId}/email`                       | Admin                        | Admin                      | used         |
-| Identity users     | `uploadStaffAvatar`                     | `PUT /api/admin/users/{userId}/avatar`                      | Admin                        | Admin                      | used         |
-| Identity users     | `removeStaffAvatar`                     | `DELETE /api/admin/users/{userId}/avatar`                   | Admin                        | Admin                      | used         |
-| Identity profile   | `getMyProfile`                          | `GET /api/profile`                                          | Admin, Manager               | Admin                      | used         |
-| Identity profile   | `changeMyName`                          | `PUT /api/profile/name`                                     | Admin, Manager               | Admin                      | used         |
-| Identity profile   | `uploadMyAvatar`                        | `PUT /api/profile/avatar`                                   | Admin, Manager               | Admin                      | used         |
-| Identity profile   | `removeMyAvatar`                        | `DELETE /api/profile/avatar`                                | Admin, Manager               | Admin                      | used         |
-| Identity profile   | `changeMyEmail`                         | `PUT /api/profile/email`                                    | Admin                        | Admin                      | used         |
-| Identity profile   | `changeMyPassword`                      | `PUT /api/profile/password`                                 | Admin                        | Admin                      | used         |
-| Media              | `getAdminMediaFolders`                  | `GET /api/admin/media/folders`                              | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `createAdminMediaFolder`                | `POST /api/admin/media/folders`                             | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `updateAdminMediaFolder`                | `PUT /api/admin/media/folders/{id}`                         | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `deleteAdminMediaFolder`                | `DELETE /api/admin/media/folders/{id}`                      | Admin                        | Admin                      | used         |
-| Media              | `getAdminMediaFiles`                    | `GET /api/admin/media/files`                                | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `uploadAdminMediaFile`                  | `POST /api/admin/media/files`                               | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `getAdminMediaFile`                     | `GET /api/admin/media/files/{id}`                           | staff (Manager or Admin)     | —                          | not consumed |
-| Media              | `updateAdminMediaFile`                  | `PUT /api/admin/media/files/{id}`                           | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `deleteAdminMediaFile`                  | `DELETE /api/admin/media/files/{id}`                        | Admin                        | Admin                      | used         |
-| Media              | `replaceAdminMediaFile`                 | `PUT /api/admin/media/files/{id}/content`                   | staff (Manager or Admin)     | Admin                      | used         |
-| Media              | `moveAdminMediaFiles`                   | `POST /api/admin/media/files/move`                          | staff (Manager or Admin)     | Admin                      | used         |
-| Sales catalog      | `getSalesCatalogProducts`               | `POST /api/sales/{lang}/catalog/products`                   | authenticated                | —                          | not consumed |
-| Sales customers    | `getAdminCustomers`                     | `GET /api/admin/customers`                                  | staff (Manager or Admin)     | Mobile cart, orders, Admin | used         |
-| Sales customers    | `getAdminCustomerById`                  | `GET /api/admin/customers/{counterpartyId}`                 | staff (Manager or Admin)     | Admin                      | used         |
-| Sales orders       | `getAdminOrders`                        | `GET /api/admin/orders`                                     | staff (Manager or Admin)     | Mobile                     | used         |
-| Sales orders       | `getAdminOrderById`                     | `GET /api/admin/orders/{orderId}`                           | staff (Manager or Admin)     | Mobile                     | used         |
-| Sales workspace    | `getAdminWorkspaceOrders`               | `GET /api/admin/order-workspace/orders`                     | staff (Manager or Admin)     | Admin                      | used         |
-| Sales workspace    | `getAdminWorkspaceOrderById`            | `GET /api/admin/order-workspace/orders/{orderId}`           | staff (Manager or Admin)     | Admin                      | used         |
-| Sales workspace    | `quoteAdminWorkspaceOrder`              | `POST /api/admin/order-workspace/quote`                     | staff (Manager or Admin)     | Admin                      | used         |
-| Sales workspace    | `createAdminWorkspaceOrder`             | `POST /api/admin/order-workspace/orders`                    | staff (Manager or Admin)     | Admin                      | used         |
-| Sales drafts       | `getAdminOrderDrafts`                   | `GET /api/admin/order-workspace/drafts`                     | staff (Manager or Admin)     | Admin                      | used         |
-| Sales drafts       | `getAdminOrderDraftById`                | `GET /api/admin/order-workspace/drafts/{draftId}`           | staff (Manager or Admin)     | Admin                      | used         |
-| Sales drafts       | `createAdminOrderDraft`                 | `POST /api/admin/order-workspace/drafts`                    | staff (Manager or Admin)     | Admin                      | used         |
-| Sales drafts       | `updateAdminOrderDraft`                 | `PUT /api/admin/order-workspace/drafts/{draftId}`           | staff (Manager or Admin)     | Admin                      | used         |
-| Sales drafts       | `deleteAdminOrderDraft`                 | `DELETE /api/admin/order-workspace/drafts/{draftId}`        | staff (Manager or Admin)     | Admin                      | used         |
-| Sales order sync   | `createAdminOrder`                      | `POST /api/admin/orders`                                    | staff (Manager or Admin)     | Mobile cart                | used         |
-| Sales order sync   | `getAdminOrderSyncStatus`               | `GET /api/admin/orders/{orderId}/sync-status`               | staff (Manager or Admin)     | —                          | not consumed |
-| Sales order sync   | `retryAdminOrderSync`                   | `POST /api/admin/orders/{orderId}/sync/retry`               | staff (Manager or Admin)     | —                          | not consumed |
+| Backend module     | `operationId`                     | Method/path                                                 | Access                       | Consumers                  | Status       |
+| ------------------ | --------------------------------- | ----------------------------------------------------------- | ---------------------------- | -------------------------- | ------------ |
+| Catalog categories | `getCategoryTree`                 | `GET /api/catalog/{lang}/categories`                        | anonymous                    | —                          | not consumed |
+| Catalog categories | `getCategoryBySlug`               | `GET /api/catalog/{lang}/categories/by-slug/{categorySlug}` | anonymous                    | —                          | not consumed |
+| Catalog categories | `getAdminCategories`              | `GET /api/categories`                                       | staff (Manager or Admin)     | Mobile, Admin              | used         |
+| Catalog categories | `getAdminCategoryById`            | `GET /api/categories/{id}`                                  | staff (Manager or Admin)     | —                          | not consumed |
+| Catalog products   | `getPublicProducts`               | `GET /api/catalog/{lang}/products`                          | anonymous                    | Storefront, Site           | used         |
+| Catalog products   | `getPublicProductsByCategorySlug` | `GET /api/catalog/{lang}/{categorySlug}/products`           | anonymous                    | Storefront                 | used         |
+| Catalog products   | `getPublicProductBySlug`          | `GET /api/catalog/{lang}/product/{productSlug}`             | anonymous                    | Storefront, Mobile, Site   | used         |
+| Catalog products   | `getAdminProducts`                | `GET /api/admin/products`                                   | staff (Manager or Admin)     | Admin, Mobile              | used         |
+| Catalog products   | `getAdminProductBySlug`           | `GET /api/admin/products/by-slug/{productSlug}`             | staff (Manager or Admin)     | Admin                      | used         |
+| Catalog products   | `getAllAdminProducts`             | `GET /api/admin/products/all`                               | staff (Manager or Admin)     | —                          | not consumed |
+| Catalog products   | `getAdminProductMedia`            | `GET /api/admin/products/{id}/media`                        | staff (Manager or Admin)     | Admin                      | used         |
+| Catalog products   | `setAdminProductMedia`            | `PUT /api/admin/products/{id}/media`                        | staff (Manager or Admin)     | Admin                      | used         |
+| Quick order        | `createQuickOrder`                | `POST /api/orders`                                          | anonymous                    | Storefront                 | used         |
+| Identity           | `loginCookieSession`              | `POST /api/auth/cookie/login`                               | anonymous, rate-limited      | Admin, Storefront          | used         |
+| Identity           | `logoutCookieSession`             | `POST /api/auth/cookie/logout`                              | session cookie + CSRF header | Admin, Storefront          | used         |
+| Identity           | `loginMobile`                     | `POST /api/auth/mobile/login`                               | anonymous, rate-limited      | Mobile                     | used         |
+| Identity           | `refreshMobile`                   | `POST /api/auth/mobile/refresh`                             | anonymous, rate-limited      | Mobile                     | used         |
+| Identity           | `logoutMobile`                    | `POST /api/auth/mobile/logout`                              | bearer                       | Mobile                     | used         |
+| Identity           | `getCurrentSession`               | `GET /api/auth/session/me`                                  | session cookie or bearer     | Admin, Storefront, Mobile  | used         |
+| Identity users     | `getStaffAccounts`                | `GET /api/admin/users`                                      | Admin                        | Admin                      | used         |
+| Identity users     | `createStaffAccount`              | `POST /api/admin/users`                                     | Admin                        | Admin                      | used         |
+| Identity users     | `changeStaffRole`                 | `PUT /api/admin/users/{userId}/role`                        | Admin                        | Admin                      | used         |
+| Identity users     | `setStaffBlocked`                 | `PUT /api/admin/users/{userId}/blocked`                     | Admin                        | Admin                      | used         |
+| Identity users     | `setStaffPassword`                | `PUT /api/admin/users/{userId}/password`                    | Admin                        | Admin                      | used         |
+| Identity users     | `changeStaffName`                 | `PUT /api/admin/users/{userId}/name`                        | Admin                        | Admin                      | used         |
+| Identity users     | `changeStaffEmail`                | `PUT /api/admin/users/{userId}/email`                       | Admin                        | Admin                      | used         |
+| Identity users     | `uploadStaffAvatar`               | `PUT /api/admin/users/{userId}/avatar`                      | Admin                        | Admin                      | used         |
+| Identity users     | `removeStaffAvatar`               | `DELETE /api/admin/users/{userId}/avatar`                   | Admin                        | Admin                      | used         |
+| Identity profile   | `getMyProfile`                    | `GET /api/profile`                                          | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `changeMyName`                    | `PUT /api/profile/name`                                     | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `uploadMyAvatar`                  | `PUT /api/profile/avatar`                                   | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `removeMyAvatar`                  | `DELETE /api/profile/avatar`                                | Admin, Manager               | Admin                      | used         |
+| Identity profile   | `changeMyEmail`                   | `PUT /api/profile/email`                                    | Admin                        | Admin                      | used         |
+| Identity profile   | `changeMyPassword`                | `PUT /api/profile/password`                                 | Admin                        | Admin                      | used         |
+| Media              | `getAdminMediaFolders`            | `GET /api/admin/media/folders`                              | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `createAdminMediaFolder`          | `POST /api/admin/media/folders`                             | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `updateAdminMediaFolder`          | `PUT /api/admin/media/folders/{id}`                         | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `deleteAdminMediaFolder`          | `DELETE /api/admin/media/folders/{id}`                      | Admin                        | Admin                      | used         |
+| Media              | `getAdminMediaFiles`              | `GET /api/admin/media/files`                                | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `uploadAdminMediaFile`            | `POST /api/admin/media/files`                               | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `getAdminMediaFile`               | `GET /api/admin/media/files/{id}`                           | staff (Manager or Admin)     | —                          | not consumed |
+| Media              | `updateAdminMediaFile`            | `PUT /api/admin/media/files/{id}`                           | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `deleteAdminMediaFile`            | `DELETE /api/admin/media/files/{id}`                        | Admin                        | Admin                      | used         |
+| Media              | `replaceAdminMediaFile`           | `PUT /api/admin/media/files/{id}/content`                   | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `moveAdminMediaFiles`             | `POST /api/admin/media/files/move`                          | staff (Manager or Admin)     | Admin                      | used         |
+| Sales catalog      | `getSalesCatalogProducts`         | `POST /api/sales/{lang}/catalog/products`                   | authenticated                | —                          | not consumed |
+| Sales customers    | `getAdminCustomers`               | `GET /api/admin/customers`                                  | staff (Manager or Admin)     | Mobile cart, orders, Admin | used         |
+| Sales customers    | `getAdminCustomerById`            | `GET /api/admin/customers/{counterpartyId}`                 | staff (Manager or Admin)     | Admin                      | used         |
+| Sales orders       | `getAdminOrders`                  | `GET /api/admin/orders`                                     | staff (Manager or Admin)     | Mobile                     | used         |
+| Sales orders       | `getAdminOrderById`               | `GET /api/admin/orders/{orderId}`                           | staff (Manager or Admin)     | Mobile                     | used         |
+| Sales workspace    | `getAdminWorkspaceOrders`         | `GET /api/admin/order-workspace/orders`                     | staff (Manager or Admin)     | Admin                      | used         |
+| Sales workspace    | `getAdminWorkspaceOrderById`      | `GET /api/admin/order-workspace/orders/{orderId}`           | staff (Manager or Admin)     | Admin                      | used         |
+| Sales workspace    | `quoteAdminWorkspaceOrder`        | `POST /api/admin/order-workspace/quote`                     | staff (Manager or Admin)     | Admin                      | used         |
+| Sales workspace    | `createAdminWorkspaceOrder`       | `POST /api/admin/order-workspace/orders`                    | staff (Manager or Admin)     | Admin                      | used         |
+| Sales drafts       | `getAdminOrderDrafts`             | `GET /api/admin/order-workspace/drafts`                     | staff (Manager or Admin)     | Admin                      | used         |
+| Sales drafts       | `getAdminOrderDraftById`          | `GET /api/admin/order-workspace/drafts/{draftId}`           | staff (Manager or Admin)     | Admin                      | used         |
+| Sales drafts       | `createAdminOrderDraft`           | `POST /api/admin/order-workspace/drafts`                    | staff (Manager or Admin)     | Admin                      | used         |
+| Sales drafts       | `updateAdminOrderDraft`           | `PUT /api/admin/order-workspace/drafts/{draftId}`           | staff (Manager or Admin)     | Admin                      | used         |
+| Sales drafts       | `deleteAdminOrderDraft`           | `DELETE /api/admin/order-workspace/drafts/{draftId}`        | staff (Manager or Admin)     | Admin                      | used         |
+| Sales order sync   | `createAdminOrder`                | `POST /api/admin/orders`                                    | staff (Manager or Admin)     | Mobile cart                | used         |
+| Sales order sync   | `getAdminOrderSyncStatus`         | `GET /api/admin/orders/{orderId}/sync-status`               | staff (Manager or Admin)     | —                          | not consumed |
+| Sales order sync   | `retryAdminOrderSync`             | `POST /api/admin/orders/{orderId}/sync/retry`               | staff (Manager or Admin)     | —                          | not consumed |
 
 ## Known provider-contract warnings
 
