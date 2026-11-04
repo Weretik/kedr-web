@@ -1144,6 +1144,122 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/documents/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the published edition of a document
+         * @description Public. `bodyHtml` is sanitized HTML (h2, h3, p, lists, strong, em, blockquote, links); the site builds its table of contents from the h2 headings and fills the `{site}`, `{email}` and `{phone}` placeholders.
+         */
+        get: operations["getPublishedLegalDocument"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the documents with their published edition and waiting draft
+         * @description Requires `CanManageContent` (Manager or Admin). Always four items, in a fixed order.
+         */
+        get: operations["getAdminLegalDocuments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/{kind}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List all editions of a document
+         * @description Requires `CanManageContent`. The draft first, then editions by number, newest first.
+         */
+        get: operations["getAdminLegalDocumentVersions"];
+        put?: never;
+        /**
+         * Start a draft
+         * @description Requires `CanManageContent`. Without a body (or without `texts`) the draft copies the published texts; with `texts` it starts from them (sanitized).
+         */
+        post: operations["createAdminLegalDocumentDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/versions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Get one edition with both texts
+         * @description Requires `CanManageContent`.
+         */
+        get: operations["getAdminLegalDocumentVersion"];
+        /**
+         * Replace both texts of a draft
+         * @description Requires `CanManageContent`. The HTML is sanitized on save.
+         */
+        put: operations["updateAdminLegalDocumentDraft"];
+        post?: never;
+        /**
+         * Delete a draft
+         * @description Requires `CanManageContent`. Published and archived editions cannot be deleted.
+         */
+        delete: operations["deleteAdminLegalDocumentDraft"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/versions/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Publish a draft
+         * @description Requires `CanManageContent`. The draft gets the next number and the given «Редакція від» date and goes on the site; the edition it replaces becomes archived. Both changes are saved together.
+         */
+        post: operations["publishAdminLegalDocumentDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/media/folders": {
         parameters: {
             query?: never;
@@ -2095,6 +2211,69 @@ export interface components {
             changedBy: string;
             changes: components["schemas"]["RequisitesFieldChange"][];
         };
+        /** @enum {string} */
+        LegalDocumentKind: "public-offer" | "privacy-policy" | "returns-policy" | "delivery-payment";
+        PublishedLegalDocument: {
+            kind: components["schemas"]["LegalDocumentKind"];
+            /** Format: int32 */
+            number: number;
+            /**
+             * Format: date
+             * @description «Редакція від».
+             */
+            effectiveFrom: string;
+            title: string;
+            bodyHtml: string;
+            /** Format: date-time */
+            publishedAt: string;
+        };
+        /** @enum {string} */
+        LegalDocumentStatus: "draft" | "published" | "archived";
+        LegalDocumentVersionSummary: {
+            /** Format: int64 */
+            id: number;
+            status: components["schemas"]["LegalDocumentStatus"];
+            /**
+             * Format: int32
+             * @description null while a draft.
+             */
+            number: number | null;
+            /**
+             * Format: date
+             * @description null while a draft.
+             */
+            effectiveFrom: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            /** @description Email (or user name) of the last editor. */
+            updatedBy: string;
+            /** Format: date-time */
+            publishedAt: string | null;
+            publishedBy: string | null;
+        };
+        LegalDocumentOverview: {
+            kind: components["schemas"]["LegalDocumentKind"];
+            published: components["schemas"]["LegalDocumentVersionSummary"] | null;
+            draft: components["schemas"]["LegalDocumentVersionSummary"] | null;
+        };
+        LegalDocumentText: {
+            /** @enum {string} */
+            language: "uk" | "ru";
+            title: string;
+            bodyHtml: string;
+        };
+        SaveLegalDocumentDraftRequest: {
+            /** @description Exactly one `uk` and one `ru` text. */
+            texts: components["schemas"]["LegalDocumentText"][];
+        };
+        LegalDocumentVersion: components["schemas"]["LegalDocumentVersionSummary"] & {
+            kind: components["schemas"]["LegalDocumentKind"];
+            texts: components["schemas"]["LegalDocumentText"][];
+        };
+        PublishLegalDocumentRequest: {
+            /** Format: date */
+            effectiveFrom: string;
+        };
         MediaFolderItem: {
             /** Format: int64 */
             id: number;
@@ -2264,6 +2443,8 @@ export interface components {
         CsrfHeader: string;
         UserId: string;
         ArticleId: number;
+        Kind: components["schemas"]["LegalDocumentKind"];
+        VersionId: number;
         Id: number;
     };
     requestBodies: never;
@@ -5526,6 +5707,398 @@ export interface operations {
             };
             /** @description Not an Admin. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublishedLegalDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+                kind: components["parameters"]["Kind"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The published edition. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishedLegalDocument"];
+                };
+            };
+            /** @description The language is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown kind, or nothing is published yet. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminLegalDocuments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description One item per document kind. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentOverview"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminLegalDocumentVersions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: components["parameters"]["Kind"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The editions. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionSummary"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown kind. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: components["parameters"]["Kind"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
+            };
+        };
+        responses: {
+            /** @description The new draft. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description Invalid texts, or nothing is published and no texts were given (`texts`). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown kind. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description This document already has a draft. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminLegalDocumentVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The edition. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved draft. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description Invalid texts; errors name `texts`, `texts[0].title`, `texts[1].bodyHtml` and so on. Both `uk` and `ru` are required; title up to 200 characters, body up to 100 000. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The edition is published or archived and can no longer change. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The edition is not a draft. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    publishAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishLegalDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description The published edition. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description `effectiveFrom` is earlier than the date of the edition on the site. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The edition is already published or archived. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

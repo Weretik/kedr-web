@@ -2,6 +2,7 @@ import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import RedoIcon from '@mui/icons-material/Redo';
@@ -48,7 +49,15 @@ function ToolButton({
   );
 }
 
-export function RichTextToolbar({ editor, onLink }: { editor: Editor; onLink: () => void }) {
+export function RichTextToolbar({
+  allowQuotes = false,
+  editor,
+  onLink,
+}: {
+  allowQuotes?: boolean;
+  editor: Editor;
+  onLink: () => void;
+}) {
   const state = useEditorState({
     editor,
     selector: ({ editor: current }) => ({
@@ -58,6 +67,7 @@ export function RichTextToolbar({ editor, onLink }: { editor: Editor; onLink: ()
       h3: current.isActive('heading', { level: 3 }),
       bulletList: current.isActive('bulletList'),
       orderedList: current.isActive('orderedList'),
+      blockquote: current.isActive('blockquote'),
       link: current.isActive('link'),
       canUndo: current.can().undo(),
       canRedo: current.can().redo(),
@@ -108,6 +118,15 @@ export function RichTextToolbar({ editor, onLink }: { editor: Editor; onLink: ()
       >
         <FormatListNumberedIcon fontSize="small" />
       </ToolButton>
+      {allowQuotes ? (
+        <ToolButton
+          active={state.blockquote}
+          label="Примітка (цитата)"
+          onClick={() => chain().toggleBlockquote().run()}
+        >
+          <FormatQuoteIcon fontSize="small" />
+        </ToolButton>
+      ) : null}
       <Divider flexItem orientation="vertical" />
       <ToolButton active={state.link} label="Додати посилання" onClick={onLink}>
         <LinkIcon fontSize="small" />

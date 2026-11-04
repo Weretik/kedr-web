@@ -3,12 +3,12 @@ import { ChevronDownIcon, ListIcon } from 'lucide-react';
 
 import styles from './privacy-content.module.css';
 
-import type { PrivacyDictionary } from '@site/content/model';
+import type { LegalDocumentSection, PrivacyDictionary } from '@site/content/model';
 
-function ContentsLinks({ dictionary }: { dictionary: PrivacyDictionary }) {
+function ContentsLinks({ sections }: { sections: readonly LegalDocumentSection[] }) {
   return (
     <ol className="space-y-1">
-      {dictionary.sections.map((section, index) => (
+      {sections.map((section, index) => (
         <li key={section.id}>
           <a
             href={'#' + section.id}
@@ -18,10 +18,7 @@ function ContentsLinks({ dictionary }: { dictionary: PrivacyDictionary }) {
               'flex min-h-10 items-start gap-2 rounded-md px-2 py-2 text-sm leading-relaxed hover:bg-muted hover:text-brand-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
             )}
           >
-            <span aria-hidden className="shrink-0">
-              {index + 1}.
-            </span>
-            <span>{section.tocLabel}</span>
+            <span>{section.title}</span>
           </a>
         </li>
       ))}
@@ -31,9 +28,11 @@ function ContentsLinks({ dictionary }: { dictionary: PrivacyDictionary }) {
 
 export function PrivacyNavigation({
   dictionary,
+  sections,
   variant,
 }: {
   dictionary: PrivacyDictionary;
+  sections: readonly LegalDocumentSection[];
   variant: 'desktop' | 'mobile';
 }) {
   if (variant === 'mobile') {
@@ -49,7 +48,7 @@ export function PrivacyNavigation({
           />
         </summary>
         <nav aria-label={dictionary.contentsLabel} className="border-t border-border p-2">
-          <ContentsLinks dictionary={dictionary} />
+          <ContentsLinks sections={sections} />
         </nav>
       </details>
     );
@@ -62,7 +61,7 @@ export function PrivacyNavigation({
       className="max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-xl border border-border p-3"
     >
       <h2 className="px-2 pb-3 pt-1 font-bold">{dictionary.contentsLabel}</h2>
-      <ContentsLinks dictionary={dictionary} />
+      <ContentsLinks sections={sections} />
     </nav>
   );
 }

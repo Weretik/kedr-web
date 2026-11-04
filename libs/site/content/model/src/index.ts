@@ -1,5 +1,5 @@
 export { getReturnsDictionary } from './lib/returns-dictionary';
-export type { ReturnsDictionary, ReturnsRow, ReturnsPolicySection } from './lib/returns-types';
+export type { ReturnsDictionary, ReturnsRow } from './lib/returns-types';
 export { getContactsDictionary } from './lib/contacts-dictionary';
 export type { ContactsDictionary, ContactsDetails } from './lib/contacts-types';
 export { ARTICLE_PAGE_SIZES, DEFAULT_ARTICLES_QUERY } from './lib/articles/article-types';
@@ -34,18 +34,11 @@ export type {
   RequisitesDictionary,
 } from './lib/requisites-types';
 export { getPublicOfferDictionary } from './lib/public-offer/public-offer-dictionary';
-export type {
-  PublicOfferDictionary,
-  PublicOfferSection,
-} from './lib/public-offer/public-offer-types';
+export type { PublicOfferDictionary } from './lib/public-offer/public-offer-types';
 export { getPrivacyDictionary } from './lib/privacy-dictionary';
 export type {
+  PrivacyContactBindings,
   PrivacyDictionary,
-  PrivacySectionId,
-  PrivacyPolicyBindings,
-  PrivacyInline,
-  PrivacyPolicyBlock,
-  PrivacyPolicySection,
   PrivacySummaryItem,
 } from './lib/privacy-types';
 export type {
@@ -64,3 +57,18 @@ export {
 } from './lib/gallery/gallery-filter';
 export { getGalleryDictionary } from './lib/gallery/gallery-dictionary';
 export type { GalleryDictionary } from './lib/gallery/gallery-dictionary';
+export type {
+  LegalDocument,
+  LegalDocumentBindings,
+  LegalDocumentKind,
+  LegalDocumentSection,
+  LegalDocumentSource,
+} from './lib/documents/legal-document-types';
+export {
+  buildLegalDocument,
+  demoteHeadings,
+  fillDocumentPlaceholders,
+  formatEffectiveDate,
+  htmlToText,
+  splitDocumentSections,
+} from './lib/documents/legal-document-html';

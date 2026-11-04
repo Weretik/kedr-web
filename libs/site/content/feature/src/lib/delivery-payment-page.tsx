@@ -1,28 +1,27 @@
 import {
   DeliveryContact,
   DeliveryPageHeader,
-  DeliveryPaymentTerms,
-  ImportantTerms,
-  OrderSteps,
+  DeliverySections,
   getDeliveryPaymentDictionary,
 } from '@site/content/ui';
 import { getCompanyContacts } from '@site/shared/company';
 
+import { loadLegalDocument } from './documents/load-legal-document';
+
 import type { Locale } from '@site/core/i18n';
 
-/** Static content inside the locale layout's existing SiteShell. */
+/** Delivery & payment terms from the admin inside the locale layout's existing SiteShell. */
 export async function DeliveryPaymentPage({ locale }: { locale: Locale }) {
   const dictionary = getDeliveryPaymentDictionary(locale);
-  const { phone } = await getCompanyContacts();
+  const contacts = await getCompanyContacts();
+  const document = await loadLegalDocument(locale, 'delivery-payment', contacts, 'delivery');
 
   return (
     <div className="space-y-10 sm:space-y-12">
-      <DeliveryPageHeader locale={locale} dictionary={dictionary} />
-      <DeliveryPaymentTerms dictionary={dictionary} />
-      <OrderSteps dictionary={dictionary} />
-      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] lg:gap-12">
-        <ImportantTerms locale={locale} dictionary={dictionary} />
-        <DeliveryContact dictionary={dictionary} phone={phone} />
+      <DeliveryPageHeader locale={locale} dictionary={dictionary} document={document} />
+      <DeliverySections sections={document.sections} />
+      <div className="max-w-md">
+        <DeliveryContact dictionary={dictionary} phone={contacts.phone} />
       </div>
     </div>
   );

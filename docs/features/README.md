@@ -18,6 +18,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Articles](admin/articles.md)                     | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit            |
 | [Company contacts](admin/company-contacts.md)     | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit |
 | [Company requisites](admin/company-requisites.md) | `/company-requisites`                                | ФОП, code, IBAN, bank, МФО with change history; Admins only   |
+| [Site documents](admin/documents.md)              | `/documents`, `/documents/:kind`                     | Offer, privacy, returns, delivery UK/RU; editions; all staff  |
 | [Customers](admin/clients.md)                     | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                               |
 | [Orders and drafts](admin/orders.md)              | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                            |
 
