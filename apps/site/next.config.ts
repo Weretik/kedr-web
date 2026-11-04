@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
       { source: '/:locale(uk|ru)/categories', destination: '/:locale', permanent: true },
       // Company content lives on the localized home page; keep the old public addresses working.
       { source: '/:locale(uk|ru)/about-company', destination: '/:locale', permanent: true },
+      // The Angular storefront had 23 regional landing pages; delivery terms for every region live on «Співпраця».
+      {
+        source: '/:locale(uk|ru)/region/:city',
+        destination: '/:locale/wholesale',
+        permanent: true,
+      },
       // Old catalog addresses of the Angular storefront; the category page then redirects former slugs.
       {
         source: '/:locale(uk|ru)/catalog/products',
