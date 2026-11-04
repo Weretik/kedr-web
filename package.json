@@ -32,8 +32,8 @@
     "typecheck:tests:storefront": "node tools/testing/typecheck-tests.mjs storefront",
     "typecheck:tests:mobile": "node tools/testing/typecheck-tests.mjs mobile",
     "typecheck:tests:site": "node tools/testing/typecheck-tests.mjs site",
-    "typecheck:tests:e2e": "tsc -p apps/admin-e2e/tsconfig.json --noEmit",
-    "typecheck:tests": "npm run typecheck:tests:web && npm run typecheck:tests:storefront && npm run typecheck:tests:mobile && npm run typecheck:tests:site && npm run typecheck:tests:e2e"
+    "typecheck:tests:e2e": "node tools/testing/typecheck-tests.mjs e2e",
+    "typecheck:tests": "node tools/testing/typecheck-tests.mjs all"
   },
   "private": true,
   "workspaces": [
