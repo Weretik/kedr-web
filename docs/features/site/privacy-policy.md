@@ -2,6 +2,8 @@
 
 **Route:** /{locale}/privacy-policy, locale uk/ru. [SDD and accepted concept](../../specs/site/content/001-privacy-policy/README.md).
 
+**Text source (2026-11-04):** the legal body is the published edition from the admin ([Admin site documents](../admin/documents.md)), read by `getLegalDocument(locale, 'privacy-policy')` in `content/data-access` (cache tag `content:document:privacy-policy`, ten-minute life) and turned into sections by `buildLegalDocument` in `content/model`: H2 headings become sections and contents, `{site}`, `{email}` and `{phone}` are filled from the site host and saved contacts. Nothing published answers 404; an API failure is an error, never an empty page. Page chrome stays in code.
+
 The page provides a short data/purpose/rights summary, eight-section contents, the complete existing localized policy and configured contact links. Desktop has sticky contents; mobile/tablet uses native details before summary. The complete document stays outside disclosure and in server HTML. Existing shell, themes and language controls are reused.
 
 ## Structure diagram
@@ -34,11 +36,8 @@ Email/tel and same-language public-offer remain real links. Domain metadata dele
 apps/site/src/app/[locale]/(content)/privacy-policy/page.tsx # thin async locale route
 libs/site/content/
 ├── model/src/lib/
-│   ├── privacy-types.ts                 # readonly view contract
-│   ├── privacy-policy-copy.ts           # full sourced UK/RU text
-│   ├── privacy-policy-sections.ts       # ordered keys and pure bindings
-│   ├── privacy-dictionary.ts            # summary/labels and assembly
-│   └── privacy-policy-sections.spec.ts  # full units/order/bindings
+│   ├── privacy-types.ts                 # page chrome contract
+│   └── privacy-dictionary.ts            # summary/labels and contact bindings
 ├── ui/src/lib/privacy/
 │   ├── privacy-content.tsx              # responsive composition
 │   ├── privacy-header.tsx               # breadcrumb/H1/intro
@@ -64,7 +63,7 @@ The four existing public index.ts files expose the feature. No new Nx project or
 
 ## Tests
 
-- **site-content-model:** node node_modules/vitest/vitest.mjs run --config libs/site/content/model/vite.config.mts src/lib/privacy-policy-sections.spec.ts — 6 tests, source completeness/order and independent bindings.
+- **site-content-model:** `src/lib/documents/legal-document-html.spec.ts` — placeholders, sections, heading levels, dates.
 - **site-content-ui:** node node_modules/vitest/vitest.mjs run --config libs/site/content/ui/vite.config.mts src/lib/privacy/privacy-content.spec.tsx — 12 tests, both locales, initial server HTML, summary, targets, disclosure and contact.
 - **site-content-seo:** node node_modules/vitest/vitest.mjs run --config libs/site/content/seo/vite.config.mts src/lib/privacy-metadata.spec.ts src/lib/privacy-json-ld.spec.ts — 12 tests, metadata and BreadcrumbList.
 - **site-content-feature:** node node_modules/vitest/vitest.mjs run --config libs/site/content/feature/vite.config.mts src/lib/privacy-page.spec.tsx src/lib/content-sitemap.spec.ts — 9 tests, actual SSR and additive sitemap regression.

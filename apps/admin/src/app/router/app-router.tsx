@@ -16,6 +16,7 @@ import {
 } from '@admin/core/auth';
 import { AdminLayout, AdminShellSessionProvider } from '@admin/core/shell';
 import { dashboardRoutes } from '@admin/dashboard/feature';
+import { documentsRoutes } from '@admin/documents/feature';
 import {
   addProductToCurrentOrder,
   clearCurrentOrder,
@@ -85,6 +86,7 @@ export function AppRouter() {
         }),
         ...articlesRoutes,
         ...companyRoutes,
+        ...documentsRoutes,
         ...profileRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },

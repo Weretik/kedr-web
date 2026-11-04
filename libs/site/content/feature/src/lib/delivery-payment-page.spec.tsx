@@ -19,17 +19,31 @@ const { contacts } = vi.hoisted(() => ({
 }));
 
 vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
+vi.mock('@site/content/data-access', () => ({
+  getLegalDocument: vi.fn(async (locale: string) => ({
+    kind: 'ok',
+    document: {
+      kind: 'delivery-payment',
+      number: 1,
+      effectiveFrom: '2026-11-03',
+      title: 'Доставка',
+      bodyHtml:
+        '<p>Вступ</p><h2>Доставка</h2><ul><li>НП</li></ul><h2>Оплата</h2><ul><li>IBAN</li></ul>' +
+        `<h2>Порядок</h2><ol><li>Кошик</li></ol><h2>Важливо</h2><blockquote><a href="/${locale}/public-offer">Оферта</a></blockquote>`,
+    },
+  })),
+}));
 
 const cases = [
   {
     locale: 'uk',
     title: 'Доставка та оплата',
-    headings: ['Доставка', 'Оплата', 'Як зробити замовлення?', 'Важливо знати'],
+    headings: ['Доставка', 'Оплата', 'Порядок', 'Важливо'],
   },
   {
     locale: 'ru',
     title: 'Доставка и оплата',
-    headings: ['Доставка', 'Оплата', 'Как сделать заказ?', 'Важно знать'],
+    headings: ['Доставка', 'Оплата', 'Порядок', 'Важливо'],
   },
 ] as const;
 

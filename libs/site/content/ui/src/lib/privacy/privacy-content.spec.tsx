@@ -1,11 +1,11 @@
-import { getPrivacyDictionary } from '@site/content/model';
+import { buildLegalDocument, getPrivacyDictionary } from '@site/content/model';
 import { FALLBACK_COMPANY_CONTACTS as CONTACTS, siteConfig } from '@site/core/config';
 import { cleanup, fireEvent, render, within } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { PrivacyContent } from './privacy-content';
 
-import type { PrivacyInline } from '@site/content/model';
+import type { Locale } from '@site/core/i18n';
 
 afterEach(cleanup);
 
@@ -15,7 +15,28 @@ const bindings = {
   phoneDisplay: CONTACTS.phone.display,
   phoneHref: 'tel:' + CONTACTS.phone.e164,
 };
-const inlineText = (content: readonly PrivacyInline[]) => content.map((part) => part.text).join('');
+const BODY =
+  '<h2>1. Загальні положення</h2><p>Сайт {site}.</p>' +
+  '<h2>2. Склад даних</h2><p>Збираємо:</p><ul><li>телефон;</li><li>ім’я.</li></ul>' +
+  '<h2>3. Контакти</h2><p>Пишіть {email} або дзвоніть {phone}.</p>';
+const policyDocument = (locale: Locale) =>
+  buildLegalDocument(
+    {
+      kind: 'privacy-policy',
+      number: 1,
+      effectiveFrom: '2026-11-03',
+      title: 'Політика',
+      bodyHtml: BODY,
+    },
+    locale,
+    bindings,
+    'privacy',
+  );
+const contactBindings = {
+  email: bindings.email,
+  phoneDisplay: bindings.phoneDisplay,
+  phoneHref: bindings.phoneHref,
+};
 
 describe.each([
   {
@@ -32,8 +53,10 @@ describe.each([
   },
 ])('privacy policy: $locale', ({ locale, title, home, action }) => {
   it('shows one localized H1 and a home breadcrumb in the same language', () => {
-    const dictionary = getPrivacyDictionary(locale, bindings);
-    const { container } = render(<PrivacyContent dictionary={dictionary} />);
+    const dictionary = getPrivacyDictionary(locale, contactBindings);
+    const { container } = render(
+      <PrivacyContent dictionary={dictionary} document={policyDocument(locale)} />,
+    );
     expect(container.querySelectorAll('h1')).toHaveLength(1);
     expect(container.querySelector('h1')?.textContent).toBe(title);
     const header = within(container.querySelector('header')!);
@@ -43,8 +66,10 @@ describe.each([
   });
 
   it('keeps three sourced summary items before the complete document', () => {
-    const dictionary = getPrivacyDictionary(locale, bindings);
-    const { container } = render(<PrivacyContent dictionary={dictionary} />);
+    const dictionary = getPrivacyDictionary(locale, contactBindings);
+    const { container } = render(
+      <PrivacyContent dictionary={dictionary} document={policyDocument(locale)} />,
+    );
     const summary = container.querySelector('[data-privacy-summary]')!;
     const policy = container.querySelector('[data-privacy-document]')!;
     expect(summary).not.toBeNull();
@@ -59,39 +84,34 @@ describe.each([
     expect(summary.compareDocumentPosition(policy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it('renders all eight headings, 15 paragraphs and 11 list items in initial server HTML', () => {
-    const dictionary = getPrivacyDictionary(locale, bindings);
+  it('renders every heading, paragraph and list item of the document in initial server HTML', () => {
+    const dictionary = getPrivacyDictionary(locale, contactBindings);
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<PrivacyContent dictionary={dictionary} />);
-    const policy = container.querySelector('[data-privacy-document]')!;
-    expect(policy).not.toBeNull();
-    expect(policy.closest('details')).toBeNull();
-    expect(policy.querySelectorAll('section')).toHaveLength(8);
-    expect(policy.querySelectorAll('h2')).toHaveLength(8);
-    expect(policy.querySelectorAll('p')).toHaveLength(15);
-    expect(policy.querySelectorAll('li')).toHaveLength(11);
-    const expectedUnits = dictionary.sections.flatMap((section) =>
-      section.blocks.flatMap((block) =>
-        block.kind === 'paragraph'
-          ? [inlineText(block.content)]
-          : block.items.map((item) => inlineText(item.content)),
-      ),
+    container.innerHTML = renderToStaticMarkup(
+      <PrivacyContent dictionary={dictionary} document={policyDocument(locale)} />,
     );
-    expect(
-      [...policy.querySelectorAll('[data-privacy-source]')].map((unit) => unit.textContent),
-    ).toEqual(expectedUnits);
-    for (const section of dictionary.sections) {
-      expect(policy.querySelector('[id="' + section.id + '"]')?.textContent).toBe(section.title);
-    }
-    expect(policy.textContent).not.toContain('kedr-web.vercel.app');
-    expect(policy.textContent).toContain(bindings.siteHost);
-    expect(policy.textContent).toContain(CONTACTS.email);
-    expect(policy.textContent).toContain(CONTACTS.phone.display);
+    const article = container.querySelector('[data-privacy-document]')!;
+    expect(article.closest('details')).toBeNull();
+    expect(article.querySelectorAll('section')).toHaveLength(3);
+    expect([...article.querySelectorAll('h2')].map((h) => h.id)).toEqual([
+      'privacy-1',
+      'privacy-2',
+      'privacy-3',
+    ]);
+    expect(article.querySelectorAll('p')).toHaveLength(3);
+    expect(article.querySelectorAll('li')).toHaveLength(2);
+    expect(article.textContent).not.toContain('{site}');
+    expect(article.textContent).toContain(bindings.siteHost);
+    expect(container.querySelector('[data-document-edition] time')?.getAttribute('dateTime')).toBe(
+      '2026-11-03',
+    );
   });
 
-  it('provides native collapsed contents, eight valid destinations per variant and unique IDs', () => {
-    const dictionary = getPrivacyDictionary(locale, bindings);
-    const { container } = render(<PrivacyContent dictionary={dictionary} />);
+  it('provides native collapsed contents, a destination per section and unique IDs', () => {
+    const dictionary = getPrivacyDictionary(locale, contactBindings);
+    const { container } = render(
+      <PrivacyContent dictionary={dictionary} document={policyDocument(locale)} />,
+    );
     const mobile = container.querySelector<HTMLDetailsElement>(
       'details[data-privacy-contents="mobile"]',
     )!;
@@ -102,9 +122,11 @@ describe.each([
     for (const variant of ['mobile', 'desktop']) {
       const nav = container.querySelector('[data-privacy-contents="' + variant + '"]')!;
       const anchors = [...nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
-      expect(anchors.map((anchor) => anchor.getAttribute('href'))).toEqual(
-        dictionary.sections.map((section) => '#' + section.id),
-      );
+      expect(anchors.map((anchor) => anchor.getAttribute('href'))).toEqual([
+        '#privacy-1',
+        '#privacy-2',
+        '#privacy-3',
+      ]);
       expect(nav.querySelector('[aria-current]')).toBeNull();
       for (const anchor of anchors) {
         expect(container.querySelectorAll('[id="' + anchor.hash.slice(1) + '"]')).toHaveLength(1);
@@ -112,17 +134,19 @@ describe.each([
     }
     const ids = [...container.querySelectorAll('[id]')].map((node) => node.id);
     expect(new Set(ids).size).toBe(ids.length);
-    const policy = container.querySelector('[data-privacy-document]')!;
+    const article = container.querySelector('[data-privacy-document]')!;
     fireEvent.click(mobile.querySelector('summary')!);
     expect(mobile.open).toBe(true);
     fireEvent.click(mobile.querySelector('summary')!);
     expect(mobile.open).toBe(false);
-    expect(policy.querySelectorAll('h2')).toHaveLength(8);
+    expect(article.querySelectorAll('h2')).toHaveLength(3);
   });
 
   it('uses the same configured contacts in the complete policy and native email action', () => {
-    const dictionary = getPrivacyDictionary(locale, bindings);
-    const { container } = render(<PrivacyContent dictionary={dictionary} />);
+    const dictionary = getPrivacyDictionary(locale, contactBindings);
+    const { container } = render(
+      <PrivacyContent dictionary={dictionary} document={policyDocument(locale)} />,
+    );
     const policy = within(container).getByRole('article', { name: dictionary.title });
     expect(within(policy).getByRole('link', { name: CONTACTS.email }).getAttribute('href')).toBe(
       'mailto:' + CONTACTS.email,
@@ -143,8 +167,10 @@ describe.each([
   });
 
   it('keeps mobile contents before summary and legal text outside every disclosure', () => {
-    const dictionary = getPrivacyDictionary(locale, bindings);
-    const { container } = render(<PrivacyContent dictionary={dictionary} />);
+    const dictionary = getPrivacyDictionary(locale, contactBindings);
+    const { container } = render(
+      <PrivacyContent dictionary={dictionary} document={policyDocument(locale)} />,
+    );
     const header = container.querySelector('header')!;
     const mobile = container.querySelector('details')!;
     const summary = container.querySelector('[data-privacy-summary]')!;

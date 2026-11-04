@@ -2,9 +2,17 @@ import { localizedPath } from '@site/core/i18n';
 import { HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import type { PrivacyDictionary } from '@site/content/model';
+import { EditionDate } from '../documents/edition-date';
 
-export function PrivacyHeader({ dictionary }: { dictionary: PrivacyDictionary }) {
+import type { LegalDocument, PrivacyDictionary } from '@site/content/model';
+
+export function PrivacyHeader({
+  dictionary,
+  document,
+}: {
+  dictionary: PrivacyDictionary;
+  document: LegalDocument;
+}) {
   return (
     <header>
       <nav
@@ -27,6 +35,11 @@ export function PrivacyHeader({ dictionary }: { dictionary: PrivacyDictionary })
         {dictionary.title}
       </h1>
       <p className="mt-3 max-w-[75ch] leading-relaxed">{dictionary.intro}</p>
+      <EditionDate
+        locale={dictionary.locale}
+        effectiveFrom={document.effectiveFrom}
+        className="mt-2 text-sm text-muted-foreground"
+      />
     </header>
   );
 }

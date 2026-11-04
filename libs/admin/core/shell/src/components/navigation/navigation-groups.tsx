@@ -4,6 +4,7 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
@@ -58,6 +59,7 @@ export const navigationGroups: NavigationGroup[] = [
     items: [
       { icon: <ArticleOutlinedIcon />, label: 'Статті', to: '/articles' },
       { icon: <ContactPhoneOutlinedIcon />, label: 'Контакти', to: '/company-contacts' },
+      { icon: <GavelOutlinedIcon />, label: 'Документи', to: '/documents' },
     ],
   },
   {

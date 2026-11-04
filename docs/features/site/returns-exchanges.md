@@ -2,6 +2,8 @@
 
 **Route:** `/{locale}/returns-exchanges` (`uk`, `ru`). [SDD and approved concept](../../specs/site/content/001-returns-exchanges/README.md).
 
+**Text source (2026-11-04):** the legal body is the published edition from the admin ([Admin site documents](../admin/documents.md)), read by `getLegalDocument(locale, 'returns-policy')` in `content/data-access` (cache tag `content:document:returns-policy`, ten-minute life) and turned into sections by `buildLegalDocument` in `content/model`: H2 headings become sections and contents, `{site}`, `{email}` and `{phone}` are filled from the site host and saved contacts. Nothing published answers 404; an API failure is an error, never an empty page. Page chrome stays in code. The summary panels, process and FAQ stay in code; the full rules section shows the edition title and date, with its headings one level lower.
+
 The page presents two compact conditions/warranty panels, a three-step request process, important notes and the configured company phone. The full existing policy and three native FAQ disclosures remain in server HTML. It uses the current shell, light/dark tokens and responsive stacking; it adds no API, return form or client state.
 
 ## Architecture
@@ -27,10 +29,8 @@ apps/site/src/app/[locale]/(content)/returns-exchanges/page.tsx # thin localized
 libs/site/content/
 ├── model/src/lib/
 │   ├── returns-types.ts          # typed content contract
-│   ├── returns-policy-copy.ts    # complete existing uk/ru policy
-│   ├── returns-summary-copy.ts   # localized summary text
-│   ├── returns-policy-sections.ts # typed complete policy mapping
-│   └── returns-dictionary.ts     # dictionary assembly and sourced FAQ
+│   ├── returns-summary-copy.ts   # localized summary text and FAQ
+│   └── returns-dictionary.ts     # dictionary assembly
 ├── ui/src/lib/returns/
 │   ├── returns-content.tsx       # content composition
 │   ├── returns-header.tsx        # breadcrumb, title and section navigation
@@ -38,7 +38,7 @@ libs/site/content/
 │   ├── returns-process.tsx       # ordered three-step process
 │   ├── returns-support.tsx       # notes and support layout
 │   ├── returns-contact.tsx       # configured telephone panel
-│   ├── returns-policy.tsx        # complete policy sections
+│   ├── returns-policy.tsx        # published full rules
 │   └── returns-faq.tsx           # native disclosure
 ├── feature/src/lib/
 │   ├── returns-page.tsx          # dictionary and UI composition
@@ -53,7 +53,5 @@ libs/site/content/
 - `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run src/lib/content-sitemap.spec.ts` — localized returns URLs and reciprocal alternates.
 
 Static model copy is exercised through component coverage. Browser/rendered HTML/build verification is not performed without separate permission; current evidence lives in SDD tasks.
-
-- Model policy completeness: node node_modules/vitest/vitest.mjs run --config libs/site/content/model/vite.config.mts src/lib/returns-policy-sections.spec.ts. The test checks every source policy heading and sentence in both languages.
 
 [Responsibility audit and refactoring](../../specs/site/content/001-returns-exchanges/code-audit/audit.md).

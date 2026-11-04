@@ -1,12 +1,7 @@
-import { ruPrivacyPolicy, ukPrivacyPolicy } from './privacy-policy-copy';
-import { buildPrivacyPolicySections, type PrivacyTocLabels } from './privacy-policy-sections';
-
-import type { PrivacyDictionary, PrivacyPolicyBindings } from './privacy-types';
+import type { PrivacyContactBindings, PrivacyDictionary } from './privacy-types';
 import type { Locale } from '@site/core/i18n';
 
-type PrivacyUiCopy = Omit<PrivacyDictionary, 'locale' | 'sections' | 'contact' | 'relatedOffer'> & {
-  readonly tocLabels: PrivacyTocLabels;
-};
+type PrivacyUiCopy = Omit<PrivacyDictionary, 'locale' | 'contact'>;
 
 const uiCopy: Readonly<Record<Locale, PrivacyUiCopy>> = {
   uk: {
@@ -32,18 +27,13 @@ const uiCopy: Readonly<Record<Locale, PrivacyUiCopy>> = {
         body: 'Дізнатися про свої дані, виправити їх або звернутися щодо видалення.',
       },
     ],
-    tocLabels: [
-      'Загальні положення',
-      'Склад персональних даних',
-      'Мета обробки',
-      'Передача третім особам',
-      'Захист та збереження',
-      'Права користувача',
-      'Зміни у політиці',
-      'Контактна інформація',
-    ],
     contactTitle: 'Маєте запитання щодо даних?',
     contactAction: 'Написати нам',
+    relatedOffer: {
+      heading: 'Інша інформація',
+      title: 'Публічна оферта',
+      description: 'Публічна оферта та правила користування сайтом (змішаний договір).',
+    },
   },
   ru: {
     breadcrumbLabel: 'Хлебные крошки',
@@ -68,42 +58,20 @@ const uiCopy: Readonly<Record<Locale, PrivacyUiCopy>> = {
         body: 'Узнать о своих данных, исправить их или обратиться по вопросу удаления.',
       },
     ],
-    tocLabels: [
-      'Общие положения',
-      'Состав персональных данных',
-      'Цель обработки',
-      'Передача третьим лицам',
-      'Защита и хранение',
-      'Права пользователя',
-      'Изменения политики',
-      'Контактная информация',
-    ],
     contactTitle: 'Есть вопросы о ваших данных?',
     contactAction: 'Написать нам',
+    relatedOffer: {
+      heading: 'Другая информация',
+      title: 'Публичная оферта',
+      description: 'Публичная оферта и правила пользования сайтом (смешанный договор).',
+    },
   },
 };
 
-/** Builds local page copy without reading environment, config, or remote data. */
+/** Page chrome of the privacy policy; the policy text itself is the published document. */
 export function getPrivacyDictionary(
   locale: Locale,
-  bindings: PrivacyPolicyBindings,
+  contact: PrivacyContactBindings,
 ): PrivacyDictionary {
-  const source = locale === 'uk' ? ukPrivacyPolicy : ruPrivacyPolicy;
-  const { tocLabels, ...copy } = uiCopy[locale];
-
-  return {
-    ...copy,
-    locale,
-    sections: buildPrivacyPolicySections(source, bindings, tocLabels),
-    contact: {
-      email: bindings.email,
-      phoneDisplay: bindings.phoneDisplay,
-      phoneHref: bindings.phoneHref,
-    },
-    relatedOffer: {
-      heading: source['privacy.sidebar.title'],
-      title: source['privacy.sidebar.card.title'],
-      description: source['privacy.sidebar.card.subtitle'],
-    },
-  };
+  return { ...uiCopy[locale], locale, contact };
 }

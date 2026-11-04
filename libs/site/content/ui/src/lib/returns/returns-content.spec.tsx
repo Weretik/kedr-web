@@ -1,10 +1,28 @@
-import { getReturnsDictionary } from '@site/content/model';
+import { buildLegalDocument, getReturnsDictionary } from '@site/content/model';
 import { FALLBACK_COMPANY_CONTACTS as COMPANY_CONTACTS } from '@site/core/config';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
 import { ReturnsContent } from './returns-content';
 
+import type { Locale } from '@site/core/i18n';
+
 afterEach(cleanup);
+
+const rules = (locale: Locale) =>
+  buildLegalDocument(
+    {
+      kind: 'returns-policy',
+      number: 1,
+      effectiveFrom: '2026-11-03',
+      title: 'Правила повернення',
+      bodyHtml:
+        '<p>Вступ</p><h2>1. Загальні</h2><ul><li>Виключення</li></ul>' +
+        '<h2>2. Гарантія</h2><h3>Правило 1 метра:</h3><p>Огляд</p>',
+    },
+    locale,
+    { siteHost: 'kedr', email: 'e', phoneDisplay: 'p', phoneHref: 'tel:p' },
+    'returns',
+  );
 
 describe.each([
   {
@@ -12,21 +30,21 @@ describe.each([
     title: 'Повернення та обмін',
     call: 'Зателефонувати',
     home: 'Головна',
-    exclusion: 'Товари, виготовлені за індивідуальним замовленням',
-    visual: 'Правило 1 метра:',
   },
   {
     locale: 'ru' as const,
     title: 'Возврат и обмен',
     call: 'Позвонить',
     home: 'Главная',
-    exclusion: 'Товары, изготовленные по индивидуальному заказу',
-    visual: 'Правило 1 метра:',
   },
-])('returns page: $locale', ({ locale, title, call, home, exclusion, visual }) => {
+])('returns page: $locale', ({ locale, title, call, home }) => {
   it('has one translated H1, the same-language home and real anchor destinations', () => {
     const { container } = render(
-      <ReturnsContent dictionary={getReturnsDictionary(locale)} phone={COMPANY_CONTACTS.phone} />,
+      <ReturnsContent
+        dictionary={getReturnsDictionary(locale)}
+        document={rules(locale)}
+        phone={COMPANY_CONTACTS.phone}
+      />,
     );
     const header = within(container.querySelector('header')!);
     expect(container.querySelectorAll('h1')).toHaveLength(1);
@@ -47,7 +65,11 @@ describe.each([
   it('shows both term panels, all summary rows and ordered process steps', () => {
     const dictionary = getReturnsDictionary(locale);
     const { container } = render(
-      <ReturnsContent dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />,
+      <ReturnsContent
+        dictionary={dictionary}
+        document={rules(locale)}
+        phone={COMPANY_CONTACTS.phone}
+      />,
     );
     const conditions = screen.getByRole('region', { name: dictionary.conditionsTitle });
     const warranty = screen.getByRole('region', { name: dictionary.warrantyTitle });
@@ -65,23 +87,40 @@ describe.each([
 
   it('uses configured contact details and retains complete policy subjects', () => {
     const dictionary = getReturnsDictionary(locale);
-    render(<ReturnsContent dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />);
+    render(
+      <ReturnsContent
+        dictionary={dictionary}
+        document={rules(locale)}
+        phone={COMPANY_CONTACTS.phone}
+      />,
+    );
     expect(screen.getByRole('link', { name: call }).getAttribute('href')).toBe(
       'tel:' + COMPANY_CONTACTS.phone.e164,
     );
     expect(
       screen.getByRole('link', { name: COMPANY_CONTACTS.phone.display }).getAttribute('href'),
     ).toBe('tel:' + COMPANY_CONTACTS.phone.e164);
-    const policy = screen.getByRole('region', { name: dictionary.policyTitle });
-    expect(policy.textContent).toContain(exclusion);
-    expect(policy.textContent).toContain(visual);
-    expect(within(policy).getAllByRole('heading', { level: 3 })).toHaveLength(4);
+    const policy = screen.getByRole('region', { name: 'Правила повернення' });
+    expect(policy.textContent).toContain('Виключення');
+    expect(
+      within(policy)
+        .getAllByRole('heading', { level: 3 })
+        .map((h) => h.textContent),
+    ).toEqual(['1. Загальні', '2. Гарантія']);
+    expect(within(policy).getByRole('heading', { level: 4 }).textContent).toBe('Правило 1 метра:');
+    expect(policy.querySelector('[data-document-edition] time')?.getAttribute('dateTime')).toBe(
+      '2026-11-03',
+    );
   });
 
   it('delivers FAQ answers in native disclosure markup without client handlers', () => {
     const dictionary = getReturnsDictionary(locale);
     const { container } = render(
-      <ReturnsContent dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />,
+      <ReturnsContent
+        dictionary={dictionary}
+        document={rules(locale)}
+        phone={COMPANY_CONTACTS.phone}
+      />,
     );
     const items = [...container.querySelectorAll('details[name="returns-faq"]')];
     expect(items).toHaveLength(3);

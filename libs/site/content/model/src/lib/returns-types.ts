@@ -5,14 +5,6 @@ export interface ReturnsRow {
   text: string;
 }
 
-export interface ReturnsPolicySection {
-  title: string;
-  intro?: string;
-  paragraphs?: readonly string[];
-  items?: readonly string[];
-  sections?: readonly ReturnsPolicySection[];
-}
-
 export interface ReturnsDictionary {
   locale: Locale;
   home: string;
@@ -33,9 +25,6 @@ export interface ReturnsDictionary {
   fullRulesLink: string;
   helpTitle: string;
   call: string;
-  policyTitle: string;
-  policyLead: string;
-  policy: readonly ReturnsPolicySection[];
   faqTitle: string;
   questions: readonly { title: string; text: string }[];
 }

@@ -3,10 +3,17 @@ import { ChevronRightIcon, HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { PublicOfferPrintButton } from './public-offer-print-button';
+import { EditionDate } from '../documents/edition-date';
 
-import type { PublicOfferDictionary } from '@site/content/model';
+import type { LegalDocument, PublicOfferDictionary } from '@site/content/model';
 
-export function PublicOfferHeader({ dictionary }: { dictionary: PublicOfferDictionary }) {
+export function PublicOfferHeader({
+  dictionary,
+  document,
+}: {
+  dictionary: PublicOfferDictionary;
+  document: LegalDocument;
+}) {
   return (
     <header>
       <nav
@@ -36,8 +43,13 @@ export function PublicOfferHeader({ dictionary }: { dictionary: PublicOfferDicti
             {dictionary.title}
           </h1>
           <p className="mt-4 max-w-[75ch] text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {dictionary.fullTitle}
+            {document.title}
           </p>
+          <EditionDate
+            locale={dictionary.locale}
+            effectiveFrom={document.effectiveFrom}
+            className="mt-2 text-sm text-muted-foreground"
+          />
         </div>
         <div data-offer-actions className="shrink-0 sm:pt-1">
           <PublicOfferPrintButton label={dictionary.print} hint={dictionary.printHint} />

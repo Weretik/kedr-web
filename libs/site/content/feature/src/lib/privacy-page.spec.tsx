@@ -17,6 +17,28 @@ const { contacts } = vi.hoisted(() => ({
 }));
 
 vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
+const { getLegalDocument } = vi.hoisted(() => ({ getLegalDocument: vi.fn() }));
+vi.mock('@site/content/data-access', () => ({ getLegalDocument }));
+vi.mock('next/navigation', () => ({
+  notFound: () => {
+    throw new Error('NEXT_NOT_FOUND');
+  },
+}));
+
+beforeEach(() => {
+  getLegalDocument.mockResolvedValue({
+    kind: 'ok',
+    document: {
+      kind: 'privacy-policy',
+      number: 1,
+      effectiveFrom: '2026-11-03',
+      title: 'Політика',
+      bodyHtml:
+        '<h2>1. Загальні</h2><p>Сайт {site}.</p><h2>2. Дані</h2><ul><li>телефон</li></ul>' +
+        '<h2>3. Контакти</h2><p>{email}, {phone}</p>',
+    },
+  });
+});
 
 it.each([
   { locale: 'uk' as const, title: 'Політика конфіденційності', home: 'Головна' },
@@ -29,9 +51,8 @@ it.each([
     expect(container.querySelector('h1')?.textContent).toBe(title);
     const policy = container.querySelector('[data-privacy-document]')!;
     expect(policy).not.toBeNull();
-    expect(policy.querySelectorAll('h2')).toHaveLength(8);
-    expect(policy.querySelectorAll('p')).toHaveLength(15);
-    expect(policy.querySelectorAll('li')).toHaveLength(11);
+    expect(policy.querySelectorAll('h2')).toHaveLength(3);
+    expect(getLegalDocument).toHaveBeenCalledWith(locale, 'privacy-policy');
     expect(policy.textContent).toContain(new URL(siteConfig.siteUrl).host);
     expect(policy.textContent).toContain(contacts.email);
     expect(policy.textContent).toContain(contacts.phone.display);
@@ -54,3 +75,11 @@ it.each([
     ]);
   },
 );
+
+it('answers 404 when no edition is published and fails loudly when the API is unavailable', async () => {
+  getLegalDocument.mockResolvedValueOnce({ kind: 'not-found' });
+  await expect(PrivacyPage({ locale: 'uk' })).rejects.toThrow('NEXT_NOT_FOUND');
+
+  getLegalDocument.mockResolvedValueOnce({ kind: 'unavailable' });
+  await expect(PrivacyPage({ locale: 'uk' })).rejects.toThrow('Content API is unavailable');
+});

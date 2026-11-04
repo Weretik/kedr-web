@@ -2,7 +2,7 @@ import { Box, FormHelperText, Typography } from '@mui/material';
 import { EditorContent, useEditor } from '@tiptap/react';
 import { useEffect, useId, useState } from 'react';
 
-import { richTextExtensions } from './rich-text-extensions';
+import { createRichTextExtensions, richTextExtensions } from './rich-text-extensions';
 import { RichTextLinkDialog } from './rich-text-link-dialog';
 import { RichTextToolbar } from './rich-text-toolbar';
 
@@ -12,6 +12,8 @@ interface RichTextEditorProps {
   onChange?: (html: string) => void;
   readOnly?: boolean;
   error?: string;
+  /** Adds the quote button; only for texts whose backend sanitizer keeps `<blockquote>` (site documents). */
+  allowQuotes?: boolean;
 }
 
 /**
@@ -19,6 +21,7 @@ interface RichTextEditorProps {
  * not as raw HTML.
  */
 export function RichTextEditor({
+  allowQuotes = false,
   error,
   label,
   onChange,
@@ -33,7 +36,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: { 'aria-labelledby': labelId, 'aria-multiline': 'true', role: 'textbox' },
     },
-    extensions: richTextExtensions,
+    extensions: allowQuotes ? createRichTextExtensions({ allowQuotes }) : richTextExtensions,
     immediatelyRender: true,
     onUpdate: ({ editor: current }) => onChange?.(current.getHTML()),
   });
@@ -76,9 +79,22 @@ export function RichTextEditor({
           '& .ProseMirror h3': { ...theme.typography.subtitle1, fontWeight: 700, mb: 1, mt: 2 },
           '& .ProseMirror p': { my: 1 },
           '& .ProseMirror a': { color: 'primary.main' },
+          '& .ProseMirror blockquote': {
+            borderLeft: 4,
+            borderColor: 'divider',
+            color: 'text.secondary',
+            ml: 0,
+            pl: 2,
+          },
         })}
       >
-        {readOnly ? null : <RichTextToolbar editor={editor} onLink={() => setLinkOpen(true)} />}
+        {readOnly ? null : (
+          <RichTextToolbar
+            allowQuotes={allowQuotes}
+            editor={editor}
+            onLink={() => setLinkOpen(true)}
+          />
+        )}
         <EditorContent editor={editor} />
       </Box>
       {error ? <FormHelperText error>{error}</FormHelperText> : null}

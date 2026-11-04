@@ -2,12 +2,14 @@
 
 **Routes:** `/uk/delivery-and-payment`, `/ru/delivery-and-payment`. The [thin route](../../../apps/site/src/app/[locale]/delivery-and-payment/page.tsx) renders the static feature inside the existing locale SiteShell. [Specification](../../specs/site/content/001-delivery-payment/README.md), including the accepted concept and verification evidence.
 
-The page shows the complete source introduction, delivery and payment terms, four ordering steps, important conditions/public offer and the configured company contact. Ukrainian and Russian text is copied from the Angular delivery dictionary as independent site content. There is no runtime Angular import, API call, checkout or payment processing. Pickup is omitted because its conditions are not specified in the source.
+The page shows the published delivery & payment edition (no «Редакція від» date) and the configured company contact: the text before the first H2 is the lead under the title, each H2 section is a card with an anchor link, and a section with a numbered list becomes full-width steps. There is no checkout or payment processing.
+
+**Text source (2026-11-04):** the legal body is the published edition from the admin ([Admin site documents](../admin/documents.md)), read by `getLegalDocument(locale, 'delivery-payment')` in `content/data-access` (cache tag `content:document:delivery-payment`, ten-minute life) and turned into sections by `buildLegalDocument` in `content/model`: H2 headings become sections and contents, `{site}`, `{email}` and `{phone}` are filled from the site host and saved contacts. Nothing published answers 404; an API failure is an error, never an empty page. Page chrome stays in code. Pickup is omitted because its conditions are not specified in the source.
 
 - Delivery and payment use two columns from `lg`, one on phones; ordering steps reflow from one to two to four columns. All substantive conditions stay visible.
 - Onest, existing Tailwind light/dark tokens, shared Button and lucide icons come from the site design system. Existing shell owns language, theme, navigation, search and catalog.
 - Semantic headings, section anchor links with sticky-header clearance, ordered steps, localized public-offer links and configured `tel:` actions.
-- Server-renderable components and static dictionaries; no new client state, external widget, fetch or cache policy.
+- Server-rendered components; the text comes from the Content API through the cached document loader.
 - Domain SEO delegates to core metadata: unique localized title/description, self canonical, UK/RU/x-default alternates, Open Graph and existing production indexing gate. App sitemap combines content descriptors with home and catalog; no invented modification date.
 
 ## Structure diagram
@@ -26,8 +28,9 @@ flowchart LR
 ```text
 libs/site/content/
 ├── ui/src/lib/
-│   ├── i18n/delivery-payment-dictionary.ts  # exact standalone UK/RU copy
-│   └── delivery-payment/  # header/anchors, terms, order steps, important/offer, contact, UI tests
+│   ├── i18n/delivery-payment-dictionary.ts  # page chrome UK/RU
+│   ├── documents/  # shared DocumentHtml and EditionDate
+│   └── delivery-payment/  # header/anchors, section cards, contact, UI tests
 ├── seo/src/lib/delivery-payment-metadata.ts  # localized domain metadata and unit tests
 └── feature/src/lib/
     ├── delivery-payment-page.tsx  # server composition and focused integration tests

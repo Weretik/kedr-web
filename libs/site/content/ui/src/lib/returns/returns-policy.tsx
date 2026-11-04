@@ -1,37 +1,12 @@
-import type { ReturnsDictionary, ReturnsPolicySection } from '@site/content/model';
+import { demoteHeadings } from '@site/content/model';
 
-function PolicySection({
-  section,
-  nested = false,
-}: {
-  section: ReturnsPolicySection;
-  nested?: boolean;
-}) {
-  const Heading = nested ? 'h4' : 'h3';
-  return (
-    <section className="space-y-3">
-      <Heading className={nested ? 'font-semibold' : 'text-lg font-semibold'}>
-        {section.title}
-      </Heading>
-      {section.intro && <p>{section.intro}</p>}
-      {section.paragraphs?.map((paragraph) => (
-        <p key={paragraph}>{paragraph}</p>
-      ))}
-      {section.items && (
-        <ul className="list-disc space-y-2 pl-5">
-          {section.items.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      )}
-      {section.sections?.map((child) => (
-        <PolicySection key={child.title} section={child} nested />
-      ))}
-    </section>
-  );
-}
+import { DocumentHtml } from '../documents/document-html';
+import { EditionDate } from '../documents/edition-date';
 
-export function ReturnsPolicy({ dictionary }: { dictionary: ReturnsDictionary }) {
+import type { LegalDocument } from '@site/content/model';
+
+/** The full published rules under the summary blocks; their headings sit one level below this section. */
+export function ReturnsPolicy({ document }: { document: LegalDocument }) {
   return (
     <section
       id="return-full-rules"
@@ -39,12 +14,20 @@ export function ReturnsPolicy({ dictionary }: { dictionary: ReturnsDictionary })
       className="scroll-mt-48 border-t border-border pt-8"
     >
       <h2 id="return-full-rules-title" className="text-xl font-bold tracking-tight sm:text-2xl">
-        {dictionary.policyTitle}
+        {document.title}
       </h2>
+      <EditionDate
+        locale={document.locale}
+        effectiveFrom={document.effectiveFrom}
+        className="mt-2 text-sm text-muted-foreground"
+      />
       <div className="mt-4 max-w-4xl space-y-6 text-sm leading-relaxed text-muted-foreground">
-        <p>{dictionary.policyLead}</p>
-        {dictionary.policy.map((section) => (
-          <PolicySection key={section.title} section={section} />
+        <DocumentHtml html={document.leadHtml} />
+        {document.sections.map((section) => (
+          <section key={section.id} className="space-y-3">
+            <h3 className="text-lg font-semibold text-foreground">{section.title}</h3>
+            <DocumentHtml html={demoteHeadings(section.html)} className="[&_h4]:text-foreground" />
+          </section>
         ))}
       </div>
     </section>
