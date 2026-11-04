@@ -140,7 +140,11 @@
       "@admin/documents/model": ["./libs/admin/documents/model/src/index.ts"],
       "@admin/documents/data-access": ["./libs/admin/documents/data-access/src/index.ts"],
       "@admin/documents/ui": ["./libs/admin/documents/ui/src/index.ts"],
-      "@admin/documents/feature": ["./libs/admin/documents/feature/src/index.ts"]
+      "@admin/documents/feature": ["./libs/admin/documents/feature/src/index.ts"],
+      "@admin/media/model": ["./libs/admin/media/model/src/index.ts"],
+      "@admin/media/data-access": ["./libs/admin/media/data-access/src/index.ts"],
+      "@admin/media/ui": ["./libs/admin/media/ui/src/index.ts"],
+      "@admin/media/feature": ["./libs/admin/media/feature/src/index.ts"]
     }
   }
 }

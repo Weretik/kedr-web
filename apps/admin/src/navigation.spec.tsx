@@ -1,5 +1,5 @@
 import { AdminLayout } from '@admin/core/shell';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 describe('Admin navigation', () => {
@@ -15,6 +15,8 @@ describe('Admin navigation', () => {
     );
 
     const navigation = screen.getAllByRole('navigation')[0];
+    // Only the block with the current page opens by itself; «Каталог» is opened by its heading.
+    fireEvent.click(within(navigation).getByRole('button', { name: 'Каталог' }));
     expect(within(navigation).getByRole('link', { name: 'Товари' })).toHaveAttribute(
       'href',
       '/catalog',

@@ -5,6 +5,7 @@ export { RequireAdminSession } from './routes/require-admin-session';
 export { RequireRole } from './routes/require-role';
 export { initializeAdminAuth, login, logout, refreshSession } from './session/auth-session';
 export {
+  canDeleteMedia,
   canEditCatalog,
   canManageRequisites,
   canManageUsers,

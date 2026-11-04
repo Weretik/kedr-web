@@ -7,6 +7,7 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 
 import type { ReactNode } from 'react';
@@ -51,6 +52,7 @@ export const navigationGroups: NavigationGroup[] = [
     items: [
       { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
       { icon: <AccountTreeOutlinedIcon />, label: 'Категорії', to: '/categories' },
+      { icon: <PhotoLibraryOutlinedIcon />, label: 'Медіа', to: '/media' },
     ],
   },
   {

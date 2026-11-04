@@ -94,7 +94,7 @@ Rules:
   | Block   | Put here                                                                                      | Visible to     |
   | ------- | --------------------------------------------------------------------------------------------- | -------------- |
   | Продаж  | Orders, customers, order documents: everything about a deal with a client                     | Manager, Admin |
-  | Каталог | Products, categories, brands, product media                                                   | Manager, Admin |
+  | Каталог | Products, categories, brands, media library                                                   | Manager, Admin |
   | Сайт    | Content a site visitor sees: articles, gallery, FAQ, company contacts                         | Manager, Admin |
   | Система | Access and legal data of the company: users, requisites (`access` in `navigation-groups.tsx`) | Admin only     |
 

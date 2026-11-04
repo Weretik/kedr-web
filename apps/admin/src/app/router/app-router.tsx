@@ -4,6 +4,7 @@ import { createClientsRoutes } from '@admin/clients/feature';
 import { companyAdminRoutes, companyRoutes } from '@admin/company/feature';
 import {
   canEditCatalog,
+  canDeleteMedia,
   canManageRequisites,
   canManageUsers,
   LoginPage,
@@ -17,6 +18,7 @@ import {
 import { AdminLayout, AdminShellSessionProvider } from '@admin/core/shell';
 import { dashboardRoutes } from '@admin/dashboard/feature';
 import { documentsRoutes } from '@admin/documents/feature';
+import { createMediaRoutes } from '@admin/media/feature';
 import {
   addProductToCurrentOrder,
   clearCurrentOrder,
@@ -52,10 +54,16 @@ function AdminShellRoute({ user }: { user: SessionUser }) {
 const usersRoutes = createUsersRoutes({ useCurrentUserId: useSignedInUserId });
 const profileRoutes = createProfileRoutes({ onProfileChanged: refreshSession });
 const categoriesRoutes = createCategoriesRoutes({ useCanEditCatalog });
+const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
 
 function useCanEditCatalog(): boolean {
   const session = useAdminSession();
   return session.status === 'authenticated' && canEditCatalog(session.user);
+}
+
+function useCanDeleteMedia(): boolean {
+  const session = useAdminSession();
+  return session.status === 'authenticated' && canDeleteMedia(session.user);
 }
 
 function useSignedInUserId(): string | null {
@@ -84,6 +92,7 @@ export function AppRouter() {
             <CustomerOrdersPanel counterpartyId={counterpartyId} returnTo={returnTo} />
           ),
         }),
+        ...mediaRoutes,
         ...articlesRoutes,
         ...companyRoutes,
         ...documentsRoutes,
