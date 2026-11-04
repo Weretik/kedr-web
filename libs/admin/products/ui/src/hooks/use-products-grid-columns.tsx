@@ -17,6 +17,7 @@ export interface ProductsGridColumnsOptions {
   booleanFilters: Partial<Record<ProductBooleanField, boolean>>;
   onBooleanFilterChange: (field: ProductBooleanField, value: boolean | undefined) => void;
   onViewProduct: (product: AdminProductListItem) => void;
+  onEditProduct?: (product: AdminProductListItem) => void;
   onAddProduct?: (product: AdminProductListItem) => void;
   priceFilterable: boolean;
 }
@@ -27,6 +28,7 @@ export function useProductsGridColumns({
   booleanFilters,
   onBooleanFilterChange,
   onViewProduct,
+  onEditProduct,
   onAddProduct,
   priceFilterable,
 }: ProductsGridColumnsOptions) {
@@ -76,9 +78,14 @@ export function useProductsGridColumns({
         headerName: 'Дії',
         sortable: false,
         filterable: false,
-        width: onAddProduct ? 130 : 80,
+        width: 80 + 44 * ((onEditProduct ? 1 : 0) + (onAddProduct ? 1 : 0)),
         renderCell: ({ row }) => (
-          <ProductsViewActionCell product={row} onView={onViewProduct} onAdd={onAddProduct} />
+          <ProductsViewActionCell
+            product={row}
+            onView={onViewProduct}
+            onEdit={onEditProduct}
+            onAdd={onAddProduct}
+          />
         ),
       },
     ],
@@ -87,6 +94,7 @@ export function useProductsGridColumns({
       categoriesById,
       onAddProduct,
       onBooleanFilterChange,
+      onEditProduct,
       onViewProduct,
       phone,
       priceFilterable,

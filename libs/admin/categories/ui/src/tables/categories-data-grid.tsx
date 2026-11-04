@@ -15,6 +15,8 @@ interface CategoriesDataGridProps {
   error: boolean;
   onRetry: () => void;
   onView: (category: AdminCategory) => void;
+  /** Administrators only: the pencil opens the edit panel over the list. */
+  onEdit?: (category: AdminCategory) => void;
 }
 
 /** Category tree in display order with client-side search over name and address. */
@@ -22,11 +24,12 @@ export function CategoriesDataGrid({
   error,
   loading,
   mode,
+  onEdit,
   onRetry,
   onView,
   rows,
 }: CategoriesDataGridProps) {
-  const columns = useMemo(() => categoriesColumns(mode, onView), [mode, onView]);
+  const columns = useMemo(() => categoriesColumns(mode, onView, onEdit), [mode, onView, onEdit]);
   const emptyMessage = mode === 'deleted' ? 'Видалених категорій немає.' : 'Категорій немає.';
 
   return (

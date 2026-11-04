@@ -1,5 +1,5 @@
 import { emptyCategoryContent } from '@admin/categories/model';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -86,18 +86,54 @@ describe('categories pages', () => {
     expect(api.list).toHaveBeenLastCalledWith({ deleted: true });
   });
 
-  it('gives managers a read-only page', () => {
+  it('gives managers a read-only page without an edit button', () => {
     renderDetails(false);
 
     expect(screen.getByRole('heading', { name: 'Завіси' })).toBeTruthy();
     expect(screen.getByText('/uk/catalog/zavisy')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Змінити' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Редагувати' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Зберегти' })).toBeNull();
+  });
+
+  it('keeps the administrator page read-only until «Редагувати» opens the panel', () => {
+    renderDetails(true);
+
+    expect(screen.queryByLabelText('Заголовок H1')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
+
+    const panel = screen.getByRole('dialog', { name: 'Редагування категорії' });
+    expect(within(panel).getByRole('textbox', { name: /^Адреса/ })).toBeTruthy();
+    expect(within(panel).getAllByLabelText('Заголовок H1').length).toBe(2);
+  });
+
+  it('opens the same panel from the pencil in the list', () => {
+    render(
+      <MemoryRouter initialEntries={['/categories']}>
+        <CategoriesPage canEdit canSeeDeleted />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати категорію Завіси' }));
+
+    expect(screen.getByRole('dialog', { name: 'Редагування категорії' })).toBeTruthy();
+    expect(api.one).toHaveBeenLastCalledWith(5, { skip: false });
+  });
+
+  it('shows no pencil to managers', () => {
+    render(
+      <MemoryRouter initialEntries={['/categories']}>
+        <CategoriesPage canSeeDeleted={false} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Переглянути категорію Завіси' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Редагувати категорію Завіси' })).toBeNull();
   });
 
   it('saves the Ukrainian text of an administrator and keeps the Russian tab', async () => {
     api.save.mockReturnValue({ unwrap: () => Promise.resolve(emptyCategoryContent('uk')) });
     renderDetails(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
 
     fireEvent.change(screen.getAllByLabelText('Заголовок H1')[0], {
       target: { value: 'Дверні завіси' },
@@ -115,6 +151,7 @@ describe('categories pages', () => {
 
   it('does not send content over the limits', () => {
     renderDetails(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
 
     fireEvent.change(screen.getAllByLabelText('SEO-заголовок (title)')[0], {
       target: { value: 'a'.repeat(71) },

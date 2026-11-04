@@ -15,13 +15,12 @@ interface CategoryContentSectionProps {
   loading: boolean;
   error: boolean;
   onRetry: () => void;
-  canEdit: boolean;
-  editor: ReturnType<typeof useCategoryContentEditor>;
+  /** With an editor the section is the form of the edit panel; without one it is read-only. */
+  editor?: ReturnType<typeof useCategoryContentEditor>;
 }
 
 /** SEO text and FAQ per language; both panes stay mounted so unsaved text survives a tab switch. */
 export function CategoryContentSection({
-  canEdit,
   content,
   editor,
   error,
@@ -51,13 +50,12 @@ export function CategoryContentSection({
                 aria-controls={`category-content-${code}`}
                 id={`category-content-tab-${code}`}
                 key={code}
-                label={editor.isDirty(code) ? `${languageLabels[code]} •` : languageLabels[code]}
+                label={editor?.isDirty(code) ? `${languageLabels[code]} •` : languageLabels[code]}
                 value={code}
               />
             ))}
           </Tabs>
           {contentLanguages.map((code) => {
-            const draft = editor.draftOf(code) ?? content[code];
             return (
               <Box
                 aria-labelledby={`category-content-tab-${code}`}
@@ -66,10 +64,10 @@ export function CategoryContentSection({
                 key={code}
                 role="tabpanel"
               >
-                {canEdit ? (
+                {editor ? (
                   <CategoryContentForm
                     dirty={editor.isDirty(code)}
-                    draft={draft}
+                    draft={editor.draftOf(code) ?? content[code]}
                     errors={editor.errorsOf(code)}
                     onChange={(next) => editor.change(code, next)}
                     onReset={() => editor.reset(code)}

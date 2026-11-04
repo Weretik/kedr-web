@@ -37,6 +37,7 @@ interface ProductsDataGridProps {
   onRetry: () => void;
   onSortChange: (sort: ProductsListSort) => void;
   onViewProduct: (product: AdminProductListItem) => void;
+  onEditProduct?: (product: AdminProductListItem) => void;
   onAddProduct?: (product: AdminProductListItem) => void;
   page: number;
   pageSize: number;
@@ -65,6 +66,7 @@ export function ProductsDataGrid({
   onRetry,
   onSortChange,
   onViewProduct,
+  onEditProduct,
   onAddProduct,
   page,
   pageSize,
@@ -81,6 +83,7 @@ export function ProductsDataGrid({
     booleanFilters,
     onBooleanFilterChange,
     onViewProduct,
+    onEditProduct,
     onAddProduct,
     priceFilterable,
   });

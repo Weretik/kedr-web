@@ -1,16 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ChangeSlugDialog } from './change-slug-dialog';
+import { SlugEditCard } from './slug-edit-card';
 import { slugChangeErrorMessage, validateSlug } from './slug-rules';
 
-const renderDialog = (onSubmit = vi.fn()) => {
+const renderCard = (onSubmit = vi.fn()) => {
   render(
-    <ChangeSlugDialog
+    <SlugEditCard
       currentSlug="zavisy"
-      onClose={vi.fn()}
       onSubmit={onSubmit}
-      open
       pathPrefix="/uk/catalog/"
       saving={false}
     />,
@@ -31,22 +29,26 @@ describe('validateSlug', () => {
   );
 });
 
-describe('ChangeSlugDialog', () => {
+describe('SlugEditCard', () => {
   it('shows the rule and sends nothing for an invalid address', () => {
-    const onSubmit = renderDialog();
+    const onSubmit = renderCard();
 
-    fireEvent.change(screen.getByLabelText(/Адреса/), { target: { value: 'zavisy dverni' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Зберегти' }));
+    fireEvent.change(screen.getByRole('textbox', { name: /^Адреса/ }), {
+      target: { value: 'zavisy dverni' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти адресу' }));
 
     expect(screen.getByText(/Лише малі латинські літери/)).toBeTruthy();
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it('sends a typed address or a regenerate request', () => {
-    const onSubmit = renderDialog();
+    const onSubmit = renderCard();
 
-    fireEvent.change(screen.getByLabelText(/Адреса/), { target: { value: ' Zavisy-Dverni ' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Зберегти' }));
+    fireEvent.change(screen.getByRole('textbox', { name: /^Адреса/ }), {
+      target: { value: ' Zavisy-Dverni ' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти адресу' }));
     fireEvent.click(screen.getByRole('button', { name: 'Згенерувати з назви' }));
 
     expect(onSubmit).toHaveBeenNthCalledWith(1, { slug: 'zavisy-dverni' });

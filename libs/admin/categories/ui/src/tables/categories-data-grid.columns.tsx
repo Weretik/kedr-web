@@ -55,6 +55,7 @@ const deletedAtColumn: GridColDef<AdminCategory> = {
 export function categoriesColumns(
   mode: 'active' | 'deleted',
   onView: (category: AdminCategory) => void,
+  onEdit?: (category: AdminCategory) => void,
 ): GridColDef<AdminCategory>[] {
   const columns =
     mode === 'deleted'
@@ -69,8 +70,10 @@ export function categoriesColumns(
             filterable: false,
             headerAlign: 'center',
             headerName: 'Дії',
-            renderCell: ({ row }) => <CategoryViewCell category={row} onView={onView} />,
-            width: 80,
+            renderCell: ({ row }) => (
+              <CategoryViewCell category={row} onEdit={onEdit} onView={onView} />
+            ),
+            width: onEdit ? 110 : 80,
           } satisfies GridColDef<AdminCategory>,
         ];
 

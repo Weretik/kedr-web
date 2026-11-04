@@ -17,7 +17,10 @@ export function createProductsRoutes({
   useCanEditCatalog = () => false,
 }: ProductsRouteOptions): RouteObject[] {
   function ProductsRoute() {
-    return <ProductsPage canSeeDeleted={useCanEditCatalog()} onAddProduct={onAddProduct} />;
+    const canEdit = useCanEditCatalog();
+    return (
+      <ProductsPage canEditSlug={canEdit} canSeeDeleted={canEdit} onAddProduct={onAddProduct} />
+    );
   }
 
   function ProductDetailsRoute() {

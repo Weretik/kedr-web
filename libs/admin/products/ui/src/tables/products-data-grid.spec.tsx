@@ -14,6 +14,7 @@ describe('ProductsDataGrid responsive actions', () => {
       removeEventListener: vi.fn(),
     }));
     const onViewProduct = vi.fn();
+    const onEditProduct = vi.fn();
     const onFilterChange = vi.fn();
     const row = {
       id: 7,
@@ -70,6 +71,7 @@ describe('ProductsDataGrid responsive actions', () => {
         onPageSizeChange={() => undefined}
         onRetry={() => undefined}
         onSortChange={() => undefined}
+        onEditProduct={onEditProduct}
         onViewProduct={onViewProduct}
         page={0}
         pageSize={20}
@@ -107,6 +109,8 @@ describe('ProductsDataGrid responsive actions', () => {
     expect(screen.queryByText('Переглянути')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Переглянути товар Кабель, ID 7' }));
     expect(onViewProduct).toHaveBeenCalledWith(row);
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати товар Кабель, ID 7' }));
+    expect(onEditProduct).toHaveBeenCalledWith(row);
   }, 10000);
 
   it('shows separate boolean columns with a check only for true values', () => {
