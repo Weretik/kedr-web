@@ -16,3 +16,6 @@ export const canManageUsers = (user: SessionUser): boolean => user.roles.include
 
 /** Catalog addresses, category texts, and deleted rows are for administrators only. */
 export const canEditCatalog = (user: SessionUser): boolean => user.roles.includes('Admin');
+
+/** Media files and folders are deleted from the CDN for good, so only administrators may. */
+export const canDeleteMedia = (user: SessionUser): boolean => user.roles.includes('Admin');

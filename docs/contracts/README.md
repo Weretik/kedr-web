@@ -45,6 +45,8 @@ Do not edit the YAML snapshot or generated TypeScript manually. To update them: 
   - [Products with unavailable photos](catalog/missing-photo-products.md)
   - [Admin categories](catalog/admin-categories.md)
   - [Quick order](catalog/quick-order.md)
+- Media:
+  - [Admin media library](media/admin-media.md)
 - Identity:
   - [Session](identity/session.md)
   - [Staff accounts](identity/staff-accounts.md)
@@ -93,6 +95,17 @@ A detailed consumer projection is needed only for operations with status `used`,
 | Identity profile   | `removeMyAvatar`                        | `DELETE /api/profile/avatar`                                | Admin, Manager               | Admin                      | used         |
 | Identity profile   | `changeMyEmail`                         | `PUT /api/profile/email`                                    | Admin                        | Admin                      | used         |
 | Identity profile   | `changeMyPassword`                      | `PUT /api/profile/password`                                 | Admin                        | Admin                      | used         |
+| Media              | `getAdminMediaFolders`                  | `GET /api/admin/media/folders`                              | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `createAdminMediaFolder`                | `POST /api/admin/media/folders`                             | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `updateAdminMediaFolder`                | `PUT /api/admin/media/folders/{id}`                         | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `deleteAdminMediaFolder`                | `DELETE /api/admin/media/folders/{id}`                      | Admin                        | Admin                      | used         |
+| Media              | `getAdminMediaFiles`                    | `GET /api/admin/media/files`                                | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `uploadAdminMediaFile`                  | `POST /api/admin/media/files`                               | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `getAdminMediaFile`                     | `GET /api/admin/media/files/{id}`                           | staff (Manager or Admin)     | —                          | not consumed |
+| Media              | `updateAdminMediaFile`                  | `PUT /api/admin/media/files/{id}`                           | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `deleteAdminMediaFile`                  | `DELETE /api/admin/media/files/{id}`                        | Admin                        | Admin                      | used         |
+| Media              | `replaceAdminMediaFile`                 | `PUT /api/admin/media/files/{id}/content`                   | staff (Manager or Admin)     | Admin                      | used         |
+| Media              | `moveAdminMediaFiles`                   | `POST /api/admin/media/files/move`                          | staff (Manager or Admin)     | Admin                      | used         |
 | Sales catalog      | `getSalesCatalogProducts`               | `POST /api/sales/{lang}/catalog/products`                   | authenticated                | —                          | not consumed |
 | Sales customers    | `getAdminCustomers`                     | `GET /api/admin/customers`                                  | staff (Manager or Admin)     | Mobile cart, orders, Admin | used         |
 | Sales customers    | `getAdminCustomerById`                  | `GET /api/admin/customers/{counterpartyId}`                 | staff (Manager or Admin)     | Admin                      | used         |

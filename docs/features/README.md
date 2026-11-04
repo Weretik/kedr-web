@@ -14,6 +14,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Dashboard](admin/dashboard.md)               | `/dashboard`                                         | Visual metrics are currently static                           |
 | [Products](admin/products.md)                 | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set            |
 | [Categories](admin/categories.md)             | `/categories`, `/categories/:categoryId`             | Tree, public address, SEO text and FAQ; Admin edits           |
+| [Media](admin/media.md)                       | `/media`                                             | CDN picture library: folders, upload, replace; Admin deletes  |
 | [Articles](admin/articles.md)                 | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit            |
 | [Company contacts](admin/company-contacts.md) | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit |
 | [Customers](admin/clients.md)                 | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                               |

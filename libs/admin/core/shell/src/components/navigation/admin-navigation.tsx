@@ -5,6 +5,7 @@ import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { Box, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
@@ -20,6 +21,7 @@ const navigationItems = [
   { icon: <AccountTreeOutlinedIcon />, label: 'Категорії', to: '/categories' },
   { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
   { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
+  { icon: <PhotoLibraryOutlinedIcon />, label: 'Медіа', to: '/media' },
   { icon: <ArticleOutlinedIcon />, label: 'Статті', to: '/articles' },
   { icon: <ContactPhoneOutlinedIcon />, label: 'Контакти', to: '/company-contacts' },
 ];
