@@ -185,7 +185,21 @@ components:
     AdminGalleryItem:
       type: object
       required:
-        [id, kind, mediaFileId, youtubeId, position, titleUk, titleRu, captionUk, captionRu, previewUrl, fileName, fileMissing, updatedAt]
+        [
+          id,
+          kind,
+          mediaFileId,
+          youtubeId,
+          position,
+          titleUk,
+          titleRu,
+          captionUk,
+          captionRu,
+          previewUrl,
+          fileName,
+          fileMissing,
+          updatedAt,
+        ]
       properties:
         id: { type: integer, format: int64 }
         kind: { $ref: '#/components/schemas/GalleryItemKind' }
@@ -196,9 +210,14 @@ components:
         titleRu: { type: [string, 'null'], maxLength: 150 }
         captionUk: { type: [string, 'null'], maxLength: 500 }
         captionRu: { type: [string, 'null'], maxLength: 500 }
-        previewUrl: { type: [string, 'null'], description: 'Poster or CDN URL; null for a photo whose file is gone.' }
+        previewUrl:
+          {
+            type: [string, 'null'],
+            description: 'Poster or CDN URL; null for a photo whose file is gone.',
+          }
         fileName: { type: [string, 'null'], description: Library file name of a photo. }
-        fileMissing: { type: boolean, description: A photo whose library file was deleted; the site hides it. }
+        fileMissing:
+          { type: boolean, description: A photo whose library file was deleted; the site hides it. }
         updatedAt: { type: string, format: date-time }
     GalleryTexts:
       type: object

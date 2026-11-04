@@ -1,4 +1,4 @@
-import { getGalleryMedia } from '@site/content/data-access';
+import { getGallery } from '@site/content/data-access';
 import { INITIAL_GALLERY_COUNT, getGalleryDictionary } from '@site/content/model';
 import { buildGalleryBreadcrumbJsonLd } from '@site/content/seo';
 import { GalleryBrowser, GalleryHeader } from '@site/content/ui';
@@ -6,10 +6,15 @@ import { JsonLd } from '@site/core/seo';
 
 import type { Locale } from '@site/core/i18n';
 
-/** Static server content; only the collection's viewing controls hydrate in the browser. */
-export function GalleryPage({ locale }: { locale: Locale }) {
+/**
+ * Server-rendered cards from the admin gallery; only the viewing controls hydrate in the browser.
+ * An API failure is an error, not an empty gallery.
+ */
+export async function GalleryPage({ locale }: { locale: Locale }) {
   const dictionary = getGalleryDictionary(locale);
-  const items = getGalleryMedia(locale);
+  const gallery = await getGallery(locale);
+  if (gallery.kind === 'unavailable') throw new Error('Content API is unavailable');
+  const { items } = gallery;
   const remaining = items.slice(INITIAL_GALLERY_COUNT);
 
   return (
