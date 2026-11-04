@@ -1,15 +1,13 @@
 import { useUpdateCompanyContactsMutation } from '@admin/company/data-access';
 import {
+  companyContactsFields,
   contactsToDraft,
   isSameContactsDraft,
   validateCompanyContactsDraft,
 } from '@admin/company/model';
 import { useMemo, useState } from 'react';
 
-import {
-  companyContactsErrorMessage,
-  companyContactsServerErrors,
-} from '../errors/company-contacts-error-message';
+import { companySaveErrorMessage, serverFieldErrors } from '../errors/company-save-errors';
 
 import type {
   CompanyContacts,
@@ -54,9 +52,9 @@ export function useCompanyContactsEditor(stored: CompanyContacts | undefined, on
       setDraft(undefined);
       onSaved();
     } catch (error) {
-      const fieldErrors = companyContactsServerErrors(error);
+      const fieldErrors = serverFieldErrors(error, companyContactsFields);
       if (fieldErrors) setErrors(fieldErrors);
-      setSaveError(companyContactsErrorMessage(error));
+      setSaveError(companySaveErrorMessage(error));
     }
   };
 

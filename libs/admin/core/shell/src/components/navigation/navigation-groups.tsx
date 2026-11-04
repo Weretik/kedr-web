@@ -1,3 +1,4 @@
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
@@ -10,8 +11,8 @@ import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import type { ReactNode } from 'react';
 
 export interface NavigationItem {
-  /** Visible only to Admin (the same condition as `canManageUsers`). */
-  adminOnly?: boolean;
+  /** `admin`: only the Admin role; `userManagement`: whoever may manage users. Omitted: everyone. */
+  access?: 'admin' | 'userManagement';
   icon: ReactNode;
   label: string;
   to: string;
@@ -63,7 +64,18 @@ export const navigationGroups: NavigationGroup[] = [
     id: 'system',
     label: 'Система',
     items: [
-      { adminOnly: true, icon: <ManageAccountsOutlinedIcon />, label: 'Користувачі', to: '/users' },
+      {
+        access: 'admin',
+        icon: <AccountBalanceOutlinedIcon />,
+        label: 'Реквізити',
+        to: '/company-requisites',
+      },
+      {
+        access: 'userManagement',
+        icon: <ManageAccountsOutlinedIcon />,
+        label: 'Користувачі',
+        to: '/users',
+      },
     ],
   },
 ];

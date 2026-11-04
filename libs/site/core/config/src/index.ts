@@ -3,4 +3,5 @@ export { FALLBACK_COMPANY_CONTACTS, formatUaPhone, viberChatLink } from './lib/c
 export type { CompanyContacts } from './lib/company-contacts';
 export { createSiteConfig, siteConfig } from './lib/site-config';
 export type { SiteConfig, SiteEnvironment } from './lib/site-config';
-export { COMPANY_REQUISITES } from './lib/company-requisites';
+export { FALLBACK_COMPANY_REQUISITES } from './lib/company-requisites';
+export type { CompanyRequisites } from './lib/company-requisites';

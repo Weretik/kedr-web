@@ -4,7 +4,7 @@
 
 Страница показывает подтверждённые данные администрации ClassKedr и банковские реквизиты, копирует отдельно IBAN либо полный шестистрочный набор, предлагает согласовать оплату заказа с менеджером. UI поддерживает UK/RU, текущие light/dark tokens и mobile stacking. Официальное имя сохраняется на украинском в обеих локалях.
 
-Локальная реализация выполнена 2026-11-03. EN-001 закрыт владельцем; EN-002 остаётся внешним publication gate для оферты/политики. Public-offer route появился отдельно, privacy-policy в проверенных destinations ещё отсутствует. Source/компонентная проверка href не означает HTTP-доступность.
+Локальная реализация выполнена 2026-11-03. С 2026-11-04 значения редактирует администратор ([admin company requisites](../admin/company-requisites.md)): [`getCompanyRequisites()`](../../../libs/site/shared/company/src/lib/requisites/company-requisites-loader.ts) читает `GET /api/content/requisites` с `'use cache'`, тегами `content` и `content:requisites` и десятиминутной жизнью; если API недоступен, минуту отдаёт `FALLBACK_COMPANY_REQUISITES` из core/config и повторяет. Держите fallback равным сохранённой записи. EN-001 закрыт владельцем; EN-002 остаётся внешним publication gate для оферты/политики. Public-offer route появился отдельно, privacy-policy в проверенных destinations ещё отсутствует. Source/компонентная проверка href не означает HTTP-доступность.
 
 ## Architecture
 
@@ -12,7 +12,7 @@
 flowchart LR
   Route["Next requisites route"] --> Feature["content/feature: RequisitesPage"]
   Route --> SEO["content/seo: metadata"]
-  Feature --> Facts["core/config: COMPANY_REQUISITES + shared/company phone"]
+  Feature --> Facts["shared/company: getCompanyRequisites + phone"]
   Feature --> Model["content/model: dictionary + copy formatter"]
   Feature --> UI["content/ui: RequisitesContent"]
   Feature --> SEO
@@ -23,7 +23,7 @@ flowchart LR
   Sitemap["existing app sitemap"] --> Registry["CONTENT_SITEMAP_PAGES"]
 ```
 
-Core config владеет фактическими строками, model — presentation types, UK/RU copy и pure formatter. Feature собирает props/payload; UI не импортирует банковский config. SEO имеет отдельный маленький locale record по boundary allowlist. API, HTTP data-access, формы и персональное хранилище не добавлялись.
+Core config владеет типом и запасными строками, model — presentation types, UK/RU copy и pure formatter. Feature собирает props/payload; UI не импортирует банковский config. SEO имеет отдельный маленький locale record по boundary allowlist. Данные приходят через shared/company; формы и персональное хранилище не добавлялись.
 
 Весь основной контент и BreadcrumbList доступны в server HTML. Только copy leaf гидратируется: idle/pending/success/error, ref-guard, live status, selectable single/multiline fallback и retry. Clipboard error не вызывает звонок. Единственный main, shell, locale/theme controls и Organization остаются у существующих владельцев; WebSite принадлежит главной.
 
@@ -31,7 +31,8 @@ Core config владеет фактическими строками, model — 
 
 ```text
 apps/site/src/app/[locale]/(content)/requisites/page.tsx  # thin async locale route/metadata
-libs/site/core/config/src/lib/company-requisites.ts     # owner-confirmed official facts
+libs/site/core/config/src/lib/company-requisites.ts     # type and code fallback
+libs/site/shared/company/src/lib/requisites/            # cached API read, mapper, cache tags
 libs/site/content/
 ├── model/src/lib/
 │   ├── requisites-types.ts                            # readonly presentation contracts

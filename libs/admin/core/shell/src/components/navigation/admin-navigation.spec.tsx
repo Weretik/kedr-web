@@ -30,12 +30,19 @@ describe('AdminNavigation by role', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Система' }));
 
     expect(screen.getByRole('link', { name: 'Користувачі' }).getAttribute('href')).toBe('/users');
+    expect(screen.getByRole('link', { name: 'Реквізити' }).getAttribute('href')).toBe(
+      '/company-requisites',
+    );
+    expect(screen.getByRole('link', { name: 'Реквізити' }).getAttribute('href')).toBe(
+      '/company-requisites',
+    );
   });
 
   it('hides the users section from a manager', () => {
     renderNavigation(false, '/orders');
 
     expect(screen.queryByRole('link', { name: 'Користувачі' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Реквізити' })).toBeNull();
     expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
   });
 

@@ -107,13 +107,15 @@ const listSx = {
 export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNavigationProps) {
   const { pathname } = useLocation();
   const user = useAdminShellUser();
-  const canManageUsers = user?.canManageUsers === true;
+  const isAllowed = (item: NavigationItem) =>
+    item.access === undefined ||
+    (item.access === 'admin' ? user?.isAdmin === true : user?.canManageUsers === true);
 
   // A block with no items for this role (for example «Система» for a manager) is hidden.
   const groups = navigationGroups
     .map((group): NavigationGroup => ({
       ...group,
-      items: group.items.filter((item) => !item.adminOnly || canManageUsers),
+      items: group.items.filter(isAllowed),
     }))
     .filter((group) => group.items.length > 0);
 

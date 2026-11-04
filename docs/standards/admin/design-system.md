@@ -91,12 +91,12 @@ Rules:
 - **Navigation item:** 44 px high (40 px inside a block), 12 px radius, muted text at rest, a light overlay on hover; the active item has a green-tinted background with light-green text and `aria-current="page"`.
 - **Navigation blocks:** «Огляд» stands alone at the top, then collapsible blocks (heading button with `aria-expanded`, chevron, items inside). The block with the current page opens automatically; the user may open several. Collapsed to icons, headings disappear and blocks are separated by a thin line. A block with no items for the user's role is hidden. Items and blocks are configured in `navigation-groups.tsx`.
 
-  | Block   | Put here                                                                    | Visible to     |
-  | ------- | --------------------------------------------------------------------------- | -------------- |
-  | Продаж  | Orders, customers, order documents: everything about a deal with a client   | Manager, Admin |
-  | Каталог | Products, categories, brands, product media                                 | Manager, Admin |
-  | Сайт    | Content a site visitor sees: articles, gallery, FAQ, company contacts       | Manager, Admin |
-  | Система | Access and legal data of the company: users, requisites (`adminOnly: true`) | Admin only     |
+  | Block   | Put here                                                                                      | Visible to     |
+  | ------- | --------------------------------------------------------------------------------------------- | -------------- |
+  | Продаж  | Orders, customers, order documents: everything about a deal with a client                     | Manager, Admin |
+  | Каталог | Products, categories, brands, product media                                                   | Manager, Admin |
+  | Сайт    | Content a site visitor sees: articles, gallery, FAQ, company contacts                         | Manager, Admin |
+  | Система | Access and legal data of the company: users, requisites (`access` in `navigation-groups.tsx`) | Admin only     |
 
   A new page goes into the block by its subject, never into a new block by default. Add a block only when no existing one fits, and record it in this table.
 

@@ -16,7 +16,7 @@ All projects were created with Nx generators (`@nx/next:application`, `@nx/react
 | `site-core-shell`          | `libs/site/core/shell`          | `scope:site`, `scope:site-shared`, `type:shell`       | Header, footer, theme, language switch, shell dictionary                                                                                        |
 | `site-shared-ui`           | `libs/site/shared/ui`           | `scope:site`, `scope:site-shared`, `type:ui`          | shadcn/ui primitives (`Button`, `Sheet`, `cn`)                                                                                                  |
 | `site-shared-api-client`   | `libs/site/shared/api-client`   | `scope:site`, `scope:site-shared`, `type:data-access` | Server-only typed catalog GET and separate fixed anonymous no-store order POST                                                                  |
-| `site-shared-company`      | `libs/site/shared/company`      | `scope:site`, `scope:site-shared`, `type:data-access` | Cached admin-edited company contacts (`getCompanyContacts`) with the code fallback                                                              |
+| `site-shared-company`      | `libs/site/shared/company`      | `scope:site`, `scope:site-shared`, `type:data-access` | Cached admin-edited company contacts and requisites (`getCompanyContacts`, `getCompanyRequisites`) with code fallbacks                          |
 | `site-catalog-model`       | `libs/site/catalog/model`       | `scope:site`, `domain:catalog`, `type:model`          | Catalog section and product summary types, locale-free catalog URLs                                                                             |
 | `site-catalog-data-access` | `libs/site/catalog/data-access` | `scope:site`, `domain:catalog`, `type:data-access`    | Cached category tree and product reads (`'use cache'`), DTO mappers, cache tags                                                                 |
 | `site-catalog-ui`          | `libs/site/catalog/ui`          | `scope:site`, `domain:catalog`, `type:ui`             | Catalog index, product card and grid, price formatting                                                                                          |
@@ -105,7 +105,7 @@ Paths marked **exists** are in the code; the rest are planned by the [migration 
 
 The [articles SDD](../../../specs/site/content/001-articles/README.md) adds one generated data-access project and uses the existing content model/UI/SEO/feature projects. The owner explicitly approved temporary local source while the provider has no article API. Only data-access contains full localized source; UI never imports it and the size selector receives scalar choices/strings only. Future DB/admin/API remains a separate migration stage.
 
-The [requisites feature](../../../features/site/requisites.md) uses the existing content projects. `core/config` owns owner-confirmed `COMPANY_REQUISITES`, model owns interface labels and exact copy formatting, and only the clipboard leaf is client-side. No new project, alias, boundary exception, global CSS or shell API is added.
+The [requisites feature](../../../features/site/requisites.md) uses the existing content projects. `shared/company` loads the admin-edited requisites with the `FALLBACK_COMPANY_REQUISITES` fallback from `core/config`, model owns interface labels and exact copy formatting, and only the clipboard leaf is client-side. No new project, alias, boundary exception, global CSS or shell API is added.
 
 ## Privacy policy implementation
 
