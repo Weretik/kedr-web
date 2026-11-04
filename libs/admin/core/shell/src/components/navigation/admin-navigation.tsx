@@ -1,6 +1,7 @@
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
@@ -20,6 +21,7 @@ const navigationItems = [
   { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
   { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
   { icon: <ArticleOutlinedIcon />, label: 'Статті', to: '/articles' },
+  { icon: <ContactPhoneOutlinedIcon />, label: 'Контакти', to: '/company-contacts' },
 ];
 
 const usersNavigationItem = {

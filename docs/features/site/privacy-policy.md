@@ -10,7 +10,7 @@ The page provides a short data/purpose/rights summary, eight-section contents, t
 flowchart LR
   Route["Next privacy route"] --> Feature["content/feature: PrivacyPage"]
   Route --> SEO["content/seo: metadata"]
-  Feature --> Config["core/config: COMPANY + siteConfig"]
+  Feature --> Config["core/config: siteConfig; shared/company: contacts"]
   Feature --> Model["content/model: pure dictionary + full source"]
   Feature --> UI["content/ui: privacy blocks"]
   Feature --> SEO
@@ -24,7 +24,7 @@ flowchart LR
 
 No API, data-access, page client state, observer or storage is added. Native links/details and scoped :target/:has styling provide navigation. Selected contents follows the URL fragment; it does not track manual scrolling.
 
-Feature passes new URL(siteConfig.siteUrl).host, COMPANY.email, COMPANY.phone.display and tel: + COMPANY.phone.e164 to the pure model. All 8 source headings, 15 paragraphs and 11 list items per locale remain. Only documented domain/contact replacements and the UK duplicate-verb correction in §4.1 are applied. Angular source is migration input, never a runtime dependency.
+Feature passes new URL(siteConfig.siteUrl).host and the admin-edited email, display phone and `tel:` link from `getCompanyContacts()` to the pure model, which fills the `{email}` and `{phone}` placeholders of §8.1. All 8 source headings, 15 paragraphs and 11 list items per locale remain. Only documented domain/contact replacements and the UK duplicate-verb correction in §4.1 are applied. Angular source is migration input, never a runtime dependency.
 
 Email/tel and same-language public-offer remain real links. Domain metadata delegates to core SEO; the page adds BreadcrumbList, layout owns Organization. One additive sitemap descriptor yields both locales, without invented modification dates. Preview/dev indexing stays off.
 

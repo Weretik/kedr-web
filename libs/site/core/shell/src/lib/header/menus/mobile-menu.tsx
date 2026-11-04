@@ -20,17 +20,18 @@ import { INFO_LINKS, SHELL_PATHS } from '../../navigation/site-navigation';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
 import type { ShellLink } from '../../navigation/catalog-navigation';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 type MobileMenuProps = {
   locale: Locale;
   dictionary: ShellDictionary;
-  phone: { display: string; e164: string };
+  contacts: CompanyContacts;
   categoryLinks: readonly ShellLink[];
 };
 
 /** Phone and tablet menu in a side sheet: catalog sections, information pages, contacts, language, and theme. */
-export function MobileMenu({ locale, dictionary, phone, categoryLinks }: MobileMenuProps) {
+export function MobileMenu({ locale, dictionary, contacts, categoryLinks }: MobileMenuProps) {
   const item = (key: string, path: string, label: string, hash?: string) => (
     <li key={key}>
       <SheetClose asChild>
@@ -53,7 +54,9 @@ export function MobileMenu({ locale, dictionary, phone, categoryLinks }: MobileM
       </SheetTrigger>
       <SheetContent side="left" closeLabel={dictionary.closeMenu}>
         <SheetTitle>{dictionary.menuTitle}</SheetTitle>
-        <SheetDescription>{dictionary.city}</SheetDescription>
+        <SheetDescription>
+          {dictionary.cityPrefix} {contacts.city[locale]}
+        </SheetDescription>
         <ul>
           {item('catalog', SHELL_PATHS.catalog, dictionary.allCategories)}
           {categoryLinks.map((link) => item(link.key, link.path, link.label))}
@@ -66,7 +69,7 @@ export function MobileMenu({ locale, dictionary, phone, categoryLinks }: MobileM
         </ul>
         <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-border pt-4">
           <CopyPhoneButton
-            phone={phone}
+            phone={contacts.phone}
             copyLabel={dictionary.copyPhone}
             copiedLabel={dictionary.phoneCopied}
           />

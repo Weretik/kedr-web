@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { Button } from '@site/shared/ui';
 import { PhoneIcon, ShoppingCartIcon } from 'lucide-react';
@@ -7,6 +6,7 @@ import Link from 'next/link';
 import { SHELL_PATHS } from '../navigation/site-navigation';
 
 import type { ShellDictionary } from '../i18n/shell-dictionary';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
@@ -17,19 +17,18 @@ import type { ReactNode } from 'react';
 export function HeaderActions({
   locale,
   dictionary,
+  phone,
   cartAction,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
+  phone: CompanyContacts['phone'];
   cartAction?: ReactNode;
 }) {
   return (
     <div className="flex items-center gap-1">
       <Button asChild variant="ghost" size="icon" className="size-10 xl:hidden">
-        <a
-          href={`tel:${COMPANY.phone.e164}`}
-          aria-label={`${dictionary.call} ${COMPANY.phone.display}`}
-        >
+        <a href={`tel:${phone.e164}`} aria-label={`${dictionary.call} ${phone.display}`}>
           <PhoneIcon strokeWidth={1.75} />
         </a>
       </Button>

@@ -1,3 +1,4 @@
+import { FALLBACK_COMPANY_CONTACTS } from '@site/core/config';
 import { render, screen, within } from '@testing-library/react';
 
 import { SiteShell } from '../site-shell';
@@ -16,6 +17,7 @@ describe('SiteShell cart action slots', () => {
     (locale) => {
       render(
         <SiteShell
+          contacts={FALLBACK_COMPANY_CONTACTS}
           locale={locale}
           cartAction={<button type="button">Main cart</button>}
           compactCartAction={<button type="button">Compact cart</button>}
@@ -48,6 +50,7 @@ describe('SiteShell cart action slots', () => {
   it.each(['main', 'compact'] as const)('replaces only the supplied %s cart surface', (surface) => {
     render(
       <SiteShell
+        contacts={FALLBACK_COMPANY_CONTACTS}
         locale="uk"
         cartAction={surface === 'main' ? <button type="button">External cart</button> : undefined}
         compactCartAction={
@@ -66,7 +69,11 @@ describe('SiteShell cart action slots', () => {
   });
 
   it.each(['uk', 'ru'] as const)('preserves localized checkout fallbacks in %s', (locale) => {
-    render(<SiteShell locale={locale}>content</SiteShell>);
+    render(
+      <SiteShell contacts={FALLBACK_COMPANY_CONTACTS} locale={locale}>
+        content
+      </SiteShell>,
+    );
 
     const fallbacks = cartFallbacks(screen.getByRole('banner'), locale);
     expect(fallbacks).toHaveLength(2);

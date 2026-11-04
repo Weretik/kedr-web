@@ -44,6 +44,7 @@ export function checkoutFixture(overrides: Partial<CheckoutViewProps> = {}): Che
     resultKind: null,
     receipt: null,
     canSubmit: true,
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
     onDraftChange: () => undefined,
     onFieldBlur: () => undefined,
     onSubmit: () => undefined,

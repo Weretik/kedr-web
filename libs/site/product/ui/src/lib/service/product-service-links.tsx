@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import {
   ArrowUpRightIcon,
@@ -13,6 +12,7 @@ import Link from 'next/link';
 
 import { getProductDictionary } from '../i18n/product-dictionary';
 
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 const textLink =
@@ -71,7 +71,13 @@ export function ProductServiceLinks({ locale }: { locale: Locale }) {
   );
 }
 
-export function ProductHelp({ locale }: { locale: Locale }) {
+export function ProductHelp({
+  locale,
+  phone,
+}: {
+  locale: Locale;
+  phone: CompanyContacts['phone'];
+}) {
   const dictionary = getProductDictionary(locale);
   return (
     <aside className="mt-8 flex min-w-0 flex-wrap items-center justify-between gap-5 border-t border-border py-6">
@@ -84,11 +90,11 @@ export function ProductHelp({ locale }: { locale: Locale }) {
         </Link>
       </div>
       <a
-        href={`tel:${COMPANY.phone.e164}`}
+        href={`tel:${phone.e164}`}
         className="inline-flex min-h-11 items-center gap-2 text-base font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
       >
         <PhoneIcon aria-hidden className="size-5 shrink-0 text-brand-text" strokeWidth={1.75} />
-        {COMPANY.phone.display}
+        {phone.display}
       </a>
     </aside>
   );

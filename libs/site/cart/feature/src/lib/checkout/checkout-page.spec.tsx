@@ -11,6 +11,7 @@ const { connectionMock } = vi.hoisted(() => ({
 }));
 
 vi.mock('next/server', () => ({ connection: connectionMock }));
+vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn() }));
 
 const privateName = 'Приватний Покупець';
 const privatePhone = '+38 (050) 123-45-67';

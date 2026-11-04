@@ -1,3 +1,4 @@
+import { FALLBACK_COMPANY_CONTACTS as COMPANY_CONTACTS } from '@site/core/config';
 import { render, screen, within } from '@testing-library/react';
 
 import {
@@ -99,7 +100,7 @@ const renderContent = (locale: Locale) => {
       <DeliveryPaymentTerms dictionary={dictionary} />
       <OrderSteps dictionary={dictionary} />
       <ImportantTerms locale={locale} dictionary={dictionary} />
-      <DeliveryContact dictionary={dictionary} />
+      <DeliveryContact dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />
     </>,
   );
 };

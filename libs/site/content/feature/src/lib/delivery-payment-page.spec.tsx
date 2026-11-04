@@ -5,6 +5,21 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { CONTENT_SITEMAP_PAGES } from './content-sitemap';
 import { DeliveryPaymentPage } from './delivery-payment-page';
 
+const { contacts } = vi.hoisted(() => ({
+  contacts: {
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+    email: 'sales@example.test',
+    city: { uk: 'Київ', ru: 'Киев' },
+    links: {
+      telegram: 'https://t.me/kedr_sales',
+      viber: 'viber://chat?number=%2B380671112233',
+      map: 'https://maps.app.goo.gl/abc',
+    },
+  },
+}));
+
+vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
+
 const cases = [
   {
     locale: 'uk',
@@ -21,14 +36,14 @@ const cases = [
 describe('delivery page composition', () => {
   it.each(cases)(
     'renders the complete $locale page in server HTML',
-    ({ locale, title, headings }) => {
-      const html = renderToStaticMarkup(<DeliveryPaymentPage locale={locale} />);
+    async ({ locale, title, headings }) => {
+      const html = renderToStaticMarkup(await DeliveryPaymentPage({ locale }));
       const page = new DOMParser().parseFromString(html, 'text/html');
       expect([...page.querySelectorAll('h1')].map((el) => el.textContent)).toEqual([title]);
       const sectionTitles = [...page.querySelectorAll('h2')].map((el) => el.textContent);
       for (const heading of headings) expect(sectionTitles).toContain(heading);
       expect(page.querySelector(`a[href="/${locale}/public-offer"]`)).not.toBeNull();
-      expect(page.querySelector('a[href="tel:+380687135049"]')).not.toBeNull();
+      expect(page.querySelector('a[href="tel:+380671112233"]')).not.toBeNull();
       expect(page.querySelectorAll('main')).toHaveLength(0);
       expect(page.querySelectorAll('script')).toHaveLength(0);
     },

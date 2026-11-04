@@ -1,5 +1,5 @@
 import { getPrivacyDictionary } from '@site/content/model';
-import { COMPANY, siteConfig } from '@site/core/config';
+import { FALLBACK_COMPANY_CONTACTS as CONTACTS, siteConfig } from '@site/core/config';
 import { cleanup, fireEvent, render, within } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -11,9 +11,9 @@ afterEach(cleanup);
 
 const bindings = {
   siteHost: new URL(siteConfig.siteUrl).host,
-  email: COMPANY.email,
-  phoneDisplay: COMPANY.phone.display,
-  phoneHref: 'tel:' + COMPANY.phone.e164,
+  email: CONTACTS.email,
+  phoneDisplay: CONTACTS.phone.display,
+  phoneHref: 'tel:' + CONTACTS.phone.e164,
 };
 const inlineText = (content: readonly PrivacyInline[]) => content.map((part) => part.text).join('');
 
@@ -85,8 +85,8 @@ describe.each([
     }
     expect(policy.textContent).not.toContain('kedr-web.vercel.app');
     expect(policy.textContent).toContain(bindings.siteHost);
-    expect(policy.textContent).toContain(COMPANY.email);
-    expect(policy.textContent).toContain(COMPANY.phone.display);
+    expect(policy.textContent).toContain(CONTACTS.email);
+    expect(policy.textContent).toContain(CONTACTS.phone.display);
   });
 
   it('provides native collapsed contents, eight valid destinations per variant and unique IDs', () => {
@@ -124,15 +124,15 @@ describe.each([
     const dictionary = getPrivacyDictionary(locale, bindings);
     const { container } = render(<PrivacyContent dictionary={dictionary} />);
     const policy = within(container).getByRole('article', { name: dictionary.title });
-    expect(within(policy).getByRole('link', { name: COMPANY.email }).getAttribute('href')).toBe(
-      'mailto:' + COMPANY.email,
+    expect(within(policy).getByRole('link', { name: CONTACTS.email }).getAttribute('href')).toBe(
+      'mailto:' + CONTACTS.email,
     );
     expect(
-      within(policy).getByRole('link', { name: COMPANY.phone.display }).getAttribute('href'),
-    ).toBe('tel:' + COMPANY.phone.e164);
+      within(policy).getByRole('link', { name: CONTACTS.phone.display }).getAttribute('href'),
+    ).toBe('tel:' + CONTACTS.phone.e164);
     const contact = within(container).getByRole('complementary', { name: dictionary.contactTitle });
     expect(within(contact).getByRole('link', { name: action }).getAttribute('href')).toBe(
-      'mailto:' + COMPANY.email,
+      'mailto:' + CONTACTS.email,
     );
     expect(
       within(contact)

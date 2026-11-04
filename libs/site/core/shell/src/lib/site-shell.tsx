@@ -4,11 +4,14 @@ import { getShellDictionary } from './i18n/shell-dictionary';
 import { resolveCategoryLinks } from './navigation/catalog-navigation';
 
 import type { CatalogNavigation } from './navigation/catalog-navigation';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
 type SiteShellProps = {
   locale: Locale;
+  /** Sales contacts from the admin (or their code fallback) for the header and footer. */
+  contacts: CompanyContacts;
   /** Catalog sections and mega menu from the catalog domain; fixed sections are used without it. */
   catalogNavigation?: CatalogNavigation;
   /** App-composed cart controls; the shell keeps its localized links when omitted. */
@@ -20,6 +23,7 @@ type SiteShellProps = {
 /** Page frame for every localized route: skip link, header, main content, and footer. */
 export function SiteShell({
   locale,
+  contacts,
   catalogNavigation,
   cartAction,
   compactCartAction,
@@ -38,6 +42,7 @@ export function SiteShell({
       <SiteHeader
         locale={locale}
         dictionary={dictionary}
+        contacts={contacts}
         catalogNavigation={catalogNavigation}
         cartAction={cartAction}
         compactCartAction={compactCartAction}
@@ -48,6 +53,7 @@ export function SiteShell({
       <SiteFooter
         locale={locale}
         dictionary={dictionary}
+        contacts={contacts}
         categoryLinks={resolveCategoryLinks(dictionary, catalogNavigation)}
       />
     </>

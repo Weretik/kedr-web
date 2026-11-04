@@ -5,6 +5,7 @@ import type {
   CheckoutFieldErrors,
   CheckoutResult,
 } from '@site/cart/model';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 export interface CartLineView extends CartLine {
@@ -45,6 +46,8 @@ export type CheckoutViewProps = BasketProps & {
   resultKind: CheckoutResult['kind'] | null;
   receipt: CheckoutReceipt | null;
   canSubmit: boolean;
+  /** Sales phone from the admin for the help line and the confirmation. */
+  phone: CompanyContacts['phone'];
   onDraftChange: (field: CheckoutField, value: string) => void;
   onFieldBlur: (field: CheckoutField) => void;
   onSubmit: () => void;

@@ -1,10 +1,10 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { Button } from '@site/shared/ui';
 import { CheckIcon, PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import type { HomeDictionary } from '../i18n/home-dictionary';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 /** Locale-free address of the cooperation page (content pages, step 6 of the migration plan). */
@@ -14,9 +14,11 @@ const WHOLESALE_PATH = '/wholesale';
 export function WholesalePanel({
   locale,
   dictionary,
+  phone,
 }: {
   locale: Locale;
   dictionary: HomeDictionary;
+  phone: CompanyContacts['phone'];
 }) {
   return (
     <aside
@@ -39,9 +41,9 @@ export function WholesalePanel({
           <Link href={localizedPath(locale, WHOLESALE_PATH)}>{dictionary.wholesaleCta}</Link>
         </Button>
         <Button asChild variant="outline">
-          <a href={`tel:${COMPANY.phone.e164}`}>
+          <a href={`tel:${phone.e164}`}>
             <PhoneIcon aria-hidden strokeWidth={1.75} />
-            {dictionary.wholesaleCall} {COMPANY.phone.display}
+            {dictionary.wholesaleCall} {phone.display}
           </a>
         </Button>
       </div>

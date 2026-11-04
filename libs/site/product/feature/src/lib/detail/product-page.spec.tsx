@@ -6,6 +6,11 @@ import { ProductPage } from './product-page';
 import { productFixture } from '../../test/product.fixture';
 
 vi.mock('@site/product/data-access', () => ({ getProductDetails: vi.fn() }));
+vi.mock('@site/shared/company', () => ({
+  getCompanyContacts: vi.fn(async () => ({
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+  })),
+}));
 vi.mock('next/image', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
 }));

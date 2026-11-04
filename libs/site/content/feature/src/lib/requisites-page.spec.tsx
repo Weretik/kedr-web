@@ -1,9 +1,24 @@
-import { COMPANY, COMPANY_REQUISITES, siteConfig } from '@site/core/config';
+import { COMPANY_REQUISITES, siteConfig } from '@site/core/config';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { RequisitesPage } from './requisites-page';
+
+const { contacts } = vi.hoisted(() => ({
+  contacts: {
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+    email: 'sales@example.test',
+    city: { uk: 'Київ', ru: 'Киев' },
+    links: {
+      telegram: 'https://t.me/kedr_sales',
+      viber: 'viber://chat?number=%2B380671112233',
+      map: 'https://maps.app.goo.gl/abc',
+    },
+  },
+}));
+
+vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
 
 const clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
 
@@ -28,9 +43,9 @@ describe.each([
     payment: 'Согласуйте с менеджером наличие, окончательную сумму и реквизиты для вашего заказа.',
   },
 ])('requisites server composition: $locale', ({ locale, title, home, payment }) => {
-  it('renders all confirmed facts, the original official name and localized links before hydration', () => {
+  it('renders all confirmed facts, the original official name and localized links before hydration', async () => {
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<RequisitesPage locale={locale} />);
+    container.innerHTML = renderToStaticMarkup(await RequisitesPage({ locale }));
 
     expect(container.querySelectorAll('h1')).toHaveLength(1);
     expect(container.querySelector('h1')?.textContent).toBe(title);
@@ -39,12 +54,12 @@ describe.each([
     }
     expect(container.textContent).toContain('ФОП Овчинников Максим Володимирович');
     expect(container.textContent).toContain(payment);
-    expect(container.textContent).toContain(COMPANY.phone.display);
+    expect(container.textContent).toContain(contacts.phone.display);
     expect(container.querySelector('main, form, iframe')).toBeNull();
 
     const hrefs = [...container.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     for (const href of [
-      `tel:${COMPANY.phone.e164}`,
+      `tel:${contacts.phone.e164}`,
       `/${locale}`,
       `/${locale}/delivery-and-payment`,
       `/${locale}/public-offer`,
@@ -54,9 +69,9 @@ describe.each([
     }
   });
 
-  it('renders one absolute localized breadcrumb graph without duplicating layout structured data', () => {
+  it('renders one absolute localized breadcrumb graph without duplicating layout structured data', async () => {
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<RequisitesPage locale={locale} />);
+    container.innerHTML = renderToStaticMarkup(await RequisitesPage({ locale }));
     const scripts = container.querySelectorAll('script[type="application/ld+json"]');
 
     expect(scripts).toHaveLength(1);
@@ -88,7 +103,7 @@ it('passes the configured IBAN and six-field localized payload through the real 
     configurable: true,
     value: { writeText },
   });
-  render(<RequisitesPage locale="ru" />);
+  render(await RequisitesPage({ locale: 'ru' }));
 
   expect(writeText).not.toHaveBeenCalled();
   await user.click(screen.getByRole('button', { name: 'Скопировать IBAN' }));

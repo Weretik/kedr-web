@@ -15,6 +15,7 @@ import {
   WholesalePanel,
   getHomeDictionary,
 } from '@site/home/ui';
+import { getCompanyContacts } from '@site/shared/company';
 
 import type { Locale } from '@site/core/i18n';
 
@@ -26,7 +27,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
   const dictionary = getHomeDictionary(locale);
   const companyDictionary = getCompanyDictionary(locale);
   const allProducts = localizedPath(locale, CATALOG_PATH);
-  const sections = await getCatalogSections(locale);
+  const [sections, { phone }] = await Promise.all([
+    getCatalogSections(locale),
+    getCompanyContacts(),
+  ]);
 
   return (
     <>
@@ -36,7 +40,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           dictionary={dictionary}
           searchAction={localizedPath(locale, SEARCH_PATH)}
         />
-        <WholesalePanel locale={locale} dictionary={dictionary} />
+        <WholesalePanel locale={locale} dictionary={dictionary} phone={phone} />
       </div>
 
       <HomeSection
@@ -55,10 +59,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
         )}
       </HomeSection>
 
-      <HomeCompany dictionary={companyDictionary} />
+      <HomeCompany dictionary={companyDictionary} phone={phone} />
       <HomeResults dictionary={companyDictionary} />
       <HomeBrands dictionary={companyDictionary} />
-      <HomeFaq dictionary={companyDictionary} />
+      <HomeFaq dictionary={companyDictionary} phone={phone} />
 
       <JsonLd data={buildWebSiteJsonLd(locale)} />
     </>

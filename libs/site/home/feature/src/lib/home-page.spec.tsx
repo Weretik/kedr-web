@@ -5,6 +5,11 @@ import { HomePage } from './home-page';
 const { getCatalogSections } = vi.hoisted(() => ({ getCatalogSections: vi.fn() }));
 
 vi.mock('@site/catalog/data-access', () => ({ getCatalogSections }));
+vi.mock('@site/shared/company', () => ({
+  getCompanyContacts: vi.fn(async () => ({
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+  })),
+}));
 
 const renderHome = async (locale: 'uk' | 'ru') => render(await HomePage({ locale }));
 
@@ -88,7 +93,7 @@ describe('home company concept', () => {
         expect(item.querySelector('p')?.textContent?.trim()).toBeTruthy();
       }
       expect(screen.getByRole('link', { name: labels[5] }).getAttribute('href')).toBe(
-        'tel:+380687135049',
+        'tel:+380671112233',
       );
     },
   );

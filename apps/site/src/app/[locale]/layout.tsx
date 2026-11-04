@@ -3,6 +3,7 @@ import { getCatalogNavigation } from '@site/catalog/feature';
 import { LOCALES, LOCALE_LANGUAGE_TAGS, isLocale } from '@site/core/i18n';
 import { JsonLd, buildOrganizationJsonLd, buildRootMetadata } from '@site/core/seo';
 import { SiteShell, ThemeProvider } from '@site/core/shell';
+import { getCompanyContacts } from '@site/shared/company';
 import { notFound } from 'next/navigation';
 
 import '../global.css';
@@ -29,7 +30,10 @@ export const viewport: Viewport = {
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const catalogNavigation = await getCatalogNavigation(locale);
+  const [catalogNavigation, contacts] = await Promise.all([
+    getCatalogNavigation(locale),
+    getCompanyContacts(),
+  ]);
 
   return (
     <html
@@ -43,6 +47,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           <CartRuntime locale={locale}>
             <SiteShell
               locale={locale}
+              contacts={contacts}
               catalogNavigation={catalogNavigation}
               cartAction={<CartHeaderAction locale={locale} />}
               compactCartAction={<CartHeaderAction locale={locale} compact />}
@@ -51,7 +56,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
             </SiteShell>
           </CartRuntime>
         </ThemeProvider>
-        <JsonLd data={buildOrganizationJsonLd(locale)} />
+        <JsonLd data={buildOrganizationJsonLd(locale, contacts)} />
       </body>
     </html>
   );

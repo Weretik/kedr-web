@@ -60,7 +60,10 @@ describe('app cart composition', () => {
         <CartHeaderAction locale="uk" compact />
         <div data-testid="product-purchase">{renderCartPurchaseAction('uk', product)}</div>
         <div data-testid="checkout">
-          <CheckoutController locale="uk" />
+          <CheckoutController
+            locale="uk"
+            phone={{ display: '(067) 111-22-33', e164: '+380671112233' }}
+          />
         </div>
       </CartRuntime>,
     );

@@ -1,10 +1,16 @@
-import { COMPANY } from '@site/core/config';
 import { Button, FaqList } from '@site/shared/ui';
 import { PhoneIcon } from 'lucide-react';
 
 import type { CompanyDictionary } from '../i18n/company-dictionary';
+import type { CompanyContacts } from '@site/core/config';
 
-export function HomeFaq({ dictionary }: { dictionary: CompanyDictionary }) {
+export function HomeFaq({
+  dictionary,
+  phone,
+}: {
+  dictionary: CompanyDictionary;
+  phone: CompanyContacts['phone'];
+}) {
   return (
     <section
       aria-labelledby="home-faq-title"
@@ -18,7 +24,7 @@ export function HomeFaq({ dictionary }: { dictionary: CompanyDictionary }) {
         <div className="mt-8 lg:mt-auto lg:pt-12">
           <h3 className="mb-3 text-xl font-bold">{dictionary.helpTitle}</h3>
           <Button asChild className="h-auto min-h-11 whitespace-normal py-3 text-left">
-            <a href={'tel:' + COMPANY.phone.e164}>
+            <a href={'tel:' + phone.e164}>
               <PhoneIcon aria-hidden strokeWidth={1.75} />
               {dictionary.manager}
             </a>

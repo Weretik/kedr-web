@@ -1,8 +1,15 @@
 import { ReturnsContact } from './returns-contact';
 
 import type { ReturnsDictionary } from '@site/content/model';
+import type { CompanyContacts } from '@site/core/config';
 
-export function ReturnsSupport({ dictionary }: { dictionary: ReturnsDictionary }) {
+export function ReturnsSupport({
+  dictionary,
+  phone,
+}: {
+  dictionary: ReturnsDictionary;
+  phone: CompanyContacts['phone'];
+}) {
   return (
     <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10">
       <section aria-labelledby="returns-important-title">
@@ -24,7 +31,7 @@ export function ReturnsSupport({ dictionary }: { dictionary: ReturnsDictionary }
           {dictionary.fullRulesLink}
         </a>
       </section>
-      <ReturnsContact dictionary={dictionary} />
+      <ReturnsContact dictionary={dictionary} phone={phone} />
     </div>
   );
 }

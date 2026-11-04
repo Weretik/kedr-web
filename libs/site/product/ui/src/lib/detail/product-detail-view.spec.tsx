@@ -32,6 +32,7 @@ describe('ProductDetailView server composition', () => {
     (locale, stock) => {
       const html = renderToString(
         <ProductDetailView
+          phone={{ display: '(067) 111-22-33', e164: '+380671112233' }}
           locale={locale}
           product={product}
           categoryHref={`/${locale}/catalog-owner/selected-category`}
@@ -58,14 +59,20 @@ describe('ProductDetailView server composition', () => {
       expect(doc.querySelector(`a[href="/${locale}/delivery-and-payment"]`)).toBeTruthy();
       expect(doc.querySelector(`a[href="/${locale}/returns-exchanges"]`)).toBeTruthy();
       expect(doc.querySelector(`a[href="/${locale}/wholesale"]`)).toBeTruthy();
-      expect(doc.querySelector('a[href^="tel:"]')).toBeTruthy();
+      expect(doc.querySelector('a[href="tel:+380671112233"]')).toBeTruthy();
       expect(doc.querySelector('[aria-current="page"]')?.textContent).toBe(product.name);
       expect(doc.body.textContent).not.toContain('DEMO-001');
     },
   );
   it('keeps the category label without inventing a destination when the feature supplies null', () => {
     const html = renderToString(
-      <ProductDetailView locale="uk" product={product} categoryHref={null} breadcrumbs={[]} />,
+      <ProductDetailView
+        phone={{ display: '(067) 111-22-33', e164: '+380671112233' }}
+        locale="uk"
+        product={product}
+        categoryHref={null}
+        breadcrumbs={[]}
+      />,
     );
     const doc = new DOMParser().parseFromString(html, 'text/html');
     expect(doc.body.textContent).toContain(product.categoryName);

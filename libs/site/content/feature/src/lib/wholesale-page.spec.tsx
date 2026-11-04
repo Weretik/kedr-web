@@ -1,13 +1,28 @@
 import { getCatalogTree } from '@site/catalog/data-access';
 import { CATALOG_ROOTS } from '@site/catalog/model';
 import { getWholesaleDictionary } from '@site/content/model';
-import { COMPANY, siteConfig } from '@site/core/config';
+import { siteConfig } from '@site/core/config';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { WholesalePage } from './wholesale-page';
 
 import type { CatalogTreeNode } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
+
+const { contacts } = vi.hoisted(() => ({
+  contacts: {
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+    email: 'sales@example.test',
+    city: { uk: 'Київ', ru: 'Киев' },
+    links: {
+      telegram: 'https://t.me/kedr_sales',
+      viber: 'viber://chat?number=%2B380671112233',
+      map: 'https://maps.app.goo.gl/abc',
+    },
+  },
+}));
+
+vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
 
 vi.mock('@site/catalog/data-access', () => ({ getCatalogTree: vi.fn() }));
 
@@ -56,16 +71,16 @@ describe.each(['uk', 'ru'] as const)('wholesale server composition: %s', (locale
     expect(container.querySelector('h1')?.textContent).toBe(dictionary.hero.title);
     expect(container.querySelector('main')).toBeNull();
     expect(container.querySelector('form')).toBeNull();
-    expect(container.textContent).toContain(COMPANY.phone.display);
-    expect(container.textContent).toContain(COMPANY.address.city[locale]);
+    expect(container.textContent).toContain(contacts.phone.display);
+    expect(container.textContent).toContain(contacts.city[locale]);
     expect(container.textContent).toContain(dictionary.company.title);
     expect(container.textContent).toContain(dictionary.steps.title);
     expect(container.textContent).toContain(dictionary.faq.title);
     const hrefs = [...container.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     for (const href of [
-      `tel:${COMPANY.phone.e164}`,
-      COMPANY.links.telegram,
-      COMPANY.links.viber,
+      `tel:${contacts.phone.e164}`,
+      contacts.links.telegram,
+      contacts.links.viber,
       `/${locale}/catalog`,
       `/${locale}#about-company`,
       `/${locale}/delivery-and-payment`,
@@ -115,7 +130,7 @@ describe.each(['uk', 'ru'] as const)('wholesale server composition: %s', (locale
       expect(container.textContent).toContain(dictionary.faq.title);
       expect(container.querySelectorAll(`a[href^="/${locale}/catalog/"]`)).toHaveLength(0);
       expect(container.querySelector(`a[href="/${locale}/catalog"]`)).not.toBeNull();
-      expect(container.querySelector(`a[href="${COMPANY.links.telegram}"]`)).not.toBeNull();
+      expect(container.querySelector(`a[href="${contacts.links.telegram}"]`)).not.toBeNull();
       expect(container.querySelectorAll('script[type="application/ld+json"]')).toHaveLength(1);
     },
   );

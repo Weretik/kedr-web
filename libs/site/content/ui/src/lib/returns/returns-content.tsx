@@ -6,14 +6,21 @@ import { ReturnsProcess } from './returns-process';
 import { ReturnsSupport } from './returns-support';
 
 import type { ReturnsDictionary } from '@site/content/model';
+import type { CompanyContacts } from '@site/core/config';
 
-export function ReturnsContent({ dictionary }: { dictionary: ReturnsDictionary }) {
+export function ReturnsContent({
+  dictionary,
+  phone,
+}: {
+  dictionary: ReturnsDictionary;
+  phone: CompanyContacts['phone'];
+}) {
   return (
     <div className="space-y-7 py-5 sm:py-8 lg:space-y-8 lg:py-10">
       <ReturnsHeader dictionary={dictionary} />
       <ReturnsPanels dictionary={dictionary} />
       <ReturnsProcess dictionary={dictionary} />
-      <ReturnsSupport dictionary={dictionary} />
+      <ReturnsSupport dictionary={dictionary} phone={phone} />
       <ReturnsPolicy dictionary={dictionary} />
       <ReturnsFaq dictionary={dictionary} />
     </div>

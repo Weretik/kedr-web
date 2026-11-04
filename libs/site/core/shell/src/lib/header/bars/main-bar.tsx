@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,12 +11,14 @@ import { MobileMenu } from '../menus/mobile-menu';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
 import type { ShellLink } from '../../navigation/catalog-navigation';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
 type MainBarProps = {
   locale: Locale;
   dictionary: ShellDictionary;
+  contacts: CompanyContacts;
   categoryLinks: readonly ShellLink[];
   /** Mega menu from the catalog domain; the fallback dropdown is used without it. */
   catalogMenu?: ReactNode;
@@ -28,6 +29,7 @@ type MainBarProps = {
 export function MainBar({
   locale,
   dictionary,
+  contacts,
   categoryLinks,
   catalogMenu,
   cartAction,
@@ -37,7 +39,7 @@ export function MainBar({
       <MobileMenu
         locale={locale}
         dictionary={dictionary}
-        phone={COMPANY.phone}
+        contacts={contacts}
         categoryLinks={categoryLinks}
       />
       <Link href={localizedPath(locale)} aria-label={dictionary.homeAria} className="shrink-0">
@@ -61,14 +63,19 @@ export function MainBar({
       />
       <div className="hidden items-center gap-2 xl:flex">
         <CopyPhoneButton
-          phone={COMPANY.phone}
+          phone={contacts.phone}
           copyLabel={dictionary.copyPhone}
           copiedLabel={dictionary.phoneCopied}
         />
-        <MessengerLinks dictionary={dictionary} />
+        <MessengerLinks dictionary={dictionary} links={contacts.links} />
       </div>
       <div className="ml-auto lg:ml-0">
-        <HeaderActions locale={locale} dictionary={dictionary} cartAction={cartAction} />
+        <HeaderActions
+          locale={locale}
+          dictionary={dictionary}
+          phone={contacts.phone}
+          cartAction={cartAction}
+        />
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ flowchart LR
   Route --> SEO["content/seo: metadata"]
   Feature --> Model["content/model: localized copy"]
   Feature --> UI["content/ui: returns blocks"]
-  UI --> Config["core/config: COMPANY"]
+  Feature --> Contacts["shared/company: getCompanyContacts (phone prop)"]
   UI --> Primitives["shared/ui"]
   SEO --> CoreSEO["core/seo"]
   Sitemap["app sitemap"] --> Descriptors["content/feature: CONTENT_SITEMAP_PAGES"]

@@ -1036,6 +1036,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company contacts
+         * @description Public, because every site page renders them for anonymous visitors.
+         */
+        get: operations["getCompanyContacts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company contacts for editing
+         * @description Requires `CanManageContent` (Manager or Admin).
+         */
+        get: operations["getAdminCompanyContacts"];
+        /**
+         * Replace all company contacts
+         * @description Requires `CanManageContent` (Manager or Admin). All fields are required and replaced at once.
+         */
+        put: operations["updateAdminCompanyContacts"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1796,6 +1840,30 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
             texts: components["schemas"]["ArticleText"][];
+        };
+        /** @example +380687135049 */
+        Phone: string;
+        SaveCompanyContactsRequest: {
+            salesPhone: components["schemas"]["Phone"];
+            /** Format: email */
+            email: string;
+            /**
+             * Format: uri
+             * @description https://t.me/… or https://telegram.me/…
+             */
+            telegramUrl: string;
+            viberPhone: components["schemas"]["Phone"];
+            /**
+             * Format: uri
+             * @description Any https link to the map.
+             */
+            mapUrl: string;
+            cityUk: string;
+            cityRu: string;
+        };
+        CompanyContacts: components["schemas"]["SaveCompanyContactsRequest"] & {
+            /** Format: date-time */
+            updatedAt: string;
         };
     };
     responses: {
@@ -4867,6 +4935,130 @@ export interface operations {
                 content?: never;
             };
             /** @description Article not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCompanyContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The contacts. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyContacts"];
+                };
+            };
+            /** @description The contacts row is missing (it is created by a migration). */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCompanyContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The contacts. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyContacts"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The contacts row is missing. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminCompanyContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveCompanyContactsRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved contacts. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyContacts"];
+                };
+            };
+            /** @description Invalid input; each error names the field (`salesPhone`, `email`, `telegramUrl`, `viberPhone`, `mapUrl`, `cityUk`, `cityRu`). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The contacts row is missing. */
             404: {
                 headers: {
                     [name: string]: unknown;

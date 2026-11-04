@@ -8,6 +8,7 @@ import { formatCartCount, formatCartMoney } from '../shared/cart-format';
 import { CartHelp, CartServiceNote } from '../shared/cart-support';
 
 import type { CheckoutReceipt } from '../types/cart-ui-props';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 const shortOrderNumber = (orderId: string) => orderId.replace(/-/g, '').slice(0, 8).toUpperCase();
@@ -15,9 +16,11 @@ const shortOrderNumber = (orderId: string) => orderId.replace(/-/g, '').slice(0,
 export function OrderConfirmation({
   locale,
   receipt,
+  phone,
 }: {
   locale: Locale;
   receipt: CheckoutReceipt;
+  phone: CompanyContacts['phone'];
 }) {
   const copy = getCartCopy(locale);
   return (
@@ -58,7 +61,7 @@ export function OrderConfirmation({
         <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{copy.totalNote}</p>
       </div>
       <CartServiceNote locale={locale} confirmation />
-      <CartHelp locale={locale} />
+      <CartHelp locale={locale} phone={phone} />
       <div className="text-center">
         <Button asChild className="h-auto min-h-12 max-w-full py-3 whitespace-normal">
           <Link href={localizedPath(locale, '/catalog')}>

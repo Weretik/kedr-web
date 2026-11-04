@@ -1,19 +1,20 @@
 import { getContactsDictionary } from '@site/content/model';
 import { buildContactsBreadcrumbJsonLd } from '@site/content/seo';
 import { ContactsContent } from '@site/content/ui';
-import { COMPANY } from '@site/core/config';
 import { JsonLd } from '@site/core/seo';
+import { getCompanyContacts } from '@site/shared/company';
 
 import type { ContactsDetails } from '@site/content/model';
 import type { Locale } from '@site/core/i18n';
 
-/** Server-rendered contacts share company facts with the site shell and organization metadata. */
-export function ContactsPage({ locale }: { locale: Locale }) {
+/** Server-rendered contacts: the same admin-edited contacts as the site shell and organization metadata. */
+export async function ContactsPage({ locale }: { locale: Locale }) {
+  const contacts = await getCompanyContacts();
   const details: ContactsDetails = {
-    phone: COMPANY.phone,
-    email: COMPANY.email,
-    city: COMPANY.address.city[locale],
-    ...COMPANY.links,
+    phone: contacts.phone,
+    email: contacts.email,
+    city: contacts.city[locale],
+    ...contacts.links,
   };
 
   return (

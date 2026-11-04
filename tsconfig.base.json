@@ -131,7 +131,12 @@
       "@admin/articles/model": ["./libs/admin/articles/model/src/index.ts"],
       "@admin/articles/data-access": ["./libs/admin/articles/data-access/src/index.ts"],
       "@admin/articles/ui": ["./libs/admin/articles/ui/src/index.ts"],
-      "@admin/articles/feature": ["./libs/admin/articles/feature/src/index.ts"]
+      "@admin/articles/feature": ["./libs/admin/articles/feature/src/index.ts"],
+      "@site/shared/company": ["./libs/site/shared/company/src/index.ts"],
+      "@admin/company/model": ["./libs/admin/company/model/src/index.ts"],
+      "@admin/company/data-access": ["./libs/admin/company/data-access/src/index.ts"],
+      "@admin/company/ui": ["./libs/admin/company/ui/src/index.ts"],
+      "@admin/company/feature": ["./libs/admin/company/feature/src/index.ts"]
     }
   }
 }

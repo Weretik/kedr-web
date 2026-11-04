@@ -1,6 +1,7 @@
 import { articlesRoutes } from '@admin/articles/feature';
 import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
+import { companyRoutes } from '@admin/company/feature';
 import {
   canEditCatalog,
   canManageUsers,
@@ -82,6 +83,7 @@ export function AppRouter() {
           ),
         }),
         ...articlesRoutes,
+        ...companyRoutes,
         ...profileRoutes,
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
       ],

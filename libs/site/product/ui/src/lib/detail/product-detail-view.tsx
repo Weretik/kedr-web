@@ -14,6 +14,7 @@ import {
   ProductWholesaleCallout,
 } from '../service/product-service-links';
 
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ProductDetails } from '@site/product/model';
 import type { ReactNode } from 'react';
@@ -25,6 +26,8 @@ export type ProductDetailViewProps = {
   categoryHref: string | null;
   /** The feature supplies the visible trail, including the current product as its last item. */
   breadcrumbs: Array<{ name: string; href: string }>;
+  /** Sales phone from the admin contacts. */
+  phone: CompanyContacts['phone'];
   purchaseAction?: ReactNode;
   /** One-tap add for the phone buy bar; the bar is omitted without it. */
   stickyPurchaseAction?: ReactNode;
@@ -41,6 +44,7 @@ export function ProductDetailView({
   product,
   categoryHref,
   breadcrumbs,
+  phone,
   purchaseAction,
   stickyPurchaseAction,
 }: ProductDetailViewProps) {
@@ -90,13 +94,14 @@ export function ProductDetailView({
             id={PURCHASE_PANEL_ID}
             locale={locale}
             product={product}
+            phone={phone}
             purchaseAction={purchaseAction}
           />
           <ProductWholesaleCallout locale={locale} />
           <ProductServiceLinks locale={locale} />
         </div>
       </div>
-      <ProductHelp locale={locale} />
+      <ProductHelp locale={locale} phone={phone} />
       {showStickyBar && (
         <ProductStickyBar
           targetId={PURCHASE_PANEL_ID}
