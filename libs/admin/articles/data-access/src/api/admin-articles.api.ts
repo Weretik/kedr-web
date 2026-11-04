@@ -4,6 +4,7 @@ import {
   mapArticle,
   mapArticleCoverUpload,
   mapArticleSummaries,
+  mapLegacyCoversMoved,
   toSaveArticleBody,
 } from '../mappers/article.mapper';
 
@@ -60,6 +61,12 @@ export const adminArticlesApi = baseApi
         query: (file) => ({ url: `${root}/covers`, method: 'POST', data: coverForm(file) }),
         transformResponse: mapArticleCoverUpload,
       }),
+      /** Moves the pre-CDN covers to the CDN; answers how many moved. Safe to repeat. */
+      moveLegacyArticleCovers: build.mutation<number, void>({
+        query: () => ({ url: `${root}/covers/move-legacy`, method: 'POST' }),
+        transformResponse: mapLegacyCoversMoved,
+        invalidatesTags: (_result, error) => (error ? [] : ['Articles']),
+      }),
     }),
   });
 
@@ -68,6 +75,7 @@ export const {
   useDeleteArticleMutation,
   useGetAdminArticleQuery,
   useGetAdminArticlesQuery,
+  useMoveLegacyArticleCoversMutation,
   useUpdateArticleMutation,
   useUploadArticleCoverMutation,
 } = adminArticlesApi;

@@ -26,6 +26,8 @@ export interface ArticleSummary {
   isPublished: boolean;
   /** Absolute cover URL (CDN, or the API for a legacy cover), or `null` without a cover. */
   coverUrl: string | null;
+  /** The cover is still a pre-CDN picture kept by the API; the list offers to move it to the CDN. */
+  hasLegacyCover: boolean;
   updatedAt: string;
   /** Who saved last; null for articles saved before this was recorded. */
   updatedBy: string | null;

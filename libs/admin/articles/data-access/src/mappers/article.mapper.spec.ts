@@ -1,4 +1,10 @@
-import { mapArticle, mapArticleSummaries, toCoverUrl, toSaveArticleBody } from './article.mapper';
+import {
+  mapArticle,
+  mapArticleSummaries,
+  mapLegacyCoversMoved,
+  toCoverUrl,
+  toSaveArticleBody,
+} from './article.mapper';
 
 vi.mock('@admin/shared/config', () => ({ appConfig: { apiBaseUrl: 'https://api.example.test/' } }));
 
@@ -26,6 +32,20 @@ describe('article mapper', () => {
     expect(toCoverUrl('/legacy', 'https://cdn.example.test/a.webp')).toBe(
       'https://cdn.example.test/a.webp',
     );
+  });
+
+  it('marks list rows whose cover is still a legacy one and reads the move answer', () => {
+    const [legacy, cdn] = mapArticleSummaries([
+      { ...article, title: 'Стара' },
+      {
+        ...article,
+        title: 'Нова',
+        coverPath: null,
+        coverUrl: 'https://cdn.example.test/articles/a.webp',
+      },
+    ]);
+    expect([legacy.hasLegacyCover, cdn.hasLegacyCover]).toEqual([true, false]);
+    expect(mapLegacyCoversMoved({ moved: 6 })).toBe(6);
   });
 
   it('rejects a response that does not match the contract', () => {

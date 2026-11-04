@@ -4,6 +4,7 @@ import {
   adminArticleListSchema,
   adminArticleSchema,
   articleCoverUploadSchema,
+  legacyArticleCoversMovedSchema,
 } from '../validators/articles.schemas';
 
 import type { SaveArticleBody } from '../contracts/admin-articles.contract';
@@ -34,6 +35,11 @@ export function mapArticleCoverUpload(response: unknown): ArticleCover {
   return { mediaFileId, url };
 }
 
+/** How many legacy covers the move put on the CDN. */
+export function mapLegacyCoversMoved(response: unknown): number {
+  return legacyArticleCoversMovedSchema.parse(response).moved;
+}
+
 export function mapArticleSummaries(response: unknown): ArticleSummary[] {
   return adminArticleListSchema.parse(response).map((item) => ({
     id: item.id,
@@ -42,6 +48,7 @@ export function mapArticleSummaries(response: unknown): ArticleSummary[] {
     publishedOn: item.publishedOn,
     isPublished: item.isPublished,
     coverUrl: toCoverUrl(item.coverPath, item.coverUrl),
+    hasLegacyCover: item.coverPath !== null,
     updatedAt: item.updatedAt,
     updatedBy: item.updatedBy ?? null,
   }));

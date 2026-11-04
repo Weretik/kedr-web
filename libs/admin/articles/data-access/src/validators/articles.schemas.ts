@@ -39,3 +39,7 @@ export const articleCoverUploadSchema = z.object({
   mediaFileId: z.number().int().min(1),
   url: z.string().min(1),
 });
+
+export const legacyArticleCoversMovedSchema = z.object({
+  moved: z.number().int().min(0),
+});

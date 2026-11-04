@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -14,6 +14,7 @@ const api = vi.hoisted(() => ({
   update: vi.fn(),
   remove: vi.fn(),
   upload: vi.fn(),
+  moveLegacy: vi.fn(),
   mediaFiles: vi.fn(),
 }));
 
@@ -24,6 +25,7 @@ vi.mock('@admin/articles/data-access', () => ({
   useUpdateArticleMutation: () => [api.update, { isLoading: false }],
   useDeleteArticleMutation: () => [api.remove, { isLoading: false }],
   useUploadArticleCoverMutation: () => [api.upload, { isLoading: false }],
+  useMoveLegacyArticleCoversMutation: () => [api.moveLegacy, { isLoading: false }],
 }));
 
 vi.mock('@admin/media/data-access', () => ({ useGetMediaFilesQuery: api.mediaFiles }));
@@ -66,7 +68,9 @@ describe('article pages', () => {
   beforeEach(() => {
     Object.values(api).forEach((mock) => mock.mockReset());
     api.list.mockReturnValue({
-      data: [{ ...article, title: article.texts.uk.title, isPublished: false }],
+      data: [
+        { ...article, title: article.texts.uk.title, isPublished: false, hasLegacyCover: false },
+      ],
       isError: false,
       isFetching: false,
       refetch: vi.fn(),
@@ -88,6 +92,23 @@ describe('article pages', () => {
     expect(screen.getByRole('link', { name: 'Нова стаття' }).getAttribute('href')).toBe(
       '/articles/new',
     );
+  });
+
+  it('offers to move legacy covers only while some remain', async () => {
+    expect(renderAt('/articles').queryByRole('button', { name: 'Перенести в CDN' })).toBeNull();
+    cleanup();
+
+    api.list.mockReturnValue({
+      data: [{ ...article, title: article.texts.uk.title, hasLegacyCover: true }],
+      isError: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+    api.moveLegacy.mockReturnValue(resolved(6));
+    renderAt('/articles');
+    expect(screen.getByText(/Старих обкладинок поза CDN: 1/)).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: 'Перенести в CDN' }));
+    await waitFor(() => expect(screen.getByText('Перенесено в CDN обкладинок: 6.')).toBeDefined());
   });
 
   it('checks a new article before sending and opens it after creation', async () => {

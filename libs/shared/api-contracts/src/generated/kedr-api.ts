@@ -1041,6 +1041,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/articles/covers/move-legacy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move covers saved before Content 008 to the CDN
+         * @description Uploads each legacy cover to the CDN under `articles/` (library folder «Статті», named after the slug), sets it as the article cover, and deletes the stored bytes. Safe to repeat: a second call moves nothing. Stops at the first failed upload and keeps what was already moved.
+         */
+        post: operations["moveLegacyAdminArticleCovers"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/content/contacts": {
         parameters: {
             query?: never;
@@ -2539,6 +2559,9 @@ export interface components {
             mediaFileId: number;
             /** Format: uri */
             url: string;
+        };
+        LegacyArticleCoversMoved: {
+            moved: number;
         };
         /** @example +380687135049 */
         Phone: string;
@@ -5966,6 +5989,47 @@ export interface operations {
             };
             /** @description The request is larger than the upload limit. */
             413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The CDN is not configured. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    moveLegacyAdminArticleCovers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description How many covers this call moved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegacyArticleCoversMoved"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
