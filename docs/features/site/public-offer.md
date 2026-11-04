@@ -2,7 +2,11 @@
 
 **Routes:** `/uk/public-offer`, `/ru/public-offer`. [SDD and accepted concept](../../specs/site/content/001-public-offer/README.md).
 
-The page renders the complete existing localized contract: seven sections, 18 numbered paragraphs and the final unnumbered note. Desktop has a sticky contents/contact rail; phones and tablets use native collapsed contents above an open document. Both themes use current site tokens and the existing shell. Configured contact links and localized delivery/returns links remain ordinary anchors.
+The page renders the published offer edition with its «Редакція від» date under the full title.
+
+**Text source (2026-11-04):** the legal body is the published edition from the admin ([Admin site documents](../admin/documents.md)), read by `getLegalDocument(locale, 'public-offer')` in `content/data-access` (cache tag `content:document:public-offer`, ten-minute life) and turned into sections by `buildLegalDocument` in `content/model`: H2 headings become sections and contents, `{site}`, `{email}` and `{phone}` are filled from the site host and saved contacts. Nothing published answers 404; an API failure is an error, never an empty page. Page chrome stays in code.
+
+Desktop has a sticky contents/contact rail; phones and tablets use native collapsed contents above an open document. Both themes use current site tokens and the existing shell. Configured contact links and localized delivery/returns links remain ordinary anchors.
 
 ## Structure diagram
 
@@ -27,14 +31,13 @@ flowchart LR
 apps/site/src/app/[locale]/(content)/public-offer/page.tsx # params/locale guard/metadata
 libs/site/content/
 ├── model/src/lib/public-offer/
-│   ├── public-offer-types.ts            # readonly presentation contract
-│   ├── public-offer-source-copy.ts      # literal complete UA/RU document
+│   ├── public-offer-types.ts            # page chrome contract
 │   ├── public-offer-ui-copy.ts          # localized controls and short labels
-│   └── public-offer-dictionary.ts       # source/section assembly
+│   └── public-offer-dictionary.ts       # chrome assembly
 ├── ui/src/lib/public-offer/
 │   ├── public-offer-content.tsx         # server responsive composition
 │   ├── public-offer-header.tsx          # breadcrumb/title/print placement
-│   ├── public-offer-document.tsx        # all seven sections and final note
+│   ├── public-offer-document.tsx        # every section of the published edition
 │   ├── public-offer-contact.tsx         # configured contact and related links
 │   ├── public-offer-toc.tsx             # native contents and active link
 │   ├── use-public-offer-section.ts      # hash/observer/scroll lifecycle

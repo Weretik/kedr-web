@@ -1150,6 +1150,266 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/documents/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the published edition of a document
+         * @description Public. `bodyHtml` is sanitized HTML (h2, h3, p, lists, strong, em, blockquote, links); the site builds its table of contents from the h2 headings and fills the `{site}`, `{email}` and `{phone}` placeholders.
+         */
+        get: operations["getPublishedLegalDocument"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the documents with their published edition and waiting draft
+         * @description Requires `CanManageContent` (Manager or Admin). Always four items, in a fixed order.
+         */
+        get: operations["getAdminLegalDocuments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/{kind}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List all editions of a document
+         * @description Requires `CanManageContent`. The draft first, then editions by number, newest first.
+         */
+        get: operations["getAdminLegalDocumentVersions"];
+        put?: never;
+        /**
+         * Start a draft
+         * @description Requires `CanManageContent`. Without a body (or without `texts`) the draft copies the published texts; with `texts` it starts from them (sanitized).
+         */
+        post: operations["createAdminLegalDocumentDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/versions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Get one edition with both texts
+         * @description Requires `CanManageContent`.
+         */
+        get: operations["getAdminLegalDocumentVersion"];
+        /**
+         * Replace both texts of a draft
+         * @description Requires `CanManageContent`. The HTML is sanitized on save.
+         */
+        put: operations["updateAdminLegalDocumentDraft"];
+        post?: never;
+        /**
+         * Delete a draft
+         * @description Requires `CanManageContent`. Published and archived editions cannot be deleted.
+         */
+        delete: operations["deleteAdminLegalDocumentDraft"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/versions/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Publish a draft
+         * @description Requires `CanManageContent`. The draft gets the next number and the given «Редакція від» date and goes on the site; the edition it replaces becomes archived. Both changes are saved together.
+         */
+        post: operations["publishAdminLegalDocumentDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/{lang}/gallery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the site gallery in one language
+         * @description Public, in site order. A video's `imageUrl` is YouTube's poster (480×360); a photo's is its CDN URL, with `width`/`height` when the library knows them. A photo whose library file was deleted is left out.
+         */
+        get: operations["getPublicGallery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the gallery cards with previews
+         * @description Requires `CanManageContent` (Manager or Admin).
+         */
+        get: operations["getAdminGallery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add media-library photos to the end of the gallery
+         * @description Requires `CanManageContent`. Up to 100 file IDs in the order to add; a photo already in the gallery is skipped. A file that is not in the library answers 400 and nothing is added.
+         */
+        post: operations["addAdminGalleryPhotos"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/videos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a YouTube video by its link to the end of the gallery
+         * @description Requires `CanManageContent`. `url` may be a watch, youtu.be, shorts, embed or live link, or the bare 11-character ID.
+         */
+        post: operations["addAdminGalleryVideo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/youtube-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Resolve a pasted YouTube link before adding it
+         * @description Requires `CanManageContent`. `title` is what YouTube's public oEmbed gives, or `null` when it does not answer (private or deleted video, network error).
+         */
+        get: operations["previewAdminGalleryYoutubeVideo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the title and caption of a card
+         * @description Requires `CanManageContent`. Empty or missing values are stored as none.
+         */
+        put: operations["updateAdminGalleryItem"];
+        post?: never;
+        /**
+         * Remove a card from the gallery
+         * @description Requires `CanManageContent`. The picture stays in the media library.
+         */
+        delete: operations["deleteAdminGalleryItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all cards
+         * @description Requires `CanManageContent`. `ids` must hold every current card exactly once, first shown first; a list built from a stale page answers 409.
+         */
+        put: operations["reorderAdminGallery"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/media/folders": {
         parameters: {
             query?: never;
@@ -2118,6 +2378,135 @@ export interface components {
             changedBy: string;
             changes: components["schemas"]["RequisitesFieldChange"][];
         };
+        /** @enum {string} */
+        LegalDocumentKind: "public-offer" | "privacy-policy" | "returns-policy" | "delivery-payment";
+        PublishedLegalDocument: {
+            kind: components["schemas"]["LegalDocumentKind"];
+            /** Format: int32 */
+            number: number;
+            /**
+             * Format: date
+             * @description «Редакція від».
+             */
+            effectiveFrom: string;
+            title: string;
+            bodyHtml: string;
+            /** Format: date-time */
+            publishedAt: string;
+        };
+        /** @enum {string} */
+        LegalDocumentStatus: "draft" | "published" | "archived";
+        LegalDocumentVersionSummary: {
+            /** Format: int64 */
+            id: number;
+            status: components["schemas"]["LegalDocumentStatus"];
+            /**
+             * Format: int32
+             * @description null while a draft.
+             */
+            number: number | null;
+            /**
+             * Format: date
+             * @description null while a draft.
+             */
+            effectiveFrom: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            /** @description Email (or user name) of the last editor. */
+            updatedBy: string;
+            /** Format: date-time */
+            publishedAt: string | null;
+            publishedBy: string | null;
+        };
+        LegalDocumentOverview: {
+            kind: components["schemas"]["LegalDocumentKind"];
+            published: components["schemas"]["LegalDocumentVersionSummary"] | null;
+            draft: components["schemas"]["LegalDocumentVersionSummary"] | null;
+        };
+        LegalDocumentText: {
+            /** @enum {string} */
+            language: "uk" | "ru";
+            title: string;
+            bodyHtml: string;
+        };
+        SaveLegalDocumentDraftRequest: {
+            /** @description Exactly one `uk` and one `ru` text. */
+            texts: components["schemas"]["LegalDocumentText"][];
+        };
+        LegalDocumentVersion: components["schemas"]["LegalDocumentVersionSummary"] & {
+            kind: components["schemas"]["LegalDocumentKind"];
+            texts: components["schemas"]["LegalDocumentText"][];
+        };
+        PublishLegalDocumentRequest: {
+            /** Format: date */
+            effectiveFrom: string;
+        };
+        /** @enum {string} */
+        GalleryItemKind: "photo" | "video";
+        PublicGalleryItem: {
+            /** Format: int64 */
+            id: number;
+            kind: components["schemas"]["GalleryItemKind"];
+            title: string | null;
+            caption: string | null;
+            /** Format: uri */
+            imageUrl: string;
+            /** Format: int32 */
+            width: number | null;
+            /** Format: int32 */
+            height: number | null;
+            /** @description Set only for a video. */
+            youtubeId: string | null;
+        };
+        AdminGalleryItem: {
+            /** Format: int64 */
+            id: number;
+            kind: components["schemas"]["GalleryItemKind"];
+            /**
+             * Format: int64
+             * @description Set only for a photo.
+             */
+            mediaFileId: number | null;
+            /** @description Set only for a video. */
+            youtubeId: string | null;
+            /** Format: int32 */
+            position: number;
+            titleUk: string | null;
+            titleRu: string | null;
+            captionUk: string | null;
+            captionRu: string | null;
+            /** @description Poster or CDN URL; null for a photo whose file is gone. */
+            previewUrl: string | null;
+            /** @description Library file name of a photo. */
+            fileName: string | null;
+            /** @description A photo whose library file was deleted; the site hides it. */
+            fileMissing: boolean;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AddGalleryPhotosRequest: {
+            mediaFileIds: number[];
+        };
+        GalleryTexts: {
+            titleUk?: string | null;
+            titleRu?: string | null;
+            captionUk?: string | null;
+            captionRu?: string | null;
+        };
+        AddGalleryVideoRequest: components["schemas"]["GalleryTexts"] & {
+            /** @description A YouTube link or the bare 11-character video ID. */
+            url: string;
+        };
+        YoutubePreview: {
+            youtubeId: string;
+            title: string | null;
+            /** Format: uri */
+            thumbnailUrl: string;
+            alreadyInGallery: boolean;
+        };
+        ReorderGalleryRequest: {
+            ids: number[];
+        };
         MediaFolderItem: {
             /** Format: int64 */
             id: number;
@@ -2251,6 +2640,15 @@ export interface components {
                 };
             };
         };
+        /** @description The whole gallery in site order. */
+        Gallery: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["AdminGalleryItem"][];
+            };
+        };
         /** @description Invalid input; each error names its field (`name`, `parentId`, `folderId`, `fileName`, `file`, …). */
         Invalid: {
             headers: {
@@ -2287,6 +2685,9 @@ export interface components {
         CsrfHeader: string;
         UserId: string;
         ArticleId: number;
+        Kind: components["schemas"]["LegalDocumentKind"];
+        VersionId: number;
+        ItemId: number;
         Id: number;
     };
     requestBodies: never;
@@ -5598,6 +5999,702 @@ export interface operations {
             };
             /** @description Not an Admin. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublishedLegalDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+                kind: components["parameters"]["Kind"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The published edition. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishedLegalDocument"];
+                };
+            };
+            /** @description The language is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown kind, or nothing is published yet. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminLegalDocuments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description One item per document kind. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentOverview"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminLegalDocumentVersions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: components["parameters"]["Kind"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The editions. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionSummary"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown kind. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: components["parameters"]["Kind"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
+            };
+        };
+        responses: {
+            /** @description The new draft. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description Invalid texts, or nothing is published and no texts were given (`texts`). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown kind. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description This document already has a draft. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminLegalDocumentVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The edition. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved draft. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description Invalid texts; errors name `texts`, `texts[0].title`, `texts[1].bodyHtml` and so on. Both `uk` and `ru` are required; title up to 200 characters, body up to 100 000. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The edition is published or archived and can no longer change. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The edition is not a draft. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    publishAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["VersionId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishLegalDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description The published edition. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersion"];
+                };
+            };
+            /** @description `effectiveFrom` is earlier than the date of the edition on the site. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such edition. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The edition is already published or archived. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublicGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The gallery cards. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicGalleryItem"][];
+                };
+            };
+            /** @description The language is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    addAdminGalleryPhotos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGalleryPhotosRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description No IDs, more than 100, or a file that is not in the media library. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    addAdminGalleryVideo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGalleryVideoRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description Not a YouTube video link, or a text over its limit. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The video is already in the gallery. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    previewAdminGalleryYoutubeVideo: {
+        parameters: {
+            query: {
+                url: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The video ID, poster and title. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["YoutubePreview"];
+                };
+            };
+            /** @description Not a YouTube video link. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminGalleryItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ItemId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GalleryTexts"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description A text over its limit. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such card. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminGalleryItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ItemId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such card. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reorderAdminGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderGalleryRequest"];
+            };
+        };
+        responses: {
+            200: components["responses"]["Gallery"];
+            /** @description A repeated or invalid ID. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The list does not match the current gallery. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

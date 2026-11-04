@@ -10,55 +10,73 @@ permissions:
   actions: read
   contents: read
 
+# A new push to a pull request cancels the run for its previous commit.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# The checks run as parallel jobs; the final `main` job keeps the single status the branch rules expect.
 jobs:
-  main:
+  checks:
+    name: lint and repository checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           filter: tree:0
           fetch-depth: 0
-
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
-      # Learn more at https://nx.dev/ci/reference/nx-cloud-cli#npx-nxcloud-startcirun
-      # Uncomment this line to enable task distribution, and replace "e2e" with "e2e-ci" in the command below
-      # - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
-
-      # Cache node_modules
-      - uses: actions/setup-node@v4
+      - uses: ./.github/actions/setup-ci
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-
-      - run: npm ci
-
-      # Pull requests check only the projects their changes affect; pushes to main check everything.
-      - uses: nrwl/nx-set-shas@v4
-        with:
-          main-branch-name: main
-      - name: Choose check scope
-        id: scope
-        run: |
-          echo "CI_SCOPE=${{ github.event_name == 'push' && 'all' || 'affected' }}" >> "$GITHUB_ENV"
-          echo "NX_MODE=${{ github.event_name == 'push' && 'run-many' || 'affected' }}" >> "$GITHUB_ENV"
-          export CI_SCOPE=${{ github.event_name == 'push' && 'all' || 'affected' }}
-          for project in admin-e2e admin storefront site; do
-            echo "$project=$(node tools/ci/run-affected.mjs --check $project)" >> "$GITHUB_OUTPUT"
-          done
-          npx nx show projects --affected | sed 's/^/affected: /' || true
-
+          cache-name: checks
       - run: node tools/ci/check-dependency-tree.mjs
       - run: npm run security:audit
       - run: npm run contracts:check
       - run: npm run docs:check
-      - run: npx nx $NX_MODE -t lint
       - run: npm run architecture:boundaries
+      - run: npx nx $NX_MODE -t lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-ci
+        with:
+          cache-name: typecheck
       - run: npx nx $NX_MODE -t typecheck
       - run: npm run typecheck:tests
+
+  test:
+    name: unit and component tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-ci
+        with:
+          cache-name: test
       - run: node tools/ci/run-affected.mjs test:web
       - run: node tools/ci/run-affected.mjs test:mobile
       - run: node tools/ci/run-affected.mjs test:site
+
+  e2e:
+    name: admin e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-ci
+        with:
+          cache-name: e2e
+      - name: Check whether admin-e2e is affected
+        id: scope
+        run: echo "admin-e2e=$(node tools/ci/run-affected.mjs --check admin-e2e)" >> "$GITHUB_OUTPUT"
 
       # The Playwright browser is cached by version; system libraries still come from apt.
       - name: Read Playwright version
@@ -78,9 +96,38 @@ jobs:
       - if: steps.scope.outputs.admin-e2e == 'true'
         run: npm run test:web:e2e
 
+  build:
+    name: production builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-ci
+        with:
+          cache-name: build
+      - name: Choose affected apps
+        id: scope
+        run: |
+          for project in admin storefront site; do
+            echo "$project=$(node tools/ci/run-affected.mjs --check $project)" >> "$GITHUB_OUTPUT"
+          done
+          npx nx show projects --affected | sed 's/^/affected: /' || true
       - if: steps.scope.outputs.admin == 'true'
         run: npx nx build admin --configuration=production
       - if: steps.scope.outputs.storefront == 'true'
         run: npx nx build storefront --configuration=production
       - if: steps.scope.outputs.site == 'true'
         run: npx nx build site
+
+  main:
+    name: main
+    if: always()
+    needs: [checks, typecheck, test, e2e, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All checks passed
+        run: |
+          echo '${{ toJSON(needs) }}'
+          test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}" = "false"

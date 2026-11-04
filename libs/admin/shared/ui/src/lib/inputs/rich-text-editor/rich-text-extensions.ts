@@ -2,11 +2,13 @@ import StarterKit from '@tiptap/starter-kit';
 
 /**
  * Only what the backend sanitizers keep for category texts and articles: paragraphs, line breaks, bold, italic,
- * H2, H3, bulleted and numbered lists, and links.
+ * H2, H3, bulleted and numbered lists, and links. Site documents also keep quotes (`allowQuotes`).
  */
-export const richTextExtensions = [
+export const createRichTextExtensions = ({
+  allowQuotes = false,
+}: { allowQuotes?: boolean } = {}) => [
   StarterKit.configure({
-    blockquote: false,
+    blockquote: allowQuotes ? {} : false,
     code: false,
     codeBlock: false,
     heading: { levels: [2, 3] },
@@ -20,6 +22,8 @@ export const richTextExtensions = [
     underline: false,
   }),
 ];
+
+export const richTextExtensions = createRichTextExtensions();
 
 /** http, https, or a site path starting with `/`, as the backend allows. */
 export function validateLinkHref(value: string): string | undefined {
