@@ -7,20 +7,21 @@ import { WholesaleContent } from '@site/content/ui';
 import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
+import { getCompanyContacts } from '@site/shared/company';
 
 import type { WholesaleCompanyDetails } from '@site/content/model';
 import type { Locale } from '@site/core/i18n';
 
 /** Server-rendered wholesale offer with real catalog sections and manager contact. */
 export async function WholesalePage({ locale }: { locale: Locale }) {
-  const tree = await getCatalogTree(locale);
+  const [tree, contacts] = await Promise.all([getCatalogTree(locale), getCompanyContacts()]);
   const categories = tree?.filter((category) => category.id !== CATALOG_ROOTS.doorsId) ?? [];
   const details: WholesaleCompanyDetails = {
     name: COMPANY.name,
-    phone: COMPANY.phone,
-    city: COMPANY.address.city[locale],
-    telegram: COMPANY.links.telegram,
-    viber: COMPANY.links.viber,
+    phone: contacts.phone,
+    city: contacts.city[locale],
+    telegram: contacts.links.telegram,
+    viber: contacts.links.viber,
   };
 
   return (

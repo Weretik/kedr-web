@@ -1,5 +1,5 @@
 import { getPublicOfferDictionary } from '@site/content/model';
-import { COMPANY } from '@site/core/config';
+import { FALLBACK_COMPANY_CONTACTS as COMPANY_CONTACTS } from '@site/core/config';
 import { cleanup, render } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -10,7 +10,9 @@ afterEach(cleanup);
 describe.each(['uk', 'ru'] as const)('public offer document: %s', (locale) => {
   it('renders one localized title, original full name and same-language home', () => {
     const dictionary = getPublicOfferDictionary(locale);
-    const { container } = render(<PublicOfferContent dictionary={dictionary} />);
+    const { container } = render(
+      <PublicOfferContent dictionary={dictionary} contacts={COMPANY_CONTACTS} />,
+    );
     expect(container.querySelectorAll('h1')).toHaveLength(1);
     expect(container.querySelector('h1')?.textContent).toBe(dictionary.title);
     expect(container.textContent).toContain(dictionary.fullTitle);
@@ -23,7 +25,9 @@ describe.each(['uk', 'ru'] as const)('public offer document: %s', (locale) => {
   it('keeps all seven headings, 18 literal clauses and final note in complete server HTML', () => {
     const dictionary = getPublicOfferDictionary(locale);
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<PublicOfferContent dictionary={dictionary} />);
+    container.innerHTML = renderToStaticMarkup(
+      <PublicOfferContent dictionary={dictionary} contacts={COMPANY_CONTACTS} />,
+    );
     const legalDocument = container.querySelector('[data-offer-document]')!;
     expect(legalDocument).not.toBeNull();
     expect(legalDocument.querySelectorAll('section')).toHaveLength(7);
@@ -45,7 +49,9 @@ describe.each(['uk', 'ru'] as const)('public offer document: %s', (locale) => {
 
   it('provides seven unique targets and native mobile contents outside the legal text', () => {
     const dictionary = getPublicOfferDictionary(locale);
-    const { container } = render(<PublicOfferContent dictionary={dictionary} />);
+    const { container } = render(
+      <PublicOfferContent dictionary={dictionary} contacts={COMPANY_CONTACTS} />,
+    );
     const details = container.querySelector('details')!;
     expect(details).not.toBeNull();
     expect(details.hasAttribute('open')).toBe(false);
@@ -62,15 +68,17 @@ describe.each(['uk', 'ru'] as const)('public offer document: %s', (locale) => {
 
   it('uses configured phone/email and same-language related pages in the responsive contact blocks', () => {
     const dictionary = getPublicOfferDictionary(locale);
-    const { container } = render(<PublicOfferContent dictionary={dictionary} />);
+    const { container } = render(
+      <PublicOfferContent dictionary={dictionary} contacts={COMPANY_CONTACTS} />,
+    );
     const contacts = [...container.querySelectorAll('[data-offer-contact]')];
     expect(contacts.length).toBeGreaterThan(0);
     for (const contact of contacts) {
-      expect(contact.textContent).toContain(COMPANY.phone.display);
-      expect(contact.textContent).toContain(COMPANY.email);
+      expect(contact.textContent).toContain(COMPANY_CONTACTS.phone.display);
+      expect(contact.textContent).toContain(COMPANY_CONTACTS.email);
       const hrefs = [...contact.querySelectorAll('a')].map((a) => a.getAttribute('href'));
-      expect(hrefs).toContain('tel:' + COMPANY.phone.e164);
-      expect(hrefs).toContain('mailto:' + COMPANY.email);
+      expect(hrefs).toContain('tel:' + COMPANY_CONTACTS.phone.e164);
+      expect(hrefs).toContain('mailto:' + COMPANY_CONTACTS.email);
       expect(hrefs).toContain('/' + locale + '/delivery-and-payment');
       expect(hrefs).toContain('/' + locale + '/returns-exchanges');
     }

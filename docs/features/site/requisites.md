@@ -12,7 +12,7 @@
 flowchart LR
   Route["Next requisites route"] --> Feature["content/feature: RequisitesPage"]
   Route --> SEO["content/seo: metadata"]
-  Feature --> Facts["core/config: COMPANY_REQUISITES + COMPANY"]
+  Feature --> Facts["core/config: COMPANY_REQUISITES + shared/company phone"]
   Feature --> Model["content/model: dictionary + copy formatter"]
   Feature --> UI["content/ui: RequisitesContent"]
   Feature --> SEO

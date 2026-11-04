@@ -1,16 +1,18 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { Button, cn } from '@site/shared/ui';
 import { ArrowUpRightIcon, MailIcon, PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import type { PublicOfferDictionary } from '@site/content/model';
+import type { CompanyContacts } from '@site/core/config';
 
 export function PublicOfferContact({
   dictionary,
+  contacts,
   className,
 }: {
   dictionary: PublicOfferDictionary;
+  contacts: Pick<CompanyContacts, 'phone' | 'email'>;
   className?: string;
 }) {
   const related = [
@@ -38,14 +40,14 @@ export function PublicOfferContact({
         <h2 className="text-lg font-bold tracking-tight">{dictionary.helpTitle}</h2>
         <address className="mt-4 grid gap-3 text-sm not-italic">
           <a
-            href={'tel:' + COMPANY.phone.e164}
+            href={'tel:' + contacts.phone.e164}
             className="flex items-center gap-2 rounded-sm font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
           >
             <PhoneIcon aria-hidden className="size-4 shrink-0 text-brand-text" strokeWidth={1.75} />
-            {COMPANY.phone.display}
+            {contacts.phone.display}
           </a>
           <a
-            href={'mailto:' + COMPANY.email}
+            href={'mailto:' + contacts.email}
             className="flex items-start gap-2 rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
           >
             <MailIcon
@@ -53,11 +55,11 @@ export function PublicOfferContact({
               className="mt-0.5 size-4 shrink-0 text-brand-text"
               strokeWidth={1.75}
             />
-            <span className="[overflow-wrap:anywhere]">{COMPANY.email}</span>
+            <span className="[overflow-wrap:anywhere]">{contacts.email}</span>
           </a>
         </address>
         <Button asChild className="mt-5 min-h-11 w-full">
-          <a href={'tel:' + COMPANY.phone.e164}>{dictionary.call}</a>
+          <a href={'tel:' + contacts.phone.e164}>{dictionary.call}</a>
         </Button>
       </section>
     </div>

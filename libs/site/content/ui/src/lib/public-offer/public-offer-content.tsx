@@ -7,9 +7,16 @@ import styles from './public-offer-print.module.css';
 import { PublicOfferToc } from './public-offer-toc';
 
 import type { PublicOfferDictionary } from '@site/content/model';
+import type { CompanyContacts } from '@site/core/config';
 
 /** Full server document; only the contents and print action need browser enhancement. */
-export function PublicOfferContent({ dictionary }: { dictionary: PublicOfferDictionary }) {
+export function PublicOfferContent({
+  dictionary,
+  contacts,
+}: {
+  dictionary: PublicOfferDictionary;
+  contacts: Pick<CompanyContacts, 'phone' | 'email'>;
+}) {
   const items = dictionary.sections.map(({ id, tocLabel }) => ({ id, label: tocLabel }));
 
   return (
@@ -24,10 +31,14 @@ export function PublicOfferContent({ dictionary }: { dictionary: PublicOfferDict
           className="min-w-0 lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:self-start lg:overflow-y-auto"
         >
           <PublicOfferToc items={items} label={dictionary.contentsLabel} />
-          <PublicOfferContact dictionary={dictionary} className="mt-6 hidden lg:block" />
+          <PublicOfferContact
+            dictionary={dictionary}
+            contacts={contacts}
+            className="mt-6 hidden lg:block"
+          />
         </aside>
         <PublicOfferDocument dictionary={dictionary} />
-        <PublicOfferContact dictionary={dictionary} className="lg:hidden" />
+        <PublicOfferContact dictionary={dictionary} contacts={contacts} className="lg:hidden" />
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import {
   ArrowRightIcon,
   ClipboardCheckIcon,
@@ -8,10 +7,17 @@ import {
 } from 'lucide-react';
 
 import type { CompanyDictionary } from '../i18n/company-dictionary';
+import type { CompanyContacts } from '@site/core/config';
 
 const ICONS = [LayersIcon, WarehouseIcon, ClipboardCheckIcon, TruckIcon] as const;
 
-export function HomeCompany({ dictionary }: { dictionary: CompanyDictionary }) {
+export function HomeCompany({
+  dictionary,
+  phone,
+}: {
+  dictionary: CompanyDictionary;
+  phone: CompanyContacts['phone'];
+}) {
   return (
     <section
       id="about-company"
@@ -31,7 +37,7 @@ export function HomeCompany({ dictionary }: { dictionary: CompanyDictionary }) {
           ))}
         </div>
         <a
-          href={'tel:' + COMPANY.phone.e164}
+          href={'tel:' + phone.e164}
           className="mt-7 flex w-fit items-center gap-3 border-b border-brand-text pb-1 font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         >
           {dictionary.contact}

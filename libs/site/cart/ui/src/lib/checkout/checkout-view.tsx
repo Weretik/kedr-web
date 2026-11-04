@@ -28,6 +28,7 @@ export function CheckoutView(props: CheckoutViewProps) {
     pending,
     recovery,
     receipt,
+    phone,
     onChangeQuantity,
     onRemove,
     onSubmit,
@@ -37,7 +38,7 @@ export function CheckoutView(props: CheckoutViewProps) {
     return (
       <div className="grid gap-5">
         <CartNotices {...props} recovery={null} notice={null} />
-        <OrderConfirmation locale={locale} receipt={receipt} />
+        <OrderConfirmation locale={locale} receipt={receipt} phone={phone} />
       </div>
     );
   if (restoring) return <CheckoutLoading locale={locale} />;
@@ -126,7 +127,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                 canSubmit={canSubmit}
               />
             </form>
-            <CartHelp locale={locale} />
+            <CartHelp locale={locale} phone={phone} />
           </div>
         </div>
       </div>

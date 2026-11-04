@@ -1,6 +1,7 @@
 import { JsonLd } from '@site/core/seo';
 import { buildProductBreadcrumbJsonLd, buildProductJsonLd } from '@site/product/seo';
 import { ProductDetailView } from '@site/product/ui';
+import { getCompanyContacts } from '@site/shared/company';
 
 import { productCrumbs } from './product-crumbs';
 import { productPurchaseDescriptor } from './product-purchase-descriptor';
@@ -34,7 +35,10 @@ export async function ProductPage({
   const purchaseAction = renderPurchaseAction?.(descriptor);
   const stickyPurchaseAction = renderStickyPurchaseAction?.(descriptor);
   const crumbs = productCrumbs(locale, product);
-  const languagePaths = await getProductLanguagePaths(locale, product);
+  const [languagePaths, { phone }] = await Promise.all([
+    getProductLanguagePaths(locale, product),
+    getCompanyContacts(),
+  ]);
   const seo = productSeoInput(locale, product, crumbs, languagePaths);
   return (
     <>
@@ -43,6 +47,7 @@ export async function ProductPage({
         product={product}
         categoryHref={productCategoryHref(locale, product)}
         breadcrumbs={crumbs}
+        phone={phone}
         purchaseAction={purchaseAction}
         stickyPurchaseAction={stickyPurchaseAction}
       />

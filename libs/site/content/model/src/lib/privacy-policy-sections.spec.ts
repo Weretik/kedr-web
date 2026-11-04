@@ -157,7 +157,9 @@ it.each(cases)(
     expect(output).not.toContain('kedr.class19@gmail.com');
     expect(output).not.toContain('(068) 713-50-49');
     expect(source['privacy.section1.p1']).toContain('kedr-web.vercel.app');
-    expect(source['privacy.section8.p1']).toContain('kedr.class19@gmail.com');
-    expect(source['privacy.section8.p1']).toContain('(068) 713-50-49');
+    expect(source['privacy.section8.p1']).toContain('{email}');
+    expect(source['privacy.section8.p1']).toContain('{phone}');
+    expect(output).not.toContain('{email}');
+    expect(output).not.toContain('{phone}');
   },
 );

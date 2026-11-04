@@ -2,7 +2,7 @@
 
 **Routes:** `/uk/contacts`, `/ru/contacts`. [SDD and accepted design](../../specs/site/content/001-contacts/README.md).
 
-The page offers the sales phone, an independent copy action, Telegram, Viber, email and the configured map link. It shows the localized city, advice to arrange a visit, a wholesale contact strip and same-language delivery/returns links. Company facts come from `COMPANY`; copy comes from the content model. No contact form, backend operation or personal-data storage is introduced.
+The page offers the sales phone, an independent copy action, Telegram, Viber, email and the configured map link. It shows the localized city, advice to arrange a visit, a wholesale contact strip and same-language delivery/returns links. Contacts come from `getCompanyContacts()` ([company contacts](company-contacts.md)), edited in the admin; copy comes from the content model. No contact form, backend operation or personal-data storage is introduced.
 
 ## Architecture
 
@@ -11,7 +11,7 @@ flowchart LR
   Route["Next contacts route"] --> Feature["content/feature: ContactsPage"]
   Route --> SEO["content/seo: metadata"]
   Feature --> Model["content/model: UK/RU copy"]
-  Feature --> Config["core/config: COMPANY"]
+  Feature --> Contacts["shared/company: getCompanyContacts"]
   Feature --> UI["content/ui: ContactsContent"]
   Feature --> SEO
   Feature --> JSON["core/seo: JsonLd"]

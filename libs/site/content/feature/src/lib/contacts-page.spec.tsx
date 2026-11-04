@@ -1,30 +1,45 @@
-import { COMPANY, siteConfig } from '@site/core/config';
+import { siteConfig } from '@site/core/config';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { ContactsPage } from './contacts-page';
+
+const { contacts } = vi.hoisted(() => ({
+  contacts: {
+    phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+    email: 'sales@example.test',
+    city: { uk: 'Київ', ru: 'Киев' },
+    links: {
+      telegram: 'https://t.me/kedr_sales',
+      viber: 'viber://chat?number=%2B380671112233',
+      map: 'https://maps.app.goo.gl/abc',
+    },
+  },
+}));
+
+vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
 
 describe.each([
   { locale: 'uk' as const, title: 'Контакти' },
   { locale: 'ru' as const, title: 'Контакты' },
 ])('contacts server composition: $locale', ({ locale, title }) => {
-  it('renders configured company facts and contact links before hydration without a nested main', () => {
+  it('renders configured company facts and contact links before hydration without a nested main', async () => {
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<ContactsPage locale={locale} />);
+    container.innerHTML = renderToStaticMarkup(await ContactsPage({ locale }));
 
     expect(container.querySelectorAll('h1')).toHaveLength(1);
     expect(container.querySelector('h1')?.textContent).toBe(title);
-    expect(container.textContent).toContain(COMPANY.phone.display);
-    expect(container.textContent).toContain(COMPANY.email);
-    expect(container.textContent).toContain(COMPANY.address.city[locale]);
+    expect(container.textContent).toContain(contacts.phone.display);
+    expect(container.textContent).toContain(contacts.email);
+    expect(container.textContent).toContain(contacts.city[locale]);
     expect(container.querySelector('main')).toBeNull();
 
     const hrefs = [...container.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     for (const href of [
-      `tel:${COMPANY.phone.e164}`,
-      `mailto:${COMPANY.email}`,
-      COMPANY.links.telegram,
-      COMPANY.links.viber,
-      COMPANY.links.map,
+      `tel:${contacts.phone.e164}`,
+      `mailto:${contacts.email}`,
+      contacts.links.telegram,
+      contacts.links.viber,
+      contacts.links.map,
       `/${locale}/delivery-and-payment`,
       `/${locale}/returns-exchanges`,
     ]) {
@@ -32,9 +47,9 @@ describe.each([
     }
   });
 
-  it('renders one localized breadcrumb graph and leaves the organization to the layout', () => {
+  it('renders one localized breadcrumb graph and leaves the organization to the layout', async () => {
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<ContactsPage locale={locale} />);
+    container.innerHTML = renderToStaticMarkup(await ContactsPage({ locale }));
     const scripts = container.querySelectorAll('script[type="application/ld+json"]');
 
     expect(scripts).toHaveLength(1);

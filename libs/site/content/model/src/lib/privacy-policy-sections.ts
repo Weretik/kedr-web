@@ -20,14 +20,13 @@ export type PrivacyTocLabels = readonly [
 type PrivacyParagraphKey = Extract<PrivacyPolicyKey, `privacy.section${number}.p${number}`>;
 type PrivacyListKey = Extract<PrivacyPolicyKey, `privacy.section${number}.li${number}`>;
 
-/** Replaces only the two existing contact tokens in the full §8 paragraph. */
+/** Fills the `{email}` and `{phone}` placeholders of the §8 paragraph with links to the saved contacts. */
 function bindContactParagraph(
   text: string,
   bindings: PrivacyPolicyBindings,
 ): readonly PrivacyInline[] {
   const content: PrivacyInline[] = [];
-  const contactTokens =
-    /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|\(\d{3}\) \d{3}-\d{2}-\d{2}/g;
+  const contactTokens = /\{email\}|\{phone\}/g;
   let offset = 0;
 
   for (const match of text.matchAll(contactTokens)) {
@@ -35,7 +34,7 @@ function bindContactParagraph(
       content.push({ text: text.slice(offset, match.index) });
     }
     content.push(
-      match[0].includes('@')
+      match[0] === '{email}'
         ? { text: bindings.email, href: `mailto:${bindings.email}` }
         : { text: bindings.phoneDisplay, href: bindings.phoneHref },
     );

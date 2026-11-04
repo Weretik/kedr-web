@@ -2,14 +2,15 @@ import { COMPANY, siteConfig } from '@site/core/config';
 import { LOCALE_LANGUAGE_TAGS, localizedPath } from '@site/core/i18n';
 
 import type { JsonLdData } from './json-ld';
-import type { SiteConfig } from '@site/core/config';
+import type { CompanyContacts, SiteConfig } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 const organizationId = (config: SiteConfig) => `${config.siteUrl}/#organization`;
 
-/** Organization with public contacts; rendered once in the root layout. */
+/** Organization with the contacts saved in the admin; rendered once in the root layout. */
 export function buildOrganizationJsonLd(
   locale: Locale,
+  contacts: CompanyContacts,
   config: SiteConfig = siteConfig,
 ): JsonLdData {
   return {
@@ -19,16 +20,16 @@ export function buildOrganizationJsonLd(
     name: COMPANY.name,
     url: `${config.siteUrl}${localizedPath(locale)}`,
     logo: `${config.siteUrl}/assets/logo/main-logo.svg`,
-    email: COMPANY.email,
-    telephone: COMPANY.phone.e164,
+    email: contacts.email,
+    telephone: contacts.phone.e164,
     address: {
       '@type': 'PostalAddress',
-      addressLocality: COMPANY.address.city[locale],
+      addressLocality: contacts.city[locale],
       addressCountry: COMPANY.address.countryCode,
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: COMPANY.phone.e164,
+      telephone: contacts.phone.e164,
       contactType: 'sales',
       areaServed: COMPANY.address.countryCode,
       availableLanguage: ['uk', 'ru'],

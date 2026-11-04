@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { MailIcon, MapPinIcon, PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -9,6 +8,7 @@ import { INFO_LINKS, LEGAL_LINKS, SHELL_PATHS } from '../navigation/site-navigat
 
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { ShellLink } from '../navigation/catalog-navigation';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 type FooterColumn = {
@@ -20,10 +20,12 @@ type FooterColumn = {
 export function SiteFooter({
   locale,
   dictionary,
+  contacts,
   categoryLinks,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
+  contacts: CompanyContacts;
   /** The same sections as the header: from the catalog tree, or the fixed fallback. */
   categoryLinks: readonly ShellLink[];
 }) {
@@ -74,22 +76,22 @@ export function SiteFooter({
         ))}
         <address className="grid content-start gap-2 text-sm not-italic">
           <h2 className="mb-1 text-sm font-semibold">{dictionary.footerContacts}</h2>
-          <a href={`tel:${COMPANY.phone.e164}`} className="flex items-center gap-2 font-semibold">
+          <a href={`tel:${contacts.phone.e164}`} className="flex items-center gap-2 font-semibold">
             <PhoneIcon className="size-4" strokeWidth={1.75} />
-            {COMPANY.phone.display}
+            {contacts.phone.display}
           </a>
           <a
-            href={`mailto:${COMPANY.email}`}
+            href={`mailto:${contacts.email}`}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
           >
             <MailIcon className="size-4" strokeWidth={1.75} />
-            {COMPANY.email}
+            {contacts.email}
           </a>
           <span className="flex items-center gap-2 text-muted-foreground">
             <MapPinIcon className="size-4" strokeWidth={1.75} />
-            {dictionary.city}
+            {dictionary.cityPrefix} {contacts.city[locale]}
           </span>
-          <MessengerLinks dictionary={dictionary} />
+          <MessengerLinks dictionary={dictionary} links={contacts.links} />
         </address>
       </div>
       <div className="border-t border-border">

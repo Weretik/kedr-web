@@ -10,7 +10,7 @@ type GetPath = { [P in keyof paths]: paths[P] extends { get: unknown } ? P : nev
 /** Public catalog and content read paths; the anonymous order mutation has its own fixed server-only transport. */
 export type PublicGetPath = Extract<
   GetPath,
-  `/api/catalog/${string}` | `/api/content/{lang}/${string}`
+  `/api/catalog/${string}` | `/api/content/{lang}/${string}` | '/api/content/contacts'
 >;
 
 type GetOperation<P extends GetPath> = paths[P] extends { get: infer Operation }

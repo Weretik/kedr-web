@@ -31,6 +31,13 @@ describe('checkout presentation', () => {
     },
   );
 
+  it('calls the sales phone passed from the admin contacts', () => {
+    render(<CheckoutView {...checkoutFixture()} />);
+
+    for (const link of screen.getAllByRole('link', { name: '(067) 111-22-33' }))
+      expect(link.getAttribute('href')).toBe('tel:+380671112233');
+  });
+
   it('forwards contact changes, blur and one explicit form submit', () => {
     const props = checkoutFixture({
       onDraftChange: vi.fn(),

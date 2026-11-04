@@ -1,4 +1,4 @@
-import { createSiteConfig } from '@site/core/config';
+import { FALLBACK_COMPANY_CONTACTS, createSiteConfig } from '@site/core/config';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { JsonLd, serializeJsonLd } from './json-ld';
@@ -20,12 +20,28 @@ describe('JSON-LD', () => {
   });
 
   it('describes the organization with localized city and contacts', () => {
-    expect(buildOrganizationJsonLd('ru', config)).toMatchObject({
+    expect(buildOrganizationJsonLd('ru', FALLBACK_COMPANY_CONTACTS, config)).toMatchObject({
       '@type': 'Organization',
       '@id': 'https://classkedr.com.ua/#organization',
       url: 'https://classkedr.com.ua/ru',
       telephone: '+380687135049',
       address: { addressLocality: 'Харьков', addressCountry: 'UA' },
+    });
+  });
+
+  it('uses the contacts saved in the admin', () => {
+    const contacts = {
+      ...FALLBACK_COMPANY_CONTACTS,
+      phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+      email: 'sales@example.test',
+      city: { uk: 'Київ', ru: 'Киев' },
+    };
+
+    expect(buildOrganizationJsonLd('uk', contacts, config)).toMatchObject({
+      email: 'sales@example.test',
+      telephone: '+380671112233',
+      address: { addressLocality: 'Київ' },
+      contactPoint: { telephone: '+380671112233' },
     });
   });
 

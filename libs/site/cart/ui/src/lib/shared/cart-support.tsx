@@ -1,10 +1,10 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { PhoneIcon, TruckIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { getCartCopy } from '../i18n/cart-copy';
 
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 
 export function CartServiceNote({
@@ -37,7 +37,7 @@ export function CartServiceNote({
   );
 }
 
-export function CartHelp({ locale }: { locale: Locale }) {
+export function CartHelp({ locale, phone }: { locale: Locale; phone: CompanyContacts['phone'] }) {
   const copy = getCartCopy(locale);
   return (
     <div className="flex items-start gap-3 px-1 text-sm">
@@ -49,10 +49,10 @@ export function CartHelp({ locale }: { locale: Locale }) {
       <div>
         <p className="text-muted-foreground">{copy.help}</p>
         <a
-          href={`tel:${COMPANY.phone.e164}`}
+          href={`tel:${phone.e164}`}
           className="mt-1 inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         >
-          {COMPANY.phone.display}
+          {phone.display}
         </a>
       </div>
     </div>

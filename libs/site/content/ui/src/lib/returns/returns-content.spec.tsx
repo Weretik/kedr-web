@@ -1,5 +1,5 @@
 import { getReturnsDictionary } from '@site/content/model';
-import { COMPANY } from '@site/core/config';
+import { FALLBACK_COMPANY_CONTACTS as COMPANY_CONTACTS } from '@site/core/config';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
 import { ReturnsContent } from './returns-content';
@@ -25,7 +25,9 @@ describe.each([
   },
 ])('returns page: $locale', ({ locale, title, call, home, exclusion, visual }) => {
   it('has one translated H1, the same-language home and real anchor destinations', () => {
-    const { container } = render(<ReturnsContent dictionary={getReturnsDictionary(locale)} />);
+    const { container } = render(
+      <ReturnsContent dictionary={getReturnsDictionary(locale)} phone={COMPANY_CONTACTS.phone} />,
+    );
     const header = within(container.querySelector('header')!);
     expect(container.querySelectorAll('h1')).toHaveLength(1);
     expect(header.getByRole('heading', { level: 1 }).textContent).toBe(title);
@@ -44,7 +46,9 @@ describe.each([
 
   it('shows both term panels, all summary rows and ordered process steps', () => {
     const dictionary = getReturnsDictionary(locale);
-    const { container } = render(<ReturnsContent dictionary={dictionary} />);
+    const { container } = render(
+      <ReturnsContent dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />,
+    );
     const conditions = screen.getByRole('region', { name: dictionary.conditionsTitle });
     const warranty = screen.getByRole('region', { name: dictionary.warrantyTitle });
     expect(conditions.querySelectorAll('dt')).toHaveLength(4);
@@ -61,13 +65,13 @@ describe.each([
 
   it('uses configured contact details and retains complete policy subjects', () => {
     const dictionary = getReturnsDictionary(locale);
-    render(<ReturnsContent dictionary={dictionary} />);
+    render(<ReturnsContent dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />);
     expect(screen.getByRole('link', { name: call }).getAttribute('href')).toBe(
-      'tel:' + COMPANY.phone.e164,
+      'tel:' + COMPANY_CONTACTS.phone.e164,
     );
-    expect(screen.getByRole('link', { name: COMPANY.phone.display }).getAttribute('href')).toBe(
-      'tel:' + COMPANY.phone.e164,
-    );
+    expect(
+      screen.getByRole('link', { name: COMPANY_CONTACTS.phone.display }).getAttribute('href'),
+    ).toBe('tel:' + COMPANY_CONTACTS.phone.e164);
     const policy = screen.getByRole('region', { name: dictionary.policyTitle });
     expect(policy.textContent).toContain(exclusion);
     expect(policy.textContent).toContain(visual);
@@ -76,7 +80,9 @@ describe.each([
 
   it('delivers FAQ answers in native disclosure markup without client handlers', () => {
     const dictionary = getReturnsDictionary(locale);
-    const { container } = render(<ReturnsContent dictionary={dictionary} />);
+    const { container } = render(
+      <ReturnsContent dictionary={dictionary} phone={COMPANY_CONTACTS.phone} />,
+    );
     const items = [...container.querySelectorAll('details[name="returns-faq"]')];
     expect(items).toHaveLength(3);
     for (let index = 0; index < items.length; index += 1) {

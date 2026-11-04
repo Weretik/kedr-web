@@ -6,6 +6,7 @@ import { resolveCategoryLinks } from '../navigation/catalog-navigation';
 
 import type { ShellDictionary } from '../i18n/shell-dictionary';
 import type { CatalogNavigation } from '../navigation/catalog-navigation';
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
@@ -16,12 +17,14 @@ import type { ReactNode } from 'react';
 export function SiteHeader({
   locale,
   dictionary,
+  contacts,
   catalogNavigation,
   cartAction,
   compactCartAction,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
+  contacts: CompanyContacts;
   catalogNavigation?: CatalogNavigation;
   cartAction?: ReactNode;
   compactCartAction?: ReactNode;
@@ -33,10 +36,11 @@ export function SiteHeader({
       className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85"
       collapsible={
         <>
-          <TopBar locale={locale} dictionary={dictionary} />
+          <TopBar locale={locale} dictionary={dictionary} contacts={contacts} />
           <MainBar
             locale={locale}
             dictionary={dictionary}
+            contacts={contacts}
             categoryLinks={categoryLinks}
             catalogMenu={catalogNavigation?.menu}
             cartAction={cartAction}

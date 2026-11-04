@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import { localizedPath } from '@site/core/i18n';
 import { Button } from '@site/shared/ui';
 import { AlertCircleIcon, ArrowRightIcon, LoaderCircleIcon } from 'lucide-react';
@@ -12,7 +11,7 @@ import type { CheckoutViewProps } from '../types/cart-ui-props';
 
 type CheckoutSummaryProps = Pick<
   CheckoutViewProps,
-  'locale' | 'pending' | 'canSubmit' | 'formMessages' | 'resultKind'
+  'locale' | 'pending' | 'canSubmit' | 'formMessages' | 'resultKind' | 'phone'
 > & {
   unitCount: number;
   goodsSubtotal: number;
@@ -24,6 +23,7 @@ export function CheckoutSummary({
   canSubmit,
   formMessages,
   resultKind,
+  phone,
   unitCount,
   goodsSubtotal,
 }: CheckoutSummaryProps) {
@@ -81,10 +81,10 @@ export function CheckoutSummary({
             </ul>
             {(resultKind === 'uncertain' || resultKind === 'conflict') && (
               <a
-                href={`tel:${COMPANY.phone.e164}`}
+                href={`tel:${phone.e164}`}
                 className="mt-2 inline-flex min-h-11 items-center font-semibold underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
               >
-                {COMPANY.phone.display}
+                {phone.display}
               </a>
             )}
           </div>

@@ -1,4 +1,3 @@
-import { COMPANY } from '@site/core/config';
 import { formatPrice, localizedPath } from '@site/core/i18n';
 import { getProductPurchaseMode } from '@site/product/model';
 import { Button } from '@site/shared/ui';
@@ -7,6 +6,7 @@ import Link from 'next/link';
 
 import { getProductDictionary } from '../i18n/product-dictionary';
 
+import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ProductDetails } from '@site/product/model';
 import type { ReactNode } from 'react';
@@ -15,6 +15,8 @@ type ProductPurchasePanelProps = {
   id?: string;
   locale: Locale;
   product: ProductDetails;
+  /** Sales phone for products sold on request. */
+  phone: CompanyContacts['phone'];
   purchaseAction?: ReactNode;
 };
 
@@ -23,6 +25,7 @@ export function ProductPurchasePanel({
   id,
   locale,
   product,
+  phone,
   purchaseAction,
 }: ProductPurchasePanelProps) {
   const dictionary = getProductDictionary(locale);
@@ -104,11 +107,11 @@ export function ProductPurchasePanel({
               </Link>
             </Button>
             <a
-              href={`tel:${COMPANY.phone.e164}`}
+              href={`tel:${phone.e164}`}
               className="inline-flex items-center gap-2 text-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
               <PhoneIcon aria-hidden className="size-4" strokeWidth={1.75} />
-              {COMPANY.phone.display}
+              {phone.display}
             </a>
           </div>
         )}

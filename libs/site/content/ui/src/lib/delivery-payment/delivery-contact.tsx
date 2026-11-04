@@ -1,10 +1,16 @@
-import { COMPANY } from '@site/core/config';
 import { Button } from '@site/shared/ui';
 import { PhoneIcon } from 'lucide-react';
 
 import type { DeliveryPaymentDictionary } from '../i18n/delivery-payment-dictionary';
+import type { CompanyContacts } from '@site/core/config';
 
-export function DeliveryContact({ dictionary }: { dictionary: DeliveryPaymentDictionary }) {
+export function DeliveryContact({
+  dictionary,
+  phone,
+}: {
+  dictionary: DeliveryPaymentDictionary;
+  phone: CompanyContacts['phone'];
+}) {
   return (
     <aside
       aria-labelledby="delivery-contact-title"
@@ -15,10 +21,10 @@ export function DeliveryContact({ dictionary }: { dictionary: DeliveryPaymentDic
       </h2>
       <p className="mt-4 flex items-center gap-2 text-lg font-semibold">
         <PhoneIcon aria-hidden className="size-5 shrink-0 text-brand-text" strokeWidth={1.75} />
-        {COMPANY.phone.display}
+        {phone.display}
       </p>
       <Button asChild className="mt-5 min-h-11 w-full">
-        <a href={`tel:${COMPANY.phone.e164}`}>{dictionary.call}</a>
+        <a href={`tel:${phone.e164}`}>{dictionary.call}</a>
       </Button>
     </aside>
   );

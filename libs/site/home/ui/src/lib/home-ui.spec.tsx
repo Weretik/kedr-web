@@ -19,14 +19,20 @@ describe('home UI', () => {
   });
 
   it('lists wholesale benefits with the cooperation page and a call link', () => {
-    render(<WholesalePanel locale="ru" dictionary={getHomeDictionary('ru')} />);
+    render(
+      <WholesalePanel
+        locale="ru"
+        dictionary={getHomeDictionary('ru')}
+        phone={{ display: '(067) 111-22-33', e164: '+380671112233' }}
+      />,
+    );
 
     expect(screen.getAllByRole('listitem')).toHaveLength(4);
     expect(screen.getByRole('link', { name: 'Стать партнером' }).getAttribute('href')).toBe(
       '/ru/wholesale',
     );
     expect(screen.getByRole('link', { name: /Позвонить/ }).getAttribute('href')).toBe(
-      'tel:+380687135049',
+      'tel:+380671112233',
     );
   });
 

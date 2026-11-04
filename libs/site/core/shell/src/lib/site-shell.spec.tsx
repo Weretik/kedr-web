@@ -1,3 +1,4 @@
+import { FALLBACK_COMPANY_CONTACTS } from '@site/core/config';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 
 import { SiteShell } from './site-shell';
@@ -12,7 +13,11 @@ describe('SiteShell', () => {
   ] as const)(
     'links to the home company section from every menu in %s',
     (locale, label, openMenu) => {
-      render(<SiteShell locale={locale}>content</SiteShell>);
+      render(
+        <SiteShell contacts={FALLBACK_COMPANY_CONTACTS} locale={locale}>
+          content
+        </SiteShell>,
+      );
 
       const expectedHref = `/${locale}#about-company`;
       const header = screen.getByRole('banner');
@@ -33,7 +38,7 @@ describe('SiteShell', () => {
 
   it('renders the header contacts, catalog sections, and localized links', () => {
     render(
-      <SiteShell locale="ru">
+      <SiteShell contacts={FALLBACK_COMPANY_CONTACTS} locale="ru">
         <h1>Страница</h1>
       </SiteShell>,
     );
@@ -50,9 +55,48 @@ describe('SiteShell', () => {
     expect(screen.getByRole('main').textContent).toContain('Страница');
   });
 
+  it('shows the contacts saved in the admin in the header and footer', () => {
+    render(
+      <SiteShell
+        locale="uk"
+        contacts={{
+          phone: { display: '(067) 111-22-33', e164: '+380671112233' },
+          email: 'sales@example.test',
+          city: { uk: 'Київ', ru: 'Киев' },
+          links: {
+            telegram: 'https://t.me/kedr_sales',
+            viber: 'viber://chat?number=%2B380671112233',
+            map: 'https://maps.app.goo.gl/abc',
+          },
+        }}
+      >
+        content
+      </SiteShell>,
+    );
+
+    const header = screen.getByRole('banner');
+    const footer = screen.getByRole('contentinfo');
+    expect(within(header).getByText('Україна, м. Київ')).toBeTruthy();
+    expect(
+      within(header)
+        .getByRole('link', { name: /\(067\) 111-22-33/ })
+        .getAttribute('href'),
+    ).toBe('tel:+380671112233');
+    expect(
+      within(footer).getByRole('link', { name: 'sales@example.test' }).getAttribute('href'),
+    ).toBe('mailto:sales@example.test');
+    expect(within(footer).getByText('Україна, м. Київ')).toBeTruthy();
+    expect(
+      within(footer)
+        .getAllByRole('link', { name: /Telegram/ })[0]
+        ?.getAttribute('href'),
+    ).toBe('https://t.me/kedr_sales');
+  });
+
   it('uses the catalog navigation passed by the layout', () => {
     render(
       <SiteShell
+        contacts={FALLBACK_COMPANY_CONTACTS}
         locale="uk"
         catalogNavigation={{
           menu: <button type="button">Мега-меню</button>,
@@ -72,7 +116,11 @@ describe('SiteShell', () => {
   });
 
   it('switches language on the same page', () => {
-    render(<SiteShell locale="ru">content</SiteShell>);
+    render(
+      <SiteShell contacts={FALLBACK_COMPANY_CONTACTS} locale="ru">
+        content
+      </SiteShell>,
+    );
 
     const switches = screen.getAllByRole('navigation', { name: 'Язык сайта' });
     const ua = within(switches[0] as HTMLElement).getByRole('link', { name: 'UA' });

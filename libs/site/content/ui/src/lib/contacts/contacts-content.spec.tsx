@@ -1,5 +1,5 @@
 import { getContactsDictionary } from '@site/content/model';
-import { COMPANY } from '@site/core/config';
+import { FALLBACK_COMPANY_CONTACTS as CONTACTS } from '@site/core/config';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
 import { ContactsContent } from './contacts-content';
@@ -10,10 +10,10 @@ afterEach(cleanup);
 
 function detailsFor(locale: 'uk' | 'ru'): ContactsDetails {
   return {
-    phone: COMPANY.phone,
-    email: COMPANY.email,
-    city: COMPANY.address.city[locale],
-    ...COMPANY.links,
+    phone: CONTACTS.phone,
+    email: CONTACTS.email,
+    city: CONTACTS.city[locale],
+    ...CONTACTS.links,
   };
 }
 
@@ -59,12 +59,12 @@ describe.each(['uk', 'ru'] as const)('contacts content: %s', (locale) => {
     const salesLinks = within(sales).getAllByRole('link');
 
     expect(salesLinks.map((link) => link.textContent)).toEqual([
-      COMPANY.phone.display,
+      CONTACTS.phone.display,
       dictionary.call,
     ]);
     expect(salesLinks.map((link) => link.getAttribute('href'))).toEqual([
-      'tel:' + COMPANY.phone.e164,
-      'tel:' + COMPANY.phone.e164,
+      'tel:' + CONTACTS.phone.e164,
+      'tel:' + CONTACTS.phone.e164,
     ]);
     expect(
       within(sales).getByRole('button', { name: dictionary.copyLabel }).getAttribute('type'),
@@ -79,16 +79,16 @@ describe.each(['uk', 'ru'] as const)('contacts content: %s', (locale) => {
     const links = within(written).getAllByRole('link');
 
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
-      COMPANY.links.telegram,
-      COMPANY.links.viber,
-      'mailto:' + COMPANY.email,
+      CONTACTS.links.telegram,
+      CONTACTS.links.viber,
+      'mailto:' + CONTACTS.email,
     ]);
     expect(links[0].textContent).toContain('Telegram');
     expect(links[0].textContent).toContain(dictionary.telegramCaption);
     expect(links[1].textContent).toContain('Viber');
     expect(links[1].textContent).toContain(dictionary.viberCaption);
     expect(links[2].textContent).toContain(dictionary.emailLabel);
-    expect(links[2].textContent).toContain(COMPANY.email);
+    expect(links[2].textContent).toContain(CONTACTS.email);
     expect(links[0].getAttribute('rel')).toContain('noopener');
   });
 
@@ -97,14 +97,14 @@ describe.each(['uk', 'ru'] as const)('contacts content: %s', (locale) => {
     render(<ContactsContent dictionary={dictionary} details={detailsFor(locale)} />);
     const location = screen.getByRole('region', { name: dictionary.locationTitle });
 
-    expect(within(location).getByText(COMPANY.address.city[locale])).toBeDefined();
+    expect(within(location).getByText(CONTACTS.city[locale])).toBeDefined();
     expect(within(location).getByText(dictionary.visitText)).toBeDefined();
     expect(
       within(location).getByRole('link', { name: dictionary.openMap }).getAttribute('href'),
-    ).toBe(COMPANY.links.map);
+    ).toBe(CONTACTS.links.map);
     expect(
       within(location).getByRole('link', { name: dictionary.contactManager }).getAttribute('href'),
-    ).toBe('tel:' + COMPANY.phone.e164);
+    ).toBe('tel:' + CONTACTS.phone.e164);
   });
 
   it('links cooperation to Telegram and both help pages to the current language', () => {
@@ -113,7 +113,7 @@ describe.each(['uk', 'ru'] as const)('contacts content: %s', (locale) => {
     const wholesale = screen.getByRole('region', { name: dictionary.wholesaleTitle });
     expect(
       within(wholesale).getByRole('link', { name: dictionary.writeManager }).getAttribute('href'),
-    ).toBe(COMPANY.links.telegram);
+    ).toBe(CONTACTS.links.telegram);
     const help = screen.getByRole('navigation', { name: dictionary.helpLabel });
     expect(
       within(help).getByRole('link', { name: dictionary.deliveryLink }).getAttribute('href'),
@@ -140,8 +140,8 @@ it('renders supplied company facts instead of freezing a second copy in the UI',
     'tel:' + supplied.phone.e164,
   );
   expect(screen.getByText(supplied.city)).toBeDefined();
-  expect(container.textContent).not.toContain(COMPANY.phone.display);
-  expect(container.textContent).not.toContain(COMPANY.email);
+  expect(container.textContent).not.toContain(CONTACTS.phone.display);
+  expect(container.textContent).not.toContain(CONTACTS.email);
   expect(container.querySelector('a[href="mailto:sales@example.test"]')).not.toBeNull();
   expect(container.querySelector('a[href="https://maps.example.test/company"]')).not.toBeNull();
 });
