@@ -232,26 +232,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/products/missing-photos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List active products whose latest photo check is unavailable
-         * @description Policy CanManageProducts. Reads persisted photo-check state only and does not contact the CDN while handling the request.
-         */
-        get: operations["getAdminProductsWithUnavailablePhotos"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/admin/products/by-slug/{productSlug}": {
         parameters: {
             query?: never;
@@ -285,6 +265,32 @@ export interface paths {
          * @description The previous slug moves to history and keeps resolving to this product. A slug used now or before by another product is rejected. Repeating the same request is safe.
          */
         put: operations["changeAdminProductSlug"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * Get the photos and the scheme linked to a product
+         * @description Policies CanManageProducts and CanManageMedia (Manager and Admin). Photos come in gallery order; file names are read from the media library.
+         */
+        get: operations["getAdminProductMedia"];
+        /**
+         * Replace the photos and the scheme of a product
+         * @description Replaces the whole set with media library files: up to 20 photos in order (the first is the list photo) and an optional scheme. A file can appear once. Every ID must exist in the library.
+         */
+        put: operations["setAdminProductMedia"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1370,6 +1376,7 @@ export interface components {
             id: number;
             name: string;
             productSlug: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
             categoryId?: number | null;
             inStock: boolean;
@@ -1394,8 +1401,12 @@ export interface components {
             productSlug: string;
             /** Format: date-time */
             updatedAt: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
+            /** @description Scheme URL; an empty string when the product has no scheme. */
             scheme: string;
+            /** @description All photo URLs in gallery order; the first equals photo. */
+            photos: string[];
             stock: number;
             categoryName: string;
             categorySlug: string;
@@ -1455,6 +1466,7 @@ export interface components {
             nameUk: string;
             nameRu: string;
             productSlug: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
             categoryId?: number | null;
             /** @description Ukrainian short category name; empty when the reference is unavailable. */
@@ -1475,26 +1487,14 @@ export interface components {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: components["schemas"]["AdminProduct"][];
         };
-        MissingProductPhoto: components["schemas"]["AdminProduct"] & {
-            /** @constant */
-            photoAvailable: false;
-            /** @enum {string} */
-            photoStatus: "Missing" | "InvalidContentType" | "CheckFailed";
-            /** Format: date-time */
-            photoCheckedAtUtc: string;
-            photoHttpStatusCode: number | null;
-        };
-        MissingProductPhotoPage: {
-            pagedInfo: components["schemas"]["PagedInfo"];
-            value: components["schemas"]["MissingProductPhoto"][];
-        };
         AdminProductDetails: {
             id: number;
             nameUk: string;
             nameRu: string;
             productSlug: string;
+            /** @description First photo URL; an empty string when the product has no photo. */
             photo: string;
-            /** @description Stored scheme URL; the API does not probe media availability. */
+            /** @description Scheme URL; an empty string when the product has no scheme. */
             scheme: string;
             categoryId: number;
             categoryName: string;
@@ -1505,6 +1505,29 @@ export interface components {
             price: number | null;
             stock: number;
             quantityInPack: number;
+        };
+        ProductMediaItem: {
+            /**
+             * Format: int64
+             * @description Media library file ID.
+             */
+            id: number;
+            url: string;
+            /** @description Library display name; empty if the file was deleted and the link is not yet dropped. */
+            fileName: string;
+        };
+        ProductMedia: {
+            productId: number;
+            photos: components["schemas"]["ProductMediaItem"][];
+            scheme: components["schemas"]["ProductMediaItem"] | null;
+        };
+        SetProductMediaRequest: {
+            photoIds: number[];
+            /**
+             * Format: int64
+             * @description Must not be one of photoIds.
+             */
+            schemeId?: number | null;
         };
         CreateOrderLineRequest: {
             productId: string;
@@ -2679,6 +2702,8 @@ export interface operations {
                 exportToSite?: components["parameters"]["ExportToSite"];
                 priceFrom?: components["parameters"]["PriceFrom"];
                 priceTo?: components["parameters"]["PriceTo"];
+                /** @description `true` lists only products without a linked photo (`photo` is an empty string). */
+                withoutPhoto?: boolean;
                 /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin role only. */
                 deleted?: boolean;
                 sort?: components["parameters"]["ProductSort"];
@@ -2735,51 +2760,6 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProduct"][];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductsWithUnavailablePhotos: {
-        parameters: {
-            query?: {
-                searchTerm?: components["parameters"]["SearchTerm"];
-                categoryId?: components["parameters"]["CategoryId"];
-                inStock?: components["parameters"]["AdminInStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                exportToSite?: components["parameters"]["ExportToSite"];
-                sort?: components["parameters"]["ProductSort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Unavailable product-photo page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MissingProductPhotoPage"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -2873,6 +2853,98 @@ export interface operations {
                 content?: never;
             };
             /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminProductMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Product media set */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductMedia"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminProductMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductMediaRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved set */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductMedia"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
