@@ -10,6 +10,6 @@
 - [x] Все SC трассируются; tests/evidence честно marked planned/unrun.
 - [x] Источники, внутренние ссылки и diff входят в docs-only verification.
 - [x] EN-001 выполнена: actual libraries/aliases/targets и boundary flow подтверждены.
-- [ ] EN-002 выполнена: общего cart owner и рабочего cart destination ещё нет.
+- [x] EN-002 выполнена2026-11-04: общий owner/count/cart_v1/checkout подтверждены cart evidence.
 
-**Решение:** независимый этап4A реализован с автоматическим/source evidence. Полная поставка покупки условна до EN-002/TS-005; новый fallback не утверждён.
+**Решение:** независимый этап4A реализован с автоматическим/source evidence. Cart4B/TS-005 подключена2026-11-04; выпускные проверки не выполнялись.

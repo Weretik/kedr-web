@@ -2,7 +2,7 @@
 
 - **Covers:** SC-001–SC-029 (сбор evidence; не повторная реализация).
 - **Depends on:** TS-001–TS-008; EN-002 обязательна для полной поставки.
-- **Status:** 4A docs/evidence complete; full closure blocked by TS-005.
+- **Status:** 4A + cart4B docs/evidence complete2026-11-04; release checks unrun.
 - **Exact paths:** эта SDD `traceability.md`, task Evidence, `verification/`; planned `docs/features/site/product.md`; existing `docs/features/README.md`, `docs/specs/README.md`, `docs/architecture/site/{structure/modules.md,platform/rendering-and-caching.md,platform/seo-architecture.md}`, `docs/specs/site/migration/README.md`.
 - **Test level:** docs/source review и минимальная недостающая focused verification по реальному diff.
 - **Baseline:** [delivery rules](../../../../../standards/shared/delivery-rules.md), [testing rules](../../../../../standards/shared/testing-rules.md).
@@ -30,3 +30,7 @@
 ## Checkpoint
 
 Карта файлов соответствует реализации, SC/TS evidence трассируется без orphan, карточка/индексы актуальны; статус полной поставки правдив и не скрывает EN-002 или непроверенный runtime scope.
+
+## Cart4B follow-up — 2026-11-04
+
+EN-002/TS-005 выполнены в cart SDD, текущие индексы/traceability/feature/migration обновлены. Исторические4A evidence выше сохранены; [свежие cart results](../../../cart/001-cart-checkout/verification/implementation.md). Browser/live/build/deployment не запускались.

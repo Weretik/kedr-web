@@ -1,0 +1,1888 @@
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Onest:wght@400;500;600;650;700;750&display=swap"
+/>
+<div id="kedr-order-concept" aria-label="Kedr · корзина и оформление заказа">
+  <div class="kd-caption">Концепт · демонстраційні товари й ціни · без надсилання замовлень</div>
+  <div class="kd-stage"><div class="kd-product"></div></div>
+</div>
+<style>
+  #kedr-order-concept {
+    --kd-bg: light-dark(#ffffff, #0c0d0c);
+    --kd-text: light-dark(#0f110f, #edefea);
+    --kd-muted: light-dark(#f4f5f2, #161815);
+    --kd-secondary: light-dark(#5c6459, #9aa296);
+    --kd-panel: light-dark(#ffffff, #111311);
+    --kd-line: light-dark(#e3e6df, #242823);
+    --kd-input: light-dark(#d9ddd5, #2e332c);
+    --kd-ink: light-dark(#0f110f, #edefea);
+    --kd-on-ink: light-dark(#fafbf8, #0f110f);
+    --kd-brand: #3fa435;
+    --kd-on-brand: #ffffff;
+    --kd-green: light-dark(#2a7323, #7dd06f);
+    --kd-soft-green: light-dark(#eaf5e7, #15241a);
+    --kd-danger: light-dark(#b42318, #ffb4ab);
+    --kd-danger-bg: light-dark(#fff4f2, #2b1815);
+    --kd-warning: light-dark(#94600a, #e8ae45);
+    --kd-warning-bg: light-dark(#fbf1de, #2b210f);
+    font-family: Onest, Arial, sans-serif;
+    color: var(--kd-text);
+    color-scheme: light dark;
+    background: transparent;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  #kedr-order-concept[data-theme='light'] {
+    color-scheme: light;
+  }
+  #kedr-order-concept[data-theme='dark'] {
+    color-scheme: dark;
+  }
+  #kedr-order-concept * {
+    box-sizing: border-box;
+  }
+  #kedr-order-concept [hidden] {
+    display: none !important;
+  }
+  #kedr-order-concept button,
+  #kedr-order-concept input {
+    font: inherit;
+  }
+  #kedr-order-concept button,
+  #kedr-order-concept a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  #kedr-order-concept button {
+    color: inherit;
+  }
+  #kedr-order-concept a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #kedr-order-concept button:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+  }
+  #kedr-order-concept :is(button, a, input):focus-visible {
+    outline: 3px solid #3fa43573;
+    outline-offset: 3px;
+  }
+  #kedr-order-concept h1,
+  #kedr-order-concept h2,
+  #kedr-order-concept h3,
+  #kedr-order-concept p {
+    margin: 0;
+  }
+  #kedr-order-concept h1 {
+    font-size: 32px;
+    line-height: 1.16;
+    font-weight: 750;
+    letter-spacing: -0.035em;
+  }
+  #kedr-order-concept h2 {
+    font-size: 19px;
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+  #kedr-order-concept h3 {
+    font-size: 15px;
+    line-height: 1.4;
+    font-weight: 650;
+  }
+  #kedr-order-concept svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.75;
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+  #kedr-order-concept .kd-caption {
+    padding: 0 0 12px;
+    color: var(--kd-secondary);
+    font-size: 12px;
+  }
+  #kedr-order-concept .kd-stage {
+    width: 100%;
+    margin-inline: auto;
+    container: kedr / inline-size;
+  }
+  #kedr-order-concept[data-mobile='true'] .kd-stage {
+    max-width: 390px;
+  }
+  #kedr-order-concept .kd-product {
+    position: relative;
+    background: var(--kd-bg);
+  }
+  #kedr-order-concept .kd-wrap {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+  #kedr-order-concept .kd-top {
+    border-bottom: 1px solid var(--kd-line);
+    background: var(--kd-muted);
+  }
+  #kedr-order-concept .kd-top-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-height: 38px;
+    font-size: 11px;
+  }
+  #kedr-order-concept .kd-city {
+    display: none;
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-top-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 17px;
+    flex: 1;
+  }
+  #kedr-order-concept .kd-settings {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  #kedr-order-concept .kd-language {
+    border: 0;
+    background: none;
+    padding: 4px 2px;
+    min-height: 30px;
+    font-size: 11px;
+    font-weight: 650;
+  }
+  #kedr-order-concept .kd-language[aria-pressed='false'] {
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-language-divider {
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-theme {
+    position: relative;
+    border: 1px solid var(--kd-input);
+    background: var(--kd-muted);
+    width: 49px;
+    height: 28px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    margin-left: 4px;
+  }
+  #kedr-order-concept .kd-theme svg {
+    position: relative;
+    width: 14px;
+    height: 14px;
+  }
+  #kedr-order-concept .kd-theme-thumb {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 22px;
+    height: 22px;
+    background: var(--kd-panel);
+    border-radius: 50%;
+    transition: transform 160ms ease-out;
+  }
+  #kedr-order-concept .kd-theme[aria-pressed='true'] .kd-theme-thumb {
+    transform: translateX(21px);
+  }
+  #kedr-order-concept .kd-mainbar {
+    border-bottom: 1px solid var(--kd-line);
+  }
+  #kedr-order-concept .kd-mainbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-block: 18px;
+  }
+  #kedr-order-concept .kd-wordmark {
+    font-size: 25px;
+    font-weight: 750;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  #kedr-order-concept .kd-wordmark span {
+    color: var(--kd-green);
+  }
+  #kedr-order-concept .kd-catalog {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    background: var(--kd-brand);
+    color: var(--kd-on-brand);
+    border: 0;
+    padding: 0 12px;
+    min-height: 40px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  #kedr-order-concept .kd-catalog svg {
+    width: 17px;
+    height: 17px;
+  }
+  #kedr-order-concept .kd-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--kd-muted);
+    border: 1px solid var(--kd-input);
+    border-radius: 8px;
+    min-height: 40px;
+    padding: 8px 12px;
+    flex: 1;
+    color: var(--kd-secondary);
+    font-size: 11px;
+  }
+  #kedr-order-concept .kd-search svg {
+    width: 16px;
+    height: 16px;
+  }
+  #kedr-order-concept .kd-phone {
+    font-weight: 650;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  #kedr-order-concept .kd-phone svg {
+    width: 17px;
+    height: 17px;
+  }
+  #kedr-order-concept .kd-utility {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  #kedr-order-concept .kd-header-total {
+    font-size: 11px;
+    font-weight: 650;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  #kedr-order-concept .kd-utility .kd-messenger {
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    padding: 7px;
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 8px;
+    position: relative;
+  }
+  #kedr-order-concept .kd-icon-button:hover {
+    background: var(--kd-muted);
+  }
+  #kedr-order-concept .kd-count {
+    position: absolute;
+    right: -4px;
+    top: -3px;
+    min-width: 19px;
+    height: 19px;
+    padding-inline: 3px;
+    border-radius: 20px;
+    color: var(--kd-on-brand);
+    background: var(--kd-brand);
+    font-size: 11px;
+    line-height: 19px;
+    font-weight: 650;
+    text-align: center;
+  }
+  #kedr-order-concept .kd-mobile-menu {
+    display: none;
+  }
+  #kedr-order-concept .kd-categories {
+    border-bottom: 1px solid var(--kd-line);
+  }
+  #kedr-order-concept .kd-category-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    min-height: 43px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  #kedr-order-concept .kd-cooperation {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    color: var(--kd-green);
+    margin-left: auto;
+  }
+  #kedr-order-concept .kd-cooperation svg {
+    width: 17px;
+    height: 17px;
+  }
+  #kedr-order-concept .kd-main {
+    padding-top: 24px;
+    padding-bottom: 40px;
+  }
+  #kedr-order-concept .kd-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--kd-secondary);
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+  #kedr-order-concept .kd-breadcrumbs svg {
+    width: 14px;
+    height: 14px;
+  }
+  #kedr-order-concept .kd-intro {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 27px;
+  }
+  #kedr-order-concept .kd-subtitle {
+    margin-top: 10px;
+    color: var(--kd-secondary);
+    max-width: 58ch;
+    font-size: 14px;
+  }
+  #kedr-order-concept .kd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--kd-green);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  #kedr-order-concept .kd-back svg {
+    width: 15px;
+    height: 15px;
+  }
+  #kedr-order-concept .kd-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
+  #kedr-order-concept .kd-layout > * {
+    min-width: 0;
+  }
+  #kedr-order-concept .kd-order-panel {
+    border: 1px solid var(--kd-line);
+    border-radius: 12px;
+    padding: 20px;
+    background: var(--kd-panel);
+  }
+  #kedr-order-concept .kd-panel-heading {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--kd-line);
+  }
+  #kedr-order-concept .kd-heading-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  #kedr-order-concept .kd-green-icon {
+    color: var(--kd-green);
+  }
+  #kedr-order-concept .kd-count-copy {
+    color: var(--kd-secondary);
+    font-size: 11px;
+    text-align: right;
+  }
+  #kedr-order-concept .kd-item {
+    display: grid;
+    grid-template-columns: 68px minmax(0, 1fr) auto;
+    gap: 14px;
+    padding-block: 22px;
+    border-bottom: 1px solid var(--kd-line);
+  }
+  #kedr-order-concept .kd-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  #kedr-order-concept .kd-photo {
+    width: 68px;
+    height: 76px;
+    background: var(--kd-muted);
+    border-radius: 8px;
+    display: grid;
+    place-content: center;
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-photo svg {
+    width: 26px;
+    height: 26px;
+  }
+  #kedr-order-concept .kd-item-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  #kedr-order-concept .kd-sku {
+    margin-top: 4px;
+    color: var(--kd-secondary);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  #kedr-order-concept .kd-item-bottom {
+    margin-top: 13px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  #kedr-order-concept .kd-unit {
+    color: var(--kd-secondary);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  #kedr-order-concept .kd-quantity {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--kd-input);
+    border-radius: 8px;
+    background: var(--kd-panel);
+  }
+  #kedr-order-concept .kd-quantity button {
+    min-width: 31px;
+    min-height: 32px;
+    display: grid;
+    place-content: center;
+    background: transparent;
+    border: 0;
+    border-radius: 7px;
+    padding: 0;
+  }
+  #kedr-order-concept .kd-quantity button:hover:not(:disabled) {
+    background: var(--kd-muted);
+  }
+  #kedr-order-concept .kd-quantity svg {
+    width: 14px;
+    height: 14px;
+  }
+  #kedr-order-concept .kd-quantity input {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    background: transparent;
+    border: 0;
+    color: var(--kd-text);
+    text-align: center;
+    width: 42px;
+    min-width: 0;
+    height: 32px;
+    padding: 0;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  #kedr-order-concept .kd-quantity input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  #kedr-order-concept .kd-item-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  #kedr-order-concept .kd-item-price {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  #kedr-order-concept .kd-remove {
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-remove:hover {
+    color: var(--kd-danger);
+    background: var(--kd-danger-bg);
+  }
+  #kedr-order-concept .kd-remove svg {
+    width: 16px;
+    height: 16px;
+  }
+  #kedr-order-concept .kd-service-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 19px 20px;
+    border-radius: 12px;
+    background: var(--kd-soft-green);
+  }
+  #kedr-order-concept .kd-service-note > svg {
+    color: var(--kd-green);
+    margin-top: 1px;
+  }
+  #kedr-order-concept .kd-service-note p {
+    font-size: 12px;
+    margin-top: 6px;
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-inline-link {
+    color: var(--kd-green);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+  #kedr-order-concept .kd-form-panel {
+    background: var(--kd-panel);
+    border: 1px solid var(--kd-line);
+    border-radius: 12px;
+    padding: 22px;
+  }
+  #kedr-order-concept .kd-form-note {
+    margin-top: 7px;
+    margin-bottom: 21px;
+    color: var(--kd-secondary);
+    font-size: 12px;
+  }
+  #kedr-order-concept .kd-field {
+    display: grid;
+    gap: 7px;
+    margin-bottom: 16px;
+  }
+  #kedr-order-concept .kd-field label {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  #kedr-order-concept .kd-field label span {
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-field input {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    background: var(--kd-bg);
+    border: 1px solid var(--kd-input);
+    border-radius: 8px;
+    color: var(--kd-text);
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  #kedr-order-concept .kd-field input::placeholder {
+    color: var(--kd-secondary);
+    opacity: 1;
+  }
+  #kedr-order-concept .kd-field input[aria-invalid='true'] {
+    border-color: var(--kd-danger);
+  }
+  #kedr-order-concept .kd-field-error {
+    color: var(--kd-danger);
+    font-size: 11px;
+  }
+  #kedr-order-concept .kd-totals {
+    border-top: 1px solid var(--kd-line);
+    margin-top: 23px;
+    padding-top: 18px;
+  }
+  #kedr-order-concept .kd-total-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+  #kedr-order-concept .kd-total-row span:first-child {
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-grand-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 4px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 650;
+  }
+  #kedr-order-concept .kd-grand-total strong {
+    font-size: 23px;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+  }
+  #kedr-order-concept .kd-form-panel .kd-grand-total {
+    flex-wrap: wrap;
+  }
+  #kedr-order-concept .kd-form-panel .kd-grand-total strong {
+    margin-left: auto;
+  }
+  #kedr-order-concept .kd-total-note {
+    color: var(--kd-secondary);
+    font-size: 11px;
+    margin-bottom: 18px;
+  }
+  #kedr-order-concept .kd-primary {
+    background: var(--kd-ink);
+    color: var(--kd-on-ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: 0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    min-height: 48px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  #kedr-order-concept .kd-primary:hover:not(:disabled) {
+    filter: brightness(0.88);
+  }
+  #kedr-order-concept .kd-primary svg {
+    width: 17px;
+    height: 17px;
+  }
+  #kedr-order-concept .kd-full {
+    width: 100%;
+  }
+  #kedr-order-concept .kd-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: var(--kd-panel);
+    border: 1px solid var(--kd-input);
+    border-radius: 8px;
+    padding: 11px 14px;
+    min-height: 44px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  #kedr-order-concept .kd-legal {
+    margin-top: 12px;
+    color: var(--kd-secondary);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  #kedr-order-concept .kd-legal a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #kedr-order-concept .kd-help {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 18px;
+    padding-inline: 3px;
+    color: var(--kd-secondary);
+    font-size: 12px;
+  }
+  #kedr-order-concept .kd-help svg {
+    color: var(--kd-green);
+    width: 17px;
+    height: 17px;
+    margin-top: 2px;
+  }
+  #kedr-order-concept .kd-help a {
+    display: inline-block;
+    font-weight: 650;
+    color: var(--kd-text);
+    margin-top: 4px;
+  }
+  #kedr-order-concept .kd-process {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+    color: var(--kd-secondary);
+    font-size: 11px;
+  }
+  #kedr-order-concept .kd-process > span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  #kedr-order-concept .kd-process .kd-step {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--kd-green);
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+    color: var(--kd-green);
+    font-size: 11px;
+    font-weight: 650;
+    flex-shrink: 0;
+  }
+  #kedr-order-concept .kd-process .kd-step-done {
+    background: var(--kd-brand);
+    border-color: var(--kd-brand);
+    color: var(--kd-on-brand);
+  }
+  #kedr-order-concept .kd-process .kd-step-done svg {
+    width: 13px;
+    height: 13px;
+  }
+  #kedr-order-concept .kd-process > svg {
+    width: 14px;
+    height: 14px;
+  }
+  #kedr-order-concept .kd-footer {
+    border-top: 1px solid var(--kd-line);
+    background: var(--kd-muted);
+  }
+  #kedr-order-concept .kd-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    padding-block: 28px;
+  }
+  #kedr-order-concept .kd-footer-grid h3 {
+    font-size: 12px;
+    margin-bottom: 9px;
+  }
+  #kedr-order-concept .kd-footer-grid p {
+    font-size: 11px;
+    color: var(--kd-secondary);
+    margin-top: 6px;
+  }
+  #kedr-order-concept .kd-footer-phone {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  #kedr-order-concept .kd-footer-phone svg {
+    width: 14px;
+    height: 14px;
+  }
+  #kedr-order-concept .kd-copyright {
+    border-top: 1px solid var(--kd-line);
+    padding-block: 12px;
+    font-size: 11px;
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-empty {
+    padding: 48px 20px 58px;
+    text-align: center;
+    border: 1px solid var(--kd-line);
+    border-radius: 12px;
+    background: var(--kd-panel);
+  }
+  #kedr-order-concept .kd-empty-mark {
+    margin: 0 auto 20px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+    color: var(--kd-green);
+    background: var(--kd-soft-green);
+  }
+  #kedr-order-concept .kd-empty-mark svg {
+    width: 28px;
+    height: 28px;
+  }
+  #kedr-order-concept .kd-empty h2 {
+    font-size: 24px;
+  }
+  #kedr-order-concept .kd-empty p {
+    color: var(--kd-secondary);
+    margin: 10px auto 22px;
+    max-width: 43ch;
+  }
+  #kedr-order-concept .kd-success {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 12px 0;
+  }
+  #kedr-order-concept .kd-success > h1,
+  #kedr-order-concept .kd-success > p {
+    text-align: center;
+  }
+  #kedr-order-concept .kd-success > p {
+    margin-top: 12px;
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-receipt {
+    margin-top: 26px;
+    padding: 24px;
+    border: 1px solid var(--kd-line);
+    border-radius: 12px;
+    background: var(--kd-panel);
+  }
+  #kedr-order-concept .kd-receipt-label {
+    color: var(--kd-secondary);
+    font-size: 11px;
+    margin-bottom: 7px;
+  }
+  #kedr-order-concept .kd-reference {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  #kedr-order-concept .kd-receipt-total {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--kd-line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  #kedr-order-concept .kd-receipt-total span {
+    font-size: 12px;
+    color: var(--kd-secondary);
+  }
+  #kedr-order-concept .kd-receipt-total strong {
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+  #kedr-order-concept .kd-success .kd-service-note {
+    margin-top: 20px;
+  }
+  #kedr-order-concept .kd-success-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  #kedr-order-concept .kd-alert {
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--kd-danger-bg);
+    color: var(--kd-danger);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  #kedr-order-concept .kd-alert.kd-uncertain {
+    color: var(--kd-warning);
+    background: var(--kd-warning-bg);
+  }
+  #kedr-order-concept .kd-status {
+    font-size: 11px;
+    color: var(--kd-green);
+    padding-top: 12px;
+  }
+  #kedr-order-concept .kd-status-error {
+    color: var(--kd-danger);
+  }
+  #kedr-order-concept .kd-sheet-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+  #kedr-order-concept .kd-backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgb(0 0 0 / 0.36);
+    padding: 0;
+  }
+  #kedr-order-concept .kd-sheet {
+    position: relative;
+    width: min(460px, 100%);
+    display: flex;
+    flex-direction: column;
+    background: var(--kd-panel);
+    padding: 24px;
+    box-shadow: -12px 0 40px rgb(0 0 0 / 0.14);
+  }
+  #kedr-order-concept .kd-sheet-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 21px;
+    border-bottom: 1px solid var(--kd-line);
+  }
+  #kedr-order-concept .kd-sheet-title h2 {
+    font-size: 25px;
+  }
+  #kedr-order-concept .kd-sheet-title p {
+    color: var(--kd-secondary);
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  #kedr-order-concept .kd-sheet .kd-item {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding-block: 20px;
+  }
+  #kedr-order-concept .kd-sheet .kd-photo {
+    width: 56px;
+    height: 66px;
+  }
+  #kedr-order-concept .kd-sheet .kd-photo svg {
+    width: 23px;
+    height: 23px;
+  }
+  #kedr-order-concept .kd-sheet .kd-item-name {
+    font-size: 12px;
+  }
+  #kedr-order-concept .kd-sheet .kd-item-bottom {
+    gap: 8px;
+  }
+  #kedr-order-concept .kd-sheet .kd-item-price {
+    font-size: 12px;
+  }
+  #kedr-order-concept .kd-sheet-bottom {
+    margin-top: 24px;
+    padding-top: 0;
+  }
+  #kedr-order-concept .kd-sheet .kd-total-note {
+    margin-bottom: 18px;
+  }
+  #kedr-order-concept .kd-sheet .kd-secondary-action {
+    margin-top: 10px;
+  }
+  #kedr-order-concept .kd-sheet .kd-empty {
+    border: 0;
+    padding-inline: 0;
+    margin-top: 24px;
+  }
+  #kedr-order-concept .kd-spinner {
+    animation: kd-spin 0.8s linear infinite;
+  }
+  @keyframes kd-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #kedr-order-concept .kd-spinner {
+      animation: none;
+    }
+    #kedr-order-concept .kd-theme-thumb {
+      transition: none;
+    }
+  }
+  @media (pointer: coarse) {
+    #kedr-order-concept .kd-quantity button {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    #kedr-order-concept .kd-quantity input {
+      height: 44px;
+      font-size: 16px;
+    }
+    #kedr-order-concept .kd-field input {
+      font-size: 16px;
+    }
+    #kedr-order-concept .kd-icon-button {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    #kedr-order-concept .kd-language {
+      min-height: 44px;
+      min-width: 32px;
+    }
+    #kedr-order-concept .kd-theme {
+      height: 44px;
+    }
+    #kedr-order-concept .kd-theme-thumb {
+      top: 10px;
+    }
+  }
+  @container kedr (min-width: 1280px) {
+    #kedr-order-concept .kd-city {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      font-size: 11px;
+    }
+  }
+  @container kedr (max-width: 1279px) {
+    #kedr-order-concept .kd-phone,
+    #kedr-order-concept .kd-messenger {
+      display: none;
+    }
+  }
+  @container kedr (max-width: 1023px) {
+    #kedr-order-concept .kd-header-total {
+      display: none;
+    }
+    #kedr-order-concept .kd-phone,
+    #kedr-order-concept .kd-messenger,
+    #kedr-order-concept .kd-categories {
+      display: none;
+    }
+    #kedr-order-concept .kd-intro {
+      align-items: flex-start;
+    }
+    #kedr-order-concept .kd-mainbar-inner {
+      gap: 12px;
+    }
+    #kedr-order-concept .kd-footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @container kedr (max-width: 719px) {
+    #kedr-order-concept .kd-layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
+    }
+    #kedr-order-concept .kd-totals {
+      margin-top: 6px;
+    }
+    #kedr-order-concept .kd-grand-total strong {
+      font-size: 25px;
+    }
+  }
+  @container kedr (max-width: 767px) {
+    #kedr-order-concept .kd-wrap {
+      padding-inline: 16px;
+    }
+    #kedr-order-concept .kd-top {
+      display: none;
+    }
+    #kedr-order-concept .kd-mainbar-inner {
+      flex-wrap: wrap;
+      padding-block: 12px;
+      gap: 9px;
+    }
+    #kedr-order-concept .kd-mobile-menu {
+      display: inline-flex;
+    }
+    #kedr-order-concept .kd-wordmark {
+      font-size: 23px;
+      flex: 1;
+    }
+    #kedr-order-concept .kd-catalog {
+      display: none;
+    }
+    #kedr-order-concept .kd-search {
+      flex-basis: 100%;
+      order: 3;
+      min-height: 38px;
+    }
+    #kedr-order-concept .kd-utility {
+      gap: 2px;
+    }
+    #kedr-order-concept .kd-main {
+      padding-top: 19px;
+      padding-bottom: 28px;
+    }
+    #kedr-order-concept h1 {
+      font-size: 27px;
+    }
+    #kedr-order-concept .kd-breadcrumbs {
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+    #kedr-order-concept .kd-intro {
+      display: block;
+      margin-bottom: 22px;
+    }
+    #kedr-order-concept .kd-subtitle {
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 9px;
+    }
+    #kedr-order-concept .kd-back {
+      margin-top: 12px;
+    }
+    #kedr-order-concept .kd-order-panel,
+    #kedr-order-concept .kd-form-panel {
+      padding: 17px 14px;
+    }
+    #kedr-order-concept h2 {
+      font-size: 18px;
+    }
+    #kedr-order-concept .kd-panel-heading {
+      padding-bottom: 15px;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    #kedr-order-concept .kd-count-copy {
+      font-size: 11px;
+    }
+    #kedr-order-concept .kd-item {
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 9px;
+      padding-block: 18px;
+    }
+    #kedr-order-concept .kd-photo {
+      width: 48px;
+      height: 58px;
+    }
+    #kedr-order-concept .kd-photo svg {
+      width: 22px;
+      height: 22px;
+    }
+    #kedr-order-concept .kd-item-name {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    #kedr-order-concept .kd-item-price {
+      font-size: 12px;
+    }
+    #kedr-order-concept .kd-item-bottom {
+      margin-top: 10px;
+      gap: 6px;
+    }
+    #kedr-order-concept .kd-sku {
+      font-size: 11px;
+    }
+    #kedr-order-concept .kd-unit {
+      font-size: 11px;
+    }
+    #kedr-order-concept .kd-quantity button {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    #kedr-order-concept .kd-quantity input {
+      width: 35px;
+    }
+    #kedr-order-concept .kd-item-end {
+      gap: 8px;
+    }
+    #kedr-order-concept .kd-form-fields {
+      display: block;
+    }
+    #kedr-order-concept .kd-field input {
+      height: 48px;
+      font-size: 16px;
+    }
+    #kedr-order-concept .kd-service-note {
+      padding: 17px 15px;
+    }
+    #kedr-order-concept .kd-service-note h3 {
+      font-size: 13px;
+    }
+    #kedr-order-concept .kd-service-note p {
+      font-size: 11px;
+    }
+    #kedr-order-concept .kd-process {
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+      font-size: 11px;
+    }
+    #kedr-order-concept .kd-process > span {
+      gap: 5px;
+    }
+    #kedr-order-concept .kd-process > svg {
+      width: 10px;
+    }
+    #kedr-order-concept .kd-footer-grid {
+      gap: 22px 16px;
+      padding-block: 24px;
+    }
+    #kedr-order-concept .kd-sheet {
+      padding: 20px 16px;
+    }
+    #kedr-order-concept .kd-sheet .kd-item {
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 9px;
+    }
+    #kedr-order-concept .kd-sheet .kd-photo {
+      width: 48px;
+      height: 58px;
+    }
+    #kedr-order-concept .kd-receipt {
+      padding: 19px 16px;
+    }
+    #kedr-order-concept .kd-reference {
+      font-size: 12px;
+    }
+  }
+  @container kedr (max-width: 359px) {
+    #kedr-order-concept .kd-item,
+    #kedr-order-concept .kd-sheet .kd-item {
+      grid-template-columns: 40px minmax(0, 1fr);
+    }
+    #kedr-order-concept .kd-photo,
+    #kedr-order-concept .kd-sheet .kd-photo {
+      width: 40px;
+      height: 50px;
+    }
+    #kedr-order-concept .kd-item-end {
+      grid-column: 2;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 2px;
+    }
+    #kedr-order-concept .kd-footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+<script>
+  (() => {
+    const root = document.getElementById('kedr-order-concept');
+    const product = root.querySelector('.kd-product');
+    const preview = { mobile: false, scenario: 'order', outcome: 'success' };
+    const seed = [
+      {
+        id: 'handle',
+        sku: 'DEMO-R10',
+        uk: 'Ручка дверна Kedr R10',
+        ru: 'Ручка дверная Kedr R10',
+        icon: 'door-open',
+        price: 425,
+        qty: 2,
+      },
+      {
+        id: 'cylinder',
+        sku: 'DEMO-C60',
+        uk: 'Циліндр 60 мм, ключ / ключ',
+        ru: 'Цилиндр 60 мм, ключ / ключ',
+        icon: 'key-round',
+        price: 186,
+        qty: 5,
+      },
+      {
+        id: 'hinge',
+        sku: 'DEMO-H100',
+        uk: 'Завіса дверна 100 мм',
+        ru: 'Петля дверная 100 мм',
+        icon: 'door-closed',
+        price: 78,
+        qty: 10,
+      },
+    ];
+    const freshLines = () => seed.map((line) => ({ ...line }));
+    const state = {
+      locale: 'uk',
+      theme: 'auto',
+      lines: freshLines(),
+      name: '',
+      phone: '',
+      touched: { name: false, phone: false },
+      drawer: false,
+      pending: false,
+      error: '',
+      serverFields: {},
+      notice: '',
+      success: false,
+      accepted: null,
+      request: 0,
+    };
+    const copy = {
+      uk: {
+        caption: 'Концепт · демонстраційні товари й ціни · без надсилання замовлень',
+        company: 'Про компанію',
+        delivery: 'Доставка та оплата',
+        returns: 'Повернення',
+        gallery: 'Галерея',
+        articles: 'Статті',
+        contacts: 'Контакти',
+        city: 'Україна, м. Харків',
+        catalog: 'Каталог',
+        search: 'Пошук за артикулом або назвою',
+        account: 'Кабінет',
+        cart: 'Кошик',
+        closeCart: 'Закрити кошик',
+        categories: [
+          'Завіси',
+          'Замки',
+          'Ручки',
+          'Циліндри',
+          'Міжкімнатні механізми',
+          'Інше',
+          'Двері',
+          'Регіони',
+        ],
+        cooperation: 'Співпраця',
+        checkout: 'Оформлення замовлення',
+        intro: 'Перевірте товари та залиште контакти. Деталі замовлення узгодимо з вами.',
+        continueShopping: 'Продовжити покупки',
+        yourOrder: 'Ваше замовлення',
+        yourContacts: 'Ваші контакти',
+        formNote: 'Ім’я та телефон для зв’язку щодо замовлення.',
+        name: 'Ім’я',
+        namePlaceholder: 'Як до вас звертатися',
+        phone: 'Телефон',
+        nameError: 'Вкажіть ім’я: від 3 до 30 символів.',
+        phoneError: 'Вкажіть телефон повністю: +38 (0XX) XXX-XX-XX.',
+        sku: 'Артикул',
+        unit: 'за шт.',
+        quantity: 'Кількість',
+        decrease: 'Зменшити кількість',
+        increase: 'Збільшити кількість',
+        remove: 'Видалити товар',
+        pieces: 'шт.',
+        goods: 'Товари',
+        shipping: 'Доставка',
+        shippingValue: 'Узгодимо окремо',
+        goodsTotal: 'Вартість товарів',
+        totalNote: 'Без вартості доставки. Умови оплати узгодимо з менеджером.',
+        send: 'Надіслати замовлення',
+        sending: 'Надсилаємо…',
+        toCheckout: 'Оформити замовлення',
+        legalStart: 'Надсилаючи замовлення, ви приймаєте',
+        offer: 'публічну оферту',
+        legalAnd: 'та',
+        privacy: 'політику конфіденційності',
+        serviceTitle: 'Доставка й оплата — після уточнення',
+        serviceText: 'Менеджер зв’яжеться з вами щодо деталей замовлення.',
+        serviceLink: 'Умови доставки та оплати',
+        help: 'Потрібна допомога із замовленням?',
+        itemsStep: 'Перевірте товари',
+        contactsStep: 'Залиште контакти',
+        confirmStep: 'Отримайте підтвердження',
+        emptyTitle: 'У кошику поки порожньо',
+        emptyText: 'Додайте потрібну фурнітуру з каталогу, щоб оформити замовлення.',
+        toCatalog: 'До каталогу',
+        successTitle: 'Дякуємо за замовлення!',
+        successText:
+          'Ми отримали ваше замовлення. Менеджер зв’яжеться з вами, щоб уточнити деталі.',
+        reference: 'Номер замовлення · приклад',
+        nextTitle: 'Що далі?',
+        nextText: 'Узгодимо наявність, доставку й оплату під час розмови з менеджером.',
+        requestError:
+          'Не вдалося надіслати замовлення. Ваші контакти й товари збережено. Спробуйте ще раз.',
+        validationError: 'Перевірте дані, позначені нижче.',
+        serverPhoneError: 'Перевірте номер телефону.',
+        conflictError:
+          'Замовлення потребує уточнення. Товари й контакти збережено. Зв’яжіться з менеджером за телефоном нижче.',
+        timeoutError:
+          'Не отримали підтвердження. Замовлення могло надійти. Перед повторним надсиланням уточніть статус у менеджера.',
+        removed: 'Товар видалено з кошика.',
+        quantityError: 'Вкажіть цілу кількість від 1 до 1000.',
+        footerCatalog: 'Каталог',
+        footerCompany: 'Про нас',
+        footerInfo: 'Покупцям',
+        footerContacts: 'Контакти',
+        copyright: 'Class Kedr. Усі права захищені.',
+        dark: 'Увімкнути темну тему',
+        light: 'Увімкнути світлу тему',
+        menu: 'Меню',
+      },
+      ru: {
+        caption: 'Концепт · демонстрационные товары и цены · без отправки заказов',
+        company: 'О компании',
+        delivery: 'Доставка и оплата',
+        returns: 'Возврат',
+        gallery: 'Галерея',
+        articles: 'Статьи',
+        contacts: 'Контакты',
+        city: 'Украина, г. Харьков',
+        catalog: 'Каталог',
+        search: 'Поиск по артикулу или названию',
+        account: 'Кабинет',
+        cart: 'Корзина',
+        closeCart: 'Закрыть корзину',
+        categories: [
+          'Петли',
+          'Замки',
+          'Ручки',
+          'Цилиндры',
+          'Межкомнатные механизмы',
+          'Прочее',
+          'Двери',
+          'Регионы',
+        ],
+        cooperation: 'Сотрудничество',
+        checkout: 'Оформление заказа',
+        intro: 'Проверьте товары и оставьте контакты. Детали заказа согласуем с вами.',
+        continueShopping: 'Продолжить покупки',
+        yourOrder: 'Ваш заказ',
+        yourContacts: 'Ваши контакты',
+        formNote: 'Имя и телефон для связи по заказу.',
+        name: 'Имя',
+        namePlaceholder: 'Как к вам обращаться',
+        phone: 'Телефон',
+        nameError: 'Укажите имя: от 3 до 30 символов.',
+        phoneError: 'Укажите телефон полностью: +38 (0XX) XXX-XX-XX.',
+        sku: 'Артикул',
+        unit: 'за шт.',
+        quantity: 'Количество',
+        decrease: 'Уменьшить количество',
+        increase: 'Увеличить количество',
+        remove: 'Удалить товар',
+        pieces: 'шт.',
+        goods: 'Товары',
+        shipping: 'Доставка',
+        shippingValue: 'Согласуем отдельно',
+        goodsTotal: 'Стоимость товаров',
+        totalNote: 'Без стоимости доставки. Условия оплаты согласуем с менеджером.',
+        send: 'Отправить заказ',
+        sending: 'Отправляем…',
+        toCheckout: 'Оформить заказ',
+        legalStart: 'Отправляя заказ, вы принимаете',
+        offer: 'публичную оферту',
+        legalAnd: 'и',
+        privacy: 'политику конфиденциальности',
+        serviceTitle: 'Доставка и оплата — после уточнения',
+        serviceText: 'Менеджер свяжется с вами по деталям заказа.',
+        serviceLink: 'Условия доставки и оплаты',
+        help: 'Нужна помощь с заказом?',
+        itemsStep: 'Проверьте товары',
+        contactsStep: 'Оставьте контакты',
+        confirmStep: 'Получите подтверждение',
+        emptyTitle: 'В корзине пока пусто',
+        emptyText: 'Добавьте нужную фурнитуру из каталога, чтобы оформить заказ.',
+        toCatalog: 'В каталог',
+        successTitle: 'Спасибо за заказ!',
+        successText: 'Мы получили ваш заказ. Менеджер свяжется с вами, чтобы уточнить детали.',
+        reference: 'Номер заказа · пример',
+        nextTitle: 'Что дальше?',
+        nextText: 'Согласуем наличие, доставку и оплату во время разговора с менеджером.',
+        requestError:
+          'Не удалось отправить заказ. Ваши контакты и товары сохранены. Попробуйте ещё раз.',
+        validationError: 'Проверьте отмеченные данные.',
+        serverPhoneError: 'Проверьте номер телефона.',
+        conflictError:
+          'Заказ требует уточнения. Товары и контакты сохранены. Свяжитесь с менеджером по телефону ниже.',
+        timeoutError:
+          'Не получили подтверждение. Заказ мог поступить. Перед повторной отправкой уточните статус у менеджера.',
+        removed: 'Товар удалён из корзины.',
+        quantityError: 'Укажите целое количество от 1 до 1000.',
+        footerCatalog: 'Каталог',
+        footerCompany: 'О нас',
+        footerInfo: 'Покупателям',
+        footerContacts: 'Контакты',
+        copyright: 'Class Kedr. Все права защищены.',
+        dark: 'Включить тёмную тему',
+        light: 'Включить светлую тему',
+        menu: 'Меню',
+      },
+    };
+    const t = () => copy[state.locale];
+    const escape = (value) =>
+      String(value).replace(
+        /[&<>"']/g,
+        (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char],
+      );
+    const icon = (name, extra = '') =>
+      `<i data-lucide="${name}" class="${extra}" aria-hidden="true"></i>`;
+    const money = (value) =>
+      new Intl.NumberFormat(state.locale === 'uk' ? 'uk-UA' : 'ru-UA', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value) + ' грн';
+    const total = () => state.lines.reduce((sum, line) => sum + line.qty * line.price, 0);
+    const count = () => state.lines.reduce((sum, line) => sum + line.qty, 0);
+    function positions(number) {
+      const words =
+        state.locale === 'uk'
+          ? ['найменування', 'найменування', 'найменувань']
+          : ['наименование', 'наименования', 'наименований'];
+      const mod = number % 100;
+      return `${number} ${words[mod > 10 && mod < 20 ? 2 : number % 10 === 1 ? 0 : number % 10 >= 2 && number % 10 <= 4 ? 1 : 2]}`;
+    }
+    const summary = () => `${positions(state.lines.length)} · ${count()} ${t().pieces}`;
+    const catalogHref = () => `https://classkedr.com.ua/${state.locale}`;
+    const catalogLink = (label) =>
+      `<a class="kd-back cursor-interaction" href="${catalogHref()}" target="_blank" rel="noopener">${icon('arrow-left')}${label}</a>`;
+    const validName = () => state.name.trim().length >= 3 && state.name.trim().length <= 30;
+    const validPhone = () => /^\+38 \(0\d{2}\) \d{3}-\d{2}-\d{2}$/.test(state.phone);
+    const canSubmit = () =>
+      state.lines.length > 0 &&
+      validName() &&
+      validPhone() &&
+      !Object.keys(state.serverFields).length &&
+      !state.pending;
+    function maskPhone(value) {
+      let digits = value.replace(/\D/g, '');
+      if (digits.startsWith('38')) digits = digits.slice(2);
+      digits = digits.slice(0, 10);
+      if (!digits) return '';
+      return (
+        '+38 (' +
+        digits.slice(0, 3) +
+        (digits.length >= 3 ? ') ' : '') +
+        digits.slice(3, 6) +
+        (digits.length > 6 ? '-' : '') +
+        digits.slice(6, 8) +
+        (digits.length > 8 ? '-' : '') +
+        digits.slice(8, 10)
+      );
+    }
+    function header() {
+      const c = t();
+      const dark =
+        state.theme === 'dark' ||
+        (state.theme === 'auto' && window.matchMedia?.('(prefers-color-scheme: dark)').matches);
+      return `<header>
+      <div class="kd-top"><div class="kd-wrap kd-top-inner">
+        <span class="kd-city">${icon('map-pin')}${c.city}</span>
+        <nav class="kd-top-links" aria-label="${c.company}"><span>${c.company}</span><a href="https://classkedr.com.ua/${state.locale}/delivery-and-payment" target="_blank" rel="noopener">${c.delivery}</a><span>${c.returns}</span><span>${c.gallery}</span><span>${c.articles}</span><a href="tel:+380687135049">${c.contacts}</a></nav>
+        <div class="kd-settings">${languageButtons()}<button class="kd-theme cursor-interaction" data-action="theme" data-focus-key="theme" aria-label="${dark ? c.light : c.dark}" aria-pressed="${Boolean(dark)}"><span class="kd-theme-thumb"></span>${icon('sun')}${icon('moon')}</button></div>
+      </div></div>
+      <div class="kd-mainbar"><div class="kd-wrap kd-mainbar-inner">
+        <span class="kd-icon-button kd-mobile-menu" aria-hidden="true">${icon('menu')}</span>
+        <a class="kd-wordmark" href="${catalogHref()}" target="_blank" rel="noopener" aria-label="Class Kedr"><span>Class</span> Kedr</a>
+        <a class="kd-catalog cursor-interaction" href="${catalogHref()}" target="_blank" rel="noopener">${icon('layout-grid')}${c.catalog}</a>
+        <div class="kd-search">${icon('search')}<span>${c.search}</span></div>
+        <a class="kd-phone" href="tel:+380687135049">${icon('phone')}(068) 713-50-49</a>
+        <div class="kd-utility"><span class="kd-messenger" aria-label="Telegram">${icon('send')}</span><span class="kd-messenger" aria-label="Viber">${icon('message-circle')}</span><span class="kd-messenger" aria-label="${c.city}">${icon('map-pin')}</span><span class="kd-icon-button" aria-label="${c.account}">${icon('user-round')}</span><button class="kd-icon-button cursor-interaction" data-action="cart" data-focus-key="header-cart" aria-label="${c.cart}, ${count()} ${c.pieces}">${icon('shopping-cart')}${count() ? `<span class="kd-count">${count()}</span>` : ''}</button>${state.lines.length ? `<span class="kd-header-total">${money(total())}</span>` : ''}</div>
+      </div></div>
+      <div class="kd-categories"><div class="kd-wrap kd-category-inner">${c.categories.map((category) => `<span>${category}</span>`).join('')}<span class="kd-cooperation">${icon('handshake')}${c.cooperation}</span></div></div>
+    </header>`;
+    }
+    function languageButtons() {
+      return `<button class="kd-language cursor-interaction" data-action="locale" data-locale="uk" data-focus-key="locale-uk" aria-pressed="${state.locale === 'uk'}">UA</button><span class="kd-language-divider">/</span><button class="kd-language cursor-interaction" data-action="locale" data-locale="ru" data-focus-key="locale-ru" aria-pressed="${state.locale === 'ru'}">RU</button>`;
+    }
+    function itemRows(prefix = 'page') {
+      const c = t();
+      return state.lines
+        .map(
+          (line) => `<article class="kd-item" aria-label="${escape(line[state.locale])}">
+      <div class="kd-photo" role="img" aria-label="${escape(line[state.locale])}">${icon(line.icon)}</div>
+      <div><h3 class="kd-item-name">${escape(line[state.locale])}</h3><p class="kd-sku">${line.sku}</p>
+        <div class="kd-item-bottom"><div class="kd-quantity">
+          <button type="button" class="cursor-interaction" data-action="decrease" data-id="${line.id}" data-focus-key="${prefix}-decrease-${line.id}" aria-label="${c.decrease}: ${escape(line[state.locale])}" ${line.qty <= 1 || state.pending ? 'disabled' : ''}>${icon('minus')}</button>
+          <input type="number" inputmode="numeric" min="1" max="1000" step="1" value="${line.qty}" data-quantity="${line.id}" data-focus-key="${prefix}-qty-${line.id}" aria-label="${c.quantity}: ${escape(line[state.locale])}" ${state.pending ? 'disabled' : ''}>
+          <button type="button" class="cursor-interaction" data-action="increase" data-id="${line.id}" data-focus-key="${prefix}-increase-${line.id}" aria-label="${c.increase}: ${escape(line[state.locale])}" ${line.qty >= 1000 || state.pending ? 'disabled' : ''}>${icon('plus')}</button>
+        </div><span class="kd-unit">${money(line.price)} ${c.unit}</span></div>
+      </div>
+      <div class="kd-item-end"><strong class="kd-item-price">${money(line.price * line.qty)}</strong><button type="button" class="kd-icon-button kd-remove cursor-interaction" data-action="remove" data-id="${line.id}" data-focus-key="${prefix}-remove-${line.id}" aria-label="${c.remove}: ${escape(line[state.locale])}" ${state.pending ? 'disabled' : ''}>${icon('trash-2')}</button></div>
+    </article>`,
+        )
+        .join('');
+    }
+    function serviceNote(success = false) {
+      const c = t();
+      return `<section class="kd-service-note" id="kd-service">${icon(success ? 'phone' : 'truck')}<div><h3>${success ? c.nextTitle : c.serviceTitle}</h3><p>${success ? c.nextText : c.serviceText}</p><p><a class="kd-inline-link" href="https://classkedr.com.ua/${state.locale}/delivery-and-payment" target="_blank" rel="noopener">${c.serviceLink}</a></p></div></section>`;
+    }
+    function form() {
+      const c = t();
+      return `<aside><form class="kd-form-panel" id="kd-order-form" novalidate aria-label="${c.yourContacts}" aria-busy="${state.pending}">
+      <h2 class="kd-heading-with-icon">${icon('user-round', 'kd-green-icon')}${c.yourContacts}</h2><p class="kd-form-note">${c.formNote}</p>
+      <div class="kd-form-fields">
+        <div class="kd-field"><label for="kd-first-name">${c.name} <span>*</span></label><input id="kd-first-name" name="firstName" data-contact="name" data-focus-key="name" autocomplete="given-name" maxlength="30" minlength="3" required placeholder="${c.namePlaceholder}" value="${escape(state.name)}" aria-describedby="kd-name-error" ${state.pending ? 'disabled' : ''}><span class="kd-field-error" id="kd-name-error" role="alert" hidden></span></div>
+        <div class="kd-field"><label for="kd-phone">${c.phone} <span>*</span></label><input id="kd-phone" name="phone" type="tel" inputmode="tel" data-contact="phone" data-focus-key="phone" autocomplete="tel" maxlength="20" required placeholder="+38 (0__) ___-__-__" value="${escape(state.phone)}" aria-describedby="kd-phone-error" ${state.pending ? 'disabled' : ''}><span class="kd-field-error" id="kd-phone-error" role="alert" hidden></span></div>
+      </div>
+      <div class="kd-totals"><div class="kd-total-row"><span>${c.goods} (${count()} ${c.pieces})</span><span>${money(total())}</span></div><div class="kd-total-row"><span>${c.shipping}</span><span>${c.shippingValue}</span></div><div class="kd-grand-total"><span>${c.goodsTotal}</span><strong>${money(total())}</strong></div><p class="kd-total-note">${c.totalNote}</p></div>
+      ${state.error ? `<div class="kd-alert ${state.error === 'timeout' || state.error === 'conflict' ? 'kd-uncertain' : ''}" role="alert">${c[state.error === 'conflict' ? 'conflictError' : state.error === 'timeout' ? 'timeoutError' : state.error === 'validation' ? 'validationError' : 'requestError']}</div>` : ''}
+      <button type="submit" class="kd-primary kd-full cursor-interaction" data-submit data-focus-key="submit" ${canSubmit() ? '' : 'disabled'}>${state.pending ? icon('loader-circle', 'kd-spinner') : ''}${state.pending ? c.sending : c.send}${state.pending ? '' : icon('arrow-right')}</button>
+      <p class="kd-legal">${c.legalStart} <a href="https://classkedr.com.ua/${state.locale}/public-offer" target="_blank" rel="noopener">${c.offer}</a> ${c.legalAnd} <a href="https://classkedr.com.ua/${state.locale}/privacy-policy" target="_blank" rel="noopener">${c.privacy}</a>.</p>
+    </form><div class="kd-help">${icon('phone')}<div>${c.help}<br><a href="tel:+380687135049">(068) 713-50-49</a></div></div></aside>`;
+    }
+    function empty() {
+      const c = t();
+      return `<section class="kd-empty"><div class="kd-empty-mark">${icon('shopping-cart')}</div><h2>${c.emptyTitle}</h2><p>${c.emptyText}</p><a class="kd-primary cursor-interaction" href="${catalogHref()}" target="_blank" rel="noopener">${c.toCatalog}${icon('arrow-right')}</a></section>`;
+    }
+    function success() {
+      const c = t();
+      const receipt = state.accepted || { total: 2560, count: 17 };
+      return `<section class="kd-success" aria-live="polite"><div class="kd-empty-mark">${icon('check')}</div><h1>${c.successTitle}</h1><p>${c.successText}</p><div class="kd-receipt"><div class="kd-receipt-label">${c.reference}</div><div class="kd-reference">11111111-2222-4333-8444-555555555555</div><div class="kd-receipt-total"><span>${c.goods} · ${receipt.count} ${c.pieces}</span><strong>${money(receipt.total)}</strong></div></div>${serviceNote(true)}<div class="kd-success-actions"><a class="kd-primary cursor-interaction" href="${catalogHref()}" target="_blank" rel="noopener">${c.toCatalog}${icon('arrow-right')}</a></div></section>`;
+    }
+    function main() {
+      const c = t();
+      return `<main class="kd-wrap kd-main" id="kd-content"><nav class="kd-breadcrumbs" aria-label="Breadcrumb"><a href="${catalogHref()}" target="_blank" rel="noopener" aria-label="Class Kedr">${icon('house')}</a><span>/</span><span>${state.success ? c.confirmStep : c.checkout}</span></nav>
+      ${
+        state.success
+          ? success()
+          : `<div class="kd-intro"><div><h1>${c.checkout}</h1><p class="kd-subtitle">${c.intro}</p></div>${catalogLink(c.continueShopping)}</div>
+        ${state.lines.length ? `<div class="kd-layout"><div><section class="kd-order-panel"><div class="kd-panel-heading"><h2 class="kd-heading-with-icon">${icon('shopping-bag', 'kd-green-icon')}${c.yourOrder}</h2><span class="kd-count-copy">${summary()}</span></div><div>${itemRows()}</div></section>${state.notice ? `<div class="kd-status ${state.notice === 'quantityError' ? 'kd-status-error' : ''}" role="${state.notice === 'quantityError' ? 'alert' : 'status'}">${c[state.notice]}</div>` : ''}${serviceNote()}<div class="kd-process" aria-label="${c.checkout}"><span><span class="kd-step kd-step-done">${icon('check')}</span>${c.itemsStep}</span>${icon('chevron-right')}<span><span class="kd-step">2</span>${c.contactsStep}</span>${icon('chevron-right')}<span><span class="kd-step">3</span>${c.confirmStep}</span></div></div>${form()}</div>` : empty()}`
+      }
+    </main>`;
+    }
+    function footer() {
+      const c = t();
+      return `<footer class="kd-footer"><div class="kd-wrap kd-footer-grid"><div><h3>${c.footerCatalog}</h3>${c.categories
+        .slice(0, 4)
+        .map((label) => `<p>${label}</p>`)
+        .join(
+          '',
+        )}</div><div><h3>${c.footerCompany}</h3><p>${c.company}</p><p>${c.gallery}</p><p>${c.articles}</p><p>${c.cooperation}</p></div><div><h3>${c.footerInfo}</h3><p><a href="https://classkedr.com.ua/${state.locale}/delivery-and-payment" target="_blank" rel="noopener">${c.delivery}</a></p><p>${c.returns}</p><p>${c.offer}</p><p>${c.privacy}</p></div><div><h3>${c.footerContacts}</h3><a class="kd-footer-phone" href="tel:+380687135049">${icon('phone')}(068) 713-50-49</a><p>info@classkedr.ua</p><p>${c.city}</p></div></div><div class="kd-copyright"><div class="kd-wrap">© 2026 ${c.copyright}</div></div></footer>`;
+    }
+    function drawer() {
+      if (!state.drawer) return '';
+      const c = t();
+      return `<div class="kd-sheet-layer"><button class="kd-backdrop cursor-interaction" data-action="close-cart" aria-label="${c.closeCart}"></button><section class="kd-sheet" role="dialog" aria-modal="true" aria-labelledby="kd-cart-heading"><div class="kd-sheet-title"><div><h2 id="kd-cart-heading">${c.cart}</h2><p>${summary()}</p></div><button class="kd-icon-button cursor-interaction" data-action="close-cart" data-focus-key="close-cart" aria-label="${c.closeCart}">${icon('x')}</button></div>${state.lines.length ? `<div>${itemRows('drawer')}</div>${state.notice ? `<div class="kd-status ${state.notice === 'quantityError' ? 'kd-status-error' : ''}" role="${state.notice === 'quantityError' ? 'alert' : 'status'}">${c[state.notice]}</div>` : ''}<div class="kd-sheet-bottom"><div class="kd-grand-total"><span>${c.goodsTotal}</span><strong>${money(total())}</strong></div><p class="kd-total-note">${c.totalNote}</p><button class="kd-primary kd-full cursor-interaction" data-action="checkout" data-focus-key="checkout">${c.toCheckout}${icon('arrow-right')}</button><button class="kd-secondary-action kd-full cursor-interaction" data-action="close-cart">${c.continueShopping}</button></div>` : empty()}</section></div>`;
+    }
+    function render(focusKey) {
+      const active = document.activeElement;
+      const restore = focusKey || (root.contains(active) ? active.dataset?.focusKey : null);
+      root.dataset.theme = state.theme;
+      root.dataset.mobile = String(preview.mobile);
+      root.lang = state.locale;
+      root.querySelector('.kd-caption').textContent = t().caption;
+      product.innerHTML = `<div class="kd-page" ${state.drawer ? 'inert aria-hidden="true"' : ''}>${header()}${main()}${footer()}</div>${drawer()}`;
+      updateForm();
+      if (globalThis.lucide)
+        globalThis.lucide.createIcons({ attrs: { width: 20, height: 20, 'stroke-width': 1.75 } });
+      if (restore) root.querySelector(`[data-focus-key="${restore}"]`)?.focus();
+    }
+    function updateForm() {
+      const fields = [
+        ['name', validName(), t().nameError, '#kd-first-name', '#kd-name-error'],
+        ['phone', validPhone(), t().phoneError, '#kd-phone', '#kd-phone-error'],
+      ];
+      fields.forEach(([key, valid, message, inputSelector, errorSelector]) => {
+        const input = root.querySelector(inputSelector);
+        const error = root.querySelector(errorSelector);
+        if (!input || !error) return;
+        const serverMessage = state.serverFields[key] ? t()[state.serverFields[key]] : '';
+        const visible = Boolean((state.touched[key] && !valid) || serverMessage);
+        input.setAttribute('aria-invalid', String(visible));
+        error.hidden = !visible;
+        error.textContent = visible ? serverMessage || message : '';
+      });
+      const submit = root.querySelector('[data-submit]');
+      if (submit) submit.disabled = !canSubmit();
+    }
+    function remember() {
+      window.openai
+        ?.setWidgetState?.({
+          modelContent: {
+            concept: 'Kedr cart and checkout',
+            locale: state.locale,
+            theme: state.theme,
+            mobile: preview.mobile,
+            screen: state.drawer ? 'cart' : state.success ? 'success' : 'checkout',
+          },
+          privateContent: {
+            quantities: Object.fromEntries(state.lines.map((line) => [line.id, line.qty])),
+            accepted: state.accepted,
+          },
+        })
+        .catch(() => {});
+    }
+    function applySaved(snapshot) {
+      if (!snapshot) return;
+      const context = snapshot.modelContent || {};
+      if (context.locale === 'uk' || context.locale === 'ru') state.locale = context.locale;
+      if (['auto', 'light', 'dark'].includes(context.theme)) state.theme = context.theme;
+      if (typeof context.mobile === 'boolean') preview.mobile = context.mobile;
+      const quantities = snapshot.privateContent?.quantities;
+      if (quantities && typeof quantities === 'object' && !Array.isArray(quantities)) {
+        state.lines = seed
+          .filter(
+            (line) =>
+              Number.isInteger(quantities[line.id]) &&
+              quantities[line.id] >= 1 &&
+              quantities[line.id] <= 1000,
+          )
+          .map((line) => ({ ...line, qty: quantities[line.id] }));
+      }
+      state.drawer = context.screen === 'cart';
+      state.success = context.screen === 'success';
+      const receipt = snapshot.privateContent?.accepted;
+      if (receipt && Number.isFinite(receipt.total) && Number.isInteger(receipt.count))
+        state.accepted = receipt;
+    }
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-action]');
+      if (!button || !root.contains(button) || button.disabled) return;
+      const action = button.dataset.action;
+      if (action === 'theme') {
+        const dark =
+          state.theme === 'dark' ||
+          (state.theme === 'auto' && window.matchMedia?.('(prefers-color-scheme: dark)').matches);
+        state.theme = dark ? 'light' : 'dark';
+      } else if (action === 'locale') state.locale = button.dataset.locale;
+      else if (action === 'cart') {
+        state.drawer = true;
+        render('close-cart');
+        remember();
+        return;
+      } else if (action === 'close-cart') {
+        state.drawer = false;
+        render('header-cart');
+        remember();
+        return;
+      } else if (action === 'checkout') {
+        state.drawer = false;
+        render('name');
+        remember();
+        return;
+      } else if (!state.pending && ['decrease', 'increase', 'remove'].includes(action)) {
+        const line = state.lines.find((item) => item.id === button.dataset.id);
+        if (!line) return;
+        if (action === 'remove') {
+          state.lines = state.lines.filter((item) => item.id !== line.id);
+          state.notice = 'removed';
+        } else line.qty = Math.max(1, Math.min(1000, line.qty + (action === 'increase' ? 1 : -1)));
+        state.error = '';
+      }
+      render(action === 'remove' ? (state.drawer ? 'close-cart' : 'header-cart') : undefined);
+      remember();
+    });
+    root.addEventListener('input', (event) => {
+      const key = event.target.dataset.contact;
+      if (!key || state.pending) return;
+      if (key === 'phone') {
+        state.phone = maskPhone(event.target.value);
+        event.target.value = state.phone;
+      } else state.name = event.target.value;
+      delete state.serverFields[key];
+      updateForm();
+    });
+    root.addEventListener('focusout', (event) => {
+      const key = event.target.dataset.contact;
+      if (key) {
+        state.touched[key] = true;
+        updateForm();
+      }
+    });
+    root.addEventListener('change', (event) => {
+      const id = event.target.dataset.quantity;
+      if (!id || state.pending) return;
+      const line = state.lines.find((item) => item.id === id);
+      if (!line) return;
+      const value = Number(event.target.value);
+      if (!Number.isInteger(value) || value < 1 || value > 1000) {
+        event.target.value = String(line.qty);
+        state.notice = 'quantityError';
+      } else {
+        line.qty = value;
+        state.notice = '';
+        state.error = '';
+      }
+      render();
+      remember();
+    });
+    root.addEventListener('submit', (event) => {
+      if (event.target.id !== 'kd-order-form') return;
+      event.preventDefault();
+      if (state.pending || !state.lines.length) return;
+      state.touched = { name: true, phone: true };
+      if (!canSubmit()) {
+        updateForm();
+        root.querySelector(!validName() ? '#kd-first-name' : '#kd-phone')?.focus();
+        return;
+      }
+      state.pending = true;
+      state.error = '';
+      state.serverFields = {};
+      const request = ++state.request;
+      render();
+      setTimeout(() => {
+        if (request !== state.request) return;
+        state.pending = false;
+        if (preview.outcome === 'success') {
+          state.accepted = { total: total(), count: count() };
+          state.success = true;
+          state.lines = [];
+          state.name = '';
+          state.phone = '';
+          state.touched = { name: false, phone: false };
+          state.notice = '';
+        } else {
+          state.error = preview.outcome;
+          if (preview.outcome === 'validation') state.serverFields = { phone: 'serverPhoneError' };
+        }
+        render();
+        remember();
+      }, 650);
+    });
+    root.addEventListener('keydown', (event) => {
+      if (!state.drawer) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        state.drawer = false;
+        render('header-cart');
+        remember();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const controls = [
+        ...root
+          .querySelector('.kd-sheet')
+          .querySelectorAll('button:not([disabled]),input:not([disabled]),a[href]'),
+      ];
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    applySaved(window.openai?.widgetState);
+    render();
+    window.addEventListener('openai:set_globals', (event) => {
+      const snapshot = event.detail?.globals?.widgetState;
+      if (snapshot) {
+        applySaved(snapshot);
+        render();
+      }
+    });
+    let lastScenario = preview.scenario;
+    if (globalThis.Tweak) {
+      const tweak = new Tweak({
+        container: root,
+        onChange: () => {
+          if (preview.scenario !== lastScenario) {
+            lastScenario = preview.scenario;
+            state.request++;
+            state.pending = false;
+            state.lines = freshLines();
+            state.name = '';
+            state.phone = '';
+            state.error = '';
+            state.serverFields = {};
+            state.notice = '';
+            state.touched = { name: false, phone: false };
+            state.success = false;
+            state.drawer = preview.scenario === 'cart';
+            if (preview.scenario === 'empty') state.lines = [];
+            if (preview.scenario === 'validation') {
+              state.name = 'Ів';
+              state.phone = '+38 (068) 71';
+              state.touched = { name: true, phone: true };
+            }
+            if (preview.scenario === 'success') {
+              state.accepted = { total: total(), count: count() };
+              state.success = true;
+              state.lines = [];
+            }
+          }
+          render(state.drawer ? 'close-cart' : undefined);
+          remember();
+        },
+      });
+      tweak.addToggle(preview, 'mobile', { label: 'Экран телефона' });
+      tweak.addSelect(state, 'theme', {
+        label: 'Тема',
+        options: [
+          { label: 'Как в приложении', value: 'auto' },
+          { label: 'Светлая', value: 'light' },
+          { label: 'Тёмная', value: 'dark' },
+        ],
+      });
+      tweak.addSelect(state, 'locale', {
+        label: 'Язык',
+        options: [
+          { label: 'Українська', value: 'uk' },
+          { label: 'Русский', value: 'ru' },
+        ],
+      });
+      tweak.addSelect(preview, 'scenario', {
+        label: 'Состояние',
+        options: [
+          { label: 'Оформление заказа', value: 'order' },
+          { label: 'Корзина из шапки', value: 'cart' },
+          { label: 'Пустая корзина', value: 'empty' },
+          { label: 'Ошибки полей', value: 'validation' },
+          { label: 'Заказ принят', value: 'success' },
+        ],
+      });
+      tweak.addSelect(preview, 'outcome', {
+        label: 'Ответ при отправке',
+        options: [
+          { label: 'Успешно', value: 'success' },
+          { label: 'Ошибка сервера', value: 'request' },
+          { label: 'Ошибки полей от сервера', value: 'validation' },
+          { label: 'Требуется уточнение', value: 'conflict' },
+          { label: 'Нет подтверждения', value: 'timeout' },
+        ],
+      });
+    }
+  })();
+</script>

@@ -1,10 +1,10 @@
 # Site product details
 
-**Route:** [product/[slug]/page.tsx](../../../apps/site/src/app/[locale]/product/[slug]/page.tsx), `/{locale}/product/{slug}`. [SDD](../../specs/site/product/001-product-details/README.md). **Status:** independent migration stage 4A implemented 2026-11-03; real purchase remains blocked by EN-002, the shared Site cart prerequisite.
+**Route:** [product/[slug]/page.tsx](../../../apps/site/src/app/[locale]/product/[slug]/page.tsx), `/{locale}/product/{slug}`. [SDD](../../specs/site/product/001-product-details/README.md). **Status:** independent migration stage 4A implemented 2026-11-03; shared cart purchase (stage4B) connected2026-11-04 via the approved cart SDD.
 
 The server renders the real product name, 1C SKU, category trail, retail UAH price or price-on-request, stock state and informational pack. The photo/scheme gallery, inline zoom and honest SKU clipboard feedback are client leaves. Product facts and service sections follow the approved light/dark UK/RU design; the existing Site shell is reused. The layout stacks below viewport `lg=1024`, uses two columns above it, and does not add a sticky purchase bar.
 
-Stock and price are independent. No stock leads to the manager availability contact; unknown price leads to the price contact. Both facts remain visible when both are missing. For an available priced product, the purchase panel accepts a real `purchaseAction` slot; the current development default is disabled quantity/cart controls. There is no simulated add-success, second cart, order operation or unapproved contact-only fallback. Do not publish the complete purchase flow until EN-002/TS-005 are finished.
+Stock and price are independent. No stock leads to the manager availability contact; unknown price leads to the price contact. Both facts remain visible when both are missing. For an available priced product, ProductPage builds a serialized descriptor and executes an app-injected server renderer. The cart purchase island owns quantity1–1000 and adds through the shared document cart. Rejection keeps quantity and never displays a false success; product has no second cart or order transport. See [cart feature](cart.md).
 
 ## Data, routing and SEO
 
@@ -21,6 +21,8 @@ Stock and price are independent. No stock leads to the manager availability cont
 ```mermaid
 flowchart LR
   Route["app product route"] --> Feature["product/feature"]
+  Route --> Cart["cart/feature server purchase renderer"]
+  Feature --> Descriptor["server callback: serialized product descriptor"]
   Feature --> Data["product/data-access"] --> Api["shared/api-client"]
   Data --> Model["product/model"]
   Feature --> Ui["product/ui: server view + small client leaves"] --> Model
@@ -52,11 +54,12 @@ libs/site/product/
 │   └── i18n/                        # typed UK/RU copy
 ├── seo/src/lib/                     # input, metadata, JSON-LD and URL helpers
 └── feature/src/lib/
+    ├── detail/product-purchase-descriptor.ts # server renderer handoff
     ├── detail/, mapping/, routing/  # page/crumbs, category/SEO mapping, identity/status/seeds
     └── crawling/                    # entries, XML budget/shards, server orchestration
 ```
 
-The cart adapter/provider/checkout are not present in this feature. The contract snapshot is unchanged.
+The shared cart runtime/provider/checkout belong to cart; app composition injects the server purchase renderer, without product→cart imports. The contract snapshot is unchanged.
 
 ## Tests
 
@@ -72,6 +75,8 @@ npx nx run site-product-feature:vite:test -- --run
 
 Installed direct `vitest.cmd run --config libs/site/product/<layer>/vite.config.mts` was used for the same scoped configs during delivery, avoiding repeated full Nx graph startup. Results: model33, data55, UI19, SEO9, feature42 — **158 product tests**. Modified core crawling tests: 5 passed; boundary fixtures:27 passed. Scoped source/test/app type checking, ESLint and architecture boundaries passed; see [implementation evidence](../../specs/site/product/001-product-details/verification/implementation.md).
 
-Browser/visual/manual, live HTTP, production build, E2E and full app suite were not run. Responsive/theme conclusions are source/component evidence, not rendered browser inspection. Full purchase completion is blocked by EN-002.
+Browser/visual/manual, live HTTP, production build, E2E and full app suite were not run. Responsive/theme conclusions are source/component evidence, not rendered browser inspection. Stage4B cart connection is complete; release/live/browser checks remain unrun.
 
 Architecture follow-up: [scoped audit and fixes](../../specs/site/product/001-product-details/code-audit/audit.md) — AF-001/002/003. Fresh targeted checks: data55, UI detail3, feature mapping/SSR6 (64 tests); type projection24 roots, scoped ESLint and boundaries108 projects. The original158-test delivery result above is historical; no full suite was repeated.
+
+Cart4B follow-up2026-11-04: descriptor7 + page8 (15 tests) passed; the shared cart runtime2 tests connect product → both headers → drawer → checkout → confirmed receipt. These are fresh scoped checks; the full historical product suite above was not repeated. [Cart evidence](../../specs/site/cart/001-cart-checkout/verification/implementation.md).

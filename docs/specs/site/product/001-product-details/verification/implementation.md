@@ -68,3 +68,7 @@ Nx graph подтвердил `vite:test`, `typecheck`, `lint` у всех пя�
 По отдельному запросу пользователя выполнен [scoped architecture audit](../code-audit/audit.md), найденные AF-001/002/003 исправлены. Category policy перемещена из UI в feature, DTO projections/raw404 parser — в private contracts, Site consumer docs/registry синхронизированы. Новых API operations, зависимостей и cross-domain разрешений нет.
 
 Свежие focused проверки: data55, detail UI3, feature mapping/SSR6 —64 tests passed; source/test/app type projection24 roots, scoped ESLint14 paths и boundary graph108 projects pass. Это не повторный прогон всех162 текущих product tests: исходные158 results выше относятся к реализации до4 новых regression tests. Нижние unaffected model/SEO/crawling/core проверки и27 fixtures повторно не запускались. Подробности docs/source/diff verification и split/keep — в audit report. Live HTTP/build/browser/E2E unrun, EN-002/TS-005 всё ещё blocked.
+
+## Cart4B — 2026-11-04
+
+Исторические4A/аудит результаты выше сохранены. EN-002 и TS-005 теперь выполнены: producer общий document owner/cart_v1/checkout, app-injected server renderer и cart-owned quantity1–1000. Product handoff/page15 и cart UI/owner/runtime focused проверки passed; [точные результаты cart](../../../cart/001-cart-checkout/verification/implementation.md). Полный product suite повторно не запускался; live HTTP/order/build/browser/deployment не выполнялись.

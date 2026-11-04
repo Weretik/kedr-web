@@ -5,6 +5,8 @@
 
 Site-wide SEO decisions. Feature specifications apply them in their `design/seo.md` and propose changes here through review. Per-feature findings for the current storefront are in the [feature inventory](../../../specs/site/migration/feature-inventory.md).
 
+Cart/checkout source update: 2026-11-04. The private checkout and product purchase bridge are implemented locally; focused automated/source evidence is linked from the [cart feature](../../../features/site/cart.md). This update does not claim a deployment, build, HTTP, browser or live-order check.
+
 ## Origin and URL form
 
 - Production origin: `https://classkedr.com.ua` (`SITE_URL`). `metadataBase` makes canonical and alternates absolute.
@@ -93,6 +95,12 @@ Delivery/payment content metadata is owned by `libs/site/content/seo`; the exist
 - `lastModified`: from the API once it exposes `updatedAt` for products and categories; omitted until then.
 - `robots.txt` (indexing on): allow `/`, disallow `/api/` and `/{locale}/checkout|cabinet|login`, `Sitemap:` absolute URL.
 
+## Checkout service metadata
+
+`libs/site/cart/seo` owns localized nonpersonal checkout metadata through `buildRobotsMeta(config, false)`. Its builder adds no customer values, order reference, canonical/alternates or transaction structured data. The app route delegates metadata and rendering to cart; the neutral server heading/Suspense fallback is separate from the request-time leaf awaiting `connection()`. Cart/contact data belongs to the browser document owner and never becomes shared cached page or URL data.
+
+The existing private policy is unchanged: checkout stays outside the public sitemap, `PRIVATE_PATHS` still produces robots disallow, service links use `nofollow`, and metadata remains `noindex`. No checkout-specific allow or indexing-gate change is introduced. This policy does not promise immediate removal of an already known URL from an external index. Cabinet/login remain separate migration work.
+
 ## Monitoring
 
 Google Search Console domain property for `classkedr.com.ua` (owner to confirm access), Core Web Vitals field data from CrUX in Search Console, reviewed after each migration step and weekly for a month after cutover.
@@ -121,4 +129,6 @@ Requisites preserve `/{locale}/requisites`, with domain metadata through core/se
 
 Privacy-policy metadata is owned by content/seo. The preserved /{locale}/privacy-policy address has complete server-rendered UK/RU text, self canonical, reciprocal HTML/sitemap alternates and the unchanged preview gate. BreadcrumbList matches visible navigation; Organization remains in the layout. CONTENT_SITEMAP_PAGES adds one descriptor without fabricated lastModified. [Verification](../../../specs/site/content/001-privacy-policy/verification/seo-verification.md) separates unit/server-render results from unrun HTTP/browser/build checks.
 
-Product stage4A (2026-11-03) uses confirmed same-SKU locale lookups, self canonical and conditional Offer. No success/data card is emitted for missing/unavailable outcomes. Source/automated checks passed; live status/HTML/validators are unrun. Shared cart purchase remains an explicit external prerequisite, preview indexing stays off.
+Product stage4A (2026-11-03) uses confirmed same-SKU locale lookups, self canonical and conditional Offer. No success/data card is emitted for missing/unavailable outcomes. Source/automated checks passed; live status/HTML/validators are unrun. At that checkpoint shared cart purchase remained an explicit external prerequisite and preview indexing stayed off.
+
+The cart integration added locally on 2026-11-04 now connects the product's injected server purchase callback to the shared document cart and private checkout. The historical stage4A evidence is retained; this later connection does not change product indexing gates or establish fresh build/HTTP/browser/live-order evidence. See the [current cart feature](../../../features/site/cart.md).

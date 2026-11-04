@@ -29,15 +29,15 @@
 ## Готовность и ограничения
 
 1. **EN-001, выполнена:** пять libraries созданы Nx-генератором, aliases/targets и узкий product-feature→catalog-model flow подтверждены. Независимые данные/UI/SEO/route/sitemap реализованы.
-2. **EN-002, blocked:** общий Site cart ещё не реализован. До подтверждения его public API, сохранения состояния, счётчика и рабочего адреса корзины TS-005 и полная поставка заблокированы. Другие задачи не ждут корзину.
-3. Доступный товар с ценой сохраняет целевое действие «У кошик». До EN-002 не публиковать имитацию успешной покупки и не заменять её несогласованным действием. Выпуск страницы до общей корзины потребует отдельного решения владельца о временном поведении.
+2. **EN-002, выполнена 2026-11-04:** cart foundation, общий document owner/count/storage и checkout подтверждены; TS-005 подключена через cart TS-009.
+3. Доступный товар с известной ценой добавляется в общую корзину через app-injected server renderer и cart client island. Contact/no-price состояния сохраняют прежнее поведение; product не импортирует cart feature.
 4. Контракт не содержит произвольных характеристик, описания, бренда, вариантов и отзывов. Эти блоки не включены; это не блокер карточки.
 
 Порядок миграции без цикла: **4A — читаемая карточка/UI/SEO → 5 — cart foundation → 4B — подключение покупки TS-005**. Шаг 5 ожидает 4A, а не полную готовность 4B. EN-001 фиксирует эту последовательность в плане перед запуском зависимых работ; номер шага не делает EN-002 следствием завершённой полной покупки.
 
 ## Реализация и evidence
 
-[Фактическая карточка функции](../../../../features/site/product.md), [результаты реализации](verification/implementation.md). Product tests158, core crawling5, boundary fixtures27; scoped type/lint/boundary checks pass. Build/live HTTP/browser/visual/manual/E2E unrun. Полная покупка не объявляется завершённой.
+[Фактическая карточка функции](../../../../features/site/product.md), [результаты реализации](verification/implementation.md). Product tests158, core crawling5, boundary fixtures27; scoped type/lint/boundary checks pass. Build/live HTTP/browser/visual/manual/E2E unrun. Cart4B подключена2026-11-04; свежие handoff/composition проверки — в [cart evidence](../../cart/001-cart-checkout/verification/implementation.md). Выпускные/live проверки не запускались.
 
 ## Источники
 
@@ -46,3 +46,5 @@
 ## История
 
 - 2026-11-03 — направление дизайна принято; создана SDD для реализации. Производственный код не изменён.
+
+- 2026-11-04 — cart producer prerequisite и TS-005 закрыты через общую cart SDD; исторические4A результаты сохранены.

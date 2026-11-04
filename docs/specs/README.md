@@ -32,7 +32,9 @@
 
 ## Site Next.js
 
-- [Product details / Карточка товара](site/product/001-product-details/README.md) — stage4A implemented 2026-11-03; product158 tests, core5, boundaries27 fixtures and scoped type/lint checks pass; full purchase blocked EN-002/TS-005; build/HTTP/browser unrun.
+- [Cart and quick checkout / Корзина и заказ](site/cart/001-cart-checkout/README.md) — implemented 2026-11-04 по принятому двухколоночному концепту; 16 R, 30 SC, общий owner/cart_v1/drawer/anonymous createQuickOrder; architecture audit AF-003–006 verified, fresh focused/type/lint/boundary evidence; build/HTTP/browser unrun.
+
+- [Product details / Карточка товара](site/product/001-product-details/README.md) — stage4A implemented 2026-11-03; product158 tests, core5, boundaries27 fixtures and scoped type/lint checks pass; stage4B cart connection completed 2026-11-04 via cart TS-009; build/HTTP/browser unrun.
 
 - [Privacy policy / Политика конфиденциальности](site/content/001-privacy-policy/README.md) — implemented and architecture-audited 2026-11-03; AF-001/AF-002 verified, test typing/import groups fixed; focused checks passed; HTTP/browser/build unrun.
 
