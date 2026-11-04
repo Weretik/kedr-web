@@ -44,11 +44,15 @@ export async function generateCategoryMetadata(
 const flatten = (nodes: readonly CatalogTreeNode[]): CatalogTreeNode[] =>
   nodes.flatMap((node) => [node, ...flatten(node.children)]);
 
-/** Hub and every category for the sitemap; slugs are the same in both languages. */
+/**
+ * Hub and every category for the sitemap; slugs are the same in both languages. An unavailable tree fails the
+ * sitemap (5xx, crawlers retry) instead of publishing a list without categories.
+ */
 export async function getCatalogSitemapPages(): Promise<SitemapPage[]> {
   const tree = await getCatalogTree(DEFAULT_LOCALE);
+  if (!tree) throw new Error('Catalog tree is unavailable for the sitemap');
   return [
     { path: CATALOG_PATH },
-    ...flatten(tree ?? []).map((node) => ({ path: categoryPath(node.slug) })),
+    ...flatten(tree).map((node) => ({ path: categoryPath(node.slug) })),
   ];
 }

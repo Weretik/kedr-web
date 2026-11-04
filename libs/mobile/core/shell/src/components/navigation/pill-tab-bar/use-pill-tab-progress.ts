@@ -1,12 +1,13 @@
 import { useKedrTheme, useReducedMotion } from '@mobile/shared/ui';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated } from 'react-native';
 
 /** Animated 0 → 1 progress of a tab becoming active; snaps instantly under reduced motion. */
 export function usePillTabProgress(focused: boolean): Animated.Value {
   const { kedr } = useKedrTheme();
   const reduced = useReducedMotion();
-  const progress = useRef(new Animated.Value(focused ? 1 : 0)).current;
+  // Created once; useState keeps the same Animated.Value without reading a ref during render.
+  const [progress] = useState(() => new Animated.Value(focused ? 1 : 0));
 
   useEffect(() => {
     if (reduced) progress.setValue(focused ? 1 : 0);

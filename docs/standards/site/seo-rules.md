@@ -16,7 +16,7 @@ Stable rules for every feature of the public Next.js site (`apps/site`). Site-wi
 
 - Canonical across languages or to a page with different content.
 - Listing untranslated pages in alternates.
-- Status 200 for not found, empty filter, or removed item pages.
+- Status 200 for not found or removed item pages. Exception: a listing whose filters or page number leave it empty streams after the status is sent, so it answers 200 with `noindex, follow` and a reset link.
 - Locale or currency redirects by IP or `Accept-Language` on localized URLs.
 - SEO data invented on the frontend when the API should provide it (SKU, prices, availability, dates).
 - Indexing on preview or local environments (`SITE_INDEXING` stays unset outside production).

@@ -17,6 +17,8 @@ import { CartHelp, CartServiceNote } from '../shared/cart-support';
 
 import type { CheckoutViewProps } from '../types/cart-ui-props';
 
+const HONEYPOT_FIELD = 'company_website';
+
 /** Presentational body; the route's server frame owns the sole H1 above its Suspense boundary. */
 export function CheckoutView(props: CheckoutViewProps) {
   const {
@@ -97,6 +99,9 @@ export function CheckoutView(props: CheckoutViewProps) {
               onSubmit={(event) => {
                 event.preventDefault();
                 if (blocked) return;
+                // Bots fill every field; people never see this one.
+                const trap = event.currentTarget.elements.namedItem(HONEYPOT_FIELD);
+                if (trap instanceof HTMLInputElement && trap.value) return;
                 if (!canSubmit) {
                   props.onFieldBlur('firstName');
                   props.onFieldBlur('phone');
@@ -105,6 +110,14 @@ export function CheckoutView(props: CheckoutViewProps) {
                 onSubmit();
               }}
             >
+              <input
+                type="text"
+                name={HONEYPOT_FIELD}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden
+                className="absolute -left-[9999px] size-px opacity-0"
+              />
               <CheckoutContacts {...props} disabled={blocked} />
               <CheckoutSummary
                 {...props}

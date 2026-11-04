@@ -74,6 +74,5 @@ Routes come from [app.routes.ts](../../apps/storefront/src/app/app.routes.ts) an
 | [Wholesale](storefront/content/wholesale.md)              | `/wholesale`                                                                            |
 | [404 page](storefront/not-found.md)                       | Shell                                                                                   |
 | [Home](storefront/home.md)                                | Library exists, not routed: `categoriesRoutes` handles `/`                              |
-| [In-stock widget](storefront/widgets.md)                  | Library exists, component not imported                                                  |
 
 After behavior changes, compare the card and this catalog with the code.

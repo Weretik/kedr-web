@@ -2351,6 +2351,13 @@ export interface operations {
                     "application/json": string[];
                 };
             };
+            /** @description Quick order rate limit exceeded (10 per 10 minutes per client address) */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     getAdminOrders: {

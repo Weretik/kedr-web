@@ -22,6 +22,16 @@ type CategoryPageProps = {
   searchParams: Promise<SearchParamsRecord>;
 };
 
+function toQueryString(params: SearchParamsRecord): string {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    for (const item of Array.isArray(value) ? value : value === undefined ? [] : [value])
+      query.append(key, item);
+  }
+  const text = query.toString();
+  return text ? `?${text}` : '';
+}
+
 /**
  * Loads the category before anything streams, so a moved slug answers 308 and a missing one 404.
  * «Фурнітура» is the whole site, so its page moves to the catalog hub; Cosmos is never shown.
@@ -30,6 +40,7 @@ type CategoryPageProps = {
 export async function loadCategoryOrRespond(
   locale: Locale,
   slug: string,
+  searchParams?: Promise<SearchParamsRecord>,
 ): Promise<CategoryDetails> {
   if (slug === CATEGORY_PLACEHOLDER_SLUG) notFound();
   const result = await getCategory(locale, slug);
@@ -39,7 +50,11 @@ export async function loadCategoryOrRespond(
     if (result.category.id === CATALOG_ROOTS.cosmosId) notFound();
     return result.category;
   }
-  if (result.kind === 'moved') permanentRedirect(localizedPath(locale, categoryPath(result.slug)));
+  if (result.kind === 'moved') {
+    // Keep ?page=2, filters, and sort so the redirect lands on the same listing.
+    const query = searchParams ? toQueryString(await searchParams) : '';
+    permanentRedirect(localizedPath(locale, categoryPath(result.slug)) + query);
+  }
   if (result.kind === 'not-found') notFound();
   throw new Error(`Catalog API is unavailable for category "${slug}"`);
 }
@@ -50,7 +65,7 @@ export async function loadCategoryOrRespond(
  */
 export async function CategoryPage({ locale, slug, searchParams }: CategoryPageProps) {
   const [category, tree] = await Promise.all([
-    loadCategoryOrRespond(locale, slug),
+    loadCategoryOrRespond(locale, slug, searchParams),
     getCatalogTree(locale),
   ]);
   const crumbs = categoryCrumbs(locale, category.breadcrumbs);

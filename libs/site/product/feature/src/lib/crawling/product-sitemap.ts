@@ -29,8 +29,36 @@ export async function getProductSitemap(id: string): Promise<MetadataRoute.Sitem
   return shard;
 }
 
+/** Static address of the product sitemap index; robots.txt lists it without reading the catalog. */
+export const PRODUCT_SITEMAP_INDEX_PATH = '/product/sitemap-index.xml';
+
 export async function getProductSitemapUrls(): Promise<string[]> {
   return (await getProductSitemapIds()).map(({ id }) =>
     new URL('/product/sitemap/' + id + '.xml', siteConfig.siteUrl).toString(),
   );
+}
+
+const escapeXml = (value: string) =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/**
+ * Sitemap index of the product shards. When the product list cannot be read completely it answers 503 with
+ * Retry-After, so crawlers keep the previous index instead of seeing products disappear.
+ */
+export async function getProductSitemapIndexResponse(): Promise<Response> {
+  let urls: string[];
+  try {
+    urls = await getProductSitemapUrls();
+  } catch {
+    return new Response('Product sitemap is temporarily unavailable', {
+      status: 503,
+      headers: { 'retry-after': '3600', 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
+  const body =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.map((url) => `<sitemap><loc>${escapeXml(url)}</loc></sitemap>\n`).join('') +
+    '</sitemapindex>\n';
+  return new Response(body, { headers: { 'content-type': 'application/xml; charset=utf-8' } });
 }

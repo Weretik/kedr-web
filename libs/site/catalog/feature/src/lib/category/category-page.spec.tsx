@@ -50,6 +50,11 @@ describe('loadCategoryOrRespond', () => {
       'REDIRECT /uk/catalog/ruchky-new',
     );
 
+    getCategory.mockResolvedValueOnce({ kind: 'moved', slug: 'ruchky-new' });
+    await expect(
+      loadCategoryOrRespond('uk', 'ruchky', Promise.resolve({ page: '2', sort: 'priceAsc' })),
+    ).rejects.toThrow('REDIRECT /uk/catalog/ruchky-new?page=2&sort=priceAsc');
+
     getCategory.mockResolvedValueOnce({ kind: 'not-found' });
     await expect(loadCategoryOrRespond('uk', 'missing')).rejects.toThrow('NEXT_NOT_FOUND');
   });
