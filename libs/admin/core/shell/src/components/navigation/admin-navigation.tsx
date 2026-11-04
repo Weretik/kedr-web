@@ -17,6 +17,8 @@ export const adminDrawerWidth = 264;
 export const adminDrawerCollapsedWidth = 84;
 
 interface AdminNavigationProps {
+  /** Optional counter per block id (for example new orders); shown only when above zero. */
+  groupCounts?: Record<string, number>;
   isCollapsed?: boolean;
   onNavigate?: () => void;
 }
@@ -55,21 +57,23 @@ function NavigationLink({
           onClick={onNavigate}
           sx={(theme) => ({
             alignItems: 'center',
-            bgcolor: isActive ? sidebarColors.activeBackground : 'transparent',
+            bgcolor: isActive && !isNested ? sidebarColors.activeBackground : 'transparent',
             borderRadius: '12px',
+            position: 'relative',
             color: isActive ? sidebarColors.activeText : sidebarColors.text,
             display: 'flex',
             gap: 1.5,
             justifyContent: isCollapsed ? 'center' : 'flex-start',
-            minHeight: isNested ? 40 : 44,
-            px: isCollapsed ? 0 : 1.5,
+            minHeight: isNested ? 36 : 44,
+            pl: isCollapsed ? 0 : isNested ? 4 : 1.5,
+            pr: isCollapsed ? 0 : 1.5,
             textDecoration: 'none',
             transition: theme.transitions.create(['background-color', 'color'], {
               duration: theme.transitions.duration.shorter,
             }),
             whiteSpace: 'nowrap',
             '&:hover': {
-              bgcolor: isActive ? sidebarColors.activeBackground : sidebarColors.hover,
+              bgcolor: isActive && !isNested ? sidebarColors.activeBackground : sidebarColors.hover,
               color: isActive ? sidebarColors.activeText : sidebarColors.textStrong,
             },
             '&:focus-visible': {
@@ -80,11 +84,32 @@ function NavigationLink({
           })}
           to={to}
         >
-          <Box sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto' }}>{icon}</Box>
+          {isNested ? (
+            <Box
+              aria-hidden
+              sx={{
+                bgcolor: isActive ? sidebarColors.accent : sidebarColors.border,
+                borderRadius: '50%',
+                boxShadow: isActive ? `0 0 0 3px ${sidebarColors.activeBackground}` : 'none',
+                height: 6,
+                left: 14,
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 6,
+              }}
+            />
+          ) : (
+            <Box sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto' }}>{icon}</Box>
+          )}
           {isCollapsed ? null : (
             <Typography
               component="span"
-              sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 700 }}
+              sx={{
+                color: 'inherit',
+                fontSize: '0.875rem',
+                fontWeight: isNested ? 600 : 700,
+              }}
             >
               {label}
             </Typography>
@@ -104,7 +129,11 @@ const listSx = {
   p: 0,
 } as const;
 
-export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNavigationProps) {
+export function AdminNavigation({
+  groupCounts = {},
+  isCollapsed = false,
+  onNavigate,
+}: AdminNavigationProps) {
   const { pathname } = useLocation();
   const user = useAdminShellUser();
   const isAllowed = (item: NavigationItem) =>
@@ -149,6 +178,8 @@ export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNaviga
       {groups.map((group) => {
         const isOpen = openGroupIds.includes(group.id);
         const panelId = `admin-navigation-${group.id}`;
+        const count = groupCounts[group.id] ?? 0;
+        const hasActivePage = group.id === activeGroupId;
 
         // Collapsed to icons: no headings, blocks are separated by a thin line.
         if (isCollapsed)
@@ -175,18 +206,18 @@ export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNaviga
               }}
               sx={(theme) => ({
                 alignItems: 'center',
-                bgcolor: 'transparent',
+                bgcolor: isOpen ? sidebarColors.hover : 'transparent',
                 border: 0,
                 borderRadius: '12px',
-                color: isOpen ? sidebarColors.textStrong : sidebarColors.groupLabel,
+                color: isOpen ? sidebarColors.textStrong : sidebarColors.text,
                 cursor: 'pointer',
                 display: 'flex',
                 font: 'inherit',
-                justifyContent: 'space-between',
-                minHeight: 40,
+                gap: 1.5,
+                minHeight: 44,
                 px: 1.5,
                 textAlign: 'left',
-                transition: theme.transitions.create('color', {
+                transition: theme.transitions.create(['background-color', 'color'], {
                   duration: theme.transitions.duration.shorter,
                 }),
                 width: '100%',
@@ -199,13 +230,38 @@ export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNaviga
               })}
               type="button"
             >
+              <Box sx={{ alignItems: 'center', display: 'flex', flex: '0 0 auto' }}>
+                {group.icon}
+              </Box>
               <Typography
                 component="span"
-                sx={{ color: 'inherit', fontWeight: 800, letterSpacing: '0.08em' }}
-                variant="overline"
+                sx={{ color: 'inherit', flex: 1, fontSize: '0.875rem', fontWeight: 700 }}
               >
                 {group.label}
               </Typography>
+              {count > 0 ? (
+                <Typography
+                  component="span"
+                  sx={{
+                    bgcolor: sidebarColors.activeBackground,
+                    borderRadius: 999,
+                    color: sidebarColors.activeText,
+                    fontWeight: 800,
+                    px: 0.875,
+                  }}
+                  variant="caption"
+                >
+                  {count}
+                </Typography>
+              ) : null}
+              {/* The block holds the current page but is closed: keep the user oriented. */}
+              {hasActivePage && !isOpen ? (
+                <Box
+                  aria-label="Тут поточна сторінка"
+                  role="img"
+                  sx={{ bgcolor: sidebarColors.accent, borderRadius: '50%', height: 6, width: 6 }}
+                />
+              ) : null}
               <ExpandMoreIcon
                 fontSize="small"
                 sx={(theme) => ({
@@ -217,7 +273,7 @@ export function AdminNavigation({ isCollapsed = false, onNavigate }: AdminNaviga
               />
             </Box>
             <Collapse id={panelId} in={isOpen} unmountOnExit>
-              <Box component="ul" sx={{ ...listSx, pt: 0.5 }}>
+              <Box component="ul" sx={{ ...listSx, gap: 0.125, pb: 0.5, pl: 1.5, pt: 0.5 }}>
                 {group.items.map((item) => (
                   <NavigationLink isNested item={item} key={item.to} {...linkProps} />
                 ))}
