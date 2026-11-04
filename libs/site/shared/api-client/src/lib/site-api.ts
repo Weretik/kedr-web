@@ -7,7 +7,7 @@ import type { paths } from '@shared/api-contracts';
 
 type GetPath = { [P in keyof paths]: paths[P] extends { get: unknown } ? P : never }[keyof paths];
 
-/** Only the public catalog API: the site never calls admin, order, or auth endpoints from the server. */
+/** Public catalog read paths; the anonymous order mutation has its own fixed server-only transport. */
 export type PublicGetPath = Extract<GetPath, `/api/catalog/${string}`>;
 
 type GetOperation<P extends GetPath> = paths[P] extends { get: infer Operation }
