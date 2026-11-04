@@ -1,11 +1,10 @@
 import { categoryContentLimits } from '@admin/categories/model';
+import { CountedTextField } from '@admin/shared/ui';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Alert, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
-
-import { CountedTextField } from './counted-text-field';
 
 import type { CategoryContentErrors, CategoryFaqItem } from '@admin/categories/model';
 

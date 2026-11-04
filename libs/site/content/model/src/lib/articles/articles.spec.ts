@@ -1,3 +1,4 @@
+import { articlePlainText } from './article-text';
 import { ARTICLE_PAGE_SIZES, DEFAULT_ARTICLES_QUERY } from './article-types';
 import { buildArticlesListing } from './articles-listing';
 import { articlesHref, parseArticlesQuery, serializeArticlesQuery } from './articles-query';
@@ -9,7 +10,10 @@ const articles: Article[] = Array.from({ length: 51 }, (_, index) => ({
   slug: 'article-' + (index + 1),
   title: 'Матеріал ' + (index + 1),
   excerpt: 'Огляд',
-  paragraphs: [index === 25 ? 'Прихований МЕХАНІЗМ для дверей' : 'Текст про фурнітуру'],
+  bodyHtml:
+    index === 25
+      ? '<p>Прихований <strong>МЕХАНІЗМ</strong> для дверей</p>'
+      : '<p>Текст про фурнітуру</p>',
   image: null,
   publishedAt: '2026-03-24',
 }));
@@ -50,6 +54,11 @@ describe('article URL and listing rules', () => {
     const result = buildArticlesListing(articles, { q: 'механізм', page: 3, pageSize: 10 });
     expect(result.items.map((item) => item.id)).toEqual([26]);
     expect(result).toMatchObject({ total: 1, pageCount: 1, start: 1, end: 1, query: { page: 1 } });
+  });
+  it('reads article HTML as plain text for search', () => {
+    expect(
+      articlePlainText('<h2>Заголовок</h2><p>Текст&nbsp;і <a href="/x">ZAMAK &amp; Co</a></p>'),
+    ).toBe('Заголовок Текст і ZAMAK & Co');
   });
   it('supports matching a title without changing source order', () => {
     const result = buildArticlesListing(articles, { ...DEFAULT_ARTICLES_QUERY, q: 'матеріал 2' });

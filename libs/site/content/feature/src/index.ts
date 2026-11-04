@@ -1,5 +1,6 @@
 export { DeliveryPaymentPage } from './lib/delivery-payment-page';
 export { CONTENT_SITEMAP_PAGES } from './lib/content-sitemap';
+export { getArticleSitemapPages } from './lib/articles/article-sitemap';
 export { ReturnsPage } from './lib/returns-page';
 export { ContactsPage } from './lib/contacts-page';
 export { ArticlesPage, generateArticlesMetadata } from './lib/articles/articles-page';

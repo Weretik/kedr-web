@@ -1,4 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import type { OrderQuote } from '@admin/orders/model';
 
@@ -26,12 +34,7 @@ export function SubmitOrderDialog({
   onSubmit,
 }: Props) {
   return (
-    <Dialog
-      fullWidth
-      maxWidth="sm"
-      onClose={submitting ? undefined : onClose}
-      open={open}
-    >
+    <Dialog fullWidth maxWidth="sm" onClose={submitting ? undefined : onClose} open={open}>
       <DialogTitle>Оформити замовлення</DialogTitle>
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
         <TextField
@@ -48,7 +51,9 @@ export function SubmitOrderDialog({
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button disabled={submitting} onClick={onClose}>Скасувати</Button>
+        <Button disabled={submitting} onClick={onClose}>
+          Скасувати
+        </Button>
         <Button disabled={!ready || submitting} onClick={onSubmit} variant="contained">
           Відправити
         </Button>

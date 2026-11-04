@@ -7,6 +7,9 @@ import type { NextConfig } from 'next';
 // Nx libraries live outside the app folder, so the workspace root is the build and tracing root.
 const workspaceRoot = path.join(__dirname, '../..');
 
+// Article covers are served by the API (Content module); keep the host in sync with siteConfig.apiUrl.
+const apiUrl = new URL(process.env['KEDR_API_URL'] || 'https://api.classkedr.com.ua');
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -20,7 +23,16 @@ const nextConfig: NextConfig = {
   },
   images: {
     // Product photos; keep in sync with PRODUCT_IMAGE_HOST in @site/catalog/data-access.
-    remotePatterns: [{ protocol: 'https', hostname: 'images-kedr.cdn.express' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images-kedr.cdn.express' },
+      // The `v` query of a cover URL changes with every new cover.
+      {
+        protocol: apiUrl.protocol === 'http:' ? 'http' : 'https',
+        hostname: apiUrl.hostname,
+        ...(apiUrl.port ? { port: apiUrl.port } : {}),
+        pathname: '/api/content/articles/**',
+      },
+    ],
   },
   experimental: {
     // The root layout sits under [locale], so unmatched URLs get a global 404 document rendered on the server.
@@ -34,6 +46,12 @@ const nextConfig: NextConfig = {
       { source: '/:locale(uk|ru)/categories', destination: '/:locale', permanent: true },
       // Company content lives on the localized home page; keep the old public addresses working.
       { source: '/:locale(uk|ru)/about-company', destination: '/:locale', permanent: true },
+      // The Angular storefront had 23 regional landing pages; delivery terms for every region live on «Співпраця».
+      {
+        source: '/:locale(uk|ru)/region/:city',
+        destination: '/:locale/wholesale',
+        permanent: true,
+      },
       // Old catalog addresses of the Angular storefront; the category page then redirects former slugs.
       {
         source: '/:locale(uk|ru)/catalog/products',

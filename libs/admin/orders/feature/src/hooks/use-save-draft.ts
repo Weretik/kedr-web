@@ -1,8 +1,8 @@
 import { useCreateWorkspaceDraftMutation } from '@admin/orders/data-access';
+import { withNotice } from '@admin/shared/routing';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { withNotice } from './use-route-notice';
 import { clearCurrentOrder } from '../state/current-order-set';
 import { keyForRequest } from '../state/idempotency-key';
 

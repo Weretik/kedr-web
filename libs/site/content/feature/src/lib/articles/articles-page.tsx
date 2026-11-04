@@ -34,7 +34,10 @@ export function ArticlesPage({ locale, searchParams }: ArticlesPageProps) {
 /** Exported within the feature for focused server integration tests, not via public index. */
 export async function ArticlesResults({ locale, searchParams }: ArticlesPageProps) {
   const requested = parseArticlesQuery(await searchParams);
-  const listing = buildArticlesListing(getArticles(locale), requested);
+  const articles = await getArticles(locale);
+  // An unavailable API fails the page (500) instead of publishing an empty list.
+  if (!articles) throw new Error('Content API is unavailable for the article list');
+  const listing = buildArticlesListing(articles, requested);
   if (requested.page !== listing.query.page) {
     redirect(articlesHref(localizedPath(locale, ARTICLES_PATH), listing.query));
   }
@@ -45,7 +48,10 @@ export async function generateArticlesMetadata(
   locale: Locale,
   searchParams: Promise<ArticlesSearchParams>,
 ) {
-  const listing = buildArticlesListing(getArticles(locale), parseArticlesQuery(await searchParams));
+  const listing = buildArticlesListing(
+    (await getArticles(locale)) ?? [],
+    parseArticlesQuery(await searchParams),
+  );
   const search = serializeArticlesQuery(listing.query);
   return buildArticlesMetadata(locale, { ...listing.query, search: search ? '?' + search : '' });
 }

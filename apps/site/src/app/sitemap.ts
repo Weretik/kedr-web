@@ -1,5 +1,5 @@
 import { getCatalogSitemapPages } from '@site/catalog/feature';
-import { CONTENT_SITEMAP_PAGES } from '@site/content/feature';
+import { CONTENT_SITEMAP_PAGES, getArticleSitemapPages } from '@site/content/feature';
 import { buildSitemapEntries } from '@site/core/seo';
 
 import type { MetadataRoute } from 'next';
@@ -10,5 +10,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/' },
     ...(await getCatalogSitemapPages()),
     ...CONTENT_SITEMAP_PAGES,
+    ...(await getArticleSitemapPages()),
   ]);
 }

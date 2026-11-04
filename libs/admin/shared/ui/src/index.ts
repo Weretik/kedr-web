@@ -13,3 +13,5 @@ export { ChangeSlugDialog } from './lib/slug/change-slug-dialog';
 export type { ChangeSlugInput } from './lib/slug/change-slug-dialog';
 export { slugChangeErrorMessage, slugMaxLength, validateSlug } from './lib/slug/slug-rules';
 export { PublicAddressCard } from './lib/slug/public-address-card';
+export { CountedTextField } from './lib/inputs/counted-text-field';
+export { RichTextEditor } from './lib/inputs/rich-text-editor/rich-text-editor';

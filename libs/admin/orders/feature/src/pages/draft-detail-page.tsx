@@ -3,6 +3,7 @@ import {
   useGetWorkspaceDraftQuery,
 } from '@admin/orders/data-access';
 import { OrderDocumentView } from '@admin/orders/ui';
+import { useRouteNotice } from '@admin/shared/routing';
 import { NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -14,7 +15,6 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { DetailHeader, safeReturnTo } from '../components/detail-header';
 import { DraftDeleteDialog } from '../dialogs/draft-delete-dialog';
 import { DraftReuseDialog } from '../dialogs/draft-reuse-dialog';
-import { useRouteNotice } from '../hooks/use-route-notice';
 import { mergeDraftIntoCurrentOrder, useCurrentOrderSet } from '../state/current-order-set';
 
 export function DraftDetailPage() {

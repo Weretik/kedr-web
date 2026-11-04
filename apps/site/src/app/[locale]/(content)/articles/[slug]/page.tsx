@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
 
-export function generateStaticParams({ params }: { params: { locale: string } }) {
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
   return isLocale(params.locale) ? getArticleStaticParams(params.locale) : [];
 }
 

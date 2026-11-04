@@ -43,25 +43,14 @@ it('publishes one contacts URL per locale without invented dates and preserves m
   }
 });
 
-it('publishes the article list and six slug articles per locale, without IDs, query or invented dates', () => {
+it('publishes the article list once per locale; article pages come from the API sitemap source', () => {
   const config = createSiteConfig({ SITE_ENV: 'production', SITE_INDEXING: 'true' });
   const entries = buildSitemapEntries([...CONTENT_SITEMAP_PAGES], config);
   const articles = entries.filter(({ url }) => new URL(url).pathname.includes('/articles'));
-  expect(articles).toHaveLength(14);
-  for (const locale of ['uk', 'ru']) {
-    expect(
-      articles.filter(({ url }) => new URL(url).pathname.startsWith(`/${locale}/articles`)),
-    ).toHaveLength(7);
-    expect(articles.some(({ url }) => url.endsWith(`/${locale}/articles`))).toBe(true);
-  }
-  expect(new Set(articles.map(({ url }) => url)).size).toBe(14);
-  for (const entry of articles) {
-    expect(new URL(entry.url).search).toBe('');
-    expect(entry.url).not.toMatch(/\/articles\/\d+$/);
-    expect(entry.lastModified).toBeUndefined();
-    expect(entry.alternates?.languages).toHaveProperty('uk-UA');
-    expect(entry.alternates?.languages).toHaveProperty('ru-UA');
-  }
+  expect(articles.map(({ url }) => url)).toEqual([
+    'https://classkedr.com.ua/uk/articles',
+    'https://classkedr.com.ua/ru/articles',
+  ]);
 });
 
 it('publishes one wholesale URL per language and preserves existing content without invented dates', () => {

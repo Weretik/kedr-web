@@ -912,6 +912,130 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List published articles in one language, newest first
+         * @description Public, because the site renders articles for anonymous visitors.
+         */
+        get: operations["getArticles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/{lang}/articles/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one published article by slug */
+        get: operations["getArticle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/articles/{id}/cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the cover picture of an article
+         * @description Public. Drafts are included so the admin preview works; the path is only known from an article response. With `v` equal to the current cover version the response is `Cache-Control: public, max-age=31536000, immutable`.
+         */
+        get: operations["getArticleCover"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all articles, drafts included, newest first */
+        get: operations["getAdminArticles"];
+        put?: never;
+        /**
+         * Create an article
+         * @description An empty `slug` is generated from the Ukrainian title (KMU-2010 transliteration, `-2`, `-3`… on a clash). `bodyHtml` is sanitized to p, br, strong, em, ul, ol, li, h2, h3, blockquote, and a[href] (http, https, or a path starting with `/`). Not idempotent: repeating the request creates another article.
+         */
+        post: operations["createAdminArticle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an article with both languages */
+        get: operations["getAdminArticle"];
+        /**
+         * Replace an article's slug, date, publication flag, and both texts
+         * @description Full replacement; `slug` is required and must not belong to another article. Repeating it is safe.
+         */
+        put: operations["updateAdminArticle"];
+        post?: never;
+        /**
+         * Delete an article and its cover for good
+         * @description To hide an article from the site without losing it, save it with `isPublished = false`.
+         */
+        delete: operations["deleteAdminArticle"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles/{id}/cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload or replace the cover picture
+         * @description JPEG, PNG, or WebP up to 10 MB, at least 600 px wide. Stored as WebP at most 1600 px wide with the EXIF orientation applied; the cover version grows by one.
+         */
+        put: operations["uploadAdminArticleCover"];
+        post?: never;
+        /** Remove the cover picture */
+        delete: operations["removeAdminArticleCover"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1610,6 +1734,69 @@ export interface components {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: components["schemas"]["SalesCatalogItem"][];
         };
+        /**
+         * @description Path of the cover relative to the API base URL, with the version in `v`; null without a cover.
+         * @example /api/content/articles/4/cover?v=1
+         */
+        CoverPath: string | null;
+        ArticleSummary: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            title: string;
+            /** @description Short plain-text description for cards and meta description. */
+            excerpt: string;
+            /** Format: date */
+            publishedOn: string;
+            coverPath: components["schemas"]["CoverPath"];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        Article: components["schemas"]["ArticleSummary"] & {
+            /** @description Sanitized HTML; safe to render as is. */
+            bodyHtml: string;
+        };
+        AdminArticleSummary: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            /** @description Ukrainian title. */
+            title: string;
+            /** Format: date */
+            publishedOn: string;
+            isPublished: boolean;
+            coverPath: components["schemas"]["CoverPath"];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ArticleText: {
+            /** @enum {string} */
+            language: "uk" | "ru";
+            title: string;
+            excerpt: string;
+            bodyHtml: string;
+        };
+        SaveArticleRequest: {
+            /** @description Required on update; empty on create means "generate from the Ukrainian title". */
+            slug?: string | null;
+            /** Format: date */
+            publishedOn: string;
+            isPublished: boolean;
+            /** @description Exactly one `uk` and one `ru` text. */
+            texts: components["schemas"]["ArticleText"][];
+        };
+        AdminArticle: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            /** Format: date */
+            publishedOn: string;
+            isPublished: boolean;
+            coverPath: components["schemas"]["CoverPath"];
+            /** Format: date-time */
+            updatedAt: string;
+            texts: components["schemas"]["ArticleText"][];
+        };
     };
     responses: {
         /** @description Input validation failed. */
@@ -1666,6 +1853,17 @@ export interface components {
                 "application/json": components["schemas"]["Error"];
             };
         };
+        /** @description Invalid input; each error names the field (`slug`, `texts`, `file`…). */
+        "articles.openapi_components-responses-ValidationError": {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
     };
     parameters: {
         Lang: "uk" | "ru";
@@ -1690,6 +1888,7 @@ export interface components {
         /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
         CsrfHeader: string;
         UserId: string;
+        ArticleId: number;
     };
     requestBodies: never;
     headers: never;
@@ -4278,6 +4477,397 @@ export interface operations {
             };
             /** @description Authenticated user is forbidden */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getArticles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Published articles. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArticleSummary"][];
+                };
+            };
+            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
+        };
+    };
+    getArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The article. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Article"];
+                };
+            };
+            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
+            /** @description No published article with this slug. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getArticleCover: {
+        parameters: {
+            query?: {
+                v?: number;
+            };
+            header?: never;
+            path: {
+                id: components["parameters"]["ArticleId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WebP picture. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": string;
+                };
+            };
+            /** @description The article or its cover does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminArticles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Articles with Ukrainian titles. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticleSummary"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveArticleRequest"];
+            };
+        };
+        responses: {
+            /** @description The created article as stored. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticle"];
+                };
+            };
+            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ArticleId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The article. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticle"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Article not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ArticleId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveArticleRequest"];
+            };
+        };
+        responses: {
+            /** @description The article as stored. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticle"];
+                };
+            };
+            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Article not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ArticleId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Article not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    uploadAdminArticleCover: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ArticleId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The article with its new `coverPath`. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticle"];
+                };
+            };
+            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Article not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The request is larger than the upload limit. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    removeAdminArticleCover: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ArticleId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The article without a cover. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticle"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Article not found. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

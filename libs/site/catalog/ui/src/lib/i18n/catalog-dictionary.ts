@@ -59,6 +59,9 @@ export type CatalogDictionary = {
   home: string;
   subcategories: string;
   faqTitle: string;
+  aboutCategory: string;
+  readMore: string;
+  readLess: string;
   hubTitle: string;
   hubIntro: string;
   searchTitle: (term: string) => string;

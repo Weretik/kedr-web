@@ -66,6 +66,9 @@ export const ru: CatalogDictionary = {
   home: 'Главная',
   subcategories: 'Подкатегории',
   faqTitle: 'Вопросы и ответы',
+  aboutCategory: 'О категории',
+  readMore: 'Читать полностью',
+  readLess: 'Свернуть',
   hubTitle: 'Каталог дверной фурнитуры',
   hubIntro:
     'Петли, замки, ручки, цилиндры и другая фурнитура оптом и в розницу со склада в Харькове.',

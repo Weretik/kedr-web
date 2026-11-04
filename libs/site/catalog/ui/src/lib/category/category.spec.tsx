@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { CategoryContent } from './category-content';
 import { CategoryHeader } from './category-header';
@@ -47,6 +47,47 @@ describe('category UI', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'Вопросы и ответы' })).toBeTruthy();
     expect(screen.getByText('Есть опт?')).toBeTruthy();
     expect(screen.getByText('Да')).toBeTruthy();
+  });
+
+  it('folds a long text behind a toggle and keeps it in the HTML', () => {
+    const long = `<p>${'Завіси для дверей. '.repeat(60)}</p>`;
+    const { container } = render(
+      <CategoryContent
+        locale="uk"
+        content={{ seoTitle: null, metaDescription: null, h1: null, bodyHtml: long, faq: [] }}
+      />,
+    );
+    expect(screen.getByRole('region', { name: 'Про категорію' })).toBeTruthy();
+    const toggle = screen.getByRole('button', { name: /Читати повністю/ });
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(container.textContent).toContain('Завіси для дверей.');
+    fireEvent.click(toggle);
+    expect(screen.getByRole('button', { name: /Згорнути/ }).getAttribute('aria-expanded')).toBe(
+      'true',
+    );
+  });
+
+  it('shows a short text without a toggle and nothing for empty content', () => {
+    const { container, rerender } = render(
+      <CategoryContent
+        locale="uk"
+        content={{
+          seoTitle: null,
+          metaDescription: null,
+          h1: null,
+          bodyHtml: '<p>Коротко</p>',
+          faq: [],
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button')).toBeNull();
+    rerender(
+      <CategoryContent
+        locale="uk"
+        content={{ seoTitle: null, metaDescription: null, h1: null, bodyHtml: '  ', faq: [] }}
+      />,
+    );
+    expect(container.innerHTML).toBe('');
   });
 
   it('links every breadcrumb except the current page', () => {

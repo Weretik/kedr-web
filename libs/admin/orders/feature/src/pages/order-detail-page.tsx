@@ -1,11 +1,11 @@
 import { useGetWorkspaceOrderQuery } from '@admin/orders/data-access';
 import { OrderDocumentView } from '@admin/orders/ui';
+import { useRouteNotice } from '@admin/shared/routing';
 import { NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import { Alert, Button, Stack } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 import { DetailHeader } from '../components/detail-header';
-import { useRouteNotice } from '../hooks/use-route-notice';
 
 export function OrderDetailPage() {
   const { notice, close: closeNotice } = useRouteNotice();
