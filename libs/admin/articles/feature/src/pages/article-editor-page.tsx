@@ -1,7 +1,7 @@
 import { useDeleteArticleMutation, useGetAdminArticleQuery } from '@admin/articles/data-access';
 import { ArticleCoverCard, ArticleForm, DeleteArticleDialog } from '@admin/articles/ui';
 import { useRouteNotice, withNotice } from '@admin/shared/routing';
-import { AdminDetailHeader, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
+import { AdminDetailHeader, ChangedNote, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Alert, Box, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
@@ -71,6 +71,7 @@ export function ArticleEditorPage() {
         headingRef={headingRef}
         title={isNew ? 'Нова стаття' : 'Редагування статті'}
       />
+      {article ? <ChangedNote at={article.updatedAt} by={article.updatedBy} /> : null}
       {!isNew && (!validId || notFound) ? (
         <Alert severity="info">Статтю не знайдено: можливо, її вже видалено.</Alert>
       ) : !isNew && query.isLoading ? (

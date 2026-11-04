@@ -153,7 +153,10 @@
       "@admin/home-content/model": ["./libs/admin/home-content/model/src/index.ts"],
       "@admin/home-content/data-access": ["./libs/admin/home-content/data-access/src/index.ts"],
       "@admin/home-content/ui": ["./libs/admin/home-content/ui/src/index.ts"],
-      "@admin/home-content/feature": ["./libs/admin/home-content/feature/src/index.ts"]
+      "@admin/home-content/feature": ["./libs/admin/home-content/feature/src/index.ts"],
+      "@site/core/revalidation": ["./libs/site/core/revalidation/src/index.ts"],
+      "@admin/site-refresh/data-access": ["./libs/admin/site-refresh/data-access/src/index.ts"],
+      "@admin/site-refresh/feature": ["./libs/admin/site-refresh/feature/src/index.ts"]
     }
   }
 }

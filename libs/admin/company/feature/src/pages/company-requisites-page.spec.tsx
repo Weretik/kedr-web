@@ -96,7 +96,8 @@ describe('CompanyRequisitesPage', () => {
     render(<CompanyRequisitesPage />);
 
     expect(screen.getByRole('heading', { name: 'Історія змін' })).toBeTruthy();
-    expect(screen.getByText(/admin@classkedr\.com\.ua/)).toBeTruthy();
+    expect(screen.getAllByText(/admin@classkedr\.com\.ua/)).toHaveLength(2);
+    expect(screen.getByText(/^Змінено: .* · admin@classkedr\.com\.ua$/)).toBeTruthy();
   });
 
   it('offers a retry when loading fails', () => {

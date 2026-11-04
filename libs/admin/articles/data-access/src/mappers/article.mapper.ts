@@ -25,6 +25,7 @@ export function mapArticleSummaries(response: unknown): ArticleSummary[] {
     isPublished: item.isPublished,
     coverUrl: toCoverUrl(item.coverPath),
     updatedAt: item.updatedAt,
+    updatedBy: item.updatedBy ?? null,
   }));
 }
 
@@ -40,6 +41,7 @@ export function mapArticle(response: unknown): Article {
     isPublished: dto.isPublished,
     coverUrl: toCoverUrl(dto.coverPath),
     updatedAt: dto.updatedAt,
+    updatedBy: dto.updatedBy ?? null,
     texts,
   };
 }

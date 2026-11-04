@@ -13,7 +13,8 @@ const dto = {
 
 describe('company contacts mapper', () => {
   it('reads the response and rejects a broken one', () => {
-    expect(mapCompanyContacts(dto)).toEqual(dto);
+    expect(mapCompanyContacts(dto)).toEqual({ ...dto, updatedBy: null });
+    expect(mapCompanyContacts({ ...dto, updatedBy: 'a@b.c' }).updatedBy).toBe('a@b.c');
     expect(() => mapCompanyContacts({ ...dto, email: null })).toThrow();
   });
 

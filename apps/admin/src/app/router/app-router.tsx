@@ -29,6 +29,7 @@ import {
   useCurrentOrderSet,
 } from '@admin/orders/feature';
 import { createProductsRoutes } from '@admin/products/feature';
+import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
 import { Navigate, useRoutes } from 'react-router-dom';
 
@@ -48,7 +49,7 @@ function AdminShellRoute({ user }: { user: SessionUser }) {
       profileHref={profilePath}
       user={toShellUser(user)}
     >
-      <AdminLayout currentOrderPositionCount={lines.length} />
+      <AdminLayout currentOrderPositionCount={lines.length} topBarActions={<SiteRefreshButton />} />
     </AdminShellSessionProvider>
   );
 }
