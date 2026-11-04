@@ -6,7 +6,6 @@ export { WholesalePanel } from './lib/wholesale/wholesale-panel';
 
 export { getCompanyDictionary } from './lib/i18n/company-dictionary';
 export { HomeCompany } from './lib/company/home-company';
-export { HomeAdvantages } from './lib/company/home-advantages';
 export { HomeResults } from './lib/company/home-results';
 export { HomeBrands } from './lib/company/home-brands';
 export { HomeFaq } from './lib/company/home-faq';

@@ -1,14 +1,15 @@
+import { formatPrice } from '@site/core/i18n';
+import { getProductPurchaseMode } from '@site/product/model';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import { ProductFacts } from '../details/product-facts';
 import { ProductGallery } from '../gallery/product-gallery';
 import { getProductDictionary } from '../i18n/product-dictionary';
 import { ProductIdentity } from '../identity/product-identity';
 import { ProductPurchasePanel } from '../purchase/product-purchase-panel';
+import { ProductStickyBar } from '../purchase/product-sticky-bar';
 import {
   ProductHelp,
-  ProductServiceDetails,
   ProductServiceLinks,
   ProductWholesaleCallout,
 } from '../service/product-service-links';
@@ -25,19 +26,31 @@ export type ProductDetailViewProps = {
   /** The feature supplies the visible trail, including the current product as its last item. */
   breadcrumbs: Array<{ name: string; href: string }>;
   purchaseAction?: ReactNode;
+  /** One-tap add for the phone buy bar; the bar is omitted without it. */
+  stickyPurchaseAction?: ReactNode;
 };
 
-/** Server composition; only gallery and clipboard are client leaves. */
+const PURCHASE_PANEL_ID = 'product-purchase';
+
+/**
+ * Server composition: breadcrumbs, gallery, identity, price and cart, wholesale note, short policy links, and help.
+ * Gallery, clipboard, and the phone buy bar are the only client leaves.
+ */
 export function ProductDetailView({
   locale,
   product,
   categoryHref,
   breadcrumbs,
   purchaseAction,
+  stickyPurchaseAction,
 }: ProductDetailViewProps) {
   const dictionary = getProductDictionary(locale);
+  const showStickyBar =
+    stickyPurchaseAction != null &&
+    getProductPurchaseMode(product) === 'cart' &&
+    product.price !== null;
   return (
-    <article className="min-w-0 pt-4 pb-8 sm:pt-5">
+    <article className={`min-w-0 pt-4 sm:pt-5 ${showStickyBar ? 'pb-24 lg:pb-8' : 'pb-8'}`}>
       <nav aria-label={dictionary.breadcrumbs} className="mb-5 text-xs text-muted-foreground">
         <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5">
           {breadcrumbs.map((crumb, index) => (
@@ -73,33 +86,26 @@ export function ProductDetailView({
         />
         <div className="min-w-0">
           <ProductIdentity locale={locale} product={product} categoryHref={categoryHref} />
-          <ProductPurchasePanel locale={locale} product={product} purchaseAction={purchaseAction} />
+          <ProductPurchasePanel
+            id={PURCHASE_PANEL_ID}
+            locale={locale}
+            product={product}
+            purchaseAction={purchaseAction}
+          />
           <ProductWholesaleCallout locale={locale} />
           <ProductServiceLinks locale={locale} />
         </div>
       </div>
-      <nav
-        aria-label={dictionary.productInformation}
-        className="mt-8 flex min-w-0 flex-wrap gap-x-6 gap-y-1 border-b border-border text-sm font-semibold"
-      >
-        <a
-          href="#product-facts"
-          className="border-b-2 border-brand py-3 underline-offset-4 hover:underline"
-        >
-          {dictionary.aboutProduct}
-        </a>
-        <a href="#product-delivery" className="py-3 underline-offset-4 hover:underline">
-          {dictionary.deliveryAndPayment}
-        </a>
-        <a href="#product-returns" className="py-3 underline-offset-4 hover:underline">
-          {dictionary.returns}
-        </a>
-      </nav>
-      <div className="grid min-w-0 gap-7 pt-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:gap-8">
-        <ProductFacts locale={locale} product={product} />
-        <ProductServiceDetails locale={locale} />
-      </div>
       <ProductHelp locale={locale} />
+      {showStickyBar && (
+        <ProductStickyBar
+          targetId={PURCHASE_PANEL_ID}
+          label={dictionary.buyBar}
+          price={formatPrice(locale, product.price!)}
+        >
+          {stickyPurchaseAction}
+        </ProductStickyBar>
+      )}
     </article>
   );
 }

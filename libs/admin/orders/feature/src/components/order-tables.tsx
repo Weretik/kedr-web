@@ -3,7 +3,7 @@ import { OrderListGrid } from '@admin/orders/ui';
 import { AdminPageHeader } from '@admin/shared/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { Alert, Button, Card, Stack, Tab, Tabs } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { DraftDeleteDialog } from '../dialogs/draft-delete-dialog';
@@ -37,17 +37,23 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
   const navigate = useNavigate();
   const customer = counterpartyId ?? '';
   const [searchText, setSearchText] = useState(searchTerm);
-  const deletion = useDraftDeletion();
-  useEffect(() => {
+  const [syncedSearch, setSyncedSearch] = useState({ mode, searchTerm });
+  if (syncedSearch.mode !== mode || syncedSearch.searchTerm !== searchTerm) {
+    // The URL is the source of truth: reset the input when it changes outside the field.
+    setSyncedSearch({ mode, searchTerm });
     setSearchText(searchTerm);
-  }, [mode, searchTerm]);
+  }
+  const deletion = useDraftDeletion();
+  const updateRef = useRef(update);
+  useEffect(() => {
+    updateRef.current = update;
+  });
   useEffect(() => {
     if (searchText === searchTerm) return;
-    const timeout = window.setTimeout(() => update({ Search: searchText }, true), 300);
-    return () => window.clearTimeout(timeout);
     // Search input commits after debounce; URL state remains the query source of truth.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, searchTerm, mode]);
+    const timeout = window.setTimeout(() => updateRef.current({ Search: searchText }, true), 300);
+    return () => window.clearTimeout(timeout);
+  }, [searchText, searchTerm]);
   const query: ListQuery = useMemo(
     () => ({
       page,
@@ -72,7 +78,11 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
       {!panelOnly && (
         <AdminPageHeader
           actions={
-            <Button onClick={() => navigate('/orders/new')} startIcon={<AddIcon />} variant="contained">
+            <Button
+              onClick={() => navigate('/orders/new')}
+              startIcon={<AddIcon />}
+              variant="contained"
+            >
               Створити замовлення
             </Button>
           }

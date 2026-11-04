@@ -7,16 +7,21 @@ import { readSearchTerm } from './search-term';
 import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 
+import type { RenderListingPurchaseAction } from '../listing/listing-purchase';
 import type { SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 
-type SearchPageProps = { locale: Locale; searchParams: Promise<SearchParamsRecord> };
+type SearchPageProps = {
+  locale: Locale;
+  searchParams: Promise<SearchParamsRecord>;
+  renderPurchaseAction?: RenderListingPurchaseAction;
+};
 
 /**
  * Search by name or SKU (`?q=`): a static frame with the form, results streamed from the URL. A new term scrolls
  * to the results heading, so the visitor sees that the search ran.
  */
-export function SearchPage({ locale, searchParams }: SearchPageProps) {
+export function SearchPage({ locale, searchParams, renderPurchaseAction }: SearchPageProps) {
   const dictionary = getCatalogDictionary(locale);
 
   return (
@@ -25,13 +30,17 @@ export function SearchPage({ locale, searchParams }: SearchPageProps) {
         {dictionary.searchHeading}
       </h1>
       <Suspense fallback={<ListingSkeleton />}>
-        <SearchResults locale={locale} searchParams={searchParams} />
+        <SearchResults
+          locale={locale}
+          searchParams={searchParams}
+          renderPurchaseAction={renderPurchaseAction}
+        />
       </Suspense>
     </div>
   );
 }
 
-async function SearchResults({ locale, searchParams }: SearchPageProps) {
+async function SearchResults({ locale, searchParams, renderPurchaseAction }: SearchPageProps) {
   const dictionary = getCatalogDictionary(locale);
   const term = readSearchTerm(await searchParams);
   const path = localizedPath(locale, SEARCH_PATH);
@@ -66,6 +75,7 @@ async function SearchResults({ locale, searchParams }: SearchPageProps) {
             scope={{ searchTerm: term }}
             searchParams={searchParams}
             extra={{ q: term }}
+            renderPurchaseAction={renderPurchaseAction}
           />
         </div>
       ) : (

@@ -42,6 +42,11 @@ describe('category routing', () => {
     ]);
   });
 
+  it('fails the sitemap instead of dropping every category when the tree is unavailable', async () => {
+    getCatalogTree.mockResolvedValue(null);
+    await expect(getCatalogSitemapPages()).rejects.toThrow('Catalog tree is unavailable');
+  });
+
   it('marks a page past the end noindex', async () => {
     getCategory.mockResolvedValue({
       kind: 'ok',

@@ -5,14 +5,10 @@ import Link from 'next/link';
 
 import { CopyrightYear } from './copyright-year';
 import { MessengerLinks } from '../controls/messenger-links';
-import {
-  CATEGORY_LINKS,
-  INFO_LINKS,
-  LEGAL_LINKS,
-  SHELL_PATHS,
-} from '../navigation/site-navigation';
+import { INFO_LINKS, LEGAL_LINKS, SHELL_PATHS } from '../navigation/site-navigation';
 
 import type { ShellDictionary } from '../i18n/shell-dictionary';
+import type { ShellLink } from '../navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
 
 type FooterColumn = {
@@ -24,14 +20,17 @@ type FooterColumn = {
 export function SiteFooter({
   locale,
   dictionary,
+  categoryLinks,
 }: {
   locale: Locale;
   dictionary: ShellDictionary;
+  /** The same sections as the header: from the catalog tree, or the fixed fallback. */
+  categoryLinks: readonly ShellLink[];
 }) {
   const columns: FooterColumn[] = [
     {
       title: dictionary.catalog,
-      links: CATEGORY_LINKS.map((link) => ({ ...link, label: dictionary.categories[link.key] })),
+      links: [...categoryLinks],
     },
     {
       title: dictionary.footerCompany,

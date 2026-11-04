@@ -8,3 +8,7 @@ export {
 } from './lib/routing/category-routing';
 export { generateSearchMetadata } from './lib/search/search-metadata';
 export { SearchPage } from './lib/search/search-page';
+export type {
+  ListingPurchaseDescriptor,
+  RenderListingPurchaseAction,
+} from './lib/listing/listing-purchase';

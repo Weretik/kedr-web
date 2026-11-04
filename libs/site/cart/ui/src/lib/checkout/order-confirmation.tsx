@@ -10,6 +10,8 @@ import { CartHelp, CartServiceNote } from '../shared/cart-support';
 import type { CheckoutReceipt } from '../types/cart-ui-props';
 import type { Locale } from '@site/core/i18n';
 
+const shortOrderNumber = (orderId: string) => orderId.replace(/-/g, '').slice(0, 8).toUpperCase();
+
 export function OrderConfirmation({
   locale,
   receipt,
@@ -35,7 +37,10 @@ export function OrderConfirmation({
       </div>
       <div className="min-w-0 rounded-xl border border-border bg-card p-5 sm:p-6">
         <p className="text-xs text-muted-foreground">{copy.reference}</p>
-        <p className="mt-2 font-mono text-sm [overflow-wrap:anywhere]">{receipt.orderId}</p>
+        {/* The first 8 characters are what managers see first in the Telegram order message. */}
+        <p className="mt-2 font-mono text-lg font-semibold tracking-wider">
+          {shortOrderNumber(receipt.orderId)}
+        </p>
         <dl className="mt-5 grid min-w-0 gap-3 border-t border-border pt-5 text-sm">
           <div className="flex justify-between gap-3">
             <dt className="text-muted-foreground">{copy.goods}</dt>

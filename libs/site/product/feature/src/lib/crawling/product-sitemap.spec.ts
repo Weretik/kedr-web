@@ -1,6 +1,11 @@
 import { TextEncoder as NodeTextEncoder } from 'node:util';
 
-import { getProductSitemap, getProductSitemapIds, getProductSitemapUrls } from './product-sitemap';
+import {
+  getProductSitemap,
+  getProductSitemapIds,
+  getProductSitemapIndexResponse,
+  getProductSitemapUrls,
+} from './product-sitemap';
 import { buildProductSitemapEntries } from './product-sitemap-entries';
 
 import type { ProductIndexItem } from '@site/product/model';
@@ -174,6 +179,20 @@ describe('product sitemap source and routes', () => {
       expect(getProductIndex).not.toHaveBeenCalled();
     },
   );
+
+  it('serves a sitemap index of the shards, or 503 while the product list is unavailable', async () => {
+    confirmedBoth();
+    const ok = await getProductSitemapIndexResponse();
+    expect(ok.status).toBe(200);
+    expect(await ok.text()).toContain(
+      '<sitemap><loc>https://classkedr.com.ua/product/sitemap/0.xml</loc></sitemap>',
+    );
+
+    getProductIndex.mockResolvedValue({ kind: 'unavailable', reason: 'transport' });
+    const failed = await getProductSitemapIndexResponse();
+    expect(failed.status).toBe(503);
+    expect(failed.headers.get('retry-after')).toBe('3600');
+  });
 
   it('returns notFound for a valid but out-of-range shard ID', async () => {
     confirmedBoth();

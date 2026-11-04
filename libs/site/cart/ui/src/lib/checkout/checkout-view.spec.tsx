@@ -137,7 +137,7 @@ describe('checkout presentation', () => {
         })}
       />,
     );
-    expect(screen.getByText('c268a89b-f9b4-4378-aaf9-3cb33557ec85')).toBeTruthy();
+    expect(screen.getByText('C268A89B')).toBeTruthy();
     expect(screen.queryByText('Кошик порожній')).toBeNull();
     expect(screen.queryByRole('form')).toBeNull();
     expect(screen.getByRole('link', { name: /Перейти в каталог/ }).getAttribute('href')).toBe(
@@ -168,7 +168,7 @@ describe('checkout presentation', () => {
         })}
       />,
     );
-    expect(screen.getByText('c268a89b-f9b4-4378-aaf9-3cb33557ec85')).toBeTruthy();
+    expect(screen.getByText('C268A89B')).toBeTruthy();
     expect(screen.getByRole('alert').textContent).toContain(
       'попередні товари можуть з’явитися знову',
     );

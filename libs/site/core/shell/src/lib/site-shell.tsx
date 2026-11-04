@@ -1,6 +1,7 @@
 import { SiteFooter } from './footer/site-footer';
 import { SiteHeader } from './header/site-header';
 import { getShellDictionary } from './i18n/shell-dictionary';
+import { resolveCategoryLinks } from './navigation/catalog-navigation';
 
 import type { CatalogNavigation } from './navigation/catalog-navigation';
 import type { Locale } from '@site/core/i18n';
@@ -44,7 +45,11 @@ export function SiteShell({
       <main id="content" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 lg:px-6">
         {children}
       </main>
-      <SiteFooter locale={locale} dictionary={dictionary} />
+      <SiteFooter
+        locale={locale}
+        dictionary={dictionary}
+        categoryLinks={resolveCategoryLinks(dictionary, catalogNavigation)}
+      />
     </>
   );
 }

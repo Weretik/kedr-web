@@ -71,58 +71,6 @@ export function ProductServiceLinks({ locale }: { locale: Locale }) {
   );
 }
 
-export function ProductServiceDetails({ locale }: { locale: Locale }) {
-  const dictionary = getProductDictionary(locale);
-  return (
-    <div className="min-w-0 rounded-xl border border-border bg-card p-5">
-      <section
-        id="product-delivery"
-        aria-labelledby="product-delivery-title"
-        className="scroll-mt-36"
-      >
-        <h2
-          id="product-delivery-title"
-          className="mb-3 flex items-start gap-2 text-lg leading-tight font-semibold tracking-tight"
-        >
-          <TruckIcon aria-hidden className="size-5 shrink-0 text-brand-text" strokeWidth={1.75} />
-          {dictionary.deliveryAndPayment}
-        </h2>
-        <p className="max-w-prose text-sm leading-relaxed text-muted-foreground">
-          {dictionary.deliveryText}
-        </p>
-        <Link href={localizedPath(locale, '/delivery-and-payment')} className={`${textLink} mt-3`}>
-          {dictionary.deliveryAction}
-          <ArrowUpRightIcon aria-hidden className="size-3.5 shrink-0" strokeWidth={1.75} />
-        </Link>
-      </section>
-      <section
-        id="product-returns"
-        aria-labelledby="product-returns-title"
-        className="mt-5 scroll-mt-36 border-t border-border pt-5"
-      >
-        <h2
-          id="product-returns-title"
-          className="mb-3 flex items-start gap-2 text-base leading-tight font-semibold"
-        >
-          <ShieldCheckIcon
-            aria-hidden
-            className="size-5 shrink-0 text-brand-text"
-            strokeWidth={1.75}
-          />
-          {dictionary.returns}
-        </h2>
-        <p className="max-w-prose text-sm leading-relaxed text-muted-foreground">
-          {dictionary.returnsText}
-        </p>
-        <Link href={localizedPath(locale, '/returns-exchanges')} className={`${textLink} mt-3`}>
-          {dictionary.returnsAction}
-          <ArrowUpRightIcon aria-hidden className="size-3.5 shrink-0" strokeWidth={1.75} />
-        </Link>
-      </section>
-    </div>
-  );
-}
-
 export function ProductHelp({ locale }: { locale: Locale }) {
   const dictionary = getProductDictionary(locale);
   return (

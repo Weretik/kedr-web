@@ -5,12 +5,12 @@ import { HomeSection } from '../layout/home-section';
 import type { CompanyDictionary } from '../i18n/company-dictionary';
 
 const BRANDS = [
-  { name: 'Korfad', file: 'Korfad.png' },
-  { name: 'Leador', file: 'Leador.png' },
-  { name: 'Syndicate doors', file: 'Syndicate.png' },
-  { name: 'Steelguard', file: 'Steelguardmain.png' },
-  { name: 'LA', file: 'LA.png' },
-  { name: 'SOVA', file: 'SOVA.png' },
+  { name: 'Korfad', file: 'Korfad.webp' },
+  { name: 'Leador', file: 'Leador.webp' },
+  { name: 'Syndicate doors', file: 'Syndicate.webp' },
+  { name: 'Steelguard', file: 'Steelguardmain.webp' },
+  { name: 'LA', file: 'LA.webp' },
+  { name: 'SOVA', file: 'SOVA.webp' },
 ] as const;
 
 export function HomeBrands({ dictionary }: { dictionary: CompanyDictionary }) {

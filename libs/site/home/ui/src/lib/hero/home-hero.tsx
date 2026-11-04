@@ -10,7 +10,10 @@ type HomeHeroProps = {
   searchAction: string;
 };
 
-/** First screen: the page's only H1, a lead paragraph, and search that works without JavaScript. */
+/**
+ * First screen: the page's only H1, a lead paragraph, and search that works without JavaScript. Phones already have
+ * the header search right above, so this form shows from the tablet width.
+ */
 export function HomeHero({ locale, dictionary, searchAction }: HomeHeroProps) {
   const inputId = `home-search-${locale}`;
 
@@ -25,7 +28,7 @@ export function HomeHero({ locale, dictionary, searchAction }: HomeHeroProps) {
         aria-label={dictionary.searchLabel}
         action={searchAction}
         method="get"
-        className="flex max-w-xl gap-2"
+        className="hidden max-w-xl gap-2 md:flex"
       >
         <label htmlFor={inputId} className="sr-only">
           {dictionary.searchLabel}
@@ -54,7 +57,7 @@ export function HomeHero({ locale, dictionary, searchAction }: HomeHeroProps) {
           {dictionary.searchSubmit}
         </button>
       </form>
-      <p id={`${inputId}-hint`} className="-mt-2 text-sm text-muted-foreground">
+      <p id={`${inputId}-hint`} className="-mt-2 hidden text-sm text-muted-foreground md:block">
         {dictionary.searchHint}
       </p>
     </div>

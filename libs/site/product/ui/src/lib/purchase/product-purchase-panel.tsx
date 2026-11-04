@@ -1,5 +1,5 @@
 import { COMPANY } from '@site/core/config';
-import { LOCALE_LANGUAGE_TAGS, localizedPath } from '@site/core/i18n';
+import { formatPrice, localizedPath } from '@site/core/i18n';
 import { getProductPurchaseMode } from '@site/product/model';
 import { Button } from '@site/shared/ui';
 import { MinusIcon, PackageIcon, PhoneIcon, PlusIcon, ShoppingCartIcon } from 'lucide-react';
@@ -12,6 +12,7 @@ import type { ProductDetails } from '@site/product/model';
 import type { ReactNode } from 'react';
 
 type ProductPurchasePanelProps = {
+  id?: string;
   locale: Locale;
   product: ProductDetails;
   purchaseAction?: ReactNode;
@@ -19,6 +20,7 @@ type ProductPurchasePanelProps = {
 
 /** Server-rendered price and pack; the real cart owner supplies its action separately. */
 export function ProductPurchasePanel({
+  id,
   locale,
   product,
   purchaseAction,
@@ -26,15 +28,14 @@ export function ProductPurchasePanel({
   const dictionary = getProductDictionary(locale);
   const mode = getProductPurchaseMode(product);
   const price =
-    product.price !== null && product.price > 0
-      ? new Intl.NumberFormat(LOCALE_LANGUAGE_TAGS[locale], {
-          minimumFractionDigits: Number.isInteger(product.price) ? 0 : 2,
-          maximumFractionDigits: 2,
-        }).format(product.price)
-      : null;
+    product.price !== null && product.price > 0 ? formatPrice(locale, product.price) : null;
 
   return (
-    <section aria-label={dictionary.retailPrice} className="mt-6 border-t border-border pt-5">
+    <section
+      id={id}
+      aria-label={dictionary.retailPrice}
+      className="mt-6 border-t border-border pt-5"
+    >
       <p className="text-xs text-muted-foreground">{dictionary.retailPrice}</p>
       <p
         className={
@@ -43,13 +44,7 @@ export function ProductPurchasePanel({
             : 'mt-1 text-2xl font-semibold tracking-tight'
         }
       >
-        {price === null ? (
-          dictionary.priceOnRequest
-        ) : (
-          <>
-            {price} <span className="text-2xl font-medium">₴</span>
-          </>
-        )}
+        {price === null ? dictionary.priceOnRequest : price}
       </p>
       {product.quantityInPack !== null && product.quantityInPack > 0 && (
         <p className="mt-3 flex items-start gap-2 text-sm text-muted-foreground">

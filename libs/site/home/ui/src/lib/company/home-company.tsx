@@ -9,7 +9,7 @@ import {
 
 import type { CompanyDictionary } from '../i18n/company-dictionary';
 
-const ICONS = [WarehouseIcon, ClipboardCheckIcon, LayersIcon, TruckIcon] as const;
+const ICONS = [LayersIcon, WarehouseIcon, ClipboardCheckIcon, TruckIcon] as const;
 
 export function HomeCompany({ dictionary }: { dictionary: CompanyDictionary }) {
   return (

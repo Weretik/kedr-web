@@ -11,7 +11,7 @@ export const CATEGORY_IMAGES: Readonly<Record<number, string>> = {
   900004: '/assets/categories/cylinders.jpg',
   900005: '/assets/categories/interior-mechanisms.jpg',
   900006: '/assets/categories/other.jpg',
-  910001: '/assets/categories/entrance-doors.png',
-  910002: '/assets/categories/interior-doors.png',
-  [CATALOG_ROOTS.doorsId]: '/assets/categories/entrance-doors.png',
+  910001: '/assets/categories/entrance-doors.webp',
+  910002: '/assets/categories/interior-doors.webp',
+  [CATALOG_ROOTS.doorsId]: '/assets/categories/entrance-doors.webp',
 };

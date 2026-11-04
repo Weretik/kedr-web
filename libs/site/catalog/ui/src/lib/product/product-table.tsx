@@ -9,14 +9,17 @@ import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
 import type { ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
+import type { ReactNode } from 'react';
 
-/** Compact list for buyers who know what they need: photo, name, SKU, stock, and price in one row. */
+/** Compact list for buyers who know what they need: photo, name, SKU, stock, price, and cart action in one row. */
 export function ProductTable({
   locale,
   products,
+  renderAction,
 }: {
   locale: Locale;
   products: readonly ProductSummary[];
+  renderAction?: (product: ProductSummary) => ReactNode;
 }) {
   const dictionary = getCatalogDictionary(locale);
 
@@ -40,6 +43,11 @@ export function ProductTable({
             <th scope="col" className="px-3 py-2 text-right font-medium">
               {dictionary.table.price}
             </th>
+            {renderAction && (
+              <th scope="col" className="px-3 py-2">
+                <span className="sr-only">{dictionary.table.action}</span>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -71,6 +79,7 @@ export function ProductTable({
               <td className="px-3 py-2 text-right font-semibold whitespace-nowrap tabular-nums">
                 <ProductPrice price={product.price} locale={locale} dictionary={dictionary} />
               </td>
+              {renderAction && <td className="px-3 py-2 text-right">{renderAction(product)}</td>}
             </tr>
           ))}
         </tbody>

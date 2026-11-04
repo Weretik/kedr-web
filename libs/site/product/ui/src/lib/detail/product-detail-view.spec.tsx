@@ -25,11 +25,11 @@ const product: ProductDetails = {
 
 describe('ProductDetailView server composition', () => {
   it.each([
-    ['uk', 'Про товар', 'Немає в наявності'],
-    ['ru', 'О товаре', 'Нет в наличии'],
+    ['uk', 'Немає в наявності'],
+    ['ru', 'Нет в наличии'],
   ] as const)(
-    'exposes facts and real policy/anchor destinations before hydration in %s',
-    (locale, about, stock) => {
+    'exposes facts and real policy destinations before hydration in %s',
+    (locale, stock) => {
       const html = renderToString(
         <ProductDetailView
           locale={locale}
@@ -51,8 +51,10 @@ describe('ProductDetailView server composition', () => {
       expect(doc.body.textContent).toContain('00817');
       expect(doc.body.textContent).toContain('420');
       expect(doc.body.textContent).toContain(stock);
-      expect(doc.querySelector('a[href="#product-facts"]')?.textContent).toBe(about);
-      expect(doc.querySelector('#product-facts')?.hasAttribute('hidden')).toBe(false);
+      expect(doc.querySelector('#product-delivery')).toBeNull();
+      expect(
+        doc.querySelector('[aria-label="Купити товар"], [aria-label="Купить товар"]'),
+      ).toBeNull();
       expect(doc.querySelector(`a[href="/${locale}/delivery-and-payment"]`)).toBeTruthy();
       expect(doc.querySelector(`a[href="/${locale}/returns-exchanges"]`)).toBeTruthy();
       expect(doc.querySelector(`a[href="/${locale}/wholesale"]`)).toBeTruthy();

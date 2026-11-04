@@ -5,6 +5,10 @@ export { JsonLd, serializeJsonLd } from './lib/json-ld/json-ld';
 export type { JsonLdData } from './lib/json-ld/json-ld';
 export { buildOrganizationJsonLd, buildWebSiteJsonLd } from './lib/json-ld/site-json-ld';
 export { buildCanonicalPath, buildLanguageAlternates } from './lib/metadata/alternates';
-export { buildPageMetadata, buildRootMetadata } from './lib/metadata/page-metadata';
+export {
+  DEFAULT_OG_IMAGE,
+  buildPageMetadata,
+  buildRootMetadata,
+} from './lib/metadata/page-metadata';
 export type { PageMetadataInput } from './lib/metadata/page-metadata';
 export { buildRobotsMeta } from './lib/metadata/robots-policy';

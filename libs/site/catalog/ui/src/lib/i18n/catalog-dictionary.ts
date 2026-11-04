@@ -13,11 +13,10 @@ export type CatalogDictionary = {
   retailPrice: string;
   isNew: string;
   isSale: string;
-  currency: string;
   sku: string;
   inStock: string;
   outOfStock: string;
-  table: { photo: string; name: string; sku: string; stock: string; price: string };
+  table: { photo: string; name: string; sku: string; stock: string; price: string; action: string };
 
   filters: string;
   onlyInStock: string;

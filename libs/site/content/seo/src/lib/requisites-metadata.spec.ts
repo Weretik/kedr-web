@@ -1,4 +1,5 @@
 import { createSiteConfig } from '@site/core/config';
+import { DEFAULT_OG_IMAGE } from '@site/core/seo';
 
 import { buildRequisitesMetadata } from './requisites-metadata';
 
@@ -47,6 +48,7 @@ describe('requisites metadata', () => {
         description: page.description,
         locale: page.ogLocale,
         alternateLocale: [page.otherOgLocale],
+        images: [DEFAULT_OG_IMAGE],
       });
       expect(metadata.robots).toEqual({ index: true, follow: true });
     },

@@ -1,3 +1,4 @@
+import { renderCartQuickAddAction } from '@site/cart/feature';
 import {
   CategoryPage,
   generateCategoryMetadata,
@@ -35,5 +36,12 @@ export default async function Page({
 }: PageProps<'/[locale]/catalog/[slug]'>) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  return <CategoryPage locale={locale} slug={slug} searchParams={searchParams} />;
+  return (
+    <CategoryPage
+      locale={locale}
+      slug={slug}
+      searchParams={searchParams}
+      renderPurchaseAction={renderCartQuickAddAction.bind(null, locale)}
+    />
+  );
 }

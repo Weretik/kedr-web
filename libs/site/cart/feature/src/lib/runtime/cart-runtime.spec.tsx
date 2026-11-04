@@ -101,7 +101,7 @@ describe('app cart composition', () => {
     await act(async () => {
       resolveOrder({ kind: 'created', orderId: '11111111-2222-4333-8444-555555555555' });
     });
-    expect(checkout.getByText('11111111-2222-4333-8444-555555555555')).toBeTruthy();
+    expect(checkout.getByText('11111111')).toBeTruthy();
     expect(checkout.queryByLabelText(/Телефон/)).toBeNull();
     expect(window.localStorage.getItem('cart_v1')).toBeNull();
     expect(orderAction).toHaveBeenCalledTimes(1);

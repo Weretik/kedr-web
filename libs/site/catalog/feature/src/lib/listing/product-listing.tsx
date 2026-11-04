@@ -19,6 +19,9 @@ import {
 } from '@site/catalog/ui';
 import { JsonLd } from '@site/core/seo';
 
+import { listingPurchaseDescriptor } from './listing-purchase';
+
+import type { RenderListingPurchaseAction } from './listing-purchase';
 import type { ProductListScope } from '@site/catalog/data-access';
 import type { SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
@@ -32,6 +35,7 @@ type ProductListingProps = {
   searchParams: Promise<SearchParamsRecord>;
   /** URL entries that are not listing choices, such as the search term `q`. */
   extra?: Record<string, string>;
+  renderPurchaseAction?: RenderListingPurchaseAction;
 };
 
 /**
@@ -44,6 +48,7 @@ export async function ProductListing({
   scope,
   searchParams,
   extra,
+  renderPurchaseAction,
 }: ProductListingProps) {
   const dictionary = getCatalogDictionary(locale);
   const query = parseListingQuery(await searchParams);
@@ -81,7 +86,15 @@ export async function ProductListing({
 
   return frame(
     <>
-      <ProductList locale={locale} products={page.items} view={query.view} />
+      <ProductList
+        locale={locale}
+        products={page.items}
+        view={query.view}
+        renderAction={
+          renderPurchaseAction &&
+          ((product) => renderPurchaseAction(listingPurchaseDescriptor(product)))
+        }
+      />
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
         <ListingSummary locale={locale} from={from} to={to} total={page.totalRecords} />
         <PerPageLinks locale={locale} path={path} query={query} extra={extra} />

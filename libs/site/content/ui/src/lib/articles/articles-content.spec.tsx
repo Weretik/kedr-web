@@ -79,7 +79,7 @@ const locales = [
 describe.each(locales)('articles controls: $locale', (copy) => {
   it('provides an accessible search without a visible external label', () => {
     const { container } = render(
-      <ArticlesContent locale={copy.locale} listing={exampleListing()} />,
+      <ArticlesContent locale={copy.locale} listing={exampleListing(20)} />,
     );
     const form = screen.getByRole('search', { name: copy.searchRegion });
     const input = within(form).getByRole('searchbox', { name: copy.searchLabel });
@@ -96,11 +96,19 @@ describe.each(locales)('articles controls: $locale', (copy) => {
     );
   });
 
+  it('shows only the cards for a short list opened without choices', () => {
+    render(<ArticlesContent locale={copy.locale} listing={exampleListing()} />);
+    expect(screen.getAllByRole('article')).toHaveLength(6);
+    expect(screen.queryByRole('search')).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
+    expect(screen.queryByRole('navigation', { name: copy.pagination })).toBeNull();
+  });
+
   it('renders the localized header, six source cards, range and a single-page pager', () => {
     const { container } = render(
       <>
         <ArticlesHeader locale={copy.locale} />
-        <ArticlesContent locale={copy.locale} listing={exampleListing()} />
+        <ArticlesContent locale={copy.locale} listing={exampleListing(6, { pageSize: 20 })} />
       </>,
     );
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(copy.title);
@@ -108,7 +116,7 @@ describe.each(locales)('articles controls: $locale', (copy) => {
     expect(screen.getByText(copy.range)).toBeDefined();
     expect(screen.getByText(copy.found)).toBeDefined();
     const size = screen.getByRole('combobox', { name: copy.pageSize }) as HTMLSelectElement;
-    expect(size.value).toBe('10');
+    expect(size.value).toBe('20');
     expect(
       within(size)
         .getAllByRole('option')
@@ -231,7 +239,7 @@ it('announces loading and an in-flight page-size transition', async () => {
         finish = resolve;
       }),
   );
-  render(<ArticlesContent locale="uk" listing={exampleListing()} />);
+  render(<ArticlesContent locale="uk" listing={exampleListing(20)} />);
   const select = screen.getByRole('combobox', { name: 'Статей на сторінці' }) as HTMLSelectElement;
   fireEvent.change(select, { target: { value: '50' } });
   expect(select.getAttribute('aria-busy')).toBe('true');
