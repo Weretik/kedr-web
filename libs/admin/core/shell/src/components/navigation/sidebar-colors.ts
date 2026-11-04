@@ -11,5 +11,7 @@ export const sidebarColors = {
   activeBackground: 'rgba(63, 164, 53, 0.2)',
   activeText: '#8FD684',
   accent: '#3FA435',
+  scrollbarThumb: '#3A4138',
+  scrollbarThumbHover: '#4B5547',
   focus: '#8FD684',
 } as const;

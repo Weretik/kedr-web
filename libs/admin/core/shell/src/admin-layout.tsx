@@ -26,6 +26,17 @@ const drawerPaperSx = {
   borderRight: 1,
   borderColor: sidebarColors.border,
   boxSizing: 'border-box',
+  // The drawer is dark in both themes, so its scrollbar must be dark and thin too.
+  colorScheme: 'dark',
+  scrollbarColor: `${sidebarColors.scrollbarThumb} transparent`,
+  scrollbarWidth: 'thin',
+  '&::-webkit-scrollbar': { width: 6 },
+  '&::-webkit-scrollbar-track': { background: 'transparent' },
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: sidebarColors.scrollbarThumb,
+    borderRadius: 3,
+    '&:hover': { backgroundColor: sidebarColors.scrollbarThumbHover },
+  },
 } as const;
 
 export function AdminLayout({ currentOrderPositionCount = 0 }: AdminLayoutProps) {
