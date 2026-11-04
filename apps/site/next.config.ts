@@ -25,6 +25,8 @@ const nextConfig: NextConfig = {
     // Product photos; keep in sync with PRODUCT_IMAGE_HOST in @site/catalog/data-access.
     remotePatterns: [
       { protocol: 'https', hostname: 'images-kedr.cdn.express' },
+      // YouTube's own posters of the gallery videos.
+      { protocol: 'https', hostname: 'i.ytimg.com', pathname: '/vi/**' },
       // The `v` query of a cover URL changes with every new cover.
       {
         protocol: apiUrl.protocol === 'http:' ? 'http' : 'https',

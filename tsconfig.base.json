@@ -144,7 +144,11 @@
       "@admin/media/model": ["./libs/admin/media/model/src/index.ts"],
       "@admin/media/data-access": ["./libs/admin/media/data-access/src/index.ts"],
       "@admin/media/ui": ["./libs/admin/media/ui/src/index.ts"],
-      "@admin/media/feature": ["./libs/admin/media/feature/src/index.ts"]
+      "@admin/media/feature": ["./libs/admin/media/feature/src/index.ts"],
+      "@admin/gallery/model": ["./libs/admin/gallery/model/src/index.ts"],
+      "@admin/gallery/data-access": ["./libs/admin/gallery/data-access/src/index.ts"],
+      "@admin/gallery/ui": ["./libs/admin/gallery/ui/src/index.ts"],
+      "@admin/gallery/feature": ["./libs/admin/gallery/feature/src/index.ts"]
     }
   }
 }

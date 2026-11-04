@@ -6,21 +6,22 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 [AppRouter](../../apps/admin/src/app/router/app-router.tsx) opens `/login` and assembles the other routes inside `AdminLayout` behind the staff session guard. See [Admin architecture](../architecture/admin/README.md).
 
-| Feature                                           | Route or entry                                       | Status                                                        |
-| ------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
-| [Session and shell](admin/session.md)             | `/login`, all routes                                 | Cookie sign-in, role guards, layout, navigation               |
-| [Users](admin/users.md)                           | `/users`                                             | Admin only: staff accounts, roles, block, managers' profile   |
-| [Мій кабінет](admin/profile.md)                   | `/profile`                                           | Own name, photo; Admin also email and password                |
-| [Dashboard](admin/dashboard.md)                   | `/dashboard`                                         | Visual metrics are currently static                           |
-| [Products](admin/products.md)                     | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set            |
-| [Categories](admin/categories.md)                 | `/categories`, `/categories/:categoryId`             | Tree, public address, SEO text and FAQ; Admin edits           |
-| [Media](admin/media.md)                           | `/media`                                             | CDN picture library: folders, upload, replace; Admin deletes  |
-| [Articles](admin/articles.md)                     | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit            |
-| [Company contacts](admin/company-contacts.md)     | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit |
-| [Company requisites](admin/company-requisites.md) | `/company-requisites`                                | ФОП, code, IBAN, bank, МФО with change history; Admins only   |
-| [Site documents](admin/documents.md)              | `/documents`, `/documents/:kind`                     | Offer, privacy, returns, delivery UK/RU; editions; all staff  |
-| [Customers](admin/clients.md)                     | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                               |
-| [Orders and drafts](admin/orders.md)              | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                            |
+| Feature                                           | Route or entry                                       | Status                                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [Session and shell](admin/session.md)             | `/login`, all routes                                 | Cookie sign-in, role guards, layout, navigation                                          |
+| [Users](admin/users.md)                           | `/users`                                             | Admin only: staff accounts, roles, block, managers' profile                              |
+| [Мій кабінет](admin/profile.md)                   | `/profile`                                           | Own name, photo; Admin also email and password                                           |
+| [Dashboard](admin/dashboard.md)                   | `/dashboard`                                         | Visual metrics are currently static                                                      |
+| [Products](admin/products.md)                     | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set                                       |
+| [Categories](admin/categories.md)                 | `/categories`, `/categories/:categoryId`             | Tree, public address, SEO text and FAQ; Admin edits                                      |
+| [Media](admin/media.md)                           | `/media`                                             | CDN picture library: folders, upload, replace; Admin deletes                             |
+| [Articles](admin/articles.md)                     | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit                                       |
+| [Company contacts](admin/company-contacts.md)     | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit                            |
+| [Company requisites](admin/company-requisites.md) | `/company-requisites`                                | ФОП, code, IBAN, bank, МФО with change history; Admins only                              |
+| [Site documents](admin/documents.md)              | `/documents`, `/documents/:kind`                     | Offer, privacy, returns, delivery UK/RU; editions; all staff                             |
+| [Site gallery](admin/gallery.md)                  | `/gallery`                                           | Photos from the media library and YouTube videos by link; order, UK/RU titles; all staff |
+| [Customers](admin/clients.md)                     | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                                                          |
+| [Orders and drafts](admin/orders.md)              | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                                                       |
 
 ## Mobile React Native
 
@@ -59,7 +60,7 @@ The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site
 | [Articles](site/articles.md)                       | `/{locale}/articles`, `/{locale}/articles/{slug}`                   | UK/RU articles from the Content API (admin-managed); search and 10/20/50 paging from 20 articles; reading pages, 301, metadata and sitemap                                   |
 | [Site catalog](site/catalog.md)                    | `/{locale}/catalog`, `/{locale}/catalog/{slug}`, `/{locale}/search` | Category page with tree, filters, pages, «Показати ще», SEO text and FAQ; hub; search; mega menu                                                                             |
 | [Product details](site/product.md)                 | `/{locale}/product/{slug}`, `/product/sitemap/{id}.xml`             | Real product/photo/scheme, UK/RU themes, SSR/canonical/redirects/Product JSON-LD; stage4A implemented; stage4B connected to the shared cart                                  |
-| [Gallery and video](site/gallery.md)               | /{locale}/galleria                                                  | Mixed gallery UI/viewer, 7 approved videos, UK/RU, static source, SEO/sitemap; photos next stage                                                                             |
+| [Gallery and video](site/gallery.md)               | /{locale}/galleria                                                  | Mixed gallery UI/viewer from the Content API (photos from the media library, YouTube videos), UK/RU, SEO/sitemap                                                             |
 
 ## Storefront Angular
 

@@ -18,6 +18,7 @@ import {
 import { AdminLayout, AdminShellSessionProvider } from '@admin/core/shell';
 import { dashboardRoutes } from '@admin/dashboard/feature';
 import { documentsRoutes } from '@admin/documents/feature';
+import { galleryRoutes } from '@admin/gallery/feature';
 import { createMediaRoutes } from '@admin/media/feature';
 import {
   addProductToCurrentOrder,
@@ -96,6 +97,7 @@ export function AppRouter() {
         ...articlesRoutes,
         ...companyRoutes,
         ...documentsRoutes,
+        ...galleryRoutes,
         ...profileRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },

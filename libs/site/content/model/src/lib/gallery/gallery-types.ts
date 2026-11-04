@@ -1,4 +1,4 @@
-/** A real local photo or poster. The server-owned source validates its path and dimensions. */
+/** A media-library photo on the CDN or a YouTube poster, with its intrinsic size for next/image. */
 export type GalleryImage = Readonly<{
   src: string;
   width: number;
@@ -26,6 +26,6 @@ export type GalleryVideo = GalleryMediaDetails &
     poster: GalleryImage;
   }>;
 
-/** Only the selected locale is passed to the browser; authoring/provenance stays on the server. */
+/** Only the selected locale is passed to the browser; the admin arranges the cards. */
 export type GalleryMedia = GalleryPhoto | GalleryVideo;
 export type GalleryFilter = 'all' | GalleryMedia['kind'];

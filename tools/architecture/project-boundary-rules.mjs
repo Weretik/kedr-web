@@ -1,5 +1,8 @@
 const documentedCrossDomainFlows = new Set([
   'admin-orders-feature->admin-products-data-access',
+  'admin-gallery-feature->admin-media-data-access',
+  'admin-gallery-feature->admin-media-model',
+  'admin-gallery-feature->admin-media-ui',
   'mobile-catalog-feature->mobile-cart-data-access',
   'mobile-catalog-feature->mobile-cart-model',
   'mobile-orders-feature->mobile-customers-data-access',

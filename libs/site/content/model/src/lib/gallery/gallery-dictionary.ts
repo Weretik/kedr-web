@@ -34,6 +34,10 @@ export type GalleryDictionary = Readonly<{
   watchOriginal: string;
   viewerLabel: string;
   noScriptText: string;
+  /** Fallbacks for a card the admin left without a title. */
+  untitledPhoto: string;
+  untitledVideo: string;
+  posterAlt: string;
 }>;
 
 const dictionaries: Readonly<Record<Locale, GalleryDictionary>> = {
@@ -69,6 +73,9 @@ const dictionaries: Readonly<Record<Locale, GalleryDictionary>> = {
     watchOriginal: 'Відкрити на YouTube',
     viewerLabel: 'Перегляд матеріалу галереї',
     noScriptText: 'Решта матеріалів галереї',
+    untitledPhoto: 'Фото з галереї',
+    untitledVideo: 'Відео з галереї',
+    posterAlt: 'Постер відео «{title}»',
   },
   ru: {
     locale: 'ru',
@@ -102,6 +109,9 @@ const dictionaries: Readonly<Record<Locale, GalleryDictionary>> = {
     watchOriginal: 'Открыть на YouTube',
     viewerLabel: 'Просмотр материала галереи',
     noScriptText: 'Остальные материалы галереи',
+    untitledPhoto: 'Фото из галереи',
+    untitledVideo: 'Видео из галереи',
+    posterAlt: 'Постер видео «{title}»',
   },
 };
 
