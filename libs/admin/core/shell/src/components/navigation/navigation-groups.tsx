@@ -5,10 +5,14 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 
 import type { ReactNode } from 'react';
 
@@ -21,6 +25,8 @@ export interface NavigationItem {
 }
 
 export interface NavigationGroup {
+  /** Shown on the block heading and for every item of the block when the drawer is collapsed. */
+  icon: ReactNode;
   id: string;
   items: NavigationItem[];
   label: string;
@@ -39,6 +45,7 @@ export const overviewItem: NavigationItem = {
  */
 export const navigationGroups: NavigationGroup[] = [
   {
+    icon: <ShoppingBagOutlinedIcon />,
     id: 'sales',
     label: 'Продаж',
     items: [
@@ -47,6 +54,7 @@ export const navigationGroups: NavigationGroup[] = [
     ],
   },
   {
+    icon: <Inventory2OutlinedIcon />,
     id: 'catalog',
     label: 'Каталог',
     items: [
@@ -56,6 +64,7 @@ export const navigationGroups: NavigationGroup[] = [
     ],
   },
   {
+    icon: <LanguageOutlinedIcon />,
     id: 'site',
     label: 'Сайт',
     items: [
@@ -65,6 +74,7 @@ export const navigationGroups: NavigationGroup[] = [
     ],
   },
   {
+    icon: <SettingsOutlinedIcon />,
     id: 'system',
     label: 'Система',
     items: [

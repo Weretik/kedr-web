@@ -88,8 +88,8 @@ Rules:
 ## Shell
 
 - **Navigation drawer** (desktop `lg` and up): permanent and dark in both light and dark themes (fixed colors in `sidebar-colors.ts`, only the on-dark logo; the brand green stays the accent), with a right border; 264 px expanded, 84 px collapsed to icons. The «Згорнути меню» control at the bottom toggles it; the choice is remembered in the browser (`kedr-admin:navigation-collapsed`). Collapsed items keep their accessible name and show a right-side tooltip.
-- **Navigation item:** 44 px high (40 px inside a block), 12 px radius, muted text at rest, a light overlay on hover; the active item has a green-tinted background with light-green text and `aria-current="page"`.
-- **Navigation blocks:** «Огляд» stands alone at the top, then collapsible blocks (heading button with `aria-expanded`, chevron, items inside). The block with the current page opens automatically; the user may open several. Collapsed to icons, headings disappear and blocks are separated by a thin line. A block with no items for the user's role is hidden. Items and blocks are configured in `navigation-groups.tsx`.
+- **Navigation item:** «Огляд» and the items of the collapsed drawer are 44 px high with an icon, 12 px radius, muted text at rest and a light overlay on hover; the active one has a green-tinted background with light-green text and `aria-current="page"`. Items inside an open block have **no icon**: 36 px high, indented, a small dot on the left; the active one has light-green text and a green dot with a soft halo, no filled background.
+- **Navigation blocks:** «Огляд» stands alone at the top, then collapsible blocks. The block heading is a 44 px button in sentence case with the block icon (Продаж: shopping bag, Каталог: box, Сайт: globe, Система: gear), an optional counter, and a chevron; an open block has a soft overlay. The block with the current page opens automatically; the user may open several. If a block with the current page is closed, a small green dot next to the heading keeps the user oriented. A counter pill (`groupCounts` prop) appears only above zero and only for something that needs action, such as new orders; no "all good" counters. Collapsed to icons, headings disappear, items show their own icons and blocks are separated by a thin line. A block with no items for the user's role is hidden. Blocks, icons and items are configured in `navigation-groups.tsx`.
 
   | Block   | Put here                                                                                      | Visible to     |
   | ------- | --------------------------------------------------------------------------------------------- | -------------- |
@@ -100,7 +100,7 @@ Rules:
 
   A new page goes into the block by its subject, never into a new block by default. Add a block only when no existing one fits, and record it in this table.
 
-- **Current order card:** at the bottom of the expanded drawer, `primary.light` surface with the position count and a contained «Оформити» button.
+- **Current order card:** at the bottom of the expanded drawer, a neutral dark card (light overlay and border, not the green active tint) with the position count and a contained green «Оформити» button.
 - **Phones and tablets:** the same sidebar opens as a temporary drawer from the menu button; it never collapses.
 - **Top bar:** sticky, 72 px, translucent `background.default` with blur and a bottom border; outlined 42 px icon buttons (current order with badge, notifications, theme, profile).
 - **Theme:** light, dark, or system through the existing theme menu (`useColorScheme`). The logo switches between `main-logo.svg` and `main-logo-on-dark.svg`.

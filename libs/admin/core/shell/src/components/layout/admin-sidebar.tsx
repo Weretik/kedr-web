@@ -93,7 +93,9 @@ export function AdminSidebar({
         {isCollapsed ? null : (
           <Box
             sx={{
-              bgcolor: sidebarColors.activeBackground,
+              bgcolor: sidebarColors.hover,
+              border: 1,
+              borderColor: sidebarColors.border,
               borderRadius: '16px',
               display: 'flex',
               flexDirection: 'column',
@@ -118,7 +120,7 @@ export function AdminSidebar({
               </Typography>
               <Typography
                 component="span"
-                sx={{ color: sidebarColors.activeText, fontWeight: 700 }}
+                sx={{ color: sidebarColors.text, fontWeight: 700 }}
                 variant="caption"
               >
                 позицій: {currentOrderPositionCount}

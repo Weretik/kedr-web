@@ -7,7 +7,6 @@ export const sidebarColors = {
   border: '#262B24',
   text: '#A9B0A5',
   textStrong: '#EEF0EA',
-  groupLabel: '#7C857A',
   hover: 'rgba(238, 240, 234, 0.06)',
   activeBackground: 'rgba(63, 164, 53, 0.2)',
   activeText: '#8FD684',
