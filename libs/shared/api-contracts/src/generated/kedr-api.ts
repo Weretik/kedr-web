@@ -1144,6 +1144,137 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/media/folders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * All folders with file counts
+         * @description A flat list ordered by name; the client builds the tree from `parentId`.
+         */
+        get: operations["getAdminMediaFolders"];
+        put?: never;
+        /** Create a folder */
+        post: operations["createAdminMediaFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/media/folders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Rename a folder and set its parent
+         * @description Moving a folder into itself or its subfolder is `400` on `parentId`.
+         */
+        put: operations["updateAdminMediaFolder"];
+        post?: never;
+        /**
+         * Delete an empty folder
+         * @description Admin only.
+         */
+        delete: operations["deleteAdminMediaFolder"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/media/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A page of files by name
+         * @description `folderId` limits the list to one folder, `inRoot=true` to files outside any folder; with neither, the whole library. `search` matches the display name (case-insensitive contains).
+         */
+        get: operations["getAdminMediaFiles"];
+        put?: never;
+        /**
+         * Upload a picture
+         * @description JPEG, PNG, or WebP (checked by content) up to 15 MB, stored unchanged under a new unique CDN key. The display name is the uploaded file name.
+         */
+        post: operations["uploadAdminMediaFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/media/files/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One file */
+        get: operations["getAdminMediaFile"];
+        /** Rename a file and set its folder */
+        put: operations["updateAdminMediaFile"];
+        post?: never;
+        /**
+         * Delete a file from the CDN and the library
+         * @description Admin only.
+         */
+        delete: operations["deleteAdminMediaFile"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/media/files/{id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the picture of a file
+         * @description The ID stays (links keep working), the URL changes, the old CDN file is deleted.
+         */
+        put: operations["replaceAdminMediaFile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/media/files/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move files to a folder
+         * @description Up to 500 IDs; unknown IDs are ignored and not counted.
+         */
+        post: operations["moveAdminMediaFiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1964,6 +2095,72 @@ export interface components {
             changedBy: string;
             changes: components["schemas"]["RequisitesFieldChange"][];
         };
+        MediaFolderItem: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            parentId?: number | null;
+            name: string;
+            /** @description Files directly in this folder. */
+            fileCount: number;
+        };
+        MediaFolderTree: {
+            folders: components["schemas"]["MediaFolderItem"][];
+            /** @description Files outside any folder. */
+            rootFileCount: number;
+            totalFileCount: number;
+        };
+        SaveMediaFolderRequest: {
+            name: string;
+            /**
+             * Format: int64
+             * @description `null` = library root.
+             */
+            parentId?: number | null;
+        };
+        MediaFileItem: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            folderId?: number | null;
+            /** @description Display name, not the CDN file name. */
+            fileName: string;
+            /**
+             * Format: uri
+             * @example https://images-kedr.cdn.express/products/731.jpg
+             */
+            url: string;
+            /** @example image/jpeg */
+            contentType: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            /** @description Unknown for files registered by the CDN sync. */
+            width?: number | null;
+            height?: number | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        MediaFilePage: {
+            items: components["schemas"]["MediaFileItem"][];
+            page: number;
+            pageSize: number;
+            totalCount: number;
+        };
+        UpdateMediaFileRequest: {
+            fileName: string;
+            /**
+             * Format: int64
+             * @description `null` = library root.
+             */
+            folderId?: number | null;
+        };
+        MoveMediaFilesRequest: {
+            fileIds: number[];
+            /** Format: int64 */
+            folderId?: number | null;
+        };
     };
     responses: {
         /** @description Input validation failed. */
@@ -2031,6 +2228,17 @@ export interface components {
                 };
             };
         };
+        /** @description Invalid input; each error names its field (`name`, `parentId`, `folderId`, `fileName`, `file`, …). */
+        Invalid: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
     };
     parameters: {
         Lang: "uk" | "ru";
@@ -2056,6 +2264,7 @@ export interface components {
         CsrfHeader: string;
         UserId: string;
         ArticleId: number;
+        Id: number;
     };
     requestBodies: never;
     headers: never;
@@ -5316,6 +5525,536 @@ export interface operations {
                 content?: never;
             };
             /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminMediaFolders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The folders. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFolderTree"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminMediaFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveMediaFolderRequest"];
+            };
+        };
+        responses: {
+            /** @description The new folder. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFolderItem"];
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A folder with this name (case-insensitive) already exists in the parent. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminMediaFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveMediaFolderRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved folder. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFolderItem"];
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such folder. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A folder with this name already exists in the target parent. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminMediaFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such folder. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The folder still has files or subfolders. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminMediaFiles: {
+        parameters: {
+            query?: {
+                folderId?: number;
+                inRoot?: boolean;
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFilePage"];
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    uploadAdminMediaFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                    /**
+                     * Format: int64
+                     * @description Omit for the library root.
+                     */
+                    folderId?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description The new file. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFileItem"];
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The request is larger than 15 MB. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CDN credentials are not configured. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminMediaFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The file. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFileItem"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such file. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminMediaFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMediaFileRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved file. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFileItem"];
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such file. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminMediaFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such file. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CDN credentials are not configured. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    replaceAdminMediaFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The file with its new URL. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFileItem"];
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such file. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The request is larger than 15 MB. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description CDN credentials are not configured. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    moveAdminMediaFiles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveMediaFilesRequest"];
+            };
+        };
+        responses: {
+            /** @description How many files moved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        moved: number;
+                    };
+                };
+            };
+            400: components["responses"]["Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
