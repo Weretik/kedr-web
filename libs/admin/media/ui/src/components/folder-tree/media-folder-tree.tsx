@@ -1,13 +1,12 @@
-import { buildFolderTree } from '@admin/media/model';
-import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
-import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import { buildFolderTree, filterFolderTree } from '@admin/media/model';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
-import { Box, IconButton, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { Box, Divider, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 
 import { MediaFolderMenu } from './media-folder-menu';
+import { MediaFolderRow } from './media-folder-row';
 
 import type { MediaFolderActions } from './media-folder-menu';
 import type { MediaFolderNode, MediaFolderTree, MediaScope } from '@admin/media/model';
@@ -17,113 +16,65 @@ interface MediaFolderTreeProps extends MediaFolderActions {
   tree: MediaFolderTree;
   scope: MediaScope;
   onSelect: (scope: MediaScope) => void;
+  /** Open folders; during a folder search every found branch is open. */
+  expandedIds: ReadonlySet<number>;
+  onToggle: (folderId: number) => void;
 }
 
 const isSelected = (scope: MediaScope, folderId: number) =>
   scope.kind === 'folder' && scope.folderId === folderId;
 
-function Count({ value }: { value: number }) {
-  return (
-    <Box
-      component="span"
-      sx={{ color: 'text.secondary', fontVariantNumeric: 'tabular-nums', typography: 'caption' }}
-    >
-      {value}
-    </Box>
-  );
-}
+/** Subfolders hang on a thin guide line instead of a deeper indent, so long names keep their width. */
+const nestedListSx = {
+  borderLeft: 1,
+  borderColor: 'divider',
+  listStyle: 'none',
+  m: 0,
+  ml: '11px',
+  p: 0,
+  pl: '4px',
+} as const;
 
-function Row({
-  children,
-  depth,
-  icon,
-  label,
-  count,
-  selected,
-  onClick,
-  toggle,
-}: {
-  children?: ReactNode;
-  depth: number;
-  icon: ReactNode;
-  label: string;
-  count: number;
-  selected: boolean;
-  onClick: () => void;
-  toggle?: ReactNode;
-}) {
-  return (
-    <Box sx={{ alignItems: 'center', display: 'flex', pl: depth * 2 }}>
-      <Box sx={{ flex: '0 0 32px', display: 'flex', justifyContent: 'center' }}>{toggle}</Box>
-      <ListItemButton onClick={onClick} selected={selected} sx={{ flex: 1, minHeight: 44, pr: 1 }}>
-        <ListItemIcon sx={{ minWidth: 32 }}>{icon}</ListItemIcon>
-        <ListItemText
-          primary={label}
-          slotProps={{ primary: { noWrap: true, variant: 'body2' } }}
-          sx={{ minWidth: 0 }}
-        />
-        <Count value={count} />
-      </ListItemButton>
-      {children}
-    </Box>
-  );
-}
-
-/** «Усі файли», «Без папки», then the nested folders with file counts and their actions. */
+/** Search, «Усі файли», «Без папки», then the folders with totals including subfolders. */
 export function MediaFolderTreeView({
+  expandedIds,
   onCreateChild,
   onDelete,
   onEdit,
   onSelect,
+  onToggle,
   scope,
   tree,
 }: MediaFolderTreeProps) {
+  const [search, setSearch] = useState('');
   const nodes = useMemo(() => buildFolderTree(tree.folders), [tree.folders]);
-  const [collapsed, setCollapsed] = useState<ReadonlySet<number>>(new Set());
-  const toggle = (id: number) =>
-    setCollapsed((current) => {
-      const next = new Set(current);
-      if (!next.delete(id)) next.add(id);
-      return next;
-    });
+  const visible = useMemo(() => filterFolderTree(nodes, search), [nodes, search]);
+  const searching = search.trim().length > 0;
 
   const renderNode = (node: MediaFolderNode): ReactNode => {
-    const open = !collapsed.has(node.id);
+    const hasChildren = node.children.length > 0;
+    const open = hasChildren && (searching || expandedIds.has(node.id));
     return (
-      <Box component="li" key={node.id} sx={{ listStyle: 'none' }}>
-        <Row
-          count={node.fileCount}
-          depth={node.depth}
-          icon={<FolderOutlinedIcon fontSize="small" />}
+      <Box component="li" key={node.id}>
+        <MediaFolderRow
+          actions={
+            <MediaFolderMenu
+              folder={node}
+              onCreateChild={onCreateChild}
+              onDelete={onDelete}
+              onEdit={onEdit}
+            />
+          }
+          count={node.totalFileCount}
+          expanded={hasChildren ? open : undefined}
+          highlight={search}
           label={node.name}
           onClick={() => onSelect({ kind: 'folder', folderId: node.id })}
+          onToggle={() => onToggle(node.id)}
           selected={isSelected(scope, node.id)}
-          toggle={
-            node.children.length > 0 ? (
-              <IconButton
-                aria-expanded={open}
-                aria-label={open ? `Згорнути «${node.name}»` : `Розгорнути «${node.name}»`}
-                onClick={() => toggle(node.id)}
-                size="small"
-              >
-                {open ? (
-                  <ExpandMoreOutlinedIcon fontSize="small" />
-                ) : (
-                  <ChevronRightOutlinedIcon fontSize="small" />
-                )}
-              </IconButton>
-            ) : null
-          }
-        >
-          <MediaFolderMenu
-            folder={node}
-            onCreateChild={onCreateChild}
-            onDelete={onDelete}
-            onEdit={onEdit}
-          />
-        </Row>
-        {open && node.children.length > 0 ? (
-          <Box component="ul" sx={{ m: 0, p: 0 }}>
+        />
+        {open ? (
+          <Box component="ul" sx={nestedListSx}>
             {node.children.map(renderNode)}
           </Box>
         ) : null}
@@ -132,26 +83,49 @@ export function MediaFolderTreeView({
   };
 
   return (
-    <List aria-label="Папки медіатеки" dense disablePadding>
-      <Row
-        count={tree.totalFileCount}
-        depth={0}
-        icon={<PhotoLibraryOutlinedIcon fontSize="small" />}
-        label="Усі файли"
-        onClick={() => onSelect({ kind: 'all' })}
-        selected={scope.kind === 'all'}
+    <Stack spacing={1}>
+      <TextField
+        onChange={(event) => setSearch(event.target.value)}
+        placeholder="Знайти папку"
+        size="small"
+        slotProps={{
+          htmlInput: { 'aria-label': 'Знайти папку' },
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchOutlinedIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          },
+        }}
+        value={search}
       />
-      <Row
-        count={tree.rootFileCount}
-        depth={0}
-        icon={<HomeOutlinedIcon fontSize="small" />}
-        label="Без папки"
-        onClick={() => onSelect({ kind: 'root' })}
-        selected={scope.kind === 'root'}
-      />
-      <Box component="ul" sx={{ m: 0, p: 0 }}>
-        {nodes.map(renderNode)}
+      <Box aria-label="Папки медіатеки" component="nav">
+        <MediaFolderRow
+          count={tree.totalFileCount}
+          icon={<PhotoLibraryOutlinedIcon color="action" fontSize="small" />}
+          label="Усі файли"
+          onClick={() => onSelect({ kind: 'all' })}
+          selected={scope.kind === 'all'}
+        />
+        <MediaFolderRow
+          count={tree.rootFileCount}
+          icon={<HomeOutlinedIcon color="action" fontSize="small" />}
+          label="Без папки"
+          onClick={() => onSelect({ kind: 'root' })}
+          selected={scope.kind === 'root'}
+        />
+        <Divider sx={{ my: 1 }} />
+        {visible.length > 0 ? (
+          <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0 }}>
+            {visible.map(renderNode)}
+          </Box>
+        ) : (
+          <Typography color="text.secondary" sx={{ px: 1, py: 1.5 }} variant="body2">
+            {searching ? 'Папок з такою назвою немає.' : 'Папок ще немає.'}
+          </Typography>
+        )}
       </Box>
-    </List>
+    </Stack>
   );
 }

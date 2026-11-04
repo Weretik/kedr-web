@@ -1578,6 +1578,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/content/site-refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ask the public site to drop its cached content and catalog
+         * @description Requires `CanManageContent` (Manager or Admin). No request body.
+         */
+        post: operations["refreshSite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/media/folders": {
         parameters: {
             query?: never;
@@ -1632,7 +1652,7 @@ export interface paths {
         };
         /**
          * A page of files by name
-         * @description `folderId` limits the list to one folder, `inRoot=true` to files outside any folder; with neither, the whole library. `search` matches the display name (case-insensitive contains).
+         * @description `folderId` limits the list to one folder, `inRoot=true` to files outside any folder; with neither, the whole library. `includeSubfolders=true` (only with `folderId`) also returns the files of all its subfolders. `search` matches the display name (case-insensitive contains).
          */
         get: operations["getAdminMediaFiles"];
         put?: never;
@@ -2446,6 +2466,8 @@ export interface components {
             /** @description Sanitized HTML; safe to render as is. */
             bodyHtml: string;
         };
+        /** @description Email (else user name) of who saved the last change; null for articles saved before it was recorded. */
+        EditorName: string | null;
         AdminArticleSummary: {
             /** Format: int64 */
             id: number;
@@ -2458,6 +2480,7 @@ export interface components {
             coverPath: components["schemas"]["CoverPath"];
             /** Format: date-time */
             updatedAt: string;
+            updatedBy: components["schemas"]["EditorName"];
         };
         ArticleText: {
             /** @enum {string} */
@@ -2485,6 +2508,7 @@ export interface components {
             coverPath: components["schemas"]["CoverPath"];
             /** Format: date-time */
             updatedAt: string;
+            updatedBy: components["schemas"]["EditorName"];
             texts: components["schemas"]["ArticleText"][];
         };
         /** @example +380687135049 */
@@ -2510,6 +2534,11 @@ export interface components {
         CompanyContacts: components["schemas"]["SaveCompanyContactsRequest"] & {
             /** Format: date-time */
             updatedAt: string;
+        };
+        /** @description The contacts with who saved the last change; the public read never shows the editor. */
+        AdminCompanyContacts: components["schemas"]["CompanyContacts"] & {
+            /** @description Email (else user name) of who saved last; null for the row created by the migration. */
+            updatedBy: string | null;
         };
         SaveCompanyRequisitesRequest: {
             /** @example ФОП Овчинников Максим Володимирович */
@@ -2735,6 +2764,10 @@ export interface components {
             name: string;
             /** Format: int64 */
             logoMediaFileId: number;
+        };
+        SiteRefreshResult: {
+            /** @enum {string} */
+            status: "refreshed" | "notConfigured" | "siteUnavailable";
         };
         MediaFolderItem: {
             /** Format: int64 */
@@ -6005,7 +6038,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CompanyContacts"];
+                    "application/json": components["schemas"]["AdminCompanyContacts"];
                 };
             };
             /** @description Not signed in. */
@@ -6050,7 +6083,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CompanyContacts"];
+                    "application/json": components["schemas"]["AdminCompanyContacts"];
                 };
             };
             /** @description Invalid input; each error names the field (`salesPhone`, `email`, `telegramUrl`, `viberPhone`, `mapUrl`, `cityUk`, `cityRu`). */
@@ -7320,6 +7353,58 @@ export interface operations {
             };
         };
     };
+    refreshSite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The site accepted the request. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteRefreshResult"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The site did not answer or refused the secret (`siteUnavailable`). */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteRefreshResult"];
+                };
+            };
+            /** @description The site address or secret is not set in this environment (`notConfigured`). */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteRefreshResult"];
+                };
+            };
+        };
+    };
     getAdminMediaFolders: {
         parameters: {
             query?: never;
@@ -7511,6 +7596,7 @@ export interface operations {
                 search?: string;
                 page?: number;
                 pageSize?: number;
+                includeSubfolders?: boolean;
             };
             header?: never;
             path?: never;

@@ -27,12 +27,12 @@ export function MediaFolderMenu({
     <>
       <IconButton
         aria-label={`Дії з папкою «${folder.name}»`}
-        edge="end"
         onClick={(event) => {
           event.stopPropagation();
           setAnchor(event.currentTarget);
         }}
         size="small"
+        sx={{ color: 'text.secondary', p: 0.5 }}
       >
         <MoreVertOutlinedIcon fontSize="small" />
       </IconButton>

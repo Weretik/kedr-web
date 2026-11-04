@@ -65,6 +65,9 @@ export function toMediaFilesParams(query: MediaFilesQuery) {
   const search = query.search.trim();
   return {
     ...(query.scope.kind === 'folder' ? { folderId: query.scope.folderId } : {}),
+    ...(query.scope.kind === 'folder' && query.includeSubfolders
+      ? { includeSubfolders: true }
+      : {}),
     ...(query.scope.kind === 'root' ? { inRoot: true } : {}),
     ...(search ? { search } : {}),
     page: query.page,

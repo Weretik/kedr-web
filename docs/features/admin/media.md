@@ -2,7 +2,9 @@
 
 **Status:** implemented (stage 2 of the media library). Route: `/media`. Backend: KedrStore module Media, consumer page [admin media library](../../contracts/media/admin-media.md); specification [media library](../../specs/admin/media/001-media-library/README.md).
 
-- One library for every picture on the CDN. The [page](../../../libs/admin/media/feature/src/pages/media-page.tsx) has the folder tree on the left («Усі файли», «Без папки», nested folders with counts) and the grid on the right with search by name and 60 files per page.
+- One library for every picture on the CDN. The [page](../../../libs/admin/media/feature/src/pages/media-page.tsx) has the folder tree on the left and the grid on the right with search by name and 60 files per page.
+- Folder tree: «Знайти папку» search (found folders with their parents, the match highlighted), «Усі файли», «Без папки», then folders. Subfolders hang on a thin guide line with one chevron; a name wraps to two lines and shows in full on hover. Each count includes all subfolders. Folders start closed, the ones the user opens are remembered in this browser, and the folders above the selected one open by themselves. The folder ⋮ menu appears on hover, focus, or the selected row.
+- Above the grid: the folder path with clickable parents and, for a folder with subfolders, «Разом з підпапками» (on by default, backend `includeSubfolders`).
 - Folders are virtual: creating, renaming, or moving a folder or file never changes a file URL. A folder cannot move into itself or its subfolder.
 - Upload: the «Завантажити» button or files dragged onto the grid go to the selected folder (the root when «Усі файли» or «Без папки» is selected). JPEG, PNG, or WebP up to 15 MB; a wrong file is listed with its reason and the rest upload one by one with progress.
 - A file opens in the side panel: preview, «Відкрити», «Копіювати посилання», name and folder, type, size, resolution (unknown for files registered from the CDN), dates, «Замінити файл» (same ID, new URL).
@@ -15,8 +17,8 @@
 flowchart LR
     App[AppRouter] --> Routes[createMediaRoutes]
     Routes --> Page[MediaPage]
-    Page --> Hooks[useMediaFilesQuery, useMediaUploads, useMediaFolderActions, useMediaFileActions, useMediaSelection]
-    Page --> Parts[MediaFoldersCard, MediaFilesToolbar]
+    Page --> Hooks[useMediaFilesQuery, useMediaFolderExpansion, useMediaUploads, useMediaFolderActions, useMediaFileActions, useMediaSelection]
+    Page --> Parts[MediaFoldersCard, MediaScopeBar, MediaFilesToolbar]
     Page --> UI[MediaFileGrid, MediaDropZone, MediaFilePanel, dialogs]
     Hooks --> Api[media data access]
     Api --> Model[media model]
@@ -28,11 +30,11 @@ flowchart LR
 libs/admin/media/
 ├── model/src/entities/                 # file, folder, limits, accepted types
 ├── model/src/queries/                  # scope (all, root, folder), page size, upload folder
-├── model/src/mappers/                  # folder tree, path, size and resolution text
+├── model/src/mappers/                  # folder tree with totals, search filter, path, size and resolution text
 ├── model/src/validators/               # upload, folder name, file name rules
 ├── data-access/src/api/admin-media.api.ts  # folders and files endpoints, tags
 ├── data-access/src/{contracts,validators,mappers}/  # DTO types, zod schemas, mapping, query params
-├── ui/src/components/folder-tree/      # tree and folder menu
+├── ui/src/components/folder-tree/      # tree with search, row, folder menu
 ├── ui/src/components/file-grid/        # grid with states, file card
 ├── ui/src/components/upload/           # drag-and-drop zone
 ├── ui/src/details/media-file-panel.tsx # side panel
@@ -43,7 +45,7 @@ libs/admin/media/
 
 ## Tests
 
-- `npx nx run admin-media-model:vite:test -- --run` — folder tree, upload and name rules.
+- `npx nx run admin-media-model:vite:test -- --run` — folder tree with totals, ancestors, search filter, upload and name rules.
 - `npx nx run admin-media-data-access:vite:test -- --run` — mapping and query parameters.
 - `npx nx run admin-media-ui:vite:test -- --run` — folder dialog name check and blocked places.
-- `npx nx run admin-media-feature:vite:test -- --run` — folder scope, upload with a skipped file, Manager and Admin delete, non-empty folder, new subfolder, error wording.
+- `npx nx run admin-media-feature:vite:test -- --run` — folder scope, closed subfolders with totals, «Разом з підпапками», folder search, upload with a skipped file, Manager and Admin delete, non-empty folder, new subfolder, error wording.

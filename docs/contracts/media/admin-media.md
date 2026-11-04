@@ -2,17 +2,17 @@
 
 **Provider:** KedrStore module Media, contract [media.openapi.yaml](../openapi/media/media.openapi.yaml). **Consumer:** Admin «Медіа» (`/media`), [feature card](../../features/admin/media.md).
 
-| Operation                                          | Use in Admin                                                                                      |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `getAdminMediaFolders`                             | Folder tree with counts; tag `MediaFolders`                                                       |
-| `createAdminMediaFolder`, `updateAdminMediaFolder` | Folder dialog (name and place); `409` = the name is taken among siblings                          |
-| `deleteAdminMediaFolder`                           | Admin only; `409` = the folder is not empty                                                       |
-| `getAdminMediaFiles`                               | Grid: `folderId` or `inRoot=true` (never both), `search`, `page`, `pageSize=60`; tag `MediaFiles` |
-| `uploadAdminMediaFile`                             | Multipart `file` + optional `folderId`; one request per file                                      |
-| `replaceAdminMediaFile`                            | Side panel «Замінити файл»; the ID stays, the URL changes                                         |
-| `updateAdminMediaFile`, `moveAdminMediaFiles`      | Rename and folder in the panel; bulk move of the selection                                        |
-| `deleteAdminMediaFile`                             | Admin only, after a confirmation; removes the CDN file                                            |
-| `getAdminMediaFile`                                | Not consumed: the grid already holds the file                                                     |
+| Operation                                          | Use in Admin                                                                                                                                             |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `getAdminMediaFolders`                             | Folder tree with counts; tag `MediaFolders`                                                                                                              |
+| `createAdminMediaFolder`, `updateAdminMediaFolder` | Folder dialog (name and place); `409` = the name is taken among siblings                                                                                 |
+| `deleteAdminMediaFolder`                           | Admin only; `409` = the folder is not empty                                                                                                              |
+| `getAdminMediaFiles`                               | Grid: `folderId` (with `includeSubfolders=true` by default on the page) or `inRoot=true` (never both), `search`, `page`, `pageSize=60`; tag `MediaFiles` |
+| `uploadAdminMediaFile`                             | Multipart `file` + optional `folderId`; one request per file                                                                                             |
+| `replaceAdminMediaFile`                            | Side panel «Замінити файл»; the ID stays, the URL changes                                                                                                |
+| `updateAdminMediaFile`, `moveAdminMediaFiles`      | Rename and folder in the panel; bulk move of the selection                                                                                               |
+| `deleteAdminMediaFile`                             | Admin only, after a confirmation; removes the CDN file                                                                                                   |
+| `getAdminMediaFile`                                | Not consumed: the grid already holds the file                                                                                                            |
 
 - Responses pass zod schemas in [media data access](../../../libs/admin/media/data-access/src/validators/media.schemas.ts); optional `parentId`, `folderId`, `width`, and `height` become `null`.
 - Every file change refreshes both tags, because folder counts change with it.
