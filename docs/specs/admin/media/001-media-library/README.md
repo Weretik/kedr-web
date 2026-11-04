@@ -13,7 +13,7 @@ Manage the pictures on the CDN (`products/`, `product-scheme/`, and new uploads)
 
 ## Product rules
 
-- **R-001.** `/media` is open to Manager and Admin; the menu item «Медіа» sits before «Статті».
+- **R-001.** `/media` is open to Manager and Admin; the menu item «Медіа» sits in the block «Каталог» after «Категорії» (`navigation-groups.tsx`).
 - **R-002.** The tree shows «Усі файли» (total), «Без папки» (root files), and nested folders with their file counts. Selecting one shows its files; a new folder or search starts from page 1.
 - **R-003.** The grid is paged on the server (60 per page) and searched by name with a short delay.
 - **R-004.** Upload goes to the selected folder, or to the root for «Усі файли» and «Без папки». A file that is not JPEG, PNG, or WebP, is empty, or is over 15 MB is listed with its reason in the pinned block and is not sent; the rest upload one by one with progress.

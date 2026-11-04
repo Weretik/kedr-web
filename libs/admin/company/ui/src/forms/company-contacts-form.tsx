@@ -1,7 +1,9 @@
 import { SectionCard } from '@admin/shared/ui';
-import { Alert, Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 
-import { ContactField } from './contact-field';
+import { DraftTextField } from './draft-text-field';
+import { FormSaveBar } from './form-save-bar';
+import { twoColumns } from './two-columns';
 
 import type { CompanyContactsDraft, CompanyContactsErrors } from '@admin/company/model';
 import type { FormEvent } from 'react';
@@ -17,12 +19,6 @@ interface CompanyContactsFormProps {
   onReset: () => void;
   onSave: () => void;
 }
-
-const twoColumns = {
-  display: 'grid',
-  gap: 2,
-  gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
-} as const;
 
 /** Phones, email, messenger and map links, and the city in both languages, saved together. */
 export function CompanyContactsForm({
@@ -46,7 +42,7 @@ export function CompanyContactsForm({
     <Stack component="form" noValidate onSubmit={handleSubmit} spacing={3}>
       <SectionCard title="Телефони і пошта">
         <Box sx={twoColumns}>
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.salesPhone}
             field="salesPhone"
@@ -54,7 +50,7 @@ export function CompanyContactsForm({
             inputMode="tel"
             label="Телефон відділу продажів"
           />
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.viberPhone}
             field="viberPhone"
@@ -62,7 +58,7 @@ export function CompanyContactsForm({
             inputMode="tel"
             label="Номер для Viber"
           />
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.email}
             field="email"
@@ -74,7 +70,7 @@ export function CompanyContactsForm({
       </SectionCard>
       <SectionCard title="Месенджери і карта">
         <Box sx={twoColumns}>
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.telegramUrl}
             field="telegramUrl"
@@ -82,7 +78,7 @@ export function CompanyContactsForm({
             inputMode="url"
             label="Посилання на Telegram"
           />
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.mapUrl}
             field="mapUrl"
@@ -94,14 +90,14 @@ export function CompanyContactsForm({
       </SectionCard>
       <SectionCard title="Місто">
         <Box sx={twoColumns}>
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.cityUk}
             field="cityUk"
             hint="Українська версія сайту."
             label="Місто українською"
           />
-          <ContactField
+          <DraftTextField
             {...field}
             error={errors?.cityRu}
             field="cityRu"
@@ -110,15 +106,7 @@ export function CompanyContactsForm({
           />
         </Box>
       </SectionCard>
-      {saveError ? <Alert severity="error">{saveError}</Alert> : null}
-      <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-        <Button disabled={!dirty || saving} onClick={onReset}>
-          Скасувати зміни
-        </Button>
-        <Button disabled={!dirty || saving} type="submit" variant="contained">
-          {saving ? 'Збереження…' : 'Зберегти'}
-        </Button>
-      </Stack>
+      <FormSaveBar dirty={dirty} onReset={onReset} saveError={saveError} saving={saving} />
     </Stack>
   );
 }

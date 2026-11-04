@@ -1,1 +1,1 @@
-export { companyRoutes } from './company.routes';
+export { companyAdminRoutes, companyRoutes } from './company.routes';

@@ -1080,6 +1080,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/requisites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company requisites
+         * @description Public, because the requisites page is shown to anonymous visitors.
+         */
+        get: operations["getCompanyRequisites"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/requisites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company requisites for editing
+         * @description Requires the Admin role.
+         */
+        get: operations["getAdminCompanyRequisites"];
+        /**
+         * Replace all company requisites
+         * @description Requires the Admin role. All fields are required and replaced at once; values are trimmed and spaces are removed from the IBAN. When something changed, one history entry is written in the same transaction; saving the same values writes nothing.
+         */
+        put: operations["updateAdminCompanyRequisites"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/requisites/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the latest requisites changes
+         * @description Requires the Admin role. The 50 newest entries, newest first.
+         */
+        get: operations["getAdminCompanyRequisitesHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/media/folders": {
         parameters: {
             query?: never;
@@ -1995,6 +2059,41 @@ export interface components {
         CompanyContacts: components["schemas"]["SaveCompanyContactsRequest"] & {
             /** Format: date-time */
             updatedAt: string;
+        };
+        SaveCompanyRequisitesRequest: {
+            /** @example ФОП Овчинников Максим Володимирович */
+            legalName: string;
+            /** @description ЄДРПОУ (8 digits) or РНОКПП (10 digits). */
+            code: string;
+            registrationExtractNumber: string;
+            /**
+             * @description Ukrainian IBAN (`UA` + 27 digits) with a valid checksum; spaces are allowed and removed.
+             * @example UA303052990000026007025905216
+             */
+            iban: string;
+            bankName: string;
+            /** @description МФО; must match digits 5–10 of the IBAN. */
+            bankCode: string;
+        };
+        CompanyRequisites: components["schemas"]["SaveCompanyRequisitesRequest"] & {
+            iban?: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        RequisitesFieldChange: {
+            /** @enum {string} */
+            field: "legalName" | "code" | "registrationExtractNumber" | "iban" | "bankName" | "bankCode";
+            oldValue: string;
+            newValue: string;
+        };
+        CompanyRequisitesChange: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            changedAt: string;
+            /** @description The editor's email (or user name) at the time of the change. */
+            changedBy: string;
+            changes: components["schemas"]["RequisitesFieldChange"][];
         };
         MediaFolderItem: {
             /** Format: int64 */
@@ -5269,6 +5368,164 @@ export interface operations {
             };
             /** @description The contacts row is missing. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCompanyRequisites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The requisites. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisites"];
+                };
+            };
+            /** @description The requisites row is missing (it is created by a migration). */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCompanyRequisites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The requisites. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisites"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The requisites row is missing. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminCompanyRequisites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveCompanyRequisitesRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved requisites. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisites"];
+                };
+            };
+            /** @description Invalid input; each error names the field (`legalName`, `code`, `registrationExtractNumber`, `iban`, `bankName`, `bankCode`). A bank code that differs from the one inside the IBAN is reported on `bankCode`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The requisites row is missing. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCompanyRequisitesHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The change log. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisitesChange"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

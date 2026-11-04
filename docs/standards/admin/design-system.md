@@ -87,8 +87,19 @@ Rules:
 
 ## Shell
 
-- **Navigation drawer** (desktop `lg` and up): permanent, `background.paper` with a right border; 264 px expanded, 84 px collapsed to icons. The «Згорнути меню» control at the bottom toggles it; the choice is remembered in the browser (`kedr-admin:navigation-collapsed`). Collapsed items keep their accessible name and show a right-side tooltip.
-- **Navigation item:** 44 px high, 12 px radius, `text.secondary` at rest, `action.hover` on hover; the active item is `primary.light` with `primary.dark` text and `aria-current="page"`.
+- **Navigation drawer** (desktop `lg` and up): permanent and dark in both light and dark themes (fixed colors in `sidebar-colors.ts`, only the on-dark logo; the brand green stays the accent), with a right border; 264 px expanded, 84 px collapsed to icons. The «Згорнути меню» control at the bottom toggles it; the choice is remembered in the browser (`kedr-admin:navigation-collapsed`). Collapsed items keep their accessible name and show a right-side tooltip.
+- **Navigation item:** 44 px high (40 px inside a block), 12 px radius, muted text at rest, a light overlay on hover; the active item has a green-tinted background with light-green text and `aria-current="page"`.
+- **Navigation blocks:** «Огляд» stands alone at the top, then collapsible blocks (heading button with `aria-expanded`, chevron, items inside). The block with the current page opens automatically; the user may open several. Collapsed to icons, headings disappear and blocks are separated by a thin line. A block with no items for the user's role is hidden. Items and blocks are configured in `navigation-groups.tsx`.
+
+  | Block   | Put here                                                                                      | Visible to     |
+  | ------- | --------------------------------------------------------------------------------------------- | -------------- |
+  | Продаж  | Orders, customers, order documents: everything about a deal with a client                     | Manager, Admin |
+  | Каталог | Products, categories, brands, media library                                                   | Manager, Admin |
+  | Сайт    | Content a site visitor sees: articles, gallery, FAQ, company contacts                         | Manager, Admin |
+  | Система | Access and legal data of the company: users, requisites (`access` in `navigation-groups.tsx`) | Admin only     |
+
+  A new page goes into the block by its subject, never into a new block by default. Add a block only when no existing one fits, and record it in this table.
+
 - **Current order card:** at the bottom of the expanded drawer, `primary.light` surface with the position count and a contained «Оформити» button.
 - **Phones and tablets:** the same sidebar opens as a temporary drawer from the menu button; it never collapses.
 - **Top bar:** sticky, 72 px, translucent `background.default` with blur and a bottom border; outlined 42 px icon buttons (current order with badge, notifications, theme, profile).

@@ -1,10 +1,11 @@
 import { articlesRoutes } from '@admin/articles/feature';
 import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
-import { companyRoutes } from '@admin/company/feature';
+import { companyAdminRoutes, companyRoutes } from '@admin/company/feature';
 import {
   canEditCatalog,
   canDeleteMedia,
+  canManageRequisites,
   canManageUsers,
   LoginPage,
   loginPath,
@@ -94,6 +95,7 @@ export function AppRouter() {
         ...articlesRoutes,
         ...companyRoutes,
         ...profileRoutes,
+        { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
       ],
     },

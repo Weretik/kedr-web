@@ -19,3 +19,5 @@ export const canEditCatalog = (user: SessionUser): boolean => user.roles.include
 
 /** Media files and folders are deleted from the CDN for good, so only administrators may. */
 export const canDeleteMedia = (user: SessionUser): boolean => user.roles.includes('Admin');
+/** Payment requisites are money: administrators only, as the backend policy RequireAdminRole. */
+export const canManageRequisites = (user: SessionUser): boolean => user.roles.includes('Admin');

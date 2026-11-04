@@ -46,7 +46,11 @@ export function ColorSchemeMenu() {
       </Tooltip>
       <Menu anchorEl={anchorElement} id="color-scheme-menu" onClose={handleClose} open={isOpen}>
         {colorSchemeItems.map(({ icon, label, value }) => (
-          <MenuItem key={value} onClick={() => handleModeChange(value)} selected={(mode ?? 'system') === value}>
+          <MenuItem
+            key={value}
+            onClick={() => handleModeChange(value)}
+            selected={(mode ?? 'system') === value}
+          >
             <ListItemIcon>{icon}</ListItemIcon>
             {label}
           </MenuItem>
