@@ -4,13 +4,27 @@ import { PhoneIcon } from 'lucide-react';
 import type { CompanyDictionary } from '../i18n/company-dictionary';
 import type { CompanyContacts } from '@site/core/config';
 
+/** One question with its answer, already in the page language. */
+export interface HomeFaqItem {
+  question: string;
+  answer: string;
+}
+
+/** The questions written in code, shown when the content API is unavailable. */
+export function defaultHomeFaq(dictionary: CompanyDictionary): HomeFaqItem[] {
+  return dictionary.questions.map((item) => ({ question: item.title, answer: item.text }));
+}
+
 export function HomeFaq({
   dictionary,
+  items,
   phone,
 }: {
   dictionary: CompanyDictionary;
+  items: readonly HomeFaqItem[];
   phone: CompanyContacts['phone'];
 }) {
+  if (!items.length) return null;
   return (
     <section
       aria-labelledby="home-faq-title"
@@ -31,11 +45,7 @@ export function HomeFaq({
           </Button>
         </div>
       </div>
-      <FaqList
-        group="home-faq"
-        items={dictionary.questions.map((item) => ({ question: item.title, answer: item.text }))}
-        openFirst
-      />
+      <FaqList group="home-faq" items={items} openFirst />
     </section>
   );
 }

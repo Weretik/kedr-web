@@ -3,6 +3,10 @@ const documentedCrossDomainFlows = new Set([
   'admin-gallery-feature->admin-media-data-access',
   'admin-gallery-feature->admin-media-model',
   'admin-gallery-feature->admin-media-ui',
+  // Home page brands: the logo is picked or uploaded from the media library (Content 006).
+  'admin-home-content-feature->admin-media-data-access',
+  'admin-home-content-feature->admin-media-model',
+  'admin-home-content-feature->admin-media-ui',
   // Product page «Фото та схема»: picks and uploads library files (Media 001 stage 3).
   'admin-products-feature->admin-media-data-access',
   'admin-products-feature->admin-media-model',
