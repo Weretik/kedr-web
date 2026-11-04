@@ -1,5 +1,6 @@
 import { useDeleteArticleMutation, useGetAdminArticleQuery } from '@admin/articles/data-access';
 import { ArticleCoverCard, ArticleForm, DeleteArticleDialog } from '@admin/articles/ui';
+import { MediaPickerDialog } from '@admin/media/ui';
 import { useRouteNotice, withNotice } from '@admin/shared/routing';
 import { AdminDetailHeader, ChangedNote, NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -13,7 +14,7 @@ import { useArticleEditor } from '../hooks/use-article-editor';
 
 import type { Article } from '@admin/articles/model';
 
-/** Creates an article (`/articles/new`) or edits one; the cover can be added once the article exists. */
+/** Creates an article (`/articles/new`) or edits one; the cover is chosen in the same form and saved with it. */
 export function ArticleEditorPage() {
   const params = useParams();
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export function ArticleEditorPage() {
       void navigate(`/articles/${saved.id}`, { replace: true, ...withNotice('Статтю створено.') });
     else setNotice('Статтю збережено.');
   });
-  const cover = useArticleCover(articleId, setNotice);
+  const cover = useArticleCover(editor.changeCover);
   const notFound = (query.error as { code?: string } | undefined)?.code === 'NotFound';
 
   useEffect(() => {
@@ -100,17 +101,15 @@ export function ArticleEditorPage() {
             saveError={editor.saveError}
             saving={editor.saving}
           />
-          {article ? (
-            <ArticleCoverCard
-              busy={cover.busy}
-              coverUrl={article.coverUrl}
-              error={cover.error}
-              onFileSelected={(file) => void cover.choose(file)}
-              onRemove={() => void cover.clear()}
-            />
-          ) : (
-            <Alert severity="info">Обкладинку можна додати після створення статті.</Alert>
-          )}
+          <ArticleCoverCard
+            busy={cover.busy}
+            coverUrl={editor.draft.cover?.url ?? null}
+            error={cover.error}
+            missing={Boolean(editor.draft.cover && !editor.draft.cover.url)}
+            onFileSelected={(file) => void cover.choose(file)}
+            onPickFromLibrary={cover.picker.onOpen}
+            onRemove={cover.clear}
+          />
         </Box>
       )}
       {article ? (
@@ -126,6 +125,22 @@ export function ArticleEditorPage() {
           title={article.texts.uk.title}
         />
       ) : null}
+      <MediaPickerDialog
+        error={cover.picker.error}
+        files={cover.picker.files}
+        loading={cover.picker.loading}
+        multiple={false}
+        onCancel={cover.picker.onCancel}
+        onConfirm={cover.picker.onConfirm}
+        onPageChange={cover.picker.onPageChange}
+        onRetry={cover.picker.onRetry}
+        onSearchChange={cover.picker.onSearchChange}
+        open={cover.picker.open}
+        page={cover.picker.page}
+        pageCount={cover.picker.pageCount}
+        search={cover.picker.search}
+        title="Обкладинка з медіатеки"
+      />
       <NoticeSnackbar
         message={notice ?? routeNotice.notice}
         onClose={() => (notice ? setNotice(null) : routeNotice.close())}

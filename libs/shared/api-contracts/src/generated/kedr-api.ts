@@ -1021,7 +1021,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/articles/{id}/cover": {
+    "/api/admin/articles/covers": {
         parameters: {
             query?: never;
             header?: never;
@@ -1029,14 +1029,33 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
         /**
-         * Upload or replace the cover picture
-         * @description JPEG, PNG, or WebP up to 10 MB, at least 600 px wide. Stored as WebP at most 1600 px wide with the EXIF orientation applied; the cover version grows by one.
+         * Upload a cover picture before saving the article
+         * @description JPEG, PNG, or WebP up to 10 MB, at least 600 px wide. Stored as WebP at most 1600 px wide with the EXIF orientation applied, on the CDN under `articles/` and in the media library folder «Статті» (created when missing). Nothing about an article changes: send `mediaFileId` as `coverMediaFileId` with the create or update.
          */
-        put: operations["uploadAdminArticleCover"];
-        post?: never;
-        /** Remove the cover picture */
-        delete: operations["removeAdminArticleCover"];
+        post: operations["uploadAdminArticleCover"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles/covers/move-legacy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move covers saved before Content 008 to the CDN
+         * @description Uploads each legacy cover to the CDN under `articles/` (library folder «Статті», named after the slug), sets it as the article cover, and deletes the stored bytes. Safe to repeat: a second call moves nothing. Stops at the first failed upload and keeps what was already moved.
+         */
+        post: operations["moveLegacyAdminArticleCovers"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -2445,10 +2464,16 @@ export interface components {
             value: components["schemas"]["SalesCatalogItem"][];
         };
         /**
-         * @description Path of the cover relative to the API base URL, with the version in `v`; null without a cover.
+         * @description Path of a cover saved before Content 008, relative to the API base URL, with the version in `v`; null otherwise.
          * @example /api/content/articles/4/cover?v=1
          */
         CoverPath: string | null;
+        /**
+         * Format: uri
+         * @description Absolute CDN address of the cover; null without one or when its library file was deleted.
+         * @example https://images-kedr.cdn.express/articles/5f1c2b7e9a.webp
+         */
+        CoverUrl: string | null;
         ArticleSummary: {
             /** Format: int64 */
             id: number;
@@ -2459,6 +2484,7 @@ export interface components {
             /** Format: date */
             publishedOn: string;
             coverPath: components["schemas"]["CoverPath"];
+            coverUrl: components["schemas"]["CoverUrl"];
             /** Format: date-time */
             updatedAt: string;
         };
@@ -2478,6 +2504,7 @@ export interface components {
             publishedOn: string;
             isPublished: boolean;
             coverPath: components["schemas"]["CoverPath"];
+            coverUrl: components["schemas"]["CoverUrl"];
             /** Format: date-time */
             updatedAt: string;
             updatedBy: components["schemas"]["EditorName"];
@@ -2495,6 +2522,16 @@ export interface components {
             /** Format: date */
             publishedOn: string;
             isPublished: boolean;
+            /**
+             * Format: int64
+             * @description Sets the cover: a file from `uploadAdminArticleCover` or any media library picture. With neither this nor `removeCover` the cover stays as it is.
+             */
+            coverMediaFileId?: number | null;
+            /**
+             * @description Drops the cover; not together with `coverMediaFileId`.
+             * @default false
+             */
+            removeCover: boolean;
             /** @description Exactly one `uk` and one `ru` text. */
             texts: components["schemas"]["ArticleText"][];
         };
@@ -2506,10 +2543,25 @@ export interface components {
             publishedOn: string;
             isPublished: boolean;
             coverPath: components["schemas"]["CoverPath"];
+            coverUrl: components["schemas"]["CoverUrl"];
+            /**
+             * Format: int64
+             * @description Media library file of the cover; stays set when that file was deleted (then `coverUrl` is null).
+             */
+            coverMediaFileId: number | null;
             /** Format: date-time */
             updatedAt: string;
             updatedBy: components["schemas"]["EditorName"];
             texts: components["schemas"]["ArticleText"][];
+        };
+        ArticleCoverUpload: {
+            /** Format: int64 */
+            mediaFileId: number;
+            /** Format: uri */
+            url: string;
+        };
+        LegacyArticleCoversMoved: {
+            moved: number;
         };
         /** @example +380687135049 */
         Phone: string;
@@ -2891,7 +2943,7 @@ export interface components {
                 "application/json": components["schemas"]["Error"];
             };
         };
-        /** @description Invalid input; each error names the field (`slug`, `texts`, `file`…). */
+        /** @description Invalid input; each error names the field (`slug`, `texts`, `coverMediaFileId`, `file`…). */
         "articles.openapi_components-responses-ValidationError": {
             headers: {
                 [name: string]: unknown;
@@ -5899,9 +5951,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: components["parameters"]["ArticleId"];
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody: {
@@ -5913,13 +5963,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The article with its new `coverPath`. */
+            /** @description The picture in the media library. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminArticle"];
+                    "application/json": components["schemas"]["ArticleCoverUpload"];
                 };
             };
             400: components["responses"]["articles.openapi_components-responses-ValidationError"];
@@ -5937,13 +5987,6 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Article not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description The request is larger than the upload limit. */
             413: {
                 headers: {
@@ -5951,26 +5994,31 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description The CDN is not configured. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
-    removeAdminArticleCover: {
+    moveLegacyAdminArticleCovers: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: components["parameters"]["ArticleId"];
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description The article without a cover. */
+            /** @description How many covers this call moved. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminArticle"];
+                    "application/json": components["schemas"]["LegacyArticleCoversMoved"];
                 };
             };
             /** @description Not signed in. */
@@ -5987,8 +6035,8 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Article not found. */
-            404: {
+            /** @description The CDN is not configured. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

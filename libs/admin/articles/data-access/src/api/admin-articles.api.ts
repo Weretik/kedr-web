@@ -1,8 +1,14 @@
 import { baseApi } from '@admin/shared/api-client';
 
-import { mapArticle, mapArticleSummaries, toSaveArticleBody } from '../mappers/article.mapper';
+import {
+  mapArticle,
+  mapArticleCoverUpload,
+  mapArticleSummaries,
+  mapLegacyCoversMoved,
+  toSaveArticleBody,
+} from '../mappers/article.mapper';
 
-import type { Article, ArticleDraft, ArticleSummary } from '@admin/articles/model';
+import type { Article, ArticleCover, ArticleDraft, ArticleSummary } from '@admin/articles/model';
 
 const root = '/api/admin/articles';
 
@@ -50,31 +56,16 @@ export const adminArticlesApi = baseApi
         query: (id) => ({ url: `${root}/${id}`, method: 'DELETE' }),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'Articles', id: 'LIST' }]),
       }),
-      uploadArticleCover: build.mutation<Article, { id: number; file: Blob }>({
-        query: ({ id, file }) => ({
-          url: `${root}/${id}/cover`,
-          method: 'PUT',
-          data: coverForm(file),
-        }),
-        transformResponse: mapArticle,
-        invalidatesTags: (_result, error, { id }) =>
-          error
-            ? []
-            : [
-                { type: 'Articles', id },
-                { type: 'Articles', id: 'LIST' },
-              ],
+      /** Puts the picture into the media library (CDN `articles/`); the article takes it on save. */
+      uploadArticleCover: build.mutation<ArticleCover, Blob>({
+        query: (file) => ({ url: `${root}/covers`, method: 'POST', data: coverForm(file) }),
+        transformResponse: mapArticleCoverUpload,
       }),
-      removeArticleCover: build.mutation<Article, number>({
-        query: (id) => ({ url: `${root}/${id}/cover`, method: 'DELETE' }),
-        transformResponse: mapArticle,
-        invalidatesTags: (_result, error, id) =>
-          error
-            ? []
-            : [
-                { type: 'Articles', id },
-                { type: 'Articles', id: 'LIST' },
-              ],
+      /** Moves the pre-CDN covers to the CDN; answers how many moved. Safe to repeat. */
+      moveLegacyArticleCovers: build.mutation<number, void>({
+        query: () => ({ url: `${root}/covers/move-legacy`, method: 'POST' }),
+        transformResponse: mapLegacyCoversMoved,
+        invalidatesTags: (_result, error) => (error ? [] : ['Articles']),
       }),
     }),
   });
@@ -84,7 +75,7 @@ export const {
   useDeleteArticleMutation,
   useGetAdminArticleQuery,
   useGetAdminArticlesQuery,
-  useRemoveArticleCoverMutation,
+  useMoveLegacyArticleCoversMutation,
   useUpdateArticleMutation,
   useUploadArticleCoverMutation,
 } = adminArticlesApi;
