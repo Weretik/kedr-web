@@ -33,12 +33,28 @@ describe('media mapper', () => {
       toMediaFilesParams({
         scope: { kind: 'folder', folderId: 3 },
         search: ' 731 ',
+        includeSubfolders: false,
         page: 2,
         pageSize: 60,
       }),
     ).toEqual({ folderId: 3, search: '731', page: 2, pageSize: 60 });
     expect(
-      toMediaFilesParams({ scope: { kind: 'root' }, search: '', page: 1, pageSize: 60 }),
+      toMediaFilesParams({
+        scope: { kind: 'folder', folderId: 3 },
+        search: '',
+        includeSubfolders: true,
+        page: 1,
+        pageSize: 60,
+      }),
+    ).toEqual({ folderId: 3, includeSubfolders: true, page: 1, pageSize: 60 });
+    expect(
+      toMediaFilesParams({
+        scope: { kind: 'root' },
+        search: '',
+        includeSubfolders: true,
+        page: 1,
+        pageSize: 60,
+      }),
     ).toEqual({ inRoot: true, page: 1, pageSize: 60 });
   });
 });

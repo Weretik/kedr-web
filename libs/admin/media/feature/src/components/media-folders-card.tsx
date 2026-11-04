@@ -10,6 +10,8 @@ interface MediaFoldersCardProps extends MediaFolderActions {
   error: boolean;
   scope: MediaScope;
   onSelect: (scope: MediaScope) => void;
+  expandedIds: ReadonlySet<number>;
+  onToggle: (folderId: number) => void;
   onRetry: () => void;
 }
 
@@ -26,7 +28,7 @@ export function MediaFoldersCard({
       sx={{
         maxHeight: { md: 'calc(100vh - 160px)' },
         overflowY: 'auto',
-        p: 1,
+        p: 1.5,
         position: { md: 'sticky' },
         top: { md: 96 },
       }}

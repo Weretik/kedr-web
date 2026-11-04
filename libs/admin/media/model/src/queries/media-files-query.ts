@@ -4,6 +4,8 @@ export type MediaScope = { kind: 'all' } | { kind: 'root' } | { kind: 'folder'; 
 export interface MediaFilesQuery {
   scope: MediaScope;
   search: string;
+  /** With a folder scope, also the files of all its subfolders. */
+  includeSubfolders: boolean;
   page: number;
   pageSize: number;
 }
@@ -13,6 +15,7 @@ export const mediaPageSize = 60;
 export const defaultMediaFilesQuery: MediaFilesQuery = {
   scope: { kind: 'all' },
   search: '',
+  includeSubfolders: false,
   page: 1,
   pageSize: mediaPageSize,
 };
