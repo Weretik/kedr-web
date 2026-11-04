@@ -2,7 +2,7 @@
 
 **Status:** implemented. Source: `GET /api/content/contacts` ([contract](../../contracts/openapi/content/contacts.openapi.yaml)), edited in the admin ([admin company contacts](../admin/company-contacts.md)).
 
-- [`getCompanyContacts()`](../../../libs/site/shared/company/src/lib/company-contacts-loader.ts) reads the record with `'use cache'`, tags `content` and `content:contacts`, and a ten-minute life. It derives the display phone `(0XX) YYY-ZZ-ZZ` and the Viber chat link.
+- [`getCompanyContacts()`](../../../libs/site/shared/company/src/lib/contacts/company-contacts-loader.ts) reads the record with `'use cache'`, tags `content` and `content:contacts`, and a ten-minute life. It derives the display phone `(0XX) YYY-ZZ-ZZ` and the Viber chat link.
 - When the API cannot be reached it returns `FALLBACK_COMPANY_CONTACTS` from [core/config](../../../libs/site/core/config/src/lib/company-contacts.ts) for a minute and retries, so the phone never disappears and builds do not fail. Keep the fallback equal to the saved record.
 - The [layout](../../../apps/site/src/app/[locale]/layout.tsx) passes the contacts to `SiteShell` (header, mobile menu, footer, city line) and to Organization JSON-LD. Feature pages (home, product, checkout, contacts, wholesale, delivery, returns, offer, requisites, privacy) load them and pass a `phone` or `contacts` prop to their UI; UI components never import the loader.
 - The privacy policy §8.1 has `{email}` and `{phone}` placeholders that the model fills with links.
@@ -25,7 +25,7 @@ flowchart LR
 
 ```text
 libs/site/core/config/src/lib/company-contacts.ts        # type, fallback, formatUaPhone, viberChatLink
-libs/site/shared/company/src/lib/
+libs/site/shared/company/src/lib/contacts/
 ├── company-contacts-loader.ts                           # cached read with fallback
 ├── company-contacts.mapper.ts                           # API row → site model
 └── company-contacts-cache.ts                            # tags and cache life

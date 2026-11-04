@@ -29,12 +29,16 @@ describe('AdminNavigation by role', () => {
     renderNavigation(true);
 
     expect(screen.getByRole('link', { name: 'Користувачі' }).getAttribute('href')).toBe('/users');
+    expect(screen.getByRole('link', { name: 'Реквізити' }).getAttribute('href')).toBe(
+      '/company-requisites',
+    );
   });
 
   it('hides the users section from a manager', () => {
     renderNavigation(false);
 
     expect(screen.queryByRole('link', { name: 'Користувачі' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Реквізити' })).toBeNull();
     expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
   });
 });

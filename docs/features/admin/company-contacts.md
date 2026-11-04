@@ -30,8 +30,8 @@ libs/admin/company/
 ├── data-access/src/api/admin-company-contacts.api.ts  # GET and PUT /api/admin/content/contacts
 ├── data-access/src/validators/                     # zod response schema
 ├── data-access/src/mappers/                        # response → model, save body
-├── ui/src/forms/                                   # form and one field
-└── feature/src/                                    # route, page, draft hook, errors
+├── ui/src/forms/                                   # form, DraftTextField, FormSaveBar (shared with requisites)
+└── feature/src/                                    # route, page, draft hook, shared save errors
 ```
 
 ## Tests
