@@ -2,7 +2,7 @@
 
 - Repository: `KedrStore`
 - Source: `docs/sdd/contracts/openapi.yaml`
-- Commit: `918c535f0b6a7c5a1f1f494cfe2b628cc8803bad`
+- Commit: `154b72c43652c80cee858c4bf8f1d4f12517be7f`
 - Files: 13 YAML documents
 
 This directory is machine-managed. Do not edit its YAML files in the frontend

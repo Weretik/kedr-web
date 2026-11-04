@@ -2351,7 +2351,7 @@ export interface operations {
                     "application/json": string[];
                 };
             };
-            /** @description Quick order rate limit exceeded (10 per 10 minutes per client address) */
+            /** @description Quick order flood limit exceeded (60 per 10 minutes per calling address; the public site calls from its server) */
             429: {
                 headers: {
                     [name: string]: unknown;
