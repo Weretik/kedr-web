@@ -15,8 +15,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   trailingSlash: false,
   // Caching is explicit: 'use cache' with cacheLife and cacheTag in data-access (docs/architecture/site/platform).
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components stays off: its runtime prerender hangs on Cloudflare Workers (docs/architecture/site/platform/hosting.md).
   outputFileTracingRoot: workspaceRoot,
   turbopack: {
     root: workspaceRoot,
@@ -39,6 +38,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // The root layout sits under [locale], so unmatched URLs get a global 404 document rendered on the server.
     globalNotFound: true,
+    useCache: true,
   },
   async redirects() {
     return [

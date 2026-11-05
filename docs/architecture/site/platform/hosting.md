@@ -3,7 +3,7 @@
 **Checked:** 2026-11-05
 **Sources:** `apps/site/open-next.config.ts`, `apps/site/wrangler.jsonc`, `apps/site/project.json`, `libs/site/core/config/src/lib/site-config.ts`
 
-The public site runs on Cloudflare Workers through the OpenNext adapter (`@opennextjs/cloudflare`, owner decision 2026-10-30). It is a separate Worker, `kedr-site`. The Angular storefront keeps its Cloudflare Pages project `kedr-web` until the domain cutover, and the API proxy Worker on `api.classkedr.com.ua` is not touched.
+The public site runs on Cloudflare Workers (Workers Paid plan: the free plan's 10 ms CPU per request is below one page render) through the OpenNext adapter (`@opennextjs/cloudflare`, owner decision 2026-10-30). It is a separate Worker, `kedr-site`. The Angular storefront keeps its Cloudflare Pages project `kedr-web` until the domain cutover, and the API proxy Worker on `api.classkedr.com.ua` is not touched.
 
 ## Build and deploy
 
@@ -19,7 +19,9 @@ The public site runs on Cloudflare Workers through the OpenNext adapter (`@openn
 
 ## Cache
 
-`'use cache'` data and prerendered pages need a persistent incremental cache on Workers. With the default dummy cache every page render hung until the runtime cancelled it (checked locally 2026-11-05).
+`'use cache'` data and prerendered pages need a persistent incremental cache on Workers.
+
+**Cache Components is off** (`cacheComponents` unset, `experimental.useCache: true`). With it on, every runtime prerender hung on workerd until the runtime cancelled it: first with the default dummy cache on every page, then on the deployed preview in every ISR regeneration (`HEAD` revalidation requests ending after 10 s), so pages kept their deploy-time data. Reproduced locally 2026-11-05 by letting a page go stale; with Cache Components off the same regeneration finishes in about 0.3 s. Other OpenNext users report the same hang and the same fix.
 
 | Part               | Binding                 | Store                       |
 | ------------------ | ----------------------- | --------------------------- |
@@ -29,7 +31,7 @@ The public site runs on Cloudflare Workers through the OpenNext adapter (`@openn
 
 KV fits the free plan. The namespaces are `kedr-site-cache` and `kedr-site-tags`; their IDs must be in `wrangler.jsonc` before the first deploy, because `deploy` writes the cache before it uploads the Worker. KV is eventually consistent (up to about 60 s between locations), which is acceptable for catalog data. R2 + D1 can replace it later without code changes.
 
-Known risk: opennextjs-cloudflare issue #1464 reports hung requests from cross-request `'use cache'` dedupe on deployed Workers. Check the preview under parallel requests before the cutover.
+The workaround from opennextjs-cloudflare issue #1464 (forcing `skipCrossRequestDedupe`) made regeneration hang without timeout, so it is not used. Revisit Cache Components when OpenNext supports it on Workers.
 
 ## Images
 

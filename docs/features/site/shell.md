@@ -9,7 +9,7 @@
 - **500:** when page data fails, [locale error](../../../apps/site/src/app/[locale]/error.tsx) renders `ErrorView` inside the frame.
 - **404:** unmatched URLs and paths without a locale (rewritten by [proxy](../../../apps/site/src/proxy.ts)) get [global-not-found](../../../apps/site/src/app/global-not-found.tsx); `notFound()` from a page renders [locale not-found](../../../apps/site/src/app/[locale]/not-found.tsx), which reads the locale with `next/root-params`.
 - **API client:** [siteApiGet](../../../libs/site/shared/api-client/src/lib/site-api.ts) is a plain typed fetch; domain `data-access` libraries cache it with `'use cache'`.
-- **Footer year:** a cached component, so the footer stays in the prerendered shell under Cache Components.
+- **Footer year:** a cached component, so the footer stays in the prerendered page.
 
 ## Architecture
 

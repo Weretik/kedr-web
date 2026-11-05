@@ -12,7 +12,7 @@ import type { Locale } from '@site/core/i18n';
 type ArticlePageProps = { locale: Locale; slug: string };
 
 /**
- * Cache Components needs at least one static param. When the API is unreachable at build time this slug is
+ * Keeps the build from producing an empty param list. When the API is unreachable at build time this slug is
  * prerendered instead, and the page answers 404 for it without calling the API.
  */
 export const ARTICLE_PLACEHOLDER_SLUG = '__placeholder__';
