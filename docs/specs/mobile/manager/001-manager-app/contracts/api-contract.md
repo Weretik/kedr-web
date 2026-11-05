@@ -18,7 +18,7 @@ All calls use the bearer token from `POST /api/auth/mobile/login` and `POST /api
 
 | Operation | Response | Notes |
 | --- | --- | --- |
-| `GET /api/mobile/sync/catalog` | `{ version, generatedAt, priceTypes[], categories[], products[] }`; each product has id, slug, name, code, categoryId, stock, quantityInPack, description, photos[] (URL, thumbnail URL), scheme, isSale, isNew, prices[] `{ priceTypeId, amount }` | `ETag` / `If-None-Match` → `304`; gzip; only products not deleted and not hidden from sale |
+| `GET /api/mobile/sync/catalog` | `{ version, generatedAt, retailPriceTypeId, priceTypes[], categories[], products[] }`; each product has id (the 1C code), slug, Ukrainian name, categoryId, stock, inStock, quantityInPack, photos[] (URLs, main first), scheme, isSale, isNew, prices[] `{ priceTypeId, amount }` in UAH | `ETag` / `If-None-Match` → `304`; gzip or Brotli; deleted products and categories left out. No description or thumbnails: KedrStore has neither yet |
 | `GET /api/mobile/sync/customers` | `{ version, generatedAt, customers[] }`; each customer has counterpartyId, name, phone, email, defaultPriceTypeId, categoryPriceTypes[] `{ categoryId, priceTypeId }`, `debt: null`, `balance: null` | `ETag` / `If-None-Match` → `304`; `debt` and `balance` are always null until 1C provides them |
 
-The app validates both responses with zod in `@mobile/sync/data-access`; DTOs do not leave that library. Unknown extra fields are ignored so the server can add fields without breaking old app versions.
+The app validates both responses with zod schemas from `@mobile/sync/model` in `@mobile/sync/data-access`; DTOs do not leave that library. Unknown extra fields are ignored so the server can add fields without breaking old app versions.

@@ -70,8 +70,8 @@ Dependency direction is unchanged: `feature → ui, data-access, model`; `data-a
 | Table | Filled by | Key fields |
 | --- | --- | --- |
 | `categories` | catalog snapshot | id, parentId, name, sortOrder |
-| `products` | catalog snapshot | id, slug, name, code, categoryId, stock, quantityInPack, description, photos (json), scheme, isSale, isNew |
-| `product_prices` | catalog snapshot | productId, priceTypeId, amount |
+| `products` | catalog snapshot | id (the 1C code), slug, name, categoryId, stock, inStock, quantityInPack, photos (json), scheme, isSale, isNew |
+| `product_prices` | catalog snapshot | productId, priceTypeId, amountKopecks |
 | `price_types` | catalog snapshot | id, name |
 | `customers` | customers snapshot | counterpartyId, name, phone, email, defaultPriceTypeId, debt (null), balance (null) |
 | `customer_category_price_types` | customers snapshot | counterpartyId, categoryId, priceTypeId |
@@ -80,7 +80,7 @@ Dependency direction is unchanged: `feature → ui, data-access, model`; `data-a
 | `outbox` | the app | id, kind (draft-create, draft-update, draft-delete, order-create), payload, idempotencyKey, state, attempts, lastError |
 | `sync_state` | sync service | resource, etag, syncedAt |
 
-Search uses an FTS5 table over product name and code. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
+Search uses an FTS5 table over product name and code, added by a migration with the stage 4 product search. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
 
 ## Client price resolver
 
@@ -116,7 +116,7 @@ Breakpoints `phone` < 600, `tablet` 600–1023, `wide` ≥ 1024 dp (Unistyles `r
 
 - Unit (Jest): price resolver, adjustment rules, totals, outbox state machine, snapshot mappers, offline session window.
 - Component (Testing Library): gate, customer search, product row states (out of stock, no price), calculation line and footer, conflict view, cabinet by role, layouts per breakpoint with a mocked Unistyles runtime.
-- Local database tests run against `expo-sqlite` mocked by `better-sqlite3` in Jest where the driver allows; otherwise data-access tests use an in-memory adapter of the same interface (decided in stage 2, recorded here).
+- Local database tests run the same Drizzle tables on `better-sqlite3` in memory (`@mobile/core/local-db/testing`); both are synchronous SQLite drivers with one Drizzle API (decided in stage 2).
 - Device checks (Android phone, iPhone, tablet; airplane mode) only with the owner's permission, in stage 8.
 
 ## Contract

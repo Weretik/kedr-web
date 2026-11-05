@@ -2151,6 +2151,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/mobile/sync/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Products, prices, categories and price types for offline work
+         * @description Requires `CanManageOrders` (Manager or Admin); the app sends its bearer token. Deleted products and categories are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
+         */
+        get: operations["getMobileCatalogSnapshot"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mobile/sync/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Customers and their price rules for offline work
+         * @description Requires `CanManageOrders` (Manager or Admin); the app sends its bearer token. Deleted customers are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
+         */
+        get: operations["getMobileCustomersSnapshot"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/content/site-refresh": {
         parameters: {
             query?: never;
@@ -3730,6 +3770,74 @@ export interface components {
             productsWithProblems?: number;
             /** @description Those of them without brand marking (reason `no_name`). */
             noNameProducts?: number;
+        };
+        CatalogSnapshotProduct: {
+            /** @description The 1C product code. */
+            id: number;
+            slug: string;
+            /** @description Ukrainian name, or the 1C name without a translation. */
+            name: string;
+            categoryId: number;
+            stock: number;
+            /** @description The sales catalog rule: hardware needs more than 2, other goods more than 0. */
+            inStock: boolean;
+            quantityInPack: number;
+            isSale: boolean;
+            isNew: boolean;
+            /** @description Photo URLs; the first is the main one. */
+            photos: string[];
+            /** Format: uri */
+            scheme: string | null;
+            /** @description UAH amounts by price type, as the order workspace quotes them. */
+            prices: {
+                priceTypeId: number;
+                amount: number;
+            }[];
+        };
+        CatalogSnapshot: {
+            /** @description Hash of the content, equal to the ETag without quotes. */
+            version: string;
+            /**
+             * Format: date-time
+             * @description When the answer was built; not part of the version.
+             */
+            generatedAt: string;
+            /** @description Price type used without a customer. */
+            retailPriceTypeId: number;
+            priceTypes: {
+                id: number;
+                name: string;
+            }[];
+            categories: {
+                id: number;
+                parentId: number | null;
+                name: string;
+                sortOrder: number;
+            }[];
+            products: components["schemas"]["CatalogSnapshotProduct"][];
+        };
+        CustomerSnapshot: {
+            counterpartyId: string;
+            name: string;
+            phone: string | null;
+            email: string;
+            defaultPriceTypeId: number;
+            /** @description One rule per category. A product takes the rule of its category or of the nearest ancestor that has one, otherwise `defaultPriceTypeId`, as the order workspace prices lines. */
+            categoryPriceTypes: {
+                categoryId: number;
+                priceTypeId: number;
+            }[];
+            /** @description Always null until 1C sends settlements. */
+            debt: number | null;
+            /** @description Always null until 1C sends settlements. */
+            balance: number | null;
+        };
+        CustomersSnapshot: {
+            /** @description Hash of the content, equal to the ETag without quotes. */
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            customers: components["schemas"]["CustomerSnapshot"][];
         };
         SiteRefreshResult: {
             /** @enum {string} */
@@ -9693,6 +9801,98 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AdminCatalogOverview"];
                 };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMobileCatalogSnapshot: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description The `ETag` of the snapshot the app already holds. */
+                "If-None-Match"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The snapshot. */
+            200: {
+                headers: {
+                    /** @description Strong tag of the content. */
+                    ETag?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogSnapshot"];
+                };
+            };
+            /** @description The app already holds this version; no body. */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMobileCustomersSnapshot: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description The `ETag` of the snapshot the app already holds. */
+                "If-None-Match"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The snapshot. */
+            200: {
+                headers: {
+                    /** @description Strong tag of the content. */
+                    ETag?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomersSnapshot"];
+                };
+            };
+            /** @description The app already holds this version; no body. */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not signed in. */
             401: {

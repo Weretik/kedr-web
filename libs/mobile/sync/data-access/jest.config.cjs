@@ -1,0 +1,20 @@
+/// <reference types="jest" />
+/// <reference types="node" />
+module.exports = {
+  displayName: 'mobile-sync-data-access',
+  preset: 'jest-expo',
+  testEnvironment: 'node',
+  moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  moduleNameMapper: {
+    '^@mobile/core/local-db/testing$': '<rootDir>/../../core/local-db/src/testing.ts',
+    '^@mobile/core/local-db$': '<rootDir>/../../core/local-db/src/index.ts',
+    '^@mobile/sync/model$': '<rootDir>/../model/src/index.ts',
+    '^@mobile/shared/api-client$': '<rootDir>/../../shared/api-client/src/index.ts',
+    '^@mobile/shared/config$': '<rootDir>/../../shared/config/src/index.ts',
+  },
+  transform: {
+    '[.][jt]sx?$': ['babel-jest', { configFile: __dirname + '/.babelrc.js' }],
+  },
+  coverageDirectory: '../../../../coverage/libs/mobile/sync/data-access',
+};

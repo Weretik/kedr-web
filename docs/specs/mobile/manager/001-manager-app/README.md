@@ -4,7 +4,7 @@
 - **App:** `apps/mobile` (Nx project `mobile`), libraries `libs/mobile/*`
 - **Architecture source:** [Mobile architecture](../../../../architecture/mobile/README.md), [ADR-0005 offline-first](../../../../architecture/mobile/adr/0005-offline-first-local-database.md), [ADR-0006 own UI](../../../../architecture/mobile/adr/0006-own-ui-on-unistyles.md), [design system «Офіс»](../../../../standards/mobile/design-system.md)
 - **Domain:** whole app (auth, customers, catalog, calculation, orders, profile, sync)
-- **Status:** stage 1 implemented; stage 2 next
+- **Status:** stages 1–2 implemented (stage 2 needs KedrStore `platform/004` deployed); stage 3 next
 - **Owner:** Виталий (product owner)
 - **Created:** 2026-11-05
 - **Updated:** 2026-11-05
@@ -20,7 +20,7 @@ The owner asked (2026-11-05) to rebuild the mobile app almost from scratch as a 
 - Specification: ready for stage 1 (2026-11-05)
 - Implementation: stage 1 (shell, «Офіс» UI, sign-in) done 2026-11-05
 - Verification: focused Jest suites, typecheck and lint for the mobile projects; no device run yet
-- Blockers: stage 2 needs KedrStore spec `platform/004-mobile-offline-sync` implemented and deployed
+- Blockers: the app's sync needs KedrStore `platform/004-mobile-offline-sync` (PR #173) deployed
 
 ## Owner decisions (2026-11-05)
 

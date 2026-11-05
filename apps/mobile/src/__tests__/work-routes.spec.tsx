@@ -16,6 +16,12 @@ jest.mock('@mobile/core/auth', () => ({
   useMobileSession: jest.fn(),
 }));
 
+jest.mock('@mobile/sync/feature', () => ({
+  clearDeviceData: jest.fn(),
+  SyncProvider: ({ children }: { children: unknown }) => children,
+  SyncStatusStrip: () => null,
+}));
+
 const manager = {
   avatarUrl: null,
   email: 'olena@classkedr.com.ua',

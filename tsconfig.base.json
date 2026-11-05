@@ -160,7 +160,12 @@
         "./libs/admin/catalog-attributes/data-access/src/index.ts"
       ],
       "@admin/catalog-attributes/ui": ["./libs/admin/catalog-attributes/ui/src/index.ts"],
-      "@admin/catalog-attributes/feature": ["./libs/admin/catalog-attributes/feature/src/index.ts"]
+      "@admin/catalog-attributes/feature": ["./libs/admin/catalog-attributes/feature/src/index.ts"],
+      "@mobile/core/local-db": ["./libs/mobile/core/local-db/src/index.ts"],
+      "@mobile/core/local-db/testing": ["./libs/mobile/core/local-db/src/testing.ts"],
+      "@mobile/sync/model": ["./libs/mobile/sync/model/src/index.ts"],
+      "@mobile/sync/data-access": ["./libs/mobile/sync/data-access/src/index.ts"],
+      "@mobile/sync/feature": ["./libs/mobile/sync/feature/src/index.ts"]
     }
   }
 }

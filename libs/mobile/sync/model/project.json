@@ -1,0 +1,9 @@
+{
+  "name": "mobile-sync-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/sync/model/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:sync", "type:model"],
+  "// targets": "to see all targets run: nx show project mobile-sync-model --web",
+  "targets": {}
+}
