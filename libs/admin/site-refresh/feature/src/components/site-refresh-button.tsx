@@ -1,13 +1,16 @@
 import { NoticeSnackbar } from '@admin/shared/ui';
 import { useRefreshSiteMutation } from '@admin/site-refresh/data-access';
 import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
-import { CircularProgress, IconButton, Tooltip } from '@mui/material';
+import { Button, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import { useState } from 'react';
 
 import { siteRefreshedMessage, siteRefreshErrorMessage } from '../messages/site-refresh-messages';
 
-/** Top bar button: shows saved site content now instead of after the 10-minute cache. */
-export function SiteRefreshButton() {
+/**
+ * Shows saved site content now instead of after the 10-minute cache: an icon in the top bar, or a labelled button
+ * on a page such as «Огляд».
+ */
+export function SiteRefreshButton({ variant = 'icon' }: { variant?: 'icon' | 'text' }) {
   const [refreshSite, { isLoading }] = useRefreshSiteMutation();
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -19,6 +22,27 @@ export function SiteRefreshButton() {
       setNotice(siteRefreshErrorMessage(error));
     }
   };
+
+  const noticeSnackbar = <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />;
+
+  if (variant === 'text') {
+    return (
+      <>
+        <Button
+          disabled={isLoading}
+          onClick={() => void refresh()}
+          startIcon={
+            isLoading ? <CircularProgress color="inherit" size={18} /> : <SyncOutlinedIcon />
+          }
+          sx={{ minHeight: 44 }}
+          variant="contained"
+        >
+          Оновити сайт зараз
+        </Button>
+        {noticeSnackbar}
+      </>
+    );
+  }
 
   return (
     <>
@@ -33,7 +57,7 @@ export function SiteRefreshButton() {
           </IconButton>
         </span>
       </Tooltip>
-      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
+      {noticeSnackbar}
     </>
   );
 }

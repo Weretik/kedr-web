@@ -167,7 +167,10 @@
       "@admin/page-seo/model": ["./libs/admin/page-seo/model/src/index.ts"],
       "@admin/page-seo/data-access": ["./libs/admin/page-seo/data-access/src/index.ts"],
       "@admin/page-seo/ui": ["./libs/admin/page-seo/ui/src/index.ts"],
-      "@admin/page-seo/feature": ["./libs/admin/page-seo/feature/src/index.ts"]
+      "@admin/page-seo/feature": ["./libs/admin/page-seo/feature/src/index.ts"],
+      "@admin/dashboard/model": ["./libs/admin/dashboard/model/src/index.ts"],
+      "@admin/dashboard/data-access": ["./libs/admin/dashboard/data-access/src/index.ts"],
+      "@admin/dashboard/ui": ["./libs/admin/dashboard/ui/src/index.ts"]
     }
   }
 }
