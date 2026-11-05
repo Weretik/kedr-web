@@ -20,7 +20,7 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 - **EN-002 — Backend sync endpoints** deployed (KedrStore `platform/004`). Status: implemented in KedrStore PR #173; deploys on its merge.
 - **TS-006 — Local database.** `@mobile/core/local-db`: connection, Drizzle schema (tables in [design](../design/frontend.md#local-data-model-drizzle-tables)), migrations, wipe. Test: data-access. Status: done 2026-11-05; `local-database.spec.ts` on `better-sqlite3`. Migrations are an ordered SQL list applied by `PRAGMA user_version` (no `drizzle-kit` files, so Metro needs no `.sql` loader); the FTS5 search table comes with stage 4 search. Tags `scope:mobile`, `type:data-access` with no domain, so every domain's data-access may read it.
 - **TS-007 — Sync service.** `@mobile/sync`: snapshot clients with zod and ETag, transactional replace, schedule, first-sync progress, `sync_state`, stale strip in the shell. Covers R-014, R-015; SC-020. Test: unit + data-access. Status: done 2026-11-05; `@mobile/sync/{model,data-access,feature}`, strip in the `WorkLayout` slot, `clearDeviceData()` on sign-out. The quick «Оновити дані зараз» button lands with the cabinet (TS-020); `syncStatusActions.requestNow()` is ready for it.
-- **TS-008 — Contract snapshot.** Refresh `docs/contracts/openapi` from KedrStore and pass `npm run contracts:check`. Status: done from the KedrStore PR #173 branch; refresh again from `master` after it merges.
+- **TS-008 — Contract snapshot.** Refresh `docs/contracts/openapi` from KedrStore and pass `npm run contracts:check`. Status: done 2026-11-05 from KedrStore `master` 0cf2b67 (PR #173 merged).
 
 ## Stage 3 — customers
 
