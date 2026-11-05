@@ -2917,7 +2917,7 @@ export interface components {
             minPrice?: number | null;
             /** @description Photo of the main product; empty without one. */
             photo: string;
-            /** @description Axis names (saved */
+            /** @description Axis names (saved, or offered for a proposal). */
             axes: string[];
             /** @description Model codes and the product codes its products have. */
             problems: string[];
