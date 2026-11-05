@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 
+import { markLocalDataChanged } from './local-data-version';
 import { migrations } from '../migrations/migrations';
 import * as schema from '../schema';
 
@@ -21,6 +22,7 @@ const dataTables = [
   schema.productPrices,
   schema.customers,
   schema.customerCategoryPriceTypes,
+  schema.customerActivity,
   schema.syncState,
 ] as const;
 
@@ -42,4 +44,5 @@ export function wipeLocalDatabase(db: LocalDatabase): void {
   db.transaction((tx) => {
     for (const table of dataTables) tx.delete(table).run();
   });
+  markLocalDataChanged();
 }

@@ -55,4 +55,12 @@ export const migrations: readonly (readonly string[])[] = [
       synced_at INTEGER NOT NULL
     )`,
   ],
+  [
+    `CREATE TABLE customer_activity (
+      counterparty_id TEXT PRIMARY KEY NOT NULL,
+      orders TEXT NOT NULL,
+      drafts TEXT NOT NULL,
+      fetched_at INTEGER NOT NULL
+    )`,
+  ],
 ];

@@ -1,0 +1,9 @@
+{
+  "name": "mobile-customers-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/customers/model/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:customers", "type:model"],
+  "// targets": "to see all targets run: nx show project mobile-customers-model --web",
+  "targets": {}
+}

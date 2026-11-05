@@ -15,6 +15,11 @@ libs/mobile/
 │   ├── feature/
 │   ├── data-access/
 │   └── model/
+├── customers/
+│   ├── feature/
+│   ├── data-access/
+│   ├── ui/
+│   └── model/
 ├── shared/
 │   ├── api-client/
 │   ├── config/

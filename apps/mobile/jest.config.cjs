@@ -13,7 +13,12 @@ module.exports = {
   moduleNameMapper: {
     '^@mobile/core/auth$': `${libs}/mobile/core/auth/src/index.ts`,
     '^@mobile/core/connectivity$': `${libs}/mobile/core/connectivity/src/index.ts`,
+    '^@mobile/core/local-db$': `${libs}/mobile/core/local-db/src/index.ts`,
     '^@mobile/core/shell$': `${libs}/mobile/core/shell/src/index.ts`,
+    '^@mobile/customers/data-access$': `${libs}/mobile/customers/data-access/src/index.ts`,
+    '^@mobile/customers/feature$': `${libs}/mobile/customers/feature/src/index.ts`,
+    '^@mobile/customers/model$': `${libs}/mobile/customers/model/src/index.ts`,
+    '^@mobile/customers/ui$': `${libs}/mobile/customers/ui/src/index.ts`,
     '^@mobile/sync/feature$': `${libs}/mobile/sync/feature/src/index.ts`,
     '^@mobile/shared/api-client$': `${libs}/mobile/shared/api-client/src/index.ts`,
     '^@mobile/shared/config$': `${libs}/mobile/shared/config/src/index.ts`,
