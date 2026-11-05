@@ -27,7 +27,7 @@ const renderLogin = () =>
 
 const fillAndSubmit = () => {
   fireEvent.change(screen.getByLabelText(/Email/), { target: { value: 'm@kedr.ua' } });
-  fireEvent.change(screen.getByLabelText(/Пароль/), { target: { value: 'secret-pass' } });
+  fireEvent.change(screen.getByLabelText(/^Пароль/), { target: { value: 'secret-pass' } });
   fireEvent.click(screen.getByRole('button', { name: 'Увійти' }));
 };
 
@@ -66,5 +66,15 @@ describe('LoginPage', () => {
     fillAndSubmit();
 
     expect((await screen.findByRole('alert')).textContent).toContain('Невірний email або пароль');
+  });
+
+  it('names Кедр Офіс and shows the password on request', () => {
+    renderLogin();
+
+    expect(screen.getByRole('heading', { name: 'Вхід у Кедр Офіс' })).toBeTruthy();
+    const password = screen.getByLabelText(/^Пароль/) as HTMLInputElement;
+    expect(password.type).toBe('password');
+    fireEvent.click(screen.getByRole('button', { name: 'Показати пароль' }));
+    expect(password.type).toBe('text');
   });
 });
