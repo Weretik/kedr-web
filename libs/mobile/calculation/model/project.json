@@ -1,0 +1,9 @@
+{
+  "name": "mobile-calculation-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/calculation/model/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:calculation", "type:model"],
+  "// targets": "to see all targets run: nx show project mobile-calculation-model --web",
+  "targets": {}
+}

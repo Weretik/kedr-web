@@ -5,6 +5,7 @@ import {
   filterProducts,
   sortProducts,
   withDescendants,
+  type PricedProduct,
   type ProductSort,
 } from '@mobile/catalog/model';
 import { ProductRow } from '@mobile/catalog/ui';
@@ -17,6 +18,8 @@ export interface ProductListProps {
   counterpartyId: string | null;
   isOnline: boolean | null;
   onOpen: (productId: number) => void;
+  /** «+» on each row: adds the product to the calculation (R-009). */
+  onAdd?: (product: PricedProduct) => void;
   /** The product whose detail is open next to the list (tablet). */
   openedId?: number | null;
 }
@@ -39,6 +42,7 @@ const nextSort: Record<ProductSort, ProductSort> = {
 export function ProductList({
   counterpartyId,
   isOnline,
+  onAdd,
   onOpen,
   openedId = null,
 }: Readonly<ProductListProps>) {
@@ -139,6 +143,7 @@ export function ProductList({
           renderItem={({ item }) => (
             <ProductRow
               isOnline={isOnline}
+              onAdd={onAdd ? () => onAdd(item) : undefined}
               onOpen={() => onOpen(item.id)}
               product={item}
               selected={item.id === openedId}

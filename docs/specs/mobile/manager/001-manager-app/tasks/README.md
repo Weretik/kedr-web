@@ -37,10 +37,10 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 
 ## Stage 5 — calculation, drafts, orders
 
-- **TS-016 — Calculation model.** Per-customer lines, adjustment parse and ≥ 1 ₴ rule, totals in kopecks. Covers R-009; SC-011, SC-012, SC-013. Test: unit.
-- **TS-017 — Calculation screen.** Lines, stepper, adjustment field, comment, footer with «Чернетка» and «Відправити в 1С»; tablet side panel. Covers R-009, R-017; SC-011, SC-024.
-- **TS-018 — Send queue.** Outbox runner, backoff, idempotency keys, quote then create, `needs-review`. Covers R-010–R-012; SC-014–SC-017. Test: unit (state machine) + data-access.
-- **TS-019 — Conflict view and orders.** Reasons and changed lines in the calculation; order and draft detail. Covers R-012, R-013; SC-017, SC-005.
+- **TS-016 — Calculation model.** Per-customer lines, adjustment parse and ≥ 1 ₴ rule, totals in kopecks. Covers R-009; SC-011, SC-012, SC-013. Test: unit. Status: done 2026-11-05; `calculation/model` (`parseAdjustment`, `adjustmentProblem`, `priceLine`, `calculationTotals`, `addProduct`) and tables `calculations`, `calculation_lines` (migration 3). Test: `calculation-model.spec.ts`, `calculation-data-access.spec.ts`.
+- **TS-017 — Calculation screen.** Lines, stepper, adjustment field, comment, footer with «Чернетка» and «Відправити в 1С»; tablet side panel. Covers R-009, R-017; SC-011, SC-024. Status: done 2026-11-05; `CalculationPanel` with inline confirm and draft steps, `calculation/ui` rows and footer, «+» and «Додати в розрахунок» in the catalog, side panel on `wide`, tab badges. Test: `calculation-ui.spec.tsx`, `calculation-feature.spec.tsx`, `catalog-feature.spec.tsx`.
+- **TS-018 — Send queue.** Outbox runner, backoff, idempotency keys, quote then create, `needs-review`. Covers R-010–R-012; SC-014–SC-017. Test: unit (state machine) + data-access. Status: done 2026-11-05; table `outbox`, `drainOutbox` and `useOutboxRunner` in `calculation/data-access`, started from the working area. Test: `calculation-model.spec.ts`, `calculation-data-access.spec.ts`.
+- **TS-019 — Conflict view and orders.** Reasons and changed lines in the calculation; order and draft detail. Covers R-012, R-013; SC-017, SC-005. Status: done 2026-11-05; `ReviewBanner` and outlined lines, `OrdersScreen` (queue, orders, drafts) and `OrderDetailScreen` in `orders/feature`, `/orders/[orderId]`. Test: `orders-feature.spec.tsx`, `orders-data-access.spec.ts`.
 
 ## Stage 6 — cabinet
 

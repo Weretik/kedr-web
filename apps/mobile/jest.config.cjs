@@ -11,6 +11,8 @@ module.exports = {
     '<rootDir>/../../libs/mobile/shared/ui/src/testing/vector-icons-mock.tsx',
   ],
   moduleNameMapper: {
+    '^@mobile/calculation/feature$': `${libs}/mobile/calculation/feature/src/index.ts`,
+    '^@mobile/orders/feature$': `${libs}/mobile/orders/feature/src/index.ts`,
     '^@mobile/catalog/feature$': `${libs}/mobile/catalog/feature/src/index.ts`,
     '^@mobile/core/auth$': `${libs}/mobile/core/auth/src/index.ts`,
     '^@mobile/core/connectivity$': `${libs}/mobile/core/connectivity/src/index.ts`,

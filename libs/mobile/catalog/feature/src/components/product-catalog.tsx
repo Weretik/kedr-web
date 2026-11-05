@@ -1,28 +1,49 @@
 import { useSelectedCustomer } from '@mobile/customers/data-access';
 import { StateView, useBreakpoint } from '@mobile/shared/ui';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
 import { ProductDetail } from './product-detail';
 import { ProductList } from './product-list';
 
+import type { PricedProduct } from '@mobile/catalog/model';
+
 export interface ProductCatalogProps {
   isOnline: boolean | null;
   /** Phone: opens the product screen. */
   onOpenProduct: (productId: number) => void;
+  /** «+» and «Додати в розрахунок»: adds to the chosen customer's calculation. */
+  onAdd?: (product: PricedProduct) => void;
+  /** Wide tablet: the calculation stays on screen next to the products (R-017, SC-024). */
+  sidePanel?: ReactNode;
 }
 
-/** Products priced for the chosen customer; tablet keeps the list and the detail side by side (R-017). */
-export function ProductCatalog({ isOnline, onOpenProduct }: Readonly<ProductCatalogProps>) {
-  const isPhone = useBreakpoint() === 'phone';
+/**
+ * Products priced for the chosen customer; tablet keeps the list and the detail side by side, a wide tablet also
+ * the calculation (R-017).
+ */
+export function ProductCatalog({
+  isOnline,
+  onAdd,
+  onOpenProduct,
+  sidePanel,
+}: Readonly<ProductCatalogProps>) {
+  const breakpoint = useBreakpoint();
+  const isPhone = breakpoint === 'phone';
+  const showPanel = breakpoint === 'wide' && sidePanel !== undefined;
   const customer = useSelectedCustomer();
   const counterpartyId = customer?.counterpartyId ?? null;
   const [openedId, setOpenedId] = useState<number | null>(null);
 
   if (isPhone) {
     return (
-      <ProductList counterpartyId={counterpartyId} isOnline={isOnline} onOpen={onOpenProduct} />
+      <ProductList
+        counterpartyId={counterpartyId}
+        isOnline={isOnline}
+        onAdd={onAdd}
+        onOpen={onOpenProduct}
+      />
     );
   }
 
@@ -32,6 +53,7 @@ export function ProductCatalog({ isOnline, onOpenProduct }: Readonly<ProductCata
         <ProductList
           counterpartyId={counterpartyId}
           isOnline={isOnline}
+          onAdd={onAdd}
           onOpen={setOpenedId}
           openedId={openedId}
         />
@@ -49,11 +71,13 @@ export function ProductCatalog({ isOnline, onOpenProduct }: Readonly<ProductCata
             customerName={customer?.name ?? null}
             isOnline={isOnline}
             key={openedId}
+            onAdd={onAdd}
             productId={openedId}
-            sideBySide
+            sideBySide={!showPanel}
           />
         )}
       </View>
+      {showPanel ? <View style={styles.panel}>{sidePanel}</View> : null}
     </View>
   );
 }
@@ -61,8 +85,13 @@ export function ProductCatalog({ isOnline, onOpenProduct }: Readonly<ProductCata
 /** The product screen of a phone, priced for the chosen customer. */
 export function ProductScreen({
   isOnline,
+  onAdd,
   productId,
-}: Readonly<{ isOnline: boolean | null; productId: number }>) {
+}: Readonly<{
+  isOnline: boolean | null;
+  onAdd?: (product: PricedProduct) => void;
+  productId: number;
+}>) {
   const customer = useSelectedCustomer();
   return (
     <ProductDetail
@@ -70,6 +99,7 @@ export function ProductScreen({
       customerName={customer?.name ?? null}
       isOnline={isOnline}
       key={productId}
+      onAdd={onAdd}
       productId={productId}
     />
   );
@@ -78,5 +108,6 @@ export function ProductScreen({
 const styles = StyleSheet.create((theme) => ({
   detail: { flex: 3 },
   list: { flex: 2, maxWidth: 480 },
+  panel: { flex: 3, minWidth: 360 },
   split: { flex: 1, flexDirection: 'row', gap: theme.space.lg },
 }));

@@ -30,15 +30,17 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 
 ## Mobile React Native
 
-Kedr Manager, rebuilt by the [SDD](../specs/mobile/manager/001-manager-app/README.md) in stages. [Expo Router](../../apps/mobile/src/app/_layout.tsx) opens login, then the working area `(work)` on customer choice; products, calculation and orders stay locked until a customer is chosen and show the customer bar; calculation and orders are placeholders until their stages. See [Mobile architecture](../architecture/mobile/README.md).
+Kedr Manager, rebuilt by the [SDD](../specs/mobile/manager/001-manager-app/README.md) in stages. [Expo Router](../../apps/mobile/src/app/_layout.tsx) opens login, then the working area `(work)` on customer choice; products, calculation and orders stay locked until a customer is chosen and show the customer bar. See [Mobile architecture](../architecture/mobile/README.md).
 
-| Feature                                 | Route or entry                                  |
-| --------------------------------------- | ----------------------------------------------- |
-| [Shell and navigation](mobile/shell.md) | `index.ts`, `_layout.tsx`, `(work)/_layout.tsx` |
-| [Sign-in and session](mobile/auth.md)   | `login.tsx`, root layout guard, cabinet         |
-| [Offline data and sync](mobile/sync.md) | `(work)/_layout.tsx` (`SyncProvider`)           |
-| [Customers](mobile/customers.md)        | `/customer`, `/customer/[counterpartyId]`       |
-| [Products](mobile/catalog.md)           | `/products`, `/products/[productId]`            |
+| Feature                                             | Route or entry                                      |
+| --------------------------------------------------- | --------------------------------------------------- |
+| [Shell and navigation](mobile/shell.md)             | `index.ts`, `_layout.tsx`, `(work)/_layout.tsx`     |
+| [Sign-in and session](mobile/auth.md)               | `login.tsx`, root layout guard, cabinet             |
+| [Offline data and sync](mobile/sync.md)             | `(work)/_layout.tsx` (`SyncProvider`)               |
+| [Customers](mobile/customers.md)                    | `/customer`, `/customer/[counterpartyId]`           |
+| [Products](mobile/catalog.md)                       | `/products`, `/products/[productId]`                |
+| [Calculation and send queue](mobile/calculation.md) | `/calculation`, `(work)/_layout.tsx` (queue runner) |
+| [Orders](mobile/orders.md)                          | `/orders`, `/orders/[orderId]`                      |
 
 ## Site Next.js
 

@@ -10,6 +10,7 @@ import {
 import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { ProductCatalog, ProductScreen } from './components/product-catalog';
 
@@ -125,6 +126,40 @@ describe('ProductCatalog', () => {
 
     expect(onOpenProduct).not.toHaveBeenCalled();
     expect(screen.getByText('Ціна для Альфа')).toBeTruthy();
+  });
+});
+
+describe('ProductCatalog with a calculation', () => {
+  beforeEach(async () => {
+    await act(async () => useSelectedCustomerStore.getState().select('c-1'));
+  });
+
+  it('adds a product with «+» on a phone', async () => {
+    mockBreakpoint = 'phone';
+    const onAdd = jest.fn();
+    await inDb(seed(), <ProductCatalog isOnline onAdd={onAdd} onOpenProduct={jest.fn()} />);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Додати Замок врізний' }));
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ id: 201, priceKopecks: 30_000 }));
+  });
+
+  it('keeps the calculation next to the products on a wide tablet (SC-024)', async () => {
+    mockBreakpoint = 'wide';
+    const onAdd = jest.fn();
+    await inDb(
+      seed(),
+      <ProductCatalog
+        isOnline
+        onAdd={onAdd}
+        onOpenProduct={jest.fn()}
+        sidePanel={<Text>Панель розрахунку</Text>}
+      />,
+    );
+
+    expect(screen.getByText('Панель розрахунку')).toBeTruthy();
+    await fireEvent.press(screen.getByText('Замок врізний'));
+    await fireEvent.press(screen.getByRole('button', { name: 'Додати в розрахунок' }));
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ id: 201 }));
   });
 });
 
