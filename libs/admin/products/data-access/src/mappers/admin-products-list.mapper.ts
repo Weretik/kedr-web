@@ -4,7 +4,11 @@ import type {
   AdminProductsListResponse,
   AdminProductsPagedInfo,
 } from '../contracts/admin-products-list.contract';
-import type { AdminProductListItem, ProductsListPage } from '@admin/products/model';
+import type {
+  AdminProductListItem,
+  AttributeProblem,
+  ProductsListPage,
+} from '@admin/products/model';
 
 export function mapAdminProductsListResponse(response: unknown): ProductsListPage {
   if (!isRecord(response) || !Array.isArray(response['value'])) {
@@ -92,7 +96,19 @@ function mapAdminProductListItem(value: unknown): AdminProductListItem {
     stock: value['stock'],
     quantityInPack: value['quantityInPack'],
     deletedAt: isString(value['deletedAt']) ? value['deletedAt'] : null,
+    groupId: isPositiveInteger(value['groupId']) ? value['groupId'] : null,
+    groupName: isString(value['groupName']) ? value['groupName'] : null,
+    problems: mapProblems(value['problems']),
   };
+}
+
+function mapProblems(value: unknown): AttributeProblem[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item: unknown) =>
+    isRecord(item) && isString(item['code'])
+      ? [{ code: item['code'], text: isString(item['text']) ? item['text'] : null }]
+      : [],
+  );
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

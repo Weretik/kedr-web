@@ -79,4 +79,24 @@ describe('products URL state', () => {
     expect(next.get('deletedPage')).toBe('3');
     expect(next.get('deletedDeleted')).toBeNull();
   });
+  it('keeps the problem filters of the «На сайті» tab only', () => {
+    const state = readProductsUrlState(
+      new URLSearchParams(
+        'mode=site&siteProblemsOnly=true&siteProblemReason=no_name&problemsOnly=true',
+      ),
+    );
+
+    expect(state.siteQuery).toMatchObject({ problemsOnly: true, problemReason: 'no_name' });
+    expect(state.allQuery.problemsOnly).toBeUndefined();
+    expect(writeProductsUrlState(state).toString()).toBe(
+      'mode=site&siteProblemsOnly=true&siteProblemReason=no_name',
+    );
+  });
+
+  it('drops a reason code with unexpected characters', () => {
+    expect(
+      readProductsUrlState(new URLSearchParams('siteProblemReason=%3Cscript%3E')).siteQuery
+        .problemReason,
+    ).toBeUndefined();
+  });
 });

@@ -7,7 +7,14 @@ import type {
 } from '../entities/dashboard-overview';
 
 export type AttentionKind =
-  'sync' | 'photos' | 'category-texts' | 'article-drafts' | 'legacy-covers' | 'document-drafts';
+  | 'sync'
+  | 'photos'
+  | 'attribute-problems'
+  | 'no-name'
+  | 'category-texts'
+  | 'article-drafts'
+  | 'legacy-covers'
+  | 'document-drafts';
 
 /** Problem tone: errors block work, warnings hurt the site, notes are unfinished work. */
 export type AttentionTone = 'error' | 'warning' | 'note';
@@ -65,6 +72,28 @@ export function attentionItems({
       detail: top ? `Покупець бачить заглушку · найбільше в «${top.name}» (${top.count})` : null,
       href: '/catalog?mode=missing',
       actionLabel: 'Відкрити товари без фото',
+    });
+  }
+
+  if (catalog && catalog.productsWithProblems > 0) {
+    items.push({
+      kind: 'attribute-problems',
+      tone: 'warning',
+      title: `Товари з нерозпізнаними властивостями: ${catalog.productsWithProblems}`,
+      detail: 'Фільтри й варіанти на сайті можуть їх не показати',
+      href: '/catalog?mode=site&siteProblemsOnly=true',
+      actionLabel: 'Відкрити проблемні товари',
+    });
+  }
+
+  if (catalog && catalog.noNameProducts > 0) {
+    items.push({
+      kind: 'no-name',
+      tone: 'warning',
+      title: `Товари No name: ${catalog.noNameProducts}`,
+      detail: 'Без маркування бренду; у групи не потрапляють, доки їх не перевірять',
+      href: '/catalog?mode=site&siteProblemReason=no_name',
+      actionLabel: 'Відкрити товари No name',
     });
   }
 

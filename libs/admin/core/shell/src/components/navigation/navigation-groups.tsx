@@ -17,6 +17,7 @@ import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
+import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 
 import type { ReactNode } from 'react';
 
@@ -64,6 +65,7 @@ export const navigationGroups: NavigationGroup[] = [
     items: [
       { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
       { icon: <AccountTreeOutlinedIcon />, label: 'Категорії', to: '/categories' },
+      { icon: <TuneOutlinedIcon />, label: 'Властивості', to: '/catalog-attributes' },
       { icon: <PhotoLibraryOutlinedIcon />, label: 'Медіа', to: '/media' },
     ],
   },

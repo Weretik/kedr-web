@@ -1,4 +1,5 @@
 import { articlesRoutes } from '@admin/articles/feature';
+import { createCatalogAttributesRoutes } from '@admin/catalog-attributes/feature';
 import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
 import { companyAdminRoutes, companyRoutes } from '@admin/company/feature';
@@ -59,6 +60,7 @@ function AdminShellRoute({ user }: { user: SessionUser }) {
 const usersRoutes = createUsersRoutes({ useCurrentUserId: useSignedInUserId });
 const profileRoutes = createProfileRoutes({ onProfileChanged: refreshSession });
 const categoriesRoutes = createCategoriesRoutes({ useCanEditCatalog });
+const catalogAttributesRoutes = createCatalogAttributesRoutes({ useCanEditCatalog });
 const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
 const dashboardRoutes = createDashboardRoutes({
   siteRefreshAction: <SiteRefreshButton variant="text" />,
@@ -100,6 +102,7 @@ export function AppRouter() {
           useCanEditCatalog,
         }),
         ...categoriesRoutes,
+        ...catalogAttributesRoutes,
         ...createOrdersRoutes({ CustomerPicker }),
         ...createClientsRoutes({
           renderOrdersPanel: (counterpartyId, returnTo) => (

@@ -27,6 +27,15 @@ vi.mock('@admin/products/data-access', () => ({
   useGetAdminProductDetailsQuery: api.details,
   useGetAdminProductCategoriesQuery: api.categories,
   useChangeProductSlugMutation: () => [api.changeSlug, { isLoading: false }],
+  useGetProblemReasonsQuery: () => ({ data: [] }),
+}));
+
+vi.mock('../components/product-attributes-section', () => ({
+  ProductAttributesSection: () => <p>Властивості</p>,
+}));
+
+vi.mock('../components/product-group-section', () => ({
+  ProductGroupSection: () => <p>Група</p>,
 }));
 
 vi.mock('../components/product-media-section', () => ({

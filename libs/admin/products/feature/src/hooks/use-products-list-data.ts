@@ -1,6 +1,7 @@
 import {
   useGetAdminProductCategoriesQuery,
   useGetMissingPhotoProductsQuery,
+  useGetProblemReasonsQuery,
   useGetProductsListQuery,
 } from '@admin/products/data-access';
 import { useRef } from 'react';
@@ -21,11 +22,12 @@ export function useProductsListData(mode: ProductsListMode, urlState: ProductsUr
     skip: mode !== 'missing',
   });
   const categoriesQuery = useGetAdminProductCategoriesQuery();
+  const problemReasonsQuery = useGetProblemReasonsQuery(undefined, { skip: mode !== 'site' });
   const totals = useRef<Partial<Record<ProductsListMode, number>>>({});
 
   const activeQuery = mode === 'missing' ? missingQuery : mode === 'site' ? siteQuery : allQuery;
   const total = activeQuery.data?.totalRecords;
   if (total !== undefined) totals.current[mode] = total;
 
-  return { activeQuery, categoriesQuery, rowCount: totals.current[mode] ?? 0 };
+  return { activeQuery, categoriesQuery, problemReasonsQuery, rowCount: totals.current[mode] ?? 0 };
 }

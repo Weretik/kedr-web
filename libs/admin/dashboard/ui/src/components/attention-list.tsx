@@ -4,6 +4,8 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import LabelOffOutlinedIcon from '@mui/icons-material/LabelOffOutlined';
+import RuleOutlinedIcon from '@mui/icons-material/RuleOutlined';
 import SyncProblemOutlinedIcon from '@mui/icons-material/SyncProblemOutlined';
 import { Box, Button, Chip, Stack, Typography } from '@mui/material';
 
@@ -16,6 +18,8 @@ const mainRows = 4;
 const icons: Record<AttentionKind, ReactNode> = {
   sync: <SyncProblemOutlinedIcon />,
   photos: <HideImageOutlinedIcon />,
+  'attribute-problems': <RuleOutlinedIcon />,
+  'no-name': <LabelOffOutlinedIcon />,
   'category-texts': <AccountTreeOutlinedIcon />,
   'article-drafts': <ArticleOutlinedIcon />,
   'legacy-covers': <ImageOutlinedIcon />,

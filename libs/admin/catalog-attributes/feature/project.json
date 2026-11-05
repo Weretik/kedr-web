@@ -1,0 +1,20 @@
+{
+  "name": "admin-catalog-attributes-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/catalog-attributes/feature/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:catalog-attributes", "type:feature"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

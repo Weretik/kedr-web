@@ -298,6 +298,396 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/products/{id}/group": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** Get the group of a product */
+        get: operations["getAdminProductGroupOfProduct"];
+        /**
+         * Move a product to a group, out of groups, or back to automatic grouping
+         * @description `automatic: true` returns the product to automatic grouping (no `groupId`). Otherwise the product is pinned to `groupId` (a group of the product's category) or, with `groupId: null`, kept out of groups.
+         */
+        put: operations["setAdminProductGroupOfProduct"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Find groups by category and part of the name
+         * @description Up to 50 groups ordered by name, for the «Перенести в іншу групу» picker.
+         */
+        get: operations["getAdminProductGroups"];
+        put?: never;
+        /**
+         * Create a group («Нова група»)
+         * @description The listed products (up to 200, all in the category) move into the new group and are pinned: automation never moves them again. The slug is built from the name.
+         */
+        post: operations["createAdminProductGroup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** Get a group with its variants */
+        get: operations["getAdminProductGroup"];
+        /**
+         * Rename a group
+         * @description The slug stays as it is.
+         */
+        put: operations["renameAdminProductGroup"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups/{id}/main": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Choose the main product («Зробити головним»)
+         * @description The product must be in the group and on the site. It stays main until it is deleted or taken off the site; then automation picks the main product again.
+         */
+        put: operations["setAdminProductGroupMain"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups/{id}/slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a group slug
+         * @description Admin only. The old slug goes to the slug history and is never given to another group.
+         */
+        put: operations["changeAdminProductGroupSlug"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        /** Get the «Властивості» panel of a product */
+        get: operations["getAdminProductAttributes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/attributes/{attributeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+                attributeId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set the values of one attribute by hand
+         * @description The values (in position order) become manual and locked: the import, the parser, and the 1C sync no longer change them. List attributes take `valueId` from the attribute's list, number attributes take `number`. Positions beyond the list are dropped. A change of color, size, or side rebuilds the variant groups.
+         */
+        put: operations["setAdminProductAttribute"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/attributes/{attributeId}/manual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+                attributeId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * «Повернути автоматичне»
+         * @description Drops the manual values of the attribute and brings back the automatic ones kept for them (`hasAutomatic`). Positions automation never had disappear; new automatic positions come with the next recognition run.
+         */
+        delete: operations["restoreAdminProductAttribute"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/review/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * «Прийняти як є»
+         * @description Permanent; automation keeps the product accepted until «Повернути на перевірку». Records who and when.
+         */
+        post: operations["acceptAdminProductReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/review/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** «Повернути на перевірку» */
+        post: operations["reopenAdminProductReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List attributes of the «Властивості» page */
+        get: operations["getAdminCatalogAttributes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** Get an attribute with its values and codes */
+        get: operations["getAdminCatalogAttribute"];
+        /**
+         * Edit an attribute (Admin)
+         * @description Names, filter flag, and order. The dictionary import no longer changes the attribute.
+         */
+        put: operations["updateAdminCatalogAttribute"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/{id}/values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a value (Admin)
+         * @description Code and slug come from the request or from the name; a taken code or explicit slug is rejected.
+         */
+        post: operations["createAdminAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/{id}/values/{valueId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                valueId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Edit a value (Admin)
+         * @description Names, order, and swatch (a color or a media-library texture). The dictionary import then leaves it.
+         */
+        put: operations["updateAdminAttributeValue"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/unresolved-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * «Не розшифровані коди»
+         * @description Codes without a value or with an unconfirmed decoding that the owner has not decided yet.
+         */
+        get: operations["getAdminUnresolvedAttributeCodes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/codes/{aliasId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                aliasId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Decode a code (Admin)
+         * @description A value of the code's attribute, or null when the code means nothing to filter by. Product values that waited only for this confirmation become confirmed at once; codes decoded for the first time reach products at the next recognition run. The dictionary import no longer changes the code.
+         */
+        put: operations["decideAdminAttributeCode"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/problem-reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Review reasons of on-site products, most frequent first */
+        get: operations["getAdminAttributeProblemReasons"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/category-filters/{categoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * «Фільтри категорій» of one category
+         * @description Filter rows in order, then attributes the category's products have that are not offered yet (off).
+         */
+        get: operations["getAdminCategoryAttributeFilters"];
+        /**
+         * Turn category filters on or off and order them (Admin)
+         * @description Attributes left out stay as they are. The attribute import no longer changes the listed filters.
+         */
+        put: operations["setAdminCategoryAttributeFilters"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/orders": {
         parameters: {
             query?: never;
@@ -2096,6 +2486,12 @@ export interface components {
             bodyHtml?: string | null;
             faq?: components["schemas"]["CategoryFaqItem"][] | null;
         };
+        AdminAttributeProblem: {
+            /** @description Stable reason code, for example `unresolved_color`, `no_name`, `same_variants`. */
+            code: string;
+            /** @description Recognizer explanation. */
+            text?: string | null;
+        };
         AdminProduct: {
             id: number;
             nameUk: string;
@@ -2117,6 +2513,11 @@ export interface components {
             isDeleted?: boolean;
             /** Format: date-time */
             deletedAt?: string | null;
+            /** @description Variant group of the product (spec catalog/006); filled by the paged list only. */
+            groupId?: number | null;
+            groupName?: string | null;
+            /** @description Why the product's attributes need review; empty when they do not or the product was accepted. Filled by the paged list only. */
+            problems?: components["schemas"]["AdminAttributeProblem"][];
         };
         AdminProductPage: {
             pagedInfo: components["schemas"]["PagedInfo"];
@@ -2163,6 +2564,221 @@ export interface components {
              * @description Must not be one of photoIds.
              */
             schemeId?: number | null;
+        };
+        AdminProductGroupMember: {
+            productId: number;
+            /** @description Original 1C name. */
+            name: string;
+            slug: string;
+            exportToSite: boolean;
+            isDeleted: boolean;
+            /** @description First photo URL; empty without photos. */
+            photo: string;
+            stock: number;
+            /** @description A person put the product here; automation leaves it. */
+            isPinned: boolean;
+            isMain: boolean;
+            /** @description Main color first, then the second color. */
+            colors: string[];
+            size?: string | null;
+            side?: string | null;
+            /** @description Color, size, and side do not tell it apart from another variant («Однакові варіанти»). */
+            hasSameVariants: boolean;
+        };
+        AdminProductGroup: {
+            id: number;
+            categoryId: number;
+            name: string;
+            slug: string;
+            mainProductId?: number | null;
+            isMainManual: boolean;
+            isCreatedManually: boolean;
+            /** @description Main product first, then by product ID. */
+            members: components["schemas"]["AdminProductGroupMember"][];
+        };
+        AdminProductGroupMembership: {
+            productId: number;
+            /** @description With `group` null it means the product was taken out of groups on purpose. */
+            isPinned: boolean;
+            group?: components["schemas"]["AdminProductGroup"] | null;
+        };
+        SetProductGroupRequest: {
+            groupId?: number | null;
+            /** @default false */
+            automatic: boolean;
+        };
+        AdminProductGroupListItem: {
+            id: number;
+            categoryId: number;
+            name: string;
+            slug: string;
+            productCount: number;
+            isCreatedManually: boolean;
+        };
+        CreateProductGroupRequest: {
+            categoryId: number;
+            name: string;
+            productIds?: number[];
+        };
+        RenameProductGroupRequest: {
+            name: string;
+        };
+        SetProductGroupMainRequest: {
+            productId: number;
+        };
+        AdminProductReview: {
+            /** @enum {string} */
+            state: "clear" | "needs_review" | "accepted";
+            reasons: components["schemas"]["AdminAttributeProblem"][];
+            acceptedBy?: string | null;
+            /** Format: date-time */
+            acceptedAt?: string | null;
+        };
+        AdminProductAttributeValue: {
+            position: number;
+            valueId?: number | null;
+            valueName?: string | null;
+            number?: number | null;
+            /** @enum {string} */
+            source: "import" | "parser" | "manual";
+            isLocked: boolean;
+            /** @description False while the decoding behind the value is not confirmed; such values stay off filters. */
+            isConfirmed: boolean;
+            /** @description Whether «Повернути автоматичне» brings an automatic value back. */
+            hasAutomatic: boolean;
+        };
+        AdminProductAttribute: {
+            attributeId: number;
+            code: string;
+            name: string;
+            /** @enum {string} */
+            kind: "enum" | "number" | "size";
+            unit?: string | null;
+            isVariantAxis: boolean;
+            values: components["schemas"]["AdminProductAttributeValue"][];
+        };
+        AdminProductAttributes: {
+            productId: number;
+            /** @description The 1C name; never changed. */
+            originalName: string;
+            /** @description Name without color, size, and side; used for grouping. */
+            baseName?: string | null;
+            review: components["schemas"]["AdminProductReview"];
+            attributes: components["schemas"]["AdminProductAttribute"][];
+        };
+        SetProductAttributeRequest: {
+            values: {
+                valueId?: number | null;
+                number?: number | null;
+            }[];
+        };
+        AdminCatalogAttributeListItem: {
+            id: number;
+            code: string;
+            nameUk: string;
+            nameRu?: string | null;
+            /** @enum {string} */
+            kind: "enum" | "number" | "size";
+            unit?: string | null;
+            slug: string;
+            isFilterable: boolean;
+            isVariantAxis: boolean;
+            sortOrder: number;
+            isEditedManually: boolean;
+            valueCount: number;
+            /** @description Products with a value of the attribute. */
+            productCount: number;
+        };
+        AdminAttributeValue: {
+            id: number;
+            code: string;
+            nameUk: string;
+            nameRu?: string | null;
+            slug: string;
+            sortOrder: number;
+            swatchHex?: string | null;
+            /** @description Media-library texture of a decor. */
+            swatchMediaFileId?: number | null;
+            swatchImageUrl?: string | null;
+            isEditedManually: boolean;
+            productCount: number;
+        };
+        AdminAttributeAlias: {
+            id: number;
+            scope: string;
+            rawValue: string;
+            valueId?: number | null;
+            isConfirmed: boolean;
+            note?: string | null;
+            isEditedManually: boolean;
+        };
+        AdminCatalogAttribute: {
+            attribute: components["schemas"]["AdminCatalogAttributeListItem"];
+            values: components["schemas"]["AdminAttributeValue"][];
+            aliases: components["schemas"]["AdminAttributeAlias"][];
+        };
+        UpdateCatalogAttributeRequest: {
+            nameUk: string;
+            nameRu?: string | null;
+            isFilterable: boolean;
+            sortOrder: number;
+        };
+        CreateAttributeValueRequest: {
+            nameUk: string;
+            nameRu?: string | null;
+            code?: string | null;
+            slug?: string | null;
+            sortOrder: number;
+            swatchHex?: string | null;
+            swatchMediaFileId?: number | null;
+        };
+        UpdateAttributeValueRequest: {
+            nameUk: string;
+            nameRu?: string | null;
+            sortOrder: number;
+            swatchHex?: string | null;
+            swatchMediaFileId?: number | null;
+        };
+        AdminUnresolvedCode: {
+            aliasId: number;
+            attributeId: number;
+            attributeName: string;
+            scope: string;
+            rawValue: string;
+            /** @description Decoding picked by an assistant, not confirmed yet. */
+            valueId?: number | null;
+            valueName?: string | null;
+            isConfirmed: boolean;
+            note?: string | null;
+            /** @description Products whose review mentions the code. */
+            productCount: number;
+        };
+        DecideAttributeCodeRequest: {
+            valueId?: number | null;
+        };
+        DecideAttributeCodeResponse: {
+            code: components["schemas"]["AdminUnresolvedCode"];
+            valuesConfirmed: number;
+        };
+        AdminProblemReason: {
+            code: string;
+            productCount: number;
+        };
+        AdminCategoryAttributeFilter: {
+            attributeId: number;
+            code: string;
+            name: string;
+            isFilterable: boolean;
+            sortOrder: number;
+            isEditedManually: boolean;
+            productCount: number;
+        };
+        SetCategoryAttributeFiltersRequest: {
+            filters: {
+                attributeId: number;
+                isFilterable: boolean;
+                sortOrder: number;
+            }[];
         };
         CreateOrderLineRequest: {
             productId: string;
@@ -3110,6 +3726,10 @@ export interface components {
             topCategoryWithoutPhoto: components["schemas"]["AdminCatalogOverviewCategory"] | null;
             /** @description Active categories without any site text or FAQ in Ukrainian or in Russian. */
             categoriesWithoutText: number;
+            /** @description On-site products whose attributes need review (spec catalog/006); the «Огляд» shows no line at 0. */
+            productsWithProblems?: number;
+            /** @description Those of them without brand marking (reason `no_name`). */
+            noNameProducts?: number;
         };
         SiteRefreshResult: {
             /** @enum {string} */
@@ -3201,8 +3821,19 @@ export interface components {
                 "application/json": components["schemas"]["ValidationErrors"];
             };
         };
-        /** @description Input validation failed. */
+        /** @description Input validation failed */
         "components-responses-ValidationError": {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                }[];
+            };
+        };
+        /** @description Input validation failed. */
+        "manager-order-read.openapi_components-responses-ValidationError": {
             headers: {
                 [name: string]: unknown;
             };
@@ -3235,6 +3866,15 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Input validation failed. */
+        "customer-read.openapi_components-responses-ValidationError": {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["schemas-ValidationErrors"];
             };
         };
         /** @description Invalid input; each error names the field (`slug`, `texts`, `coverMediaFileId`, `file`…). */
@@ -3723,6 +4363,10 @@ export interface operations {
                 priceTo?: components["parameters"]["PriceTo"];
                 /** @description `true` lists only products without a linked photo (`photo` is an empty string). */
                 withoutPhoto?: boolean;
+                /** @description `true` lists only products whose attributes need review («Тільки проблемні», spec catalog/006). */
+                problemsOnly?: boolean;
+                /** @description Lists only products that need review for this reason code, for example `no_name`. */
+                problemReason?: string;
                 /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin role only. */
                 deleted?: boolean;
                 sort?: components["parameters"]["ProductSort"];
@@ -3979,6 +4623,1032 @@ export interface operations {
             };
         };
     };
+    getAdminProductGroupOfProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Group of the product */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupMembership"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminProductGroupOfProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductGroupRequest"];
+            };
+        };
+        responses: {
+            /** @description Group of the product */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupMembership"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminProductGroups: {
+        parameters: {
+            query?: {
+                categoryId?: number;
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Groups */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupListItem"][];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminProductGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProductGroupRequest"];
+            };
+        };
+        responses: {
+            /** @description Created group */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroup"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminProductGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Group */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroup"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Group not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    renameAdminProductGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RenameProductGroupRequest"];
+            };
+        };
+        responses: {
+            /** @description Group */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroup"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Group not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminProductGroupMain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductGroupMainRequest"];
+            };
+        };
+        responses: {
+            /** @description Group */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroup"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Group not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeAdminProductGroupSlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSlugRequest"];
+            };
+        };
+        responses: {
+            /** @description New slug */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeSlugResponse"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Group not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminProductAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Panel */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributes"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminProductAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+                attributeId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductAttributeRequest"];
+            };
+        };
+        responses: {
+            /** @description Panel after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributes"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    restoreAdminProductAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+                attributeId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Panel after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributes"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    acceptAdminProductReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Panel after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributes"];
+                };
+            };
+            /** @description The product has no recognized attributes yet, or invalid input. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reopenAdminProductReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Panel after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributes"];
+                };
+            };
+            /** @description The product has no recognized attributes yet, or invalid input. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Product not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCatalogAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attributes in order */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogAttributeListItem"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCatalogAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attribute */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Attribute not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminCatalogAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCatalogAttributeRequest"];
+            };
+        };
+        responses: {
+            /** @description Attribute */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Attribute not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAttributeValueRequest"];
+            };
+        };
+        responses: {
+            /** @description Attribute with the new value */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Attribute not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                valueId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAttributeValueRequest"];
+            };
+        };
+        responses: {
+            /** @description Attribute */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Value not found in this attribute. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminUnresolvedAttributeCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Codes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUnresolvedCode"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    decideAdminAttributeCode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                aliasId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecideAttributeCodeRequest"];
+            };
+        };
+        responses: {
+            /** @description Decision */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecideAttributeCodeResponse"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Code not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminAttributeProblemReasons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reasons */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProblemReason"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCategoryAttributeFilters: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Filters */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryAttributeFilter"][];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Category not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminCategoryAttributeFilters: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetCategoryAttributeFiltersRequest"];
+            };
+        };
+        responses: {
+            /** @description Filters */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryAttributeFilter"][];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Category not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     createQuickOrder: {
         parameters: {
             query?: never;
@@ -4049,7 +5719,7 @@ export interface operations {
                     "application/json": components["schemas"]["ManagerOrderPage"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["manager-order-read.openapi_components-responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -4152,7 +5822,7 @@ export interface operations {
                     "application/json": components["schemas"]["ManagerOrderDetail"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["manager-order-read.openapi_components-responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -4892,7 +6562,7 @@ export interface operations {
                     "application/json": components["schemas"]["CustomerPage"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["customer-read.openapi_components-responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -4929,7 +6599,7 @@ export interface operations {
                     "application/json": components["schemas"]["CustomerDetail"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["customer-read.openapi_components-responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
