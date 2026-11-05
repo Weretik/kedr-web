@@ -10,6 +10,7 @@ import { buildArticlesBreadcrumbJsonLd, buildArticlesMetadata } from '@site/cont
 import { ArticlesContent, ArticlesHeader, ArticlesLoading } from '@site/content/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
+import { withPageSeo } from '@site/shared/page-seo';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -53,5 +54,10 @@ export async function generateArticlesMetadata(
     parseArticlesQuery(await searchParams),
   );
   const search = serializeArticlesQuery(listing.query);
-  return buildArticlesMetadata(locale, { ...listing.query, search: search ? '?' + search : '' });
+  const metadata = buildArticlesMetadata(locale, {
+    ...listing.query,
+    search: search ? '?' + search : '',
+  });
+  // The editor's texts describe the list itself, not a search or a later page.
+  return search ? metadata : withPageSeo(locale, 'Articles', metadata);
 }

@@ -4,7 +4,7 @@
 
 Список використовує погоджений концепт, існуючі shell/Onest/теми та сітку 1/2/3 колонки. Видимого label перед пошуком немає; поле й форма мають доступні назви. Native GET шукає назву або повний текст у всьому локалізованому наборі. Поки статей менше 20 і відвідувач нічого не обрав, сторінка показує лише картки: пошук, розмір сторінки й пагінація з'являються від 20 статей або після будь-якого вибору ([articles-tools.ts](../../../libs/site/content/model/src/lib/articles/articles-tools.ts)). Ліміт 10 за замовчуванням, вибір 10/20/50; новий q/size скидає page, сторінкові посилання зберігають вибір і ведуть до #articles-results під sticky header. Порожня видача має очистку, непорожня одна сторінка зберігає pager із disabled краями. Desktop — номери; mobile — N / total.
 
-Query owner: content/model, `q`, `pageSize`, `page`. Defaults omitted, input bounded, filter before paging, out-of-range page temporarily redirects to last available normalized URL. Unknown slug is notFound in page and metadata. Detail is server HTML with full source paragraphs, publication date, cover, breadcrumb and back link; no nested main or extra CTA.
+Query owner: content/model, `q`, `pageSize`, `page`. Defaults omitted, input bounded, filter before paging, out-of-range page temporarily redirects to last available normalized URL. Unknown slug is notFound in page and metadata. Detail is server HTML with full source paragraphs, publication date, cover, breadcrumb, a closing «Підберіть фурнітуру» block linking to the catalog and «Співпраця» (links passed by the feature), and the back link; no nested main. The list title in search results is «Статті про дверну фурнітуру» / «Статьи о дверной фурнитуре»; the breadcrumb stays «Статті».
 
 ## Джерело та межі
 

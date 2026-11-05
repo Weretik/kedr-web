@@ -16,8 +16,18 @@ const article = {
 
 describe('article list metadata', () => {
   it.each([
-    { locale: 'uk', title: 'Статті', pageSuffix: 'сторінка', ogLocale: 'uk_UA' },
-    { locale: 'ru', title: 'Статьи', pageSuffix: 'страница', ogLocale: 'ru_UA' },
+    {
+      locale: 'uk',
+      title: 'Статті про дверну фурнітуру',
+      pageSuffix: 'сторінка',
+      ogLocale: 'uk_UA',
+    },
+    {
+      locale: 'ru',
+      title: 'Статьи о дверной фурнитуре',
+      pageSuffix: 'страница',
+      ogLocale: 'ru_UA',
+    },
   ] as const)(
     'keeps the $locale list canonical, translated and indexable after the site gate',
     (page) => {

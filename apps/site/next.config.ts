@@ -54,6 +54,9 @@ const nextConfig: NextConfig = {
         destination: '/:locale/wholesale',
         permanent: true,
       },
+      // The Angular storefront had a demo sign-in and cabinet; the site has no accounts (owner decision 2026-11-04).
+      { source: '/:locale(uk|ru)/login', destination: '/:locale', permanent: true },
+      { source: '/:locale(uk|ru)/cabinet/:path*', destination: '/:locale', permanent: true },
       // Old catalog addresses of the Angular storefront; the category page then redirects former slugs.
       {
         source: '/:locale(uk|ru)/catalog/products',

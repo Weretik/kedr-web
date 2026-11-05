@@ -3,6 +3,7 @@ import { pluralize } from '@site/core/i18n';
 import { buildPageMetadata } from '@site/core/seo';
 
 import { CATALOG_SEO_TEXT } from './catalog-seo-text';
+import { categorySubject } from './category-subject';
 
 import type { CategoryDetails, ListingQuery } from '@site/catalog/model';
 import type { SiteConfig } from '@site/core/config';
@@ -31,11 +32,12 @@ export function buildCategoryMetadata(input: CategoryMetadataInput, config?: Sit
   const page = indexable ? query.page : 1;
   const suffix = page > 1 ? text.pageSuffix(page) : '';
 
-  const title = (category.content?.seoTitle ?? text.categoryTitle(category.name)) + suffix;
+  const subject = categorySubject(category);
+  const title = (category.content?.seoTitle ?? text.categoryTitle(subject)) + suffix;
   const description =
     category.content?.metaDescription ??
     text.categoryDescription(
-      category.name,
+      subject,
       pluralize(locale, category.productCount, text.products),
       formatMinPrice(category.minPrice, locale),
     );

@@ -28,6 +28,7 @@ import {
   CustomerOrdersPanel,
   useCurrentOrderSet,
 } from '@admin/orders/feature';
+import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
@@ -103,6 +104,7 @@ export function AppRouter() {
         ...galleryRoutes,
         ...homeContentRoutes,
         ...wholesaleContentRoutes,
+        ...pageSeoRoutes,
         ...profileRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },

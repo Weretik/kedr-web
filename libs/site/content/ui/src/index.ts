@@ -9,6 +9,7 @@ export { ArticlesHeader } from './lib/articles/articles-header';
 export { ArticlesContent } from './lib/articles/articles-content';
 export { ArticlesLoading } from './lib/articles/articles-loading';
 export { ArticleContent } from './lib/articles/article-content';
+export type { ArticleNextStepLinks } from './lib/articles/article-content';
 export { WholesaleContent } from './lib/wholesale/wholesale-content';
 export type { WholesaleContentProps } from './lib/wholesale/wholesale-content';
 export { RequisitesContent } from './lib/requisites/requisites-content';

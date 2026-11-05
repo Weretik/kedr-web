@@ -1,6 +1,8 @@
+import { CATALOG_PATH } from '@site/catalog/model';
 import { getArticle, getArticles } from '@site/content/data-access';
 import { buildArticleJsonLd, buildArticleMetadata } from '@site/content/seo';
 import { ArticleContent } from '@site/content/ui';
+import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
 import { notFound } from 'next/navigation';
 
@@ -31,7 +33,14 @@ export async function ArticlePage({ locale, slug }: ArticlePageProps) {
   const article = await loadArticleOrRespond(locale, slug);
   return (
     <>
-      <ArticleContent locale={locale} article={article} />
+      <ArticleContent
+        locale={locale}
+        article={article}
+        links={{
+          catalog: localizedPath(locale, CATALOG_PATH),
+          wholesale: localizedPath(locale, '/wholesale'),
+        }}
+      />
       <JsonLd data={buildArticleJsonLd(locale, article)} />
     </>
   );

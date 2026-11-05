@@ -16,6 +16,7 @@ import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
 
 import type { ReactNode } from 'react';
 
@@ -77,6 +78,7 @@ export const navigationGroups: NavigationGroup[] = [
       { icon: <ContactPhoneOutlinedIcon />, label: 'Контакти', to: '/company-contacts' },
       { icon: <GavelOutlinedIcon />, label: 'Документи', to: '/documents' },
       { icon: <CollectionsOutlinedIcon />, label: 'Галерея', to: '/gallery' },
+      { icon: <TravelExploreOutlinedIcon />, label: 'SEO сторінок', to: '/page-seo' },
     ],
   },
   {

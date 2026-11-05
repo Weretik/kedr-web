@@ -1,0 +1,20 @@
+{
+  "name": "admin-page-seo-model",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/page-seo/model/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:page-seo", "type:model"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}
