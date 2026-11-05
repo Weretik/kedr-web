@@ -1,0 +1,56 @@
+# Kedr Manager — tasks
+
+Stage numbers match the [stage table](../README.md#stages). Every stage ends with a short structure check of the changed files (split mixed files, group dump folders) and its PR; the next stage starts on the owner's word.
+
+## Stage 0 — specification
+
+- **TS-000 — Spec and standards.** This SDD, design system «Офіс», ADR-0005, ADR-0006, mobile rules and stack updated, specs index; KedrStore spec `platform/004-mobile-offline-sync`. Test level: docs check. Status: done in this PR.
+
+## Stage 1 — shell, design system, sign-in
+
+- **EN-001 — Packages.** Add `react-native-unistyles`, `@gorhom/bottom-sheet`, `expo-local-authentication`, `zustand` with `npx expo install`; run Expo Doctor; record versions in the [technology stack](../../../../../architecture/mobile/platform/technology-stack.md). Checkpoint: `npx nx run mobile:typecheck`.
+- **TS-001 — Tokens and themes.** `libs/mobile/shared/ui/src/theme/*` for «Офіс» light/dark and breakpoints; Unistyles config loaded before the root layout. Covers R-017 (base). Test: unit for token roles.
+- **TS-002 — Base components.** Button, IconButton, TextField, SearchField, SegmentedControl, Chip, StatusPill, QuantityStepper, Card, ListRow, Avatar, Sheet, StateView in `@mobile/shared/ui`. Test: component.
+- **TS-003 — Shell and gate.** `(work)/_layout.tsx` with `TabBar` (phone) and `NavRail` (tablet), customer gate, `CustomerBar` placeholder until stage 3; orientation per breakpoint. Covers R-002, R-017; SC-003, SC-024 (layout part). Test: component.
+- **TS-004 — Sign-in and session.** «Офіс» login screen with show-password; 7-day offline window; quick unlock adapter and setting. Covers R-001, R-014; SC-001, SC-002, SC-018, SC-019. Test: unit + component.
+- **TS-005 — Remove the old app parts.** Delete Paper, actions-sheet, «Пагін» theme, Unbounded, Home placeholder, products-without-photos route and feature, Redux store wiring for removed screens; old catalog/cart/orders routes stay only until their stage replaces them, or are removed now if they no longer compile without Paper. Test: `mobile:typecheck`, `mobile:lint`.
+
+## Stage 2 — local database and sync
+
+- **EN-002 — Backend sync endpoints** deployed (KedrStore `platform/004`).
+- **TS-006 — Local database.** `@mobile/core/local-db`: connection, Drizzle schema (tables in [design](../design/frontend.md#local-data-model-drizzle-tables)), migrations, wipe. Test: data-access.
+- **TS-007 — Sync service.** `@mobile/sync`: snapshot clients with zod and ETag, transactional replace, schedule, first-sync progress, `sync_state`, stale strip in the shell. Covers R-014, R-015; SC-020. Test: unit + data-access.
+- **TS-008 — Contract snapshot.** Refresh `docs/contracts/openapi` from KedrStore and pass `npm run contracts:check`.
+
+## Stage 3 — customers
+
+- **TS-009 — Selected customer.** Zustand store persisted by id, restore on start, `CustomerBar` live. Covers R-002; SC-003, SC-004.
+- **TS-010 — Customer choice and list.** Search by name/phone/code, recent, A–Я; tablet list + card. Covers R-003; SC-004.
+- **TS-011 — Customer card.** Contacts, price type and rules, debt and balance «—» with the 1C note, orders and drafts tabs from `order-workspace` cached locally. Covers R-004, R-013; SC-005.
+
+## Stage 4 — products
+
+- **TS-012 — Price resolver.** Pure resolver in `catalog/model` with KedrStore cases. Covers R-005; SC-006. Test: unit.
+- **TS-013 — Product list.** FTS search, category tree, «лише в наявності», sort, client price, disabled add when out of stock or without price; tablet table. Covers R-005–R-007; SC-007, SC-008.
+- **TS-014 — Product detail and viewer.** Photos and scheme on white, segmented «Фото | Схема», full-screen `ZoomViewer`, tablet side by side. Covers R-008, R-017; SC-009, SC-025.
+- **TS-015 — Photo cache.** Prefetch of thumbnails and schemes on Wi‑Fi, «Завантажити всі фото». Covers R-008; SC-010.
+
+## Stage 5 — calculation, drafts, orders
+
+- **TS-016 — Calculation model.** Per-customer lines, adjustment parse and ≥ 1 ₴ rule, totals in kopecks. Covers R-009; SC-011, SC-012, SC-013. Test: unit.
+- **TS-017 — Calculation screen.** Lines, stepper, adjustment field, comment, footer with «Чернетка» and «Відправити в 1С»; tablet side panel. Covers R-009, R-017; SC-011, SC-024.
+- **TS-018 — Send queue.** Outbox runner, backoff, idempotency keys, quote then create, `needs-review`. Covers R-010–R-012; SC-014–SC-017. Test: unit (state machine) + data-access.
+- **TS-019 — Conflict view and orders.** Reasons and changed lines in the calculation; order and draft detail. Covers R-012, R-013; SC-017, SC-005.
+
+## Stage 6 — cabinet
+
+- **TS-020 — Cabinet.** Photo, name; Admin email and password with current password and confirmation; sync time, queue, «Оновити дані зараз», «Завантажити всі фото», theme, quick unlock, sign-out with queue warning. Covers R-016; SC-021–SC-023.
+
+## Stage 7 — tablet pass
+
+- **TS-021 — Layouts.** Check and finish every screen at `phone`, `tablet`, `wide` in both orientations. Covers R-017; SC-024, SC-025.
+
+## Stage 8 — release
+
+- **TS-022 — Distribution.** App name «Кедр Менеджер», icons and splash in «Офіс», EAS profiles for internal distribution (Android APK link, iPhone TestFlight/ad hoc), `expo-updates`.
+- **TS-023 — Docs and audit.** Feature map, architecture pages, offline strategy rewritten, final structure audit; device checks with the owner's permission.
