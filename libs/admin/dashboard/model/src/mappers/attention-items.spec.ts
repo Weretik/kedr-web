@@ -37,6 +37,8 @@ const catalog: DashboardCatalog = {
   productsWithoutPhoto: 37,
   topCategoryWithoutPhoto: { id: 5, name: 'Ручки на розетці', count: 12 },
   categoriesWithoutText: 1,
+  productsWithProblems: 0,
+  noNameProducts: 0,
 };
 const content: DashboardContent = {
   articleDrafts: 3,
@@ -69,6 +71,30 @@ describe('attentionItems', () => {
     expect(items[4].title).toBe('1 чернетка документа');
   });
 
+  it('adds attribute problems and No name products with links to the filtered list', () => {
+    const items = attentionItems({
+      orders: undefined,
+      catalog: { ...catalog, productsWithProblems: 1668, noNameProducts: 36 },
+      content: undefined,
+      now,
+    });
+
+    expect(items.map((item) => item.kind)).toEqual([
+      'photos',
+      'attribute-problems',
+      'no-name',
+      'category-texts',
+    ]);
+    expect(items[1]).toMatchObject({
+      title: 'Товари з нерозпізнаними властивостями: 1668',
+      href: '/catalog?mode=site&siteProblemsOnly=true',
+    });
+    expect(items[2]).toMatchObject({
+      title: 'Товари No name: 36',
+      href: '/catalog?mode=site&siteProblemReason=no_name',
+    });
+  });
+
   it('links a single problem straight to its page', () => {
     const items = attentionItems({
       orders: { ...orders, syncProblemCount: 1, syncProblems: [orders.syncProblems[0]] },
@@ -89,6 +115,8 @@ describe('attentionItems', () => {
           productsWithoutPhoto: 0,
           topCategoryWithoutPhoto: null,
           categoriesWithoutText: 0,
+          productsWithProblems: 0,
+          noNameProducts: 0,
         },
         content: undefined,
         now,

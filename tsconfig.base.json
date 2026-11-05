@@ -170,7 +170,13 @@
       "@admin/page-seo/feature": ["./libs/admin/page-seo/feature/src/index.ts"],
       "@admin/dashboard/model": ["./libs/admin/dashboard/model/src/index.ts"],
       "@admin/dashboard/data-access": ["./libs/admin/dashboard/data-access/src/index.ts"],
-      "@admin/dashboard/ui": ["./libs/admin/dashboard/ui/src/index.ts"]
+      "@admin/dashboard/ui": ["./libs/admin/dashboard/ui/src/index.ts"],
+      "@admin/catalog-attributes/model": ["./libs/admin/catalog-attributes/model/src/index.ts"],
+      "@admin/catalog-attributes/data-access": [
+        "./libs/admin/catalog-attributes/data-access/src/index.ts"
+      ],
+      "@admin/catalog-attributes/ui": ["./libs/admin/catalog-attributes/ui/src/index.ts"],
+      "@admin/catalog-attributes/feature": ["./libs/admin/catalog-attributes/feature/src/index.ts"]
     }
   }
 }

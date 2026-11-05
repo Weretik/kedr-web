@@ -33,6 +33,8 @@ export const catalogOverviewSchema = z.object({
     .object({ id: z.number(), name: z.string(), count: z.number().int() })
     .nullable(),
   categoriesWithoutText: z.number().int().nonnegative(),
+  productsWithProblems: z.number().int().nonnegative().default(0),
+  noNameProducts: z.number().int().nonnegative().default(0),
 });
 
 export const contentOverviewSchema = z.object({

@@ -34,6 +34,10 @@ export interface DashboardCatalog {
   productsWithoutPhoto: number;
   topCategoryWithoutPhoto: { id: number; name: string; count: number } | null;
   categoriesWithoutText: number;
+  /** On-site products whose attributes need review. */
+  productsWithProblems: number;
+  /** Those of them without brand marking (No name). */
+  noNameProducts: number;
 }
 
 export interface DashboardContent {

@@ -39,7 +39,10 @@ export function ProductsPage({
   const [editedProduct, setEditedProduct] = useState<EditedProduct | undefined>();
   const [editOpen, setEditOpen] = useState(false);
   const list = useProductsListState(canSeeDeleted);
-  const { activeQuery, categoriesQuery, rowCount } = useProductsListData(list.mode, list.urlState);
+  const { activeQuery, categoriesQuery, problemReasonsQuery, rowCount } = useProductsListData(
+    list.mode,
+    list.urlState,
+  );
   const { currentQuery, mode, search } = list;
 
   const viewProduct = useCallback(
@@ -50,7 +53,12 @@ export function ProductsPage({
     [navigate, search],
   );
   const editProduct = useCallback((product: AdminProductListItem) => {
-    setEditedProduct({ id: product.id, nameUk: product.nameUk, productSlug: product.productSlug });
+    setEditedProduct({
+      id: product.id,
+      nameUk: product.nameUk,
+      productSlug: product.productSlug,
+      categoryId: product.categoryId,
+    });
     setEditOpen(true);
   }, []);
 
@@ -112,6 +120,17 @@ export function ProductsPage({
             rowCount={rowCount}
             rows={activeQuery.data?.items ?? []}
             sort={currentQuery.sort}
+            showGroup={mode === 'site'}
+            problemFilter={
+              mode === 'site'
+                ? {
+                    problemsOnly: currentQuery.problemsOnly === true,
+                    reason: currentQuery.problemReason,
+                    reasons: problemReasonsQuery.data ?? [],
+                    onChange: list.changeProblemFilter,
+                  }
+                : undefined
+            }
           />
         )}
       </Card>

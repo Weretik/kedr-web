@@ -15,6 +15,10 @@ const documentedCrossDomainFlows = new Set([
   'admin-products-feature->admin-media-data-access',
   'admin-products-feature->admin-media-model',
   'admin-products-feature->admin-media-ui',
+  // «Властивості»: a value's decor texture is picked from the media library (Catalog 006 phase 3).
+  'admin-catalog-attributes-feature->admin-media-data-access',
+  'admin-catalog-attributes-feature->admin-media-model',
+  'admin-catalog-attributes-feature->admin-media-ui',
   'mobile-catalog-feature->mobile-cart-data-access',
   'mobile-catalog-feature->mobile-cart-model',
   'mobile-orders-feature->mobile-customers-data-access',
