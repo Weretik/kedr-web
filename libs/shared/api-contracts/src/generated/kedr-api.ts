@@ -396,6 +396,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/order-workspace/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Orders today, drafts, 1C problems and the newest orders
+         * @description Requires `CanManageOrders` (Manager or Admin). Lists hold at most 5 rows, newest first.
+         */
+        get: operations["getAdminWorkspaceOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/order-workspace/orders": {
         parameters: {
             query?: never;
@@ -1701,6 +1721,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/content/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Article drafts, legacy covers and document drafts
+         * @description Requires `CanManageContent` (Manager or Admin).
+         */
+        get: operations["getAdminContentOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Products without a photo and categories without site text
+         * @description Requires `CanManageProducts` (Manager or Admin). Deleted products and categories are not counted.
+         */
+        get: operations["getAdminCatalogOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/content/site-refresh": {
         parameters: {
             query?: never;
@@ -2259,11 +2319,17 @@ export interface components {
              */
             syncStatus: "RetryScheduled";
         };
-        "components-schemas-PagedInfo": {
-            pageNumber: number;
-            pageSize: number;
-            totalPages: number;
-            totalRecords: number;
+        WorkspaceSyncProblem: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            createdAtUtc: string;
+            /** @enum {string} */
+            syncStatus: "BusinessError" | "DeadLetter";
+            /** @description The last message 1C or the delivery gave, if any. */
+            errorMessage: string | null;
         };
         Money: number;
         OrderListItem: {
@@ -2279,6 +2345,22 @@ export interface components {
             syncStatus: string;
             /** @description Sum of discounts (negative) and markups (positive) over all units; 0 when none. */
             adjustmentAmount: number;
+        };
+        WorkspaceOverview: {
+            /** @description Orders created since Kyiv midnight. */
+            ordersToday: number;
+            /** @description Saved drafts not turned into orders. */
+            draftCount: number;
+            /** @description Orders with sync status `BusinessError` or `DeadLetter`. */
+            syncProblemCount: number;
+            syncProblems: components["schemas"]["WorkspaceSyncProblem"][];
+            latestOrders: components["schemas"]["OrderListItem"][];
+        };
+        "components-schemas-PagedInfo": {
+            pageNumber: number;
+            pageSize: number;
+            totalPages: number;
+            totalRecords: number;
         };
         OrderPage: {
             pagedInfo: components["schemas"]["components-schemas-PagedInfo"];
@@ -2997,6 +3079,37 @@ export interface components {
             titleRu?: string | null;
             descriptionUk?: string | null;
             descriptionRu?: string | null;
+        };
+        AdminContentOverviewDraft: {
+            /** Format: int64 */
+            id: number;
+            /** @description Ukrainian title, or the slug without one. */
+            title: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminContentOverview: {
+            /** @description Articles not published yet. */
+            articleDrafts: number;
+            /** @description The draft edited longest ago; null without drafts. */
+            oldestArticleDraft: components["schemas"]["AdminContentOverviewDraft"] | null;
+            /** @description Articles whose cover is still in the database, not in the media library («Перенести в CDN»). */
+            legacyArticleCovers: number;
+            /** @description Unpublished document versions. */
+            documentDrafts: number;
+        };
+        AdminCatalogOverviewCategory: {
+            id: number;
+            name: string;
+            count: number;
+        };
+        AdminCatalogOverview: {
+            /** @description Active products without a linked photo, as the admin «Без фото» tab lists them. */
+            productsWithoutPhoto: number;
+            /** @description The category with most of them; null when there are none. */
+            topCategoryWithoutPhoto: components["schemas"]["AdminCatalogOverviewCategory"] | null;
+            /** @description Active categories without any site text or FAQ in Ukrainian or in Russian. */
+            categoriesWithoutText: number;
         };
         SiteRefreshResult: {
             /** @enum {string} */
@@ -4154,6 +4267,40 @@ export interface operations {
             };
             /** @description Current synchronization status cannot be retried. */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkspaceOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The orders block. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceOverview"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -7808,6 +7955,74 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminContentOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The content block. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminContentOverview"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminCatalogOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The catalog block. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogOverview"];
+                };
             };
             /** @description Not signed in. */
             401: {

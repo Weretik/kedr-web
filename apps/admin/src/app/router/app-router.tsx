@@ -16,7 +16,7 @@ import {
   useAdminSession,
 } from '@admin/core/auth';
 import { AdminLayout, AdminShellSessionProvider } from '@admin/core/shell';
-import { dashboardRoutes } from '@admin/dashboard/feature';
+import { createDashboardRoutes } from '@admin/dashboard/feature';
 import { documentsRoutes } from '@admin/documents/feature';
 import { galleryRoutes } from '@admin/gallery/feature';
 import { homeContentRoutes } from '@admin/home-content/feature';
@@ -60,6 +60,10 @@ const usersRoutes = createUsersRoutes({ useCurrentUserId: useSignedInUserId });
 const profileRoutes = createProfileRoutes({ onProfileChanged: refreshSession });
 const categoriesRoutes = createCategoriesRoutes({ useCanEditCatalog });
 const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
+const dashboardRoutes = createDashboardRoutes({
+  siteRefreshAction: <SiteRefreshButton variant="text" />,
+  useViewerName: useSignedInUserName,
+});
 
 function useCanEditCatalog(): boolean {
   const session = useAdminSession();
@@ -69,6 +73,11 @@ function useCanEditCatalog(): boolean {
 function useCanDeleteMedia(): boolean {
   const session = useAdminSession();
   return session.status === 'authenticated' && canDeleteMedia(session.user);
+}
+
+function useSignedInUserName(): string | null {
+  const session = useAdminSession();
+  return session.status === 'authenticated' ? session.user.fullName : null;
 }
 
 function useSignedInUserId(): string | null {

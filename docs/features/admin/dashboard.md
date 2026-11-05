@@ -1,43 +1,44 @@
-# Admin Dashboard
+# Admin Dashboard («Огляд»)
 
-**Status:** the screen is implemented; the statistics shown in the UI are still static rather than backend data.
+**Status:** live data since 2026-11-05 (design «Робочий стіл», variant A chosen by the owner).
 
-- **Route:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) connects [dashboardRoutes](../../../libs/admin/dashboard/feature/src/dashboard.routes.tsx) at `/dashboard`.
-- **Design (2026-10-25):** «Огляд» header with «Каталог» and «Нове замовлення», a «Демо-дані» label, statistic cards with tone pills, charts, latest orders and products; cards rise in one after another (off with reduced motion).
-- **Composition:** [DashboardPage](../../../libs/admin/dashboard/feature/src/pages/dashboard-page.tsx) composes cards, recent products and orders, and sales and traffic charts from `dashboard/feature` components.
-- **Data and boundary:** there is currently no separate dashboard `data-access` library. [Admin shell](../../../libs/admin/core/shell/src/index.ts) is responsible for layout and session. Real metrics in the future require a verified API contract first.
+- **Route:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) builds [createDashboardRoutes](../../../libs/admin/dashboard/feature/src/dashboard.routes.tsx) at `/dashboard` and passes the viewer's name and the «Оновити сайт зараз» button (`SiteRefreshButton variant="text"`).
+- **Page:** [DashboardPage](../../../libs/admin/dashboard/feature/src/pages/dashboard-page.tsx) shows the Kyiv date and a greeting, «Нове замовлення» and «Нова стаття», then «Потребує уваги», «Останні замовлення», «Сьогодні» (orders today, drafts) and «Сайт».
+- **Problems only:** [attentionItems](../../../libs/admin/dashboard/model/src/mappers/attention-items.ts) builds the attention list most urgent first: 1C refused orders, products without photo (with the category that has most), categories without site text, article drafts (with the oldest), article covers not in the media library, document drafts. A zero count or a block that did not load adds nothing, and the card is hidden when the list is empty; the first four are rows, the rest short links. The latest orders table marks only a 1C problem. No money sums or new-customer counts (owner's decision).
+- **Data:** [admin-overview.api](../../../libs/admin/dashboard/data-access/src/api/admin-overview.api.ts) reads `GET /api/admin/order-workspace/overview`, `/api/admin/catalog/overview` and `/api/admin/content/overview` (KedrStore Platform 003), validated with zod and refetched on every visit. A failed block is named in one page notice; the others still show.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
   Route["AppRouter /dashboard"] --> Page["DashboardPage"]
-  Page --> Widgets["Cards and charts"]
-  Static["Static UI data"] --> Widgets
+  Page --> Hook["useDashboardOverview"]
+  Hook --> Api["dashboard data-access: 3 overview reads"]
+  Hook --> Model["attentionItems"]
+  Page --> UI["AttentionList · LatestOrdersTable · TodayCard · SiteCard"]
 ```
 
 ## Code structure
 
-Actual entry points and primary feature files (other files in these directories are omitted):
-
 ```text
-apps/admin/src/app/
-└── router/app-router.tsx  # route entry point
-
-libs/admin/core/shell/
-└── src/index.ts  # library public API
-
 libs/admin/dashboard/
+├── model/src/
+│   ├── entities/dashboard-overview.ts     # orders, catalog, content blocks
+│   └── mappers/{attention-items,greeting,plural}.ts
+├── data-access/src/
+│   ├── api/admin-overview.api.ts          # three queries
+│   ├── validators/overview.schemas.ts
+│   └── mappers/overview.mapper.ts
+├── ui/src/components/                     # attention list, today, latest orders, site card
 └── feature/src/
-    ├── pages/dashboard-page.tsx  # page and UI composition
-    └── dashboard.routes.tsx  # feature routes
+    ├── dashboard.routes.tsx               # createDashboardRoutes
+    ├── hooks/use-dashboard-overview.ts
+    └── pages/dashboard-page.tsx
 ```
 
 ## Tests
 
-Spec files sit next to the code in each project. Focused runs:
-
-- `apps/admin` (3 spec files): `npx nx run admin:vite:test -- --run`
-- `libs/admin/core/shell` (2 spec files): `npx nx run admin-core-shell:vite:test -- --run`
-
-Without tests: `admin-dashboard-feature`.
+- `npx nx run admin-dashboard-model:vite:test -- --run` — attention list, plurals, greeting, Kyiv date.
+- `npx nx run admin-dashboard-data-access:vite:test -- --run` — response mapping.
+- `npx nx run admin-dashboard-ui:vite:test -- --run` — attention list rows and links.
+- `npx nx run admin-dashboard-feature:vite:test -- --run` — page with loaded, empty and failed blocks.

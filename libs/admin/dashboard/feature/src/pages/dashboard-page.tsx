@@ -1,108 +1,98 @@
-import { AdminPageHeader, StatusPill } from '@admin/shared/ui';
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
-import AddIcon from '@mui/icons-material/Add';
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import { Box, Button, Grid, Stack, keyframes } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { greeting, kyivDate } from '@admin/dashboard/model';
+import { AttentionList, LatestOrdersTable, SiteCard, TodayCard } from '@admin/dashboard/ui';
+import { PageIssues, PageLoader } from '@admin/shared/ui';
+import AddIcon from '@mui/icons-material/AddOutlined';
+import { Box, Button, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 
-import { DashboardLatestOrders } from '../components/dashboard-latest-orders';
-import { DashboardLatestProducts } from '../components/dashboard-latest-products';
-import { DashboardSalesChart } from '../components/dashboard-sales-chart';
-import { DashboardTrafficChart } from '../components/dashboard-traffic-chart';
-import { StatisticCard } from '../components/statistic-card';
+import { useDashboardOverview } from '../hooks/use-dashboard-overview';
 
-import type { ReactNode } from 'react';
+import type { DashboardRouteOptions } from '../dashboard.routes';
 
-const statistics = [
-  {
-    icon: <AccountBalanceWalletOutlinedIcon />,
-    title: 'Бюджет',
-    trend: { direction: 'up' as const, label: '+12% за місяць' },
-    value: '₴ 84 200',
-  },
-  {
-    icon: <PeopleAltOutlinedIcon />,
-    title: 'Клієнти',
-    trend: { direction: 'up' as const, label: '+16% за місяць' },
-    value: '1 248',
-  },
-  { icon: <ChecklistOutlinedIcon />, progress: 75.5, title: 'Виконання завдань', value: '75,5%' },
-  { icon: <CategoryOutlinedIcon />, title: 'Прибуток', value: '₴ 56 400' },
-] as const;
+const dayFormat = new Intl.DateTimeFormat('uk-UA', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'Europe/Kyiv',
+});
 
-const rise = keyframes`
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
-`;
+/** «Огляд» («Робочий стіл»): what needs attention, today's orders, and the newest orders. */
+export function DashboardPage({ siteRefreshAction, useViewerName }: DashboardRouteOptions) {
+  const [now] = useState(() => new Date());
+  const name = useViewerName();
+  const { failed, isLoading, items, orders } = useDashboardOverview(now);
+  const today = kyivDate(now);
+  const day = dayFormat.format(now);
 
-/** Grid cell that rises in after the previous ones; reduced motion turns it off globally. */
-function Reveal({
-  children,
-  order,
-  size,
-}: {
-  children: ReactNode;
-  order: number;
-  size: Record<string, number>;
-}) {
-  return (
-    <Grid
-      size={size}
-      sx={(theme) => ({
-        animation: `${rise} ${theme.transitions.duration.complex}ms ${theme.transitions.easing.easeOut} both`,
-        animationDelay: `${order * 60}ms`,
-      })}
-    >
-      {children}
-    </Grid>
-  );
-}
-
-export function DashboardPage() {
   return (
     <Stack component="section" spacing={3}>
-      <AdminPageHeader
-        actions={
-          <>
-            <Button component={RouterLink} to="/catalog" variant="outlined">
-              Каталог
-            </Button>
-            <Button
-              component={RouterLink}
-              startIcon={<AddIcon />}
-              to="/orders/new"
-              variant="contained"
-            >
-              Нове замовлення
-            </Button>
-          </>
-        }
-        title="Огляд"
-      />
-      <Box>
-        <StatusPill label="Демо-дані: показники ще не підключені до API" tone="neutral" />
-      </Box>
-      <Grid container spacing={3}>
-        {statistics.map((statistic, index) => (
-          <Reveal key={statistic.title} order={index} size={{ lg: 3, sm: 6, xs: 12 }}>
-            <StatisticCard {...statistic} />
-          </Reveal>
-        ))}
-        <Reveal order={4} size={{ lg: 8, xs: 12 }}>
-          <DashboardSalesChart />
-        </Reveal>
-        <Reveal order={5} size={{ lg: 4, md: 6, xs: 12 }}>
-          <DashboardTrafficChart />
-        </Reveal>
-        <Reveal order={6} size={{ lg: 8, md: 12, xs: 12 }}>
-          <DashboardLatestOrders />
-        </Reveal>
-        <Reveal order={7} size={{ lg: 4, md: 6, xs: 12 }}>
-          <DashboardLatestProducts />
-        </Reveal>
-      </Grid>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={2}
+        sx={{ alignItems: { md: 'flex-end' }, justifyContent: 'space-between' }}
+      >
+        <Stack spacing={0.5}>
+          <Typography color="text.secondary" sx={{ fontWeight: 600 }} variant="body2">
+            {day.charAt(0).toUpperCase() + day.slice(1)}
+          </Typography>
+          <Typography component="h1" variant="h4">
+            {greeting(now, name)}
+          </Typography>
+        </Stack>
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
+          <Button
+            href="/orders/new"
+            startIcon={<AddIcon />}
+            sx={{ minHeight: 44 }}
+            variant="contained"
+          >
+            Нове замовлення
+          </Button>
+          <Button
+            href="/articles/new"
+            startIcon={<AddIcon />}
+            sx={{ minHeight: 44 }}
+            variant="outlined"
+          >
+            Нова стаття
+          </Button>
+        </Stack>
+      </Stack>
+
+      {failed.length > 0 ? (
+        <PageIssues
+          messages={[`Не вдалося завантажити: ${failed.join(', ')}. Оновіть сторінку.`]}
+        />
+      ) : null}
+
+      {isLoading ? (
+        <PageLoader label="Завантаження огляду" />
+      ) : (
+        <Box
+          sx={{
+            alignItems: 'start',
+            display: 'grid',
+            gap: 3,
+            gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'minmax(0, 2fr) minmax(0, 1fr)' },
+          }}
+        >
+          <Stack spacing={3} sx={{ minWidth: 0 }}>
+            <AttentionList items={items} />
+            {orders ? <LatestOrdersTable orders={orders.latestOrders} /> : null}
+          </Stack>
+          <Stack spacing={3} sx={{ minWidth: 0 }}>
+            {orders ? (
+              <TodayCard
+                draftCount={orders.draftCount}
+                draftsHref="/orders?ordersTab=drafts"
+                ordersHref={`/orders?ordersOFrom=${today}&ordersOTo=${today}`}
+                ordersToday={orders.ordersToday}
+              />
+            ) : null}
+            <SiteCard action={siteRefreshAction} />
+          </Stack>
+        </Box>
+      )}
     </Stack>
   );
 }
