@@ -3,12 +3,7 @@ export type {
   CatalogSection,
   CatalogTreeNode,
   ProductSummary,
-  ProductSwatch,
 } from './lib/entities/catalog-model';
-export { keepOfferedChoices } from './lib/facets/category-facets';
-export type { CategoryFacets, Facet, FacetDisplay, FacetValue } from './lib/facets/category-facets';
-export { countAttributeChoices, toAttributeFilter } from './lib/listing/attribute-choices';
-export type { AttributeChoices } from './lib/listing/attribute-choices';
 export type {
   CategoryContent,
   CategoryDetails,
@@ -25,7 +20,6 @@ export {
   listingHref,
   parseListingQuery,
   serializeListingQuery,
-  toggleAttribute,
   withoutFilters,
 } from './lib/listing/listing-query';
 export type {

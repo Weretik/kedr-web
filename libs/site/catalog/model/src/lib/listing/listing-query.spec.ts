@@ -5,7 +5,6 @@ import {
   listingHref,
   parseListingQuery,
   serializeListingQuery,
-  toggleAttribute,
   withoutFilters,
 } from './listing-query';
 
@@ -33,7 +32,6 @@ describe('listing query', () => {
       priceTo: null,
       view: 'table',
       perPage: 100,
-      attributes: {},
     });
 
     expect(
@@ -95,28 +93,5 @@ describe('listing query', () => {
       perPage: 20,
     });
     expect(hasListingFilters(withoutFilters(query))).toBe(false);
-  });
-
-  it('reads attribute filters from other keys and puts them first in the URL', () => {
-    const query = parseListingQuery({
-      kolir: 'khrom,Chornyi',
-      storona: ['liva', 'liva'],
-      q: 'agb',
-      utm_source: 'ads',
-      page: '2',
-    });
-    expect(query.attributes).toEqual({ kolir: ['chornyi', 'khrom'], storona: ['liva'] });
-    expect(serializeListingQuery(query)).toBe('kolir=chornyi,khrom&storona=liva&page=2');
-    expect(hasListingFilters(query)).toBe(true);
-    expect(isIndexableListing(query)).toBe(false);
-    expect(withoutFilters(query).attributes).toEqual({});
-  });
-
-  it('toggles one attribute value from page 1', () => {
-    const query = { ...DEFAULT_LISTING_QUERY, page: 4, attributes: { kolir: ['khrom'] } };
-    const added = toggleAttribute(query, 'kolir', 'chornyi');
-    expect(added).toMatchObject({ page: 1, attributes: { kolir: ['chornyi', 'khrom'] } });
-    expect(toggleAttribute(added, 'kolir', 'chornyi').attributes).toEqual({ kolir: ['khrom'] });
-    expect(toggleAttribute(query, 'kolir', 'khrom').attributes).toEqual({});
   });
 });

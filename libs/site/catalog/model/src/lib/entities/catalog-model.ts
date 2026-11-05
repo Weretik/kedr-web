@@ -31,16 +31,4 @@ export type ProductSummary = {
   inStock: boolean;
   isNew: boolean;
   isSale: boolean;
-  /** On a category listing: variants of the product's group on the site, this one included (spec catalog/006). */
-  variantCount?: number;
-  /** On a category listing: the colors of the group's variants. */
-  swatches?: ProductSwatch[];
-};
-
-/** A color: a circle (`hex`), a texture picture, or only the name when neither is set. */
-export type ProductSwatch = {
-  slug: string;
-  name: string;
-  hex: string | null;
-  textureUrl: string | null;
 };
