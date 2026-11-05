@@ -75,11 +75,3 @@ export const categoryFilterSchema = z.object({
   isEditedManually: z.boolean(),
   productCount: z.number().int().nonnegative(),
 });
-
-export const filterCategoriesSchema = z.array(
-  z.object({
-    id: z.number().int().min(1),
-    parentId: z.number().int().nullable(),
-    shortNameUk: z.string(),
-  }),
-);

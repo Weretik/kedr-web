@@ -1,7 +1,6 @@
 import {
   siteModelCategoriesSchema,
   siteModelHealthSchema,
-  siteModelListSchema,
   siteModelSchema,
   siteShowcaseListSchema,
 } from '../validators/site-models.schemas';
@@ -10,10 +9,8 @@ import type {
   SiteModel,
   SiteModelCategory,
   SiteModelHealth,
-  SiteModelListItem,
   SiteModelProblem,
   SiteModelsPage,
-  SiteModelsQuery,
   SiteModelTextInput,
   SiteProductProblem,
   SiteShowcaseQuery,
@@ -25,18 +22,6 @@ type SetSiteModelTextBody = components['schemas']['SetSiteModelTextRequest'];
 
 // Codes come from the backend; unknown ones are shown as they are.
 const asProblems = (codes: readonly string[]) => codes as SiteModelProblem[];
-
-export function mapSiteModelList(response: unknown): SiteModelsPage<SiteModelListItem> {
-  const dto = siteModelListSchema.parse(response);
-  return {
-    ...dto,
-    items: dto.items.map((item) => ({
-      ...item,
-      minPrice: item.minPrice ?? null,
-      problems: asProblems(item.problems),
-    })),
-  };
-}
 
 export function mapSiteModel(response: unknown): SiteModel {
   const dto = siteModelSchema.parse(response);
@@ -99,11 +84,6 @@ export function toSiteShowcaseParams(query: SiteShowcaseQuery) {
     page: query.page,
     pageSize: query.pageSize,
   };
-}
-
-/** Query string of the models list: empty filters are left out. */
-export function toSiteModelsParams(query: SiteModelsQuery) {
-  return toSiteShowcaseParams(query);
 }
 
 /** Blank texts are sent as they are: the backend stores them empty. */

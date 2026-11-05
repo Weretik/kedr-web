@@ -3,7 +3,6 @@ import {
   catalogAttributeSchema,
   categoryFilterSchema,
   codeDecisionResultSchema,
-  filterCategoriesSchema,
   unresolvedCodeSchema,
 } from '../validators/catalog-attributes.schemas';
 
@@ -13,7 +12,6 @@ import type {
   CatalogAttributeValueChange,
   CategoryFilter,
   CodeDecisionResult,
-  FilterCategoryOption,
   NewCatalogAttribute,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
@@ -85,27 +83,6 @@ export function mapCodeDecisionResult(response: unknown): CodeDecisionResult {
 
 export function mapCategoryFilters(response: unknown): CategoryFilter[] {
   return categoryFilterSchema.array().parse(response);
-}
-
-/** Leaf categories (where products live) with their full path, ordered by it. */
-export function mapFilterCategories(response: unknown): FilterCategoryOption[] {
-  const categories = filterCategoriesSchema.parse(response);
-  const byId = new Map(categories.map((category) => [category.id, category]));
-  const parents = new Set(categories.map((category) => category.parentId));
-  const pathOf = (id: number): string => {
-    const names: string[] = [];
-    const seen = new Set<number>();
-    for (let current = byId.get(id); current && !seen.has(current.id);) {
-      seen.add(current.id);
-      names.unshift(current.shortNameUk.trim() || 'Категорія без назви');
-      current = current.parentId === null ? undefined : byId.get(current.parentId);
-    }
-    return names.join(' / ');
-  };
-  return categories
-    .filter((category) => !parents.has(category.id))
-    .map((category) => ({ id: category.id, name: pathOf(category.id) }))
-    .sort((left, right) => left.name.localeCompare(right.name, 'uk'));
 }
 
 function toAttribute(dto: z.infer<typeof catalogAttributeSchema>): CatalogAttribute {

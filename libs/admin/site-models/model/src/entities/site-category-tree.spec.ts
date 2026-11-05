@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isFinalSiteCategory, siteCategoryAncestors, siteCategoryTree } from './site-category-tree';
+import { siteCategoryAncestors, siteCategoryTree } from './site-category-tree';
 
 import type { SiteModelCategory } from './site-showcase';
 
@@ -26,7 +26,5 @@ describe('site category tree', () => {
   it('finds the ancestors and final categories', () => {
     expect(siteCategoryAncestors(list, 3)).toEqual([2, 1]);
     expect(siteCategoryAncestors(list, undefined)).toEqual([]);
-    expect(isFinalSiteCategory(list, 3)).toBe(true);
-    expect(isFinalSiteCategory(list, 1)).toBe(false);
   });
 });

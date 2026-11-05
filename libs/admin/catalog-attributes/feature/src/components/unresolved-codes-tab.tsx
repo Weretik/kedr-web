@@ -4,7 +4,7 @@ import {
   useGetUnresolvedCodesQuery,
 } from '@admin/catalog-attributes/data-access';
 import { codeDecisionNotice } from '@admin/catalog-attributes/model';
-import { CodeDecisionDialog, UnresolvedCodesDataGrid } from '@admin/catalog-attributes/ui';
+import { CodeDecisionPanel, UnresolvedCodesDataGrid } from '@admin/catalog-attributes/ui';
 import { Card } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useState } from 'react';
@@ -18,7 +18,7 @@ interface UnresolvedCodesTabProps {
   onNotice: (message: string) => void;
 }
 
-/** «Не розшифровані коди»: the owner decides what each 1C code means. */
+/** «Не розшифровані коди»: the owner decides what each 1C code means, in the right-side panel. */
 export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProps) {
   const query = useGetUnresolvedCodesQuery();
   const [code, setCode] = useState<UnresolvedCode>();
@@ -53,18 +53,15 @@ export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProp
           rows={query.data ?? []}
         />
       </Card>
-      {code ? (
-        <CodeDecisionDialog
-          code={code}
-          error={error}
-          key={code.aliasId}
-          onCancel={() => setCode(undefined)}
-          onSave={(valueId) => void save(valueId)}
-          saving={decideState.isLoading}
-          values={values.data?.values ?? []}
-          valuesLoading={values.isFetching}
-        />
-      ) : null}
+      <CodeDecisionPanel
+        code={code}
+        error={error}
+        onClose={() => setCode(undefined)}
+        onSave={(valueId) => void save(valueId)}
+        saving={decideState.isLoading}
+        values={values.data?.values ?? []}
+        valuesLoading={values.isFetching}
+      />
     </>
   );
 }

@@ -12,15 +12,3 @@ export interface SiteShowcaseQuery {
   page: number;
   pageSize: number;
 }
-
-export interface SiteModelsQuery {
-  categoryId?: number;
-  status?: SiteModelStatus;
-  problem?: SiteProblemFilter;
-  search?: string;
-  page: number;
-  pageSize: number;
-}
-
-export const siteModelsPageSizes = [25, 50, 100] as const;
-export const defaultSiteModelsPageSize = 50;

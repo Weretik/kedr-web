@@ -4,10 +4,8 @@ import {
   mapSiteModel,
   mapSiteModelCategories,
   mapSiteModelHealth,
-  mapSiteModelList,
   mapSiteShowcase,
   toSetSiteModelTextBody,
-  toSiteModelsParams,
   toSiteShowcaseParams,
 } from '../mappers/site-models.mapper';
 
@@ -16,9 +14,7 @@ import type {
   SiteModelCategory,
   SiteModelHealth,
   SiteModelLanguage,
-  SiteModelListItem,
   SiteModelsPage,
-  SiteModelsQuery,
   SiteModelTextInput,
   SiteShowcaseQuery,
   SiteShowcaseRow,
@@ -45,16 +41,6 @@ export const siteModelsApi = baseApi.injectEndpoints({
     getSiteModelCategories: build.query<SiteModelCategory[], void>({
       query: () => ({ url: `${base}/categories`, method: 'GET' }),
       transformResponse: mapSiteModelCategories,
-      providesTags: ['SiteModels'],
-    }),
-    getSiteModelHealth: build.query<SiteModelHealth, void>({
-      query: () => ({ url: `${base}/health`, method: 'GET' }),
-      transformResponse: mapSiteModelHealth,
-      providesTags: ['SiteModels'],
-    }),
-    getSiteModels: build.query<SiteModelsPage<SiteModelListItem>, SiteModelsQuery>({
-      query: (query) => ({ url: base, method: 'GET', params: toSiteModelsParams(query) }),
-      transformResponse: mapSiteModelList,
       providesTags: ['SiteModels'],
     }),
     getSiteModel: build.query<SiteModel, number>({
@@ -132,9 +118,7 @@ export const {
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
   useGetSiteModelCategoriesQuery,
-  useGetSiteModelHealthQuery,
   useGetSiteModelQuery,
-  useGetSiteModelsQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,
   useRenameSiteModelMutation,

@@ -47,11 +47,3 @@ export function siteCategoryAncestors(
   }
   return result;
 }
-
-/** Whether a category has subcategories in the list (a model belongs to a final category). */
-export function isFinalSiteCategory(
-  categories: readonly SiteModelCategory[],
-  categoryId: number,
-): boolean {
-  return !categories.some((category) => category.parentId === categoryId);
-}

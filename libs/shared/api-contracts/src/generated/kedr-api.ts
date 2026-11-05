@@ -3299,7 +3299,7 @@ export interface components {
             problemCount: number;
             /** @description On-site products in no model (the hard error). */
             loneProducts: number;
-            /** @description Attributes this category itself offers as site filters */
+            /** @description Attributes this category itself offers as site filters, without subcategories. */
             filterCount: number;
         };
         SiteModelHealth: {

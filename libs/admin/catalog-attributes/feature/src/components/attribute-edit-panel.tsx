@@ -7,7 +7,7 @@ import {
 import {
   AttributeAliasesCard,
   AttributeSettingsCard,
-  AttributeValueDialog,
+  AttributeValueForm,
   AttributeValuesCard,
 } from '@admin/catalog-attributes/ui';
 import { MediaPickerDialog } from '@admin/media/ui';
@@ -117,6 +117,21 @@ export function AttributeEditPanel({
           {details.attribute.kind === 'enum' ? (
             <AttributeValuesCard
               canEdit={canEdit}
+              editing={valueEdit ? (valueEdit.value?.id ?? 'new') : undefined}
+              form={
+                valueEdit ? (
+                  <AttributeValueForm
+                    error={valueError}
+                    key={valueEdit.value?.id ?? 'new'}
+                    onCancel={() => setValueEdit(undefined)}
+                    onPickTexture={picker.onOpen}
+                    onSave={(change) => void saveValue(change)}
+                    saving={valueSaving}
+                    texture={texture}
+                    value={valueEdit.value}
+                  />
+                ) : null
+              }
               onAdd={() => openValue(null)}
               onEdit={openValue}
               values={details.values}
@@ -125,17 +140,6 @@ export function AttributeEditPanel({
           <AttributeAliasesCard aliases={details.aliases} values={details.values} />
         </>
       )}
-      {valueEdit ? (
-        <AttributeValueDialog
-          error={valueError}
-          onCancel={() => setValueEdit(undefined)}
-          onPickTexture={picker.onOpen}
-          onSave={(change) => void saveValue(change)}
-          saving={valueSaving}
-          texture={texture}
-          value={valueEdit.value}
-        />
-      ) : null}
       <MediaPickerDialog
         error={picker.error}
         files={picker.files}
