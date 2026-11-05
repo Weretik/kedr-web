@@ -90,6 +90,20 @@ export async function login(request: MobileLoginRequest): Promise<SessionUser> {
   return user;
 }
 
+/**
+ * Keeps the session in step after the manager changed their own name, photo or e-mail in the cabinet, so the rail,
+ * the cabinet and an offline start show the new values.
+ */
+export async function updateSessionUser(
+  change: Partial<Pick<SessionUser, 'avatarUrl' | 'email' | 'fullName'>>,
+): Promise<void> {
+  const state = getMobileSessionState();
+  if (state.status !== 'authenticated') return;
+  const user = { ...state.user, ...change };
+  setMobileSessionState({ status: 'authenticated', user });
+  await rememberSession(user);
+}
+
 export async function logout(): Promise<void> {
   const current = tokens;
 

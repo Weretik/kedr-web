@@ -24,8 +24,8 @@ Test paths are filled in when each task is implemented.
 | SC-018 | R-014 | TS-004 | unit | `core/auth/src/session/mobile-auth.spec.ts`, `offline-window.spec.ts` | done |
 | SC-019 | R-014 | TS-004 | unit | `core/auth/src/session/mobile-auth.spec.ts`, `offline-window.spec.ts` | done |
 | SC-020 | R-015 | TS-007, EN-002 | unit + data-access | `sync/data-access/src/runner/sync-runner.spec.ts`, `sync/feature/src/sync-feature.spec.tsx`, `core/local-db/src/database/local-database.spec.ts` | done |
-| SC-021 | R-016 | TS-020 | component | — | planned |
-| SC-022 | R-016 | TS-020 | component | — | planned |
-| SC-023 | R-016 | TS-020 | component | — | planned |
+| SC-021 | R-016 | TS-020 | component | `profile/ui/src/profile-ui.spec.tsx`, `profile/feature/src/profile-feature.spec.tsx` | done |
+| SC-022 | R-016 | TS-020 | component | `profile/ui/src/profile-ui.spec.tsx`, `profile/feature/src/profile-feature.spec.tsx`, `profile/model/src/profile-model.spec.ts` | done |
+| SC-023 | R-016 | TS-020 | component | `profile/ui/src/profile-ui.spec.tsx`, `calculation/feature/src/calculation-feature.spec.tsx` | done |
 | SC-024 | R-017 | TS-003, TS-017, TS-021 | component | `core/shell/src/navigation/work-navigation.spec.tsx` (tab bar vs rail), `catalog/feature/src/catalog-feature.spec.tsx` (calculation panel) | navigation and panel done; tablet pass in TS-021 |
 | SC-025 | R-008, R-017 | TS-014, TS-021 | component | `catalog/ui/src/catalog-ui.spec.tsx`, `catalog/feature/src/catalog-feature.spec.tsx` | done |

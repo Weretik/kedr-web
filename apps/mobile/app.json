@@ -21,6 +21,13 @@
       "expo-secure-store",
       "expo-font",
       "expo-image",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Дозвольте Кедр Менеджер вибрати фото для профілю.",
+          "cameraPermission": "Дозвольте Кедр Менеджер зробити фото для профілю."
+        }
+      ],
       "expo-splash-screen",
       [
         "expo-local-authentication",

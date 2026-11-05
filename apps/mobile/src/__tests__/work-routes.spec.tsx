@@ -11,7 +11,9 @@ import ProductsRoute from '../app/(work)/products/index';
 import IndexRoute from '../app/index';
 
 jest.mock('@mobile/core/auth', () => ({
+  login: jest.fn(),
   logout: jest.fn(),
+  updateSessionUser: jest.fn(),
   QuickUnlockRow: () => null,
   useMobileSession: jest.fn(),
 }));
@@ -20,10 +22,20 @@ let mockCustomer: { name: string; priceTypeName: string | null } | null = null;
 
 jest.mock('@mobile/calculation/feature', () => ({
   CalculationPanel: () => null,
+  QueueSummaryCard: () => null,
   useAddToCalculation: () => undefined,
   useCalculationBadges: () => ({}),
   useOutboxRunner: jest.fn(),
+  useQueuedCount: () => 0,
 }));
+
+jest.mock('@mobile/profile/feature', () => {
+  const { Text } = jest.requireActual('react-native');
+  return {
+    CabinetProfile: ({ user }: { user: { email: string } }) => <Text>{user.email}</Text>,
+    SignOutSection: () => null,
+  };
+});
 
 jest.mock('@mobile/orders/feature', () => ({
   OrderDetailScreen: () => null,
@@ -56,6 +68,7 @@ jest.mock('@mobile/customers/feature', () => {
 
 jest.mock('@mobile/sync/feature', () => ({
   clearDeviceData: jest.fn(),
+  SyncInfoCard: () => null,
   SyncProvider: ({ children }: { children: unknown }) => children,
   SyncStatusStrip: () => null,
 }));

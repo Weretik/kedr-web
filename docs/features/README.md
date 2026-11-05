@@ -42,6 +42,7 @@ Kedr Manager, rebuilt by the [SDD](../specs/mobile/manager/001-manager-app/READM
 | [Products](mobile/catalog.md)                       | `/products`, `/products/[productId]`                |
 | [Calculation and send queue](mobile/calculation.md) | `/calculation`, `(work)/_layout.tsx` (queue runner) |
 | [Orders](mobile/orders.md)                          | `/orders`, `/orders/[orderId]`                      |
+| [Cabinet](mobile/cabinet.md)                        | `/cabinet`                                          |
 
 ## Site Next.js
 
