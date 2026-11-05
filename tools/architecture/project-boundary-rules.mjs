@@ -19,6 +19,15 @@ const documentedCrossDomainFlows = new Set([
   'admin-catalog-attributes-feature->admin-media-data-access',
   'admin-catalog-attributes-feature->admin-media-model',
   'admin-catalog-attributes-feature->admin-media-ui',
+  // Products are priced for the selected customer (Kedr Manager stage 4).
+  'mobile-catalog-feature->mobile-customers-data-access',
+  // The calculation is priced from the catalog for the selected customer (Kedr Manager stage 5).
+  'mobile-calculation-feature->mobile-catalog-data-access',
+  'mobile-calculation-feature->mobile-customers-data-access',
+  // «Замовлення»: the send queue, saved drafts and the customer's orders (Kedr Manager stage 5).
+  'mobile-orders-feature->mobile-calculation-data-access',
+  'mobile-orders-feature->mobile-calculation-model',
+  'mobile-orders-feature->mobile-calculation-ui',
   'mobile-catalog-feature->mobile-cart-data-access',
   'mobile-catalog-feature->mobile-cart-model',
   'mobile-orders-feature->mobile-customers-data-access',

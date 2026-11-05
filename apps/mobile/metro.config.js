@@ -34,6 +34,32 @@ const workspaceAliases = {
   '@mobile/shared/config': path.join(workspaceRoot, 'libs/mobile/shared/config/src/index.ts'),
   '@mobile/shared/model': path.join(workspaceRoot, 'libs/mobile/shared/model/src/index.ts'),
   '@mobile/shared/ui': path.join(workspaceRoot, 'libs/mobile/shared/ui/src/index.ts'),
+  '@mobile/calculation/data-access': path.join(
+    workspaceRoot,
+    'libs/mobile/calculation/data-access/src/index.ts',
+  ),
+  '@mobile/calculation/feature': path.join(
+    workspaceRoot,
+    'libs/mobile/calculation/feature/src/index.ts',
+  ),
+  '@mobile/calculation/model': path.join(
+    workspaceRoot,
+    'libs/mobile/calculation/model/src/index.ts',
+  ),
+  '@mobile/calculation/ui': path.join(workspaceRoot, 'libs/mobile/calculation/ui/src/index.ts'),
+  '@mobile/orders/data-access': path.join(
+    workspaceRoot,
+    'libs/mobile/orders/data-access/src/index.ts',
+  ),
+  '@mobile/orders/feature': path.join(workspaceRoot, 'libs/mobile/orders/feature/src/index.ts'),
+  '@mobile/orders/model': path.join(workspaceRoot, 'libs/mobile/orders/model/src/index.ts'),
+  '@mobile/catalog/data-access': path.join(
+    workspaceRoot,
+    'libs/mobile/catalog/data-access/src/index.ts',
+  ),
+  '@mobile/catalog/feature': path.join(workspaceRoot, 'libs/mobile/catalog/feature/src/index.ts'),
+  '@mobile/catalog/model': path.join(workspaceRoot, 'libs/mobile/catalog/model/src/index.ts'),
+  '@mobile/catalog/ui': path.join(workspaceRoot, 'libs/mobile/catalog/ui/src/index.ts'),
   '@mobile/core/auth': path.join(workspaceRoot, 'libs/mobile/core/auth/src/index.ts'),
   '@mobile/core/connectivity': path.join(
     workspaceRoot,
@@ -41,6 +67,16 @@ const workspaceAliases = {
   ),
   '@mobile/core/local-db': path.join(workspaceRoot, 'libs/mobile/core/local-db/src/index.ts'),
   '@mobile/core/shell': path.join(workspaceRoot, 'libs/mobile/core/shell/src/index.ts'),
+  '@mobile/customers/data-access': path.join(
+    workspaceRoot,
+    'libs/mobile/customers/data-access/src/index.ts',
+  ),
+  '@mobile/customers/feature': path.join(
+    workspaceRoot,
+    'libs/mobile/customers/feature/src/index.ts',
+  ),
+  '@mobile/customers/model': path.join(workspaceRoot, 'libs/mobile/customers/model/src/index.ts'),
+  '@mobile/customers/ui': path.join(workspaceRoot, 'libs/mobile/customers/ui/src/index.ts'),
   '@mobile/sync/data-access': path.join(workspaceRoot, 'libs/mobile/sync/data-access/src/index.ts'),
   '@mobile/sync/feature': path.join(workspaceRoot, 'libs/mobile/sync/feature/src/index.ts'),
   '@mobile/sync/model': path.join(workspaceRoot, 'libs/mobile/sync/model/src/index.ts'),

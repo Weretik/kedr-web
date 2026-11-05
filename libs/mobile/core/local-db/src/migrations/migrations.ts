@@ -55,4 +55,44 @@ export const migrations: readonly (readonly string[])[] = [
       synced_at INTEGER NOT NULL
     )`,
   ],
+  [
+    `CREATE TABLE customer_activity (
+      counterparty_id TEXT PRIMARY KEY NOT NULL,
+      orders TEXT NOT NULL,
+      drafts TEXT NOT NULL,
+      fetched_at INTEGER NOT NULL
+    )`,
+  ],
+  [
+    `CREATE TABLE calculations (
+      counterparty_id TEXT PRIMARY KEY NOT NULL,
+      comment TEXT,
+      source_draft_id INTEGER,
+      source_draft_version TEXT,
+      source_draft_title TEXT,
+      review TEXT
+    )`,
+    `CREATE TABLE calculation_lines (
+      counterparty_id TEXT NOT NULL,
+      product_id INTEGER NOT NULL,
+      quantity INTEGER NOT NULL,
+      adjustment_kopecks INTEGER NOT NULL,
+      position INTEGER NOT NULL,
+      PRIMARY KEY (counterparty_id, product_id)
+    )`,
+    `CREATE TABLE outbox (
+      id TEXT PRIMARY KEY NOT NULL,
+      kind TEXT NOT NULL,
+      counterparty_id TEXT NOT NULL,
+      payload TEXT NOT NULL,
+      idempotency_key TEXT NOT NULL,
+      state TEXT NOT NULL,
+      attempts INTEGER NOT NULL,
+      last_error TEXT,
+      next_attempt_at INTEGER NOT NULL,
+      created_at INTEGER NOT NULL,
+      review TEXT,
+      order_number TEXT
+    )`,
+  ],
 ];

@@ -58,7 +58,7 @@ New libraries are created with `npx nx g @nx/react:library` (React Native preset
 | `@mobile/core/shell` | rewrite | Providers, `TabBar`, `NavRail`, customer gate, `CustomerBar`, stale-data strip |
 | `@mobile/sync/{model,data-access,feature}` | new | Snapshot download with ETag, table replace in a transaction, schedule, send queue (outbox) runner, sync status |
 | `@mobile/customers/{model,data-access,ui,feature}` | rewrite | Selected customer store (Zustand, persisted id), search over local table, list, card with debt placeholder |
-| `@mobile/catalog/{model,data-access,ui,feature}` | rewrite | Product queries on local tables (FTS for search), category tree, client price resolver, product list and detail, photo prefetch |
+| `@mobile/catalog/{model,data-access,ui,feature}` | rewrite | Product queries on local tables (in-memory search), category tree, client price resolver, product list and detail, photo prefetch |
 | `@mobile/calculation/{model,data-access,ui,feature}` | new (replaces `cart`) | Per-customer calculation, adjustment rules (≥ 1 ₴), totals, quote call, draft save and send through the queue, conflict view |
 | `@mobile/orders/{model,data-access,ui,feature}` | rewrite | Customer orders and drafts from local tables refreshed from `order-workspace`, order and draft detail |
 | `@mobile/profile/{data-access,ui,feature}` | new | Cabinet: photo, name, Admin email/password, sync and queue info, theme, quick unlock, sign-out |
@@ -76,11 +76,11 @@ Dependency direction is unchanged: `feature → ui, data-access, model`; `data-a
 | `customers` | customers snapshot | counterpartyId, name, phone, email, defaultPriceTypeId, debt (null), balance (null) |
 | `customer_category_price_types` | customers snapshot | counterpartyId, categoryId, priceTypeId |
 | `calculations` / `calculation_lines` | the app | counterpartyId, productId, quantity, priceAdjustment, comment, sourceDraftId |
-| `orders_cache`, `drafts_cache` | order-workspace reads | per customer, last 50 |
+| `customer_activity` | order-workspace reads | counterpartyId, orders (json), drafts (json), fetchedAt; last 50 of each per customer |
 | `outbox` | the app | id, kind (draft-create, draft-update, draft-delete, order-create), payload, idempotencyKey, state, attempts, lastError |
 | `sync_state` | sync service | resource, etag, syncedAt |
 
-Search uses an FTS5 table over product name and code, added by a migration with the stage 4 product search. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
+Product search filters the priced list in memory (about 2.5 thousand rows): the code from its start or every typed word in the name. An FTS5 table was planned, but at this size it adds a migration and a second copy of the names without a visible gain; it stays an option if the catalog grows past about 20 thousand products. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
 
 ## Client price resolver
 
@@ -90,9 +90,20 @@ Pure function in `catalog/model`: input = product category id, category parent m
 
 The outbox runner starts on network return, after each enqueue when online, and on app start. Entries run one at a time in creation order. Order creation calls `POST /api/admin/order-workspace/quote` then `POST /api/admin/order-workspace/orders` with the entry's `Idempotency-Key`; drafts use the drafts endpoints with their key. Network errors and 5xx retry with backoff (5 s, 30 s, 2 min, then every 5 min); 4xx business errors (`quote_changed`, stock, `price_below_minimum`, unknown customer) stop the entry, set `state = needs-review`, and reopen the calculation with the reason. 401 triggers refresh; an expired session pauses the queue until sign-in.
 
+Stage 5 as built:
+
+- The `outbox` kinds are `order-create`, `draft-save` (create when the calculation has no source draft, otherwise update with `If-Match`) and `draft-delete`. Each entry also keeps `review` and `orderNumber`; a delivered order stays `done` for a day to show its number, sent draft changes leave the queue at once.
+- The queue entry keeps the customer price per product that the manager saw (`expectedBaseKopecks`). The runner compares it with `quote.baseUnitPrice` before `orders`, so a changed price returns the order before the server's `quote_changed` would.
+- A returned entry reopens the calculation only when that calculation is empty; otherwise it waits in «Замовлення» until the manager sends or saves the current one, so nothing is overwritten. An order made from a draft enqueues the draft's deletion after it is created.
+- `calculations` keeps the source draft id, version and title and the last review; the calculation stores no prices, they come from the catalog tables for the customer.
+- `calculation/model` defines its own `LineProduct` (id, name, stock, price), which the catalog's priced product fits, so the model does not depend on another domain. `calculation/feature` reads catalog prices and the selected customer; `orders/feature` reads the queue and opens drafts through `calculation/data-access`.
+- Confirmation and draft naming are inline steps under the lines, not bottom sheets, so they also work in the wide-tablet side panel.
+- Drafts open online only: the activity cache keeps the draft list, not draft lines. The order detail is also read online.
+- There is no `orders/ui`: rows come from `customers/ui` and `calculation/ui`.
+
 ## Photos
 
-`expo-image` with `cachePolicy="disk"`. After a catalog sync on Wi‑Fi, thumbnails (CDN URLs) and schemes are prefetched in batches of 20; «Завантажити всі фото» prefetches large photos with a progress indicator and a stop button. The viewer uses Gesture Handler (pinch, double tap, pan) and Reanimated on the UI thread; `react-native-zoom-toolkit` may replace the hand-written gesture if its Expo 58 build is confirmed in stage 4.
+`expo-image` with `cachePolicy="disk"`. KedrStore has no thumbnails, so after each new catalog version on Wi‑Fi (`isUnmetered` of the connectivity adapter) the main photo of every product and every scheme are prefetched in batches of 20; «Завантажити всі фото» prefetches large photos with a progress indicator and a stop button. The viewer uses Gesture Handler (pinch, double tap, pan) and Reanimated on the UI thread; stage 4 kept the hand-written gesture (no new native package). Jest cannot start Reanimated, so the viewer tests replace `ZoomableImage`; the gestures are checked on a device.
 
 ## Packages to add (checked against Expo 58 in the stage that needs them)
 

@@ -1,13 +1,17 @@
-import { WorkScreen } from '@mobile/core/shell';
-import { StateView } from '@mobile/shared/ui';
+import { useConnectivity, WorkScreen } from '@mobile/core/shell';
+import { CustomerChoice } from '@mobile/customers/feature';
+import { router } from 'expo-router';
 
 export default function CustomerChoiceRoute() {
+  const isOnline = useConnectivity()?.isOnline ?? null;
+
   return (
     <WorkScreen title="Клієнт">
-      <StateView
-        kind="empty"
-        message="Пошук і список клієнтів з’являться після синхронізації даних."
-        title="Оберіть клієнта"
+      <CustomerChoice
+        isOnline={isOnline}
+        onOpenCard={(counterpartyId) =>
+          router.push({ params: { counterpartyId }, pathname: '/customer/[counterpartyId]' })
+        }
       />
     </WorkScreen>
   );

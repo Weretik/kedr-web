@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 
+import { markLocalDataChanged } from './local-data-version';
 import { migrations } from '../migrations/migrations';
 import * as schema from '../schema';
 
@@ -13,7 +14,10 @@ export { schema };
  */
 export type LocalDatabase = BaseSQLiteDatabase<'sync', unknown, typeof schema>;
 
-/** Tables that hold synced or local business data; all are emptied on sign-out. */
+/**
+ * Tables that hold synced or local business data; all are emptied on sign-out, the send queue too, so another
+ * account never sends this manager's orders.
+ */
 const dataTables = [
   schema.categories,
   schema.priceTypes,
@@ -21,6 +25,10 @@ const dataTables = [
   schema.productPrices,
   schema.customers,
   schema.customerCategoryPriceTypes,
+  schema.customerActivity,
+  schema.calculations,
+  schema.calculationLines,
+  schema.outbox,
   schema.syncState,
 ] as const;
 
@@ -42,4 +50,5 @@ export function wipeLocalDatabase(db: LocalDatabase): void {
   db.transaction((tx) => {
     for (const table of dataTables) tx.delete(table).run();
   });
+  markLocalDataChanged();
 }

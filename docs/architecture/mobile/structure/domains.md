@@ -15,6 +15,11 @@ libs/mobile/
 │   ├── feature/
 │   ├── data-access/
 │   └── model/
+├── customers/
+│   ├── feature/
+│   ├── data-access/
+│   ├── ui/
+│   └── model/
 ├── shared/
 │   ├── api-client/
 │   ├── config/
@@ -31,7 +36,7 @@ Create new libraries only when their responsibility appears; do not create them 
 
 ## `mobile/core`
 
-`shell` contains the mobile shell: global providers, the theme choice store, the work area with tab bar, rail and customer gate, the screen frame and the customer bar. `auth` owns session lifecycle and the Expo SecureStore adapter. `connectivity` encapsulates NetInfo and provides normalized online/offline state to the app. `local-db` owns the SQLite connection, the Drizzle tables and migrations; it carries no domain tag because every domain's `data-access` reads its tables.
+`shell` contains the mobile shell: global providers, the theme choice store, the work area with tab bar, rail and customer gate, the screen frame and the customer bar. `auth` owns session lifecycle and the Expo SecureStore adapter. `connectivity` encapsulates NetInfo and provides normalized online/offline state, and whether the network is unmetered (Wi‑Fi or cable) for background photo downloads. `local-db` owns the SQLite connection, the Drizzle tables and migrations; it carries no domain tag because every domain's `data-access` reads its tables.
 
 `core` does not contain products, orders, or other domain logic.
 

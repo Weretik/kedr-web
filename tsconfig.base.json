@@ -165,7 +165,22 @@
       "@mobile/core/local-db/testing": ["./libs/mobile/core/local-db/src/testing.ts"],
       "@mobile/sync/model": ["./libs/mobile/sync/model/src/index.ts"],
       "@mobile/sync/data-access": ["./libs/mobile/sync/data-access/src/index.ts"],
-      "@mobile/sync/feature": ["./libs/mobile/sync/feature/src/index.ts"]
+      "@mobile/sync/feature": ["./libs/mobile/sync/feature/src/index.ts"],
+      "@mobile/customers/model": ["./libs/mobile/customers/model/src/index.ts"],
+      "@mobile/customers/data-access": ["./libs/mobile/customers/data-access/src/index.ts"],
+      "@mobile/customers/ui": ["./libs/mobile/customers/ui/src/index.ts"],
+      "@mobile/customers/feature": ["./libs/mobile/customers/feature/src/index.ts"],
+      "@mobile/catalog/model": ["./libs/mobile/catalog/model/src/index.ts"],
+      "@mobile/catalog/data-access": ["./libs/mobile/catalog/data-access/src/index.ts"],
+      "@mobile/catalog/ui": ["./libs/mobile/catalog/ui/src/index.ts"],
+      "@mobile/catalog/feature": ["./libs/mobile/catalog/feature/src/index.ts"],
+      "@mobile/calculation/model": ["./libs/mobile/calculation/model/src/index.ts"],
+      "@mobile/calculation/data-access": ["./libs/mobile/calculation/data-access/src/index.ts"],
+      "@mobile/calculation/ui": ["./libs/mobile/calculation/ui/src/index.ts"],
+      "@mobile/calculation/feature": ["./libs/mobile/calculation/feature/src/index.ts"],
+      "@mobile/orders/model": ["./libs/mobile/orders/model/src/index.ts"],
+      "@mobile/orders/data-access": ["./libs/mobile/orders/data-access/src/index.ts"],
+      "@mobile/orders/feature": ["./libs/mobile/orders/feature/src/index.ts"]
     }
   }
 }
