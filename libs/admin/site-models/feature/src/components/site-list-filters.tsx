@@ -1,9 +1,9 @@
 import { siteProblemLabel } from '@admin/site-models/model';
 import SearchIcon from '@mui/icons-material/Search';
-import { Autocomplete, InputAdornment, MenuItem, Stack, TextField } from '@mui/material';
+import { InputAdornment, MenuItem, Stack, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
-import type { SiteModelCategory, SiteProblemFilter } from '@admin/site-models/model';
+import type { SiteProblemFilter } from '@admin/site-models/model';
 
 interface SiteListFiltersProps {
   search: string | undefined;
@@ -12,16 +12,9 @@ interface SiteListFiltersProps {
   problems: readonly string[];
   onSearch: (search: string | undefined) => void;
   onProblem: (problem: SiteProblemFilter | undefined) => void;
-  /** Without categories the category picker is hidden (the «Моделі» sidebar picks it). */
-  categories?: readonly SiteModelCategory[];
-  categoryId?: number;
-  onCategory?: (categoryId: number | undefined) => void;
 }
 
-const categoryLabel = (category: SiteModelCategory) =>
-  category.parentName ? `${category.parentName} › ${category.name}` : category.name;
-
-/** Search, category, and «Чого бракує» above a site models table. */
+/** Search and «Чого бракує» above a site models table; the category tree beside it picks the category. */
 export function SiteListFilters(props: SiteListFiltersProps) {
   const [search, setSearch] = useState(props.search ?? '');
   const onSearch = useRef(props.onSearch);
@@ -60,16 +53,6 @@ export function SiteListFilters(props: SiteListFiltersProps) {
         sx={{ flex: 1.5, minWidth: 0 }}
         value={search}
       />
-      {props.categories && props.onCategory ? (
-        <Autocomplete
-          getOptionLabel={categoryLabel}
-          onChange={(_event, category) => props.onCategory?.(category?.id)}
-          options={[...props.categories]}
-          renderInput={(params) => <TextField {...params} label="Категорія" size="small" />}
-          sx={{ flex: 1, minWidth: 0 }}
-          value={props.categories.find((category) => category.id === props.categoryId) ?? null}
-        />
-      ) : null}
       <TextField
         label="Чого бракує"
         onChange={(event) =>

@@ -51,7 +51,14 @@ export type {
   SiteModelHealth,
   SiteModelsPage,
   SiteShowcaseItem,
+  SiteShowcaseRow,
   SiteShowcaseValue,
 } from './entities/site-showcase';
 export type { SiteModelsQuery, SiteShowcaseQuery } from './queries/site-models-queries';
+export type { SiteCategoryNode } from './entities/site-category-tree';
+export {
+  isFinalSiteCategory,
+  siteCategoryAncestors,
+  siteCategoryTree,
+} from './entities/site-category-tree';
 export { defaultSiteModelsPageSize, siteModelsPageSizes } from './queries/site-models-queries';

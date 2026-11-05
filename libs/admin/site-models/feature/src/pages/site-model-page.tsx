@@ -16,17 +16,19 @@ import {
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { ProductAttributesPanel } from '../components/product-attributes-panel';
 import { useAxisValueOptions } from '../hooks/use-axis-value-options';
 import { useSiteModelEditor } from '../hooks/use-site-model-editor';
+import { siteListReturn } from '../model/site-list-return';
 
 import type { EditedSiteProduct } from '../components/product-attributes-panel';
 
 /** The model card: its products and their axis values, the switchers, and the SEO texts. */
 export function SiteModelPage() {
   const params = useParams();
+  const back = siteListReturn(useLocation().state);
   const id = Number(params['id']) || undefined;
   const [notice, setNotice] = useState<string | null>(null);
   const editor = useSiteModelEditor(id, setNotice);
@@ -81,8 +83,8 @@ export function SiteModelPage() {
             ) : null}
           </>
         }
-        backLabel="Моделі"
-        backTo="/site-models"
+        backLabel={back.label}
+        backTo={back.path}
         title={model.name}
       />
       <Stack spacing={0.5}>
@@ -166,7 +168,9 @@ export function SiteModelPage() {
       ) : null}
       {adding ? (
         <AddModelProductsDialog
-          candidates={(candidates.data?.items ?? []).filter((item) => !inModel.has(item.productId))}
+          candidates={(candidates.data?.items ?? [])
+            .flatMap((row) => row.products)
+            .filter((item) => !inModel.has(item.productId))}
           categoryName={model.categoryName}
           error={editor.errors.add ?? null}
           loading={candidates.isFetching}

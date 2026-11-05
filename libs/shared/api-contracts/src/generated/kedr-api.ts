@@ -235,6 +235,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/categories/{id}/site-visibility": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Show or hide a category on the site
+         * @description Spec catalog/007 R-18. Hiding hides every subcategory too; showing shows every subcategory and every parent. A hidden category and its products leave the public site, «Вітрина сайту», «Моделі», and the counts of «Огляд». The 1C sync never changes the mark; a new category takes its parent's. The Cosmos import root is never shown. Repeating the same request is safe.
+         */
+        put: operations["setAdminCategorySiteVisibility"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/categories/{id}/content": {
         parameters: {
             query?: never;
@@ -524,8 +544,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * «Вітрина сайту» - on-site products with model, variant values, and problems
-         * @description On-site, not deleted products. Products outside accepted models come first, then other products with problems, then by name. `search` matches part of the product name or its 1C code exactly.
+         * «Вітрина сайту» - models with their on-site products, variant values, and problems
+         * @description One row per model with on-site products and one row per on-site product in no model (spec catalog/007 R-19). On site means exported from 1C, not deleted, and in a category shown on the site (R-18). Rows with products outside accepted models come first, then other rows with problems, then by name. `categoryId` takes the category with its subcategories; `search` matches part of the model or product name, or a 1C code exactly.
          */
         get: operations["getAdminSiteShowcase"];
         put?: never;
@@ -544,8 +564,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Final categories with models and problems, for the «Моделі» sidebar
-         * @description Final categories (without children) that have on-site products or models, by parent name, then name.
+         * Category tree with models and problems, for «Моделі» and «Вітрина сайту»
+         * @description Categories shown on the site (R-18) with on-site products in them or below them, each with its parent; counts include subcategories. Ordered by name; the client builds the tree from `parentId`.
          */
         get: operations["getAdminSiteModelCategories"];
         put?: never;
@@ -2932,6 +2952,8 @@ export interface components {
             isDeleted: boolean;
             /** Format: date-time */
             deletedAt: string | null;
+            /** @description Shown on the site, in «Вітрина сайту», and in «Моделі» (R-18). */
+            isShownOnSite: boolean;
             /** @description Active products of the category and all its descendants, on the site or not. Filled in the active list (`deleted=false`) only; `null` elsewhere. */
             productCount?: number | null;
             /** @description Languages that have at least one site text field or FAQ item, sorted. Filled in the active list only; `null` elsewhere. */
@@ -2950,6 +2972,15 @@ export interface components {
             id: number;
             slug: string;
             previousSlug: string;
+        };
+        SetCategorySiteVisibilityRequest: {
+            isShownOnSite: boolean;
+        };
+        CategorySiteVisibilityResponse: {
+            id: number;
+            isShownOnSite: boolean;
+            /** @description The category and its relatives whose mark changed. */
+            changedCount: number;
         };
         AdminCategoryContentItem: components["schemas"]["CategoryContent"] & {
             /** @enum {string} */
@@ -3231,8 +3262,26 @@ export interface components {
             values: components["schemas"]["SiteShowcaseValue"][];
             problems: ("no_model" | "no_attributes" | "missing_axis_value" | "same_combination")[];
         };
+        SiteShowcaseRow: {
+            /** @description `m{modelId}` for a model, `p{productId}` for a product in no model. */
+            key: string;
+            /** @description The model; null for a product in no model. */
+            model?: components["schemas"]["SiteShowcaseModel"] | null;
+            /** @description The model name or the original 1C product name. */
+            name: string;
+            photo: string;
+            categoryId: number;
+            categoryName: string;
+            minPrice?: number | null;
+            /** @description Any of its products is in stock. */
+            inStock: boolean;
+            /** @description Its on-site products, the main one first. */
+            products: components["schemas"]["SiteShowcaseItem"][];
+            /** @description Problem codes of the model and of its products. */
+            problems: string[];
+        };
         SiteShowcaseList: {
-            items: components["schemas"]["SiteShowcaseItem"][];
+            items: components["schemas"]["SiteShowcaseRow"][];
             totalCount: number;
             page: number;
             pageSize: number;
@@ -3240,7 +3289,9 @@ export interface components {
         SiteModelCategory: {
             id: number;
             name: string;
-            parentName?: string | null;
+            /** @description Null for a top category. */
+            parentId?: number | null;
+            /** @description With subcategories. */
             onSiteProducts: number;
             acceptedModels: number;
             proposedModels: number;
@@ -5149,6 +5200,54 @@ export interface operations {
             };
         };
     };
+    setAdminCategorySiteVisibility: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["parameters-CategoryId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetCategorySiteVisibilityRequest"];
+            };
+        };
+        responses: {
+            /** @description Mark set (or already equal). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategorySiteVisibilityResponse"];
+                };
+            };
+            400: components["responses"]["ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Category not found or deleted. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getAdminCategoryContent: {
         parameters: {
             query?: never;
@@ -5970,7 +6069,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description A page of products */
+            /** @description A page of rows */
             200: {
                 headers: {
                     [name: string]: unknown;

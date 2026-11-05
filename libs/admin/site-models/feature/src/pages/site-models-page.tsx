@@ -1,12 +1,11 @@
-import { AdminPageHeader, NoticeSnackbar } from '@admin/shared/ui';
+import { AdminPageHeader } from '@admin/shared/ui';
 import {
-  useAcceptSiteModelsMutation,
   useCreateSiteModelMutation,
   useGetSiteModelCategoriesQuery,
   useGetSiteModelHealthQuery,
   useGetSiteModelsQuery,
 } from '@admin/site-models/data-access';
-import { siteModelProblems } from '@admin/site-models/model';
+import { isFinalSiteCategory, siteModelProblems } from '@admin/site-models/model';
 import {
   SiteModelCategoriesNav,
   SiteModelNameDialog,
@@ -17,43 +16,39 @@ import AddIcon from '@mui/icons-material/Add';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { Alert, Box, Button, Card, Stack, Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { SiteListFilters } from '../components/site-list-filters';
 import { siteModelsErrorMessage } from '../errors/site-models-error-message';
 import { useSiteQueryParams } from '../hooks/use-site-query-params';
+import { siteListReturnState } from '../model/site-list-return';
 import { readModelsQuery } from '../model/site-models-url-state';
 
 import type { SiteModelStatus } from '@admin/site-models/model';
 
-/** «Моделі» (spec catalog/007): the site pages of products, by category; proposals are accepted here. */
+/**
+ * «Моделі» (spec catalog/007): the site pages of on-site products, by category; a proposal is accepted in its card.
+ */
 export function SiteModelsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const params = useSiteQueryParams(readModelsQuery);
   const { filter, query } = params;
   const models = useGetSiteModelsQuery(query);
   const categories = useGetSiteModelCategoriesQuery();
   const health = useGetSiteModelHealthQuery();
-  const [accept, acceptState] = useAcceptSiteModelsMutation();
   const [create, createState] = useCreateSiteModelMutation();
-  const [selected, setSelected] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
   const [help, setHelp] = useState(false);
   const [creating, setCreating] = useState(false);
   const category = categories.data?.find((item) => item.id === query.categoryId);
+  // A model belongs to a final category.
+  const canCreate = category && isFinalSiteCategory(categories.data ?? [], category.id);
   const proposed = health.data?.proposedModels ?? 0;
-
-  const acceptSelected = async () => {
-    setError(null);
-    try {
-      await accept(selected).unwrap();
-      setNotice(`Прийнято моделей: ${selected.length}`);
-      setSelected([]);
-    } catch (cause) {
-      setError(siteModelsErrorMessage(cause));
-    }
-  };
+  const open = (id: number) =>
+    navigate(`/site-models/${id}`, {
+      state: siteListReturnState(location.pathname, location.search),
+    });
 
   const createModel = async (name: string) => {
     if (!category) return;
@@ -61,7 +56,7 @@ export function SiteModelsPage() {
     try {
       const model = await create({ categoryId: category.id, name, productIds: [] }).unwrap();
       setCreating(false);
-      navigate(`/site-models/${model.id}`);
+      open(model.id);
     } catch (cause) {
       setError(siteModelsErrorMessage(cause));
     }
@@ -76,13 +71,13 @@ export function SiteModelsPage() {
               Як це працює
             </Button>
             <Button
-              disabled={!category}
+              disabled={!canCreate}
               onClick={() => {
                 setError(null);
                 setCreating(true);
               }}
               startIcon={<AddIcon />}
-              title={category ? undefined : 'Спершу виберіть категорію'}
+              title={canCreate ? undefined : 'Спершу виберіть кінцеву категорію'}
               variant="contained"
             >
               Нова модель
@@ -100,8 +95,8 @@ export function SiteModelsPage() {
           }
           severity="info"
         >
-          Запропоновано моделей: {proposed}. Перегляньте їх і прийміть, щоб товари отримали свої
-          сторінки.
+          Запропоновано моделей: {proposed}. Відкрийте кожну, перевірте і натисніть «Прийняти
+          модель», щоб товари отримали свої сторінки.
         </Alert>
       ) : null}
       {error && !creating ? <Alert severity="error">{error}</Alert> : null}
@@ -115,6 +110,7 @@ export function SiteModelsPage() {
       >
         <SiteModelCategoriesNav
           categories={categories.data ?? []}
+          count="models"
           loading={categories.isLoading}
           onSelect={(categoryId) => filter({ categoryId })}
           selectedId={query.categoryId}
@@ -139,38 +135,24 @@ export function SiteModelsPage() {
             search={query.search}
             searchLabel="Модель, товар або код 1С"
           />
-          {selected.length > 0 ? (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <Button
-                disabled={acceptState.isLoading}
-                onClick={() => void acceptSelected()}
-                variant="contained"
-              >
-                Прийняти вибрані ({selected.length})
-              </Button>
-              <Button onClick={() => setSelected([])}>Зняти вибір</Button>
-            </Stack>
-          ) : null}
           <Card sx={{ overflow: 'hidden' }} variant="outlined">
             <SiteModelsDataGrid
               error={models.isError}
               loading={models.isFetching}
-              onOpen={(model) => navigate(`/site-models/${model.id}`)}
+              onOpen={(model) => open(model.id)}
               onPageChange={params.page}
               onPageSizeChange={params.pageSize}
               onRetry={() => void models.refetch()}
-              onSelectedChange={setSelected}
               page={query.page}
               pageSize={query.pageSize}
               rowCount={models.data?.totalCount ?? 0}
               rows={models.data?.items ?? []}
-              selected={selected}
             />
           </Card>
         </Stack>
       </Box>
       {help ? <SiteModelsHelpDialog onClose={() => setHelp(false)} /> : null}
-      {creating && category ? (
+      {creating && canCreate ? (
         <SiteModelNameDialog
           description={`Порожня модель у категорії «${category.name}». Товари додасте на її сторінці.`}
           error={error}
@@ -182,7 +164,6 @@ export function SiteModelsPage() {
           title="Нова модель"
         />
       ) : null}
-      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
     </Stack>
   );
 }

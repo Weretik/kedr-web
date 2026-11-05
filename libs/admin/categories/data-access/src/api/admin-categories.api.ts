@@ -7,7 +7,12 @@ import {
   toSaveCategoryContentBody,
 } from '../mappers/category-content.mapper';
 
-import type { ChangeSlugBody, ChangeSlugResult } from '../contracts/admin-categories.contract';
+import type {
+  CategorySiteVisibilityResult,
+  ChangeSlugBody,
+  ChangeSlugResult,
+  SetCategorySiteVisibilityBody,
+} from '../contracts/admin-categories.contract';
 import type { CategoryContentByLanguage } from '../mappers/category-content.mapper';
 import type {
   AdminCategory,
@@ -81,6 +86,18 @@ export const adminCategoriesApi = baseApi.injectEndpoints({
               { type: 'Categories', id: 'LIST' },
             ],
     }),
+    setCategorySiteVisibility: build.mutation<
+      CategorySiteVisibilityResult,
+      { id: number; isShownOnSite: boolean }
+    >({
+      query: ({ id, isShownOnSite }) => ({
+        url: `${root}/${id}/site-visibility`,
+        method: 'PUT',
+        data: { isShownOnSite } satisfies SetCategorySiteVisibilityBody,
+      }),
+      // Subcategories and parents change too, and the site lists follow the mark.
+      invalidatesTags: (_result, error) => (error ? [] : ['Categories', 'SiteModels']),
+    }),
   }),
 });
 
@@ -90,4 +107,5 @@ export const {
   useGetAdminCategoryQuery,
   useGetCategoryContentQuery,
   useSaveCategoryContentMutation,
+  useSetCategorySiteVisibilityMutation,
 } = adminCategoriesApi;

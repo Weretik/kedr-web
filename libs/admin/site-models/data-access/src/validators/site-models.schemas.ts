@@ -83,20 +83,35 @@ export const siteModelSchema = z.object({
   problems,
 });
 
+const showcaseModel = z.object({ id: z.number().int().min(1), name: z.string(), status });
+
+const showcaseItem = z.object({
+  productId: z.number().int().min(1),
+  name: z.string(),
+  slug: z.string(),
+  photo: z.string(),
+  categoryId: z.number().int(),
+  categoryName: z.string(),
+  retailPrice: z.number().nullish(),
+  inStock: z.boolean(),
+  model: showcaseModel.nullish(),
+  values: z.array(
+    z.object({ attributeId: z.number().int(), attributeName: z.string(), value: z.string() }),
+  ),
+  problems,
+});
+
 export const siteShowcaseListSchema = page(
   z.object({
-    productId: z.number().int().min(1),
+    key: z.string(),
+    model: showcaseModel.nullish(),
     name: z.string(),
-    slug: z.string(),
     photo: z.string(),
     categoryId: z.number().int(),
     categoryName: z.string(),
-    retailPrice: z.number().nullish(),
+    minPrice: z.number().nullish(),
     inStock: z.boolean(),
-    model: z.object({ id: z.number().int().min(1), name: z.string(), status }).nullish(),
-    values: z.array(
-      z.object({ attributeId: z.number().int(), attributeName: z.string(), value: z.string() }),
-    ),
+    products: z.array(showcaseItem),
     problems,
   }),
 );
@@ -105,7 +120,7 @@ export const siteModelCategoriesSchema = z.array(
   z.object({
     id: z.number().int().min(1),
     name: z.string(),
-    parentName: z.string().nullish(),
+    parentId: z.number().int().nullish(),
     onSiteProducts: z.number().int().nonnegative(),
     acceptedModels: z.number().int().nonnegative(),
     proposedModels: z.number().int().nonnegative(),
