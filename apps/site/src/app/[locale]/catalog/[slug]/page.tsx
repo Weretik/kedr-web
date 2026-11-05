@@ -10,8 +10,6 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 // The category is resolved before streaming so a missing slug answers 404 and an old slug 308.
-// That lookup blocks navigation on purpose, so instant-navigation validation is turned off here.
-export const instant = false;
 
 export async function generateStaticParams() {
   const params = await Promise.all(

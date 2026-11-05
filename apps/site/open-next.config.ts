@@ -4,7 +4,7 @@ import memoryQueue from '@opennextjs/cloudflare/overrides/queue/memory-queue';
 import kvNextTagCache from '@opennextjs/cloudflare/overrides/tag-cache/kv-next-tag-cache';
 
 // Cloudflare Workers adapter (owner decision 2026-10-30, migration step 0).
-// Cache Components data and prerendered pages live in Workers KV (free plan, no card);
+// 'use cache' data and prerendered pages live in Workers KV;
 // the tag cache makes /api/revalidate from KedrStore reach every isolate.
 const config = defineCloudflareConfig({
   incrementalCache: kvIncrementalCache,

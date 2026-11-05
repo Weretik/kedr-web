@@ -54,7 +54,7 @@ maps to a permanent category redirect; a bare/invalid-body 404 remains not-found
 Transport failure, invalid mandatory identity and unexpected 410 map to unavailable,
 not a fabricated product or missing state. Feature owns the actual HTTP response.
 
-Cache Components uses hours for current success and the explicit failure/redirect
+`'use cache'` uses hours for current success and the explicit failure/redirect
 profile `{ stale: 60, revalidate: 60, expire: 3600 }`. Detail tags include shared
 `catalog`/`catalog:products`, requested/canonical product slug and SKU; the bounded
 index also uses `catalog:products:index`. Cache inputs contain no session, cookie

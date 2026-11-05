@@ -8,7 +8,6 @@ import type { Metadata } from 'next';
 type ProductRouteProps = { params: Promise<{ locale: string; slug: string }> };
 
 // Resolve the product before streaming to preserve real 404/308/500 responses.
-export const instant = false;
 export const generateStaticParams = getProductStaticParams;
 
 export async function generateMetadata({ params }: ProductRouteProps): Promise<Metadata> {

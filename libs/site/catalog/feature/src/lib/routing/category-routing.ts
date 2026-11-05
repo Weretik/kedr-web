@@ -9,7 +9,7 @@ import type { SitemapPage } from '@site/core/seo';
 import type { Metadata } from 'next';
 
 /**
- * Cache Components needs at least one static param. When the API is unreachable at build time this slug is
+ * Keeps the build from producing an empty param list. When the API is unreachable at build time this slug is
  * prerendered instead, and the page answers 404 for it without calling the API.
  */
 export const CATEGORY_PLACEHOLDER_SLUG = '__placeholder__';

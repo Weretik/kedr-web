@@ -21,7 +21,7 @@
 | `/{locale}/checkout`          | `app/[locale]/checkout/page.tsx`       | `cart/feature`, `cart/seo`                            | private/noindex; neutral frame + request-time leaf | exists locally                 |
 | `/robots.txt`, `/sitemap.xml` | `app/robots.ts`, `app/sitemap.ts`      | `core/seo`                                            | static                                             | exists                         |
 
-Cache Components is on, so `dynamicParams` is not allowed. `generateStaticParams` prerenders `uk` and `ru`; any other first segment never reaches the layout: `src/proxy.ts` matches only paths that do not start with a locale, `_next/`, or a file name, and rewrites them to an unmatched path, which serves `global-not-found.tsx` with 404 and keeps the requested URL. The proxy matcher repeats the locale list as a static literal; keep it in sync with `LOCALES`. Paths have no trailing slash; `/uk/` redirects to `/uk` (Next.js default).
+`generateStaticParams` prerenders `uk` and `ru`; any other first segment never reaches the layout: `src/proxy.ts` matches only paths that do not start with a locale, `_next/`, or a file name, and rewrites them to an unmatched path, which serves `global-not-found.tsx` with 404 and keeps the requested URL. The proxy matcher repeats the locale list as a static literal; keep it in sync with `LOCALES`. Paths have no trailing slash; `/uk/` redirects to `/uk` (Next.js default).
 
 `app/[locale]/not-found.tsx` is a Server Component that reads the locale with `next/root-params`. All 404 responses carry `noindex`.
 
