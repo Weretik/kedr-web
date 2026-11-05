@@ -1,5 +1,6 @@
 import { AdminPageHeader, NoticeSnackbar } from '@admin/shared/ui';
-import { Stack, Tab, Tabs } from '@mui/material';
+import AddOutlined from '@mui/icons-material/AddOutlined';
+import { Button, Stack, Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -17,24 +18,48 @@ export function CatalogAttributesPage({ canEdit }: { canEdit: boolean }) {
   const requested = searchParams.get('tab') as AttributesPageTab | null;
   const tab: AttributesPageTab = requested && tabs.includes(requested) ? requested : 'attributes';
   const [notice, setNotice] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
 
   return (
     <Stack component="section" spacing={3}>
       <AdminPageHeader title="Ознаки" />
-      <Tabs
-        aria-label="Розділ ознак"
-        onChange={(_event, value: AttributesPageTab) =>
-          setSearchParams(value === 'attributes' ? {} : { tab: value })
-        }
-        sx={{ borderBottom: 1, borderColor: 'divider', mt: -1 }}
-        value={tab}
-        variant="scrollable"
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ alignItems: 'center', borderBottom: 1, borderColor: 'divider', mt: -1 }}
       >
-        <Tab label="Ознаки" value="attributes" />
-        <Tab label="Не розшифровані коди" value="codes" />
-        <Tab label="Фільтри категорій" value="filters" />
-      </Tabs>
-      {tab === 'attributes' ? <AttributesTab canEdit={canEdit} onNotice={setNotice} /> : null}
+        <Tabs
+          aria-label="Розділ ознак"
+          onChange={(_event, value: AttributesPageTab) =>
+            setSearchParams(value === 'attributes' ? {} : { tab: value })
+          }
+          sx={{ flex: 1, minWidth: 0 }}
+          value={tab}
+          variant="scrollable"
+        >
+          <Tab label="Ознаки" value="attributes" />
+          <Tab label="Не розшифровані коди" value="codes" />
+          <Tab label="Фільтри категорій" value="filters" />
+        </Tabs>
+        {canEdit && tab === 'attributes' ? (
+          <Button
+            onClick={() => setCreating(true)}
+            startIcon={<AddOutlined />}
+            sx={{ flexShrink: 0 }}
+            variant="contained"
+          >
+            Нова ознака
+          </Button>
+        ) : null}
+      </Stack>
+      {tab === 'attributes' ? (
+        <AttributesTab
+          canEdit={canEdit}
+          creating={creating}
+          onCreatingChange={setCreating}
+          onNotice={setNotice}
+        />
+      ) : null}
       {tab === 'codes' ? <UnresolvedCodesTab canEdit={canEdit} onNotice={setNotice} /> : null}
       {tab === 'filters' ? <CategoryFiltersTab canEdit={canEdit} onNotice={setNotice} /> : null}
       <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />

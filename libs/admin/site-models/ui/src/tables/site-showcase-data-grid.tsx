@@ -39,19 +39,14 @@ const muted = (text: string) => (
   </Typography>
 );
 
-function ValueLines({ item }: { item: SiteShowcaseItem }) {
+/** Attribute values in one line; the full list is in the hint. */
+function ValueLine({ item }: { item: SiteShowcaseItem }) {
   if (item.values.length === 0) return muted('—');
+  const text = item.values.map((value) => `${value.attributeName}: ${value.value}`).join(' · ');
   return (
-    <Stack spacing={0.25} sx={{ py: 1.25 }}>
-      {item.values.map((value) => (
-        <Typography key={`${value.attributeId}-${value.value}`} variant="body2">
-          <Box component="span" sx={{ color: 'text.secondary' }}>
-            {value.attributeName}:
-          </Box>{' '}
-          {value.value}
-        </Typography>
-      ))}
-    </Stack>
+    <Typography noWrap title={text} variant="body2">
+      {text}
+    </Typography>
   );
 }
 
@@ -63,7 +58,7 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
     {
       field: 'expand',
       headerName: '',
-      width: 56,
+      width: 48,
       sortable: false,
       renderCell: ({ row }) =>
         row.kind === 'model' && row.row.model ? (
@@ -87,31 +82,31 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
     {
       field: 'photo',
       headerName: 'Фото',
-      width: 76,
+      width: 64,
       sortable: false,
       renderCell: ({ row }) =>
         row.kind === 'model' ? (
           <ProductThumb src={row.row.photo} />
         ) : (
-          <Box sx={{ pl: 1.5 }}>
-            <ProductThumb size={36} src={row.item.photo} />
+          <Box sx={{ pl: 1 }}>
+            <ProductThumb size={32} src={row.item.photo} />
           </Box>
         ),
     },
     {
       field: 'name',
       headerName: 'Модель / товар',
-      flex: 1.8,
-      minWidth: 260,
+      flex: 1.6,
+      minWidth: 240,
       sortable: false,
       renderCell: ({ row }) => {
         if (row.kind === 'product') {
           return (
-            <Stack spacing={0.25} sx={{ pl: 2, py: 1 }}>
-              <Typography sx={{ overflowWrap: 'anywhere' }} variant="body2">
+            <Stack sx={{ minWidth: 0, pl: 2 }}>
+              <Typography noWrap title={row.item.name} variant="body2">
                 {row.item.name}
               </Typography>
-              <Typography color="text.secondary" variant="caption">
+              <Typography color="text.secondary" noWrap variant="caption">
                 Код 1С {row.item.productId}
               </Typography>
             </Stack>
@@ -119,19 +114,23 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
         }
         const lone = loneProduct(row.row);
         return (
-          <Stack spacing={0.5} sx={{ alignItems: 'flex-start', py: 1.25 }}>
-            <Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }} variant="body2">
-              {row.row.name}
-            </Typography>
-            <Typography color="text.secondary" variant="caption">
+          <Stack sx={{ minWidth: 0 }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
+              <Typography noWrap sx={{ fontWeight: 600 }} title={row.row.name} variant="body2">
+                {row.row.name}
+              </Typography>
+              {row.row.model?.status === 'proposed' ? (
+                <Box sx={{ flexShrink: 0 }}>
+                  <StatusPill label="Запропонована" tone="info" />
+                </Box>
+              ) : null}
+            </Stack>
+            <Typography color="text.secondary" noWrap variant="caption">
               {lone
                 ? `Код 1С ${lone.productId} · без моделі`
                 : `Товарів: ${row.row.products.length}`}{' '}
               · {row.row.categoryName}
             </Typography>
-            {row.row.model?.status === 'proposed' ? (
-              <StatusPill label="Запропонована" tone="info" />
-            ) : null}
           </Stack>
         );
       },
@@ -140,17 +139,17 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
       field: 'values',
       headerName: 'Ознаки',
       flex: 1,
-      minWidth: 180,
+      minWidth: 160,
       sortable: false,
       renderCell: ({ row }) => {
         const item = row.kind === 'product' ? row.item : loneProduct(row.row);
-        return item ? <ValueLines item={item} /> : null;
+        return item ? <ValueLine item={item} /> : null;
       },
     },
     {
       field: 'price',
       headerName: 'Ціна',
-      minWidth: 120,
+      width: 120,
       sortable: false,
       align: 'right',
       headerAlign: 'right',
@@ -164,7 +163,7 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
     {
       field: 'inStock',
       headerName: 'Наявн.',
-      minWidth: 90,
+      width: 80,
       sortable: false,
       renderCell: ({ row }) =>
         (row.kind === 'product' ? row.item.inStock : row.row.inStock) ? (
@@ -176,21 +175,19 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
     {
       field: 'problems',
       headerName: 'Чого бракує',
-      flex: 1.2,
-      minWidth: 200,
+      width: 190,
       sortable: false,
       renderCell: ({ row }) => (
-        <Box sx={{ py: 1.25 }}>
-          <SiteProblemPills
-            problems={row.kind === 'product' ? row.item.problems : row.row.problems}
-          />
-        </Box>
+        <SiteProblemPills
+          compact
+          problems={row.kind === 'product' ? row.item.problems : row.row.problems}
+        />
       ),
     },
     {
       field: 'actions',
       headerName: 'Дії',
-      width: 110,
+      width: 100,
       sortable: false,
       align: 'right',
       headerAlign: 'right',
@@ -223,6 +220,9 @@ function columns(props: SiteShowcaseDataGridProps): GridColDef<GridRow>[] {
   ];
 }
 
+/** Fills the screen below the filters, but never shorter than ten rows. */
+const SHOWCASE_GRID_HEIGHT = { xs: 560, md: 'max(480px, calc(100vh - 300px))' };
+
 /** Model rows with their products below the expanded ones. */
 export function showcaseGridRows(
   rows: readonly SiteShowcaseRow[],
@@ -240,51 +240,51 @@ export function showcaseGridRows(
   ]);
 }
 
-/** «Вітрина сайту»: models with their on-site products; the arrow or a click on the row shows the products. */
+/**
+ * «Вітрина сайту»: models with their on-site products; the arrow or a click on the row shows the products.
+ * One-line rows; the grid keeps a bounded height and scrolls inside instead of stretching the page.
+ */
 export function SiteShowcaseDataGrid(props: SiteShowcaseDataGridProps) {
   return (
-    <Box sx={{ minWidth: 0, overflowX: 'auto', width: '100%' }}>
-      <Box sx={{ minWidth: 960 }}>
-        <DataGrid
-          autoHeight
-          columns={columns(props)}
-          disableColumnMenu
-          disableRowSelectionOnClick
-          getRowClassName={({ row }) => (row.kind === 'product' ? 'showcase-product' : '')}
-          getRowHeight={() => 'auto'}
-          getRowId={(row) => row.id}
-          loading={props.loading}
-          onPaginationModelChange={(next) =>
-            next.pageSize !== props.pageSize
-              ? props.onPageSizeChange(next.pageSize)
-              : props.onPageChange(next.page + 1)
-          }
-          onRowClick={({ row }) => {
-            if (row.kind === 'model' && row.row.model) props.onToggle(row.row.key);
-          }}
-          pageSizeOptions={[25, 50, 100]}
-          pagination
-          paginationMode="server"
-          paginationModel={{ page: props.page - 1, pageSize: props.pageSize }}
-          rowCount={props.error ? 0 : props.rowCount}
-          rows={props.error ? [] : showcaseGridRows(props.rows, props.expanded)}
-          slots={{
-            noRowsOverlay: () =>
-              props.error ? (
-                <DataGridMessageOverlay
-                  message="Не вдалося завантажити вітрину."
-                  onRetry={props.onRetry}
-                />
-              ) : (
-                <DataGridMessageOverlay message="Моделей і товарів за цими умовами немає." />
-              ),
-          }}
-          sx={{
-            '& .MuiDataGrid-row': { cursor: 'pointer' },
-            '& .showcase-product': { bgcolor: 'action.hover', cursor: 'default' },
-          }}
-        />
-      </Box>
+    <Box sx={{ height: SHOWCASE_GRID_HEIGHT, minWidth: 0, width: '100%' }}>
+      <DataGrid
+        columns={columns(props)}
+        disableColumnMenu
+        disableRowSelectionOnClick
+        getRowClassName={({ row }) => (row.kind === 'product' ? 'showcase-product' : '')}
+        getRowHeight={({ model }) => ((model as GridRow).kind === 'product' ? 48 : 60)}
+        getRowId={(row) => row.id}
+        loading={props.loading}
+        onPaginationModelChange={(next) =>
+          next.pageSize !== props.pageSize
+            ? props.onPageSizeChange(next.pageSize)
+            : props.onPageChange(next.page + 1)
+        }
+        onRowClick={({ row }) => {
+          if (row.kind === 'model' && row.row.model) props.onToggle(row.row.key);
+        }}
+        pageSizeOptions={[25, 50, 100]}
+        pagination
+        paginationMode="server"
+        paginationModel={{ page: props.page - 1, pageSize: props.pageSize }}
+        rowCount={props.error ? 0 : props.rowCount}
+        rows={props.error ? [] : showcaseGridRows(props.rows, props.expanded)}
+        slots={{
+          noRowsOverlay: () =>
+            props.error ? (
+              <DataGridMessageOverlay
+                message="Не вдалося завантажити вітрину."
+                onRetry={props.onRetry}
+              />
+            ) : (
+              <DataGridMessageOverlay message="Моделей і товарів за цими умовами немає." />
+            ),
+        }}
+        sx={{
+          '& .MuiDataGrid-row': { cursor: 'pointer' },
+          '& .showcase-product': { bgcolor: 'action.hover', cursor: 'default' },
+        }}
+      />
     </Box>
   );
 }
