@@ -50,11 +50,11 @@ Do not install the entire list “just in case” or mass-migrate existing compo
 
 The public API of each library remains in its `src/index.ts`. Do not export DTOs or the API client through a UI library.
 
-## Expo Go and Development Build
+## Native changes and builds
 
 After adding any dependency, check compatibility with the current Expo SDK using `npx expo-doctor` and the package documentation. FlashList supports Expo Go with SDK 46+, but the installed version still needs checking. `expo-camera` adds camera permission; the iOS permission explanation and app-config changes are included in the native binary, so a new production/development build is needed. Unistyles 3 and Nitro Modules are native, so the app runs in a Development Build, not in Expo Go.
 
-The complete process for switching and rebuilding is in [Expo Go and Development Build](development-build.md). This catalog does not authorize creating `expo-dev-client` or an EAS build without a specific native need.
+The complete process for switching and rebuilding is in [Builds, distribution and updates](development-build.md). Any of these changes needs a new build and a higher `version` in `app.json`.
 
 ## Sources
 

@@ -46,21 +46,23 @@ The [UI and platform capabilities catalog](ui-capabilities.md) lists approved UI
 ## Current decisions
 
 - The app's Nx project is `mobile` in `apps/mobile`.
-- Rebuilt as Kedr Manager by the [SDD](../../../specs/mobile/manager/001-manager-app/README.md); stage 1 (2026-11-05) delivered the «Офіс» UI, the shell with the customer gate, sign-in with the offline window and quick unlock. The old catalog, cart and order screens were removed.
-- Data source: versioned Kedr OpenAPI contract; from stage 2 through the sync service into the local database.
-- Unistyles 3 needs Nitro Modules, so the app runs in a Development Build, not in Expo Go.
+- Rebuilt as Kedr Manager by the [SDD](../../../specs/mobile/manager/001-manager-app/README.md) (stages 1–8, 2026-11-05). The old catalog, cart and order screens were removed.
+- Data source: versioned Kedr OpenAPI contract, through the sync service into the local database ([offline strategy](../runtime/offline-strategy.md)).
+- Unistyles 3 needs Nitro Modules, so the app runs in a development or internal EAS build, not in Expo Go ([builds](development-build.md)).
 
 ## Versions added in stage 1 (EN-001)
 
 Expo's online version check was not reachable from the build environment, so versions were taken from `expo/bundledNativeModules.json` of SDK 58 where listed and from the latest releases otherwise; Expo Doctor runs on the next device build.
 
-| Package                      | Version   | Source                      |
-| ---------------------------- | --------- | --------------------------- |
-| `react-native-unistyles`     | `^3.8.1`  | latest 3.x, needs RN ≥ 0.85 |
-| `react-native-nitro-modules` | `^0.37.2` | Unistyles peer              |
-| `@gorhom/bottom-sheet`       | `^5.2.14` | latest 5.x                  |
-| `zustand`                    | `^5.0.16` | latest 5.x                  |
-| `expo-local-authentication`  | `~58.0.2` | SDK 58 bundled version      |
-| `expo-screen-orientation`    | `~58.0.3` | SDK 58 bundled version      |
+| Package                      | Version    | Source                      |
+| ---------------------------- | ---------- | --------------------------- |
+| `react-native-unistyles`     | `^3.8.1`   | latest 3.x, needs RN ≥ 0.85 |
+| `react-native-nitro-modules` | `^0.37.2`  | Unistyles peer              |
+| `@gorhom/bottom-sheet`       | `^5.2.14`  | latest 5.x                  |
+| `zustand`                    | `^5.0.16`  | latest 5.x                  |
+| `expo-local-authentication`  | `~58.0.2`  | SDK 58 bundled version      |
+| `expo-screen-orientation`    | `~58.0.3`  | SDK 58 bundled version      |
+| `expo-updates` (stage 8)     | `~58.0.20` | SDK 58 bundled version      |
+| `expo-dev-client` (stage 8)  | `~58.0.18` | SDK 58 bundled version      |
 
 - Device/E2E coverage remains a feature-level decision; an unavailable runner must not be represented as completed device verification.

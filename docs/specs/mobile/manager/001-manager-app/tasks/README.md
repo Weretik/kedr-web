@@ -52,5 +52,5 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 
 ## Stage 8 — release
 
-- **TS-022 — Distribution.** App name «Кедр Менеджер», icons and splash in «Офіс», EAS profiles for internal distribution (Android APK link, iPhone TestFlight/ad hoc), `expo-updates`.
-- **TS-023 — Docs and audit.** Feature map, architecture pages, offline strategy rewritten, final structure audit; device checks with the owner's permission.
+- **TS-022 — Distribution.** App name «Кедр Менеджер», icons and splash in «Офіс», EAS profiles for internal distribution (Android APK link, iPhone TestFlight/ad hoc), `expo-updates`. Status: done 2026-11-05 in code; app name and version 2.0.0, «К» icons and «Офіс» splash, iOS bundle id `com.classkedr.mobile`, profiles `development`/`simulator`/`preview`/`production` with update channels, remote build numbers, `expo-updates` (runtime by app version, check on start), `expo-dev-client`. Builds themselves are run by the owner ([builds guide](../../../../../architecture/mobile/platform/development-build.md)); iPhone waits for the Apple Developer account.
+- **TS-023 — Docs and audit.** Feature map, architecture pages, offline strategy rewritten, final structure audit; device checks with the owner's permission. Status: docs and audit done 2026-11-05 (offline strategy, state and API, builds rewritten); device checks open until the owner installs a `preview` build.

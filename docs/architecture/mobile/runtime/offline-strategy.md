@@ -1,28 +1,38 @@
-# Mobile online-first and future offline support
+# Mobile offline strategy
 
-> **Changing.** [ADR-0005](../adr/0005-offline-first-local-database.md) (2026-11-05) moves the app to offline-first with a local database and a send queue. This page describes the current code until the [Kedr Manager rebuild](../../../specs/mobile/manager/001-manager-app/README.md) replaces it in stage 2; then it is rewritten.
+Kedr Manager is **offline-first** ([ADR-0005](../adr/0005-offline-first-local-database.md)). Screens read a local SQLite database. Two parts of the app reach the network: the sync service, which downloads data, and the send queue, which uploads it. A few online-only reads go straight to the server.
 
-## Current decision
+## What lives on the device
 
-The first release is **online-first**. SQLite and AsyncStorage are not installed or used for the catalog. RTK Query cache exists only in process memory and is not an offline database.
+| Data                                               | Source                                    | Kept                                                                              |
+| -------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
+| Catalog: categories, products, prices, price types | `GET /api/mobile/sync/catalog` snapshot   | until the next snapshot; replaced in one transaction                              |
+| Customers and their category price rules           | `GET /api/mobile/sync/customers` snapshot | same                                                                              |
+| Customer orders and drafts lists                   | `order-workspace` reads, last 50 of each  | refreshed online, shown from cache offline                                        |
+| Calculations (one per customer)                    | the manager                               | until sent, saved as a draft or cleared                                           |
+| Send queue (`outbox`)                              | the manager                               | until delivered; a delivered order stays a day to show its number                 |
+| Main photo and scheme of every product             | CDN, on Wi‑Fi                             | `expo-image` disk cache; «Завантажити всі фото» in the cabinet fetches the rest   |
+| Session                                            | sign-in                                   | SecureStore; works offline for 7 days after the last confirmed sign-in or refresh |
 
-`@mobile/core/connectivity` encapsulates NetInfo and provides normalized network state. It improves UX but does not replace handling actual HTTP errors.
+Sign-out empties every table and the sync status. Tokens never go to SQLite or AsyncStorage.
 
-| State                                   | Behavior                                                                          |
-| --------------------------------------- | --------------------------------------------------------------------------------- |
-| No network before initial load          | offline state and retry button                                                    |
-| Network lost during a request           | error state and retry button                                                      |
-| Catalog data already displayed, offline | show in-memory data and an unobtrusive offline indicator                          |
-| Network restored                        | do not silently reload; the next user action or explicit refresh starts a request |
+## Sync
 
-## Deferred levels
+The sync service runs on start, when the network returns, every 15 minutes while online and on «Оновити дані зараз». Each snapshot uses `If-None-Match`; `304` keeps the data. A new body is validated with zod and swaps the tables in one transaction, so a screen sees either the old or the new data. A broken body keeps the old data; `401`/`403` stops the run. Until the first snapshot is stored, the work area shows progress or «Немає мережі»; afterwards it never blocks, and the status strip says how old the data is.
 
-```text
-Stage 1 — online-first: NetInfo + RTK Query memory cache
-Stage 2 — persistent read cache: separate decision about AsyncStorage
-Stage 3 — offline-first: SQLite, local model, sync queue, conflicts
-```
+## Send queue
 
-Moving to any later level requires a new ADR. It must define data to store, TTL and versioning, invalidation, write queue, idempotency, conflict policy, retries after network recovery, and personal-data protection.
+Orders and drafts go through the `outbox` table one entry at a time, each with its own idempotency key, so a retry never creates a second order. Network errors and 5xx retry after 5 s, 30 s, 2 min, then every 5 min. A business rejection (changed price, stock, minimum price, unknown customer) stops the entry and returns it to the calculation with the server's reason. Before creating an order the queue compares the quoted prices with what the manager saw. An expired session pauses the queue until sign-in. Sign-out warns when the queue is not empty.
 
-Do not use AsyncStorage for tokens. Tokens for a future session belong in Expo SecureStore.
+## Online only
+
+- Sign-in, profile changes (name, photo, Admin e-mail and password).
+- Opening a saved draft and an order's lines.
+
+These screens say they open with the network instead of showing stale data.
+
+## Limits
+
+- The server is the authority for prices and stock; the device shows the last snapshot and the queue re-checks prices before an order.
+- Search filters the priced list in memory (about 2.5 thousand products). Full-text search is an option only past about 20 thousand.
+- Feature details: [sync](../../../features/mobile/sync.md), [calculation and queue](../../../features/mobile/calculation.md), [orders](../../../features/mobile/orders.md).
