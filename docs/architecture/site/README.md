@@ -38,4 +38,4 @@ Arrows point from consumer to dependency. Routes compose implemented domain feat
 | Pages    | Migrated home/catalog/product/content pages and private checkout are implemented locally | Continue the remaining storefront migration     | [Feature catalog](../../features/README.md)                |
 | Indexing | Existing production gates remain; checkout is private/noindex                            | Production indexing only after the cutover gate | [SEO architecture](platform/seo-architecture.md)           |
 | Data     | Cached catalog/product reads and a dedicated anonymous no-store order POST               | Extend only through accepted domain contracts   | [Rendering and caching](platform/rendering-and-caching.md) |
-| Hosting  | Deployment/cutover not verified by this update                                           | Follow the hosting and cutover decision         | [Migration plan](../../specs/site/migration/README.md)     |
+| Hosting  | Worker `kedr-site` on Cloudflare through OpenNext; preview before the domain cutover     | Domain cutover in migration step 9              | [Hosting](platform/hosting.md)                             |

@@ -95,7 +95,7 @@
     "expo-system-ui": "~58.0.7",
     "express": "^5.3.0",
     "lucide-react": "1.66.0",
-    "next": "16.4.3",
+    "next": "16.4.5",
     "next-themes": "0.4.6",
     "ngxtension": "^7.3.1",
     "postcss": "^8.5.32",
@@ -163,6 +163,7 @@
     "@nx/vitest": "24.0.3",
     "@nx/web": "24.0.3",
     "@nx/workspace": "24.0.3",
+    "@opennextjs/cloudflare": "1.20.16",
     "@playwright/test": "^1.64.1",
     "@react-native/jest-preset": "0.88.1",
     "@react-native/metro-config": "0.88.1",
@@ -230,13 +231,17 @@
     "typescript-eslint": "^8.72.1",
     "vite": "8.3.5",
     "vitest": "5.0.5",
-    "webpack": "^5.1.0"
+    "webpack": "^5.1.0",
+    "wrangler": "4.158.0"
   },
   "overrides": {
     "@angular-devkit/architect": "0.2202.5",
     "undici": "^7.18.2",
     "openapi-typescript": {
       "typescript": "$typescript"
+    },
+    "@node-minify/core": {
+      "glob": "^10.5.0"
     }
   },
   "nx": {}
