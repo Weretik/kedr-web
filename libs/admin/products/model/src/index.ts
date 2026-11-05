@@ -18,26 +18,3 @@ export {
   normalizeProductsListQuery,
 } from './queries/products-list-query';
 export type { ProductsListQuery, ProductsListSort } from './queries/products-list-query';
-export type { AttributeProblem } from './entities/attribute-problem';
-export { problemLabel, problemReasonLabel } from './entities/attribute-problem';
-export type {
-  AttributeKind,
-  AttributeOption,
-  AttributeValueOption,
-  AttributeValueSource,
-  ProductAttribute,
-  ProductAttributeInput,
-  ProductAttributes,
-  ProductAttributeValue,
-  ProductReview,
-  ProductReviewState,
-} from './entities/product-attributes';
-export { attributeValueText, isManualAttribute } from './entities/product-attributes';
-export type {
-  ProductGroup,
-  ProductGroupChange,
-  ProductGroupMember,
-  ProductGroupMembership,
-  ProductGroupOption,
-} from './entities/product-group';
-export { variantText } from './entities/product-group';

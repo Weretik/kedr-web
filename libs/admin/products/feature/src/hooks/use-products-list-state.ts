@@ -56,9 +56,6 @@ export function useProductsListState(canSeeDeleted: boolean) {
     changeBooleanFilter: (field: BooleanFilterField, value: boolean | undefined) =>
       updateCurrent({ [field]: value }),
     changeCategory: (categoryId: number | undefined) => updateCurrent({ categoryId }),
-    /** «Тільки проблемні» and the reason filter of the «На сайті» tab; a reason implies problems only. */
-    changeProblemFilter: (problemsOnly: boolean, problemReason: string | undefined) =>
-      updateCurrent({ problemsOnly: problemsOnly || undefined, problemReason }),
     changeDeletedQuery: (deletedQuery: ProductsListQuery) => write({ ...urlState, deletedQuery }),
   };
 }

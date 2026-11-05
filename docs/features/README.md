@@ -14,7 +14,8 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Dashboard](admin/dashboard.md)                   | `/dashboard`                                         | What needs attention, today, latest orders                                                |
 | [Products](admin/products.md)                     | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set                                        |
 | [Categories](admin/categories.md)                 | `/categories`, `/categories/:categoryId`             | Tree, public address, SEO text and FAQ; Admin edits                                       |
-| [Властивості](admin/catalog-attributes.md)        | `/catalog-attributes`                                | Product properties, values with swatches, 1C codes, category filters; Admin edits         |
+| [Ознаки](admin/catalog-attributes.md)             | `/catalog-attributes`                                | Product properties, values with swatches, 1C codes, category filters; Admin edits         |
+| [Вітрина сайту, Моделі](admin/site-models.md)     | `/site-showcase`, `/site-models`, `/site-models/:id` | On-site products and their models: problems, axes, product values, SEO texts              |
 | [Media](admin/media.md)                           | `/media`                                             | CDN picture library: folders, upload, replace; Admin deletes                              |
 | [Home page blocks](admin/home-content.md)         | `/home-content`                                      | Home FAQ (UK/RU) and brand logos from the media library; order; all staff                 |
 | [Page «Співпраця»](admin/wholesale-content.md)    | `/wholesale-content`                                 | Wholesale page texts UK/RU: hero, company, three steps, 1–12 questions; all staff         |

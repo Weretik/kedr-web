@@ -412,6 +412,242 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/site-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The «Моделі» list
+         * @description Models with problems first, then by name. `search` matches part of the model name, part of a product name, or a 1C code exactly.
+         */
+        get: operations["getAdminSiteModels"];
+        put?: never;
+        /**
+         * Create a model («Нова модель»)
+         * @description The model is accepted at once. The category must be final (no children); the products (up to 200) must be in it and not in another accepted model; a proposed model gives its products up. Axes are offered from the products and saved.
+         */
+        post: operations["createAdminSiteModel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/showcase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * «Вітрина сайту» - on-site products with model, variant values, and problems
+         * @description On-site, not deleted products. Products outside accepted models come first, then other products with problems, then by name. `search` matches part of the product name or its 1C code exactly.
+         */
+        get: operations["getAdminSiteShowcase"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Final categories with models and problems, for the «Моделі» sidebar
+         * @description Final categories (without children) that have on-site products or models, by parent name, then name.
+         */
+        get: operations["getAdminSiteModelCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Site model problem counts (also inside the «Огляд» catalog block) */
+        get: operations["getAdminSiteModelHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept models («Прийняти»)
+         * @description Accepts up to 500 models; offered axes are saved for models without saved axes; products are pinned. Already accepted models stay as they are. Returns the new counts.
+         */
+        post: operations["acceptAdminSiteModels"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** The model card */
+        get: operations["getAdminSiteModel"];
+        /**
+         * Rename a model
+         * @description The slug stays as it is.
+         */
+        put: operations["renameAdminSiteModel"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/{id}/axes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set the model's axes (switchers), in order
+         * @description Up to 6 attributes of the shared dictionary; number attributes are refused. An empty list clears the axes.
+         */
+        put: operations["setAdminSiteModelAxes"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/{id}/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add products to a model
+         * @description The products must be in the model's category and not in another accepted model; they are pinned.
+         */
+        post: operations["addAdminSiteModelProducts"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/{id}/products/{productId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                productId: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Take a product out of a model
+         * @description The product is pinned out of models, so automation does not put it back.
+         */
+        delete: operations["removeAdminSiteModelProduct"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/{id}/texts/{language}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                language: "uk" | "ru";
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the model's texts in one language
+         * @description All four texts are replaced; a missing or blank text is stored empty.
+         */
+        put: operations["setAdminSiteModelText"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/{id}/fill-from-names": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * «Заповнити з назв»
+         * @description For each product and axis without a value a person set, the confirmed value the recognizer read from the 1C name becomes a manual value. Codes nobody decoded stay empty.
+         */
+        post: operations["fillAdminSiteModelFromNames"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/products/{productId}/attributes": {
         parameters: {
             query?: never;
@@ -2666,6 +2902,175 @@ export interface components {
         SetProductGroupMainRequest: {
             productId: number;
         };
+        SiteModelListItem: {
+            id: number;
+            categoryId: number;
+            categoryName: string;
+            name: string;
+            slug: string;
+            /** @enum {string} */
+            status: "proposed" | "accepted";
+            /** @description Not deleted products. */
+            productCount: number;
+            onSiteCount: number;
+            /** @description Lowest retail price of its on-site products. */
+            minPrice?: number | null;
+            /** @description Photo of the main product; empty without one. */
+            photo: string;
+            /** @description Axis names (saved, or offered for a proposal). */
+            axes: string[];
+            /** @description Model codes and the product codes its products have. */
+            problems: string[];
+        };
+        SiteModelList: {
+            items: components["schemas"]["SiteModelListItem"][];
+            totalCount: number;
+            page: number;
+            pageSize: number;
+        };
+        CreateSiteModelRequest: {
+            categoryId: number;
+            name: string;
+            productIds: number[];
+        };
+        SiteModelAxis: {
+            attributeId: number;
+            code: string;
+            name: string;
+            /** @enum {string} */
+            display: "swatch" | "button" | "checkbox";
+            /** @description False for axes only offered to a proposal. */
+            isSaved: boolean;
+        };
+        SiteModelProductValue: {
+            attributeId: number;
+            /** @description Null when the product has no confirmed value on this axis. */
+            valueId?: number | null;
+            name?: string | null;
+            isManual: boolean;
+        };
+        SiteModelProduct: {
+            productId: number;
+            /** @description Original 1C name. */
+            name: string;
+            slug: string;
+            photo: string;
+            retailPrice?: number | null;
+            inStock: boolean;
+            exportToSite: boolean;
+            isMain: boolean;
+            /** @description One per axis. */
+            values: components["schemas"]["SiteModelProductValue"][];
+            problems: string[];
+        };
+        SiteModelText: {
+            /** @enum {string} */
+            language: "uk" | "ru";
+            shortDescription: string;
+            description: string;
+            seoTitle: string;
+            seoDescription: string;
+        };
+        SiteModelCharacteristic: {
+            attributeId: number;
+            name: string;
+            /** @description Confirmed values shared by all on-site products. */
+            values: string[];
+        };
+        SiteModel: {
+            id: number;
+            categoryId: number;
+            categoryName: string;
+            name: string;
+            slug: string;
+            /** @enum {string} */
+            status: "proposed" | "accepted";
+            /** Format: date-time */
+            acceptedAt?: string | null;
+            acceptedBy?: string | null;
+            mainProductId?: number | null;
+            axes: components["schemas"]["SiteModelAxis"][];
+            products: components["schemas"]["SiteModelProduct"][];
+            /** @description Both languages, empty strings where nothing is saved. */
+            texts: components["schemas"]["SiteModelText"][];
+            characteristics: components["schemas"]["SiteModelCharacteristic"][];
+            /** @description Model problem codes. */
+            problems: string[];
+        };
+        SiteShowcaseModel: {
+            id: number;
+            name: string;
+            /** @enum {string} */
+            status: "proposed" | "accepted";
+        };
+        SiteShowcaseValue: {
+            attributeId: number;
+            attributeName: string;
+            value: string;
+        };
+        SiteShowcaseItem: {
+            /** @description The 1C code. */
+            productId: number;
+            /** @description Original 1C name. */
+            name: string;
+            slug: string;
+            photo: string;
+            categoryId: number;
+            categoryName: string;
+            retailPrice?: number | null;
+            inStock: boolean;
+            /** @description Its model; null when it is in none. */
+            model?: components["schemas"]["SiteShowcaseModel"] | null;
+            /** @description Confirmed values of the variant attributes (color, size, side). */
+            values: components["schemas"]["SiteShowcaseValue"][];
+            problems: ("no_model" | "no_attributes" | "missing_axis_value" | "same_combination")[];
+        };
+        SiteShowcaseList: {
+            items: components["schemas"]["SiteShowcaseItem"][];
+            totalCount: number;
+            page: number;
+            pageSize: number;
+        };
+        SiteModelCategory: {
+            id: number;
+            name: string;
+            parentName?: string | null;
+            onSiteProducts: number;
+            acceptedModels: number;
+            proposedModels: number;
+            /** @description Accepted models with a problem plus on-site products outside accepted models. */
+            problemCount: number;
+        };
+        SiteModelHealth: {
+            /** @description On-site products outside an accepted model: the hard error of «Огляд». */
+            productsWithoutModel: number;
+            productsWithoutAttributes: number;
+            productsMissingAxisValue: number;
+            productsWithSameCombination: number;
+            modelsWithoutAxes: number;
+            modelsWithoutSeo: number;
+            modelsWithoutPhoto: number;
+            /** @description Proposed models with on-site products. */
+            proposedModels: number;
+        };
+        AcceptSiteModelsRequest: {
+            ids: number[];
+        };
+        RenameSiteModelRequest: {
+            name: string;
+        };
+        SetSiteModelAxesRequest: {
+            attributeIds: number[];
+        };
+        AddSiteModelProductsRequest: {
+            productIds: number[];
+        };
+        SetSiteModelTextRequest: {
+            shortDescription?: string | null;
+            description?: string | null;
+            seoTitle?: string | null;
+            seoDescription?: string | null;
+        };
         AdminProductReview: {
             /** @enum {string} */
             state: "clear" | "needs_review" | "accepted";
@@ -2790,7 +3195,7 @@ export interface components {
             valueName?: string | null;
             isConfirmed: boolean;
             note?: string | null;
-            /** @description Products whose review mentions the code. */
+            /** @description On-site products whose review mentions the code (spec catalog/007 M-01). */
             productCount: number;
         };
         DecideAttributeCodeRequest: {
@@ -3770,6 +4175,8 @@ export interface components {
             productsWithProblems?: number;
             /** @description Those of them without brand marking (reason `no_name`). */
             noNameProducts?: number;
+            /** @description Site model health (spec catalog/007); `productsWithoutModel` is the hard error. The «Огляд» shows no line at 0. */
+            siteModels?: components["schemas"]["SiteModelHealth"] | null;
         };
         CatalogSnapshotProduct: {
             /** @description The 1C product code. */
@@ -5080,6 +5487,560 @@ export interface operations {
                 content?: never;
             };
             /** @description Group not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminSiteModels: {
+        parameters: {
+            query?: {
+                categoryId?: number;
+                status?: "proposed" | "accepted";
+                /** @description A problem code or `any` for every row with a problem. */
+                problem?: "any" | "no_model" | "no_attributes" | "missing_axis_value" | "same_combination" | "model_no_axes" | "model_no_seo" | "model_no_photo";
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A page of models */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelList"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminSiteModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSiteModelRequest"];
+            };
+        };
+        responses: {
+            /** @description Created model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminSiteShowcase: {
+        parameters: {
+            query?: {
+                categoryId?: number;
+                problem?: "any" | "no_model" | "no_attributes" | "missing_axis_value" | "same_combination";
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A page of products */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteShowcaseList"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminSiteModelCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Categories */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelCategory"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminSiteModelHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Counts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelHealth"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    acceptAdminSiteModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptSiteModelsRequest"];
+            };
+        };
+        responses: {
+            /** @description Counts after accepting */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelHealth"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminSiteModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    renameAdminSiteModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RenameSiteModelRequest"];
+            };
+        };
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminSiteModelAxes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetSiteModelAxesRequest"];
+            };
+        };
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    addAdminSiteModelProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddSiteModelProductsRequest"];
+            };
+        };
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    removeAdminSiteModelProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found or proposed model gone. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setAdminSiteModelText: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                language: "uk" | "ru";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetSiteModelTextRequest"];
+            };
+        };
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fillAdminSiteModelFromNames: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModel"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Model not found. */
             404: {
                 headers: {
                     [name: string]: unknown;

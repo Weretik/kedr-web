@@ -1,5 +1,6 @@
 export type {
   DashboardCatalog,
+  DashboardSiteModels,
   DashboardContent,
   DashboardOrder,
   DashboardOrders,

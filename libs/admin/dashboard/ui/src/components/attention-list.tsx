@@ -4,9 +4,11 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import LabelOffOutlinedIcon from '@mui/icons-material/LabelOffOutlined';
+import LinkOffOutlinedIcon from '@mui/icons-material/LinkOffOutlined';
+import PlaylistAddCheckOutlinedIcon from '@mui/icons-material/PlaylistAddCheckOutlined';
 import RuleOutlinedIcon from '@mui/icons-material/RuleOutlined';
 import SyncProblemOutlinedIcon from '@mui/icons-material/SyncProblemOutlined';
+import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
 import { Box, Button, Chip, Stack, Typography } from '@mui/material';
 
 import type { AttentionItem, AttentionKind, AttentionTone } from '@admin/dashboard/model';
@@ -18,8 +20,10 @@ const mainRows = 4;
 const icons: Record<AttentionKind, ReactNode> = {
   sync: <SyncProblemOutlinedIcon />,
   photos: <HideImageOutlinedIcon />,
-  'attribute-problems': <RuleOutlinedIcon />,
-  'no-name': <LabelOffOutlinedIcon />,
+  'site-no-model': <LinkOffOutlinedIcon />,
+  'site-product-problems': <RuleOutlinedIcon />,
+  'site-model-problems': <ViewModuleOutlinedIcon />,
+  'site-proposed-models': <PlaylistAddCheckOutlinedIcon />,
   'category-texts': <AccountTreeOutlinedIcon />,
   'article-drafts': <ArticleOutlinedIcon />,
   'legacy-covers': <ImageOutlinedIcon />,

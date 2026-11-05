@@ -96,10 +96,10 @@ export function AttributeEditPanel({
       onClose={onClose}
       open={open && attributeId !== undefined}
       subtitle={details?.attribute.nameUk}
-      title={canEdit ? 'Редагування властивості' : 'Властивість'}
+      title={canEdit ? 'Редагування ознаки' : 'Ознака'}
     >
       {query.isLoading ? (
-        <PageLoader label="Завантаження властивості" />
+        <PageLoader label="Завантаження ознаки" />
       ) : query.isError || !details ? (
         <Alert action={<Button onClick={() => query.refetch()}>Повторити</Button>} severity="error">
           Не вдалося завантажити властивість. Спробуйте ще раз.

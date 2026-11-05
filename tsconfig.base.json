@@ -180,7 +180,11 @@
       "@mobile/calculation/feature": ["./libs/mobile/calculation/feature/src/index.ts"],
       "@mobile/orders/model": ["./libs/mobile/orders/model/src/index.ts"],
       "@mobile/orders/data-access": ["./libs/mobile/orders/data-access/src/index.ts"],
-      "@mobile/orders/feature": ["./libs/mobile/orders/feature/src/index.ts"]
+      "@mobile/orders/feature": ["./libs/mobile/orders/feature/src/index.ts"],
+      "@admin/site-models/model": ["./libs/admin/site-models/model/src/index.ts"],
+      "@admin/site-models/data-access": ["./libs/admin/site-models/data-access/src/index.ts"],
+      "@admin/site-models/ui": ["./libs/admin/site-models/ui/src/index.ts"],
+      "@admin/site-models/feature": ["./libs/admin/site-models/feature/src/index.ts"]
     }
   }
 }
