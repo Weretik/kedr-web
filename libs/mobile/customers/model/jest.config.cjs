@@ -6,6 +6,9 @@ module.exports = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  moduleNameMapper: {
+    '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
+  },
   transform: {
     '[.][jt]sx?$': ['babel-jest', { configFile: __dirname + '/.babelrc.js' }],
   },

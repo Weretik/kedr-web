@@ -1,0 +1,9 @@
+{
+  "name": "mobile-catalog-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/catalog/feature/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:catalog", "type:feature"],
+  "// targets": "to see all targets run: nx show project mobile-catalog-feature --web",
+  "targets": {}
+}

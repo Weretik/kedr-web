@@ -30,10 +30,10 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 
 ## Stage 4 — products
 
-- **TS-012 — Price resolver.** Pure resolver in `catalog/model` with KedrStore cases. Covers R-005; SC-006. Test: unit.
-- **TS-013 — Product list.** FTS search, category tree, «лише в наявності», sort, client price, disabled add when out of stock or without price; tablet table. Covers R-005–R-007; SC-007, SC-008.
-- **TS-014 — Product detail and viewer.** Photos and scheme on white, segmented «Фото | Схема», full-screen `ZoomViewer`, tablet side by side. Covers R-008, R-017; SC-009, SC-025.
-- **TS-015 — Photo cache.** Prefetch of thumbnails and schemes on Wi‑Fi, «Завантажити всі фото». Covers R-008; SC-010.
+- **TS-012 — Price resolver.** Pure resolver in `catalog/model` with KedrStore cases. Covers R-005; SC-006. Test: unit. Status: done 2026-11-05; `resolvePriceTypeId`/`resolvePriceKopecks` in `catalog/model` (a rule type without a price gives null, as in KedrStore). Test: `catalog-model.spec.ts`.
+- **TS-013 — Product list.** FTS search, category tree, «лише в наявності», sort, client price, disabled add when out of stock or without price; tablet table. Covers R-005–R-007; SC-007, SC-008. Status: done 2026-11-05; `ProductList` in `catalog/feature` with in-memory search instead of FTS (see design), category chips with the path, «Лише в наявності», sort chip; the «+» in `ProductRow` appears when stage 5 passes `onAdd`. Test: `catalog-model.spec.ts`, `catalog-feature.spec.tsx`.
+- **TS-014 — Product detail and viewer.** Photos and scheme on white, segmented «Фото | Схема», full-screen `ZoomViewer`, tablet side by side. Covers R-008, R-017; SC-009, SC-025. Status: done 2026-11-05; `ProductGallery`, `ProductImage`, `ZoomViewer`/`ZoomableImage` in `catalog/ui`, `ProductDetail` in `catalog/feature`, routes `/products` and `/products/[productId]`; description and characteristics wait for KedrStore to send them. Test: `catalog-ui.spec.tsx`, `catalog-feature.spec.tsx`.
+- **TS-015 — Photo cache.** Prefetch of thumbnails and schemes on Wi‑Fi, «Завантажити всі фото». Covers R-008; SC-010. Status: done 2026-11-05; `useEssentialPhotoDownload` (main photo and scheme of every product on Wi‑Fi per catalog version) and `PhotoDownloadCard` in the cabinet. Test: `catalog-data-access.spec.tsx`.
 
 ## Stage 5 — calculation, drafts, orders
 

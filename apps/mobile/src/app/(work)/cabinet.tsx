@@ -1,5 +1,6 @@
+import { PhotoDownloadCard } from '@mobile/catalog/feature';
 import { logout, QuickUnlockRow, useMobileSession } from '@mobile/core/auth';
-import { ThemePreferenceControl, WorkScreen } from '@mobile/core/shell';
+import { ThemePreferenceControl, useConnectivity, WorkScreen } from '@mobile/core/shell';
 import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { AppText, Avatar, Button, Card } from '@mobile/shared/ui';
 import { clearDeviceData } from '@mobile/sync/feature';
@@ -10,6 +11,7 @@ import { StyleSheet } from 'react-native-unistyles';
 export default function CabinetRoute() {
   const session = useMobileSession();
   const user = session.status === 'authenticated' ? session.user : null;
+  const connectivity = useConnectivity();
 
   return (
     <WorkScreen title="Кабінет">
@@ -30,6 +32,10 @@ export default function CabinetRoute() {
         </AppText>
         <ThemePreferenceControl />
         <QuickUnlockRow />
+        <PhotoDownloadCard
+          isOnline={connectivity?.isOnline ?? null}
+          isUnmetered={connectivity?.isUnmetered ?? false}
+        />
         <Button label="Вийти" onPress={() => void signOut()} variant="destructive" />
       </ScrollView>
     </WorkScreen>

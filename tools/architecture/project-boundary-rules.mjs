@@ -19,6 +19,8 @@ const documentedCrossDomainFlows = new Set([
   'admin-catalog-attributes-feature->admin-media-data-access',
   'admin-catalog-attributes-feature->admin-media-model',
   'admin-catalog-attributes-feature->admin-media-ui',
+  // Products are priced for the selected customer (Kedr Manager stage 4).
+  'mobile-catalog-feature->mobile-customers-data-access',
   'mobile-catalog-feature->mobile-cart-data-access',
   'mobile-catalog-feature->mobile-cart-model',
   'mobile-orders-feature->mobile-customers-data-access',
