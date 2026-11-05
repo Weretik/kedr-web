@@ -54,7 +54,21 @@ export type {
   SiteShowcaseRow,
   SiteShowcaseValue,
 } from './entities/site-showcase';
-export type { SiteModelsQuery, SiteShowcaseQuery } from './queries/site-models-queries';
+export type {
+  SiteModelsQuery,
+  SiteShowcaseQuery,
+  SiteShowcaseStatus,
+} from './queries/site-models-queries';
+export type { SiteQueueView } from './entities/site-queue';
+export {
+  isSiteQueueView,
+  nextSiteQueueKey,
+  similarSiteModels,
+  siteQueueCounts,
+  siteQueueFilter,
+  siteQueueViewLabels,
+  siteQueueViews,
+} from './entities/site-queue';
 export type { SiteCategoryNode } from './entities/site-category-tree';
 export {
   isFinalSiteCategory,

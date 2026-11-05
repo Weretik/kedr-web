@@ -58,7 +58,8 @@ export function useSiteModelEditor(id: number | undefined, onNotice: (text: stri
     adding: addState.isLoading,
     textSaving: textState.isLoading,
     renaming: renameState.isLoading,
-    accept: (modelId: number) => run('header', () => accept([modelId]).unwrap(), 'Модель прийнято'),
+    accept: (modelId: number) =>
+      run('header', () => accept([modelId]).unwrap(), 'Модель погоджено'),
     rename: (modelId: number, name: string) =>
       run('header', () => rename({ id: modelId, name }).unwrap(), 'Назву змінено'),
     setAxes: (modelId: number, attributeIds: number[]) =>

@@ -1,9 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CatalogAttributesPage } from './catalog-attributes-page';
+import { CatalogDictionaryTab } from './catalog-dictionary-tab';
 
+import type { CatalogDictionaryTabProps } from './catalog-dictionary-tab';
 import type { CatalogAttribute, CatalogAttributeDetails } from '@admin/catalog-attributes/model';
 
 const api = vi.hoisted(() => ({
@@ -70,14 +71,29 @@ const details: CatalogAttributeDetails = {
   ],
 };
 
-const renderPage = (canEdit: boolean, entry = '/catalog-attributes') =>
-  render(
-    <MemoryRouter initialEntries={[entry]}>
-      <CatalogAttributesPage canEdit={canEdit} />
-    </MemoryRouter>,
+/** The page of «Вітрина сайту» holds «Нова ознака» and the notice; this harness stands in for it. */
+function Harness({ canEdit, tab }: Pick<CatalogDictionaryTabProps, 'canEdit' | 'tab'>) {
+  const [creating, setCreating] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  return (
+    <>
+      {canEdit ? <button onClick={() => setCreating(true)}>Нова ознака</button> : null}
+      <CatalogDictionaryTab
+        canEdit={canEdit}
+        creating={creating}
+        onCreatingChange={setCreating}
+        onNotice={setNotice}
+        tab={tab}
+      />
+      {notice ? <p>{notice}</p> : null}
+    </>
   );
+}
 
-describe('CatalogAttributesPage', () => {
+const renderPage = (canEdit: boolean, tab: CatalogDictionaryTabProps['tab'] = 'attributes') =>
+  render(<Harness canEdit={canEdit} tab={tab} />);
+
+describe('CatalogDictionaryTab', () => {
   beforeEach(() => {
     Object.values(api).forEach((mock) => mock.mockReset());
     api.list.mockReturnValue({ data: [attribute], isError: false, isFetching: false });
@@ -133,9 +149,8 @@ describe('CatalogAttributesPage', () => {
     expect(screen.queryByRole('button', { name: 'Нова ознака' })).toBeNull();
   });
 
-  it('opens the codes tab from the address', () => {
-    renderPage(true, '/catalog-attributes?tab=codes');
-    expect(screen.getByRole('tab', { name: 'Не розшифровані коди', selected: true })).toBeTruthy();
+  it('shows the codes tab', () => {
+    renderPage(true, 'codes');
     expect(screen.getByText('Нерозшифрованих кодів немає.')).toBeTruthy();
   });
 });

@@ -93,6 +93,7 @@ export function mapSiteModelHealth(response: unknown): SiteModelHealth {
 export function toSiteShowcaseParams(query: SiteShowcaseQuery) {
   return {
     categoryId: query.categoryId,
+    status: query.status,
     problem: query.problem,
     search: query.search?.trim() || undefined,
     page: query.page,
@@ -102,7 +103,7 @@ export function toSiteShowcaseParams(query: SiteShowcaseQuery) {
 
 /** Query string of the models list: empty filters are left out. */
 export function toSiteModelsParams(query: SiteModelsQuery) {
-  return { ...toSiteShowcaseParams(query), status: query.status };
+  return toSiteShowcaseParams(query);
 }
 
 /** Blank texts are sent as they are: the backend stores them empty. */

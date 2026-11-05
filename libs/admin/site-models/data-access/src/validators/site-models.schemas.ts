@@ -125,6 +125,8 @@ export const siteModelCategoriesSchema = z.array(
     acceptedModels: z.number().int().nonnegative(),
     proposedModels: z.number().int().nonnegative(),
     problemCount: z.number().int().nonnegative(),
+    loneProducts: z.number().int().nonnegative(),
+    filterCount: z.number().int().nonnegative(),
   }),
 );
 
