@@ -27,6 +27,8 @@ export type ArticlesDictionary = {
   loading: string;
   updating: string;
   backToList: string;
+  /** The block after an article: from reading to choosing hardware. */
+  nextStep: { title: string; text: string; catalog: string; wholesale: string };
   published: string;
   found: (total: number) => string;
   range: (start: number, end: number, total: number) => string;
@@ -60,6 +62,12 @@ const dictionaries: Record<Locale, ArticlesDictionary> = {
     loading: 'Завантажуємо статті…',
     updating: 'Оновлюємо список…',
     backToList: 'До всіх статей',
+    nextStep: {
+      title: 'Підберіть фурнітуру для своїх дверей',
+      text: 'Перегляньте розділи каталогу або запитайте оптові умови в менеджера.',
+      catalog: 'Перейти до каталогу',
+      wholesale: 'Оптові умови',
+    },
     published: 'Опубліковано',
     found: (total) =>
       `Знайдено ${pluralize('uk', total, { one: 'статтю', few: 'статті', many: 'статей' })}`,
@@ -92,6 +100,12 @@ const dictionaries: Record<Locale, ArticlesDictionary> = {
     loading: 'Загружаем статьи…',
     updating: 'Обновляем список…',
     backToList: 'Ко всем статьям',
+    nextStep: {
+      title: 'Подберите фурнитуру для своих дверей',
+      text: 'Посмотрите разделы каталога или узнайте оптовые условия у менеджера.',
+      catalog: 'Перейти в каталог',
+      wholesale: 'Оптовые условия',
+    },
     published: 'Опубликовано',
     found: (total) =>
       `Найдено ${pluralize('ru', total, { one: 'статья', few: 'статьи', many: 'статей' })}`,

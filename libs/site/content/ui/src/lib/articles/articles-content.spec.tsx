@@ -254,7 +254,10 @@ it.each(['uk', 'ru'] as const)(
   'renders complete source text, publication date and article links in %s',
   (locale) => {
     const article = exampleListing(1).items[0];
-    const { container } = render(<ArticleContent locale={locale} article={article} />);
+    const links = { catalog: `/${locale}/catalog`, wholesale: `/${locale}/wholesale` };
+    const { container } = render(
+      <ArticleContent locale={locale} article={article} links={links} />,
+    );
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(article.title);
     for (const text of ['Повний текст матеріалу 1.', 'Останній абзац джерела.'])
       expect(screen.getByText(text)).toBeDefined();
@@ -265,7 +268,11 @@ it.each(['uk', 'ru'] as const)(
     });
     expect(back.getAttribute('href')).toBe(`/${locale}/articles`);
     expect(container.querySelector('main')).toBeNull();
-    expect(container.querySelector('aside')).toBeNull();
+    const nextStep = screen.getByRole('complementary');
+    expect([...nextStep.querySelectorAll('a')].map((link) => link.getAttribute('href'))).toEqual([
+      links.catalog,
+      links.wholesale,
+    ]);
     expect(container.querySelector('img')?.getAttribute('loading')).toBe('eager');
   },
 );

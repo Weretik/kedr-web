@@ -16,7 +16,7 @@ export function buildArticlesMetadata(
 ): Metadata {
   const copy = ARTICLES_SEO_COPY[locale];
   const hasSearch = input.q.length > 0;
-  const baseTitle = hasSearch ? copy.searchTitle + ': ' + input.q : copy.title;
+  const baseTitle = hasSearch ? copy.searchTitle + ': ' + input.q : copy.listTitle;
   const title = input.page > 1 ? baseTitle + ' — ' + copy.page + ' ' + input.page : baseTitle;
   const metadata = buildPageMetadata(
     {
