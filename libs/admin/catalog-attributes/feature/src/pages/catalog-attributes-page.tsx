@@ -11,7 +11,7 @@ type AttributesPageTab = 'attributes' | 'codes' | 'filters';
 
 const tabs: readonly AttributesPageTab[] = ['attributes', 'codes', 'filters'];
 
-/** «Властивості» (spec catalog/006, phase 3): the dictionary of product properties. Admins change it. */
+/** «Ознаки» (spec catalog/006 phase 3, renamed by spec catalog/007): the dictionary of product properties. Admins change it. */
 export function CatalogAttributesPage({ canEdit }: { canEdit: boolean }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const requested = searchParams.get('tab') as AttributesPageTab | null;
@@ -20,9 +20,9 @@ export function CatalogAttributesPage({ canEdit }: { canEdit: boolean }) {
 
   return (
     <Stack component="section" spacing={3}>
-      <AdminPageHeader title="Властивості" />
+      <AdminPageHeader title="Ознаки" />
       <Tabs
-        aria-label="Розділ властивостей"
+        aria-label="Розділ ознак"
         onChange={(_event, value: AttributesPageTab) =>
           setSearchParams(value === 'attributes' ? {} : { tab: value })
         }
@@ -30,7 +30,7 @@ export function CatalogAttributesPage({ canEdit }: { canEdit: boolean }) {
         value={tab}
         variant="scrollable"
       >
-        <Tab label="Властивості" value="attributes" />
+        <Tab label="Ознаки" value="attributes" />
         <Tab label="Не розшифровані коди" value="codes" />
         <Tab label="Фільтри категорій" value="filters" />
       </Tabs>

@@ -50,8 +50,7 @@ const noCatalogProblems: DashboardCatalog = {
   productsWithoutPhoto: 0,
   topCategoryWithoutPhoto: null,
   categoriesWithoutText: 0,
-  productsWithProblems: 0,
-  noNameProducts: 0,
+  siteModels: null,
 };
 const content: DashboardContent = {
   articleDrafts: 0,

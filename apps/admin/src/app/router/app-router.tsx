@@ -31,6 +31,7 @@ import {
 } from '@admin/orders/feature';
 import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
+import { createSiteModelsRoutes } from '@admin/site-models/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
 import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
@@ -61,6 +62,7 @@ const usersRoutes = createUsersRoutes({ useCurrentUserId: useSignedInUserId });
 const profileRoutes = createProfileRoutes({ onProfileChanged: refreshSession });
 const categoriesRoutes = createCategoriesRoutes({ useCanEditCatalog });
 const catalogAttributesRoutes = createCatalogAttributesRoutes({ useCanEditCatalog });
+const siteModelsRoutes = createSiteModelsRoutes();
 const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
 const dashboardRoutes = createDashboardRoutes({
   siteRefreshAction: <SiteRefreshButton variant="text" />,
@@ -102,6 +104,7 @@ export function AppRouter() {
           useCanEditCatalog,
         }),
         ...categoriesRoutes,
+        ...siteModelsRoutes,
         ...catalogAttributesRoutes,
         ...createOrdersRoutes({ CustomerPicker }),
         ...createClientsRoutes({

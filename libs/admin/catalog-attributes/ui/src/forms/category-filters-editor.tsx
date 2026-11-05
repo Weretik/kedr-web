@@ -32,7 +32,7 @@ export function CategoryFiltersEditor({
   if (draft.length === 0)
     return (
       <Typography color="text.secondary" variant="body2">
-        У товарах категорії ще немає властивостей для фільтрів.
+        У товарах категорії ще немає ознак для фільтрів.
       </Typography>
     );
 

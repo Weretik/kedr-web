@@ -19,10 +19,6 @@ export interface ProductsListQuery {
   categoryId?: number;
   priceFrom?: number;
   priceTo?: number;
-  /** «Тільки проблемні»: products whose attributes need review. */
-  problemsOnly?: boolean;
-  /** Products in review for this reason code only, for example `no_name`. */
-  problemReason?: string;
   sort: ProductsListSort;
   page: number;
   pageSize: number;
@@ -61,8 +57,6 @@ export function normalizeProductsListQuery(query: ProductsListQuery): ProductsLi
         : undefined,
     priceFrom: normalizePrice(query.priceFrom),
     priceTo: normalizePrice(query.priceTo),
-    problemsOnly: query.problemsOnly === true ? true : undefined,
-    problemReason: normalizeReason(query.problemReason),
     sort: isProductsListSort(query.sort) ? query.sort : DEFAULT_PRODUCTS_LIST_QUERY.sort,
     page: normalizePositiveInteger(query.page, DEFAULT_PRODUCTS_LIST_QUERY.page),
     pageSize: Math.min(
@@ -80,11 +74,6 @@ function normalizeSearchTerm(value: string | undefined): string | undefined {
   const normalized = value?.trim();
 
   return normalized?.slice(0, 100) || undefined;
-}
-
-function normalizeReason(value: string | undefined): string | undefined {
-  const normalized = value?.trim();
-  return normalized && /^[a-z0-9_]{1,64}$/.test(normalized) ? normalized : undefined;
 }
 
 function normalizePrice(value: number | undefined): number | undefined {

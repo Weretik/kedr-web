@@ -109,12 +109,9 @@ export function CatalogAttributesDataGrid({
         slots={{
           noRowsOverlay: () =>
             error ? (
-              <DataGridMessageOverlay
-                message="Не вдалося завантажити властивості."
-                onRetry={onRetry}
-              />
+              <DataGridMessageOverlay message="Не вдалося завантажити ознаки." onRetry={onRetry} />
             ) : (
-              <DataGridMessageOverlay message="Властивостей ще немає: запустіть імпорт словника." />
+              <DataGridMessageOverlay message="Ознак ще немає: запустіть імпорт словника." />
             ),
         }}
       />

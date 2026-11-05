@@ -32,9 +32,6 @@ describe('ProductsDataGrid responsive actions', () => {
       stock: 2,
       quantityInPack: 1,
       deletedAt: null,
-      groupId: null,
-      groupName: null,
-      problems: [],
     };
 
     render(
@@ -157,9 +154,6 @@ describe('ProductsDataGrid responsive actions', () => {
             stock: 2,
             quantityInPack: 1,
             deletedAt: null,
-            groupId: null,
-            groupName: null,
-            problems: [],
           },
         ]}
         sort="id-asc"

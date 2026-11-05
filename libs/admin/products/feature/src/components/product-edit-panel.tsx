@@ -1,7 +1,5 @@
 import { AdminEditPanel, SlugEditCard } from '@admin/shared/ui';
 
-import { ProductAttributesSection } from './product-attributes-section';
-import { ProductGroupSection } from './product-group-section';
 import { ProductMediaSection } from './product-media-section';
 import { useProductSlugChange } from '../hooks/use-product-slug-change';
 
@@ -11,7 +9,6 @@ export interface EditedProduct {
   id: number;
   nameUk: string;
   productSlug: string;
-  categoryId: number | null;
 }
 
 interface ProductEditPanelProps {
@@ -24,8 +21,8 @@ interface ProductEditPanelProps {
 }
 
 /**
- * What the admin may edit in a product: attributes, review, and variant group (spec catalog/006), photos and
- * scheme, and the site address. Names, prices, and stock come from 1С and stay read-only.
+ * What the admin may edit in a product: photos and scheme, and the site address. Names, prices, and
+ * stock come from 1С and stay read-only.
  */
 export function ProductEditPanel({
   canEditSlug,
@@ -46,12 +43,6 @@ export function ProductEditPanel({
     >
       {product ? (
         <>
-          <ProductAttributesSection productId={product.id} />
-          <ProductGroupSection
-            categoryId={product.categoryId}
-            productId={product.id}
-            suggestedName={product.nameUk}
-          />
           <ProductMediaSection productId={product.id} />
           {canEditSlug ? (
             <SlugEditCard
