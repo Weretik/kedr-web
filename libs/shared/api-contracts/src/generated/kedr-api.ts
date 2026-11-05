@@ -81,6 +81,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/{lang}/{categorySlug}/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the attribute filters of a category with counts
+         * @description Spec catalog/006, phase 5. The attributes the category tree offers as filters («Фільтри категорій»), with the values its on-site products have. A count is the number of cards (a variant group is one card) the list would show with that value added: other attributes' choices apply, the attribute's own do not. Only values a person confirmed count. A value without cards is left out unless chosen; an attribute without values is left out. Takes the same query as the category product list.
+         */
+        get: operations["getCategoryFacets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/{lang}/product/{productSlug}": {
         parameters: {
             query?: never;
@@ -2433,6 +2453,13 @@ export interface components {
             /** Format: int64 */
             totalRecords: number;
         };
+        /** @description A color circle (`hex`), a texture picture (`textureUrl`), or only the name when neither is set. */
+        ProductSwatch: {
+            slug: string;
+            name: string;
+            hex?: string | null;
+            textureUrl?: string | null;
+        };
         ProductListItem: {
             id: number;
             name: string;
@@ -2444,15 +2471,75 @@ export interface components {
             isSale: boolean;
             isNew: boolean;
             price?: number | null;
+            /** @description With `groupVariants`: on-site variants of the group, this one included; null for a single product. */
+            variantCount?: number | null;
+            /** @description With `groupVariants`: colors of the group's on-site variants in dictionary order. */
+            swatches?: components["schemas"]["ProductSwatch"][] | null;
         };
         ProductPage: {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: components["schemas"]["ProductListItem"][];
         };
+        CategoryFacetValue: {
+            slug: string;
+            name: string;
+            hex?: string | null;
+            textureUrl?: string | null;
+            count: number;
+            selected: boolean;
+        };
+        CategoryFacet: {
+            code: string;
+            /** @description The attribute part of `filter`. */
+            slug: string;
+            name: string;
+            /** @enum {string} */
+            display: "swatch" | "button" | "checkbox";
+            values: components["schemas"]["CategoryFacetValue"][];
+        };
+        CategoryFacets: {
+            /** @description Cards with every choice applied. */
+            totalCards: number;
+            facets: components["schemas"]["CategoryFacet"][];
+        };
         Breadcrumb: {
             id: number;
             name: string;
             slug: string;
+        };
+        ProductVariants: {
+            groupName: string;
+            groupSlug: string;
+            /** @description The group's main product on the site; the canonical page. */
+            mainProductSlug?: string | null;
+            /** @description Variant attributes (color, size, side) whose values differ inside the group. */
+            axes: {
+                code: string;
+                slug: string;
+                name: string;
+                /** @enum {string} */
+                display: "swatch" | "button";
+                values: {
+                    /** @description Value slug; a two-color value joins the slugs with `+`. */
+                    key: string;
+                    name: string;
+                    swatches: components["schemas"]["ProductSwatch"][];
+                }[];
+            }[];
+            items: {
+                id: number;
+                productSlug: string;
+                name: string;
+                photo: string;
+                price?: number | null;
+                inStock: boolean;
+                isCurrent: boolean;
+                isMain: boolean;
+                /** @description Axis code → value key; missing when the variant has none. */
+                values: {
+                    [key: string]: string;
+                };
+            }[];
         };
         ProductDetails: {
             /** @description 1C product code shown to customers as the article. */
@@ -2474,6 +2561,14 @@ export interface components {
             quantityInPack: number;
             price?: number | null;
             breadcrumbs: components["schemas"]["Breadcrumb"][];
+            /** @description The variant group when it has at least two variants on the site (spec catalog/006). */
+            variants?: components["schemas"]["ProductVariants"] | null;
+            /** @description Confirmed attribute values for «Характеристики», in attribute order. */
+            characteristics?: {
+                code: string;
+                name: string;
+                value: string;
+            }[];
         };
         AdminCategory: {
             id: number;
@@ -4039,6 +4134,10 @@ export interface components {
         PriceTo: number;
         /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
         Availability: "InStock" | "All";
+        /** @description Attribute filter `attribute-slug:value-slug[,value-slug]`, repeatable (spec catalog/006). Values of one attribute match any of them, different attributes all; only confirmed values match. At most 50 values. Malformed: `400`; unknown attribute or value slug: `404`. */
+        AttributeFilter: string[];
+        /** @description `true` returns one row per variant group, at the place of its first matching product: the group's main product when it matches, otherwise the first matching variant. Counts and pages are in cards. */
+        GroupVariants: boolean;
         ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc" | "AvailabilityThenName";
         Page: number;
         PageSize: number;
@@ -4131,6 +4230,10 @@ export interface operations {
                 priceTo?: components["parameters"]["PriceTo"];
                 /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
                 availability?: components["parameters"]["Availability"];
+                /** @description Attribute filter `attribute-slug:value-slug[,value-slug]`, repeatable (spec catalog/006). Values of one attribute match any of them, different attributes all; only confirmed values match. At most 50 values. Malformed: `400`; unknown attribute or value slug: `404`. */
+                filter?: components["parameters"]["AttributeFilter"];
+                /** @description `true` returns one row per variant group, at the place of its first matching product: the group's main product when it matches, otherwise the first matching variant. Counts and pages are in cards. */
+                groupVariants?: components["parameters"]["GroupVariants"];
                 sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
                 pageSize?: components["parameters"]["PageSize"];
@@ -4168,6 +4271,10 @@ export interface operations {
                 priceTo?: components["parameters"]["PriceTo"];
                 /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
                 availability?: components["parameters"]["Availability"];
+                /** @description Attribute filter `attribute-slug:value-slug[,value-slug]`, repeatable (spec catalog/006). Values of one attribute match any of them, different attributes all; only confirmed values match. At most 50 values. Malformed: `400`; unknown attribute or value slug: `404`. */
+                filter?: components["parameters"]["AttributeFilter"];
+                /** @description `true` returns one row per variant group, at the place of its first matching product: the group's main product when it matches, otherwise the first matching variant. Counts and pages are in cards. */
+                groupVariants?: components["parameters"]["GroupVariants"];
                 sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
                 pageSize?: components["parameters"]["PageSize"];
@@ -4191,7 +4298,49 @@ export interface operations {
                 };
             };
             400: components["responses"]["responses-ValidationError"];
-            /** @description Unknown or deleted category slug. */
+            /** @description Unknown or deleted category slug, or an unknown attribute or value slug in `filter`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCategoryFacets: {
+        parameters: {
+            query?: {
+                searchTerm?: components["parameters"]["SearchTerm"];
+                inStock?: components["parameters"]["InStock"];
+                isSale?: components["parameters"]["IsSale"];
+                isNew?: components["parameters"]["IsNew"];
+                priceFrom?: components["parameters"]["PriceFrom"];
+                priceTo?: components["parameters"]["PriceTo"];
+                /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
+                availability?: components["parameters"]["Availability"];
+                /** @description Attribute filter `attribute-slug:value-slug[,value-slug]`, repeatable (spec catalog/006). Values of one attribute match any of them, different attributes all; only confirmed values match. At most 50 values. Malformed: `400`; unknown attribute or value slug: `404`. */
+                filter?: components["parameters"]["AttributeFilter"];
+            };
+            header?: never;
+            path: {
+                lang: components["parameters"]["Lang"];
+                categorySlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Filters with counts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryFacets"];
+                };
+            };
+            400: components["responses"]["responses-ValidationError"];
+            /** @description Unknown or deleted category slug, or an unknown attribute or value slug in `filter`. */
             404: {
                 headers: {
                     [name: string]: unknown;

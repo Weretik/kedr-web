@@ -1,3 +1,12 @@
+import {
+  countAttributeChoices,
+  parseAttributeChoices,
+  serializeAttributeChoices,
+  toggleAttributeChoice,
+} from './attribute-choices';
+
+import type { AttributeChoices } from './attribute-choices';
+
 /** Sort orders offered on listings; `availability` (in stock first, then by name) is the default. */
 export const LISTING_SORTS = ['availability', 'price-asc', 'price-desc', 'new', 'name'] as const;
 export type ListingSort = (typeof LISTING_SORTS)[number];
@@ -20,6 +29,8 @@ export type ListingQuery = {
   priceTo: number | null;
   view: ListingView;
   perPage: ListingPageSize;
+  /** Category attribute filters; the URL keeps each as its own key, for example `?kolir=khrom,chornyi`. */
+  attributes: AttributeChoices;
 };
 
 export const DEFAULT_LISTING_QUERY: ListingQuery = {
@@ -32,7 +43,22 @@ export const DEFAULT_LISTING_QUERY: ListingQuery = {
   priceTo: null,
   view: 'grid',
   perPage: 20,
+  attributes: {},
 };
+
+/** URL keys that are not attribute filters: the listing choices and the search term. */
+const RESERVED_KEYS: ReadonlySet<string> = new Set([
+  'page',
+  'sort',
+  'inStock',
+  'isSale',
+  'isNew',
+  'priceFrom',
+  'priceTo',
+  'view',
+  'perPage',
+  'q',
+]);
 
 /** Shape of Next.js `searchParams` and of `URLSearchParams` entries. */
 export type SearchParamsRecord = Record<string, string | string[] | undefined>;
@@ -84,12 +110,13 @@ export function parseListingQuery(params: SearchParamsRecord): ListingQuery {
     priceTo,
     view: pick(LISTING_VIEWS, first(params['view']), DEFAULT_LISTING_QUERY.view),
     perPage: parsePerPage(first(params['perPage'])),
+    attributes: parseAttributeChoices(params, RESERVED_KEYS),
   };
 }
 
 /**
  * Query string without the leading `?`, in a fixed order and without default values, so equal choices give
- * one URL. Extra entries (the search term) come first.
+ * one URL. Attribute filters come first (sorted, with readable commas), then extra entries (the search term).
  */
 export function serializeListingQuery(
   query: ListingQuery,
@@ -105,7 +132,7 @@ export function serializeListingQuery(
   if (query.view !== DEFAULT_LISTING_QUERY.view) params.set('view', query.view);
   if (query.perPage !== DEFAULT_LISTING_QUERY.perPage) params.set('perPage', String(query.perPage));
   if (query.page !== 1) params.set('page', String(query.page));
-  return params.toString();
+  return [serializeAttributeChoices(query.attributes), params.toString()].filter(Boolean).join('&');
 }
 
 /** Path with the serialized query, for links and navigation. */
@@ -130,8 +157,14 @@ export function hasListingFilters(query: ListingQuery): boolean {
     query.isSale ||
     query.isNew ||
     query.priceFrom !== null ||
-    query.priceTo !== null
+    query.priceTo !== null ||
+    countAttributeChoices(query.attributes) > 0
   );
+}
+
+/** Adds or removes one attribute value, from page 1. */
+export function toggleAttribute(query: ListingQuery, key: string, value: string): ListingQuery {
+  return { ...query, attributes: toggleAttributeChoice(query.attributes, key, value), page: 1 };
 }
 
 /** The same choices without filters, from page 1: the reset target of an empty result. */

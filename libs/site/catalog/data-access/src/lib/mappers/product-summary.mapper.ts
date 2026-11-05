@@ -1,7 +1,8 @@
 import type { components } from '@shared/api-contracts';
-import type { ProductSummary } from '@site/catalog/model';
+import type { ProductSummary, ProductSwatch } from '@site/catalog/model';
 
 type ProductListItem = components['schemas']['ProductListItem'];
+type ApiSwatch = components['schemas']['ProductSwatch'];
 
 /** Product photos are served by this CDN; keep in sync with `images.remotePatterns` in `apps/site/next.config.ts`. */
 export const PRODUCT_IMAGE_HOST = 'images-kedr.cdn.express';
@@ -28,5 +29,20 @@ export function mapProductSummary(item: ProductListItem): ProductSummary {
     inStock: item.inStock,
     isNew: item.isNew,
     isSale: item.isSale,
+    ...(typeof item.variantCount === 'number' &&
+      item.variantCount > 1 && { variantCount: item.variantCount }),
+    ...(item.swatches?.length && { swatches: item.swatches.map(mapSwatch) }),
+  };
+}
+
+const HEX = /^#[0-9a-f]{6}$/i;
+
+/** Swatch texture pictures live in the media library on the same CDN as product photos. */
+export function mapSwatch(swatch: ApiSwatch): ProductSwatch {
+  return {
+    slug: swatch.slug,
+    name: swatch.name,
+    hex: swatch.hex && HEX.test(swatch.hex) ? swatch.hex : null,
+    textureUrl: toProductPhotoUrl(swatch.textureUrl),
   };
 }
