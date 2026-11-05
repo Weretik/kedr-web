@@ -1,8 +1,9 @@
 import { customers, LocalDatabaseProvider, type LocalDatabase } from '@mobile/core/local-db';
 import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
-import { act, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
+import { SyncInfoCard } from './components/sync-info-card';
 import { SyncProvider } from './components/sync-provider';
 import { SyncStatusStrip } from './components/sync-status-strip';
 import { syncStatusActions, useSyncStatus } from './state/sync-status-store';
@@ -131,5 +132,29 @@ describe('SyncStatusStrip', () => {
 
     expect(screen.queryByTestId('sync-status-strip')).toBeNull();
     expect(useSyncStatus.getState().running).toBe(false);
+  });
+});
+
+describe('SyncInfoCard', () => {
+  beforeEach(() => syncStatusActions.reset());
+
+  it('shows the update time and asks for a sync now (R-016)', async () => {
+    const syncedAt = new Date(2026, 10, 5, 14, 5).getTime();
+    await act(async () => syncStatusActions.loaded({ catalog: syncedAt, customers: syncedAt }));
+    await render(<SyncInfoCard isOnline now={syncedAt + 60_000} />);
+
+    expect(screen.getByText('Оновлено 14:05')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Оновити дані зараз' }));
+    expect(useSyncStatus.getState().requestedAt).toBeGreaterThan(0);
+  });
+
+  it('cannot update offline and explains a failed update', async () => {
+    await act(async () =>
+      syncStatusActions.finished([{ kind: 'failed', reason: 'server', resource: 'catalog' }]),
+    );
+    await render(<SyncInfoCard isOnline={false} />);
+
+    expect(screen.getByRole('button', { name: 'Оновити дані зараз' })).toBeDisabled();
+    expect(screen.getByText('Не вдалося оновити: сервер тимчасово недоступний.')).toBeTruthy();
   });
 });

@@ -101,6 +101,13 @@ Stage 5 as built:
 - Drafts open online only: the activity cache keeps the draft list, not draft lines. The order detail is also read online.
 - There is no `orders/ui`: rows come from `customers/ui` and `calculation/ui`.
 
+## Cabinet (stage 6 as built)
+
+- `@mobile/profile` got a `model` library too: the name, e-mail and password rules and the error wording are pure and tested apart from the screens.
+- The route composes the cabinet from `profile/feature`, `sync/feature` (`SyncInfoCard`), `calculation/feature` (`QueueSummaryCard`, `useQueuedCount`), `catalog/feature` and `core/auth`, so `profile` has no cross-domain dependency; session updates and the re-sign-in are passed in as callbacks.
+- KedrStore revokes every refresh session after an own e-mail or password change, also for the calling bearer client. The app therefore signs in again with the new e-mail or password right after a successful change; no backend change was needed.
+- Photo change uses `expo-image-picker` (gallery, square crop, JPEG 70 %); the server crops to 256×256 WebP and enforces the 2 MB and 128 px limits.
+
 ## Photos
 
 `expo-image` with `cachePolicy="disk"`. KedrStore has no thumbnails, so after each new catalog version on Wi‑Fi (`isUnmetered` of the connectivity adapter) the main photo of every product and every scheme are prefetched in batches of 20; «Завантажити всі фото» prefetches large photos with a progress indicator and a stop button. The viewer uses Gesture Handler (pinch, double tap, pan) and Reanimated on the UI thread; stage 4 kept the hand-written gesture (no new native package). Jest cannot start Reanimated, so the viewer tests replace `ZoomableImage`; the gestures are checked on a device.

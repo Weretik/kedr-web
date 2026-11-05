@@ -53,6 +53,13 @@ const workspaceAliases = {
   ),
   '@mobile/orders/feature': path.join(workspaceRoot, 'libs/mobile/orders/feature/src/index.ts'),
   '@mobile/orders/model': path.join(workspaceRoot, 'libs/mobile/orders/model/src/index.ts'),
+  '@mobile/profile/data-access': path.join(
+    workspaceRoot,
+    'libs/mobile/profile/data-access/src/index.ts',
+  ),
+  '@mobile/profile/feature': path.join(workspaceRoot, 'libs/mobile/profile/feature/src/index.ts'),
+  '@mobile/profile/model': path.join(workspaceRoot, 'libs/mobile/profile/model/src/index.ts'),
+  '@mobile/profile/ui': path.join(workspaceRoot, 'libs/mobile/profile/ui/src/index.ts'),
   '@mobile/catalog/data-access': path.join(
     workspaceRoot,
     'libs/mobile/catalog/data-access/src/index.ts',

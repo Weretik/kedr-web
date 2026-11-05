@@ -1,5 +1,6 @@
 export { clearDeviceData } from './state/clear-device-data';
 export { SyncGate, type SyncGateProps } from './components/sync-gate';
+export { SyncInfoCard, type SyncInfoCardProps } from './components/sync-info-card';
 export { SyncProvider, type SyncProviderProps } from './components/sync-provider';
 export { SyncStatusStrip, type SyncStatusStripProps } from './components/sync-status-strip';
 export { useSyncScheduler, type SyncSchedulerOptions } from './hooks/use-sync-scheduler';

@@ -7,7 +7,7 @@
 - [mobile-auth](../../../libs/mobile/core/auth/src/session/mobile-auth.ts) connects the shared API client; on a `401` [bearer-auth](../../../libs/mobile/shared/api-client/src/interceptors/bearer-auth.ts) refreshes the pair once and repeats the request. Every successful sign-in or refresh restarts the offline window.
 - Offline start: when the API cannot be reached, the saved session opens if the last confirmation is at most 7 days old ([offline-window](../../../libs/mobile/core/auth/src/session/offline-window.ts)); after that the login screen opens. KedrStore keeps `RefreshAbsoluteLifetimeDays` at 7 or more (KedrStore spec `platform/004`).
 - Quick unlock: with «Швидкий вхід» on ([QuickUnlockRow](../../../libs/mobile/core/auth/src/components/quick-unlock-row.tsx) in the cabinet; turning it on asks for the fingerprint, face or device code once), a restored session starts `locked` and [UnlockScreen](../../../libs/mobile/core/auth/src/screens/unlock-screen.tsx) asks again ([quick-unlock](../../../libs/mobile/core/auth/src/session/quick-unlock.ts), `expo-local-authentication`). «Увійти паролем» signs out. A password sign-in never locks.
-- Sign-out (`POST /api/auth/mobile/logout`) forgets the tokens and the saved session even offline. Contract: [Session](../../contracts/identity/session.md).
+- Sign-out (`POST /api/auth/mobile/logout`) forgets the tokens and the saved session even offline; the [cabinet](cabinet.md) warns first when the send queue is not empty. Contract: [Session](../../contracts/identity/session.md).
 
 ## Structure diagram
 

@@ -7,6 +7,7 @@ import {
   logout,
   refreshAccessToken,
   unlockSession,
+  updateSessionUser,
 } from './mobile-auth';
 import { confirmOwner, isQuickUnlockAvailable } from './quick-unlock';
 import { getMobileSessionState } from './session-store';
@@ -159,6 +160,22 @@ describe('mobile auth session', () => {
     await login({ email: 'm@kedr.ua', password: 'secret-pass' });
 
     expect(getMobileSessionState().status).toBe('authenticated');
+  });
+
+  it('keeps the saved session in step with a cabinet change (R-016)', async () => {
+    jest.mocked(requestLogin).mockResolvedValue({ accessToken: 'a1', refreshToken: 'r1' });
+    jest.mocked(requestCurrentUser).mockResolvedValue(manager);
+    await login({ email: 'm@kedr.ua', password: 'secret-pass' });
+
+    await updateSessionUser({ avatarUrl: 'https://cdn/a.webp', fullName: 'Олена К.' });
+
+    expect(getMobileSessionState()).toEqual({
+      status: 'authenticated',
+      user: { ...manager, avatarUrl: 'https://cdn/a.webp', fullName: 'Олена К.' },
+    });
+    expect(saveSession).toHaveBeenLastCalledWith(
+      expect.objectContaining({ user: expect.objectContaining({ fullName: 'Олена К.' }) }),
+    );
   });
 
   it('forgets the tokens on logout even when offline', async () => {

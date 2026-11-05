@@ -11,6 +11,7 @@ import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 
 import { CalculationPanel } from './components/calculation-panel';
+import { QueueSummaryCard } from './components/queue-summary-card';
 import { useAddToCalculation, useCalculationBadges } from './hooks/use-add-to-calculation';
 
 import type { ReactNode } from 'react';
@@ -188,5 +189,25 @@ describe('CalculationPanel', () => {
       });
     });
     expect(result.current).toEqual({ calculation: undefined, orders: 1 });
+  });
+
+  it('shows the waiting queue in the cabinet (R-016)', async () => {
+    const db = seed();
+    await render(<QueueSummaryCard isOnline={false} />, { wrapper: wrapperFor(db) });
+    expect(screen.queryByText('Черга відправлення')).toBeNull();
+
+    await act(async () => {
+      enqueueOrder(db, {
+        comment: null,
+        counterpartyId: 'c-1',
+        customerName: 'Будмаркет',
+        expectedBaseKopecks: {},
+        lines: [],
+        totalKopecks: 0,
+      });
+    });
+    expect(
+      screen.getByText('Чекають відправлення: 1. Відправляться, коли зʼявиться мережа.'),
+    ).toBeTruthy();
   });
 });

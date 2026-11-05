@@ -44,7 +44,7 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 
 ## Stage 6 — cabinet
 
-- **TS-020 — Cabinet.** Photo, name; Admin email and password with current password and confirmation; sync time, queue, «Оновити дані зараз», «Завантажити всі фото», theme, quick unlock, sign-out with queue warning. Covers R-016; SC-021–SC-023.
+- **TS-020 — Cabinet.** Photo, name; Admin email and password with current password and confirmation; sync time, queue, «Оновити дані зараз», «Завантажити всі фото», theme, quick unlock, sign-out with queue warning. Covers R-016; SC-021–SC-023. Status: done 2026-11-05; `@mobile/profile/{model,data-access,ui,feature}` (`CabinetProfile`, `SignOutSection`), `SyncInfoCard` in `sync/feature`, `QueueSummaryCard` in `calculation/feature`, `updateSessionUser` in `core/auth`; after an e-mail or password change the app signs in again because KedrStore revokes every refresh session. Photo picking adds `expo-image-picker` (new native build). Test: `profile-*.spec.ts(x)`, `sync-feature.spec.tsx`, `calculation-feature.spec.tsx`, `mobile-auth.spec.ts`.
 
 ## Stage 7 — tablet pass
 
