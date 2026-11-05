@@ -27,7 +27,7 @@ The public site runs on Cloudflare Workers through the OpenNext adapter (`@openn
 | Tag cache          | `NEXT_TAG_CACHE_KV`     | Workers KV                  |
 | Revalidation queue | `WORKER_SELF_REFERENCE` | in-memory queue per isolate |
 
-KV fits the free plan. The KV namespace IDs must be in `wrangler.jsonc` before the first deploy, because `deploy` writes the cache before it uploads the Worker. KV is eventually consistent (up to about 60 s between locations), which is acceptable for catalog data. R2 + D1 can replace it later without code changes.
+KV fits the free plan. The namespaces are `kedr-site-cache` and `kedr-site-tags`; their IDs must be in `wrangler.jsonc` before the first deploy, because `deploy` writes the cache before it uploads the Worker. KV is eventually consistent (up to about 60 s between locations), which is acceptable for catalog data. R2 + D1 can replace it later without code changes.
 
 Known risk: opennextjs-cloudflare issue #1464 reports hung requests from cross-request `'use cache'` dedupe on deployed Workers. Check the preview under parallel requests before the cutover.
 

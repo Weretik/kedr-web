@@ -16,8 +16,11 @@
       "service": "kedr-site",
     },
   ],
-  // Cache Components data and prerendered pages (open-next.config.ts). Add the "id" of each namespace before the first deploy.
-  "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV" }, { "binding": "NEXT_TAG_CACHE_KV" }],
+  // Cache Components data and prerendered pages (open-next.config.ts); namespaces created in the dashboard 2026-11-05.
+  "kv_namespaces": [
+    { "binding": "NEXT_INC_CACHE_KV", "id": "f17685bc56eb4f04af695122291d0f91" }, // kedr-site-cache
+    { "binding": "NEXT_TAG_CACHE_KV", "id": "b167f3ba3a4648e9b02f26ecdff453d3" }, // kedr-site-tags
+  ],
   // next/image optimization through Cloudflare Images (free tier: 5000 unique transformations a month).
   "images": {
     "binding": "IMAGES",
