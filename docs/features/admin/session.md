@@ -3,7 +3,7 @@
 **Entry point:** [AppRouter](../../../apps/admin/src/app/router/app-router.tsx) opens `/login` and wraps every other route in `RequireAdminSession`, [AdminShellSessionProvider](../../../libs/admin/core/shell/src/providers/admin-shell-session-provider.tsx), and `AdminLayout`.
 
 - The browser session is an HttpOnly cookie set by `POST /api/auth/cookie/login`; JavaScript never sees a token. [session-transport](../../../libs/admin/core/auth/src/session/session-transport.ts) signs in, reads `GET /api/auth/session/me`, and signs out with the CSRF header. [auth-session](../../../libs/admin/core/auth/src/session/auth-session.ts) keeps the result in [session-store](../../../libs/admin/core/auth/src/session/session-store.ts). See the [contract](../../contracts/identity/session.md).
-- Without a session, [RequireAdminSession](../../../libs/admin/core/auth/src/routes/require-admin-session.tsx) sends the user to [LoginPage](../../../libs/admin/core/auth/src/pages/login-page.tsx) with `?returnTo=` and the page returns there after sign-in ([login-return-path](../../../libs/admin/core/auth/src/routes/login-return-path.ts) accepts only in-app paths). A signed-in account without the Admin or Manager role sees the full-screen [NoAccessPage](../../../libs/admin/core/auth/src/pages/no-access-page.tsx).
+- Without a session, [RequireAdminSession](../../../libs/admin/core/auth/src/routes/require-admin-session.tsx) sends the user to [LoginPage](../../../libs/admin/core/auth/src/pages/login-page.tsx) with `?returnTo=` and the page returns there after sign-in ([login-return-path](../../../libs/admin/core/auth/src/routes/login-return-path.ts) accepts only in-app paths). The page is titled «Вхід у Кедр Офіс» (browser tab «Кедр Офіс») and on desktop has a dark side panel with the cabinet's name and what is inside, as in Brevi Office. A signed-in account without the Admin or Manager role sees the full-screen [NoAccessPage](../../../libs/admin/core/auth/src/pages/no-access-page.tsx).
 - Any API `401` (session expired, password changed, account blocked) sets the session to anonymous through the API client's `onUnauthenticated`, which opens the login page. Every non-GET request carries `X-CSRF-Token` from the `kedr.csrf` cookie ([csrf-request interceptor](../../../libs/admin/shared/api-client/src/interceptors/csrf-request.interceptor.ts)).
 - Role-gated sections use the layout route [RequireRole](../../../libs/admin/core/auth/src/routes/require-role.tsx), which shows "Немає доступу" inside the layout. The shell receives an `AdminShellUser` from the app ([shell-user](../../../apps/admin/src/app/router/shell-user.ts)): navigation shows **Користувачі** only when `canManageUsers`, and the [profile menu](../../../libs/admin/core/shell/src/components/top-bar/profile/profile-menu.tsx) shows the avatar, a card with name, email and role, and the items "Мій кабінет" ([profile](profile.md)) and "Вийти". After an own profile change, `refreshSession()` re-reads `me` so the header updates. The backend still enforces every policy.
 - [AdminLayout](../../../libs/admin/core/shell/src/admin-layout.tsx) and navigation belong to `core/shell`; dashboard, products, orders, clients, and [users](users.md) connect their routes through AppRouter. AppRouter clears the local order product set on explicit sign-out.
@@ -38,8 +38,11 @@ apps/admin/src/app/router/
 └── shell-user.ts  # maps the session user to the shell's AdminShellUser
 
 libs/admin/core/auth/src/
+├── components/login/
+│   ├── login-intro-panel.tsx  # dark «Кедр Офіс» side: what the cabinet holds (desktop only)
+│   └── password-field.tsx  # show/hide password, Caps Lock hint
 ├── pages/
-│   ├── login-page.tsx  # email/password form, return to the previous page
+│   ├── login-page.tsx  # «Вхід у Кедр Офіс» form, return to the previous page
 │   ├── login-error-message.ts  # 401/429/offline messages
 │   └── no-access-page.tsx  # full-screen or in-layout "no access"
 ├── routes/
