@@ -252,7 +252,7 @@ export function SiteShowcaseDataGrid(props: SiteShowcaseDataGridProps) {
         disableColumnMenu
         disableRowSelectionOnClick
         getRowClassName={({ row }) => (row.kind === 'product' ? 'showcase-product' : '')}
-        getRowHeight={({ model }) => (model.kind === 'product' ? 48 : 60)}
+        getRowHeight={({ model }) => ((model as GridRow).kind === 'product' ? 48 : 60)}
         getRowId={(row) => row.id}
         loading={props.loading}
         onPaginationModelChange={(next) =>
