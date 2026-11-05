@@ -1,0 +1,20 @@
+{
+  "name": "admin-wholesale-content-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/wholesale-content/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:wholesale-content", "type:data-access"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

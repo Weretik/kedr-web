@@ -7,6 +7,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { WholesalePage } from './wholesale-page';
 
 import type { CatalogTreeNode } from '@site/catalog/model';
+import type { WholesaleTextsResult } from '@site/content/data-access';
 import type { Locale } from '@site/core/i18n';
 
 const { contacts } = vi.hoisted(() => ({
@@ -25,6 +26,12 @@ const { contacts } = vi.hoisted(() => ({
 vi.mock('@site/shared/company', () => ({ getCompanyContacts: vi.fn(async () => contacts) }));
 
 vi.mock('@site/catalog/data-access', () => ({ getCatalogTree: vi.fn() }));
+
+const { getWholesaleTexts } = vi.hoisted(() => ({
+  getWholesaleTexts: vi.fn(async () => ({ kind: 'unavailable' }) as WholesaleTextsResult),
+}));
+
+vi.mock('@site/content/data-access', () => ({ getWholesaleTexts }));
 
 const hardware = (locale: Locale): CatalogTreeNode[] => {
   const names =
@@ -134,6 +141,48 @@ describe.each(['uk', 'ru'] as const)('wholesale server composition: %s', (locale
       expect(container.querySelectorAll('script[type="application/ld+json"]')).toHaveLength(1);
     },
   );
+
+  it('shows the copy managers saved in the admin, with more than three questions', async () => {
+    const faq = Array.from({ length: 4 }, (_, index) => ({
+      question: `Питання ${index + 1}?`,
+      answer: `Відповідь ${index + 1}.`,
+    }));
+    getWholesaleTexts.mockResolvedValueOnce({
+      kind: 'ok',
+      texts: {
+        heroTitle: 'Оптові закупівлі фурнітури',
+        heroLead: 'Новий вступ.',
+        contactCardTitle: 'Напишіть нам',
+        contactCardNote: 'Відповімо сьогодні.',
+        assortmentTitle: 'Що ми продаємо',
+        assortmentIntro: 'Оберіть розділ.',
+        companyTitle: 'надійний постачальник',
+        companyText: 'Про нас.',
+        selectionTitle: 'Підбір',
+        selectionText: 'допоможемо.',
+        warehouseTitle: 'Склад',
+        warehouseText: 'усе в наявності.',
+        stepsTitle: 'Три кроки',
+        steps: [
+          { title: 'Один', text: 'Перший.' },
+          { title: 'Два', text: 'Другий.' },
+          { title: 'Три', text: 'Третій.' },
+        ],
+        faqTitle: 'Часті питання',
+        faq,
+        closingTitle: 'Домовимося',
+      },
+    });
+
+    const container = await renderPage(locale);
+
+    expect(getWholesaleTexts).toHaveBeenCalledWith(locale);
+    expect(container.querySelector('h1')?.textContent).toBe('Оптові закупівлі фурнітури');
+    expect(container.textContent).toContain('надійний постачальник');
+    expect(container.textContent).toContain('Домовимося');
+    expect(container.querySelectorAll('dt')).toHaveLength(4);
+    expect(container.textContent).toContain('Відповідь 4.');
+  });
 
   it('adds only the two visible localized breadcrumb items and leaves Organization to layout', async () => {
     const container = await renderPage(locale);

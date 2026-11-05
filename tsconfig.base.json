@@ -156,7 +156,13 @@
       "@admin/home-content/feature": ["./libs/admin/home-content/feature/src/index.ts"],
       "@site/core/revalidation": ["./libs/site/core/revalidation/src/index.ts"],
       "@admin/site-refresh/data-access": ["./libs/admin/site-refresh/data-access/src/index.ts"],
-      "@admin/site-refresh/feature": ["./libs/admin/site-refresh/feature/src/index.ts"]
+      "@admin/site-refresh/feature": ["./libs/admin/site-refresh/feature/src/index.ts"],
+      "@admin/wholesale-content/model": ["./libs/admin/wholesale-content/model/src/index.ts"],
+      "@admin/wholesale-content/data-access": [
+        "./libs/admin/wholesale-content/data-access/src/index.ts"
+      ],
+      "@admin/wholesale-content/ui": ["./libs/admin/wholesale-content/ui/src/index.ts"],
+      "@admin/wholesale-content/feature": ["./libs/admin/wholesale-content/feature/src/index.ts"]
     }
   }
 }

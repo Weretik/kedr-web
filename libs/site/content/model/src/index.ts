@@ -23,7 +23,14 @@ export { ARTICLES_TOOLS_MIN_TOTAL, showArticlesTools } from './lib/articles/arti
 export { getArticlesDictionary } from './lib/articles/articles-dictionary';
 export type { ArticlesDictionary } from './lib/articles/articles-dictionary';
 export { getWholesaleDictionary } from './lib/wholesale-dictionary';
-export type { WholesaleCompanyDetails, WholesaleDictionary } from './lib/wholesale-types';
+export { applyWholesaleTexts } from './lib/wholesale-texts';
+export type {
+  WholesaleCompanyDetails,
+  WholesaleDictionary,
+  WholesaleFaqItem,
+  WholesaleStep,
+  WholesaleTexts,
+} from './lib/wholesale-types';
 export { getRequisitesDictionary } from './lib/requisites-dictionary';
 export { formatRequisitesCopy } from './lib/requisites-copy';
 export type {

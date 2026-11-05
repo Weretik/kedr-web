@@ -1597,6 +1597,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/wholesale": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the page texts in one language
+         * @description Public, because the site renders the page for anonymous visitors.
+         */
+        get: operations["getPublicWholesalePage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/wholesale": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get both languages for editing
+         * @description Requires `CanManageContent` (Manager or Admin).
+         */
+        get: operations["getAdminWholesalePage"];
+        /**
+         * Replace both languages at once
+         * @description Requires `CanManageContent` (Manager or Admin). Every text is required. Repeating it is safe.
+         */
+        put: operations["updateAdminWholesalePage"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/content/site-refresh": {
         parameters: {
             query?: never;
@@ -2820,6 +2864,52 @@ export interface components {
             name: string;
             /** Format: int64 */
             logoMediaFileId: number;
+        };
+        WholesaleStep: {
+            title: string;
+            text: string;
+        };
+        WholesaleFaqItem: {
+            question: string;
+            answer: string;
+        };
+        WholesaleText: {
+            /** @enum {string} */
+            language: "uk" | "ru";
+            heroTitle: string;
+            heroLead: string;
+            contactCardTitle: string;
+            contactCardNote: string;
+            assortmentTitle: string;
+            assortmentIntro: string;
+            /** @description Shown after the company name («Class Kedr — …»), so it may start in lower case. */
+            companyTitle: string;
+            companyText: string;
+            selectionTitle: string;
+            selectionText: string;
+            warehouseTitle: string;
+            warehouseText: string;
+            stepsTitle: string;
+            steps: components["schemas"]["WholesaleStep"][];
+            faqTitle: string;
+            faq: components["schemas"]["WholesaleFaqItem"][];
+            closingTitle: string;
+        };
+        PublicWholesalePage: {
+            text: components["schemas"]["WholesaleText"];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminWholesalePage: {
+            texts: components["schemas"]["WholesaleText"][];
+            /** Format: date-time */
+            updatedAt: string;
+            /** @description Email (else user name) of who saved last; null for the row created by the migration. */
+            updatedBy: string | null;
+        };
+        SaveWholesalePageRequest: {
+            /** @description Exactly one `uk` and one `ru` text. */
+            texts: components["schemas"]["WholesaleText"][];
         };
         SiteRefreshResult: {
             /** @enum {string} */
@@ -7398,6 +7488,139 @@ export interface operations {
             };
             /** @description The list does not match the current brands. */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublicWholesalePage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: "uk" | "ru";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The texts. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicWholesalePage"];
+                };
+            };
+            /** @description `lang` is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The page row is missing (it is created by a migration). */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWholesalePage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Both texts, `uk` first. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminWholesalePage"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The page row is missing. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminWholesalePage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveWholesalePageRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminWholesalePage"];
+                };
+            };
+            /** @description Invalid input; errors name the field (`texts`, `texts[0].HeroTitle`, `texts[1].Steps`…). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The page row is missing. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

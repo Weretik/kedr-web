@@ -1,7 +1,8 @@
 import { getCatalogTree } from '@site/catalog/data-access';
 import { CATALOG_PATH, CATALOG_ROOTS } from '@site/catalog/model';
 import { CategoryCards } from '@site/catalog/ui';
-import { getWholesaleDictionary } from '@site/content/model';
+import { getWholesaleTexts } from '@site/content/data-access';
+import { applyWholesaleTexts, getWholesaleDictionary } from '@site/content/model';
 import { buildWholesaleBreadcrumbJsonLd } from '@site/content/seo';
 import { WholesaleContent } from '@site/content/ui';
 import { COMPANY } from '@site/core/config';
@@ -14,7 +15,15 @@ import type { Locale } from '@site/core/i18n';
 
 /** Server-rendered wholesale offer with real catalog sections and manager contact. */
 export async function WholesalePage({ locale }: { locale: Locale }) {
-  const [tree, contacts] = await Promise.all([getCatalogTree(locale), getCompanyContacts()]);
+  const [tree, contacts, wholesale] = await Promise.all([
+    getCatalogTree(locale),
+    getCompanyContacts(),
+    getWholesaleTexts(locale),
+  ]);
+  const dictionary = applyWholesaleTexts(
+    getWholesaleDictionary(locale),
+    wholesale.kind === 'ok' ? wholesale.texts : null,
+  );
   const categories = tree?.filter((category) => category.id !== CATALOG_ROOTS.doorsId) ?? [];
   const details: WholesaleCompanyDetails = {
     name: COMPANY.name,
@@ -27,7 +36,7 @@ export async function WholesalePage({ locale }: { locale: Locale }) {
   return (
     <>
       <WholesaleContent
-        dictionary={getWholesaleDictionary(locale)}
+        dictionary={dictionary}
         details={details}
         assortment={
           categories.length ? (
