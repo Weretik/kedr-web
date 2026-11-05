@@ -13,6 +13,13 @@ const { getArticles, getArticle } = vi.hoisted(() => ({
 
 vi.mock('server-only', () => ({}));
 vi.mock('@site/content/data-access', () => ({ getArticles, getArticle }));
+const { withPageSeo } = vi.hoisted(() => ({
+  withPageSeo: vi.fn(async (_locale: string, _page: string, metadata: object) => ({
+    ...metadata,
+    title: 'Editor title',
+  })),
+}));
+vi.mock('@site/shared/page-seo', () => ({ withPageSeo }));
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
   redirect: (href: string) => {
@@ -77,6 +84,14 @@ describe.each(['uk', 'ru'] as const)('articles server integration %s', (locale) 
     );
     expect(metadata.alternates?.canonical).toBe('/' + locale + '/articles?q=ZAMAK&pageSize=20');
     expect(metadata.robots).toMatchObject({ index: false });
+    expect(metadata.title).not.toBe('Editor title');
+  });
+
+  it('gives the plain list the search title editors set, but not a search or a later page', async () => {
+    const list = await generateArticlesMetadata(locale, Promise.resolve({}));
+
+    expect(withPageSeo).toHaveBeenCalledWith(locale, 'Articles', expect.any(Object));
+    expect(list.title).toBe('Editor title');
   });
 
   it('redirects a page beyond the end to the normalized available page', async () => {

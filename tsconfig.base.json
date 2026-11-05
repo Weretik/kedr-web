@@ -133,6 +133,7 @@
       "@admin/articles/ui": ["./libs/admin/articles/ui/src/index.ts"],
       "@admin/articles/feature": ["./libs/admin/articles/feature/src/index.ts"],
       "@site/shared/company": ["./libs/site/shared/company/src/index.ts"],
+      "@site/shared/page-seo": ["./libs/site/shared/page-seo/src/index.ts"],
       "@admin/company/model": ["./libs/admin/company/model/src/index.ts"],
       "@admin/company/data-access": ["./libs/admin/company/data-access/src/index.ts"],
       "@admin/company/ui": ["./libs/admin/company/ui/src/index.ts"],
@@ -162,7 +163,11 @@
         "./libs/admin/wholesale-content/data-access/src/index.ts"
       ],
       "@admin/wholesale-content/ui": ["./libs/admin/wholesale-content/ui/src/index.ts"],
-      "@admin/wholesale-content/feature": ["./libs/admin/wholesale-content/feature/src/index.ts"]
+      "@admin/wholesale-content/feature": ["./libs/admin/wholesale-content/feature/src/index.ts"],
+      "@admin/page-seo/model": ["./libs/admin/page-seo/model/src/index.ts"],
+      "@admin/page-seo/data-access": ["./libs/admin/page-seo/data-access/src/index.ts"],
+      "@admin/page-seo/ui": ["./libs/admin/page-seo/ui/src/index.ts"],
+      "@admin/page-seo/feature": ["./libs/admin/page-seo/feature/src/index.ts"]
     }
   }
 }

@@ -1641,6 +1641,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/{lang}/page-seo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the set search texts in one language
+         * @description Public, because the site builds page metadata for anonymous visitors. Only pages with a title or a description in this language are listed.
+         */
+        get: operations["listPublicPageSeo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/page-seo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List every site page with its texts
+         * @description Requires `CanManageContent` (Manager or Admin). Pages never saved have empty values.
+         */
+        get: operations["listAdminPageSeo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/page-seo/{page}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the texts of one page
+         * @description Requires `CanManageContent` (Manager or Admin). Values are trimmed; an empty or missing value returns that text to the site default. The first save creates the page row. Repeating it is safe.
+         */
+        put: operations["updateAdminPageSeo"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/content/site-refresh": {
         parameters: {
             query?: never;
@@ -2910,6 +2970,33 @@ export interface components {
         SaveWholesalePageRequest: {
             /** @description Exactly one `uk` and one `ru` text. */
             texts: components["schemas"]["WholesaleText"][];
+        };
+        /** @enum {string} */
+        SitePage: "Home" | "Catalog" | "Wholesale" | "DeliveryPayment" | "ReturnsExchanges" | "Contacts" | "Gallery" | "Articles" | "Requisites" | "PublicOffer" | "PrivacyPolicy";
+        PublicPageSeo: {
+            page: components["schemas"]["SitePage"];
+            title: string | null;
+            description: string | null;
+        };
+        AdminPageSeo: {
+            page: components["schemas"]["SitePage"];
+            titleUk: string | null;
+            titleRu: string | null;
+            descriptionUk: string | null;
+            descriptionRu: string | null;
+            /**
+             * Format: date-time
+             * @description Null until the first save.
+             */
+            updatedAt: string | null;
+            /** @description Who saved the last change. */
+            updatedBy: string | null;
+        };
+        SavePageSeoRequest: {
+            titleUk?: string | null;
+            titleRu?: string | null;
+            descriptionUk?: string | null;
+            descriptionRu?: string | null;
         };
         SiteRefreshResult: {
             /** @enum {string} */
@@ -7621,6 +7708,116 @@ export interface operations {
             };
             /** @description The page row is missing. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listPublicPageSeo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: "uk" | "ru";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The pages in menu order. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicPageSeo"][];
+                };
+            };
+            /** @description `lang` is not `uk` or `ru`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listAdminPageSeo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description All pages in menu order. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPageSeo"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminPageSeo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page: components["schemas"]["SitePage"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SavePageSeoRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPageSeo"];
+                };
+            };
+            /** @description Unknown page or a text over its limit; `errors` names the field. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager or Admin. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
