@@ -76,7 +76,7 @@ Dependency direction is unchanged: `feature → ui, data-access, model`; `data-a
 | `customers` | customers snapshot | counterpartyId, name, phone, email, defaultPriceTypeId, debt (null), balance (null) |
 | `customer_category_price_types` | customers snapshot | counterpartyId, categoryId, priceTypeId |
 | `calculations` / `calculation_lines` | the app | counterpartyId, productId, quantity, priceAdjustment, comment, sourceDraftId |
-| `orders_cache`, `drafts_cache` | order-workspace reads | per customer, last 50 |
+| `customer_activity` | order-workspace reads | counterpartyId, orders (json), drafts (json), fetchedAt; last 50 of each per customer |
 | `outbox` | the app | id, kind (draft-create, draft-update, draft-delete, order-create), payload, idempotencyKey, state, attempts, lastError |
 | `sync_state` | sync service | resource, etag, syncedAt |
 

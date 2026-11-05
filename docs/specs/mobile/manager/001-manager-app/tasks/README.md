@@ -24,9 +24,9 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 
 ## Stage 3 — customers
 
-- **TS-009 — Selected customer.** Zustand store persisted by id, restore on start, `CustomerBar` live. Covers R-002; SC-003, SC-004.
-- **TS-010 — Customer choice and list.** Search by name/phone/code, recent, A–Я; tablet list + card. Covers R-003; SC-004.
-- **TS-011 — Customer card.** Contacts, price type and rules, debt and balance «—» with the 1C note, orders and drafts tabs from `order-workspace` cached locally. Covers R-004, R-013; SC-005.
+- **TS-009 — Selected customer.** Zustand store persisted by id, restore on start, `CustomerBar` live. Covers R-002; SC-003, SC-004. Status: done 2026-11-05; `useSelectedCustomerStore` in `customers/data-access` (ids only, AsyncStorage key `kedr.mobile.selected-customer`), `hasCustomer` in `(work)/_layout.tsx` is true only for a customer the synced data knows, sign-out clears the choice. Test: `customers-data-access.spec.tsx`, app `work-routes.spec.tsx`.
+- **TS-010 — Customer choice and list.** Search by name/phone/code, recent, A–Я; tablet list + card. Covers R-003; SC-004. Status: done 2026-11-05; `CustomerList` and `CustomerChoice` in `customers/feature`, search in `customers/model`. Picking a row selects the customer; the phone opens `/customer/[counterpartyId]`, the tablet shows the card on the right. Test: `customers-feature.spec.tsx`, `customers-model.spec.ts`.
+- **TS-011 — Customer card.** Contacts, price type and rules, debt and balance «—» with the 1C note, orders and drafts tabs from `order-workspace` cached locally. Covers R-004, R-013; SC-005. Status: done 2026-11-05; `CustomerCard` with `CustomerMoney`, `PriceRules`, `OrderRow`, `DraftRow`. Orders and drafts (last 50 each) are kept in one `customer_activity` table per customer instead of `orders_cache`/`drafts_cache`; offline the card shows them with their date. Test: `customers-ui.spec.tsx`, `customers-feature.spec.tsx`, `customers-data-access.spec.tsx`.
 
 ## Stage 4 — products
 

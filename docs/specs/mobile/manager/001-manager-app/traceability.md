@@ -6,9 +6,9 @@ Test paths are filled in when each task is implemented.
 | --- | --- | --- | --- | --- | --- |
 | SC-001 | R-001 | TS-004 | component | `core/auth/src/screens/login-screen.spec.tsx`, `apps/mobile/src/__tests__/work-routes.spec.tsx` | done |
 | SC-002 | R-001 | TS-004 | component | `core/auth/src/screens/no-access-screen.spec.tsx` | done |
-| SC-003 | R-002 | TS-003, TS-009 | component | `core/shell/src/navigation/work-navigation.spec.tsx`, `apps/mobile/src/__tests__/work-routes.spec.tsx` | gate done; customer choice in stage 3 |
-| SC-004 | R-002, R-003 | TS-009, TS-010 | component | — | planned |
-| SC-005 | R-004, R-013 | TS-011, TS-019 | component | — | planned |
+| SC-003 | R-002 | TS-003, TS-009 | component | `core/shell/src/navigation/work-navigation.spec.tsx`, `apps/mobile/src/__tests__/work-routes.spec.tsx` | done |
+| SC-004 | R-002, R-003 | TS-009, TS-010 | component | `customers/feature/src/customers-feature.spec.tsx`, `customers/data-access/src/customers-data-access.spec.tsx`, `customers/model/src/customers-model.spec.ts` | done |
+| SC-005 | R-004, R-013 | TS-011, TS-019 | component | `customers/feature/src/customers-feature.spec.tsx`, `customers/ui/src/customers-ui.spec.tsx` | card done; sending from the card with TS-019 |
 | SC-006 | R-005 | TS-012 | unit | — | planned |
 | SC-007 | R-006 | TS-013 | component | — | planned |
 | SC-008 | R-007 | TS-013 | data-access | — | planned |

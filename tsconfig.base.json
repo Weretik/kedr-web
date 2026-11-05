@@ -165,7 +165,11 @@
       "@mobile/core/local-db/testing": ["./libs/mobile/core/local-db/src/testing.ts"],
       "@mobile/sync/model": ["./libs/mobile/sync/model/src/index.ts"],
       "@mobile/sync/data-access": ["./libs/mobile/sync/data-access/src/index.ts"],
-      "@mobile/sync/feature": ["./libs/mobile/sync/feature/src/index.ts"]
+      "@mobile/sync/feature": ["./libs/mobile/sync/feature/src/index.ts"],
+      "@mobile/customers/model": ["./libs/mobile/customers/model/src/index.ts"],
+      "@mobile/customers/data-access": ["./libs/mobile/customers/data-access/src/index.ts"],
+      "@mobile/customers/ui": ["./libs/mobile/customers/ui/src/index.ts"],
+      "@mobile/customers/feature": ["./libs/mobile/customers/feature/src/index.ts"]
     }
   }
 }

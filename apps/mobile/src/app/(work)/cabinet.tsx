@@ -1,5 +1,6 @@
 import { logout, QuickUnlockRow, useMobileSession } from '@mobile/core/auth';
 import { ThemePreferenceControl, WorkScreen } from '@mobile/core/shell';
+import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { AppText, Avatar, Button, Card } from '@mobile/shared/ui';
 import { clearDeviceData } from '@mobile/sync/feature';
 import { ScrollView, View } from 'react-native';
@@ -38,6 +39,7 @@ export default function CabinetRoute() {
 async function signOut() {
   await logout();
   clearDeviceData();
+  useSelectedCustomerStore.getState().clear();
 }
 
 const styles = StyleSheet.create((theme) => ({

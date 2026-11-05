@@ -6,6 +6,7 @@ import {
   productPrices,
   products,
   syncState,
+  markLocalDataChanged,
   type LocalDatabase,
 } from '@mobile/core/local-db';
 import {
@@ -90,6 +91,7 @@ export function replaceCatalog(
     );
     saveSyncState(tx, 'catalog', etag, now);
   });
+  markLocalDataChanged();
 }
 
 /** Replaces the customers and their price rules in one transaction. */
@@ -131,6 +133,7 @@ export function replaceCustomers(
     );
     saveSyncState(tx, 'customers', etag, now);
   });
+  markLocalDataChanged();
 }
 
 function saveSyncState(tx: Transaction, resource: SyncResource, etag: string, now: number): void {
