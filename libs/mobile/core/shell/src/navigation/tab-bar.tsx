@@ -4,33 +4,43 @@ import { StyleSheet } from 'react-native-unistyles';
 
 import { navItemAccessibilityLabel, navItemLabel, type WorkNavItem } from './work-nav-item';
 
+import type { ReactNode } from 'react';
+
 /** Phone: white bottom bar with five tabs; locked tabs show a lock and do not open. */
-export function TabBar({ items }: Readonly<{ items: readonly WorkNavItem[] }>) {
+export function TabBar({
+  items,
+  statusStrip,
+}: Readonly<{ items: readonly WorkNavItem[]; statusStrip?: ReactNode }>) {
   return (
-    <View accessibilityRole="tablist" style={styles.bar} testID="work-tab-bar">
-      {items.map((item) => (
-        <Pressable
-          accessibilityLabel={navItemAccessibilityLabel(item)}
-          accessibilityRole="tab"
-          accessibilityState={{ disabled: item.locked, selected: item.focused }}
-          key={item.key}
-          onPress={item.onPress}
-          style={styles.item}
-        >
-          <Icon
-            name={item.locked ? 'lock-outline' : item.focused ? item.tab.activeIcon : item.tab.icon}
-            size={24}
-            tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
-          />
-          <AppText
-            numberOfLines={1}
-            tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
-            variant="tabLabel"
+    <View>
+      {statusStrip}
+      <View accessibilityRole="tablist" style={styles.bar} testID="work-tab-bar">
+        {items.map((item) => (
+          <Pressable
+            accessibilityLabel={navItemAccessibilityLabel(item)}
+            accessibilityRole="tab"
+            accessibilityState={{ disabled: item.locked, selected: item.focused }}
+            key={item.key}
+            onPress={item.onPress}
+            style={styles.item}
           >
-            {navItemLabel(item)}
-          </AppText>
-        </Pressable>
-      ))}
+            <Icon
+              name={
+                item.locked ? 'lock-outline' : item.focused ? item.tab.activeIcon : item.tab.icon
+              }
+              size={24}
+              tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
+            />
+            <AppText
+              numberOfLines={1}
+              tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
+              variant="tabLabel"
+            >
+              {navItemLabel(item)}
+            </AppText>
+          </Pressable>
+        ))}
+      </View>
     </View>
   );
 }

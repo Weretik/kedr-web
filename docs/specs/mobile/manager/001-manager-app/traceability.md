@@ -23,7 +23,7 @@ Test paths are filled in when each task is implemented.
 | SC-017 | R-012 | TS-018, TS-019 | unit + component | — | planned |
 | SC-018 | R-014 | TS-004 | unit | `core/auth/src/session/mobile-auth.spec.ts`, `offline-window.spec.ts` | done |
 | SC-019 | R-014 | TS-004 | unit | `core/auth/src/session/mobile-auth.spec.ts`, `offline-window.spec.ts` | done |
-| SC-020 | R-015 | TS-007, EN-002 | unit | — | planned |
+| SC-020 | R-015 | TS-007, EN-002 | unit + data-access | `sync/data-access/src/runner/sync-runner.spec.ts`, `sync/feature/src/sync-feature.spec.tsx`, `core/local-db/src/database/local-database.spec.ts` | done |
 | SC-021 | R-016 | TS-020 | component | — | planned |
 | SC-022 | R-016 | TS-020 | component | — | planned |
 | SC-023 | R-016 | TS-020 | component | — | planned |

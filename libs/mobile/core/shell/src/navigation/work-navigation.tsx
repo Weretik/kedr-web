@@ -6,6 +6,7 @@ import { workTabs, type WorkTabName } from './work-tabs';
 
 import type { WorkNavItem } from './work-nav-item';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
+import type { ReactNode } from 'react';
 
 export interface WorkNavigationProps extends Pick<
   BottomTabBarProps,
@@ -15,6 +16,8 @@ export interface WorkNavigationProps extends Pick<
   /** Count shown next to a label, e.g. `{ calculation: 3 }` → «Розрахунок · 3». */
   badges?: Partial<Record<WorkTabName, number>>;
   hasCustomer: boolean;
+  /** Sync status from the app, drawn above the phone tab bar or under the rail items. */
+  statusStrip?: (layout: 'bar' | 'rail') => ReactNode;
 }
 
 /** Tab bar on phones, rail on tablets; both lock the sections that need a customer. */
@@ -25,6 +28,7 @@ export function WorkNavigation({
   hasCustomer,
   navigateToTab,
   state,
+  statusStrip,
 }: Readonly<WorkNavigationProps>) {
   const breakpoint = useBreakpoint();
   const focusedName = state.routes[state.index]?.name;
@@ -57,8 +61,8 @@ export function WorkNavigation({
   });
 
   return breakpoint === 'phone' ? (
-    <TabBar items={items} />
+    <TabBar items={items} statusStrip={statusStrip?.('bar')} />
   ) : (
-    <NavRail account={account} items={items} />
+    <NavRail account={account} items={items} statusStrip={statusStrip?.('rail')} />
   );
 }

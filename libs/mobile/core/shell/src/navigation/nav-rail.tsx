@@ -4,6 +4,8 @@ import { StyleSheet } from 'react-native-unistyles';
 
 import { navItemAccessibilityLabel, navItemLabel, type WorkNavItem } from './work-nav-item';
 
+import type { ReactNode } from 'react';
+
 export interface RailAccount {
   name: string;
   photoUrl?: string | null;
@@ -13,7 +15,8 @@ export interface RailAccount {
 export function NavRail({
   account,
   items,
-}: Readonly<{ account?: RailAccount; items: readonly WorkNavItem[] }>) {
+  statusStrip,
+}: Readonly<{ account?: RailAccount; items: readonly WorkNavItem[]; statusStrip?: ReactNode }>) {
   return (
     <View style={styles.rail} testID="work-nav-rail">
       <BrandMark />
@@ -45,6 +48,7 @@ export function NavRail({
           </Pressable>
         ))}
       </View>
+      {statusStrip}
       {account ? <Avatar name={account.name} photoUrl={account.photoUrl} size={40} /> : null}
     </View>
   );

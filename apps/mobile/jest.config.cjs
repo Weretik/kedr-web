@@ -14,6 +14,7 @@ module.exports = {
     '^@mobile/core/auth$': `${libs}/mobile/core/auth/src/index.ts`,
     '^@mobile/core/connectivity$': `${libs}/mobile/core/connectivity/src/index.ts`,
     '^@mobile/core/shell$': `${libs}/mobile/core/shell/src/index.ts`,
+    '^@mobile/sync/feature$': `${libs}/mobile/sync/feature/src/index.ts`,
     '^@mobile/shared/api-client$': `${libs}/mobile/shared/api-client/src/index.ts`,
     '^@mobile/shared/config$': `${libs}/mobile/shared/config/src/index.ts`,
     '^@mobile/shared/model$': `${libs}/mobile/shared/model/src/index.ts`,

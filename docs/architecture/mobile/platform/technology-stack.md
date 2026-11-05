@@ -29,12 +29,12 @@ The [UI and platform capabilities catalog](ui-capabilities.md) lists approved UI
 
 ## On-device data and network
 
-| Area                      | Choice                      | Usage rule                                                                                                            |
-| ------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Secrets                   | Expo SecureStore            | Sensitive data only: session tokens and other credentials. Do not use for large API responses or catalogs.            |
-| Network state             | NetInfo                     | Detects online/offline state for UX, retries, and offline scenarios. Does not replace handling actual request errors. |
-| Small non-sensitive cache | AsyncStorage                | Persisted Zustand stores only (theme choice, later the selected customer id). No tokens or personal data.             |
-| Full offline support      | `expo-sqlite` + Drizzle ORM | Local database, sync snapshots and the send queue (ADR-0005).                                                         |
+| Area                      | Choice                      | Usage rule                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Secrets                   | Expo SecureStore            | Sensitive data only: session tokens and other credentials. Do not use for large API responses or catalogs.                                                                                                                                                                                                                                                          |
+| Network state             | NetInfo                     | Detects online/offline state for UX, retries, and offline scenarios. Does not replace handling actual request errors.                                                                                                                                                                                                                                               |
+| Small non-sensitive cache | AsyncStorage                | Persisted Zustand stores only (theme choice, later the selected customer id). No tokens or personal data.                                                                                                                                                                                                                                                           |
+| Full offline support      | `expo-sqlite` + Drizzle ORM | Local database, sync snapshots and the send queue (ADR-0005). In the code since stage 2: `expo-sqlite` ~58.0.15, `drizzle-orm` 0.45.4. Jest runs the same Drizzle tables on `better-sqlite3` (dev only). Migrations are an ordered SQL list in `@mobile/core/local-db` applied by `PRAGMA user_version`, not `drizzle-kit` output, so Metro needs no `.sql` loader. |
 
 ## Fixed boundaries
 

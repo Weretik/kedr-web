@@ -36,6 +36,7 @@ Kedr Manager, rebuilt by the [SDD](../specs/mobile/manager/001-manager-app/READM
 | --------------------------------------- | ----------------------------------------------- |
 | [Shell and navigation](mobile/shell.md) | `index.ts`, `_layout.tsx`, `(work)/_layout.tsx` |
 | [Sign-in and session](mobile/auth.md)   | `login.tsx`, root layout guard, cabinet         |
+| [Offline data and sync](mobile/sync.md) | `(work)/_layout.tsx` (`SyncProvider`)           |
 
 ## Site Next.js
 

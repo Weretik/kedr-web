@@ -39,7 +39,11 @@ const workspaceAliases = {
     workspaceRoot,
     'libs/mobile/core/connectivity/src/index.ts',
   ),
+  '@mobile/core/local-db': path.join(workspaceRoot, 'libs/mobile/core/local-db/src/index.ts'),
   '@mobile/core/shell': path.join(workspaceRoot, 'libs/mobile/core/shell/src/index.ts'),
+  '@mobile/sync/data-access': path.join(workspaceRoot, 'libs/mobile/sync/data-access/src/index.ts'),
+  '@mobile/sync/feature': path.join(workspaceRoot, 'libs/mobile/sync/feature/src/index.ts'),
+  '@mobile/sync/model': path.join(workspaceRoot, 'libs/mobile/sync/model/src/index.ts'),
   '@shared/api-contracts': path.join(workspaceRoot, 'libs/shared/api-contracts/src/index.ts'),
 };
 

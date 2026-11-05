@@ -1,0 +1,9 @@
+{
+  "name": "mobile-core-local-db",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/core/local-db/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "type:data-access"],
+  "// targets": "to see all targets run: nx show project mobile-core-local-db --web",
+  "targets": {}
+}
