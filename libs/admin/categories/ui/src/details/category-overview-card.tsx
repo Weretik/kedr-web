@@ -1,6 +1,8 @@
 import { isCategoryContentEmpty } from '@admin/categories/model';
 import { DetailField, DetailFieldList, SectionCard, StatusPill } from '@admin/shared/ui';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import {
   Alert,
   Box,
@@ -34,6 +36,8 @@ interface CategoryOverviewCardProps {
   onSelect: (categoryId: number) => void;
   /** Administrators only: opens the edit panel. */
   onEdit?: () => void;
+  /** Administrators only: asks to show or hide the category on the site. */
+  onToggleSite?: () => void;
 }
 
 function LanguageSummary({
@@ -91,6 +95,7 @@ export function CategoryOverviewCard({
   contentLoading,
   detailsHref,
   onEdit,
+  onToggleSite,
   onRetryContent,
   onSelect,
   pathPrefix,
@@ -128,6 +133,32 @@ export function CategoryOverviewCard({
           </Typography>
         </Breadcrumbs>
       ) : null}
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={1.5}
+        sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}
+      >
+        {category.isShownOnSite ? (
+          <Typography variant="body2">Показується на сайті</Typography>
+        ) : (
+          <Box>
+            <StatusPill label="Не показується на сайті" tone="warning" />
+          </Box>
+        )}
+        {onToggleSite ? (
+          <Button
+            color={category.isShownOnSite ? 'inherit' : 'primary'}
+            onClick={onToggleSite}
+            size="small"
+            startIcon={
+              category.isShownOnSite ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />
+            }
+            variant="outlined"
+          >
+            {category.isShownOnSite ? 'Сховати з сайту' : 'Показати на сайті'}
+          </Button>
+        ) : null}
+      </Stack>
       <DetailFieldList columns={2}>
         <DetailField label="Назва російською" value={orDash(category.nameRu)} />
         <DetailField label="Назва в 1С" value={orDash(category.sourceName)} />

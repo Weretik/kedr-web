@@ -20,8 +20,8 @@ import type {
   SiteModelsPage,
   SiteModelsQuery,
   SiteModelTextInput,
-  SiteShowcaseItem,
   SiteShowcaseQuery,
+  SiteShowcaseRow,
 } from '@admin/site-models/model';
 
 const base = '/api/admin/site-models';
@@ -33,7 +33,7 @@ const modelTag = (id: number) => ({ type: 'SiteModels' as const, id: `model-${id
  */
 export const siteModelsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getSiteShowcase: build.query<SiteModelsPage<SiteShowcaseItem>, SiteShowcaseQuery>({
+    getSiteShowcase: build.query<SiteModelsPage<SiteShowcaseRow>, SiteShowcaseQuery>({
       query: (query) => ({
         url: `${base}/showcase`,
         method: 'GET',

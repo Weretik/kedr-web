@@ -1,61 +1,121 @@
-import { Box, Card, List, ListItemButton, ListItemText, Skeleton, Typography } from '@mui/material';
+import { siteCategoryAncestors, siteCategoryTree } from '@admin/site-models/model';
+import { Box, Button, Card, Skeleton, Stack, Typography } from '@mui/material';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { useState } from 'react';
 
-import type { SiteModelCategory } from '@admin/site-models/model';
+import type { SiteCategoryNode, SiteModelCategory } from '@admin/site-models/model';
 
 interface SiteModelCategoriesNavProps {
   categories: readonly SiteModelCategory[];
   loading: boolean;
   selectedId: number | undefined;
   onSelect: (categoryId: number | undefined) => void;
+  /** What the count next to a category means: models or on-site products. */
+  count: 'models' | 'products';
 }
 
-/** «Моделі» sidebar: final categories with model counts; a red count marks problems. */
+function TreeNodes({
+  count,
+  nodes,
+}: {
+  count: SiteModelCategoriesNavProps['count'];
+  nodes: readonly SiteCategoryNode[];
+}) {
+  return nodes.map(({ category, children }) => {
+    const total =
+      count === 'models'
+        ? category.acceptedModels + category.proposedModels
+        : category.onSiteProducts;
+    return (
+      <TreeItem
+        itemId={String(category.id)}
+        key={category.id}
+        label={
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', minWidth: 0, py: 0.25 }}>
+            <Typography component="span" sx={{ overflowWrap: 'anywhere' }} variant="body2">
+              {category.name}
+            </Typography>
+            {category.problemCount > 0 ? (
+              <Typography
+                aria-label={`Проблем: ${category.problemCount}`}
+                component="span"
+                sx={{ color: 'error.main', fontWeight: 700 }}
+                variant="caption"
+              >
+                {category.problemCount}
+              </Typography>
+            ) : null}
+            <Typography
+              aria-label={count === 'models' ? `${total} моделей` : `${total} товарів`}
+              color="text.secondary"
+              component="span"
+              sx={{ fontVariantNumeric: 'tabular-nums', ml: 'auto !important', pl: 1 }}
+              variant="caption"
+            >
+              {total}
+            </Typography>
+          </Stack>
+        }
+      >
+        {children.length > 0 ? <TreeNodes count={count} nodes={children} /> : null}
+      </TreeItem>
+    );
+  });
+}
+
+/**
+ * Category tree of «Моделі» and «Вітрина сайту»: only categories shown on the site with on-site products; a click
+ * selects a category with its subcategories, the arrow expands; a red count marks problems.
+ */
 export function SiteModelCategoriesNav({
   categories,
+  count,
   loading,
   onSelect,
   selectedId,
 }: SiteModelCategoriesNavProps) {
+  const [expanded, setExpanded] = useState<string[] | null>(null);
+  // Once the list arrives, the branch of the selected category opens.
+  if (expanded === null && categories.length > 0) {
+    setExpanded(siteCategoryAncestors(categories, selectedId).map(String));
+  }
+
   return (
-    <Card component="nav" aria-label="Категорії моделей" variant="outlined">
-      <List dense disablePadding sx={{ maxHeight: { md: '70vh' }, overflowY: 'auto' }}>
-        <ListItemButton onClick={() => onSelect(undefined)} selected={selectedId === undefined}>
-          <ListItemText primary="Усі категорії" />
-        </ListItemButton>
+    <Card component="nav" aria-label="Категорії" sx={{ minWidth: 0 }} variant="outlined">
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 1 }}>
+        <Button
+          aria-pressed={selectedId === undefined}
+          fullWidth
+          onClick={() => onSelect(undefined)}
+          sx={{ justifyContent: 'flex-start' }}
+          variant={selectedId === undefined ? 'contained' : 'text'}
+        >
+          Усі категорії
+        </Button>
+      </Box>
+      <Box sx={{ maxHeight: { md: 'calc(100vh - 260px)' }, overflowY: 'auto', p: 1 }}>
         {loading ? (
-          <Box sx={{ p: 2 }}>
-            <Skeleton aria-label="Завантаження категорій" height={160} variant="rounded" />
-          </Box>
+          <Skeleton aria-label="Завантаження категорій" height={160} variant="rounded" />
+        ) : categories.length === 0 ? (
+          <Typography color="text.secondary" sx={{ p: 1 }} variant="body2">
+            Категорій з товарами на сайті немає.
+          </Typography>
         ) : (
-          categories.map((category) => (
-            <ListItemButton
-              key={category.id}
-              onClick={() => onSelect(category.id)}
-              selected={selectedId === category.id}
-            >
-              <ListItemText
-                primary={category.name}
-                secondary={[
-                  category.parentName,
-                  `моделей ${category.acceptedModels}`,
-                  category.proposedModels ? `запропоновано ${category.proposedModels}` : null,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              />
-              {category.problemCount > 0 ? (
-                <Typography
-                  aria-label={`Проблем: ${category.problemCount}`}
-                  sx={{ color: 'error.main', fontWeight: 700, ml: 1 }}
-                  variant="caption"
-                >
-                  {category.problemCount}
-                </Typography>
-              ) : null}
-            </ListItemButton>
-          ))
+          <SimpleTreeView
+            aria-label="Категорії"
+            expandedItems={expanded ?? []}
+            expansionTrigger="iconContainer"
+            onExpandedItemsChange={(_event, ids) => setExpanded(ids)}
+            onSelectedItemsChange={(_event, id) => {
+              if (id) onSelect(Number(id));
+            }}
+            selectedItems={selectedId === undefined ? null : String(selectedId)}
+          >
+            <TreeNodes count={count} nodes={siteCategoryTree(categories)} />
+          </SimpleTreeView>
         )}
-      </List>
+      </Box>
     </Card>
   );
 }

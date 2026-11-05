@@ -3,7 +3,6 @@ import { formatSitePrice } from '@admin/site-models/model';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { selectedIds, selectionModel } from './row-selection';
 import { ProductThumb } from '../common/product-thumb';
 import { SiteProblemPills } from '../common/site-problem-pills';
 
@@ -17,8 +16,6 @@ interface SiteModelsDataGridProps {
   pageSize: number;
   loading: boolean;
   error: boolean;
-  selected: readonly number[];
-  onSelectedChange: (ids: number[]) => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   onRetry: () => void;
@@ -100,7 +97,14 @@ function columns(onOpen: (model: SiteModelListItem) => void): GridColDef<SiteMod
       align: 'right',
       headerAlign: 'right',
       renderCell: ({ row }) => (
-        <Button aria-label={`Відкрити модель ${row.name}`} onClick={() => onOpen(row)} size="small">
+        <Button
+          aria-label={`Відкрити модель ${row.name}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpen(row);
+          }}
+          size="small"
+        >
           Відкрити
         </Button>
       ),
@@ -108,36 +112,32 @@ function columns(onOpen: (model: SiteModelListItem) => void): GridColDef<SiteMod
   ];
 }
 
-/** «Моделі»: models with problems first; proposed ones can be selected and accepted. */
+/** «Моделі»: models with problems first; a click on a row opens the model card. */
 export function SiteModelsDataGrid(props: SiteModelsDataGridProps) {
-  const pageIds = props.rows.map((row) => row.id);
   return (
     <Box sx={{ minWidth: 0, overflowX: 'auto', width: '100%' }}>
       <Box sx={{ minWidth: 860 }}>
         <DataGrid
           autoHeight
-          checkboxSelection
           columns={columns(props.onOpen)}
           disableColumnMenu
           disableRowSelectionOnClick
           getRowHeight={() => 'auto'}
           getRowId={(row) => row.id}
-          isRowSelectable={({ row }) => row.status === 'proposed'}
-          keepNonExistentRowsSelected
           loading={props.loading}
           onPaginationModelChange={(next) =>
             next.pageSize !== props.pageSize
               ? props.onPageSizeChange(next.pageSize)
               : props.onPageChange(next.page + 1)
           }
-          onRowSelectionModelChange={(model) => props.onSelectedChange(selectedIds(model, pageIds))}
+          onRowClick={({ row }) => props.onOpen(row)}
           pageSizeOptions={[25, 50, 100]}
           pagination
           paginationMode="server"
           paginationModel={{ page: props.page - 1, pageSize: props.pageSize }}
           rowCount={props.error ? 0 : props.rowCount}
-          rowSelectionModel={selectionModel(props.selected)}
           rows={props.error ? [] : [...props.rows]}
+          sx={{ '& .MuiDataGrid-row': { cursor: 'pointer' } }}
           slots={{
             noRowsOverlay: () =>
               props.error ? (

@@ -1,5 +1,5 @@
 import type { SiteModelStatus } from './site-model';
-import type { SiteProductProblem } from './site-model-problem';
+import type { SiteModelProblem, SiteProductProblem } from './site-model-problem';
 
 /** A variant value of an on-site product, for example «Колір: Хром». */
 export interface SiteShowcaseValue {
@@ -8,7 +8,7 @@ export interface SiteShowcaseValue {
   value: string;
 }
 
-/** A row of «Вітрина сайту»: an on-site product with its model, variant values, and problems. */
+/** An on-site product inside a «Вітрина сайту» row, with its variant values and problems. */
 export interface SiteShowcaseItem {
   /** The 1C code. */
   productId: number;
@@ -24,11 +24,26 @@ export interface SiteShowcaseItem {
   problems: readonly SiteProductProblem[];
 }
 
-/** A final category of the «Моделі» sidebar. */
+/** A row of «Вітрина сайту»: a model with its on-site products, or one product in no model. */
+export interface SiteShowcaseRow {
+  /** `m{modelId}` or `p{productId}`. */
+  key: string;
+  model: { id: number; name: string; status: SiteModelStatus } | null;
+  name: string;
+  photo: string;
+  categoryId: number;
+  categoryName: string;
+  minPrice: number | null;
+  inStock: boolean;
+  products: readonly SiteShowcaseItem[];
+  problems: readonly SiteModelProblem[];
+}
+
+/** A category shown on the site with on-site products; counts include subcategories. */
 export interface SiteModelCategory {
   id: number;
   name: string;
-  parentName: string | null;
+  parentId: number | null;
   onSiteProducts: number;
   acceptedModels: number;
   proposedModels: number;

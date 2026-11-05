@@ -8,18 +8,29 @@ import {
 } from './site-models.mapper';
 
 describe('site models mapper', () => {
-  it('maps a showcase page and fills missing optional fields with null', () => {
+  it('maps a showcase row with its products and fills missing optional fields with null', () => {
     const page = mapSiteShowcase({
       items: [
         {
-          productId: 7,
+          key: 'p7',
           name: 'Ручка AB L',
-          slug: 'ruchka',
           photo: '',
           categoryId: 10,
           categoryName: 'Ручки',
           inStock: true,
-          values: [{ attributeId: 1, attributeName: 'Колір', value: 'Латунь' }],
+          products: [
+            {
+              productId: 7,
+              name: 'Ручка AB L',
+              slug: 'ruchka',
+              photo: '',
+              categoryId: 10,
+              categoryName: 'Ручки',
+              inStock: true,
+              values: [{ attributeId: 1, attributeName: 'Колір', value: 'Латунь' }],
+              problems: ['no_model'],
+            },
+          ],
           problems: ['no_model'],
         },
       ],
@@ -28,7 +39,8 @@ describe('site models mapper', () => {
       pageSize: 50,
     });
 
-    expect(page.items[0]).toMatchObject({ model: null, retailPrice: null, problems: ['no_model'] });
+    expect(page.items[0]).toMatchObject({ model: null, minPrice: null, problems: ['no_model'] });
+    expect(page.items[0].products[0]).toMatchObject({ model: null, retailPrice: null });
   });
 
   it('maps a model card', () => {

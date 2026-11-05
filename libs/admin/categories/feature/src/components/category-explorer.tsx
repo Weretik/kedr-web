@@ -1,11 +1,18 @@
-import { useGetCategoryContentQuery } from '@admin/categories/data-access';
+import {
+  useGetCategoryContentQuery,
+  useSetCategorySiteVisibilityMutation,
+} from '@admin/categories/data-access';
 import {
   buildCategoryTree,
   categoryAncestorIds,
   filterCategoryTree,
   missingContentLanguages,
 } from '@admin/categories/model';
-import { CategoryOverviewCard, CategoryTreeNav } from '@admin/categories/ui';
+import {
+  CategoryOverviewCard,
+  CategorySiteVisibilityDialog,
+  CategoryTreeNav,
+} from '@admin/categories/ui';
 import { NoticeSnackbar } from '@admin/shared/ui';
 import { Box, Typography } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
@@ -53,6 +60,9 @@ export function CategoryExplorer({
   const [expanded, setExpanded] = useState<string[] | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [visibilityOpen, setVisibilityOpen] = useState(false);
+  const [visibilityError, setVisibilityError] = useState<string | null>(null);
+  const [setSiteVisibility, visibilityState] = useSetCategorySiteVisibilityMutation();
   const overviewRef = useRef<HTMLDivElement>(null);
 
   const byId = useMemo(() => new Map(categories.map((row) => [row.id, row])), [categories]);
@@ -94,6 +104,31 @@ export function CategoryExplorer({
     // On phones the overview is under the tree; bring it into view.
     if (window.matchMedia?.('(max-width: 899.95px)').matches)
       overviewRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  };
+
+  const descendantCount = useMemo(
+    () =>
+      selected
+        ? categories.filter((row) => categoryAncestorIds(row.id, byId).includes(selected.id)).length
+        : 0,
+    [byId, categories, selected],
+  );
+
+  const toggleSite = async () => {
+    if (!selected) return;
+    setVisibilityError(null);
+    try {
+      await setSiteVisibility({
+        id: selected.id,
+        isShownOnSite: !selected.isShownOnSite,
+      }).unwrap();
+      setVisibilityOpen(false);
+      setNotice(
+        selected.isShownOnSite ? 'Категорію сховано з сайту.' : 'Категорію показано на сайті.',
+      );
+    } catch {
+      setVisibilityError('Не вдалося змінити показ на сайті. Спробуйте ще раз.');
+    }
   };
 
   const childCategories = useMemo(
@@ -141,6 +176,14 @@ export function CategoryExplorer({
             contentLoading={contentQuery.isLoading}
             detailsHref={`/categories/${selected.id}?category=${selected.id}`}
             onEdit={canEdit ? () => setEditOpen(true) : undefined}
+            onToggleSite={
+              canEdit
+                ? () => {
+                    setVisibilityError(null);
+                    setVisibilityOpen(true);
+                  }
+                : undefined
+            }
             onRetryContent={() => contentQuery.refetch()}
             onSelect={select}
             pathPrefix={publicPathPrefix}
@@ -157,6 +200,16 @@ export function CategoryExplorer({
           onClose={() => setEditOpen(false)}
           onNotice={setNotice}
           open={editOpen}
+        />
+      ) : null}
+      {visibilityOpen && selected ? (
+        <CategorySiteVisibilityDialog
+          category={selected}
+          descendantCount={descendantCount}
+          error={visibilityError}
+          onCancel={() => setVisibilityOpen(false)}
+          onConfirm={() => void toggleSite()}
+          submitting={visibilityState.isLoading}
         />
       ) : null}
       <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />

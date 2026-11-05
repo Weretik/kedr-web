@@ -16,8 +16,8 @@ import type {
   SiteModelsQuery,
   SiteModelTextInput,
   SiteProductProblem,
-  SiteShowcaseItem,
   SiteShowcaseQuery,
+  SiteShowcaseRow,
 } from '@admin/site-models/model';
 import type { components } from '@shared/api-contracts';
 
@@ -60,15 +60,21 @@ export function mapSiteModel(response: unknown): SiteModel {
   };
 }
 
-export function mapSiteShowcase(response: unknown): SiteModelsPage<SiteShowcaseItem> {
+export function mapSiteShowcase(response: unknown): SiteModelsPage<SiteShowcaseRow> {
   const dto = siteShowcaseListSchema.parse(response);
   return {
     ...dto,
-    items: dto.items.map((item) => ({
-      ...item,
-      retailPrice: item.retailPrice ?? null,
-      model: item.model ?? null,
-      problems: item.problems as SiteProductProblem[],
+    items: dto.items.map((row) => ({
+      ...row,
+      model: row.model ?? null,
+      minPrice: row.minPrice ?? null,
+      problems: asProblems(row.problems),
+      products: row.products.map((item) => ({
+        ...item,
+        retailPrice: item.retailPrice ?? null,
+        model: item.model ?? null,
+        problems: item.problems as SiteProductProblem[],
+      })),
     })),
   };
 }
@@ -76,7 +82,7 @@ export function mapSiteShowcase(response: unknown): SiteModelsPage<SiteShowcaseI
 export function mapSiteModelCategories(response: unknown): SiteModelCategory[] {
   return siteModelCategoriesSchema
     .parse(response)
-    .map((category) => ({ ...category, parentName: category.parentName ?? null }));
+    .map((category) => ({ ...category, parentId: category.parentId ?? null }));
 }
 
 export function mapSiteModelHealth(response: unknown): SiteModelHealth {
