@@ -31,6 +31,7 @@ import {
 import { createProductsRoutes } from '@admin/products/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
+import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { CustomerPicker } from '../customer-picker';
@@ -101,6 +102,7 @@ export function AppRouter() {
         ...documentsRoutes,
         ...galleryRoutes,
         ...homeContentRoutes,
+        ...wholesaleContentRoutes,
         ...profileRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },

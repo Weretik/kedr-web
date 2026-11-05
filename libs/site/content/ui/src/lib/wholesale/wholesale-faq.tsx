@@ -2,7 +2,7 @@ import { CircleHelpIcon, ClipboardListIcon, HeadphonesIcon } from 'lucide-react'
 
 import type { WholesaleDictionary } from '@site/content/model';
 
-const questionIcons = [CircleHelpIcon, ClipboardListIcon, HeadphonesIcon];
+const questionIcons = [CircleHelpIcon, ClipboardListIcon, HeadphonesIcon] as const;
 
 export function WholesaleFaq({ dictionary }: { dictionary: WholesaleDictionary['faq'] }) {
   return (
@@ -15,7 +15,8 @@ export function WholesaleFaq({ dictionary }: { dictionary: WholesaleDictionary['
       </h2>
       <dl className="mt-4 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
         {dictionary.items.map((item, index) => {
-          const Icon = questionIcons[index];
+          // Managers may add up to twelve questions; the three icons repeat in order.
+          const Icon = questionIcons[index % questionIcons.length];
 
           return (
             <div key={item.question} className="grid min-w-0 gap-2 p-4 lg:grid-cols-2 lg:gap-5">

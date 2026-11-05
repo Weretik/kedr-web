@@ -6,6 +6,7 @@ import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
+import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
@@ -71,6 +72,7 @@ export const navigationGroups: NavigationGroup[] = [
     label: 'Сайт',
     items: [
       { icon: <HomeOutlinedIcon />, label: 'Головна сторінка', to: '/home-content' },
+      { icon: <HandshakeOutlinedIcon />, label: 'Співпраця', to: '/wholesale-content' },
       { icon: <ArticleOutlinedIcon />, label: 'Статті', to: '/articles' },
       { icon: <ContactPhoneOutlinedIcon />, label: 'Контакти', to: '/company-contacts' },
       { icon: <GavelOutlinedIcon />, label: 'Документи', to: '/documents' },

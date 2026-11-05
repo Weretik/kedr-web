@@ -6,3 +6,6 @@ export { GALLERY_CACHE_TAGS } from './lib/gallery/gallery-cache';
 export { getLegalDocument } from './lib/documents/legal-document-loader';
 export type { LegalDocumentResult } from './lib/documents/legal-document-loader';
 export { LEGAL_DOCUMENT_CACHE_TAGS } from './lib/documents/legal-document-cache';
+export { getWholesaleTexts } from './lib/wholesale/wholesale-loader';
+export type { WholesaleTextsResult } from './lib/wholesale/wholesale-loader';
+export { WHOLESALE_CACHE_TAGS } from './lib/wholesale/wholesale-cache';
