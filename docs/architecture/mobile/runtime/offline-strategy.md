@@ -1,5 +1,7 @@
 # Mobile online-first and future offline support
 
+> **Changing.** [ADR-0005](../adr/0005-offline-first-local-database.md) (2026-11-05) moves the app to offline-first with a local database and a send queue. This page describes the current code until the [Kedr Manager rebuild](../../../specs/mobile/manager/001-manager-app/README.md) replaces it in stage 2; then it is rewritten.
+
 ## Current decision
 
 The first release is **online-first**. SQLite and AsyncStorage are not installed or used for the catalog. RTK Query cache exists only in process memory and is not an offline database.

@@ -1,6 +1,6 @@
 # ADR-0003: Online-first strategy for the first release
 
-**Status:** Accepted\
+**Status:** Replaced by [ADR-0005](0005-offline-first-local-database.md) on 2026-11-05\
 **Date:** 2026-07-27
 
 ## Context

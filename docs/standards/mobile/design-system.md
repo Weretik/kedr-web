@@ -1,171 +1,136 @@
-# Mobile design system «Пагін»
+# Mobile design system «Офіс»
 
-This is the visual standard for Kedr Mobile (`apps/mobile`, `libs/mobile/*`). The product owner chose it on 2026-10-26 from the [concept page](https://claude.ai/artifact/Bt5JEczChkmo4dsAJWWzDL) (direction C). Language, states, and accessibility stay in the [Mobile UI rules](mobile-ui.md); library choice stays in the [UI and platform capabilities catalog](../../architecture/mobile/platform/ui-capabilities.md). Admin and Storefront do not follow this document.
+This is the visual standard for the Kedr Manager app (`apps/mobile`, `libs/mobile/*`). The product owner chose direction A «Офіс» on 2026-11-05 from the [design canvas](https://claude.ai/artifact/7tcWwjg6KXeDuZLCuYRaks). It replaces «Пагін» (2026-10-26), whose rules stay in git history and in the [old redesign SDD](../../specs/mobile/redesign/001-pagin-design-system/README.md). Language, states and accessibility are in the [Mobile UI rules](mobile-ui.md); the component library decision is [ADR-0006](../../architecture/mobile/adr/0006-own-ui-on-unistyles.md).
 
-**Status:** implemented on 2026-10-26 for all screens (stages 1–6 of the [redesign SDD](../../specs/mobile/redesign/001-pagin-design-system/README.md)). Items marked _deferred_ below are not built yet. New mobile work follows this document.
+**Status:** accepted 2026-11-05; built screen by screen in the [Kedr Manager rebuild](../../specs/mobile/manager/001-manager-app/README.md). Until stage 1 is merged the code still carries «Пагін» tokens.
 
-The character is bright, bold, and friendly: a brand-green hero block with a large rounded bottom edge, product tiles in two columns, a dark floating pill navigation, a display face for headings and prices, and short, springy motion that confirms what the manager did.
+The character is calm and businesslike, close to the Kedr Admin: light ground, white cards with thin borders, one green accent, the selected customer always visible at the top, and large product photos and schemes on white. Nothing decorative competes with prices, stock and the calculation.
 
 ## Where the tokens live
 
-Tokens are code in `@mobile/shared/ui` (`libs/mobile/shared/ui/src/theme/`), because shared UI components need them and `scope:mobile-shared` libraries cannot depend on `@mobile/core/shell`. The shell assembles the Paper themes from them in `libs/mobile/core/shell/src/theme/app-theme.ts`. This page describes the tokens; the code is the source of truth.
+Tokens are code in `@mobile/shared/ui` (`libs/mobile/shared/ui/src/theme/`), registered with `react-native-unistyles`. Feature and UI code reads them through `StyleSheet.create((theme, rt) => …)`; no hex values, font names, radii or durations in components. A new token goes into the theme first and onto this page second.
 
-| File                   | Owns                                                                              |
-| ---------------------- | --------------------------------------------------------------------------------- |
-| `palette.ts`           | `kedrBrand`, light and dark color roles                                           |
-| `typography.ts`        | Font families and the type scale mapped onto Paper `fonts`                        |
-| `shape.ts`             | Radii, spacing, touch targets, elevation                                          |
-| `motion.ts`            | Durations, spring configs, press scale                                            |
-| `kedr-theme.ts`        | `KedrTokens`, `KedrTheme`, `createKedrTokens`, `useKedrTheme()`                   |
-| `app-theme.ts` (shell) | Assembles the Paper MD3 theme (`roundness`, `colors`, `fonts`) plus `kedr` tokens |
-
-The Paper `MD3Theme` is extended with a typed `kedr` object (`theme.kedr.radius`, `theme.kedr.space`, `theme.kedr.motion`, `theme.kedr.colors`) read through a `useKedrTheme()` hook exported from `@mobile/shared/ui`. Outside a Kedr theme (for example in tests with a plain Paper theme) the hook falls back to the light tokens. Feature and UI code uses theme values only: no hex values, font names, durations, or radii in components. A new token goes into the theme first and onto this page second.
+| File            | Owns                                          |
+| --------------- | --------------------------------------------- |
+| `palette.ts`    | Brand colors and light/dark color roles       |
+| `typography.ts` | Font family, type scale, tabular figures      |
+| `shape.ts`      | Radii, spacing, touch targets, borders        |
+| `breakpoints.ts`| `phone`, `tablet`, `wide`                     |
+| `motion.ts`     | Durations and the press feedback              |
+| `themes.ts`     | Assembled `light` and `dark` Unistyles themes |
 
 ## Color
 
-Brand colors come from the logo and do not change: **green `#3FA435`** and **ink `#0F110F`**.
+Brand colors come from the logo: **green `#3FA435`** and **ink `#0F110F`**. White text on brand green is only 3.2:1, so filled buttons with text use the darker `action` green; brand green is for the logo, selection marks, icons and focus.
 
-| Role                                              | Token (`theme.colors` / `theme.kedr.colors`) | Light                 | Dark              |
-| ------------------------------------------------- | -------------------------------------------- | --------------------- | ----------------- |
-| Screen ground                                     | `background`                                 | `#F6F7F2`             | `#0F110F`         |
-| Surface (tiles, rows, sheets)                     | `surface`                                    | `#FFFFFF`             | `#181B17`         |
-| Soft surface (image wells, chips, stepper groove) | `surfaceVariant`                             | `#EEF1E8`             | `#20251F`         |
-| Text                                              | `onSurface`                                  | `#0F110F`             | `#F0F3EC`         |
-| Secondary text                                    | `onSurfaceVariant`                           | `#5D665A`             | `#9DA899`         |
-| Separators, outlines                              | `outlineVariant`                             | `#E6E9E1`             | `#272C26`         |
-| Hero block, accent fill                           | `primary`                                    | `#3FA435`             | `#3FA435`         |
-| Text and icons on hero / accent fill              | `onPrimary`                                  | `#FFFFFF`             | `#0F110F`         |
-| Accent text and links                             | `kedr.colors.accentText`                     | `#2A7323`             | `#7DD06F`         |
-| Inverse surface (pill nav, buy bar, total card)   | `inverseSurface`                             | `#0F110F`             | `#E9F7C9`         |
-| Text on inverse surface                           | `inverseOnSurface`                           | `#F2F5EF`             | `#0F110F`         |
-| Highlight tile (headline metric)                  | `kedr.colors.highlight`                      | `#E9F7C9`             | `#26331C`         |
-| Scrim behind sheets                               | `backdrop`                                   | `rgba(15,17,15,0.45)` | `rgba(0,0,0,0.6)` |
+| Role                                              | Token             | Light     | Dark      |
+| ------------------------------------------------- | ----------------- | --------- | --------- |
+| Screen ground                                     | `background`      | `#F5F6F3` | `#0F110F` |
+| Cards, rows, bars, inputs                         | `surface`         | `#FFFFFF` | `#181B17` |
+| Segmented control track, quiet fills              | `surfaceMuted`    | `#E9EBE6` | `#20251F` |
+| Text                                              | `text`            | `#0F110F` | `#EEF1EA` |
+| Secondary text (labels, codes, captions)          | `textSecondary`   | `#5B6358` | `#A3AD9E` |
+| Disabled text and icons                           | `textDisabled`    | `#A3AA9F` | `#5E665B` |
+| Input and button borders                          | `outline`         | `#D6DAD1` | `#3A4138` |
+| Card borders, separators                          | `outlineVariant`  | `#E3E6DF` | `#272C26` |
+| Brand mark, selected tab, focus ring              | `brand`           | `#3FA435` | `#3FA435` |
+| Filled primary button                             | `action`          | `#2E7D26` | `#3FA435` |
+| Text on `action`                                  | `onAction`        | `#FFFFFF` | `#0F110F` |
+| Green text, links, active tab label               | `accentText`      | `#2A7323` | `#7DD06F` |
+| Customer avatar, selected chip fill               | `accentContainer` | `#E3F3E0` | `#1C3A1A` |
+| Photo and scheme frame (always white)             | `photoFrame`      | `#FFFFFF` | `#FFFFFF` |
+| Scrim behind sheets                               | `backdrop`        | `rgba(15,17,15,0.45)` | `rgba(0,0,0,0.6)` |
 
-Status colors (order sync, stock) are pairs of text color and soft background:
+Status colors are text/background pairs; every status also has a word.
 
-| Status kind     | Used for                                       | Text light / dark     | Background light / dark |
-| --------------- | ---------------------------------------------- | --------------------- | ----------------------- |
-| `success`       | In stock, «Прийнято в 1С»                      | `#2E8B2A` / `#6FD164` | `#E3F3E0` / `#183019`   |
-| `warning`       | «Очікує на відправлення», retry scheduled      | `#A86A00` / `#F0B44A` | `#FBF0D9` / `#33270F`   |
-| `error`         | Out of stock, sync errors, destructive actions | `#C2392F` / `#FF8A7F` | `#FBE5E2` / `#3A1714`   |
-| `informational` | «Надіслано до 1С», neutral notices             | `#2D6FB5` / `#7FB6F2` | `#E2EDF9` / `#132539`   |
-
-The kinds map one-to-one onto `OrderSyncStatusKind` in `@mobile/shared/model`. «Наявність уточнюється» uses `warning`, never Paper's default `tertiary`.
+| Kind            | Used for                                         | Text light / dark     | Background light / dark |
+| --------------- | ------------------------------------------------ | --------------------- | ----------------------- |
+| `success`       | In stock, «Прийнято 1С», markup                  | `#2A7323` / `#7DD06F` | `#E3F3E0` / `#183019`   |
+| `warning`       | «У черзі», «Без мережі · дані від 08:12», low stock | `#7A4D00` / `#F0B44A` | `#FBF0D9` / `#33270F` |
+| `error`         | Out of stock, rejected send, discount, sign-out  | `#B3261E` / `#FF8A7F` | `#FBE5E2` / `#3A1714`   |
+| `informational` | Notes («замовлення піде в 1С, коли з’явиться мережа»), scheme labels | `#1F4F86` / `#7FB6F2` | `#E2EDF9` / `#132539` |
 
 Rules:
 
-- `primary` is a fill, not a text color: green on white is about 3:1. Green text on light grounds uses `accentText`.
-- One accent per screen area: the hero block, the active nav pill, or the main action. Status colors mark state only.
-- Every status pill or icon carries a text label; color is never the only signal.
-- No hard-coded white or black: image wells use `surfaceVariant` so product photos sit on a soft tile in both schemes. Product images with white backgrounds go inside a `surface` inner frame with radius `md`.
-- Paper's default purple `tertiary` / `secondary` are overwritten with brand roles so no off-brand color can leak in.
+- One filled `action` button per screen area; the second action is an outlined button.
+- Discount is shown in `error` text, markup in `success` text, zero in `textSecondary`, always with the sign and «₴/шт».
+- No «all OK» badges: an online, synced state shows only a small dot with time on tablet headers; problems get a status pill with the reason.
+- Photos and schemes always sit on `photoFrame` white, in both themes.
 
 ## Typography
 
-| Role                                                   | Family                                                     | Weights            |
-| ------------------------------------------------------ | ---------------------------------------------------------- | ------------------ |
-| Display: screen titles, prices, totals, metric numbers | [Unbounded](https://fonts.google.com/specimen/Unbounded)   | 500, 600           |
-| Text: everything else                                  | [Golos Text](https://fonts.google.com/specimen/Golos+Text) | 400, 500, 600, 700 |
+One family: [Golos Text](https://fonts.google.com/specimen/Golos+Text) 400/500/600/700 (full Cyrillic, already a dependency), loaded with `expo-font` behind the splash screen.
 
-Both have full Cyrillic. They are loaded with `expo-font` from `@expo-google-fonts/unbounded` and `@expo-google-fonts/golos-text` in the root layout while the splash screen is shown; no Development Build is needed. Fallback is the platform system font.
+| Use                                   | Size / weight / line height |
+| ------------------------------------- | --------------------------- |
+| Screen title                          | 26 / 700 / 32               |
+| Login title                           | 30 / 700 / 36               |
+| Section title, product name on detail | 20 / 700 / 26               |
+| Total amount                          | 24 / 700 / 30               |
+| Price in list                         | 16 / 700 / 22               |
+| Body, row title                       | 14–15 / 600 / 20            |
+| Secondary text                        | 13 / 400 / 18               |
+| Caption, code, stock                  | 12 / 400–500 / 16           |
+| Tab label                             | 11 / 500 / 14               |
 
-| Use                        | Paper variant                | Family / size / weight / line height |
-| -------------------------- | ---------------------------- | ------------------------------------ |
-| Hero greeting title        | `headlineSmall`              | Unbounded 22 / 600 / 28              |
-| Screen title               | `titleLarge`                 | Unbounded 20 / 600 / 26              |
-| Product name on detail     | `titleMedium`                | Unbounded 16 / 600 / 22              |
-| Big total, metric number   | `displaySmall` (custom size) | Unbounded 30 / 600 / 36              |
-| Price in tile and row      | `labelLarge` (display)       | Unbounded 13 / 600 / 18              |
-| Body, list text            | `bodyMedium`                 | Golos 14 / 400 / 20                  |
-| Tile name, secondary body  | `bodySmall`                  | Golos 12.5 / 400 / 17                |
-| Buttons, chips, tab labels | `labelLarge` / `labelMedium` | Golos 13–14 / 600                    |
-| Metadata, captions         | `labelSmall`                 | Golos 11.5 / 500 / 16                |
+Numbers (prices, quantities, codes, totals) use tabular figures. Text follows system font scaling; layouts are checked at 130% and rows grow, never clip.
 
-Rules: numbers (prices, quantities, IDs, totals) use tabular figures (`fontVariant: ['tabular-nums']`); Unbounded is never used for running text or for more than one line in a list item; text respects system font scaling, and layouts are checked at 130% scale (no fixed heights on text containers).
+## Shape and spacing
 
-## Shape, spacing, and elevation
-
-| Token             | Value                           | Used for                                                          |
-| ----------------- | ------------------------------- | ----------------------------------------------------------------- |
-| `radius.sm`       | 12                              | Small buttons, image inner frames                                 |
-| `radius.md`       | 16                              | Image wells, inputs inside cards                                  |
-| `radius.lg`       | 22                              | Product tiles, list rows, cards                                   |
-| `radius.xl`       | 30                              | Hero block bottom corners, product stage, total card              |
-| `radius.pill`     | 999                             | Search field, chips, nav, buy bar, status pills, steppers         |
-| `space`           | 4-pt grid: 4, 8, 12, 16, 20, 24 | Screen side padding 16; gap between tiles 10; between sections 16 |
-| Touch target      | min 44×44                       | Every pressable; small visual controls get `hitSlop`              |
-| Paper `roundness` | 4 (×4 = 16)                     | Default radius for Paper controls                                 |
-
-Elevation is flat: tiles and rows are separated by color (`surface` on `background`), not shadow. Shadows are used only for floating layers: the pill navigation, the buy bar, and sheets (one soft shadow, `elevation` 6 on Android).
+| Token          | Value                         | Used for                                      |
+| -------------- | ----------------------------- | --------------------------------------------- |
+| `radius.sm`    | 8                             | Segments inside a segmented control, tags     |
+| `radius.md`    | 10–12                         | Inputs, buttons, thumbnails, steppers         |
+| `radius.lg`    | 14                            | Cards and list rows                           |
+| `radius.xl`    | 18                            | Photo stage, profile card                     |
+| `radius.pill`  | 999                           | Chips, status pills                           |
+| `space`        | 4-pt grid: 4, 8, 12, 16, 20, 24, 28 | Side padding 16; gap between rows 8     |
+| Touch target   | min 44×44 (buttons 48 high)   | Every pressable                               |
+| Border         | 1 px `outlineVariant`         | Cards and rows; no shadows except sheets      |
 
 ## Layout patterns
 
-- **Hero header.** Root tab screens (Каталог, Головна) open with a `primary` block: status bar area, greeting or screen title, and the pill search field with a filter button. Bottom corners `radius.xl`. Inner screens use a plain header on `background` with round back and action buttons.
-- **Pill navigation.** The tab bar is a dark (`inverseSurface`) floating pill, inset 16 from the sides and safe-area bottom, height 58. The active tab is a `primary` pill that shows icon plus label; inactive tabs show the icon only, with accessible names. The cart tab shows a count badge. Screen content gets bottom padding equal to the nav height plus inset so nothing hides under it.
-- **Category rail.** Horizontal rail of 54×54 rounded icon tiles with labels; the selected one turns `inverseSurface`. It replaces the unlabeled filter, sort, and category icon buttons. Filters and sort are opened from the filter button in the search field and summarized as removable chips under the rail.
-- **Product grid.** Two-column tiles: image well (aspect 1:0.82), up to two lines of name, display price, round dark «+» button. Flags («Хіт», «Немає») sit top-left on the image. Lists use FlashList with `numColumns={2}`.
-- **Product stage.** Detail opens with a large `primary` stage (radius `xl`) holding the gallery, round translucent back and favorite buttons, then name, stock pill, ID, variant chips, and characteristics.
-- **Action bar.** Primary actions on detail and cart live in a dark floating pill at the bottom: quantity stepper on the left, green action pill with the amount on the right («485 ₴ + кошик», «Оформити»).
-- **Total card.** Cart starts with an `inverseSurface` card: amount due in display type, discount note, and the selected customer with a change action.
-- **Bento summary.** Orders start with metric tiles: a wide `highlight` tile (today's total and count) and two small tiles (awaiting 1С, with errors). Below, order rows with a status icon tile, number and customer, status label, and amount.
-- **Sheets.** All bottom sheets use one shared `KedrSheet` wrapper (built on `react-native-actions-sheet`): `surface` background, top radius `xl`, 36×4 handle, `backdrop` scrim, title row with close button, safe-area bottom padding. Full-screen filter UI is a sheet too, not a Paper `Modal`.
+- **Customer bar.** After a customer is chosen, every working screen starts with a white card: avatar with initials, customer name, «Ціни: Опт 2», and a «Змінити» chip. On tablets it is the top header with the price type, debt «—» and draft count.
+- **Customer gate.** Until a customer is chosen, «Товари», «Розрахунок» and «Замовлення» show a lock icon in the tab bar and cannot be opened; «Клієнт» and «Кабінет» stay open.
+- **Tab bar (phone).** White bar, 5 tabs with icon and label: Клієнт, Товари, Розрахунок · N, Замовлення, Кабінет. Active tab in `accentText`.
+- **Rail (tablet, wide).** 76 dp white rail on the left with the logo, the same sections and the avatar at the bottom; on `wide` the calculation is a 360 dp panel on the right that is always visible.
+- **Product row.** 64 dp white thumbnail, name (2 lines), «Код · залишок», client price, and a 40 dp «+» button in `action`; out of stock the button is grey and disabled and the stock says «немає в наявності». Tablet `wide` shows the same data as table columns: Фото, Товар, Код, Залишок, Ціна клієнта, action.
+- **Product detail.** Segmented «Фото N/M | Схема» over a white photo stage (330 dp high on phone, full height on tablet) with a full-screen button; thumbnails below, the scheme thumbnail labeled «Схема». Full screen supports pinch zoom, double tap and swipe between photos and the scheme. A bottom bar shows «Ціна для <клієнт> · N шт» and «Додати в розрахунок».
+- **Calculation line.** Name and line sum, stepper (− qty +), unit price, and the signed adjustment pill or field «± ₴/шт». The footer shows the adjustment total, «Разом» and two buttons: «Чернетка» (outlined) and «Відправити в 1С» (filled).
+- **Offline notes.** Under the customer bar a `warning` strip «Без мережі · дані від HH:MM»; in the calculation an `informational` note that the order will queue.
+- **Customer card.** Header with avatar, name, phone and price type; two tiles «Заборгованість» and «Взаєморозрахунки» showing «—» and one line why; contact rows; segmented «Замовлення | Чернетки · N»; order rows with number, date, status pill and sum.
 
-## Component inventory
+## Components
 
-Shared presentational components live in a new `@mobile/shared/ui` library (alias already reserved in `tsconfig.base.json`); domain components stay in their domain `ui` libraries and compose these.
+Shared components live in `@mobile/shared/ui`; domain components compose them in their `ui` libraries.
 
-| Component         | Library              | Replaces / notes                                                             |
-| ----------------- | -------------------- | ---------------------------------------------------------------------------- |
-| `HeroHeader`      | `@mobile/shared/ui`  | Paper `Appbar` on root tabs                                                  |
-| `ScreenHeader`    | `@mobile/shared/ui`  | Paper `Appbar` on inner screens; round icon buttons                          |
-| `PillTabBar`      | `@mobile/core/shell` | Paper `BottomNavigation.Bar` in `(tabs)/_layout.tsx`                         |
-| `SearchField`     | `@mobile/shared/ui`  | Search entry in catalog and orders; pill, optional trailing action           |
-| `CategoryRail`    | `@mobile/catalog/ui` | _Deferred._ Labeled `FilterChip`s in `CatalogQueryActionRow` for now         |
-| `FilterChip`      | `@mobile/shared/ui`  | Clipped Paper `Chip` in `catalog-active-filters.tsx`; height 32, wraps label |
-| `ProductTile`     | `@mobile/catalog/ui` | Implemented as the restyled `ProductCard` (two-column tile)                  |
-| `QuantityStepper` | `@mobile/shared/ui`  | Icon-button steppers in cart and detail; `horizontal` and `vertical`         |
-| `ActionBar`       | `@mobile/shared/ui`  | `ProductDetailsCartAction`, cart summary button                              |
-| `TotalCard`       | `@mobile/cart/ui`    | Total card in the `CartView` list header; `CartSummary` is the action bar    |
-| `StatusPill`      | `@mobile/shared/ui`  | `OrderStatusChip`, stock labels; takes a status kind and label               |
-| `MetricTile`      | `@mobile/shared/ui`  | New, orders bento summary                                                    |
-| `OrderRow`        | `@mobile/orders/ui`  | Implemented as the restyled `OrderCard`; bento is `OrderHistorySummary`      |
-| `KedrSheet`       | `@mobile/shared/ui`  | Catalog, cart, and customer action sheets and the filters modal              |
-| `StateView`       | `@mobile/shared/ui`  | Loading, empty, error, offline states; illustration tile, text, retry        |
-| `Skeleton`        | `@mobile/shared/ui`  | _Deferred._ `StateView kind="loading"` for now                               |
-| Theme choice      | `@mobile/core/shell` | Moves from every tab header into the profile screen                          |
-
-Also in `@mobile/shared/ui`: `PressableScale`, `RoundIconButton`, `ActionPillButton`, `KedrCard`, and the `useBump` and `useReducedMotion` hooks. The tab bar is laid out in the normal flow (not absolutely positioned), so screen content never hides behind it.
+| Component          | Notes                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| `Button`           | `filled`, `outlined`, `text`, `destructive`; 48 high          |
+| `IconButton`       | 40–48, square with `radius.md`; accessible label required     |
+| `TextField`        | Label above, 48 high, optional leading icon and trailing action (show password) |
+| `SearchField`      | `TextField` with search icon                                  |
+| `SegmentedControl` | Two or three segments on `surfaceMuted`                       |
+| `Chip`             | Filter and category chips; selected = ink fill, white text    |
+| `StatusPill`       | Kind + label                                                  |
+| `QuantityStepper`  | − qty +, 36 high                                              |
+| `Card`, `ListRow`  | White, 1 px border, `radius.lg`                               |
+| `Avatar`           | Photo or initials on a stable color                           |
+| `CustomerBar`      | Customer bar pattern above                                    |
+| `TabBar`, `NavRail`| Phone tabs and tablet rail, both with the customer gate        |
+| `Sheet`            | One bottom sheet wrapper                                      |
+| `StateView`        | Loading, empty, offline-stale, error; text and action         |
+| `ZoomViewer`       | Full-screen photos and scheme with pinch zoom                 |
 
 ## Motion
 
-Motion is short and springy and always confirms an action or shows where something came from. It uses React Native `Animated` with the native driver (transform and opacity only); tokens are in `motion.ts`. Reanimated stays available for gesture-driven motion.
-
-| Token           | Value                             | Used for                                          |
-| --------------- | --------------------------------- | ------------------------------------------------- |
-| `duration.fast` | 150 ms                            | Press feedback, color changes                     |
-| `duration.base` | 250 ms                            | Chips, selection, list item entering              |
-| `duration.slow` | 350 ms                            | Nav pill expand, sheet, stage                     |
-| `spring.snappy` | damping 18, stiffness 260         | Nav pill, selected category lift                  |
-| `spring.bouncy` | damping 12, stiffness 300         | Count badge and quantity bump (scale 1 → 1.2 → 1) |
-| `press.scale`   | 0.97                              | Tiles, rows, buttons while pressed                |
-| `easing.out`    | `Easing.bezier(0.2, 0.8, 0.2, 1)` | Default for timing animations                     |
-
-Moments:
-
-- Pressed tiles and buttons scale to `press.scale`.
-- The active nav pill grows to reveal its label (`spring.snappy`).
-- _Deferred:_ «+» quick add on a tile (list items do not carry stock yet). The cart badge bumps (`spring.bouncy`); a light haptic is added only once `expo-haptics` is approved through a platform adapter.
-- Quantity and totals bump when they change.
-- _Deferred:_ list items enter with a 10 px rise and 40 ms stagger, only on first load of a list, never on scroll recycling.
-- _Deferred:_ the product stage has a slow «breathing» halo behind the photo (4 s loop, scale 1 → 1.08), stopped when the screen is not focused.
-
-Reduced motion (`AccessibilityInfo.isReduceMotionEnabled`, read by `useReducedMotion`) turns off the halo, staggers, and bumps, and replaces springs with instant changes.
+Short and quiet: press feedback (opacity 0.7 or scale 0.98, 120 ms), sheets and panels 250 ms, the tab badge count changes without bounce. Reduced motion turns transitions into instant changes. Zoom and swipe follow the finger on the UI thread (Reanimated).
 
 ## Do and don't
 
-- Do use `surface` tiles on `background` instead of shadows; don't put cards inside cards.
-- Do label every filter and action with text; icon-only controls are allowed only in the nav and headers and always have an accessibility label.
-- Do keep one primary action per screen, in the action bar.
-- Don't add new colors, fonts, radii, or durations in feature code.
-- Don't fix text heights; let rows grow with font scaling.
-- Don't mix sheet libraries or use Paper `Modal` for bottom sheets.
+- Do keep the customer visible on every working screen.
+- Do show prices only as the selected customer's prices.
+- Do keep photos and schemes large and on white; never crop a scheme.
+- Don't use more than one filled button per area.
+- Don't add colors, fonts, radii or durations in feature code.
+- Don't show an «all OK» badge.
