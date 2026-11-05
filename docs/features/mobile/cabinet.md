@@ -8,6 +8,7 @@
 - [QueueSummaryCard](../../../libs/mobile/calculation/feature/src/components/queue-summary-card.tsx): shown only while orders or drafts wait or were returned.
 - Theme, «Швидкий вхід» and «Завантажити всі фото» stay as before.
 - [SignOutSection](../../../libs/mobile/profile/ui/src/components/sign-out-section.tsx): with a non-empty queue «Вийти» first says how many items will be lost and signs out only on «Вийти все одно».
+- On a tablet the cabinet has two columns: profile and sign-out on the left, data, queue and device settings on the right.
 
 ## Routes
 

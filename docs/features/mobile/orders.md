@@ -5,6 +5,7 @@
 - [OrdersScreen](../../../libs/mobile/orders/feature/src/components/orders-screen.tsx): «Відправлення» lists the customer's [queue](calculation.md) entries («У черзі», the number once created, «Потрібна перевірка» with the reason). Below, orders and drafts come from the [customer activity](customers.md) cache and refresh online, also after each delivered order. The tab shows «Замовлення · N» while orders wait.
 - A draft opens online in the calculation (`GET /api/admin/order-workspace/drafts/{draftId}`) with its version, so saving replaces it unless someone changed it. A returned order opens in the calculation. Neither overwrites a calculation that has lines; the screen asks to send or save it first.
 - [OrderDetailScreen](../../../libs/mobile/orders/feature/src/components/order-detail-screen.tsx) reads `GET /api/admin/order-workspace/orders/{orderId}` online: number, customer, date, 1C number, comment, lines with quantity, adjustment and amount, total. Only a sync problem gets a status pill. Offline it says the order opens with the network.
+- [OrdersWorkspace](../../../libs/mobile/orders/feature/src/components/orders-workspace.tsx) is what `/orders` shows: on a phone the lists open `/orders/[orderId]`, on a tablet the opened order stands next to the lists.
 
 ## Routes
 

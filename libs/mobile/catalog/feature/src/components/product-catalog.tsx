@@ -1,5 +1,5 @@
 import { useSelectedCustomer } from '@mobile/customers/data-access';
-import { StateView, useBreakpoint } from '@mobile/shared/ui';
+import { Button, StateView, useBreakpoint } from '@mobile/shared/ui';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
@@ -20,8 +20,8 @@ export interface ProductCatalogProps {
 }
 
 /**
- * Products priced for the chosen customer; tablet keeps the list and the detail side by side, a wide tablet also
- * the calculation (R-017).
+ * Products priced for the chosen customer; a tablet keeps the list and the detail side by side, a wide tablet keeps
+ * the calculation next to the products and opens a product in the list's place (R-017).
  */
 export function ProductCatalog({
   isOnline,
@@ -47,37 +47,66 @@ export function ProductCatalog({
     );
   }
 
+  const list = (
+    <ProductList
+      counterpartyId={counterpartyId}
+      isOnline={isOnline}
+      onAdd={onAdd}
+      onOpen={setOpenedId}
+      openedId={openedId}
+    />
+  );
+  const detail =
+    openedId === null ? null : (
+      <ProductDetail
+        counterpartyId={counterpartyId}
+        customerName={customer?.name ?? null}
+        isOnline={isOnline}
+        key={openedId}
+        onAdd={onAdd}
+        productId={openedId}
+      />
+    );
+
+  // Wide: the calculation keeps its column, so an opened product takes the list's place at full width and its
+  // photo and scheme stay side by side (SC-024, SC-025).
+  if (showPanel) {
+    return (
+      <View style={styles.split}>
+        <View style={styles.main}>
+          {detail ? (
+            <View style={styles.opened}>
+              <View style={styles.back}>
+                <Button
+                  icon="arrow-left"
+                  label="До списку товарів"
+                  onPress={() => setOpenedId(null)}
+                  variant="text"
+                />
+              </View>
+              {detail}
+            </View>
+          ) : (
+            list
+          )}
+        </View>
+        <View style={styles.panel}>{sidePanel}</View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.split}>
-      <View style={styles.list}>
-        <ProductList
-          counterpartyId={counterpartyId}
-          isOnline={isOnline}
-          onAdd={onAdd}
-          onOpen={setOpenedId}
-          openedId={openedId}
-        />
-      </View>
+      <View style={styles.list}>{list}</View>
       <View style={styles.detail}>
-        {openedId === null ? (
+        {detail ?? (
           <StateView
             kind="empty"
             message="Фото, схема і ціна відкриються праворуч."
             title="Оберіть товар"
           />
-        ) : (
-          <ProductDetail
-            counterpartyId={counterpartyId}
-            customerName={customer?.name ?? null}
-            isOnline={isOnline}
-            key={openedId}
-            onAdd={onAdd}
-            productId={openedId}
-            sideBySide={!showPanel}
-          />
         )}
       </View>
-      {showPanel ? <View style={styles.panel}>{sidePanel}</View> : null}
     </View>
   );
 }
@@ -106,8 +135,11 @@ export function ProductScreen({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  back: { alignSelf: 'flex-start' },
   detail: { flex: 3 },
   list: { flex: 2, maxWidth: 480 },
-  panel: { flex: 3, minWidth: 360 },
+  main: { flex: 3 },
+  opened: { flex: 1, gap: theme.space.xs },
+  panel: { flex: 2, maxWidth: 520, minWidth: 360 },
   split: { flex: 1, flexDirection: 'row', gap: theme.space.lg },
 }));

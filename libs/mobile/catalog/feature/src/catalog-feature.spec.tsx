@@ -158,8 +158,14 @@ describe('ProductCatalog with a calculation', () => {
 
     expect(screen.getByText('Панель розрахунку')).toBeTruthy();
     await fireEvent.press(screen.getByText('Замок врізний'));
+    // The opened product takes the list's place; the calculation stays.
+    expect(screen.queryByLabelText('Пошук товару')).toBeNull();
+    expect(screen.getByText('Панель розрахунку')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Додати в розрахунок' }));
     expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ id: 201 }));
+
+    await fireEvent.press(screen.getByRole('button', { name: 'До списку товарів' }));
+    expect(screen.getByLabelText('Пошук товару')).toBeTruthy();
   });
 });
 
@@ -181,5 +187,17 @@ describe('ProductScreen', () => {
     expect(screen.getByRole('tab', { name: 'Схема' })).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Фото 1 з 1 на весь екран' }));
     expect(screen.getByRole('button', { name: 'Закрити' })).toBeTruthy();
+  });
+
+  it('puts the photo and the scheme side by side in a wide column (SC-025)', async () => {
+    await inDb(seed(), <ProductScreen isOnline productId={101} />);
+
+    await fireEvent(screen.getByTestId('product-detail'), 'layout', {
+      nativeEvent: { layout: { height: 900, width: 820, x: 0, y: 0 } },
+    });
+
+    expect(screen.queryByRole('tab', { name: 'Схема' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Фото 1 з 1 на весь екран' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Схема на весь екран' })).toBeTruthy();
   });
 });

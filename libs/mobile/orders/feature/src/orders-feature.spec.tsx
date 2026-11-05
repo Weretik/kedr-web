@@ -12,8 +12,15 @@ import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import { OrderDetailScreen } from './components/order-detail-screen';
 import { OrdersScreen } from './components/orders-screen';
+import { OrdersWorkspace } from './components/orders-workspace';
 
 import type { ReactNode } from 'react';
+
+let mockBreakpoint = 'phone';
+jest.mock('@mobile/shared/ui', () => ({
+  ...jest.requireActual('@mobile/shared/ui'),
+  useBreakpoint: () => mockBreakpoint,
+}));
 
 function seed(): LocalDatabase {
   const db = createTestLocalDatabase();
@@ -23,11 +30,11 @@ function seed(): LocalDatabase {
   return db;
 }
 
-const wrapperFor =
-  (db: LocalDatabase) =>
-  ({ children }: { children: ReactNode }) => (
-    <LocalDatabaseProvider database={db}>{children}</LocalDatabaseProvider>
-  );
+function wrapperFor(db: LocalDatabase) {
+  return function DatabaseWrapper({ children }: { children: ReactNode }) {
+    return <LocalDatabaseProvider database={db}>{children}</LocalDatabaseProvider>;
+  };
+}
 
 const fetcher = jest.fn().mockResolvedValue({
   drafts: [{ draftId: 5, lineCount: 1, title: 'Подол', updatedAtUtc: '2026-11-04T10:00:00Z' }],
@@ -63,6 +70,26 @@ const queueOrder = (db: LocalDatabase) =>
     lines: [{ adjustmentKopecks: 0, productId: 7, quantity: 1 }],
     totalKopecks: 41_200,
   });
+
+const order = {
+  comment: 'Самовивіз',
+  createdAtUtc: '2026-11-05T10:00:00Z',
+  customerName: 'Будмаркет',
+  lines: [
+    {
+      adjustmentKopecks: -1000,
+      amountKopecks: 160_800,
+      productId: '7',
+      productName: 'Петля дверна',
+      quantity: 4,
+    },
+  ],
+  oneCDocumentNumber: null,
+  orderId: 42,
+  orderNumber: 'КД-0042',
+  syncStatus: 'Synced',
+  totalKopecks: 160_800,
+};
 
 describe('OrdersScreen', () => {
   beforeEach(async () => {
@@ -149,25 +176,6 @@ describe('OrdersScreen', () => {
 
 describe('OrderDetailScreen', () => {
   it('shows lines with adjustments and the total', async () => {
-    const order = {
-      comment: 'Самовивіз',
-      createdAtUtc: '2026-11-05T10:00:00Z',
-      customerName: 'Будмаркет',
-      lines: [
-        {
-          adjustmentKopecks: -1000,
-          amountKopecks: 160_800,
-          productId: '7',
-          productName: 'Петля дверна',
-          quantity: 4,
-        },
-      ],
-      oneCDocumentNumber: null,
-      orderId: 42,
-      orderNumber: 'КД-0042',
-      syncStatus: 'Synced',
-      totalKopecks: 160_800,
-    };
     await render(
       <OrderDetailScreen fetcher={jest.fn().mockResolvedValue(order)} isOnline orderId={42} />,
     );
@@ -181,5 +189,38 @@ describe('OrderDetailScreen', () => {
   it('says it opens with the network', async () => {
     await render(<OrderDetailScreen isOnline={false} orderId={42} />);
     expect(screen.getByText('Замовлення відкриється, коли з’явиться мережа.')).toBeTruthy();
+  });
+});
+
+describe('OrdersWorkspace', () => {
+  beforeEach(async () => {
+    await act(async () => useSelectedCustomerStore.getState().select('c-1'));
+  });
+  afterEach(() => {
+    mockBreakpoint = 'phone';
+  });
+
+  it('opens the order next to the lists on a tablet (R-017)', async () => {
+    mockBreakpoint = 'tablet';
+    const onOpenOrder = jest.fn();
+    await render(
+      <OrdersWorkspace
+        api={api}
+        detailFetcher={jest.fn().mockResolvedValue(order)}
+        fetcher={fetcher}
+        isOnline
+        onOpenCalculation={jest.fn()}
+        onOpenOrder={onOpenOrder}
+      />,
+      { wrapper: wrapperFor(seed()) },
+    );
+    await act(async () => undefined);
+    expect(screen.getByText('Оберіть замовлення')).toBeTruthy();
+
+    await fireEvent.press(screen.getByText('№ КД-0042'));
+    await act(async () => undefined);
+
+    expect(onOpenOrder).not.toHaveBeenCalled();
+    expect(screen.getByText('Петля дверна')).toBeTruthy();
   });
 });

@@ -10,7 +10,10 @@ export interface WorkScreenProps {
   title?: string;
 }
 
-/** Screen frame: ground color, top safe area, 16 dp sides and the screen title. */
+/**
+ * Screen frame: ground color, safe areas, 16 dp sides and the screen title. The rail takes the left inset and the
+ * phone tab bar the bottom one, so a tablet in landscape pads the right side and the bottom here (R-017).
+ */
 export function WorkScreen({ children, headerRight, title }: Readonly<WorkScreenProps>) {
   return (
     <View style={styles.screen}>
@@ -33,7 +36,9 @@ const styles = StyleSheet.create((theme, rt) => ({
   screen: {
     backgroundColor: theme.colors.background,
     flex: 1,
-    paddingHorizontal: theme.space.lg,
+    paddingBottom: rt.breakpoint === undefined || rt.breakpoint === 'phone' ? 0 : rt.insets.bottom,
+    paddingLeft: theme.space.lg,
+    paddingRight: rt.insets.right + theme.space.lg,
     paddingTop: rt.insets.top + theme.space.sm,
   },
   title: { flex: 1 },

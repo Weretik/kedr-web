@@ -1,6 +1,6 @@
 import { CustomerBar, useConnectivity, WorkScreen } from '@mobile/core/shell';
 import { useSelectedCustomerSummary } from '@mobile/customers/feature';
-import { OrdersScreen } from '@mobile/orders/feature';
+import { OrdersWorkspace } from '@mobile/orders/feature';
 import { router } from 'expo-router';
 
 export default function OrdersRoute() {
@@ -10,7 +10,7 @@ export default function OrdersRoute() {
   return (
     <WorkScreen title="Замовлення">
       <CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />
-      <OrdersScreen
+      <OrdersWorkspace
         isOnline={isOnline}
         onOpenCalculation={() => router.navigate('/calculation')}
         onOpenOrder={(orderId) =>
