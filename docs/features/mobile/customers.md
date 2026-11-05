@@ -20,7 +20,7 @@
 
 ```text
 libs/mobile/customers/
-├── model/src/{entities,activity,search,format}/  # types, zod schemas of orders and drafts, search, А–Я, money
+├── model/src/{entities,activity,search}/  # types, zod schemas of orders and drafts, search, А–Я (money formats re-exported from shared/model)
 ├── data-access/src/{queries,selection,activity,hooks}/  # local DB reads, selected store, order-workspace client and cache
 ├── ui/src/components/  # CustomerRow, CustomerMoney, PriceRules, OrderRow, DraftRow
 └── feature/src/{components,hooks}/  # CustomerList, CustomerChoice, CustomerCard, useSelectedCustomerSummary

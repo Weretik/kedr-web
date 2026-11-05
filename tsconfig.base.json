@@ -169,7 +169,11 @@
       "@mobile/customers/model": ["./libs/mobile/customers/model/src/index.ts"],
       "@mobile/customers/data-access": ["./libs/mobile/customers/data-access/src/index.ts"],
       "@mobile/customers/ui": ["./libs/mobile/customers/ui/src/index.ts"],
-      "@mobile/customers/feature": ["./libs/mobile/customers/feature/src/index.ts"]
+      "@mobile/customers/feature": ["./libs/mobile/customers/feature/src/index.ts"],
+      "@mobile/catalog/model": ["./libs/mobile/catalog/model/src/index.ts"],
+      "@mobile/catalog/data-access": ["./libs/mobile/catalog/data-access/src/index.ts"],
+      "@mobile/catalog/ui": ["./libs/mobile/catalog/ui/src/index.ts"],
+      "@mobile/catalog/feature": ["./libs/mobile/catalog/feature/src/index.ts"]
     }
   }
 }

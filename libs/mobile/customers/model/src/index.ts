@@ -8,7 +8,7 @@ export {
   type CustomerOrder,
 } from './activity/customer-activity';
 export type { Customer, CustomerDetails, CustomerPriceRule } from './entities/customer';
-export { formatDate, formatHryvnias, formatKopecks } from './format/money';
+export { formatDate, formatHryvnias, formatKopecks } from '@mobile/shared/model';
 export {
   compareNames,
   groupByLetter,

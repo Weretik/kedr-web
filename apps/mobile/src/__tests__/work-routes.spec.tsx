@@ -18,6 +18,13 @@ jest.mock('@mobile/core/auth', () => ({
 
 let mockCustomer: { name: string; priceTypeName: string | null } | null = null;
 
+jest.mock('@mobile/catalog/feature', () => ({
+  PhotoDownloadCard: () => null,
+  ProductCatalog: () => null,
+  ProductScreen: () => null,
+  useKeepEssentialPhotos: jest.fn(),
+}));
+
 jest.mock('@mobile/core/local-db', () => ({
   LocalDatabaseProvider: ({ children }: { children: unknown }) => children,
 }));

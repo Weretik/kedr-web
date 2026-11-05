@@ -12,6 +12,7 @@ module.exports = {
     '^@mobile/core/local-db$': '<rootDir>/../../core/local-db/src/index.ts',
     '^@mobile/customers/model$': '<rootDir>/../model/src/index.ts',
     '^@mobile/shared/api-client$': '<rootDir>/../../shared/api-client/src/index.ts',
+    '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
     '^@mobile/shared/config$': '<rootDir>/../../shared/config/src/index.ts',
     '^@react-native-async-storage/async-storage$': `${root}/node_modules/@react-native-async-storage/async-storage/jest/async-storage-mock.js`,
   },

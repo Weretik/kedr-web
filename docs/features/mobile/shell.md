@@ -8,7 +8,7 @@
 - `WorkLayout` takes a `statusStrip` slot: the app passes the [sync status strip](sync.md), drawn above the phone tab bar or under the rail items, so the shell does not depend on the sync domain.
 - Customer gate: without a customer, «Товари», «Розрахунок» and «Замовлення» show a lock and do not open, and a link into them lands on `/customer`. Until the customer stage the [work layout route](../../../apps/mobile/src/app/%28work%29/_layout.tsx) passes `hasCustomer={false}`.
 - Phones stay in portrait, tablets turn freely ([orientation policy](../../../libs/mobile/core/shell/src/providers/orientation-policy.ts)). The theme choice «Як у системі / Світла / Темна» is a persisted Zustand store ([theme-preference-store](../../../libs/mobile/core/shell/src/theme/theme-preference-store.ts)).
-- [WorkScreen](../../../libs/mobile/core/shell/src/layout/work-screen.tsx) is the screen frame; [CustomerBar](../../../libs/mobile/core/shell/src/customer/customer-bar.tsx) is ready for the customer stage. Products, calculation, orders and customer choice are placeholders until their stages.
+- [WorkScreen](../../../libs/mobile/core/shell/src/layout/work-screen.tsx) is the screen frame; [CustomerBar](../../../libs/mobile/core/shell/src/customer/customer-bar.tsx) tops products, calculation and orders. Customer choice and products are live ([customers](customers.md), [products](catalog.md)); calculation and orders are placeholders until their stages.
 
 ## Structure diagram
 
@@ -37,7 +37,7 @@ apps/mobile/
     ├── index.tsx  # → /customer
     └── (work)/
         ├── _layout.tsx  # WorkLayout with the customer gate
-        ├── customer/, products/, orders/  # section stacks (placeholders)
+        ├── customer/, products/, orders/  # section stacks (orders is a placeholder)
         ├── calculation.tsx  # placeholder
         └── cabinet.tsx  # account, theme, quick unlock, sign-out
 

@@ -1,15 +1,24 @@
-import { CustomerBar, WorkScreen } from '@mobile/core/shell';
+import { ProductCatalog } from '@mobile/catalog/feature';
+import { CustomerBar, useConnectivity, WorkScreen } from '@mobile/core/shell';
 import { useSelectedCustomerSummary } from '@mobile/customers/feature';
-import { StateView } from '@mobile/shared/ui';
 import { router } from 'expo-router';
 
 export default function ProductsRoute() {
   const customer = useSelectedCustomerSummary();
+  const isOnline = useConnectivity()?.isOnline ?? null;
 
   return (
     <WorkScreen title="Товари">
       <CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />
-      <StateView kind="empty" message="Розділ з’явиться в наступному оновленні." title="Товари" />
+      <ProductCatalog
+        isOnline={isOnline}
+        onOpenProduct={(productId) =>
+          router.push({
+            params: { productId: productId.toString() },
+            pathname: '/products/[productId]',
+          })
+        }
+      />
     </WorkScreen>
   );
 }

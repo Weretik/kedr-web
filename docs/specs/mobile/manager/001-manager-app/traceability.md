@@ -9,11 +9,11 @@ Test paths are filled in when each task is implemented.
 | SC-003 | R-002 | TS-003, TS-009 | component | `core/shell/src/navigation/work-navigation.spec.tsx`, `apps/mobile/src/__tests__/work-routes.spec.tsx` | done |
 | SC-004 | R-002, R-003 | TS-009, TS-010 | component | `customers/feature/src/customers-feature.spec.tsx`, `customers/data-access/src/customers-data-access.spec.tsx`, `customers/model/src/customers-model.spec.ts` | done |
 | SC-005 | R-004, R-013 | TS-011, TS-019 | component | `customers/feature/src/customers-feature.spec.tsx`, `customers/ui/src/customers-ui.spec.tsx` | card done; sending from the card with TS-019 |
-| SC-006 | R-005 | TS-012 | unit | — | planned |
-| SC-007 | R-006 | TS-013 | component | — | planned |
-| SC-008 | R-007 | TS-013 | data-access | — | planned |
-| SC-009 | R-008 | TS-014 | component | — | planned |
-| SC-010 | R-008, R-014 | TS-015 | unit | — | planned |
+| SC-006 | R-005 | TS-012 | unit | `catalog/model/src/catalog-model.spec.ts`, `catalog/data-access/src/catalog-data-access.spec.tsx`, `catalog/feature/src/catalog-feature.spec.tsx` | done |
+| SC-007 | R-006 | TS-013 | component | `catalog/ui/src/catalog-ui.spec.tsx`, `catalog/feature/src/catalog-feature.spec.tsx` | done; the «+» button is wired in stage 5 |
+| SC-008 | R-007 | TS-013 | data-access | `catalog/model/src/catalog-model.spec.ts`, `catalog/feature/src/catalog-feature.spec.tsx` | done |
+| SC-009 | R-008 | TS-014 | component | `catalog/ui/src/catalog-ui.spec.tsx` (switch, full-screen open, close) | done; pinch and double tap need the device check |
+| SC-010 | R-008, R-014 | TS-015 | unit | `catalog/data-access/src/catalog-data-access.spec.tsx`, `catalog/ui/src/catalog-ui.spec.tsx` | done |
 | SC-011 | R-009 | TS-016, TS-017 | unit + component | — | planned |
 | SC-012 | R-009 | TS-016 | unit | — | planned |
 | SC-013 | R-002, R-009 | TS-016 | unit | — | planned |
@@ -28,4 +28,4 @@ Test paths are filled in when each task is implemented.
 | SC-022 | R-016 | TS-020 | component | — | planned |
 | SC-023 | R-016 | TS-020 | component | — | planned |
 | SC-024 | R-017 | TS-003, TS-017, TS-021 | component | `core/shell/src/navigation/work-navigation.spec.tsx` (tab bar vs rail) | layout part done |
-| SC-025 | R-008, R-017 | TS-014, TS-021 | component | — | planned |
+| SC-025 | R-008, R-017 | TS-014, TS-021 | component | `catalog/ui/src/catalog-ui.spec.tsx`, `catalog/feature/src/catalog-feature.spec.tsx` | done |

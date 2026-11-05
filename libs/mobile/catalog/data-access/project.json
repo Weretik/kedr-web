@@ -1,0 +1,9 @@
+{
+  "name": "mobile-catalog-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/catalog/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:catalog", "type:data-access"],
+  "// targets": "to see all targets run: nx show project mobile-catalog-data-access --web",
+  "targets": {}
+}

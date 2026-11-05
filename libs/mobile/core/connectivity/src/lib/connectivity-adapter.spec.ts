@@ -11,7 +11,7 @@ jest.mock('@react-native-community/netinfo', () => ({
 }));
 
 const createNetInfoState = (
-  overrides: Partial<Pick<NetInfoState, 'isConnected' | 'isInternetReachable'>>,
+  overrides: Partial<Pick<NetInfoState, 'isConnected' | 'isInternetReachable' | 'type'>>,
 ): NetInfoState =>
   ({
     details: null,
@@ -26,6 +26,7 @@ describe('toConnectivityState', () => {
     expect(toConnectivityState(createNetInfoState({}))).toEqual({
       isInternetReachable: true,
       isOnline: true,
+      isUnmetered: true,
     });
   });
 
@@ -33,6 +34,13 @@ describe('toConnectivityState', () => {
     expect(toConnectivityState(createNetInfoState({ isInternetReachable: false }))).toEqual({
       isInternetReachable: false,
       isOnline: false,
+      isUnmetered: false,
     });
+  });
+
+  it('keeps mobile data metered', () => {
+    expect(toConnectivityState(createNetInfoState({ type: 'cellular' } as never)).isUnmetered).toBe(
+      false,
+    );
   });
 });

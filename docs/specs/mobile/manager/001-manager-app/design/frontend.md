@@ -58,7 +58,7 @@ New libraries are created with `npx nx g @nx/react:library` (React Native preset
 | `@mobile/core/shell` | rewrite | Providers, `TabBar`, `NavRail`, customer gate, `CustomerBar`, stale-data strip |
 | `@mobile/sync/{model,data-access,feature}` | new | Snapshot download with ETag, table replace in a transaction, schedule, send queue (outbox) runner, sync status |
 | `@mobile/customers/{model,data-access,ui,feature}` | rewrite | Selected customer store (Zustand, persisted id), search over local table, list, card with debt placeholder |
-| `@mobile/catalog/{model,data-access,ui,feature}` | rewrite | Product queries on local tables (FTS for search), category tree, client price resolver, product list and detail, photo prefetch |
+| `@mobile/catalog/{model,data-access,ui,feature}` | rewrite | Product queries on local tables (in-memory search), category tree, client price resolver, product list and detail, photo prefetch |
 | `@mobile/calculation/{model,data-access,ui,feature}` | new (replaces `cart`) | Per-customer calculation, adjustment rules (≥ 1 ₴), totals, quote call, draft save and send through the queue, conflict view |
 | `@mobile/orders/{model,data-access,ui,feature}` | rewrite | Customer orders and drafts from local tables refreshed from `order-workspace`, order and draft detail |
 | `@mobile/profile/{data-access,ui,feature}` | new | Cabinet: photo, name, Admin email/password, sync and queue info, theme, quick unlock, sign-out |
@@ -80,7 +80,7 @@ Dependency direction is unchanged: `feature → ui, data-access, model`; `data-a
 | `outbox` | the app | id, kind (draft-create, draft-update, draft-delete, order-create), payload, idempotencyKey, state, attempts, lastError |
 | `sync_state` | sync service | resource, etag, syncedAt |
 
-Search uses an FTS5 table over product name and code, added by a migration with the stage 4 product search. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
+Product search filters the priced list in memory (about 2.5 thousand rows): the code from its start or every typed word in the name. An FTS5 table was planned, but at this size it adds a migration and a second copy of the names without a visible gain; it stays an option if the catalog grows past about 20 thousand products. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
 
 ## Client price resolver
 
@@ -92,7 +92,7 @@ The outbox runner starts on network return, after each enqueue when online, and 
 
 ## Photos
 
-`expo-image` with `cachePolicy="disk"`. After a catalog sync on Wi‑Fi, thumbnails (CDN URLs) and schemes are prefetched in batches of 20; «Завантажити всі фото» prefetches large photos with a progress indicator and a stop button. The viewer uses Gesture Handler (pinch, double tap, pan) and Reanimated on the UI thread; `react-native-zoom-toolkit` may replace the hand-written gesture if its Expo 58 build is confirmed in stage 4.
+`expo-image` with `cachePolicy="disk"`. KedrStore has no thumbnails, so after each new catalog version on Wi‑Fi (`isUnmetered` of the connectivity adapter) the main photo of every product and every scheme are prefetched in batches of 20; «Завантажити всі фото» prefetches large photos with a progress indicator and a stop button. The viewer uses Gesture Handler (pinch, double tap, pan) and Reanimated on the UI thread; stage 4 kept the hand-written gesture (no new native package). Jest cannot start Reanimated, so the viewer tests replace `ZoomableImage`; the gestures are checked on a device.
 
 ## Packages to add (checked against Expo 58 in the stage that needs them)
 

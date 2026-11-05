@@ -4,7 +4,7 @@
 - **App:** `apps/mobile` (Nx project `mobile`), libraries `libs/mobile/*`
 - **Architecture source:** [Mobile architecture](../../../../architecture/mobile/README.md), [ADR-0005 offline-first](../../../../architecture/mobile/adr/0005-offline-first-local-database.md), [ADR-0006 own UI](../../../../architecture/mobile/adr/0006-own-ui-on-unistyles.md), [design system «Офіс»](../../../../standards/mobile/design-system.md)
 - **Domain:** whole app (auth, customers, catalog, calculation, orders, profile, sync)
-- **Status:** stages 1–3 implemented; stage 4 (products) next
+- **Status:** stages 1–4 implemented; stage 5 (calculation, drafts, orders) next
 - **Owner:** Виталий (product owner)
 - **Created:** 2026-11-05
 - **Updated:** 2026-11-05
