@@ -12,6 +12,8 @@ const category = (id: number, parentId: number | null): SiteModelCategory => ({
   acceptedModels: 0,
   proposedModels: 0,
   problemCount: 0,
+  loneProducts: 0,
+  filterCount: 0,
 });
 
 describe('site category tree', () => {
