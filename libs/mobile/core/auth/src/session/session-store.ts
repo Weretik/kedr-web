@@ -1,7 +1,14 @@
 import type { SessionUser } from './session-user';
 
+/**
+ * `locked`: a saved session waits for quick unlock (fingerprint, face or device code).
+ * `authenticated` may start offline from the saved session within the offline window.
+ */
 export type MobileSessionState =
-  { status: 'loading' } | { status: 'anonymous' } | { status: 'authenticated'; user: SessionUser };
+  | { status: 'anonymous' }
+  | { status: 'authenticated'; user: SessionUser }
+  | { status: 'loading' }
+  | { status: 'locked'; user: SessionUser };
 
 let state: MobileSessionState = { status: 'loading' };
 const listeners = new Set<() => void>();

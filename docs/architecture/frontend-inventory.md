@@ -21,7 +21,7 @@ This document records the current workspace; it does not declare violations acce
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Site            | Next.js 16 App Router, React 19, shadcn/ui (Radix), Tailwind CSS v4, server `fetch` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
-| Mobile          | Expo 58, React Native 0.88, Expo Router, Paper, Redux Toolkit/RTK Query, Axios      |
+| Mobile          | Expo 58, React Native 0.88, Expo Router, Unistyles, Zustand, Axios                  |
 | Contracts       | OpenAPI snapshot → `openapi-typescript` → `@shared/api-contracts`                   |
 
 ## Applications and library groups
@@ -31,7 +31,7 @@ This document records the current workspace; it does not declare violations acce
 | `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*` |
 | `site`       | `apps/site`       | `libs/site/{core/{config,i18n,seo,shell},shared/{ui,api-client}}`                              |
 | `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/*,products/*,categories/*,orders/*,clients/*,users/*,shared/*}`  |
-| `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*,catalog/*,cart/*,orders/*,customers/*}`                          |
+| `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*}` (domains added by the Kedr Manager rebuild)                    |
 
 All libraries have a root `src/index.ts`; cross-library imports found during baseline search use aliases from `tsconfig.base.json`. No deep alias imports were found. Some barrels expose internal transport/mappers/storage; this is AF-008, not an approved public contract.
 
@@ -42,18 +42,13 @@ Key edges that determine remediation:
 ```text
 storefront -> storefront feature/shell/data-access + Angular shared
 admin -> admin core/features/shared
-mobile -> shell + mobile-core-auth + catalog/cart/orders features
+mobile -> shell + mobile-core-auth + mobile-shared-ui
 
-mobile-core-auth -> shell + mobile-shared/api-client + mobile-shared/config + mobile-shared/ui
-
-shell -> mobile-core-connectivity + mobile-shared/api-client + mobile-orders/model
-mobile-cart-model -> mobile-orders-model
-mobile-catalog-feature -> catalog lower layers + cart data-access/model
-mobile-cart-feature -> cart lower layers + customers data-access/model/ui
-mobile-orders-feature -> orders lower layers + customers data-access/model/ui
+mobile-core-auth -> mobile-shared/api-client + mobile-shared/config + mobile-shared/ui
+shell -> mobile-core-connectivity + mobile-shared/ui
 ```
 
-The first three cross-domain feature edges correspond to implemented user flows but need an explicit orchestration policy. `core -> orders/model` and `cart/model -> orders/model` conflict with the documented direction.
+The old mobile cross-domain edges (`core -> orders/model`, `cart/model -> orders/model`) left with the old libraries on 2026-11-05.
 
 ## Tags and enforcement
 
@@ -72,7 +67,7 @@ Therefore, a passing lint is necessary but insufficient evidence for boundaries.
 | Client     | Approved server path                                                                             | Local/client state                                              |
 | ---------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
 | Admin      | domain RTK Query endpoint → `@admin/shared/api-client` → Axios; auth raw Axios only per ADR-0001 | component state, React Hook Form; Redux for shared client state |
-| Mobile     | domain RTK Query endpoint → `@mobile/shared/api-client` → Axios                                  | component/reducer, React Hook Form; root Redux store            |
+| Mobile     | sync service and send queue → `@mobile/shared/api-client` → Axios (ADR-0005, from stage 2)       | component state, React Hook Form; Zustand stores                |
 | Storefront | data-access repository/facade → Angular `HttpClient`                                             | Angular signals/RxJS/domain stores                              |
 
 No direct API calls were found in presentation `ui`. Generated DTO imports remain in transport/data-access and the Admin auth adapter. Exceptions and violations:
@@ -98,7 +93,6 @@ Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` passed for 62 
 
 - `libs/admin/core/permissions` removed: the empty project had no consumers or production responsibility.
 - `apps/mobile/src/components`;
-- `libs/mobile/{catalog/feature,orders/{data-access,feature,ui}}/src/{test-mocks|lib}`;
 - `libs/shared/auth/src/lib/guards`;
 - `libs/storefront/feature/{articles,cabinet}/src/lib/sections`;
 - `apps/storefront/public/assets/i18n`.

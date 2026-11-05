@@ -3,7 +3,7 @@
 ## Components and theme
 
 - Write visible strings, accessible names, and feature specs in Ukrainian.
-- Build screens from `@mobile/shared/ui` components and standard React Native views; React Native Paper is being removed ([ADR-0006](../../architecture/mobile/adr/0006-own-ui-on-unistyles.md)) and is not used in new code.
+- Build screens from `@mobile/shared/ui` components (`AppText`, `Button`, `TextField`, …) and standard React Native views; React Native Paper was removed on 2026-11-05 ([ADR-0006](../../architecture/mobile/adr/0006-own-ui-on-unistyles.md)).
 - Theme, colors, typography, spacing and breakpoints belong to the Unistyles theme in `@mobile/shared/ui`; features must not create local design tokens or providers.
 - Visual style, tokens, layout patterns, components, and motion follow the [design system «Офіс»](design-system.md).
 - Every screen works at the three widths `phone`, `tablet` and `wide` and in both orientations on tablets.

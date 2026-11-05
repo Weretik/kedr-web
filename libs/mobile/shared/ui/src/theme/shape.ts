@@ -1,14 +1,16 @@
-export const kedrRadius = { lg: 22, md: 16, pill: 999, sm: 12, xl: 30 } as const;
+export const radius = { sm: 8, md: 12, lg: 14, xl: 18, pill: 999 } as const;
 
-export const kedrSpace = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24 } as const;
+/** 4-point grid. Side padding is `lg`, the gap between rows is `sm`. */
+export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 28 } as const;
 
-export const kedrLayout = {
-  /** Gap between product tiles and list rows. */
-  itemGap: 10,
-  /** Height of the floating pill navigation without the safe-area inset. */
-  navHeight: 58,
-  /** Distance of the pill navigation from the screen edges. */
-  navInset: 16,
-  screenPadding: 16,
-  touchTarget: 44,
+export const sizes = {
+  border: 1,
+  button: 48,
+  calculationPanel: 360,
+  field: 48,
+  iconButton: 44,
+  rail: 76,
+  stepper: 36,
+  /** Minimum size of every pressable. */
+  touch: 44,
 } as const;

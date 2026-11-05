@@ -1,40 +1,38 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { ThemeProvider } from 'expo-router/react-navigation';
+import { StatusBar } from 'expo-status-bar';
 import { type ReactNode } from 'react';
-import { type ColorSchemeName } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider as ReduxProvider, type ProviderProps } from 'react-redux';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { ConnectivityProvider } from './connectivity-context';
-import { AppNotificationProvider } from './notification-context';
-import { ThemePreferenceProvider } from './theme-preference-context';
-import { OfflineIndicator } from '../components/status/offline-indicator';
-import { appStore } from '../state/app-store';
+import { useOrientationPolicy } from './orientation-policy';
+import { toNavigationTheme } from '../theme/navigation-theme';
 
-export interface AppProvidersProps {
-  children: ReactNode;
-  colorScheme?: ColorSchemeName;
-  store?: ProviderProps['store'];
-}
+/** Everything a screen needs: gestures, safe areas, sheets, navigation colors, network state. */
+export function AppProviders({ children }: Readonly<{ children: ReactNode }>) {
+  const { rt, theme } = useUnistyles();
+  const dark = rt.themeName === 'dark';
 
-export function AppProviders({
-  children,
-  colorScheme,
-  store = appStore,
-}: Readonly<AppProvidersProps>) {
+  useOrientationPolicy();
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
-        <ReduxProvider store={store}>
-          <ThemePreferenceProvider colorScheme={colorScheme}>
-            <AppNotificationProvider>
-              <ConnectivityProvider>
-                <OfflineIndicator />
-                {children}
-              </ConnectivityProvider>
-            </AppNotificationProvider>
-          </ThemePreferenceProvider>
-        </ReduxProvider>
+        <ThemeProvider value={toNavigationTheme(theme, dark)}>
+          <BottomSheetModalProvider>
+            <ConnectivityProvider>
+              <StatusBar style={dark ? 'light' : 'dark'} />
+              {children}
+            </ConnectivityProvider>
+          </BottomSheetModalProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create((theme) => ({
+  root: { backgroundColor: theme.colors.background, flex: 1 },
+}));

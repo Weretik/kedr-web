@@ -3,6 +3,7 @@ import { createContext, use, useEffect, useState, type ReactNode } from 'react';
 
 const ConnectivityContext = createContext<ConnectivityState | null>(null);
 
+/** Null until the first network check answers. */
 export function useConnectivity(): ConnectivityState | null {
   return use(ConnectivityContext);
 }
@@ -14,11 +15,8 @@ export function ConnectivityProvider({ children }: Readonly<{ children: ReactNod
     let isActive = true;
 
     void connectivityAdapter.getCurrent().then((state) => {
-      if (isActive) {
-        setConnectivity(state);
-      }
+      if (isActive) setConnectivity(state);
     });
-
     const unsubscribe = connectivityAdapter.subscribe(setConnectivity);
 
     return () => {

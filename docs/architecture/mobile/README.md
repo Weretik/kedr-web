@@ -22,17 +22,16 @@ libs/mobile/<domain>/feature/        screen and user flow
        ├──────────────┬──────────────┬──────────────┐
        ▼              ▼              ▼              ▼
      ui/        data-access/       model/     mobile/shared/
-  presentation   RTK Query/API    pure TS     Axios, config, UI
+  presentation  local DB, sync    pure TS     Axios, config, UI
 ```
 
 ```text
 libs/mobile/
-├── core/                            shell, connectivity
-├── shared/                          api-client, config, model
-├── catalog/                         feature, data-access, model, ui
-├── cart/                            feature, data-access, model, ui
-├── orders/                          feature, data-access, model, ui
-└── customers/                       data-access, model, ui
+├── core/                            shell, auth, connectivity
+└── shared/                          ui, api-client, config, model
+
+Domain libraries (customers, catalog, calculation, orders, sync, profile) are added stage by stage
+by the Kedr Manager rebuild (docs/specs/mobile/manager/001-manager-app).
 ```
 
 `apps/mobile/src/app` is the Expo Router technical layer. Route files contain no HTTP or business logic; they connect to public screens from domain `feature` libraries. Across libraries, only aliases and `src/index.ts` are allowed. DTOs stay inside `data-access`, and `ui` does not depend on the API or router.

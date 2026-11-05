@@ -1,85 +1,83 @@
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
-import { Icon, Text } from 'react-native-paper';
+import { Pressable, View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
-import { useBump } from '../../hooks/use-bump';
-import { useKedrTheme } from '../../theme/kedr-theme';
-import { tabularNumbers } from '../../theme/typography';
+import { AppText } from '../text/app-text';
+import { Icon } from '../text/icon';
 
 export interface QuantityStepperProps {
-  /** Product name used in accessible labels. */
-  itemName: string;
+  /** Names the product so screen readers say what changes. */
+  itemLabel: string;
   max?: number;
   min?: number;
-  onDecrement: () => void;
-  onIncrement: () => void;
-  orientation?: 'horizontal' | 'vertical';
-  /** `inverse` sits on the dark action bar. */
-  tone?: 'default' | 'inverse';
+  onChange: (quantity: number) => void;
   value: number;
 }
 
+/** − qty +, 36 high. The value never leaves [min, max]. */
 export function QuantityStepper({
-  itemName,
-  max = Number.POSITIVE_INFINITY,
+  itemLabel,
+  max = Number.MAX_SAFE_INTEGER,
   min = 1,
-  onDecrement,
-  onIncrement,
-  orientation = 'horizontal',
-  tone = 'default',
+  onChange,
   value,
 }: Readonly<QuantityStepperProps>) {
-  const { kedr } = useKedrTheme();
-  const scale = useBump(value);
-  const color = tone === 'inverse' ? kedr.colors.inverseOnSurface : kedr.colors.onSurface;
-  const groove = tone === 'inverse' ? 'rgba(127,127,127,0.24)' : kedr.colors.surfaceVariant;
-  const canDecrement = value > min;
-  const canIncrement = value < max;
-  const vertical = orientation === 'vertical';
-
-  const button = (kind: 'minus' | 'plus') => {
-    const enabled = kind === 'plus' ? canIncrement : canDecrement;
-    return (
-      <Pressable
-        accessibilityLabel={`${kind === 'plus' ? 'Збільшити' : 'Зменшити'} кількість ${itemName}`}
-        accessibilityRole="button"
-        accessibilityState={{ disabled: !enabled }}
-        disabled={!enabled}
-        hitSlop={4}
-        onPress={kind === 'plus' ? onIncrement : onDecrement}
-        style={[styles.button, { opacity: enabled ? 1 : 0.35 }]}
-      >
-        <Icon color={color} size={18} source={kind} />
-      </Pressable>
-    );
-  };
+  const canDecrease = value > min;
+  const canIncrease = value < max;
 
   return (
     <View
-      style={[
-        styles.root,
-        vertical ? styles.vertical : styles.horizontal,
-        { backgroundColor: groove, borderRadius: kedr.radius.pill },
-      ]}
+      accessibilityLabel={`Кількість: ${itemLabel}`}
+      accessibilityRole="adjustable"
+      accessibilityValue={{ max, min, now: value }}
+      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'increment' && canIncrease) onChange(value + 1);
+        if (event.nativeEvent.actionName === 'decrement' && canDecrease) onChange(value - 1);
+      }}
+      style={styles.stepper}
     >
-      {vertical ? button('plus') : button('minus')}
-      <Animated.View style={{ transform: [{ scale }] }}>
-        <Text
-          accessibilityLabel={`Кількість ${itemName}: ${value}`}
-          style={[styles.value, tabularNumbers, { color }]}
-          variant="labelLarge"
-        >
-          {value}
-        </Text>
-      </Animated.View>
-      {vertical ? button('minus') : button('plus')}
+      <Pressable
+        accessibilityLabel={`Зменшити кількість: ${itemLabel}`}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: !canDecrease }}
+        disabled={!canDecrease}
+        hitSlop={6}
+        onPress={() => onChange(value - 1)}
+        style={styles.step}
+      >
+        <Icon name="minus" size={18} tone={canDecrease ? 'default' : 'disabled'} />
+      </Pressable>
+      <AppText numeric style={styles.value} variant="bodyStrong">
+        {value}
+      </AppText>
+      <Pressable
+        accessibilityLabel={`Збільшити кількість: ${itemLabel}`}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: !canIncrease }}
+        disabled={!canIncrease}
+        hitSlop={6}
+        onPress={() => onChange(value + 1)}
+        style={styles.step}
+      >
+        <Icon name="plus" size={18} tone={canIncrease ? 'default' : 'disabled'} />
+      </Pressable>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  button: { alignItems: 'center', height: 40, justifyContent: 'center', width: 40 },
-  horizontal: { flexDirection: 'row' },
-  root: { alignItems: 'center', padding: 2 },
-  value: { minWidth: 24, textAlign: 'center' },
-  vertical: { flexDirection: 'column' },
-});
+const styles = StyleSheet.create((theme) => ({
+  step: {
+    alignItems: 'center',
+    height: theme.sizes.stepper,
+    justifyContent: 'center',
+    width: theme.sizes.stepper,
+  },
+  stepper: {
+    alignItems: 'center',
+    borderColor: theme.colors.outline,
+    borderRadius: theme.radius.md,
+    borderWidth: theme.sizes.border,
+    flexDirection: 'row',
+  },
+  value: { minWidth: 32, textAlign: 'center' },
+}));
