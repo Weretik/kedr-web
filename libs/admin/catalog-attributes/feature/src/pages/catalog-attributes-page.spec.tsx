@@ -11,6 +11,7 @@ const api = vi.hoisted(() => ({
   one: vi.fn(),
   codes: vi.fn(),
   update: vi.fn(),
+  create: vi.fn(),
 }));
 
 vi.mock('@admin/catalog-attributes/data-access', () => ({
@@ -20,6 +21,7 @@ vi.mock('@admin/catalog-attributes/data-access', () => ({
   useGetFilterCategoriesQuery: () => ({ data: [], isError: false, isFetching: false }),
   useGetCategoryFiltersQuery: () => ({ data: undefined, isError: false, isLoading: false }),
   useUpdateCatalogAttributeMutation: () => [api.update, { isLoading: false }],
+  useCreateCatalogAttributeMutation: () => [api.create, { isLoading: false }],
   useCreateAttributeValueMutation: () => [vi.fn(), { isLoading: false }],
   useUpdateAttributeValueMutation: () => [vi.fn(), { isLoading: false }],
   useDecideAttributeCodeMutation: () => [vi.fn(), { isLoading: false }],
@@ -98,11 +100,37 @@ describe('CatalogAttributesPage', () => {
     expect(screen.getByText('Не підтверджено')).toBeTruthy();
   });
 
+  it('lets an admin create an attribute and opens it', async () => {
+    api.create.mockReturnValue({ unwrap: () => Promise.resolve(details) });
+    renderPage(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Нова ознака' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Створити' }));
+    expect(api.create).not.toHaveBeenCalled();
+    expect(screen.getByText('Вкажіть назву до 120 символів.')).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText(/Назва українською/), {
+      target: { value: 'Матеріал ручки' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Створити' }));
+    expect(api.create).toHaveBeenCalledWith({
+      nameUk: 'Матеріал ручки',
+      nameRu: null,
+      kind: 'enum',
+      unit: null,
+      isFilterable: true,
+      isVariantAxis: false,
+      sortOrder: 100,
+    });
+    expect(await screen.findByText('Ознаку створено.')).toBeTruthy();
+    expect(screen.getByText('Редагування ознаки')).toBeTruthy();
+  });
+
   it('shows a manager the attribute read-only', () => {
     renderPage(false);
     fireEvent.click(screen.getByRole('button', { name: 'Переглянути властивість Колір / декор' }));
     expect(screen.queryByLabelText(/Назва українською/)).toBeNull();
     expect(screen.queryByRole('button', { name: 'Додати' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Нова ознака' })).toBeNull();
   });
 
   it('opens the codes tab from the address', () => {

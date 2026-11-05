@@ -7,6 +7,7 @@ import {
   mapCodeDecisionResult,
   mapFilterCategories,
   mapUnresolvedCodes,
+  toNewAttributeBody,
   toValueBody,
 } from '../mappers/catalog-attributes.mapper';
 
@@ -19,6 +20,7 @@ import type {
   CodeDecision,
   CodeDecisionResult,
   FilterCategoryOption,
+  NewCatalogAttribute,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
 
@@ -41,6 +43,15 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
       query: (id) => ({ url: `/api/admin/catalog-attributes/${id}`, method: 'GET' }),
       transformResponse: mapCatalogAttributeDetails,
       providesTags: (_result, _error, id) => [{ type: 'CatalogAttributes', id }],
+    }),
+    createCatalogAttribute: build.mutation<CatalogAttributeDetails, NewCatalogAttribute>({
+      query: (attribute) => ({
+        url: '/api/admin/catalog-attributes',
+        method: 'POST',
+        data: toNewAttributeBody(attribute),
+      }),
+      transformResponse: mapCatalogAttributeDetails,
+      invalidatesTags: (_result, error) => (error ? [] : [listTag]),
     }),
     updateCatalogAttribute: build.mutation<
       CatalogAttributeDetails,
@@ -143,6 +154,7 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
 
 export const {
   useCreateAttributeValueMutation,
+  useCreateCatalogAttributeMutation,
   useDecideAttributeCodeMutation,
   useGetCatalogAttributeQuery,
   useGetCatalogAttributesQuery,

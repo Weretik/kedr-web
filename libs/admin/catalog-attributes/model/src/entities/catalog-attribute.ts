@@ -56,6 +56,17 @@ export interface CatalogAttributeChange {
   sortOrder: number;
 }
 
+/** A new attribute an Admin adds («Нова ознака»): a list of values or a number. */
+export interface NewCatalogAttribute {
+  nameUk: string;
+  nameRu: string | null;
+  kind: 'enum' | 'number';
+  unit: string | null;
+  isFilterable: boolean;
+  isVariantAxis: boolean;
+  sortOrder: number;
+}
+
 export interface CatalogAttributeValueChange {
   nameUk: string;
   nameRu: string | null;

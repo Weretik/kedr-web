@@ -101,6 +101,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/{lang}/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search models
+         * @description Models over all categories, without attribute filters. `search` matches every word in the model name, or in one product's Ukrainian or Russian name or 1C code. When the whole search is the 1C code of an on-site product, `exactMatch` is its model address.
+         */
+        get: operations["getPublicSiteModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{lang}/{categorySlug}/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Models of a category
+         * @description Models of the category and every category below it. A final category (without children) takes attribute filters and returns them with counts in `filters`; a parent category gives `filters` empty and refuses attribute filters with 400. A former category slug still selects its category. A model matches when one of its on-site products matches every filter; the card's price, stock, sale, and new count only those products.
+         */
+        get: operations["getPublicCategorySiteModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{lang}/model/{modelSlug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The model page
+         * @description A current model slug, or the slug of an on-site product shown as a model of its own, gives the page. The page lists the axis values its products have and each product's values, so the site can hide combinations no product has and offer in-stock neighbours. Texts of `ru` fall back to `uk` field by field.
+         */
+        get: operations["getPublicSiteModel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{lang}/product/{productSlug}/model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The model address of an old product address
+         * @description A current or former slug of an on-site product gives its model and the product's axis values, for the permanent redirect of the old product page.
+         */
+        get: operations["getPublicProductModelAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/categories": {
         parameters: {
             query?: never;
@@ -764,7 +844,11 @@ export interface paths {
         /** List attributes of the «Властивості» page */
         get: operations["getAdminCatalogAttributes"];
         put?: never;
-        post?: never;
+        /**
+         * Add an attribute («Нова ознака», Admin)
+         * @description The attribute is manual from the start, so the dictionary import leaves it. Code and slug come from the request or from the name (a slug made from the name gets a number when taken); a taken code or explicit slug is rejected.
+         */
+        post: operations["createAdminCatalogAttribute"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2711,6 +2795,128 @@ export interface components {
             price?: number | null;
             breadcrumbs: components["schemas"]["Breadcrumb"][];
         };
+        PublicSiteModelSwatch: {
+            slug: string;
+            name: string;
+            /** @description #RRGGBB */
+            hex: string | null;
+            textureUrl: string | null;
+        };
+        PublicSiteModelCard: {
+            slug: string;
+            name: string;
+            categorySlug: string;
+            /** @description The main product's photo or the first product photo; empty when none. */
+            photo: string;
+            priceFrom: number | null;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            /** @description On-site products of the model. */
+            productCount: number;
+            /** @description False for an on-site product shown as a model of its own. */
+            isAccepted: boolean;
+            /** @description Colors of the model's products when color is one of its axes. */
+            colors: components["schemas"]["PublicSiteModelSwatch"][];
+        };
+        PublicSiteModelFilterValue: {
+            slug: string;
+            name: string;
+            hex: string | null;
+            textureUrl: string | null;
+            /** @description Models with this value added to the other attributes' choices. */
+            count: number;
+            selected: boolean;
+        };
+        PublicSiteModelFilter: {
+            code: string;
+            slug: string;
+            name: string;
+            /** @enum {string} */
+            display: "swatch" | "button" | "checkbox";
+            values: components["schemas"]["PublicSiteModelFilterValue"][];
+        };
+        PublicSiteModelAddress: {
+            modelSlug: string;
+            categorySlug: string;
+            /** @description Axis slug to value key. */
+            selection: {
+                [key: string]: string;
+            };
+        };
+        PublicSiteModelList: {
+            /** @description The current slug of the category; null for the search. */
+            categorySlug: string | null;
+            isFinalCategory: boolean;
+            page: number;
+            pageSize: number;
+            totalPages: number;
+            totalRecords: number;
+            items: components["schemas"]["PublicSiteModelCard"][];
+            filters: components["schemas"]["PublicSiteModelFilter"][];
+            exactMatch: components["schemas"]["PublicSiteModelAddress"] | null;
+        };
+        PublicSiteModelCategory: {
+            id: number;
+            slug: string;
+            name: string;
+        };
+        PublicSiteModelText: {
+            shortDescription: string;
+            description: string;
+            seoTitle: string;
+            seoDescription: string;
+        };
+        PublicSiteModelAxisValue: {
+            /** @description The value slug; several values of one product join with `_`; a number is its text. */
+            key: string;
+            name: string;
+            hex: string | null;
+            textureUrl: string | null;
+        };
+        PublicSiteModelAxis: {
+            code: string;
+            slug: string;
+            name: string;
+            /** @enum {string} */
+            display: "swatch" | "button";
+            values: components["schemas"]["PublicSiteModelAxisValue"][];
+        };
+        PublicSiteModelProduct: {
+            /** @description 1C code. */
+            id: number;
+            name: string;
+            slug: string;
+            photo: string;
+            price: number | null;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            isMain: boolean;
+            /** @description Axis slug to value key. */
+            selection: {
+                [key: string]: string;
+            };
+        };
+        PublicSiteModelCharacteristic: {
+            code: string;
+            name: string;
+            values: string[];
+        };
+        PublicSiteModel: {
+            slug: string;
+            name: string;
+            isAccepted: boolean;
+            category: components["schemas"]["PublicSiteModelCategory"];
+            /** @description From the root to the model's category. */
+            breadcrumbs: components["schemas"]["PublicSiteModelCategory"][];
+            texts: components["schemas"]["PublicSiteModelText"];
+            mainProductSlug: string | null;
+            axes: components["schemas"]["PublicSiteModelAxis"][];
+            /** @description In stock first, then by name. */
+            products: components["schemas"]["PublicSiteModelProduct"][];
+            characteristics: components["schemas"]["PublicSiteModelCharacteristic"][];
+        };
         AdminCategory: {
             id: number;
             /** @description Original source category name. */
@@ -3133,6 +3339,22 @@ export interface components {
             valueCount: number;
             /** @description Products with a value of the attribute. */
             productCount: number;
+        };
+        CreateCatalogAttributeRequest: {
+            nameUk: string;
+            nameRu?: string | null;
+            /**
+             * @description `enum` - a list of values; `number` - a number in `unit`.
+             * @enum {string}
+             */
+            kind: "enum" | "number";
+            unit?: string | null;
+            code?: string | null;
+            slug?: string | null;
+            isFilterable: boolean;
+            /** @description The products of a model may differ by it (offered as a model switcher). */
+            isVariantAxis: boolean;
+            sortOrder: number;
         };
         AdminAttributeValue: {
             id: number;
@@ -4449,6 +4671,14 @@ export interface components {
         ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc" | "AvailabilityThenName";
         Page: number;
         PageSize: number;
+        /** @description `uk` or `ru`; anything else reads as `uk`. */
+        "parameters-Lang": string;
+        Search: string;
+        /** @description Only products in stock. */
+        "parameters-InStock": boolean;
+        /** @description `default` - in stock first, then by name. */
+        Sort: "default" | "price_asc" | "price_desc" | "name_asc" | "new";
+        "parameters-PageSize": number;
         "parameters-CategoryId": number;
         "parameters-CategorySlug": string;
         AdminInStock: boolean;
@@ -4632,6 +4862,154 @@ export interface operations {
             };
             400: components["responses"]["responses-ValidationError"];
             /** @description Product not found. For a deleted product whose category is active the body names that category; otherwise there is no body. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogRedirect"];
+                };
+            };
+        };
+    };
+    getPublicSiteModels: {
+        parameters: {
+            query?: {
+                search?: components["parameters"]["Search"];
+                /** @description Only products in stock. */
+                inStock?: components["parameters"]["parameters-InStock"];
+                isSale?: components["parameters"]["IsSale"];
+                isNew?: components["parameters"]["IsNew"];
+                priceFrom?: components["parameters"]["PriceFrom"];
+                priceTo?: components["parameters"]["PriceTo"];
+                /** @description `default` - in stock first, then by name. */
+                sort?: components["parameters"]["Sort"];
+                page?: components["parameters"]["Page"];
+                pageSize?: components["parameters"]["parameters-PageSize"];
+            };
+            header?: never;
+            path: {
+                /** @description `uk` or `ru`; anything else reads as `uk`. */
+                lang: components["parameters"]["parameters-Lang"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A page of model cards */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelList"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+        };
+    };
+    getPublicCategorySiteModels: {
+        parameters: {
+            query?: {
+                /** @description `attribute-slug:value-slug[,value-slug]`, repeatable; values of one attribute match any of them, different attributes all. At most 50 values. */
+                filter?: string[];
+                search?: components["parameters"]["Search"];
+                /** @description Only products in stock. */
+                inStock?: components["parameters"]["parameters-InStock"];
+                isSale?: components["parameters"]["IsSale"];
+                isNew?: components["parameters"]["IsNew"];
+                priceFrom?: components["parameters"]["PriceFrom"];
+                priceTo?: components["parameters"]["PriceTo"];
+                /** @description `default` - in stock first, then by name. */
+                sort?: components["parameters"]["Sort"];
+                page?: components["parameters"]["Page"];
+                pageSize?: components["parameters"]["parameters-PageSize"];
+            };
+            header?: never;
+            path: {
+                /** @description `uk` or `ru`; anything else reads as `uk`. */
+                lang: components["parameters"]["parameters-Lang"];
+                categorySlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A page of model cards */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelList"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Unknown category, or an unknown attribute or value slug in `filter`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPublicSiteModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description `uk` or `ru`; anything else reads as `uk`. */
+                lang: components["parameters"]["parameters-Lang"];
+                modelSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The model */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModel"];
+                };
+            };
+            /** @description Not a model. For a former model slug, or the slug of a product inside an accepted model, the body is the address to redirect to permanently; otherwise there is no body. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelAddress"];
+                };
+            };
+        };
+    };
+    getPublicProductModelAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description `uk` or `ru`; anything else reads as `uk`. */
+                lang: components["parameters"]["parameters-Lang"];
+                productSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Model address */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelAddress"];
+                };
+            };
+            /** @description The product is unknown, or not on the site. For a product off the site or deleted whose category is public the body names that category; otherwise there is no body. */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -6313,6 +6691,45 @@ export interface operations {
                 content?: never;
             };
             /** @description Signed in without the Manager or Admin role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminCatalogAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCatalogAttributeRequest"];
+            };
+        };
+        responses: {
+            /** @description The new attribute */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
