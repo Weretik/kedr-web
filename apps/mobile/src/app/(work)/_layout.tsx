@@ -1,3 +1,4 @@
+import { useCalculationBadges, useOutboxRunner } from '@mobile/calculation/feature';
 import { useKeepEssentialPhotos } from '@mobile/catalog/feature';
 import { useMobileSession } from '@mobile/core/auth';
 import { LocalDatabaseProvider } from '@mobile/core/local-db';
@@ -28,10 +29,14 @@ function WorkArea({
   const hasCustomer = useSelectedCustomerSummary() !== null;
   // Main photos and schemes go to the device on Wi‑Fi after each catalog version (R-008).
   useKeepEssentialPhotos(isUnmetered);
+  // Orders and drafts waiting in the send queue go out whenever the network is there (R-011).
+  useOutboxRunner(isOnline);
+  const badges = useCalculationBadges();
 
   return (
     <WorkLayout
       account={user ? { name: user.fullName, photoUrl: user.avatarUrl } : undefined}
+      badges={badges}
       hasCustomer={hasCustomer}
       statusStrip={(layout) => <SyncStatusStrip isOnline={isOnline} layout={layout} />}
     />

@@ -14,7 +14,10 @@ export { schema };
  */
 export type LocalDatabase = BaseSQLiteDatabase<'sync', unknown, typeof schema>;
 
-/** Tables that hold synced or local business data; all are emptied on sign-out. */
+/**
+ * Tables that hold synced or local business data; all are emptied on sign-out, the send queue too, so another
+ * account never sends this manager's orders.
+ */
 const dataTables = [
   schema.categories,
   schema.priceTypes,
@@ -23,6 +26,9 @@ const dataTables = [
   schema.customers,
   schema.customerCategoryPriceTypes,
   schema.customerActivity,
+  schema.calculations,
+  schema.calculationLines,
+  schema.outbox,
   schema.syncState,
 ] as const;
 

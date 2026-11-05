@@ -20,13 +20,18 @@ const isKnownStatus = (status: string): status is OrderSyncStatus =>
 const linesLabel = (count: number) => `${count} поз.`;
 
 /** An order of the customer; only a sync problem or a waiting order gets a pill. */
-export function OrderRow({ order }: Readonly<{ order: CustomerOrder }>) {
+export function OrderRow({
+  onOpen,
+  order,
+}: Readonly<{ order: CustomerOrder; onOpen?: () => void }>) {
   const status = isKnownStatus(order.syncStatus) ? order.syncStatus : null;
   const kind = status ? getOrderSyncStatusKind(status) : null;
   const showPill = status !== null && (kind === 'error' || kind === 'warning');
 
   return (
     <ListRow
+      onPress={onOpen}
+      opensDetail={onOpen !== undefined}
       subtitle={`${formatDate(order.createdAtUtc)} · ${linesLabel(order.lineCount)}`}
       title={`№ ${order.orderNumber}`}
       trailing={
@@ -44,9 +49,15 @@ export function OrderRow({ order }: Readonly<{ order: CustomerOrder }>) {
 }
 
 /** A saved draft of the customer. */
-export function DraftRow({ draft }: Readonly<{ draft: CustomerDraft }>) {
+export function DraftRow({
+  draft,
+  onOpen,
+}: Readonly<{ draft: CustomerDraft; onOpen?: () => void }>) {
   return (
     <ListRow
+      accessibilityHint={onOpen ? 'Відкриває чернетку в розрахунку' : undefined}
+      onPress={onOpen}
+      opensDetail={onOpen !== undefined}
       subtitle={`Змінено ${formatDate(draft.updatedAtUtc)} · ${linesLabel(draft.lineCount)}`}
       title={draft.title}
     />

@@ -18,6 +18,18 @@ jest.mock('@mobile/core/auth', () => ({
 
 let mockCustomer: { name: string; priceTypeName: string | null } | null = null;
 
+jest.mock('@mobile/calculation/feature', () => ({
+  CalculationPanel: () => null,
+  useAddToCalculation: () => undefined,
+  useCalculationBadges: () => ({}),
+  useOutboxRunner: jest.fn(),
+}));
+
+jest.mock('@mobile/orders/feature', () => ({
+  OrderDetailScreen: () => null,
+  OrdersScreen: () => null,
+}));
+
 jest.mock('@mobile/catalog/feature', () => ({
   PhotoDownloadCard: () => null,
   ProductCatalog: () => null,

@@ -1,8 +1,15 @@
 import { useCategories, usePricedProduct } from '@mobile/catalog/data-access';
-import { categoryPath, formatStock, isOutOfStock, productImages } from '@mobile/catalog/model';
+import {
+  canAdd,
+  categoryPath,
+  formatStock,
+  isOutOfStock,
+  productImages,
+  type PricedProduct,
+} from '@mobile/catalog/model';
 import { ProductGallery, ZoomViewer } from '@mobile/catalog/ui';
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, Card, StateView, StatusPill } from '@mobile/shared/ui';
+import { AppText, Button, Card, StateView, StatusPill } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
@@ -11,6 +18,8 @@ export interface ProductDetailProps {
   counterpartyId: string | null;
   customerName: string | null;
   isOnline: boolean | null;
+  /** Adds the product to the chosen customer's calculation (R-009). */
+  onAdd?: (product: PricedProduct) => void;
   productId: number;
   /** Tablet: photo and scheme side by side (SC-025). */
   sideBySide?: boolean;
@@ -21,6 +30,7 @@ export function ProductDetail({
   counterpartyId,
   customerName,
   isOnline,
+  onAdd,
   productId,
   sideBySide = false,
 }: Readonly<ProductDetailProps>) {
@@ -80,6 +90,14 @@ export function ProductDetail({
         <AppText numeric variant={product.priceKopecks === null ? 'body' : 'total'}>
           {product.priceKopecks === null ? 'Ціну уточнюйте' : formatKopecks(product.priceKopecks)}
         </AppText>
+        {onAdd ? (
+          <Button
+            disabled={!canAdd(product)}
+            icon="plus"
+            label="Додати в розрахунок"
+            onPress={() => onAdd(product)}
+          />
+        ) : null}
       </Card>
       <ZoomViewer
         images={productImages(product)}

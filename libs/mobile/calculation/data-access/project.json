@@ -1,0 +1,9 @@
+{
+  "name": "mobile-calculation-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mobile/calculation/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:mobile", "domain:calculation", "type:data-access"],
+  "// targets": "to see all targets run: nx show project mobile-calculation-data-access --web",
+  "targets": {}
+}
