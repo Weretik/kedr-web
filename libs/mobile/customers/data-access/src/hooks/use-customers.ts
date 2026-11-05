@@ -10,7 +10,7 @@ import type { Customer, CustomerDetails } from '@mobile/customers/model';
 export function useCustomers(): Customer[] {
   const db = useLocalDatabase();
   const version = useLocalDataVersion();
-  // `version` re-runs the read after a sync.
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `version` re-runs the read after a sync.
   return useMemo(() => readCustomers(db), [db, version]);
 }
 
@@ -19,7 +19,7 @@ export function useCustomerDetails(counterpartyId: string | null): CustomerDetai
   const version = useLocalDataVersion();
   return useMemo(
     () => (counterpartyId ? readCustomerDetails(db, counterpartyId) : null),
-    // `version` re-runs the read after a sync.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `version` re-runs the read after a sync.
     [db, counterpartyId, version],
   );
 }

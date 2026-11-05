@@ -31,11 +31,11 @@ export function useCustomerActivity(
   const [state, setState] = useState<CustomerActivityState>(() => ({
     activity: readCachedActivity(db, counterpartyId),
     failed: false,
-    loading: false,
+    // The card is keyed by customer, so a first online read starts as loading.
+    loading: isOnline === true,
   }));
 
   const refresh = useEffectEvent((isActive: () => boolean) => {
-    setState((current) => ({ ...current, failed: false, loading: true }));
     fetcher(counterpartyId)
       .then((lists) => {
         const activity = { ...lists, fetchedAt: now() };
