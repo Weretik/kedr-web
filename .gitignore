@@ -73,3 +73,8 @@ out
 .vitest
 apps/site/next-env.d.ts
 apps/site/tsconfig.tsbuildinfo
+
+# Cloudflare Workers build of apps/site (OpenNext)
+.open-next
+.wrangler
+.dev.vars

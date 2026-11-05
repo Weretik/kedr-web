@@ -1,0 +1,30 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  // Worker of the public Next.js site; the Angular storefront keeps its own Pages project until cutover.
+  "name": "kedr-site",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "services": [
+    {
+      // Lets the Worker call itself (OpenNext cache revalidation); must match "name".
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "kedr-site",
+    },
+  ],
+  // Cache Components data and prerendered pages (open-next.config.ts). Add the "id" of each namespace before the first deploy.
+  "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV" }, { "binding": "NEXT_TAG_CACHE_KV" }],
+  // next/image optimization through Cloudflare Images (free tier: 5000 unique transformations a month).
+  "images": {
+    "binding": "IMAGES",
+  },
+  "observability": {
+    "enabled": true,
+  },
+  // Environment variables and secrets live in the Cloudflare dashboard; deploys must not wipe them.
+  "keep_vars": true,
+}

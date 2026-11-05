@@ -10,6 +10,6 @@ module.exports = [
     settings: { next: { rootDir: 'apps/site' } },
   },
   {
-    ignores: ['.next/**', 'next-env.d.ts'],
+    ignores: ['.next/**', '.open-next/**', '.wrangler/**', 'next-env.d.ts'],
   },
 ];
