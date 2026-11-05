@@ -1,80 +1,68 @@
-# Expo Go and Development Build
+# Builds, distribution and updates
 
-**Status:** current workflow for `apps/mobile`\
-**Related documents:** [technology stack](technology-stack.md), [testing](../workflow/testing.md), [apps/mobile README](../../../../apps/mobile/README.md)
+Kedr Manager uses native modules (Unistyles with Nitro, SQLite, SecureStore, local authentication, image picker), so it does **not** run in Expo Go. Every device runs an EAS build: a development client for daily work, or an internal build for managers.
 
-## Current mode: Expo Go
+## Identity
 
-As long as the app does not need a custom native runtime, daily development stays in Expo Go.
+| Setting                         | Value                                                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Name                            | «Кедр Менеджер»                                                                                                          |
+| Android package / iOS bundle id | `com.classkedr.mobile` (kept, so installed apps update)                                                                  |
+| EAS project                     | `d4dbe4f7-f294-4be1-9081-44aa05f48ab8`, slug `mobile`                                                                    |
+| Version                         | `version` in `apps/mobile/app.json`; build numbers are kept by EAS (`appVersionSource: remote`, `autoIncrement`)         |
+| Icons and splash                | `apps/mobile/assets/images`: green «К» on brand green `#3FA435`; splash on the «Офіс» ground (`#F5F6F3`, dark `#0F110F`) |
+
+## EAS profiles (`apps/mobile/eas.json`)
+
+| Profile       | For                       | Result                                                                  | Update channel |
+| ------------- | ------------------------- | ----------------------------------------------------------------------- | -------------- |
+| `development` | the developer's own phone | development client (`expo-dev-client`) that loads JavaScript from Metro | `development`  |
+| `simulator`   | iOS simulator on a Mac    | development client for the simulator                                    | `development`  |
+| `preview`     | managers                  | Android APK by link, iPhone ad hoc build; internal distribution         | `preview`      |
+| `production`  | a future store release    | Android App Bundle, iOS store build                                     | `production`   |
+
+## Build for managers
+
+From `apps/mobile`:
 
 ```powershell
-cd apps/mobile
-npx expo start
+npx eas-cli@latest login
+npx eas-cli@latest build --profile preview --platform android
 ```
 
-Scan the QR code with Expo Go on Android. The `npx nx start mobile` command from the workspace root also starts Metro, but use the interactive `npx expo start` for the QR code: Nx may hide Expo's QR interface.
+When the build finishes, EAS shows a link and a QR code. A manager opens the link on the phone and installs the APK (Android asks to allow installs from the browser once). The new app replaces the old one because the package name is the same.
 
-Expo Go is sufficient for screens, styles, React/TypeScript, RTK Query, ordinary JavaScript dependencies, and Fast Refresh.
+iPhone: `--platform ios` with the same profile needs a paid Apple Developer account. Each iPhone must first be registered with `npx eas-cli@latest device:create`; EAS then builds an ad hoc app those phones can install by link. TestFlight needs the `production` profile and `eas submit`.
 
-## When a Development Build is needed
+## Updates without a new build
 
-Switch to a Development Build when you need to run code not included in Expo Go's native runtime, or when native configuration changes:
+`expo-updates` is on: `runtimeVersion` follows the app version, the app checks for an update on start and applies it on the next start. After a JavaScript-only change (screens, logic, texts):
 
-- a library with native code is added or updated;
-- `app.json`/app config, Android permissions, a config plugin, or native build configuration changes;
-- Expo SDK is updated;
-- a custom native capability needs to be checked on a device.
+```powershell
+npx eas-cli@latest update --channel preview --message "Що змінилося"
+```
 
-Do not create a new binary after an ordinary screen, style, RTK Query, or TypeScript change: Metro and Fast Refresh deliver these changes to the installed Development Build.
+Managers get it the next time they open the app twice. A **new build** is needed instead when a native part changes: a library with native code, permissions, `app.json`, a config plugin, icons or splash, or the Expo SDK. Then raise `version` in `app.json`, so old builds stop taking updates meant for the new one.
 
-## One-time move to Android Development Build
+## Daily development
 
-This repository already contains `apps/mobile/eas.json` with a `development` profile: `developmentClient: true` and `distribution: internal`. Do not run `eas build:configure` unless this configuration needs to change.
-
-1. Check native dependencies before the first binary:
-
-   ```powershell
-   cd apps/mobile
-   npx expo-doctor
-   ```
-
-2. Install the development client in the mobile application:
-
-   ```powershell
-   npx expo install expo-dev-client
-   ```
-
-3. Sign in to Expo and submit a cloud build. If EAS CLI is not installed globally, use `npx`:
-
-   ```powershell
-   npx eas-cli@latest login
-   npx eas-cli@latest build --profile development --platform android
-   ```
-
-4. When EAS Build finishes, open the Expo link or QR code provided and install the internal Android build on a device. This is the app's custom development client, not Expo Go.
-
-EAS Build creates the Android binary in the cloud; Android Studio is not needed for this cloud workflow. Android Studio is needed only for a local native build with `npx expo run:android`.
-
-## Daily work after installation
+Install a `development` build once (`--profile development --platform android`), then:
 
 ```powershell
 cd apps/mobile
 npx expo start --dev-client
 ```
 
-Scan the QR code with the device camera or open the link in the installed Development Build. The app connects to the local Metro server and updates with Fast Refresh.
-
-## When to rebuild the binary
-
-Repeat EAS Build only after a native runtime change: native library, permissions, app/native config, config plugin, or Expo SDK. A new cloud binary is not needed for UI, domain logic, HTTP client, RTK Query, or TypeScript changes.
+Open the link or QR code in the installed development client; Metro and Fast Refresh deliver code changes.
 
 ## Cost and limits
 
-EAS Build has a free plan, but available build credits, queue speed, and terms can change. Check current Expo limits before regular cloud builds; do not record a number of free builds in a feature spec as a guarantee.
+EAS Build and Update have a free plan, but build credits, queue speed and update limits can change. Check current Expo limits before regular builds; do not record a number of free builds as a guarantee.
 
 ## Sources
 
-- [Expo: Introduction to development builds](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Expo: Switch from Expo Go to a development build](https://docs.expo.dev/develop/development-builds/expo-go-to-dev-build/)
+- [Expo: Internal distribution](https://docs.expo.dev/build/internal-distribution/)
 - [Expo: Configure EAS Build with eas.json](https://docs.expo.dev/build/eas-json/)
+- [Expo: EAS Update](https://docs.expo.dev/eas-update/introduction/)
+- [Expo: Runtime versions](https://docs.expo.dev/eas-update/runtime-versions/)
 - [Expo pricing](https://expo.dev/pricing)

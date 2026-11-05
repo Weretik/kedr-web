@@ -29,7 +29,7 @@ Dependency directions match Admin. The only difference is platform-adapter imple
 - A domain must not import another domain's internal modules. Feature may orchestrate another domain's public lower-layer API only when the feature design records it; feature-to-feature dependency is prohibited.
 - `mobile/shared` must not depend on domain libraries. Generated `@shared/api-contracts` is allowed only at the transport/data-access boundary, not in UI.
 - `feature`, `data-access`, `ui`, and `model` must not depend on Expo Router route files.
-- `ui` must not import `data-access`, RTK Query hooks, or the router.
+- `ui` must not import `data-access`, data hooks, or the router.
 - `model` is plain TypeScript without React, React Native, Expo, HTTP, or storage APIs.
 - API DTOs must not leave `data-access`; feature and UI use domain models.
 - `data-access` does not access Expo SecureStore or NetInfo directly; it receives needed behavior through public `core/auth` and `core/connectivity` adapters.

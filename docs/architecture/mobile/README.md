@@ -30,8 +30,8 @@ libs/mobile/
 ├── core/                            shell, auth, connectivity
 └── shared/                          ui, api-client, config, model
 
-Domain libraries (customers, catalog, calculation, orders, sync, profile) are added stage by stage
-by the Kedr Manager rebuild (docs/specs/mobile/manager/001-manager-app).
+Domain libraries: customers, catalog, calculation, orders, sync, profile
+(Kedr Manager, docs/specs/mobile/manager/001-manager-app).
 ```
 
 `apps/mobile/src/app` is the Expo Router technical layer. Route files contain no HTTP or business logic; they connect to public screens from domain `feature` libraries. Across libraries, only aliases and `src/index.ts` are allowed. DTOs stay inside `data-access`, and `ui` does not depend on the API or router.
@@ -49,13 +49,13 @@ by the Kedr Manager rebuild (docs/specs/mobile/manager/001-manager-app).
 
 - [Application and routing](runtime/application.md)
 - [State, API, and forms](runtime/state-and-api.md)
-- [Online-first and future offline support](runtime/offline-strategy.md)
+- [Offline strategy](runtime/offline-strategy.md)
 
 ### Expo platform and devices
 
 - [Technology stack and responsibility boundaries](platform/technology-stack.md)
 - [UI and platform capabilities catalog](platform/ui-capabilities.md)
-- [Expo Go and Development Build](platform/development-build.md)
+- [Builds, distribution and updates](platform/development-build.md)
 
 ### Process and decisions
 
