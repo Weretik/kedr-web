@@ -39,7 +39,7 @@ jest.mock('@mobile/profile/feature', () => {
 
 jest.mock('@mobile/orders/feature', () => ({
   OrderDetailScreen: () => null,
-  OrdersScreen: () => null,
+  OrdersWorkspace: () => null,
 }));
 
 jest.mock('@mobile/catalog/feature', () => ({

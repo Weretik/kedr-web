@@ -21,9 +21,10 @@ export interface ProductDetailProps {
   /** Adds the product to the chosen customer's calculation (R-009). */
   onAdd?: (product: PricedProduct) => void;
   productId: number;
-  /** Tablet: photo and scheme side by side (SC-025). */
-  sideBySide?: boolean;
 }
+
+/** From this width the photo and the scheme stand side by side instead of the «Фото | Схема» switch (SC-025). */
+const SIDE_BY_SIDE_MIN_WIDTH = 520;
 
 /** Large photos and scheme, name, code, category, stock and the customer's price (R-005–R-008). */
 export function ProductDetail({
@@ -32,11 +33,12 @@ export function ProductDetail({
   isOnline,
   onAdd,
   productId,
-  sideBySide = false,
 }: Readonly<ProductDetailProps>) {
   const product = usePricedProduct(productId, counterpartyId);
   const categories = useCategories();
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+  // The column width, not the screen class, decides: a tablet column can be as narrow as a phone.
+  const [width, setWidth] = useState(0);
 
   if (!product) {
     return (
@@ -54,12 +56,16 @@ export function ProductDetail({
     .join(' › ');
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
+    <ScrollView
+      contentContainerStyle={styles.content}
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      testID="product-detail"
+    >
       <ProductGallery
         isOnline={isOnline}
         onOpenFullScreen={setViewerIndex}
         product={product}
-        sideBySide={sideBySide}
+        sideBySide={width >= SIDE_BY_SIDE_MIN_WIDTH}
       />
       <AppText accessibilityRole="header" variant="sectionTitle">
         {product.name}

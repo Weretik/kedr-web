@@ -48,7 +48,7 @@ Stage numbers match the [stage table](../README.md#stages). Every stage ends wit
 
 ## Stage 7 — tablet pass
 
-- **TS-021 — Layouts.** Check and finish every screen at `phone`, `tablet`, `wide` in both orientations. Covers R-017; SC-024, SC-025.
+- **TS-021 — Layouts.** Check and finish every screen at `phone`, `tablet`, `wide` in both orientations. Covers R-017; SC-024, SC-025. Status: done 2026-11-05; wide catalog opens a product in the list's place next to the calculation, gallery side by side by column width (≥ 520 dp), `OrdersWorkspace` (lists + order on a tablet), two-column cabinet, centred calculation, right and bottom safe areas in `WorkScreen`. Test: `catalog-feature.spec.tsx`, `orders-feature.spec.tsx`. Device check on a real tablet in stage 8.
 
 ## Stage 8 — release
 

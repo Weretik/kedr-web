@@ -2,16 +2,16 @@
 
 ## Applicable rules
 
-| Rule | Source |
-| --- | --- |
-| Domain libraries `model / data-access / ui / feature`, thin route files | [Mobile code rules](../../../../../standards/mobile/mobile-code-organization.md) |
-| Look, tokens, patterns | [Design system «Офіс»](../../../../../standards/mobile/design-system.md) |
-| States, accessibility, Ukrainian strings | [Mobile UI rules](../../../../../standards/mobile/mobile-ui.md) |
-| Offline-first, local database, send queue, 7-day offline session | [ADR-0005](../../../../../architecture/mobile/adr/0005-offline-first-local-database.md) |
-| Own UI on Unistyles instead of Paper | [ADR-0006](../../../../../architecture/mobile/adr/0006-own-ui-on-unistyles.md) |
-| Expo Router, file routes | [ADR-0001](../../../../../architecture/mobile/adr/0001-expo-router.md) |
-| Staged structure check after every stage, closing checklist | [Delivery rules](../../../../../standards/shared/delivery-rules.md) |
-| Scaffold with Nx generators, then trim to repo conventions | root `AGENTS.md` |
+| Rule                                                                    | Source                                                                                  |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Domain libraries `model / data-access / ui / feature`, thin route files | [Mobile code rules](../../../../../standards/mobile/mobile-code-organization.md)        |
+| Look, tokens, patterns                                                  | [Design system «Офіс»](../../../../../standards/mobile/design-system.md)                |
+| States, accessibility, Ukrainian strings                                | [Mobile UI rules](../../../../../standards/mobile/mobile-ui.md)                         |
+| Offline-first, local database, send queue, 7-day offline session        | [ADR-0005](../../../../../architecture/mobile/adr/0005-offline-first-local-database.md) |
+| Own UI on Unistyles instead of Paper                                    | [ADR-0006](../../../../../architecture/mobile/adr/0006-own-ui-on-unistyles.md)          |
+| Expo Router, file routes                                                | [ADR-0001](../../../../../architecture/mobile/adr/0001-expo-router.md)                  |
+| Staged structure check after every stage, closing checklist             | [Delivery rules](../../../../../standards/shared/delivery-rules.md)                     |
+| Scaffold with Nx generators, then trim to repo conventions              | root `AGENTS.md`                                                                        |
 
 ## Starting state (2026-11-05, commit 402c348)
 
@@ -47,38 +47,38 @@ The gate uses `Stack.Protected guard={hasCustomer}` around the guarded routes an
 
 New libraries are created with `npx nx g @nx/react:library` (React Native preset as in existing mobile libs) and trimmed to repo conventions; tags `scope:mobile`, `domain:<name>`, `type:<layer>`.
 
-| Library | Status | Responsibility |
-| --- | --- | --- |
-| `@mobile/shared/ui` | rewrite | «Офіс» tokens on Unistyles, breakpoints, base components (Button, TextField, SegmentedControl, Chip, StatusPill, QuantityStepper, Card, ListRow, Avatar, Sheet, StateView, ZoomViewer) |
-| `@mobile/shared/api-client` | keep, trim | Axios client, bearer refresh, `ApiError`; RTK Query files removed |
-| `@mobile/shared/model` | keep | Money formatting, order sync status kinds |
-| `@mobile/core/auth` | extend | Session, token storage, 7-day offline window, quick unlock adapter (`expo-local-authentication`), login screen in «Офіс» |
-| `@mobile/core/connectivity` | keep | NetInfo adapter |
-| `@mobile/core/local-db` | new | SQLite connection, Drizzle schema per table, migrations, wipe on sign-out |
-| `@mobile/core/shell` | rewrite | Providers, `TabBar`, `NavRail`, customer gate, `CustomerBar`, stale-data strip |
-| `@mobile/sync/{model,data-access,feature}` | new | Snapshot download with ETag, table replace in a transaction, schedule, send queue (outbox) runner, sync status |
-| `@mobile/customers/{model,data-access,ui,feature}` | rewrite | Selected customer store (Zustand, persisted id), search over local table, list, card with debt placeholder |
-| `@mobile/catalog/{model,data-access,ui,feature}` | rewrite | Product queries on local tables (in-memory search), category tree, client price resolver, product list and detail, photo prefetch |
-| `@mobile/calculation/{model,data-access,ui,feature}` | new (replaces `cart`) | Per-customer calculation, adjustment rules (≥ 1 ₴), totals, quote call, draft save and send through the queue, conflict view |
-| `@mobile/orders/{model,data-access,ui,feature}` | rewrite | Customer orders and drafts from local tables refreshed from `order-workspace`, order and draft detail |
-| `@mobile/profile/{data-access,ui,feature}` | new | Cabinet: photo, name, Admin email/password, sync and queue info, theme, quick unlock, sign-out |
+| Library                                              | Status                | Responsibility                                                                                                                                                                         |
+| ---------------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@mobile/shared/ui`                                  | rewrite               | «Офіс» tokens on Unistyles, breakpoints, base components (Button, TextField, SegmentedControl, Chip, StatusPill, QuantityStepper, Card, ListRow, Avatar, Sheet, StateView, ZoomViewer) |
+| `@mobile/shared/api-client`                          | keep, trim            | Axios client, bearer refresh, `ApiError`; RTK Query files removed                                                                                                                      |
+| `@mobile/shared/model`                               | keep                  | Money formatting, order sync status kinds                                                                                                                                              |
+| `@mobile/core/auth`                                  | extend                | Session, token storage, 7-day offline window, quick unlock adapter (`expo-local-authentication`), login screen in «Офіс»                                                               |
+| `@mobile/core/connectivity`                          | keep                  | NetInfo adapter                                                                                                                                                                        |
+| `@mobile/core/local-db`                              | new                   | SQLite connection, Drizzle schema per table, migrations, wipe on sign-out                                                                                                              |
+| `@mobile/core/shell`                                 | rewrite               | Providers, `TabBar`, `NavRail`, customer gate, `CustomerBar`, stale-data strip                                                                                                         |
+| `@mobile/sync/{model,data-access,feature}`           | new                   | Snapshot download with ETag, table replace in a transaction, schedule, send queue (outbox) runner, sync status                                                                         |
+| `@mobile/customers/{model,data-access,ui,feature}`   | rewrite               | Selected customer store (Zustand, persisted id), search over local table, list, card with debt placeholder                                                                             |
+| `@mobile/catalog/{model,data-access,ui,feature}`     | rewrite               | Product queries on local tables (in-memory search), category tree, client price resolver, product list and detail, photo prefetch                                                      |
+| `@mobile/calculation/{model,data-access,ui,feature}` | new (replaces `cart`) | Per-customer calculation, adjustment rules (≥ 1 ₴), totals, quote call, draft save and send through the queue, conflict view                                                           |
+| `@mobile/orders/{model,data-access,ui,feature}`      | rewrite               | Customer orders and drafts from local tables refreshed from `order-workspace`, order and draft detail                                                                                  |
+| `@mobile/profile/{data-access,ui,feature}`           | new                   | Cabinet: photo, name, Admin email/password, sync and queue info, theme, quick unlock, sign-out                                                                                         |
 
 Dependency direction is unchanged: `feature → ui, data-access, model`; `data-access → model, core/local-db, shared/api-client`; `ui → model, shared/ui`. `calculation/model` uses `catalog/model` for the price resolver input types only.
 
 ## Local data model (Drizzle tables)
 
-| Table | Filled by | Key fields |
-| --- | --- | --- |
-| `categories` | catalog snapshot | id, parentId, name, sortOrder |
-| `products` | catalog snapshot | id (the 1C code), slug, name, categoryId, stock, inStock, quantityInPack, photos (json), scheme, isSale, isNew |
-| `product_prices` | catalog snapshot | productId, priceTypeId, amountKopecks |
-| `price_types` | catalog snapshot | id, name |
-| `customers` | customers snapshot | counterpartyId, name, phone, email, defaultPriceTypeId, debt (null), balance (null) |
-| `customer_category_price_types` | customers snapshot | counterpartyId, categoryId, priceTypeId |
-| `calculations` / `calculation_lines` | the app | counterpartyId, productId, quantity, priceAdjustment, comment, sourceDraftId |
-| `customer_activity` | order-workspace reads | counterpartyId, orders (json), drafts (json), fetchedAt; last 50 of each per customer |
-| `outbox` | the app | id, kind (draft-create, draft-update, draft-delete, order-create), payload, idempotencyKey, state, attempts, lastError |
-| `sync_state` | sync service | resource, etag, syncedAt |
+| Table                                | Filled by             | Key fields                                                                                                             |
+| ------------------------------------ | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `categories`                         | catalog snapshot      | id, parentId, name, sortOrder                                                                                          |
+| `products`                           | catalog snapshot      | id (the 1C code), slug, name, categoryId, stock, inStock, quantityInPack, photos (json), scheme, isSale, isNew         |
+| `product_prices`                     | catalog snapshot      | productId, priceTypeId, amountKopecks                                                                                  |
+| `price_types`                        | catalog snapshot      | id, name                                                                                                               |
+| `customers`                          | customers snapshot    | counterpartyId, name, phone, email, defaultPriceTypeId, debt (null), balance (null)                                    |
+| `customer_category_price_types`      | customers snapshot    | counterpartyId, categoryId, priceTypeId                                                                                |
+| `calculations` / `calculation_lines` | the app               | counterpartyId, productId, quantity, priceAdjustment, comment, sourceDraftId                                           |
+| `customer_activity`                  | order-workspace reads | counterpartyId, orders (json), drafts (json), fetchedAt; last 50 of each per customer                                  |
+| `outbox`                             | the app               | id, kind (draft-create, draft-update, draft-delete, order-create), payload, idempotencyKey, state, attempts, lastError |
+| `sync_state`                         | sync service          | resource, etag, syncedAt                                                                                               |
 
 Product search filters the priced list in memory (about 2.5 thousand rows): the code from its start or every typed word in the name. An FTS5 table was planned, but at this size it adds a migration and a second copy of the names without a visible gain; it stays an option if the catalog grows past about 20 thousand products. All amounts are stored as integer kopecks to avoid rounding drift; the server remains the authority.
 
@@ -114,21 +114,38 @@ Stage 5 as built:
 
 ## Packages to add (checked against Expo 58 in the stage that needs them)
 
-| Package | Why | Stage |
-| --- | --- | --- |
-| `react-native-unistyles` 3.x | themes and breakpoints (ADR-0006) | 1 |
-| `@gorhom/bottom-sheet` 5.x | single sheet implementation | 1 |
-| `expo-local-authentication` | quick unlock | 1 |
-| `zustand` 5.x | small UI state | 1 |
-| `expo-sqlite`, `drizzle-orm`, `drizzle-kit` | local database and migrations | 2 |
-| `react-native-zoom-toolkit` (optional) | zoom viewer | 4 |
-| `expo-updates` | over-the-air updates for distribution | 8 |
+| Package                                     | Why                                   | Stage |
+| ------------------------------------------- | ------------------------------------- | ----- |
+| `react-native-unistyles` 3.x                | themes and breakpoints (ADR-0006)     | 1     |
+| `@gorhom/bottom-sheet` 5.x                  | single sheet implementation           | 1     |
+| `expo-local-authentication`                 | quick unlock                          | 1     |
+| `zustand` 5.x                               | small UI state                        | 1     |
+| `expo-sqlite`, `drizzle-orm`, `drizzle-kit` | local database and migrations         | 2     |
+| `react-native-zoom-toolkit` (optional)      | zoom viewer                           | 4     |
+| `expo-updates`                              | over-the-air updates for distribution | 8     |
 
 Removed: `react-native-paper`, `react-native-actions-sheet`, `@reduxjs/toolkit`, `react-redux`, `@expo-google-fonts/unbounded`, `react-native-reanimated-carousel`, `react-native-tree-multi-select`, `@react-native-assets/slider` once nothing uses them.
 
 ## Responsive layouts
 
 Breakpoints `phone` < 600, `tablet` 600–1023, `wide` ≥ 1024 dp (Unistyles `rt.breakpoint`). `app.json` allows all orientations on tablets and keeps portrait on phones (`expo-screen-orientation` lock by breakpoint at start). Each feature screen has one controller hook and a `components/*-layout.tsx` per breakpoint where the layout differs (catalog: list vs table + calculation panel; customers: list vs list + card; product: stacked vs side by side).
+
+### As built (stage 7)
+
+| Screen     | Phone                  | Tablet (600–1023)                                         | Wide (≥ 1024)                                                                          |
+| ---------- | ---------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Navigation | tab bar                | rail                                                      | rail                                                                                   |
+| Клієнт     | list → card screen     | list + card                                               | list + card                                                                            |
+| Товари     | list → product screen  | list + product                                            | list, or the opened product in its place with «До списку товарів», + calculation panel |
+| Product    | «Фото \| Схема» switch | photo and scheme side by side when the column is ≥ 520 dp | same                                                                                   |
+| Розрахунок | full screen            | one column up to 880 dp, centred                          | same                                                                                   |
+| Замовлення | lists → order screen   | lists + order                                             | lists + order                                                                          |
+| Кабінет    | one column             | profile and sign-out left, data and device settings right | same                                                                                   |
+
+- The gallery follows its column width, not the screen class: a tablet column can be as narrow as a phone. So on a wide tablet an opened product takes the list's place instead of squeezing a third column between the list and the calculation (SC-024, SC-025).
+- The calculation keeps its tab on a wide tablet as well; it also stays next to the products.
+- `WorkScreen` pads the right safe area and, without a tab bar, the bottom one; the rail takes the left one.
+- Layouts live in the existing feature components (`ProductCatalog`, `CustomerChoice`, new `OrdersWorkspace`) and in the cabinet and calculation routes, not in separate `*-layout.tsx` files: each split is a few lines.
 
 ## Testing
 
