@@ -16,8 +16,10 @@ import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
+import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
 
 import type { ReactNode } from 'react';
 
@@ -64,8 +66,10 @@ export const navigationGroups: NavigationGroup[] = [
     label: 'Каталог',
     items: [
       { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
+      { icon: <StorefrontOutlinedIcon />, label: 'Вітрина сайту', to: '/site-showcase' },
+      { icon: <ViewModuleOutlinedIcon />, label: 'Моделі', to: '/site-models' },
+      { icon: <TuneOutlinedIcon />, label: 'Ознаки', to: '/catalog-attributes' },
       { icon: <AccountTreeOutlinedIcon />, label: 'Категорії', to: '/categories' },
-      { icon: <TuneOutlinedIcon />, label: 'Властивості', to: '/catalog-attributes' },
       { icon: <PhotoLibraryOutlinedIcon />, label: 'Медіа', to: '/media' },
     ],
   },

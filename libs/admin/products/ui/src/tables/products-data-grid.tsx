@@ -10,7 +10,6 @@ import { ProductsGridToolbar } from './toolbar/products-grid-toolbar';
 import { ProductsGridToolbarContext } from './toolbar/products-grid-toolbar-context';
 
 import type { ProductBooleanField } from './cells/products-boolean-filter-header';
-import type { ProblemFilterProps } from './toolbar/problem-filter-controls';
 import type {
   AdminProductListItem,
   ProductCategoryOption,
@@ -47,9 +46,6 @@ interface ProductsDataGridProps {
   sort: ProductsListSort;
   priceFilterable: boolean;
   sortable?: boolean;
-  /** The «Група» column («На сайті»). */
-  showGroup?: boolean;
-  problemFilter?: ProblemFilterProps;
 }
 
 export function ProductsDataGrid({
@@ -79,8 +75,6 @@ export function ProductsDataGrid({
   sort,
   priceFilterable,
   sortable = true,
-  showGroup = false,
-  problemFilter,
 }: ProductsDataGridProps) {
   const [panelAnchor, setPanelAnchor] = useState<HTMLDivElement | null>(null);
   const panelWidth = usePanelWidth(panelAnchor);
@@ -92,7 +86,6 @@ export function ProductsDataGrid({
     onEditProduct,
     onAddProduct,
     priceFilterable,
-    showGroup,
   });
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
@@ -109,7 +102,6 @@ export function ProductsDataGrid({
           categoriesError,
           onCategoryChange,
           setPanelAnchor,
-          problemFilter,
         }}
       >
         <DataGrid

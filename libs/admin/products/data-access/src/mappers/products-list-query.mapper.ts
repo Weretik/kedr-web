@@ -23,8 +23,6 @@ export function mapProductsListQueryToApi(query: ProductsListQuery) {
     categoryId: query.categoryId,
     priceFrom: query.priceFrom,
     priceTo: query.priceTo,
-    problemsOnly: query.problemsOnly,
-    problemReason: query.problemReason,
     sort: sortToApiValue[query.sort],
     page: query.page,
     pageSize: query.pageSize,

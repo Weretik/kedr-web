@@ -9,8 +9,10 @@ import type {
 export type AttentionKind =
   | 'sync'
   | 'photos'
-  | 'attribute-problems'
-  | 'no-name'
+  | 'site-no-model'
+  | 'site-product-problems'
+  | 'site-model-problems'
+  | 'site-proposed-models'
   | 'category-texts'
   | 'article-drafts'
   | 'legacy-covers'
@@ -63,6 +65,17 @@ export function attentionItems({
     });
   }
 
+  if (catalog?.siteModels && catalog.siteModels.productsWithoutModel > 0) {
+    items.push({
+      kind: 'site-no-model',
+      tone: 'error',
+      title: `Товари на сайті без моделі: ${catalog.siteModels.productsWithoutModel}`,
+      detail: 'На сайті вони не мають своєї сторінки',
+      href: '/site-showcase?problem=no_model',
+      actionLabel: 'Відкрити товари без моделі',
+    });
+  }
+
   if (catalog && catalog.productsWithoutPhoto > 0) {
     const top = catalog.topCategoryWithoutPhoto;
     items.push({
@@ -75,25 +88,52 @@ export function attentionItems({
     });
   }
 
-  if (catalog && catalog.productsWithProblems > 0) {
+  const site = catalog?.siteModels;
+  const productProblems = site
+    ? site.productsWithoutAttributes +
+      site.productsMissingAxisValue +
+      site.productsWithSameCombination
+    : 0;
+  if (site && productProblems > 0) {
     items.push({
-      kind: 'attribute-problems',
+      kind: 'site-product-problems',
       tone: 'warning',
-      title: `Товари з нерозпізнаними властивостями: ${catalog.productsWithProblems}`,
-      detail: 'Фільтри й варіанти на сайті можуть їх не показати',
-      href: '/catalog?mode=site&siteProblemsOnly=true',
-      actionLabel: 'Відкрити проблемні товари',
+      title: `Товари на сайті з неповними ознаками: ${productProblems}`,
+      detail:
+        [
+          site.productsWithoutAttributes ? `без ознак ${site.productsWithoutAttributes}` : null,
+          site.productsMissingAxisValue
+            ? `не заповнена ознака ${site.productsMissingAxisValue}`
+            : null,
+          site.productsWithSameCombination
+            ? `однакові варіанти ${site.productsWithSameCombination}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(' · ') || null,
+      href: '/site-showcase?problem=any',
+      actionLabel: 'Відкрити вітрину сайту',
     });
   }
 
-  if (catalog && catalog.noNameProducts > 0) {
+  const modelProblems = site
+    ? site.modelsWithoutAxes + site.modelsWithoutSeo + site.modelsWithoutPhoto
+    : 0;
+  if (site && modelProblems > 0) {
     items.push({
-      kind: 'no-name',
+      kind: 'site-model-problems',
       tone: 'warning',
-      title: `Товари No name: ${catalog.noNameProducts}`,
-      detail: 'Без маркування бренду; у групи не потрапляють, доки їх не перевірять',
-      href: '/catalog?mode=site&siteProblemReason=no_name',
-      actionLabel: 'Відкрити товари No name',
+      title: `Моделі, які треба доповнити: ${modelProblems}`,
+      detail:
+        [
+          site.modelsWithoutSeo ? `без SEO ${site.modelsWithoutSeo}` : null,
+          site.modelsWithoutAxes ? `без ознак ${site.modelsWithoutAxes}` : null,
+          site.modelsWithoutPhoto ? `без фото ${site.modelsWithoutPhoto}` : null,
+        ]
+          .filter(Boolean)
+          .join(' · ') || null,
+      href: '/site-models?status=accepted&problem=any',
+      actionLabel: 'Відкрити моделі',
     });
   }
 
@@ -105,6 +145,17 @@ export function attentionItems({
       detail: 'Немає опису або питань українською чи російською',
       href: '/categories',
       actionLabel: 'Відкрити категорії',
+    });
+  }
+
+  if (site && site.proposedModels > 0) {
+    items.push({
+      kind: 'site-proposed-models',
+      tone: 'note',
+      title: `Запропоновані моделі: ${site.proposedModels}`,
+      detail: 'Перегляньте й прийміть, щоб товари отримали свої сторінки',
+      href: '/site-models?status=proposed',
+      actionLabel: 'Переглянути пропозиції',
     });
   }
 

@@ -8,6 +8,7 @@ const category = (overrides: Partial<AdminCategory>): AdminCategory => ({
   deletedAt: null,
   id: 1,
   isDeleted: false,
+  isShownOnSite: true,
   level: 0,
   nameRu: '',
   nameUk: 'Категорія',

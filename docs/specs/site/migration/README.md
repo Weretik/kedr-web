@@ -35,6 +35,8 @@
 
 Шаг 0 можно делать параллельно со 2–3, но до показа превью владельцу.
 
+Шаг 0 (2026-11-05): OpenNext, Worker `kedr-site` и KV-кэш настроены по [хостингу сайта](../../../architecture/site/platform/hosting.md); локально в Workers runtime страницы отвечают 200 на тестовых данных. Превью на `*.workers.dev` открывается после подключения Workers Builds владельцем.
+
 Шаг5 [корзины и быстрого заказа](../cart/001-cart-checkout/README.md) реализован 2026-11-04 по принятому концепту: два блока рядом от720px области checkout, имя/телефон и существующий createQuickOrder. Product EN-002/TS-005 закрыты через cart TS-009. [Фактическое evidence](../cart/001-cart-checkout/verification/implementation.md) отделяет автоматические/source результаты от незапущенных live order/build/HTTP/browser/deployment; доставка/оплата уточняются менеджером.
 
 ## Решения владельца

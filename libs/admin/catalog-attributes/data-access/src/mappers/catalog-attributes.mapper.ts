@@ -14,12 +14,14 @@ import type {
   CategoryFilter,
   CodeDecisionResult,
   FilterCategoryOption,
+  NewCatalogAttribute,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
 import type { components } from '@shared/api-contracts';
 import type { z } from 'zod';
 
 type UpdateValueBody = components['schemas']['UpdateAttributeValueRequest'];
+type CreateAttributeBody = components['schemas']['CreateCatalogAttributeRequest'];
 
 export function mapCatalogAttributes(response: unknown): CatalogAttribute[] {
   return catalogAttributeSchema.array().parse(response).map(toAttribute);
@@ -44,6 +46,21 @@ export function mapCatalogAttributeDetails(response: unknown): CatalogAttributeD
       isConfirmed: alias.isConfirmed,
       note: alias.note ?? null,
     })),
+  };
+}
+
+/** Code and slug are left to the server, which makes them from the name. */
+export function toNewAttributeBody(attribute: NewCatalogAttribute): CreateAttributeBody {
+  return {
+    nameUk: attribute.nameUk.trim(),
+    nameRu: attribute.nameRu?.trim() || null,
+    kind: attribute.kind,
+    unit: attribute.kind === 'number' ? attribute.unit?.trim() || null : null,
+    code: null,
+    slug: null,
+    isFilterable: attribute.isFilterable,
+    isVariantAxis: attribute.isVariantAxis,
+    sortOrder: attribute.sortOrder,
   };
 }
 

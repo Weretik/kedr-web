@@ -184,7 +184,11 @@
       "@mobile/profile/model": ["./libs/mobile/profile/model/src/index.ts"],
       "@mobile/profile/data-access": ["./libs/mobile/profile/data-access/src/index.ts"],
       "@mobile/profile/ui": ["./libs/mobile/profile/ui/src/index.ts"],
-      "@mobile/profile/feature": ["./libs/mobile/profile/feature/src/index.ts"]
+      "@mobile/profile/feature": ["./libs/mobile/profile/feature/src/index.ts"],
+      "@admin/site-models/model": ["./libs/admin/site-models/model/src/index.ts"],
+      "@admin/site-models/data-access": ["./libs/admin/site-models/data-access/src/index.ts"],
+      "@admin/site-models/ui": ["./libs/admin/site-models/ui/src/index.ts"],
+      "@admin/site-models/feature": ["./libs/admin/site-models/feature/src/index.ts"]
     }
   }
 }

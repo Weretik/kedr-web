@@ -6,3 +6,6 @@ export type AdminCategoryContentItemDto = components['schemas']['AdminCategoryCo
 export type SaveCategoryContentBody = components['schemas']['SaveCategoryContentRequest'];
 export type ChangeSlugBody = components['schemas']['ChangeSlugRequest'];
 export type ChangeSlugResult = components['schemas']['ChangeSlugResponse'];
+export type SetCategorySiteVisibilityBody =
+  components['schemas']['SetCategorySiteVisibilityRequest'];
+export type CategorySiteVisibilityResult = components['schemas']['CategorySiteVisibilityResponse'];

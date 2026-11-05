@@ -10,7 +10,7 @@
 - Next.js 16 App Router (version from `package-lock.json`), Turbopack build, `@nx/next` plugin targets `site:dev|build|start`.
 - Cache model: **Cache Components** (`cacheComponents: true`, `partialPrefetching: true`, owner decision 2026-10-30). Caching is explicit: data functions in domain `data-access` start with `'use cache'` and call `cacheTag` and `cacheLife`. Do not use the previous model (`export const revalidate`, `fetch(..., { next })`, `unstable_cache`, `dynamic`, `dynamicParams`).
 - Code that must stay in the prerendered shell may not read the clock or other request data outside a cached scope (the footer year is a cached component).
-- Hosting: Cloudflare through OpenNext (owner decision 2026-10-30). OpenNext lists `'use cache'` as supported, but opennextjs-cloudflare issue #1464 reports hangs from cross-request cache dedupe on Next 16.4 Workers; step 0 verifies caching on the preview before cutover.
+- Hosting: Cloudflare Workers through OpenNext with a KV incremental and tag cache; see [hosting](hosting.md). opennextjs-cloudflare issue #1464 reports hangs from cross-request cache dedupe on Next 16.4 Workers; check the preview under parallel requests before cutover.
 - Agent docs: `node_modules/next/dist/docs/` and `apps/site/AGENTS.md` (the `nextjs-agent-rules` block is written by `next dev`; keep it).
 
 ## Route types

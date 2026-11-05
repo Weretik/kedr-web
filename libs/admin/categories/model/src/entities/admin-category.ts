@@ -14,6 +14,8 @@ export interface AdminCategory {
   level: number;
   isDeleted: boolean;
   deletedAt: string | null;
+  /** Shown on the site, in «Вітрина сайту», and in «Моделі»; an Admin changes it. */
+  isShownOnSite: boolean;
   /** Active products here and in descendants; `null` when the server did not count them. */
   productCount: number | null;
   /** Languages with any site text; `null` when unknown (deleted rows, single reads). */

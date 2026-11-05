@@ -34,10 +34,20 @@ export interface DashboardCatalog {
   productsWithoutPhoto: number;
   topCategoryWithoutPhoto: { id: number; name: string; count: number } | null;
   categoriesWithoutText: number;
-  /** On-site products whose attributes need review. */
-  productsWithProblems: number;
-  /** Those of them without brand marking (No name). */
-  noNameProducts: number;
+  /** Site model health (spec catalog/007); null when the backend does not send it. */
+  siteModels: DashboardSiteModels | null;
+}
+
+/** Site model problem counts; on-site products outside an accepted model are the hard error. */
+export interface DashboardSiteModels {
+  productsWithoutModel: number;
+  productsWithoutAttributes: number;
+  productsMissingAxisValue: number;
+  productsWithSameCombination: number;
+  modelsWithoutAxes: number;
+  modelsWithoutSeo: number;
+  modelsWithoutPhoto: number;
+  proposedModels: number;
 }
 
 export interface DashboardContent {

@@ -8,3 +8,9 @@ export { AttributeValueDialog } from './dialogs/attribute-value-dialog';
 export type { SwatchTexture } from './dialogs/attribute-value-dialog';
 export { CodeDecisionDialog } from './dialogs/code-decision-dialog';
 export { CategoryFiltersEditor } from './forms/category-filters-editor';
+export {
+  NewAttributeFields,
+  emptyNewAttribute,
+  toNewAttribute,
+} from './forms/new-attribute-fields';
+export type { NewAttributeDraft } from './forms/new-attribute-fields';

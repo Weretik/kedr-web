@@ -53,8 +53,6 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     exportToSite: true,
     priceFrom: readNumber(params.get('sitePriceFrom')),
     priceTo: readNumber(params.get('sitePriceTo')),
-    problemsOnly: params.get('siteProblemsOnly') === 'true' || undefined,
-    problemReason: params.get('siteProblemReason') ?? undefined,
     sort: (params.get('siteSort') ?? DEFAULT_PRODUCTS_LIST_QUERY.sort) as ProductsListQuery['sort'],
     page: readPositiveInteger(params.get('sitePage'), 1),
     pageSize: readPositiveInteger(params.get('sitePageSize'), 20),
@@ -119,10 +117,6 @@ function writeQuery(
   if (prefix !== 'missing') {
     if (query.priceFrom !== undefined) params.set(key('priceFrom'), String(query.priceFrom));
     if (query.priceTo !== undefined) params.set(key('priceTo'), String(query.priceTo));
-  }
-  if (prefix === 'site') {
-    if (query.problemsOnly) params.set(key('problemsOnly'), 'true');
-    if (query.problemReason) params.set(key('problemReason'), query.problemReason);
   }
   if (query.sort !== DEFAULT_PRODUCTS_LIST_QUERY.sort) params.set(key('sort'), query.sort);
   if (query.page !== 1) params.set(key('page'), String(query.page));

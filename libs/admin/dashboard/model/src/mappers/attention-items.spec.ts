@@ -37,8 +37,7 @@ const catalog: DashboardCatalog = {
   productsWithoutPhoto: 37,
   topCategoryWithoutPhoto: { id: 5, name: 'Ручки на розетці', count: 12 },
   categoriesWithoutText: 1,
-  productsWithProblems: 0,
-  noNameProducts: 0,
+  siteModels: null,
 };
 const content: DashboardContent = {
   articleDrafts: 3,
@@ -71,28 +70,48 @@ describe('attentionItems', () => {
     expect(items[4].title).toBe('1 чернетка документа');
   });
 
-  it('adds attribute problems and No name products with links to the filtered list', () => {
+  it('puts products without a model first and links site model problems', () => {
     const items = attentionItems({
       orders: undefined,
-      catalog: { ...catalog, productsWithProblems: 1668, noNameProducts: 36 },
+      catalog: {
+        ...catalog,
+        siteModels: {
+          productsWithoutModel: 12,
+          productsWithoutAttributes: 3,
+          productsMissingAxisValue: 2,
+          productsWithSameCombination: 0,
+          modelsWithoutAxes: 0,
+          modelsWithoutSeo: 40,
+          modelsWithoutPhoto: 1,
+          proposedModels: 760,
+        },
+      },
       content: undefined,
       now,
     });
 
     expect(items.map((item) => item.kind)).toEqual([
+      'site-no-model',
       'photos',
-      'attribute-problems',
-      'no-name',
+      'site-product-problems',
+      'site-model-problems',
       'category-texts',
+      'site-proposed-models',
     ]);
-    expect(items[1]).toMatchObject({
-      title: 'Товари з нерозпізнаними властивостями: 1668',
-      href: '/catalog?mode=site&siteProblemsOnly=true',
+    expect(items[0]).toMatchObject({
+      tone: 'error',
+      title: 'Товари на сайті без моделі: 12',
+      href: '/site-showcase?problem=no_model',
     });
     expect(items[2]).toMatchObject({
-      title: 'Товари No name: 36',
-      href: '/catalog?mode=site&siteProblemReason=no_name',
+      title: 'Товари на сайті з неповними ознаками: 5',
+      detail: 'без ознак 3 · не заповнена ознака 2',
     });
+    expect(items[3]).toMatchObject({
+      detail: 'без SEO 40 · без фото 1',
+      href: '/site-models?status=accepted&problem=any',
+    });
+    expect(items[5].href).toBe('/site-models?status=proposed');
   });
 
   it('links a single problem straight to its page', () => {
@@ -115,8 +134,7 @@ describe('attentionItems', () => {
           productsWithoutPhoto: 0,
           topCategoryWithoutPhoto: null,
           categoriesWithoutText: 0,
-          productsWithProblems: 0,
-          noNameProducts: 0,
+          siteModels: null,
         },
         content: undefined,
         now,

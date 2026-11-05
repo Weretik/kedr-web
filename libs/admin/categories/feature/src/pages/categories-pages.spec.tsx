@@ -14,6 +14,7 @@ const api = vi.hoisted(() => ({
   content: vi.fn(),
   save: vi.fn(),
   changeSlug: vi.fn(),
+  siteVisibility: vi.fn(),
 }));
 
 vi.mock('@admin/categories/data-access', () => ({
@@ -22,12 +23,14 @@ vi.mock('@admin/categories/data-access', () => ({
   useGetCategoryContentQuery: api.content,
   useSaveCategoryContentMutation: () => [api.save, { isLoading: false }],
   useChangeCategorySlugMutation: () => [api.changeSlug, { isLoading: false }],
+  useSetCategorySiteVisibilityMutation: () => [api.siteVisibility, { isLoading: false }],
 }));
 
 const category: AdminCategory = {
   deletedAt: null,
   id: 5,
   isDeleted: false,
+  isShownOnSite: true,
   level: 0,
   nameRu: 'Петли',
   nameUk: 'Завіси',
@@ -228,6 +231,45 @@ describe('categories pages', () => {
 
     expect(screen.getByRole('dialog', { name: 'Редагування категорії' })).toBeTruthy();
     expect(api.one).toHaveBeenLastCalledWith(5, { skip: false });
+  });
+
+  it('lets an administrator hide a category from the site after confirming', async () => {
+    api.siteVisibility.mockReturnValue({
+      unwrap: () => Promise.resolve({ id: 5, isShownOnSite: false, changedCount: 1 }),
+    });
+    render(
+      <MemoryRouter initialEntries={['/categories?category=5']}>
+        <CategoriesPage canEdit canSeeDeleted />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Показується на сайті')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Сховати з сайту' }));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Сховати з сайту?' })).getByRole('button', {
+        name: 'Сховати',
+      }),
+    );
+
+    expect(api.siteVisibility).toHaveBeenCalledWith({ id: 5, isShownOnSite: false });
+    expect(await screen.findByText('Категорію сховано з сайту.')).toBeTruthy();
+  });
+
+  it('marks a hidden category and gives managers no visibility button', () => {
+    api.list.mockReturnValue({
+      data: [{ ...category, isShownOnSite: false }],
+      isError: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+    render(
+      <MemoryRouter initialEntries={['/categories?category=5']}>
+        <CategoriesPage canSeeDeleted={false} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getAllByLabelText('Не показується на сайті').length).toBeGreaterThan(0);
+    expect(screen.queryByRole('button', { name: 'Показати на сайті' })).toBeNull();
   });
 
   it('saves the Ukrainian text of an administrator and keeps the Russian tab', async () => {

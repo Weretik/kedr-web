@@ -1,5 +1,6 @@
 import { missingContentLanguages } from '@admin/categories/model';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import {
   Alert,
   Box,
@@ -48,12 +49,22 @@ function TreeNodes({ nodes }: { nodes: readonly CategoryTreeNode[] }) {
         label={
           <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', minWidth: 0, py: 0.25 }}>
             <Typography
+              color={category.isShownOnSite ? 'text.primary' : 'text.secondary'}
               component="span"
               sx={{ fontWeight: category.level === 0 ? 700 : 500, overflowWrap: 'anywhere' }}
               variant="body2"
             >
               {category.nameUk}
             </Typography>
+            {category.isShownOnSite ? null : (
+              <Tooltip title="Не показується на сайті">
+                <VisibilityOffOutlinedIcon
+                  aria-label="Не показується на сайті"
+                  role="img"
+                  sx={{ alignSelf: 'center', color: 'text.secondary', fontSize: 16 }}
+                />
+              </Tooltip>
+            )}
             {problem ? (
               <Tooltip title={problem}>
                 <Box

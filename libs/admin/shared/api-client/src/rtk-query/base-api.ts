@@ -14,5 +14,6 @@ export const baseApi = createApi({
     'StaffProfile',
     'Categories',
     'CatalogAttributes',
+    'SiteModels',
   ],
 });

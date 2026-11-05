@@ -5,13 +5,10 @@ import { FilterPanelTrigger, QuickFilter, QuickFilterControl, Toolbar } from '@m
 import { useContext } from 'react';
 
 import { CategoryFilterAutocomplete } from './category-filter-autocomplete';
-import { ProblemFilterControls } from './problem-filter-controls';
 import { ProductsGridToolbarContext } from './products-grid-toolbar-context';
 
 export function ProductsGridToolbar() {
-  const { problemFilter, setPanelAnchor, ...categoryFilter } = useContext(
-    ProductsGridToolbarContext,
-  );
+  const { setPanelAnchor, ...categoryFilter } = useContext(ProductsGridToolbarContext);
 
   return (
     <Toolbar
@@ -74,7 +71,6 @@ export function ProductsGridToolbar() {
           </Button>
         )}
       />
-      {problemFilter ? <ProblemFilterControls {...problemFilter} /> : null}
       <Box sx={{ ml: { sm: 'auto' }, minWidth: { xs: '100%', sm: 240 }, width: { sm: 320 } }}>
         <CategoryFilterAutocomplete {...categoryFilter} />
       </Box>

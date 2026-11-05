@@ -1,5 +1,6 @@
 export {
   useCreateAttributeValueMutation,
+  useCreateCatalogAttributeMutation,
   useDecideAttributeCodeMutation,
   useGetCatalogAttributeQuery,
   useGetCatalogAttributesQuery,
