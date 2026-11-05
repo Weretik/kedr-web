@@ -1,4 +1,3 @@
-import { AppProviders } from '@mobile/core/shell';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { AxiosError, AxiosHeaders } from 'axios';
 
@@ -7,12 +6,7 @@ import { login } from '../session/mobile-auth';
 
 jest.mock('../session/mobile-auth', () => ({ login: jest.fn(), logout: jest.fn() }));
 
-const renderScreen = async () =>
-  await render(
-    <AppProviders>
-      <LoginScreen />
-    </AppProviders>,
-  );
+const renderScreen = async () => await render(<LoginScreen />);
 
 const fillAndSubmit = async (screen: Awaited<ReturnType<typeof renderScreen>>) => {
   await fireEvent.changeText(await screen.findByLabelText('Email'), 'm@kedr.ua');
@@ -20,13 +14,17 @@ const fillAndSubmit = async (screen: Awaited<ReturnType<typeof renderScreen>>) =
   await fireEvent.press(screen.getByRole('button', { name: 'Увійти' }));
 };
 
-describe('LoginScreen', () => {
+describe('LoginScreen (SC-001)', () => {
   beforeEach(() => jest.mocked(login).mockReset());
 
   it('signs in with the trimmed email', async () => {
-    jest
-      .mocked(login)
-      .mockResolvedValue({ email: 'm@kedr.ua', fullName: 'M', id: '1', roles: ['Manager'] });
+    jest.mocked(login).mockResolvedValue({
+      avatarUrl: null,
+      email: 'm@kedr.ua',
+      fullName: 'M',
+      id: '1',
+      roles: ['Manager'],
+    });
     const screen = await renderScreen();
 
     await fireEvent.changeText(await screen.findByLabelText('Email'), ' m@kedr.ua ');
@@ -36,6 +34,14 @@ describe('LoginScreen', () => {
     await waitFor(() =>
       expect(login).toHaveBeenCalledWith({ email: 'm@kedr.ua', password: 'secret-pass' }),
     );
+  });
+
+  it('can show the password', async () => {
+    const screen = await renderScreen();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Показати пароль' }));
+
+    expect(screen.getByLabelText('Пароль').props['secureTextEntry']).toBe(false);
   });
 
   it('explains wrong credentials', async () => {

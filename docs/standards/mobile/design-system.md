@@ -2,7 +2,7 @@
 
 This is the visual standard for the Kedr Manager app (`apps/mobile`, `libs/mobile/*`). The product owner chose direction A «Офіс» on 2026-11-05 from the [design canvas](https://claude.ai/artifact/7tcWwjg6KXeDuZLCuYRaks). It replaces «Пагін» (2026-10-26), whose rules stay in git history and in the [old redesign SDD](../../specs/mobile/redesign/001-pagin-design-system/README.md). Language, states and accessibility are in the [Mobile UI rules](mobile-ui.md); the component library decision is [ADR-0006](../../architecture/mobile/adr/0006-own-ui-on-unistyles.md).
 
-**Status:** accepted 2026-11-05; built screen by screen in the [Kedr Manager rebuild](../../specs/mobile/manager/001-manager-app/README.md). Until stage 1 is merged the code still carries «Пагін» tokens.
+**Status:** accepted 2026-11-05; tokens, themes and base components are in code since stage 1 of the [Kedr Manager rebuild](../../specs/mobile/manager/001-manager-app/README.md); screens follow stage by stage.
 
 The character is calm and businesslike, close to the Kedr Admin: light ground, white cards with thin borders, one green accent, the selected customer always visible at the top, and large product photos and schemes on white. Nothing decorative competes with prices, stock and the calculation.
 
@@ -10,45 +10,46 @@ The character is calm and businesslike, close to the Kedr Admin: light ground, w
 
 Tokens are code in `@mobile/shared/ui` (`libs/mobile/shared/ui/src/theme/`), registered with `react-native-unistyles`. Feature and UI code reads them through `StyleSheet.create((theme, rt) => …)`; no hex values, font names, radii or durations in components. A new token goes into the theme first and onto this page second.
 
-| File            | Owns                                          |
-| --------------- | --------------------------------------------- |
-| `palette.ts`    | Brand colors and light/dark color roles       |
-| `typography.ts` | Font family, type scale, tabular figures      |
-| `shape.ts`      | Radii, spacing, touch targets, borders        |
-| `breakpoints.ts`| `phone`, `tablet`, `wide`                     |
-| `motion.ts`     | Durations and the press feedback              |
-| `themes.ts`     | Assembled `light` and `dark` Unistyles themes |
+| File             | Owns                                            |
+| ---------------- | ----------------------------------------------- |
+| `palette.ts`     | Brand colors and light/dark color roles         |
+| `typography.ts`  | Font family, type scale, tabular figures        |
+| `shape.ts`       | Radii, spacing, touch targets, borders          |
+| `breakpoints.ts` | `phone`, `tablet`, `wide`                       |
+| `unistyles.ts`   | Registers themes and breakpoints with Unistyles |
+| `motion.ts`      | Durations and the press feedback                |
+| `themes.ts`      | Assembled `light` and `dark` Unistyles themes   |
 
 ## Color
 
 Brand colors come from the logo: **green `#3FA435`** and **ink `#0F110F`**. White text on brand green is only 3.2:1, so filled buttons with text use the darker `action` green; brand green is for the logo, selection marks, icons and focus.
 
-| Role                                              | Token             | Light     | Dark      |
-| ------------------------------------------------- | ----------------- | --------- | --------- |
-| Screen ground                                     | `background`      | `#F5F6F3` | `#0F110F` |
-| Cards, rows, bars, inputs                         | `surface`         | `#FFFFFF` | `#181B17` |
-| Segmented control track, quiet fills              | `surfaceMuted`    | `#E9EBE6` | `#20251F` |
-| Text                                              | `text`            | `#0F110F` | `#EEF1EA` |
-| Secondary text (labels, codes, captions)          | `textSecondary`   | `#5B6358` | `#A3AD9E` |
-| Disabled text and icons                           | `textDisabled`    | `#A3AA9F` | `#5E665B` |
-| Input and button borders                          | `outline`         | `#D6DAD1` | `#3A4138` |
-| Card borders, separators                          | `outlineVariant`  | `#E3E6DF` | `#272C26` |
-| Brand mark, selected tab, focus ring              | `brand`           | `#3FA435` | `#3FA435` |
-| Filled primary button                             | `action`          | `#2E7D26` | `#3FA435` |
-| Text on `action`                                  | `onAction`        | `#FFFFFF` | `#0F110F` |
-| Green text, links, active tab label               | `accentText`      | `#2A7323` | `#7DD06F` |
-| Customer avatar, selected chip fill               | `accentContainer` | `#E3F3E0` | `#1C3A1A` |
-| Photo and scheme frame (always white)             | `photoFrame`      | `#FFFFFF` | `#FFFFFF` |
-| Scrim behind sheets                               | `backdrop`        | `rgba(15,17,15,0.45)` | `rgba(0,0,0,0.6)` |
+| Role                                     | Token             | Light                 | Dark              |
+| ---------------------------------------- | ----------------- | --------------------- | ----------------- |
+| Screen ground                            | `background`      | `#F5F6F3`             | `#0F110F`         |
+| Cards, rows, bars, inputs                | `surface`         | `#FFFFFF`             | `#181B17`         |
+| Segmented control track, quiet fills     | `surfaceMuted`    | `#E9EBE6`             | `#20251F`         |
+| Text                                     | `text`            | `#0F110F`             | `#EEF1EA`         |
+| Secondary text (labels, codes, captions) | `textSecondary`   | `#5B6358`             | `#A3AD9E`         |
+| Disabled text and icons                  | `textDisabled`    | `#A3AA9F`             | `#5E665B`         |
+| Input and button borders                 | `outline`         | `#D6DAD1`             | `#3A4138`         |
+| Card borders, separators                 | `outlineVariant`  | `#E3E6DF`             | `#272C26`         |
+| Brand mark, selected tab, focus ring     | `brand`           | `#3FA435`             | `#3FA435`         |
+| Filled primary button                    | `action`          | `#2E7D26`             | `#3FA435`         |
+| Text on `action`                         | `onAction`        | `#FFFFFF`             | `#0F110F`         |
+| Green text, links, active tab label      | `accentText`      | `#2A7323`             | `#7DD06F`         |
+| Customer avatar, selected chip fill      | `accentContainer` | `#E3F3E0`             | `#1C3A1A`         |
+| Photo and scheme frame (always white)    | `photoFrame`      | `#FFFFFF`             | `#FFFFFF`         |
+| Scrim behind sheets                      | `backdrop`        | `rgba(15,17,15,0.45)` | `rgba(0,0,0,0.6)` |
 
 Status colors are text/background pairs; every status also has a word.
 
-| Kind            | Used for                                         | Text light / dark     | Background light / dark |
-| --------------- | ------------------------------------------------ | --------------------- | ----------------------- |
-| `success`       | In stock, «Прийнято 1С», markup                  | `#2A7323` / `#7DD06F` | `#E3F3E0` / `#183019`   |
-| `warning`       | «У черзі», «Без мережі · дані від 08:12», low stock | `#7A4D00` / `#F0B44A` | `#FBF0D9` / `#33270F` |
-| `error`         | Out of stock, rejected send, discount, sign-out  | `#B3261E` / `#FF8A7F` | `#FBE5E2` / `#3A1714`   |
-| `informational` | Notes («замовлення піде в 1С, коли з’явиться мережа»), scheme labels | `#1F4F86` / `#7FB6F2` | `#E2EDF9` / `#132539` |
+| Kind            | Used for                                                             | Text light / dark     | Background light / dark |
+| --------------- | -------------------------------------------------------------------- | --------------------- | ----------------------- |
+| `success`       | In stock, «Прийнято 1С», markup                                      | `#2A7323` / `#7DD06F` | `#E3F3E0` / `#183019`   |
+| `warning`       | «У черзі», «Без мережі · дані від 08:12», low stock                  | `#7A4D00` / `#F0B44A` | `#FBF0D9` / `#33270F`   |
+| `error`         | Out of stock, rejected send, discount, sign-out                      | `#B3261E` / `#FF8A7F` | `#FBE5E2` / `#3A1714`   |
+| `informational` | Notes («замовлення піде в 1С, коли з’явиться мережа»), scheme labels | `#1F4F86` / `#7FB6F2` | `#E2EDF9` / `#132539`   |
 
 Rules:
 
@@ -77,16 +78,16 @@ Numbers (prices, quantities, codes, totals) use tabular figures. Text follows sy
 
 ## Shape and spacing
 
-| Token          | Value                         | Used for                                      |
-| -------------- | ----------------------------- | --------------------------------------------- |
-| `radius.sm`    | 8                             | Segments inside a segmented control, tags     |
-| `radius.md`    | 10–12                         | Inputs, buttons, thumbnails, steppers         |
-| `radius.lg`    | 14                            | Cards and list rows                           |
-| `radius.xl`    | 18                            | Photo stage, profile card                     |
-| `radius.pill`  | 999                           | Chips, status pills                           |
-| `space`        | 4-pt grid: 4, 8, 12, 16, 20, 24, 28 | Side padding 16; gap between rows 8     |
-| Touch target   | min 44×44 (buttons 48 high)   | Every pressable                               |
-| Border         | 1 px `outlineVariant`         | Cards and rows; no shadows except sheets      |
+| Token         | Value                               | Used for                                  |
+| ------------- | ----------------------------------- | ----------------------------------------- |
+| `radius.sm`   | 8                                   | Segments inside a segmented control, tags |
+| `radius.md`   | 10–12                               | Inputs, buttons, thumbnails, steppers     |
+| `radius.lg`   | 14                                  | Cards and list rows                       |
+| `radius.xl`   | 18                                  | Photo stage, profile card                 |
+| `radius.pill` | 999                                 | Chips, status pills                       |
+| `space`       | 4-pt grid: 4, 8, 12, 16, 20, 24, 28 | Side padding 16; gap between rows 8       |
+| Touch target  | min 44×44 (buttons 48 high)         | Every pressable                           |
+| Border        | 1 px `outlineVariant`               | Cards and rows; no shadows except sheets  |
 
 ## Layout patterns
 
@@ -102,25 +103,27 @@ Numbers (prices, quantities, codes, totals) use tabular figures. Text follows sy
 
 ## Components
 
-Shared components live in `@mobile/shared/ui`; domain components compose them in their `ui` libraries.
+Shared components live in `@mobile/shared/ui`; `CustomerBar`, `TabBar` and `NavRail` live in `@mobile/core/shell`; domain components compose them in their `ui` libraries.
 
-| Component          | Notes                                                        |
-| ------------------ | ------------------------------------------------------------ |
-| `Button`           | `filled`, `outlined`, `text`, `destructive`; 48 high          |
-| `IconButton`       | 40–48, square with `radius.md`; accessible label required     |
-| `TextField`        | Label above, 48 high, optional leading icon and trailing action (show password) |
-| `SearchField`      | `TextField` with search icon                                  |
-| `SegmentedControl` | Two or three segments on `surfaceMuted`                       |
-| `Chip`             | Filter and category chips; selected = ink fill, white text    |
-| `StatusPill`       | Kind + label                                                  |
-| `QuantityStepper`  | − qty +, 36 high                                              |
-| `Card`, `ListRow`  | White, 1 px border, `radius.lg`                               |
-| `Avatar`           | Photo or initials on a stable color                           |
-| `CustomerBar`      | Customer bar pattern above                                    |
-| `TabBar`, `NavRail`| Phone tabs and tablet rail, both with the customer gate        |
-| `Sheet`            | One bottom sheet wrapper                                      |
-| `StateView`        | Loading, empty, offline-stale, error; text and action         |
-| `ZoomViewer`       | Full-screen photos and scheme with pinch zoom                 |
+| Component           | Notes                                                                           |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `AppText`, `Icon`   | Only text component (type scale + tone); icons by tone (MaterialCommunityIcons) |
+| `BrandMark`         | Green square with «К»: rail and auth screens                                    |
+| `Button`            | `filled`, `outlined`, `text`, `destructive`; 48 high                            |
+| `IconButton`        | 40–48, square with `radius.md`; accessible label required                       |
+| `TextField`         | Label above, 48 high, optional leading icon and trailing action (show password) |
+| `SearchField`       | `TextField` with search icon                                                    |
+| `SegmentedControl`  | Two or three segments on `surfaceMuted`                                         |
+| `Chip`              | Filter and category chips; selected = ink fill, white text                      |
+| `StatusPill`        | Kind + label                                                                    |
+| `QuantityStepper`   | − qty +, 36 high                                                                |
+| `Card`, `ListRow`   | White, 1 px border, `radius.lg`                                                 |
+| `Avatar`            | Photo or initials on a stable color                                             |
+| `CustomerBar`       | Customer bar pattern above                                                      |
+| `TabBar`, `NavRail` | Phone tabs and tablet rail, both with the customer gate                         |
+| `Sheet`             | One bottom sheet wrapper                                                        |
+| `StateView`         | Loading, empty, offline-stale, error; text and action                           |
+| `ZoomViewer`        | Full-screen photos and scheme with pinch zoom                                   |
 
 ## Motion
 

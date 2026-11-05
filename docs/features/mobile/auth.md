@@ -1,13 +1,13 @@
-# Mobile sign-in
+# Mobile sign-in and session
 
-**Entry point:** [Root layout](../../../apps/mobile/src/app/_layout.tsx) starts `initializeMobileAuth()` behind the splash screen and splits routes with `Stack.Protected`: without a session only [login](../../../apps/mobile/src/app/login.tsx) exists; after sign-in the login screen disappears and the tabs open.
+**Entry point:** [Root layout](../../../apps/mobile/src/app/_layout.tsx) starts `initializeMobileAuth()` behind the splash screen and splits routes with `Stack.Protected`: without a session only [login](../../../apps/mobile/src/app/login.tsx) exists; after sign-in the working area opens on customer choice. [SDD](../../specs/mobile/manager/001-manager-app/README.md) (R-001, R-014; SC-001, SC-002, SC-018, SC-019).
 
-- The app uses the admin API, so it is for staff only. [LoginScreen](../../../libs/mobile/core/auth/src/screens/login-screen.tsx) calls `POST /api/auth/mobile/login`, which returns an access token (15 minutes) and a refresh token. A signed-in account without the Admin or Manager role sees [NoAccessScreen](../../../libs/mobile/core/auth/src/screens/no-access-screen.tsx).
-- Both tokens live only in the device keychain/keystore through [token-storage](../../../libs/mobile/core/auth/src/storage/token-storage.ts) (`expo-secure-store`) and in memory; never in AsyncStorage, Redux, or logs.
-- [mobile-auth](../../../libs/mobile/core/auth/src/session/mobile-auth.ts) connects the shared API client through `configureMobileAuth`. [bearer-auth](../../../libs/mobile/shared/api-client/src/interceptors/bearer-auth.ts) adds `Authorization: Bearer`; on a `401` it refreshes the pair once (`POST /api/auth/mobile/refresh`, parallel requests share one refresh) and repeats the request. If the refresh fails, the session ends and the login screen opens.
-- On start a saved session is restored with `GET /api/auth/session/me`; an expired access token is refreshed first. Without a network the app asks to sign in and keeps the saved tokens.
-- [AccountHeaderControl](../../../libs/mobile/core/auth/src/components/account-header-control.tsx) in the profile tab shows the name, email, and role and signs out (`POST /api/auth/mobile/logout`); the device forgets the tokens even when offline.
-- Contract: [Session](../../contracts/identity/session.md).
+- Staff only: [LoginScreen](../../../libs/mobile/core/auth/src/screens/login-screen.tsx) («Офіс», show-password button) calls `POST /api/auth/mobile/login` with the Kedr Admin email and password. A signed-in account without the Admin or Manager role sees [NoAccessScreen](../../../libs/mobile/core/auth/src/screens/no-access-screen.tsx) with «Вийти» only.
+- Tokens, the user and the time of the last server confirmation live only in the keychain/keystore through [token-storage](../../../libs/mobile/core/auth/src/storage/token-storage.ts) (`expo-secure-store`).
+- [mobile-auth](../../../libs/mobile/core/auth/src/session/mobile-auth.ts) connects the shared API client; on a `401` [bearer-auth](../../../libs/mobile/shared/api-client/src/interceptors/bearer-auth.ts) refreshes the pair once and repeats the request. Every successful sign-in or refresh restarts the offline window.
+- Offline start: when the API cannot be reached, the saved session opens if the last confirmation is at most 7 days old ([offline-window](../../../libs/mobile/core/auth/src/session/offline-window.ts)); after that the login screen opens. KedrStore keeps `RefreshAbsoluteLifetimeDays` at 7 or more (KedrStore spec `platform/004`).
+- Quick unlock: with «Швидкий вхід» on ([QuickUnlockRow](../../../libs/mobile/core/auth/src/components/quick-unlock-row.tsx) in the cabinet; turning it on asks for the fingerprint, face or device code once), a restored session starts `locked` and [UnlockScreen](../../../libs/mobile/core/auth/src/screens/unlock-screen.tsx) asks again ([quick-unlock](../../../libs/mobile/core/auth/src/session/quick-unlock.ts), `expo-local-authentication`). «Увійти паролем» signs out. A password sign-in never locks.
+- Sign-out (`POST /api/auth/mobile/logout`) forgets the tokens and the saved session even offline. Contract: [Session](../../contracts/identity/session.md).
 
 ## Structure diagram
 
@@ -15,43 +15,43 @@
 flowchart LR
 Root["Root layout"] --> Init["initializeMobileAuth"]
 Root -->|guest| Login["LoginScreen"]
+Root -->|locked| Unlock["UnlockScreen"]
 Root -->|not staff| NoAccess["NoAccessScreen"]
-Root -->|staff| Tabs["Tabs and detail screens"]
+Root -->|staff| Work["(work) area"]
 Init --> Auth["mobile-auth + session-store"]
 Login --> Auth
+Unlock --> Auth
+Auth --> Window["offline-window (7 days)"]
+Auth --> Quick["quick-unlock (local authentication)"]
 Auth --> Storage["token-storage (SecureStore)"]
 Auth --> Transport["auth-transport (/api/auth/mobile/*, /me)"]
 Auth -->|configureMobileAuth| Client["api-client bearer-auth"]
-Client -->|401: refresh once| Auth
 ```
 
 ## Code structure
 
 ```text
-apps/mobile/src/app/
-├── _layout.tsx  # session bootstrap and protected routes
-└── login.tsx  # login route
-
 libs/mobile/core/auth/src/
-├── components/account-header-control.tsx  # user and sign-out
+├── components/
+│   ├── auth-frame.tsx  # centered column for auth screens
+│   └── quick-unlock-row.tsx  # cabinet switch
 ├── screens/
 │   ├── login-screen.tsx  # email/password form
 │   ├── login-error-message.ts  # 401/429/offline messages
-│   └── no-access-screen.tsx  # non-staff account
+│   ├── no-access-screen.tsx  # non-staff account
+│   └── unlock-screen.tsx  # quick unlock of a saved session
 ├── session/
 │   ├── auth-transport.ts  # mobile login/refresh/logout and me
-│   ├── mobile-auth.ts  # login, logout, restore, single-flight refresh
-│   ├── session-store.ts  # loading/anonymous/authenticated state
-│   ├── session-user.ts  # isStaff
+│   ├── mobile-auth.ts  # login, logout, restore, offline start, unlock, single-flight refresh
+│   ├── offline-window.ts  # 7-day rule
+│   ├── quick-unlock.ts  # expo-local-authentication adapter
+│   ├── quick-unlock-setting.ts  # setting hook
+│   ├── session-store.ts  # loading/anonymous/locked/authenticated
+│   ├── session-user.ts  # isStaff, isAdmin
 │   └── use-mobile-session.ts  # React hook
-└── storage/token-storage.ts  # SecureStore
-
-libs/mobile/shared/api-client/src/
-├── auth/mobile-auth-adapter.ts  # adapter set by core auth
-└── interceptors/bearer-auth.ts  # bearer header, refresh and retry
+└── storage/token-storage.ts  # SecureStore: tokens, saved session, quick unlock flag
 ```
 
 ## Tests
 
-- `libs/mobile/core/auth` (session and login screen): `npx nx run mobile-core-auth:test`
-- `libs/mobile/shared/api-client` (bearer and refresh): `npx nx run api-client:test`
+`libs/mobile/core/auth` (4 spec files: session, offline window, login, no access): `npx nx run mobile-core-auth:test`

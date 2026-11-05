@@ -1,18 +1,29 @@
 import { configureMobileAuth } from '@mobile/shared/api-client';
 
 import { requestCurrentUser, requestLogin, requestLogout, requestRefresh } from './auth-transport';
-import { setMobileSessionState } from './session-store';
-import { clearStoredTokens, readStoredTokens, saveTokens } from '../storage/token-storage';
+import { isWithinOfflineWindow } from './offline-window';
+import { confirmOwner, isQuickUnlockAvailable } from './quick-unlock';
+import { getMobileSessionState, setMobileSessionState } from './session-store';
+import {
+  clearStoredTokens,
+  readQuickUnlockEnabled,
+  readSavedSession,
+  readStoredTokens,
+  saveSession,
+  saveTokens,
+} from '../storage/token-storage';
 
 import type { MobileLoginRequest } from './auth-transport';
 import type { SessionUser } from './session-user';
 import type { StoredTokens } from '../storage/token-storage';
 
 let tokens: StoredTokens | null = null;
+let currentUser: SessionUser | null = null;
 let refreshInFlight: Promise<string | null> | null = null;
 
 async function endSession(): Promise<void> {
   tokens = null;
+  currentUser = null;
   setMobileSessionState({ status: 'anonymous' });
   await clearStoredTokens().catch(() => undefined);
 }
@@ -20,6 +31,12 @@ async function endSession(): Promise<void> {
 async function storeTokens(nextTokens: StoredTokens): Promise<void> {
   tokens = nextTokens;
   await saveTokens(nextTokens);
+}
+
+/** The offline window counts from the last time the server confirmed the session. */
+async function rememberSession(user: SessionUser): Promise<void> {
+  currentUser = user;
+  await saveSession({ lastRefreshedAt: Date.now(), user }).catch(() => undefined);
 }
 
 /** One refresh at a time: parallel 401s wait for the same rotation instead of reusing the old token. */
@@ -33,6 +50,7 @@ export function refreshAccessToken(): Promise<string | null> {
       if (!nextTokens) return null;
 
       await storeTokens(nextTokens);
+      if (currentUser) await rememberSession(currentUser);
       return nextTokens.accessToken;
     })().finally(() => {
       refreshInFlight = null;
@@ -52,6 +70,13 @@ async function loadUser(): Promise<SessionUser | null> {
   return accessToken ? requestCurrentUser(accessToken) : null;
 }
 
+/** A restored session opens behind quick unlock when the manager turned it on. */
+async function openSavedSession(user: SessionUser): Promise<void> {
+  const lock =
+    (await readQuickUnlockEnabled().catch(() => false)) && (await isQuickUnlockAvailable());
+  setMobileSessionState(lock ? { status: 'locked', user } : { status: 'authenticated', user });
+}
+
 export async function login(request: MobileLoginRequest): Promise<SessionUser> {
   await storeTokens(await requestLogin(request));
   const user = await loadUser();
@@ -60,6 +85,7 @@ export async function login(request: MobileLoginRequest): Promise<SessionUser> {
     throw new Error('The new session was rejected.');
   }
 
+  await rememberSession(user);
   setMobileSessionState({ status: 'authenticated', user });
   return user;
 }
@@ -76,8 +102,18 @@ export async function logout(): Promise<void> {
   }
 }
 
+/** Quick unlock: asks for the fingerprint, face or device code; true when the app opened. */
+export async function unlockSession(): Promise<boolean> {
+  const state = getMobileSessionState();
+  if (state.status !== 'locked') return state.status === 'authenticated';
+  if (!(await confirmOwner())) return false;
+
+  setMobileSessionState({ status: 'authenticated', user: state.user });
+  return true;
+}
+
 /** Connects the API client and restores the session saved on the device. */
-export async function initializeMobileAuth(): Promise<void> {
+export async function initializeMobileAuth(now: () => number = Date.now): Promise<void> {
   configureMobileAuth({
     getAccessToken: () => tokens?.accessToken ?? null,
     onUnauthenticated: () => void endSession(),
@@ -87,13 +123,21 @@ export async function initializeMobileAuth(): Promise<void> {
   try {
     tokens = await readStoredTokens();
     const user = await loadUser();
-    if (user) {
-      setMobileSessionState({ status: 'authenticated', user });
-    } else {
+    if (!user) {
       await endSession();
+      return;
     }
+
+    await rememberSession(user);
+    await openSavedSession(user);
   } catch {
-    // Offline start: keep the saved tokens, but ask to sign in until the API answers.
-    setMobileSessionState({ status: 'anonymous' });
+    // Offline start: the saved session works for seven days after the last confirmation.
+    const saved = tokens ? await readSavedSession().catch(() => null) : null;
+    if (saved && isWithinOfflineWindow(saved.lastRefreshedAt, now())) {
+      currentUser = saved.user;
+      await openSavedSession(saved.user);
+    } else {
+      setMobileSessionState({ status: 'anonymous' });
+    }
   }
 }

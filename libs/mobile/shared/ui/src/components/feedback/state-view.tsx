@@ -1,94 +1,60 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Button, Icon, Text } from 'react-native-paper';
+import { ActivityIndicator, View } from 'react-native';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
-import { useKedrTheme } from '../../theme/kedr-theme';
+import { Button } from '../controls/button';
+import { AppText } from '../text/app-text';
+import { Icon, type IconName } from '../text/icon';
 
-export type StateViewKind = 'empty' | 'error' | 'loading' | 'offline';
+export type StateViewKind = 'empty' | 'error' | 'loading' | 'locked' | 'offline';
 
 export interface StateViewProps {
-  actionLabel?: string;
-  icon?: string;
+  action?: { label: string; onPress: () => void };
   kind: StateViewKind;
   message?: string;
-  onAction?: () => void;
-  testID?: string;
   title: string;
 }
 
-const defaultIcons: Record<Exclude<StateViewKind, 'loading'>, string> = {
-  empty: 'package-variant',
+const icons: Record<Exclude<StateViewKind, 'loading'>, IconName> = {
+  empty: 'tray-remove',
   error: 'alert-circle-outline',
+  locked: 'lock-outline',
   offline: 'wifi-off',
 };
 
-/** Centered loading, empty, error, or offline state with an optional action. */
-export function StateView({
-  actionLabel,
-  icon,
-  kind,
-  message,
-  onAction,
-  testID,
-  title,
-}: Readonly<StateViewProps>) {
-  const { kedr } = useKedrTheme();
-  const tint = kind === 'error' ? kedr.colors.status.error : null;
+/** Loading, empty, locked, offline and error states: a title, one line why, one action. */
+export function StateView({ action, kind, message, title }: Readonly<StateViewProps>) {
+  const { theme } = useUnistyles();
 
   return (
     <View
-      accessibilityLiveRegion={kind === 'error' ? 'polite' : undefined}
-      style={styles.root}
-      testID={testID}
+      accessibilityLiveRegion={kind === 'error' ? 'polite' : 'none'}
+      accessibilityRole={kind === 'error' ? 'alert' : undefined}
+      style={styles.container}
     >
-      <View
-        style={[
-          styles.badge,
-          {
-            backgroundColor: tint?.background ?? kedr.colors.surfaceVariant,
-            borderRadius: kedr.radius.lg,
-          },
-        ]}
-      >
-        {kind === 'loading' ? (
-          <ActivityIndicator accessibilityLabel={title} color={kedr.colors.primary} />
-        ) : (
-          <Icon
-            color={tint?.foreground ?? kedr.colors.primary}
-            size={30}
-            source={icon ?? defaultIcons[kind]}
-          />
-        )}
-      </View>
-      <Text
-        accessibilityRole="header"
-        style={[styles.center, { color: kedr.colors.onSurface }]}
-        variant="titleMedium"
-      >
+      {kind === 'loading' ? (
+        <ActivityIndicator color={theme.colors.brand} size="large" />
+      ) : (
+        <Icon name={icons[kind]} size={40} tone={kind === 'error' ? 'error' : 'secondary'} />
+      )}
+      <AppText accessibilityRole="header" align="center" variant="sectionTitle">
         {title}
-      </Text>
+      </AppText>
       {message ? (
-        <Text style={[styles.center, { color: kedr.colors.onSurfaceVariant }]} variant="bodyMedium">
+        <AppText align="center" tone="secondary" variant="secondary">
           {message}
-        </Text>
+        </AppText>
       ) : null}
-      {actionLabel && onAction ? (
-        <Button
-          buttonColor={kedr.colors.inverseSurface}
-          mode="contained"
-          onPress={onAction}
-          style={styles.action}
-          textColor={kedr.colors.inverseOnSurface}
-        >
-          {actionLabel}
-        </Button>
-      ) : null}
+      {action ? <Button label={action.label} onPress={action.onPress} variant="outlined" /> : null}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  action: { marginTop: 8 },
-  badge: { alignItems: 'center', height: 64, justifyContent: 'center', marginBottom: 4, width: 64 },
-  center: { maxWidth: 320, textAlign: 'center' },
-  root: { alignItems: 'center', flex: 1, gap: 8, justifyContent: 'center', padding: 24 },
-});
+const styles = StyleSheet.create((theme) => ({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    gap: theme.space.md,
+    justifyContent: 'center',
+    padding: theme.space.xxl,
+  },
+}));

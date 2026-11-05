@@ -4,16 +4,18 @@ import {
   GolosText_600SemiBold,
   GolosText_700Bold,
 } from '@expo-google-fonts/golos-text';
-import { Unbounded_500Medium, Unbounded_600SemiBold } from '@expo-google-fonts/unbounded';
-import { CartProvider } from '@mobile/cart/feature';
-import { initializeMobileAuth, isStaff, NoAccessScreen, useMobileSession } from '@mobile/core/auth';
+import {
+  initializeMobileAuth,
+  isStaff,
+  NoAccessScreen,
+  UnlockScreen,
+  useMobileSession,
+} from '@mobile/core/auth';
 import { AppProviders } from '@mobile/core/shell';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-
-import { appStore } from '../state/app-store';
 
 void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 void initializeMobileAuth();
@@ -24,8 +26,6 @@ export default function RootLayout() {
     GolosText_500Medium,
     GolosText_600SemiBold,
     GolosText_700Bold,
-    Unbounded_500Medium,
-    Unbounded_600SemiBold,
   });
   const session = useMobileSession();
   const ready = (fontsLoaded || Boolean(fontError)) && session.status !== 'loading';
@@ -37,30 +37,34 @@ export default function RootLayout() {
 
   if (!ready) return null;
 
-  if (isSignedIn && !isStaff(session.user)) {
+  if (session.status === 'locked') {
     return (
-      <AppProviders store={appStore}>
+      <AppProviders>
+        <UnlockScreen user={session.user} />
+      </AppProviders>
+    );
+  }
+
+  if (session.status === 'authenticated' && !isStaff(session.user)) {
+    return (
+      <AppProviders>
         <NoAccessScreen />
       </AppProviders>
     );
   }
 
-  // Without a session only the login screen exists; after sign-in it disappears and the tabs open.
+  // Without a session only the login screen exists; after sign-in the working area opens.
   return (
-    <AppProviders store={appStore}>
-      <CartProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Protected guard={isSignedIn}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="orders/[orderId]" />
-            <Stack.Screen name="product/[productSlug]" />
-          </Stack.Protected>
-          <Stack.Protected guard={!isSignedIn}>
-            <Stack.Screen name="login" />
-          </Stack.Protected>
-        </Stack>
-      </CartProvider>
+    <AppProviders>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Protected guard={isSignedIn}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(work)" />
+        </Stack.Protected>
+        <Stack.Protected guard={!isSignedIn}>
+          <Stack.Screen name="login" />
+        </Stack.Protected>
+      </Stack>
     </AppProviders>
   );
 }

@@ -2,7 +2,7 @@
 
 ## Target boundaries and actual modules
 
-The current `catalog`, `cart`, `orders`, `customers`, `core`, and `shared` are listed in the [map of existing modules](modules.md). The diagram below and the following `catalog` example show the principle for assigning responsibility; they are not a complete list of implemented libraries.
+The current `core` and `shared` libraries are listed in the [map of existing modules](modules.md); domain libraries of the Kedr Manager rebuild are added stage by stage. The diagram below and the following `catalog` example show the principle for assigning responsibility; they are not a complete list of implemented libraries.
 
 ```text
 libs/mobile/
@@ -13,8 +13,8 @@ libs/mobile/
 ├── shared/
 │   ├── api-client/
 │   ├── config/
-│   ├── ui/
-│   └── util/
+│   ├── model/
+│   └── ui/
 └── catalog/
     ├── feature/
     ├── data-access/
@@ -22,15 +22,15 @@ libs/mobile/
     └── ui/
 ```
 
-Create new libraries only when their responsibility appears; do not create them in advance. `orders` already has its own libraries; the current map has no separate `profile` feature project.
+Create new libraries only when their responsibility appears; do not create them in advance.
 
 ## `mobile/core`
 
-`shell` contains the mobile shell: global providers, Redux store, corporate Paper theme mapping, safe-area `AppScreen`, tab/stack composition, shared headers, and navigation configurations that do not belong to a specific domain. `auth` owns session lifecycle and the Expo SecureStore adapter. `connectivity` encapsulates NetInfo and provides normalized online/offline state to the app.
+`shell` contains the mobile shell: global providers, the theme choice store, the work area with tab bar, rail and customer gate, the screen frame and the customer bar. `auth` owns session lifecycle and the Expo SecureStore adapter. `connectivity` encapsulates NetInfo and provides normalized online/offline state to the app.
 
 `core` does not contain products, orders, or other domain logic.
 
-`shared/ui` contains only reusable presentational components and does not own the theme, store, safe-area shell, or global providers.
+`shared/ui` contains the «Офіс» tokens, the Unistyles themes and breakpoints, and reusable presentational components; it does not own stores, the work area, or global providers.
 
 ## Business domains
 
@@ -39,9 +39,9 @@ A domain exposes its public API only through its root `src/index.ts`. Deep impor
 | Layer         | Responsibility                                                                | Must not contain                                            |
 | ------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | `feature`     | Mobile scenario, screen, orchestration, local state                           | HTTP details, shared UI primitives, Expo Router route files |
-| `data-access` | RTK Query endpoints, DTOs, mapping, response validation, cache tags           | JSX, routes, Paper components                               |
+| `data-access` | Local database queries, sync clients, DTOs, mapping, response validation      | JSX, routes, UI components                                  |
 | `model`       | Domain types, invariants, pure transformations, Zod schemas when domain-owned | React, HTTP, Expo APIs                                      |
-| `ui`          | Reusable domain presentation components based on React Native Paper           | API, router, server state                                   |
+| `ui`          | Reusable domain presentation components built from `@mobile/shared/ui`        | API, router, server state                                   |
 
 A small scenario may start with `feature` and `data-access`. Extract `model` and `ui` when types/logic or components begin to be reused. This is the same evolutionary model as Admin.
 

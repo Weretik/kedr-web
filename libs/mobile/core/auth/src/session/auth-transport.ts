@@ -48,14 +48,14 @@ export async function requestLogout(tokens: StoredTokens): Promise<void> {
   );
 }
 
-/** Returns the user, or null when the access token was rejected. */
+/** Returns the user, or null when the access token was rejected; throws when the API cannot be reached. */
 export async function requestCurrentUser(accessToken: string): Promise<SessionUser | null> {
   try {
     const response = await authClient.get<SessionUserResponse>('/api/auth/session/me', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    const { email, fullName, roles, userId } = response.data;
-    return { email, fullName, id: userId, roles };
+    const { avatarUrl, email, fullName, roles, userId } = response.data;
+    return { avatarUrl: avatarUrl ?? null, email, fullName, id: userId, roles };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       return null;

@@ -1,49 +1,32 @@
-import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
-import { useKedrTheme } from '../../theme/kedr-theme';
-import { type KedrStatusKind } from '../../theme/palette';
+import { AppText } from '../text/app-text';
+
+import type { StatusKind } from '../../theme/palette';
 
 export interface StatusPillProps {
-  kind: KedrStatusKind;
+  kind: StatusKind;
   label: string;
-  testID?: string;
 }
 
-/** Soft status pill with a dot and a text label; color never carries the meaning alone. */
-export function StatusPill({ kind, label, testID }: Readonly<StatusPillProps>) {
-  const { kedr } = useKedrTheme();
-  const colors = kedr.colors.status[kind];
-
+/** A problem or state with its word; never an «all OK» badge. */
+export function StatusPill({ kind, label }: Readonly<StatusPillProps>) {
   return (
-    <View
-      accessibilityLabel={label}
-      style={[styles.pill, { backgroundColor: colors.background, borderRadius: kedr.radius.pill }]}
-      testID={testID}
-    >
-      <View style={[styles.dot, { backgroundColor: colors.foreground }]} />
-      <Text
-        numberOfLines={1}
-        style={[styles.label, { color: colors.foreground }]}
-        variant="labelSmall"
-      >
+    <View style={styles.pill(kind)}>
+      <AppText numberOfLines={1} tone={kind} variant="caption">
         {label}
-      </Text>
+      </AppText>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  dot: { borderRadius: 3, height: 6, width: 6 },
-  label: { flexShrink: 1 },
-  pill: {
-    alignItems: 'center',
+const styles = StyleSheet.create((theme) => ({
+  pill: (kind: StatusKind) => ({
     alignSelf: 'flex-start',
-    flexDirection: 'row',
-    gap: 6,
-    maxWidth: '100%',
-    minHeight: 24,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-  },
-});
+    backgroundColor: theme.colors.status[kind].background,
+    borderRadius: theme.radius.pill,
+    paddingHorizontal: theme.space.sm,
+    paddingVertical: 2,
+  }),
+}));

@@ -7,6 +7,6 @@
 - [x] Planned library map with one responsibility each; what stays and what goes.
 - [x] Existing API operations verified in KedrStore code (commit f2e3cb3); new operations specified in KedrStore `platform/004-mobile-offline-sync`.
 - [x] Tasks per stage with covered rules and test level; traceability for every scenario.
-- [ ] Package versions confirmed against Expo SDK 58 — in EN-001 (stage 1) and stage 2.
+- [x] Stage 1 package versions recorded (EN-001, 2026-11-05); stage 2 packages are checked in stage 2.
 - [ ] Local database test approach (Jest driver) — decided in TS-006.
 - [ ] Apple developer account for iPhone distribution — needed before stage 8.

@@ -34,36 +34,12 @@ const workspaceAliases = {
   '@mobile/shared/config': path.join(workspaceRoot, 'libs/mobile/shared/config/src/index.ts'),
   '@mobile/shared/model': path.join(workspaceRoot, 'libs/mobile/shared/model/src/index.ts'),
   '@mobile/shared/ui': path.join(workspaceRoot, 'libs/mobile/shared/ui/src/index.ts'),
-  '@mobile/shared/util': path.join(workspaceRoot, 'libs/mobile/shared/util/src/index.ts'),
+  '@mobile/core/auth': path.join(workspaceRoot, 'libs/mobile/core/auth/src/index.ts'),
   '@mobile/core/connectivity': path.join(
     workspaceRoot,
     'libs/mobile/core/connectivity/src/index.ts',
   ),
   '@mobile/core/shell': path.join(workspaceRoot, 'libs/mobile/core/shell/src/index.ts'),
-  '@mobile/catalog/model': path.join(workspaceRoot, 'libs/mobile/catalog/model/src/index.ts'),
-  '@mobile/catalog/data-access': path.join(
-    workspaceRoot,
-    'libs/mobile/catalog/data-access/src/index.ts',
-  ),
-  '@mobile/catalog/ui': path.join(workspaceRoot, 'libs/mobile/catalog/ui/src/index.ts'),
-  '@mobile/catalog/feature': path.join(workspaceRoot, 'libs/mobile/catalog/feature/src/index.ts'),
-  '@mobile/cart/model': path.join(workspaceRoot, 'libs/mobile/cart/model/src/index.ts'),
-  '@mobile/cart/data-access': path.join(workspaceRoot, 'libs/mobile/cart/data-access/src/index.ts'),
-  '@mobile/cart/ui': path.join(workspaceRoot, 'libs/mobile/cart/ui/src/index.ts'),
-  '@mobile/cart/feature': path.join(workspaceRoot, 'libs/mobile/cart/feature/src/index.ts'),
-  '@mobile/orders/model': path.join(workspaceRoot, 'libs/mobile/orders/model/src/index.ts'),
-  '@mobile/orders/data-access': path.join(
-    workspaceRoot,
-    'libs/mobile/orders/data-access/src/index.ts',
-  ),
-  '@mobile/orders/ui': path.join(workspaceRoot, 'libs/mobile/orders/ui/src/index.ts'),
-  '@mobile/orders/feature': path.join(workspaceRoot, 'libs/mobile/orders/feature/src/index.ts'),
-  '@mobile/customers/model': path.join(workspaceRoot, 'libs/mobile/customers/model/src/index.ts'),
-  '@mobile/customers/data-access': path.join(
-    workspaceRoot,
-    'libs/mobile/customers/data-access/src/index.ts',
-  ),
-  '@mobile/customers/ui': path.join(workspaceRoot, 'libs/mobile/customers/ui/src/index.ts'),
   '@shared/api-contracts': path.join(workspaceRoot, 'libs/shared/api-contracts/src/index.ts'),
 };
 

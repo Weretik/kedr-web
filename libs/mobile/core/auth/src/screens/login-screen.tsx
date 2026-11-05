@@ -1,17 +1,19 @@
-import { AppScreen } from '@mobile/core/shell';
-import { kedrSpace } from '@mobile/shared/ui';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
-import { Button, HelperText, Text, TextInput } from 'react-native-paper';
+import { AppText, BrandMark, Button, Card, TextField } from '@mobile/shared/ui';
+import { useRef, useState } from 'react';
+import { View, type TextInputInstance } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { getLoginErrorMessage } from './login-error-message';
+import { AuthFrame } from '../components/auth-frame';
 import { login } from '../session/mobile-auth';
 
+/** Sign-in with the Kedr Admin email and password (R-001). */
 export function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const passwordRef = useRef<TextInputInstance>(null);
   const canSubmit = email.trim().length > 0 && password.length > 0 && !submitting;
 
   const submit = async () => {
@@ -29,56 +31,54 @@ export function LoginScreen() {
   };
 
   return (
-    <AppScreen>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.container}
-      >
-        <View style={styles.form}>
-          <Text accessibilityRole="header" variant="headlineMedium">
-            Вхід
-          </Text>
-          <Text variant="bodyMedium">Увійдіть обліковим записом менеджера Kedr.</Text>
-          <TextInput
-            accessibilityLabel="Email"
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            label="Email"
-            mode="outlined"
-            onChangeText={setEmail}
-            textContentType="username"
-            value={email}
-          />
-          <TextInput
-            accessibilityLabel="Пароль"
-            autoComplete="password"
-            label="Пароль"
-            mode="outlined"
-            onChangeText={setPassword}
-            onSubmitEditing={() => void submit()}
-            secureTextEntry
-            textContentType="password"
-            value={password}
-          />
-          <HelperText accessibilityLiveRegion="polite" type="error" visible={error !== null}>
-            {error}
-          </HelperText>
-          <Button
-            disabled={!canSubmit}
-            loading={submitting}
-            mode="contained"
-            onPress={() => void submit()}
-          >
-            Увійти
-          </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </AppScreen>
+    <AuthFrame>
+      <View style={styles.brand}>
+        <BrandMark size={56} />
+        <AppText accessibilityRole="header" variant="loginTitle">
+          Кедр Менеджер
+        </AppText>
+        <AppText tone="secondary">Увійдіть тим самим email і паролем, що й в адмінці Кедр.</AppText>
+      </View>
+      <Card style={styles.form}>
+        <TextField
+          autoCapitalize="none"
+          autoComplete="email"
+          keyboardType="email-address"
+          label="Email"
+          onChangeText={setEmail}
+          onSubmitEditing={() => passwordRef.current?.focus()}
+          placeholder="name@classkedr.com.ua"
+          returnKeyType="next"
+          textContentType="username"
+          value={email}
+        />
+        <TextField
+          autoComplete="password"
+          error={error}
+          inputRef={passwordRef}
+          label="Пароль"
+          onChangeText={setPassword}
+          onSubmitEditing={() => void submit()}
+          returnKeyType="go"
+          secret
+          textContentType="password"
+          value={password}
+        />
+        <Button
+          disabled={!canSubmit}
+          label="Увійти"
+          loading={submitting}
+          onPress={() => void submit()}
+        />
+      </Card>
+      <AppText align="center" tone="secondary" variant="secondary">
+        Без мережі застосунок працює до 7 днів після останнього входу.
+      </AppText>
+    </AuthFrame>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center' },
-  form: { gap: kedrSpace.md },
-});
+const styles = StyleSheet.create((theme) => ({
+  brand: { gap: theme.space.sm },
+  form: { gap: theme.space.lg },
+}));
