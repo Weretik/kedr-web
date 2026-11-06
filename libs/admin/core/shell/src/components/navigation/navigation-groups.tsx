@@ -1,6 +1,8 @@
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
@@ -17,6 +19,7 @@ import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
@@ -88,6 +91,12 @@ export const navigationGroups: NavigationGroup[] = [
     ],
   },
   {
+    icon: <AssignmentOutlinedIcon />,
+    id: 'work',
+    label: 'Робота',
+    items: [{ icon: <TaskAltOutlinedIcon />, label: 'Мої задачі', to: '/my-tasks' }],
+  },
+  {
     icon: <SettingsOutlinedIcon />,
     id: 'system',
     label: 'Система',
@@ -103,6 +112,12 @@ export const navigationGroups: NavigationGroup[] = [
         icon: <ManageAccountsOutlinedIcon />,
         label: 'Користувачі',
         to: '/users',
+      },
+      {
+        access: 'userManagement',
+        icon: <AssessmentOutlinedIcon />,
+        label: 'Звіт роботи',
+        to: '/work-report',
       },
     ],
   },

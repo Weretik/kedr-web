@@ -2682,6 +2682,116 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/work/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The caller's board
+         * @description Open tasks and tasks done in the last 30 days, most recently changed first.
+         */
+        get: operations["getMyWorkTasks"];
+        put?: never;
+        /** Create an own task in «План» */
+        post: operations["createMyWorkTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/tasks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change an own task's title and details */
+        put: operations["updateMyWorkTask"];
+        post?: never;
+        /** Delete an own task */
+        delete: operations["deleteMyWorkTask"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/tasks/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Move an own task to another column
+         * @description `InProgress` and `Done` set the start time once; `Done` sets the completion time and keeps `result`; leaving `Done` clears both.
+         */
+        put: operations["changeMyWorkTaskStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The caller's own report */
+        get: operations["getMyWorkReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/work/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Put a task on a staff member's board */
+        post: operations["createAdminWorkTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/work/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A staff member's report */
+        get: operations["getAdminWorkReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4593,6 +4703,82 @@ export interface components {
             /** Format: int64 */
             folderId?: number | null;
         };
+        /** @enum {string} */
+        WorkTaskStatus: "Planned" | "InProgress" | "Done";
+        WorkTask: {
+            /** Format: int64 */
+            id: number;
+            /** Format: uuid */
+            ownerUserId: string;
+            /** Format: uuid */
+            createdByUserId: string;
+            /** @description False when an administrator gave the task («Від адміністратора»). */
+            createdByOwner: boolean;
+            title: string;
+            details: string | null;
+            status: components["schemas"]["WorkTaskStatus"];
+            /** @description What was done; only for `Done`. */
+            result: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            startedAt: string | null;
+            /** Format: date-time */
+            completedAt: string | null;
+        };
+        SaveWorkTaskRequest: {
+            title: string;
+            details?: string | null;
+        };
+        ChangeWorkTaskStatusRequest: {
+            status: components["schemas"]["WorkTaskStatus"];
+            result?: string | null;
+        };
+        WorkActivity: {
+            /** Format: int64 */
+            id: number;
+            /** Format: uuid */
+            userId: string;
+            /** @description Sign-in email at the time of the change. */
+            userEmail: string;
+            /** @description Controller name without `Admin`, for example `Categories`, `PageSeo`, `MediaFiles`. */
+            area: string;
+            /** @description Action method name, for example `UpdateContent`. */
+            operation: string;
+            /** @enum {string} */
+            method: "POST" | "PUT" | "PATCH" | "DELETE";
+            /** @description Route values in name order, for example `id=12, lang=uk`; may be empty. */
+            target: string;
+            /** @description How many times the same change was saved within 10 minutes. */
+            count: number;
+            /** Format: date-time */
+            firstAt: string;
+            /** Format: date-time */
+            occurredAt: string;
+        };
+        WorkReport: {
+            /** Format: uuid */
+            userId: string;
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            /** @description Finished in the period. */
+            doneTasks: components["schemas"]["WorkTask"][];
+            /** @description Not finished now. */
+            openTasks: components["schemas"]["WorkTask"][];
+            /** @description Newest first, at most 2000. */
+            activity: components["schemas"]["WorkActivity"][];
+            activityTruncated: boolean;
+        };
+        CreateWorkTaskForUserRequest: {
+            /** Format: uuid */
+            ownerUserId: string;
+            title: string;
+            details?: string | null;
+        };
     };
     responses: {
         /** @description Input validation failed. */
@@ -4709,6 +4895,17 @@ export interface components {
                 };
             };
         };
+        /** @description Invalid input; each error names its field (`title`, `status`, `to`, …). */
+        "responses-Invalid": {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
     };
     parameters: {
         Lang: "uk" | "ru";
@@ -4747,6 +4944,10 @@ export interface components {
         ItemId: number;
         RowId: number;
         Id: number;
+        /** @description First Kyiv calendar day of the period. */
+        From: string;
+        /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
+        To: string;
     };
     requestBodies: never;
     headers: never;
@@ -11967,6 +12168,336 @@ export interface operations {
                 content?: never;
             };
             /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMyWorkTasks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The caller's tasks. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createMyWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveWorkTaskRequest"];
+            };
+        };
+        responses: {
+            /** @description The new task. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateMyWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveWorkTaskRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved task. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteMyWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeMyWorkTaskStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeWorkTaskStatusRequest"];
+            };
+        };
+        responses: {
+            /** @description The moved task. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMyWorkReport: {
+        parameters: {
+            query: {
+                /** @description First Kyiv calendar day of the period. */
+                from: components["parameters"]["From"];
+                /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
+                to: components["parameters"]["To"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The report. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkReport"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWorkTaskForUserRequest"];
+            };
+        };
+        responses: {
+            /** @description The new task, with `createdByOwner` false. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkReport: {
+        parameters: {
+            query: {
+                userId: string;
+                /** @description First Kyiv calendar day of the period. */
+                from: components["parameters"]["From"];
+                /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
+                to: components["parameters"]["To"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The report. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkReport"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;

@@ -188,7 +188,11 @@
       "@admin/site-models/model": ["./libs/admin/site-models/model/src/index.ts"],
       "@admin/site-models/data-access": ["./libs/admin/site-models/data-access/src/index.ts"],
       "@admin/site-models/ui": ["./libs/admin/site-models/ui/src/index.ts"],
-      "@admin/site-models/feature": ["./libs/admin/site-models/feature/src/index.ts"]
+      "@admin/site-models/feature": ["./libs/admin/site-models/feature/src/index.ts"],
+      "@admin/work/model": ["./libs/admin/work/model/src/index.ts"],
+      "@admin/work/data-access": ["./libs/admin/work/data-access/src/index.ts"],
+      "@admin/work/ui": ["./libs/admin/work/ui/src/index.ts"],
+      "@admin/work/feature": ["./libs/admin/work/feature/src/index.ts"]
     }
   }
 }

@@ -10,6 +10,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | ------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | [Session and shell](admin/session.md)             | `/login`, all routes                                 | Cookie sign-in, role guards, layout, navigation                                           |
 | [Users](admin/users.md)                           | `/users`                                             | Admin only: staff accounts, roles, block, managers' profile                               |
+| [Мої задачі, Звіт роботи](admin/work.md)          | `/my-tasks`, `/work-report`                          | Own task board with results; Admin reads a person's tasks and admin changes               |
 | [Мій кабінет](admin/profile.md)                   | `/profile`                                           | Own name, photo; Admin also email and password                                            |
 | [Dashboard](admin/dashboard.md)                   | `/dashboard`                                         | What needs attention, today, latest orders                                                |
 | [Products](admin/products.md)                     | `/catalog`, `/catalog/:productSlug`                  | List, details, and adding products to an order set                                        |

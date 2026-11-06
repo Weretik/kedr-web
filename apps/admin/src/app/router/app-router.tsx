@@ -33,14 +33,19 @@ import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
 import { createSiteModelsRoutes } from '@admin/site-models/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
+import { useGetStaffAccountsQuery } from '@admin/users/data-access';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
+import { staffRoleLabels } from '@admin/users/model';
 import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
+import { createWorkReportRoutes, myTasksRoutes } from '@admin/work/feature';
+import { useMemo } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { CustomerPicker } from '../customer-picker';
 import { toShellUser } from './shell-user';
 
 import type { SessionUser } from '@admin/core/auth';
+import type { StaffMember } from '@admin/work/feature';
 
 function AdminShellRoute({ user }: { user: SessionUser }) {
   const { lines } = useCurrentOrderSet();
@@ -68,6 +73,23 @@ const dashboardRoutes = createDashboardRoutes({
   siteRefreshAction: <SiteRefreshButton variant="text" />,
   useViewerName: useSignedInUserName,
 });
+
+const workReportRoutes = createWorkReportRoutes({ useStaffMembers });
+
+/** People for «Звіт роботи»: the staff list the admin already manages on «Користувачі». */
+function useStaffMembers(): { staff: readonly StaffMember[]; loading: boolean } {
+  const { data, isLoading } = useGetStaffAccountsQuery();
+  const staff = useMemo(
+    () =>
+      (data ?? []).map((account) => ({
+        id: account.id,
+        name: account.fullName || account.email,
+        roleLabel: staffRoleLabels[account.role],
+      })),
+    [data],
+  );
+  return { staff, loading: isLoading };
+}
 
 function useCanEditCatalog(): boolean {
   const session = useAdminSession();
@@ -121,8 +143,10 @@ export function AppRouter() {
         ...wholesaleContentRoutes,
         ...pageSeoRoutes,
         ...profileRoutes,
+        ...myTasksRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
+        { element: <RequireRole allow={canManageUsers} />, children: workReportRoutes },
       ],
     },
     { path: '*', element: <Navigate replace to="/dashboard" /> },

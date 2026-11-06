@@ -39,9 +39,16 @@ describe('AdminNavigation by role', () => {
     expect(screen.getByRole('link', { name: 'Реквізити' }).getAttribute('href')).toBe(
       '/company-requisites',
     );
-    expect(screen.getByRole('link', { name: 'Реквізити' }).getAttribute('href')).toBe(
-      '/company-requisites',
+    expect(screen.getByRole('link', { name: 'Звіт роботи' }).getAttribute('href')).toBe(
+      '/work-report',
     );
+  });
+
+  it('gives every staff member «Мої задачі» but the work report only to an admin', () => {
+    renderNavigation(false, '/my-tasks');
+
+    expect(screen.getByRole('link', { name: 'Мої задачі' }).getAttribute('href')).toBe('/my-tasks');
+    expect(screen.queryByRole('link', { name: 'Звіт роботи' })).toBeNull();
   });
 
   it('hides the users section from a manager', () => {
