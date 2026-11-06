@@ -6,8 +6,6 @@ export const ru: CatalogDictionary = {
   variants: { one: 'вариант', few: 'варианта', many: 'вариантов' },
   fromPrice: 'от',
   models: { one: 'модель', few: 'модели', many: 'моделей' },
-  landingLinks: 'Подборки',
-  allValues: 'Все',
   landingIntro: (heading: string, count: string) =>
     `${heading}: ${count}. Продаём оптом и в розницу, доставка по Украине.`,
   colors: 'Цвета',

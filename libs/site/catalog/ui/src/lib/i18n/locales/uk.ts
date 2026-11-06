@@ -6,8 +6,6 @@ export const uk: CatalogDictionary = {
   variants: { one: 'варіант', few: 'варіанти', many: 'варіантів' },
   fromPrice: 'від',
   models: { one: 'модель', few: 'моделі', many: 'моделей' },
-  landingLinks: 'Добірки',
-  allValues: 'Усі',
   landingIntro: (heading: string, count: string) =>
     `${heading}: ${count}. Продаємо оптом і в роздріб, доставка по Україні.`,
   colors: 'Кольори',

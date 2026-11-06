@@ -126,7 +126,7 @@ describe('CategoryPage', () => {
     getCatalogTree.mockResolvedValue(tree);
   });
 
-  it('renders breadcrumbs, the admin H1, sibling chips, value links, text, and breadcrumb JSON-LD before the listing', async () => {
+  it('renders breadcrumbs, the admin H1, sibling chips, text, and breadcrumb JSON-LD before the listing', async () => {
     getProductListPage
       .mockResolvedValueOnce(basePage)
       .mockReturnValue(new Promise(() => undefined));
@@ -139,10 +139,8 @@ describe('CategoryPage', () => {
       '/uk/catalog/zamky',
     );
     expect(screen.getByRole('link', { name: /Ручки/ }).getAttribute('aria-current')).toBe('page');
-    expect(screen.getByRole('link', { name: /Хром/ }).getAttribute('href')).toBe(
-      '/uk/catalog/ruchky/khrom',
-    );
-    expect(screen.queryByRole('link', { name: /Біле золото/ })).toBeNull();
+    // Colors and sizes are only in the filters on the left, not as links above the list (owner 2026-11-06).
+    expect(screen.queryByRole('link', { name: /Хром/ })).toBeNull();
     expect(screen.getByText('Опис')).toBeTruthy();
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       'BreadcrumbList',
