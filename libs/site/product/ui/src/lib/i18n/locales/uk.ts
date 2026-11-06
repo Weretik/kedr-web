@@ -37,4 +37,11 @@ export const uk = {
   helpTitle: 'Потрібна допомога з вибором?',
   helpText: 'Зверніться до менеджера — допоможемо з вашим замовленням.',
   contactManager: 'Зв’язатися з менеджером',
+  modelProduct: 'Обраний варіант',
+  variantPicker: 'Вибір варіанта',
+  inStockAlternatives: 'Є в наявності:',
+  allVariants: 'Усі варіанти',
+  description: 'Опис',
+  characteristics: 'Характеристики',
+  otherModels: 'Інші моделі в категорії',
 } as const;

@@ -9,6 +9,9 @@ export type ListingView = (typeof LISTING_VIEWS)[number];
 export const LISTING_PAGE_SIZES = [20, 50, 100] as const;
 export type ListingPageSize = (typeof LISTING_PAGE_SIZES)[number];
 
+/** Attribute filter choices: attribute slug → value slugs, both sorted, so equal choices give one URL. */
+export type ListingAttributes = Readonly<Record<string, readonly string[]>>;
+
 /** Visitor choices on a listing. The URL keeps only values that differ from `DEFAULT_LISTING_QUERY`. */
 export type ListingQuery = {
   page: number;
@@ -20,6 +23,8 @@ export type ListingQuery = {
   priceTo: number | null;
   view: ListingView;
   perPage: ListingPageSize;
+  /** Attribute filters of a final category (`?kolir=khrom,bronza`). */
+  attributes: ListingAttributes;
 };
 
 export const DEFAULT_LISTING_QUERY: ListingQuery = {
@@ -32,6 +37,7 @@ export const DEFAULT_LISTING_QUERY: ListingQuery = {
   priceTo: null,
   view: 'grid',
   perPage: 20,
+  attributes: {},
 };
 
 /** Shape of Next.js `searchParams` and of `URLSearchParams` entries. */
@@ -63,6 +69,48 @@ const parsePerPage = (value: string | undefined): ListingPageSize => {
     : DEFAULT_LISTING_QUERY.perPage;
 };
 
+/** Query keys that are listing choices or the search term; every other slug-like key is an attribute filter. */
+const RESERVED_KEYS = new Set([
+  'page',
+  'sort',
+  'inStock',
+  'isSale',
+  'isNew',
+  'priceFrom',
+  'priceTo',
+  'view',
+  'perPage',
+  'q',
+]);
+const SLUG = /^[a-z0-9][a-z0-9-]{0,79}$/;
+const MAX_ATTRIBUTES = 10;
+const MAX_VALUES = 50;
+
+/** Attribute filters from the URL: slug keys with comma-separated slug values; anything else is ignored. */
+const parseAttributes = (params: SearchParamsRecord): ListingAttributes => {
+  const attributes: Record<string, string[]> = {};
+  let values = 0;
+  for (const key of Object.keys(params).sort()) {
+    if (RESERVED_KEYS.has(key) || !SLUG.test(key)) continue;
+    if (Object.keys(attributes).length >= MAX_ATTRIBUTES) break;
+    const raw = params[key];
+    const chosen = [
+      ...new Set(
+        (Array.isArray(raw) ? raw : [raw])
+          .flatMap((value) => (value ?? '').split(','))
+          .map((value) => value.trim())
+          .filter((value) => SLUG.test(value)),
+      ),
+    ]
+      .sort()
+      .slice(0, MAX_VALUES - values);
+    if (!chosen.length) continue;
+    attributes[key] = chosen;
+    values += chosen.length;
+  }
+  return attributes;
+};
+
 const pick = <T extends string>(values: readonly T[], value: string | undefined, fallback: T): T =>
   values.includes(value as T) ? (value as T) : fallback;
 
@@ -84,7 +132,24 @@ export function parseListingQuery(params: SearchParamsRecord): ListingQuery {
     priceTo,
     view: pick(LISTING_VIEWS, first(params['view']), DEFAULT_LISTING_QUERY.view),
     perPage: parsePerPage(first(params['perPage'])),
+    attributes: parseAttributes(params),
   };
+}
+
+/** Adds or removes one attribute value, from page 1. */
+export function toggleAttributeValue(
+  query: ListingQuery,
+  attribute: string,
+  value: string,
+): ListingQuery {
+  const current = query.attributes[attribute] ?? [];
+  const next = current.includes(value)
+    ? current.filter((item) => item !== value)
+    : [...current, value].sort();
+  const attributes = { ...query.attributes };
+  if (next.length) attributes[attribute] = next;
+  else delete attributes[attribute];
+  return { ...query, attributes, page: 1 };
 }
 
 /**
@@ -96,6 +161,10 @@ export function serializeListingQuery(
   extra: Record<string, string> = {},
 ): string {
   const params = new URLSearchParams(extra);
+  for (const key of Object.keys(query.attributes).sort()) {
+    const values = query.attributes[key];
+    if (values?.length) params.set(key, values.join(','));
+  }
   if (query.inStock) params.set('inStock', 'true');
   if (query.isSale) params.set('isSale', 'true');
   if (query.isNew) params.set('isNew', 'true');
@@ -126,6 +195,7 @@ export function isIndexableListing(query: ListingQuery): boolean {
 /** Whether any filter narrows the list (sort, view, page, and page size do not). */
 export function hasListingFilters(query: ListingQuery): boolean {
   return (
+    Object.keys(query.attributes).length > 0 ||
     query.inStock ||
     query.isSale ||
     query.isNew ||

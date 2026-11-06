@@ -9,6 +9,11 @@ export type CatalogDictionary = {
   /** Link to a whole category when only part of its subcategories is shown. */
   allInCategory: (count: number) => string;
   products: PluralForms;
+  /** «варіант» forms for the number of products of a model card. */
+  variants: PluralForms;
+  /** Before the lowest price of a model of several products. */
+  fromPrice: string;
+  colors: string;
   priceOnRequest: string;
   retailPrice: string;
   isNew: string;

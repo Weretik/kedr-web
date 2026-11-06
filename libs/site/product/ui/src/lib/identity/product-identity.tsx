@@ -12,10 +12,13 @@ export function ProductIdentity({
   locale,
   product,
   categoryHref,
+  title,
 }: {
   locale: Locale;
   product: ProductDetails;
   categoryHref: string | null;
+  /** The model name; the chosen product's own name then follows the heading. */
+  title?: string;
 }) {
   const dictionary = getProductDictionary(locale);
   return (
@@ -43,8 +46,14 @@ export function ProductIdentity({
         </p>
       </div>
       <h1 className="text-[1.625rem] leading-[1.18] font-bold tracking-tight text-balance [overflow-wrap:anywhere] lg:text-[2rem]">
-        {product.name}
+        {title ?? product.name}
       </h1>
+      {title && title !== product.name && (
+        <p className="mt-2 text-sm [overflow-wrap:anywhere]">
+          <span className="sr-only">{dictionary.modelProduct}: </span>
+          {product.name}
+        </p>
+      )}
       {product.categoryName && (
         <p className="mt-3 text-sm text-muted-foreground [overflow-wrap:anywhere]">
           {dictionary.category}:{' '}

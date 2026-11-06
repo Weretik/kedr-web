@@ -1,7 +1,7 @@
 import { listingPurchaseDescriptor } from './listing-purchase';
 
 const product = {
-  id: 7,
+  id: '7',
   sku: 26821,
   slug: 'ruchka',
   name: 'Ручка',
@@ -10,6 +10,8 @@ const product = {
   inStock: true,
   isNew: false,
   isSale: false,
+  variantCount: 1,
+  colors: [],
 };
 
 describe('listingPurchaseDescriptor', () => {
@@ -26,7 +28,11 @@ describe('listingPurchaseDescriptor', () => {
   });
 
   it('is not purchasable without stock or a price', () => {
-    expect(listingPurchaseDescriptor({ ...product, inStock: false }).available).toBe(false);
-    expect(listingPurchaseDescriptor({ ...product, price: null }).available).toBe(false);
+    expect(listingPurchaseDescriptor({ ...product, inStock: false })?.available).toBe(false);
+    expect(listingPurchaseDescriptor({ ...product, price: null })?.available).toBe(false);
+  });
+
+  it('gives nothing for a model of several products, which opens its page instead', () => {
+    expect(listingPurchaseDescriptor({ ...product, sku: null, variantCount: 3 })).toBeNull();
   });
 });

@@ -2,6 +2,7 @@ import type {
   ApiProductDetails,
   ApiProductListItem,
   ApiProductPage,
+  ApiSiteModelList,
 } from '../contracts/product.dto';
 
 export const photoUrl = 'https://images-kedr.cdn.express/~/o/products/731.jpg';
@@ -50,4 +51,32 @@ export const pageFixture = (
     totalRecords: total,
     totalPages: Math.ceil(total / size),
   },
+});
+
+export const modelPageFixture = (
+  ids: number[],
+  { number = 1, size = 100, total = ids.length } = {},
+): ApiSiteModelList => ({
+  categorySlug: null,
+  isFinalCategory: false,
+  page: number,
+  pageSize: size,
+  totalRecords: total,
+  totalPages: Math.ceil(total / size),
+  items: ids.map((id) => ({
+    slug: `model-${id}`,
+    name: `Модель ${id}`,
+    categorySlug: 'zavisy',
+    photo: '',
+    priceFrom: null,
+    inStock: true,
+    isSale: false,
+    isNew: false,
+    productCount: 2,
+    isAccepted: true,
+    colors: [],
+    productId: null,
+  })),
+  filters: [],
+  exactMatch: null,
 });

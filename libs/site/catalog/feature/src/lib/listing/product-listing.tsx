@@ -4,6 +4,7 @@ import {
   isIndexableListing,
   listingHref,
   parseListingQuery,
+  productPath,
   withoutFilters,
 } from '@site/catalog/model';
 import { buildProductItemListJsonLd } from '@site/catalog/seo';
@@ -17,7 +18,9 @@ import {
   ProductList,
   getCatalogDictionary,
 } from '@site/catalog/ui';
+import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
+import { redirect } from 'next/navigation';
 
 import { listingPurchaseDescriptor } from './listing-purchase';
 
@@ -54,13 +57,27 @@ export async function ProductListing({
   const query = parseListingQuery(await searchParams);
   const page = await getProductListPage(locale, scope, query);
 
+  // An exact 1C code opens its model with that product chosen (spec site/product/002 D-06).
+  if (page?.exactMatch && 'searchTerm' in scope && query.page === 1) {
+    const selection = new URLSearchParams(page.exactMatch.selection).toString();
+    const href = localizedPath(locale, productPath(page.exactMatch.slug));
+    redirect(selection ? `${href}?${selection}` : href);
+  }
+
+  const filters = page?.filters ?? [];
   const frame = (content: ReactNode) => (
     <div className="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8">
       <aside aria-label={dictionary.filters} className="hidden lg:block">
-        <FilterForm locale={locale} path={path} query={query} extra={extra ?? {}} />
+        <FilterForm
+          locale={locale}
+          path={path}
+          query={query}
+          extra={extra ?? {}}
+          filters={filters}
+        />
       </aside>
       <div className="grid min-w-0 content-start gap-4">
-        <ListingToolbar locale={locale} path={path} query={query} extra={extra} />
+        <ListingToolbar locale={locale} path={path} query={query} extra={extra} filters={filters} />
         {content}
       </div>
     </div>
@@ -92,7 +109,10 @@ export async function ProductListing({
         view={query.view}
         renderAction={
           renderPurchaseAction &&
-          ((product) => renderPurchaseAction(listingPurchaseDescriptor(product)))
+          ((product) => {
+            const descriptor = listingPurchaseDescriptor(product);
+            return descriptor ? renderPurchaseAction(descriptor) : null;
+          })
         }
       />
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">

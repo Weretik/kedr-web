@@ -35,7 +35,7 @@ export async function generateCategoryMetadata(
   const query = parseListingQuery(await searchParams);
   const page =
     query.page > 1
-      ? await getProductListPage(locale, { categoryId: result.category.id }, query)
+      ? await getProductListPage(locale, { categorySlug: result.category.slug }, query)
       : null;
   const pastEnd = page !== null && page.items.length === 0;
   return buildCategoryMetadata({ locale, category: result.category, query, pastEnd });

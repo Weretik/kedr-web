@@ -13,11 +13,12 @@ export function buildProductMetadata(
   input: ProductSeoInput,
   config: SiteConfig = siteConfig,
 ): Metadata {
-  const title = `${input.name} — арт. ${input.sku}`;
+  const title = input.title || `${input.name} — арт. ${input.sku}`;
   const description =
-    input.locale === 'uk'
+    input.description ||
+    (input.locale === 'uk'
       ? `${input.name}. Артикул ${input.sku}. Інформація про товар, ціну та наявність у ${COMPANY.name}.`
-      : `${input.name}. Артикул ${input.sku}. Информация о товаре, цене и наличии в ${COMPANY.name}.`;
+      : `${input.name}. Артикул ${input.sku}. Информация о товаре, цене и наличии в ${COMPANY.name}.`);
   const base = buildPageMetadata(
     { locale: input.locale, path: input.path, title, description },
     config,

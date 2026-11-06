@@ -13,10 +13,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
+import { AttributeFilters } from './attribute-filters';
 import { Flag, PriceInput } from './toolbar-controls';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
-import type { ListingQuery } from '@site/catalog/model';
+import type { ListingFilter, ListingQuery, SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 import type { FormEvent } from 'react';
 
@@ -25,17 +26,29 @@ type FilterFormProps = {
   path: string;
   query: ListingQuery;
   extra: Record<string, string>;
+  /** Attribute filters of a final category; empty elsewhere. */
+  filters?: readonly ListingFilter[];
   /** Called after a choice that closes a surrounding panel. */
   onDone?: () => void;
 };
 
+const NO_FILTERS: readonly ListingFilter[] = [];
+
+/** Form fields as URL params; repeated names (attribute values) stay lists. */
+const formParams = (form: HTMLFormElement): SearchParamsRecord => {
+  const params: Record<string, string[]> = {};
+  for (const [name, value] of new FormData(form)) {
+    if (typeof value === 'string') (params[name] ??= []).push(value);
+  }
+  return params;
+};
+
 /** Filters from the form on top of the current sort, view, and page size, from page 1. */
 const nextQuery = (form: HTMLFormElement, query: ListingQuery): ListingQuery => {
-  const chosen = parseListingQuery(
-    Object.fromEntries(new FormData(form)) as Record<string, string>,
-  );
+  const chosen = parseListingQuery(formParams(form));
   return {
     ...query,
+    attributes: chosen.attributes,
     inStock: chosen.inStock,
     isSale: chosen.isSale,
     isNew: chosen.isNew,
@@ -46,10 +59,18 @@ const nextQuery = (form: HTMLFormElement, query: ListingQuery): ListingQuery => 
 };
 
 /**
- * Filters of a listing: the left column on desktop and the filter panel on phones. Stock, sale, and new flags and the price range. A GET form that keeps the other choices in hidden fields, so it
+ * Filters of a listing: the left column on desktop and the filter panel on phones. Stock, sale, and new flags, the
+ * price range, and the attribute filters of a final category. A GET form that keeps the other choices in hidden fields, so it
  * also works without JavaScript; with JavaScript flags apply at once and the price on «Застосувати».
  */
-export function FilterForm({ locale, path, query, extra, onDone }: FilterFormProps) {
+export function FilterForm({
+  locale,
+  path,
+  query,
+  extra,
+  filters = NO_FILTERS,
+  onDone,
+}: FilterFormProps) {
   // The dictionary holds functions, which cannot cross from a Server Component, so it is read here.
   const dictionary = getCatalogDictionary(locale);
   const router = useRouter();
@@ -94,6 +115,7 @@ export function FilterForm({ locale, path, query, extra, onDone }: FilterFormPro
         <Flag name="isSale" label={dictionary.onlySale} checked={query.isSale} />
         <Flag name="isNew" label={dictionary.onlyNew} checked={query.isNew} />
       </fieldset>
+      <AttributeFilters filters={filters} />
       <div className="border-t border-border pt-4">
         <fieldset className="grid gap-2">
           <legend className="mb-3 font-semibold">{dictionary.price}</legend>

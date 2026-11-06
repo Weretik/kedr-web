@@ -15,7 +15,11 @@ export type ListingPurchaseDescriptor = {
 /** Executed on the server for each listed product; only the returned node reaches the card or row. */
 export type RenderListingPurchaseAction = (descriptor: ListingPurchaseDescriptor) => ReactNode;
 
-export function listingPurchaseDescriptor(product: ProductSummary): ListingPurchaseDescriptor {
+/** Only a one-product model (a product with its article) is added from the list; a model opens its page. */
+export function listingPurchaseDescriptor(
+  product: ProductSummary,
+): ListingPurchaseDescriptor | null {
+  if (product.sku === null) return null;
   return {
     productId: String(product.sku),
     title: product.name,

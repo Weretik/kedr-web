@@ -41,6 +41,9 @@ const documentedCrossDomainFlows = new Set([
   'site-home-feature->site-catalog-data-access',
   'site-home-feature->site-catalog-model',
   'site-product-feature->site-catalog-model',
+  // «Інші моделі в категорії» on the model page: the category's model cards (site/product/002 R-04).
+  'site-product-feature->site-catalog-data-access',
+  'site-product-feature->site-catalog-ui',
   'site-cart-feature->site-product-model',
   'site-home-feature->site-catalog-ui',
   'site-content-feature->site-catalog-data-access',
