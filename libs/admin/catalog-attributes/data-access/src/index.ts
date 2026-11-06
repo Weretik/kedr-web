@@ -5,6 +5,7 @@ export {
   useGetCatalogAttributeQuery,
   useGetCatalogAttributesQuery,
   useGetCategoryFiltersQuery,
+  useGetCodeProductsQuery,
   useGetUnresolvedCodesQuery,
   useSetCategoryFiltersMutation,
   useUpdateAttributeValueMutation,

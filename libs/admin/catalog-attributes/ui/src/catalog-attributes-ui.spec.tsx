@@ -1,11 +1,16 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { CodeWorkspace } from './components/codes/code-workspace';
 import { AttributeValueForm } from './forms/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
-import { UnresolvedCodesDataGrid } from './tables/unresolved-codes-data-grid';
 
-import type { CategoryFilter, UnresolvedCode } from '@admin/catalog-attributes/model';
+import type {
+  CatalogAttributeValue,
+  CategoryFilter,
+  CodeProducts,
+  UnresolvedCode,
+} from '@admin/catalog-attributes/model';
 
 const code = (aliasId: number, valueId: number | null): UnresolvedCode => ({
   aliasId,
@@ -64,32 +69,70 @@ describe('catalog attributes ui', () => {
     });
   });
 
-  it('marks undecoded codes and guesses, and lets only admins decide', () => {
-    const { rerender } = render(
-      <UnresolvedCodesDataGrid
+  it('shows the products of a code by category and decides it for all and per category', () => {
+    const onSave = vi.fn();
+    const value = (id: number, nameUk: string, valueCode: string): CatalogAttributeValue => ({
+      id,
+      code: valueCode,
+      nameUk,
+      nameRu: null,
+      slug: valueCode.toLowerCase(),
+      sortOrder: 0,
+      swatchHex: null,
+      swatchMediaFileId: null,
+      swatchImageUrl: null,
+      isEditedManually: false,
+      productCount: 0,
+    });
+    const products: CodeProducts = {
+      aliasId: 1,
+      rawValue: 'AL',
+      categories: [
+        {
+          categoryId: 5915,
+          categoryPath: 'Фурнітура > Ручки > На планці',
+          hasOwnValue: false,
+          valueId: null,
+          valueName: null,
+          products: [{ productId: 60, name: 'KEDR ручка R08.148-AL-SN/CP', photo: '' }],
+        },
+        {
+          categoryId: 7,
+          categoryPath: 'Міжкімнатні двері > Korfad',
+          hasOwnValue: true,
+          valueId: null,
+          valueName: null,
+          products: [{ productId: 26363, name: 'Дверне полотно ALIANO AL-06', photo: '' }],
+        },
+      ],
+    };
+    render(
+      <CodeWorkspace
         canEdit
-        error={false}
-        loading={false}
-        onDecide={vi.fn()}
+        code={{ ...code(1, null), rawValue: 'AL', productCount: 2 }}
+        error={null}
         onRetry={vi.fn()}
-        rows={[code(1, null), code(2, 5)]}
+        onSave={onSave}
+        onSkip={vi.fn()}
+        products={products}
+        productsError={false}
+        productsLoading={false}
+        saving={false}
+        values={[value(5, 'Алюміній', 'ALUMINIUM')]}
       />,
     );
-    expect(screen.getByText('Не розшифровано')).toBeTruthy();
-    expect(screen.getByText('Припущення: Хром')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Розшифрувати код C1' })).toBeTruthy();
 
-    rerender(
-      <UnresolvedCodesDataGrid
-        canEdit={false}
-        error={false}
-        loading={false}
-        onDecide={vi.fn()}
-        onRetry={vi.fn()}
-        rows={[code(1, null)]}
-      />,
-    );
-    expect(screen.queryByRole('button', { name: /Розшифрувати/ })).toBeNull();
+    expect(screen.getByRole('region', { name: 'Ручки > На планці' })).toBeTruthy();
+    expect(screen.getAllByText('AL').some((node) => node.tagName === 'MARK')).toBe(true);
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Значення для всіх товарів' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Алюміній (ALUMINIUM)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти і далі' }));
+
+    expect(onSave).toHaveBeenCalledWith({
+      valueId: 5,
+      applyToAll: true,
+      categories: [{ categoryId: 7, valueId: null }],
+    });
   });
 
   it('reorders and hides category filters before saving', () => {

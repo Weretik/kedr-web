@@ -1,12 +1,13 @@
 export { AttributeSwatch } from './swatch/attribute-swatch';
-export { CatalogAttributesDataGrid } from './tables/catalog-attributes-data-grid';
-export { UnresolvedCodesDataGrid } from './tables/unresolved-codes-data-grid';
+export { AttributeList } from './components/attributes/attribute-list';
+export { AttributeOverview } from './components/attributes/attribute-overview';
+export { CodeQueueList } from './components/codes/code-queue-list';
+export { CodeWorkspace } from './components/codes/code-workspace';
 export { AttributeSettingsCard } from './details/attribute-settings-card';
 export { AttributeValuesCard } from './details/attribute-values-card';
 export { AttributeAliasesCard } from './details/attribute-aliases-card';
 export { AttributeValueForm } from './forms/attribute-value-form';
 export type { SwatchTexture } from './forms/attribute-value-form';
-export { CodeDecisionPanel } from './panels/code-decision-panel';
 export { CategoryFiltersEditor } from './forms/category-filters-editor';
 export {
   NewAttributeFields,

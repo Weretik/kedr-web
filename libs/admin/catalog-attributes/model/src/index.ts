@@ -20,5 +20,17 @@ export {
   findFilterCategory,
 } from './entities/category-filter';
 export { moveFilter } from './entities/category-filter';
-export type { CodeDecision, CodeDecisionResult, UnresolvedCode } from './entities/unresolved-code';
+export type {
+  CodeCategory,
+  CodeCategoryDecision,
+  CodeChoice,
+  CodeDecision,
+  CodeDecisionResult,
+  CodeProduct,
+  CodeProducts,
+  UnresolvedCode,
+} from './entities/unresolved-code';
 export { codeDecisionNotice } from './entities/unresolved-code';
+export { categoryChoice, shortCategoryPath, toCodeDecision } from './mappers/code-decision';
+export type { AttributeRole } from './mappers/attribute-role';
+export { attributeRole, attributeRoles, groupAttributesByRole } from './mappers/attribute-role';
