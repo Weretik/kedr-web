@@ -3,7 +3,11 @@ import { DEFAULT_LISTING_QUERY } from '@site/catalog/model';
 import { ProductGrid } from '@site/catalog/ui';
 import { JsonLd } from '@site/core/seo';
 import { parseModelSelection, selectModelProduct } from '@site/product/model';
-import { buildProductBreadcrumbJsonLd, buildProductJsonLd } from '@site/product/seo';
+import {
+  buildProductBreadcrumbJsonLd,
+  buildProductGroupJsonLd,
+  buildProductJsonLd,
+} from '@site/product/seo';
 import {
   ModelAlternatives,
   ModelLead,
@@ -16,7 +20,7 @@ import {
 import { getCompanyContacts } from '@site/shared/company';
 
 import { loadAcceptedModel } from './model-response';
-import { modelSeoInput } from './model-seo';
+import { modelGroupSeoInput, modelSeoInput } from './model-seo';
 import { modelAlternativeLinks, modelVariantGroups, modelVariantRows } from './model-view';
 import { ProductPage } from '../detail/product-page';
 import { productPurchaseDescriptor } from '../detail/product-purchase-descriptor';
@@ -114,7 +118,15 @@ export async function ModelPage({
           </>
         }
       />
-      <JsonLd data={[buildProductJsonLd(seo), buildProductBreadcrumbJsonLd(seo)]} />
+      <JsonLd
+        data={[
+          // A model of several products is one ProductGroup with a «від» price; a single product keeps its offer.
+          model.products.length > 1
+            ? buildProductGroupJsonLd(modelGroupSeoInput(locale, model, seo))
+            : buildProductJsonLd(seo),
+          buildProductBreadcrumbJsonLd(seo),
+        ]}
+      />
     </>
   );
 }

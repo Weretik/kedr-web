@@ -53,6 +53,7 @@ const model: SiteModel = {
   mainProductSlug: 'zavisa-1',
   axes: [
     {
+      code: 'color',
       slug: 'kolir',
       name: 'Колір',
       display: 'button',
@@ -119,6 +120,10 @@ describe('ModelPage', () => {
     expect(html).toContain('Інші моделі в категорії');
     expect(html).toContain('Інша завіса');
     expect(html).not.toContain('Є в наявності:');
+    // One ProductGroup with the «від» price only (stage 7).
+    expect(html).toContain('"@type":"ProductGroup"');
+    expect(html).toContain('"lowPrice":65.7');
+    expect(html).not.toContain('"highPrice"');
     expect(renderVariantsAction).toHaveBeenCalledWith([
       expect.objectContaining({ productId: '1', details: 'Хром', current: true, available: true }),
       expect.objectContaining({

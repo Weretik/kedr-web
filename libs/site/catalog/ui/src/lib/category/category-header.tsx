@@ -12,6 +12,10 @@ type CategoryHeaderProps = {
   locale: Locale;
   heading: string;
   productCount: number;
+  /** What the count counts; a value page counts models. */
+  countOf?: 'products' | 'models';
+  /** Opening line under the heading (value pages). */
+  intro?: string;
   /** Chips under the heading: the subcategories, or the sibling categories of a category without them. */
   chips: readonly CatalogTreeNode[];
   /** The chip of the current category, marked when the chips are its siblings. */
@@ -23,6 +27,8 @@ export function CategoryHeader({
   locale,
   heading,
   productCount,
+  countOf = 'products',
+  intro,
   chips,
   activeId,
 }: CategoryHeaderProps) {
@@ -33,9 +39,10 @@ export function CategoryHeader({
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h1 className="text-2xl font-semibold tracking-tight lg:text-3xl">{heading}</h1>
         <span className="text-sm text-muted-foreground">
-          {pluralize(locale, productCount, dictionary.products)}
+          {pluralize(locale, productCount, dictionary[countOf])}
         </span>
       </div>
+      {intro && <p className="max-w-3xl text-sm text-muted-foreground">{intro}</p>}
       {chips.length > 0 && (
         <nav aria-label={dictionary.subcategories}>
           <ul className="flex flex-wrap gap-2">

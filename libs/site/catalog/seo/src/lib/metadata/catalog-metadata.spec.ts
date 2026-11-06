@@ -1,7 +1,7 @@
 import { DEFAULT_LISTING_QUERY } from '@site/catalog/model';
 import { createSiteConfig } from '@site/core/config';
 
-import { buildCategoryMetadata } from './category-metadata';
+import { buildCategoryMetadata, buildLandingMetadata } from './category-metadata';
 import { buildCatalogHubMetadata, buildSearchMetadata } from './hub-search-metadata';
 
 import type { CategoryDetails } from '@site/catalog/model';
@@ -97,5 +97,49 @@ describe('hub and search metadata', () => {
       title: 'Поиск: agb',
       robots: { index: false, follow: true },
     });
+  });
+});
+
+describe('buildLandingMetadata', () => {
+  const zavisy = { ...category, slug: 'zavisy', name: 'Завіси' };
+  const landing = { code: 'color', attribute: 'kolir', value: 'khrom', name: 'Хром', count: 12 };
+
+  it('indexes a value page with two or more models under its own canonical', () => {
+    const metadata = buildLandingMetadata(
+      { locale: 'uk', category: zavisy, query: DEFAULT_LISTING_QUERY, landing },
+      production,
+    );
+
+    expect(metadata.title).toBe('Завіси хром — купити оптом і в роздріб');
+    expect(metadata.description).toBe(
+      'Завіси хром: 12 моделей. Опт і роздріб, склад у Харкові, доставка по Україні.',
+    );
+    expect(metadata.alternates?.canonical).toBe('/uk/catalog/zavisy/khrom');
+    expect(metadata.robots).toEqual({ index: true, follow: true });
+  });
+
+  it('keeps other choices and single-model values out of the index', () => {
+    const sorted = buildLandingMetadata(
+      {
+        locale: 'uk',
+        category: zavisy,
+        query: { ...DEFAULT_LISTING_QUERY, sort: 'name' },
+        landing,
+      },
+      production,
+    );
+    expect(sorted.robots).toEqual({ index: false, follow: true });
+    expect(sorted.alternates?.canonical).toBe('/uk/catalog/zavisy/khrom');
+
+    const single = buildLandingMetadata(
+      {
+        locale: 'uk',
+        category: zavisy,
+        query: DEFAULT_LISTING_QUERY,
+        landing: { ...landing, count: 1 },
+      },
+      production,
+    );
+    expect(single.robots).toEqual({ index: false, follow: true });
   });
 });

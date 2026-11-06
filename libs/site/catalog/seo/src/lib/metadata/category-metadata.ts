@@ -1,11 +1,17 @@
-import { categoryPath, isIndexableListing } from '@site/catalog/model';
+import {
+  LANDING_MIN_MODELS,
+  categoryPath,
+  isIndexableListing,
+  landingHeading,
+  landingPath,
+} from '@site/catalog/model';
 import { pluralize } from '@site/core/i18n';
 import { buildPageMetadata } from '@site/core/seo';
 
 import { CATALOG_SEO_TEXT } from './catalog-seo-text';
 import { categorySubject } from './category-subject';
 
-import type { CategoryDetails, ListingQuery } from '@site/catalog/model';
+import type { CategoryDetails, ListingLanding, ListingQuery } from '@site/catalog/model';
 import type { SiteConfig } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { Metadata } from 'next';
@@ -49,6 +55,39 @@ export function buildCategoryMetadata(input: CategoryMetadataInput, config?: Sit
       search: page > 1 ? `?page=${page}` : '',
       title,
       description,
+      indexable,
+    },
+    config,
+  );
+}
+
+export type LandingMetadataInput = CategoryMetadataInput & {
+  landing: ListingLanding;
+};
+
+/**
+ * A value page of a final category («Завіси хром», stage 7). Indexable with a self canonical when it has at least
+ * two models and no other choice; any other filter, sort, or view is `noindex, follow` with the value page's
+ * canonical. `query` holds only the choices beyond the value in the path.
+ */
+export function buildLandingMetadata(input: LandingMetadataInput, config?: SiteConfig): Metadata {
+  const { locale, category, query, landing, pastEnd = false } = input;
+  const text = CATALOG_SEO_TEXT[locale];
+  const indexable = isIndexableListing(query) && !pastEnd && landing.count >= LANDING_MIN_MODELS;
+  const page = indexable ? query.page : 1;
+  const suffix = page > 1 ? text.pageSuffix(page) : '';
+  const heading = landingHeading(categorySubject(category), landing);
+  return buildPageMetadata(
+    {
+      locale,
+      path: landingPath(category.slug, landing.value),
+      search: page > 1 ? `?page=${page}` : '',
+      title: text.categoryTitle(heading) + suffix,
+      description: text.categoryDescription(
+        heading,
+        pluralize(locale, landing.count, text.models),
+        null,
+      ),
       indexable,
     },
     config,

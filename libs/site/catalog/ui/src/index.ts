@@ -6,6 +6,8 @@ export type { CatalogDictionary } from './lib/i18n/catalog-dictionary';
 export { ListingEmpty } from './lib/listing/listing-empty';
 export { ListingPagination } from './lib/listing/listing-pagination';
 export { FilterForm } from './lib/listing/filter-form';
+export { LandingLinks } from './lib/listing/landing-links';
+export type { LandingLinkGroup, LandingLinkView } from './lib/listing/landing-links';
 export { ListingToolbar } from './lib/listing/listing-toolbar';
 export { CategoryCards } from './lib/category-cards/category-cards';
 export { ListingSummary } from './lib/listing/listing-summary';

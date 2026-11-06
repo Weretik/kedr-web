@@ -3,7 +3,7 @@
 - **Клиент:** публичный Next.js сайт, `apps/site`.
 - **Домены:** `catalog` (списки), `product` (страница модели), `cart` (добавление нескольких вариантов).
 - **Backend:** KedrStore spec catalog/007, этап 5 (публичный API моделей) и этап 6 (R-21: `productId` в карточке модели из одного товара).
-- **Статус:** принято владельцем 2026-11-06 («Внедряй»); реализовано 2026-11-06 (этап 6), ждёт слияния.
+- **Статус:** принято владельцем 2026-11-06 («Внедряй»); этап 6 слит 2026-11-06 (kedr-web #80); этап 7 (страницы «категория + цвет/размер», ProductGroup) реализован 2026-11-06, ждёт слияния.
 - **Макет:** [«Кедр: моделі на сайті»](https://claude.ai/artifact/G1jtkkUC1y5ZRdM4iKhHDz), доски «Категорія» и «ПІДСУМОК: сторінка моделі». Основа — [«Кедр: моделі та ознаки»](https://claude.ai/artifact/DYfVE9Kkxc6RGD293mjXNV).
 
 Модель — одна страница сайта в одной конечной категории, которая объединяет товары 1С (цвет, размер, сторона). Товар вне погодженої модели показывается как модель из одного товара под своим адресом (007 M-04, решение владельца 2026-11-06: непогоджені модели на сайт не выводятся).
@@ -66,6 +66,41 @@ libs/site/cart/
   feature/ purchase/cart-bulk-add-controller.tsx, render-cart-purchase-action.tsx  # «Додати вибране», renderCartBulkAddAction
 apps/site/src/app/[locale]/product/[slug]/page.tsx  # searchParams, ModelPage, getModelMetadata
 tools/architecture/project-boundary-rules.mjs       # product-feature → catalog data-access/ui («Інші моделі»)
+```
+
+## Этап 7: страницы значений и разметка модели
+
+Решения владельца 2026-11-06, макет [«Кедр: SEO моделей і фільтрів»](https://claude.ai/artifact/1CRE9fujKBoD6LQMqd9ygN).
+
+- **D-07. Страница значения.** В конечной категории каждое значение ознаки с кодом `color` или `size` получает адрес `/{locale}/catalog/{категория}/{значение}` («Завіси хром», «Завіси 100×75 мм»). Сочетаний значений нет.
+- **D-08. Порог.** Ссылка, индексация и карта сайта — только у значения с двумя и более моделями (счётчик значения в нефильтрованном списке). Значение с одной моделью открывается по прямому адресу, но `noindex`.
+- **D-09. Остальные фильтры** (сторона, два значения, наличие, цена, сортировка, вид) остаются в query и `noindex`, как раньше; на странице значения они отправляются в адрес категории со значением в query.
+- **D-10. Переадресация.** Категория с ровно одним значением цвета или размера в query и без других фильтров отвечает 308 на страницу значения (если у значения есть страница), сортировка, вид и страница сохраняются. Переименованная категория отвечает 308 на новую страницу значения.
+- **D-11. Тексты автоматические:** H1 «{предмет категории} {значение}» (цвет строчными), строка под H1 и описание для Google из числа моделей. Тексты категории на странице значения не повторяются. Ручные тексты страниц значений в админке — следующим шагом (нужен backend).
+- **D-12. ProductGroup.** Модель из нескольких товаров размечается `ProductGroup`: `productGroupID` = слаг модели, `variesBy` (цвет, размер), `hasVariant` с названием, кодом 1С, адресом варианта, фото, цветом и размером; цена — только «від»: `AggregateOffer` с `lowPrice`, без `highPrice` и без цен вариантов. Модель из одного товара сохраняет `Product` с `Offer`.
+
+- **SC-08 (D-07, D-08).** Конечная категория показывает ссылки «Колір: Хром 12, Золото 9…» на страницы значений; значение с одной моделью ссылки не получает.
+- **SC-09 (D-07, D-11).** `/catalog/zavisy/khrom`: крошки с «Хром», H1 «Завіси хром», число моделей и строка, список моделей с цветом хром, отмеченный «Хром» и «Усі» обратно в категорию; canonical — сам адрес.
+- **SC-10 (D-10).** `/catalog/zavisy?kolir=khrom&sort=name` отвечает 308 на `/catalog/zavisy/khrom?sort=name`; `?kolir=khrom&inStock=true` остаётся в категории.
+- **SC-11 (D-08).** Карта сайта каталога перечисляет страницы значений с двумя и более моделями; недоступный список категории роняет карту (5xx), а не публикует неполную.
+- **SC-12 (D-12).** Страница модели из нескольких товаров отдаёт `ProductGroup` с `lowPrice` и без `highPrice`.
+
+```text
+libs/site/catalog/
+  model/   landing/listing-landing.ts         # коды color/size, порог 2, путь, поиск значения, H1, query без/со значением
+  seo/     metadata/category-metadata.ts      # buildLandingMetadata
+  ui/      listing/landing-links.tsx          # ссылки на страницы значений
+           category/category-header.tsx       # + countOf, intro
+           listing/listing-toolbar.tsx        # + filterPath/filterQuery для панели фильтров
+  feature/ landing/landing-page.tsx           # CategoryValuePage, loadLandingOrRespond
+           landing/landing-link-groups.ts     # группы ссылок из нефильтрованного списка
+           category/category-page.tsx         # ссылки, 308 одного значения, loadBaseListing
+           listing/product-listing.tsx        # + landing, filterPath
+           routing/category-routing.ts        # generateLandingMetadata, карта сайта со значениями
+libs/site/product/
+  seo/     json-ld/product-group-json-ld.ts, inputs/product-group-seo-input.ts
+  feature/ model/model-seo.ts, model-page.tsx # modelGroupSeoInput, ProductGroup вместо Product
+apps/site/src/app/[locale]/catalog/[slug]/[value]/page.tsx
 ```
 
 ## Проверки

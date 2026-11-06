@@ -16,6 +16,10 @@ type ListingToolbarProps = {
   locale: Locale;
   /** Localized path of the listing, for example `/uk/catalog/ruchky`. */
   path: string;
+  /** Where the filter panel sends its choices; a value page sends them to its category. Defaults to `path`. */
+  filterPath?: string;
+  /** Choices the filter panel shows; a value page adds its own value. Defaults to `query`. */
+  filterQuery?: ListingQuery;
   query: ListingQuery;
   /** Entries that are not listing choices but belong to the URL, such as the search term `q`. */
   extra?: Record<string, string>;
@@ -33,7 +37,9 @@ const NO_EXTRA: Record<string, string> = {};
 export function ListingToolbar({
   locale,
   path,
+  filterPath = path,
   query,
+  filterQuery = query,
   extra = NO_EXTRA,
   filters = NO_FILTERS,
 }: ListingToolbarProps) {
@@ -45,15 +51,15 @@ export function ListingToolbar({
       <div className="mr-auto lg:hidden">
         <ToolbarPopover
           label={dictionary.filters}
-          marked={hasListingFilters(query)}
+          marked={hasListingFilters(filterQuery)}
           icon={<SlidersHorizontalIcon className="size-4" strokeWidth={1.75} />}
           panelClassName="right-auto left-0 w-72"
         >
           {(close) => (
             <FilterForm
               locale={locale}
-              path={path}
-              query={query}
+              path={filterPath}
+              query={filterQuery}
               extra={extra}
               filters={filters}
               onDone={close}

@@ -1,8 +1,10 @@
 export { CategoryPage } from './lib/category/category-page';
+export { CategoryValuePage } from './lib/landing/landing-page';
 export { CatalogHubPage } from './lib/hub/catalog-hub-page';
 export { getCatalogNavigation } from './lib/navigation/catalog-navigation';
 export {
   generateCategoryMetadata,
+  generateLandingMetadata,
   getCatalogSitemapPages,
   getCategoryStaticParams,
 } from './lib/routing/category-routing';

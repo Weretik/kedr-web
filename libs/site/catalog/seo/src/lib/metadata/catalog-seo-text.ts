@@ -5,6 +5,7 @@ type CatalogSeoText = {
   categoryDescription: (name: string, count: string, minPrice: string | null) => string;
   pageSuffix: (page: number) => string;
   products: PluralForms;
+  models: PluralForms;
   hubTitle: string;
   hubDescription: string;
   searchTitle: (term: string) => string;
@@ -20,6 +21,7 @@ export const CATALOG_SEO_TEXT: Record<Locale, CatalogSeoText> = {
       `${name}: ${count}${minPrice ? ` від ${minPrice} грн` : ''}. Опт і роздріб, склад у Харкові, доставка по Україні.`,
     pageSuffix: (page) => ` — сторінка ${page}`,
     products: { one: 'товар', few: 'товари', many: 'товарів' },
+    models: { one: 'модель', few: 'моделі', many: 'моделей' },
     hubTitle: 'Каталог дверної фурнітури',
     hubDescription:
       'Усі розділи каталогу Class Kedr: завіси, замки, ручки, циліндри, міжкімнатні механізми та двері. Ціни, наявність і артикули.',
@@ -33,6 +35,7 @@ export const CATALOG_SEO_TEXT: Record<Locale, CatalogSeoText> = {
       `${name}: ${count}${minPrice ? ` от ${minPrice} грн` : ''}. Опт и розница, склад в Харькове, доставка по Украине.`,
     pageSuffix: (page) => ` — страница ${page}`,
     products: { one: 'товар', few: 'товара', many: 'товаров' },
+    models: { one: 'модель', few: 'модели', many: 'моделей' },
     hubTitle: 'Каталог дверной фурнитуры',
     hubDescription:
       'Все разделы каталога Class Kedr: петли, замки, ручки, цилиндры, межкомнатные механизмы и двери. Цены, наличие и артикулы.',
