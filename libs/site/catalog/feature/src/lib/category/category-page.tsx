@@ -95,7 +95,7 @@ export async function CategoryPage({
         <ProductListing
           locale={locale}
           path={path}
-          scope={{ categoryId: category.id }}
+          scope={{ categorySlug: category.slug }}
           searchParams={searchParams}
           renderPurchaseAction={renderPurchaseAction}
         />

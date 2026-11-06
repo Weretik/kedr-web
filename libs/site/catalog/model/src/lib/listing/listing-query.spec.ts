@@ -5,6 +5,7 @@ import {
   listingHref,
   parseListingQuery,
   serializeListingQuery,
+  toggleAttributeValue,
   withoutFilters,
 } from './listing-query';
 
@@ -32,12 +33,39 @@ describe('listing query', () => {
       priceTo: null,
       view: 'table',
       perPage: 100,
+      attributes: {},
     });
 
     expect(
       parseListingQuery({ page: '0', sort: 'cheap', view: 'list', priceFrom: '-1', perPage: '24' }),
     ).toEqual(DEFAULT_LISTING_QUERY);
     expect(parseListingQuery({ page: ['2', '5'] }).page).toBe(2);
+  });
+
+  it('reads attribute filters from slug keys and values, sorted, and serializes them first', () => {
+    const query = parseListingQuery({
+      storona: 'prava,liva',
+      kolir: ['khrom', 'bronza,khrom'],
+      Bad: 'x',
+      rozmir: 'NOT VALID',
+      q: 'agb',
+    });
+    expect(query.attributes).toEqual({ kolir: ['bronza', 'khrom'], storona: ['liva', 'prava'] });
+    expect(serializeListingQuery({ ...query, inStock: true })).toBe(
+      'kolir=bronza%2Ckhrom&storona=liva%2Cprava&inStock=true',
+    );
+    expect(hasListingFilters(query)).toBe(true);
+    expect(isIndexableListing(query)).toBe(false);
+  });
+
+  it('toggles one attribute value from page 1', () => {
+    const query = { ...DEFAULT_LISTING_QUERY, page: 3, attributes: { kolir: ['khrom'] } };
+    expect(toggleAttributeValue(query, 'kolir', 'bronza')).toMatchObject({
+      page: 1,
+      attributes: { kolir: ['bronza', 'khrom'] },
+    });
+    expect(toggleAttributeValue(query, 'kolir', 'khrom').attributes).toEqual({});
+    expect(withoutFilters(query).attributes).toEqual({});
   });
 
   it('swaps a reversed price range', () => {

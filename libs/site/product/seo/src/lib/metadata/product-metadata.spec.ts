@@ -62,4 +62,15 @@ describe('product metadata', () => {
         .robots,
     ).toMatchObject({ index: false, follow: false });
   });
+
+  it('takes the model SEO title and description when they are filled', () => {
+    const metadata = buildProductMetadata(
+      { ...input, title: 'Завіси FLUSH купити', description: 'Опис для пошуку' },
+      production,
+    );
+    expect([metadata.title, metadata.description]).toEqual([
+      'Завіси FLUSH купити',
+      'Опис для пошуку',
+    ]);
+  });
 });

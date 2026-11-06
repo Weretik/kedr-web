@@ -13,4 +13,7 @@ export type ProductSeoInput = {
   breadcrumbs: readonly { name: string; path: string }[];
   /** Only locale-specific URLs confirmed for this product identity. */
   languagePaths: Partial<Record<Locale, string>>;
+  /** Model page: the SEO title and description from «Вітрина сайту»; the generated text is used without them. */
+  title?: string;
+  description?: string;
 };

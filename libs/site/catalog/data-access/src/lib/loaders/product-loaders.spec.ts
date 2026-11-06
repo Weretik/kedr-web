@@ -12,36 +12,75 @@ vi.mock('server-only', () => ({}));
 vi.mock('next/cache', () => ({ cacheLife, cacheTag }));
 vi.mock('@site/shared/api-client', () => ({ siteApiGet }));
 
+const list = {
+  categorySlug: 'zavisy',
+  isFinalCategory: true,
+  page: 2,
+  pageSize: 20,
+  totalPages: 3,
+  totalRecords: 60,
+  items: [],
+  filters: [],
+  exactMatch: null,
+};
+
 describe('getProductListPage', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it('loads one listing page of a category with its paging info', async () => {
-    siteApiGet.mockResolvedValue({
-      kind: 'ok',
-      data: {
-        pagedInfo: { pageNumber: 2, pageSize: 24, totalPages: 3, totalRecords: 60 },
-        value: [],
-      },
-    });
+  it('loads one page of category models with attribute filters and paging info', async () => {
+    siteApiGet.mockResolvedValue({ kind: 'ok', data: list });
 
     const page = await getProductListPage(
       'uk',
-      { categoryId: 9 },
-      { ...DEFAULT_LISTING_QUERY, page: 2 },
+      { categorySlug: 'zavisy' },
+      { ...DEFAULT_LISTING_QUERY, page: 2, attributes: { kolir: ['bronza', 'khrom'] } },
     );
 
-    expect(page).toEqual({ items: [], page: 2, pageSize: 24, totalPages: 3, totalRecords: 60 });
-    expect(siteApiGet).toHaveBeenCalledWith('/api/catalog/{lang}/products', {
-      path: { lang: 'uk' },
+    expect(page).toEqual({
+      items: [],
+      page: 2,
+      pageSize: 20,
+      totalPages: 3,
+      totalRecords: 60,
+      filters: [],
+      exactMatch: null,
+    });
+    expect(siteApiGet).toHaveBeenCalledWith('/api/catalog/{lang}/{categorySlug}/models', {
+      path: { lang: 'uk', categorySlug: 'zavisy' },
       query: expect.objectContaining({
-        categoryId: 9,
+        filter: ['kolir:bronza,khrom'],
         page: 2,
         pageSize: 20,
-        sort: 'AvailabilityThenName',
+        sort: 'default',
       }),
     });
     expect(cacheTag).toHaveBeenCalledWith('catalog', 'catalog:products');
     expect(cacheLife).toHaveBeenCalledWith('hours');
+  });
+
+  it('searches models over the whole site without attribute filters', async () => {
+    siteApiGet.mockResolvedValue({ kind: 'ok', data: { ...list, categorySlug: null } });
+
+    await getProductListPage(
+      'ru',
+      { searchTerm: '1201' },
+      { ...DEFAULT_LISTING_QUERY, attributes: { kolir: ['khrom'] } },
+    );
+
+    expect(siteApiGet).toHaveBeenCalledWith('/api/catalog/{lang}/models', {
+      path: { lang: 'ru' },
+      query: expect.not.objectContaining({ filter: expect.anything() }),
+    });
+    expect(siteApiGet.mock.calls[0]?.[1].query.search).toBe('1201');
+  });
+
+  it('lists nothing for an unknown filter value', async () => {
+    siteApiGet.mockResolvedValue({ kind: 'not-found' });
+
+    const page = await getProductListPage('uk', { categorySlug: 'zavisy' }, DEFAULT_LISTING_QUERY);
+
+    expect(page?.items).toEqual([]);
+    expect(page?.totalRecords).toBe(0);
   });
 
   it('returns null with a short lifetime when the API fails', async () => {

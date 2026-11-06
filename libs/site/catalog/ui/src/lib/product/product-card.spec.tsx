@@ -12,7 +12,7 @@ vi.mock('next/image', () => ({
 }));
 
 const product: ProductSummary = {
-  id: 7,
+  id: '7',
   sku: 7,
   slug: 'zavisa-agb',
   name: 'Завіса AGB',
@@ -21,6 +21,8 @@ const product: ProductSummary = {
   inStock: true,
   isNew: true,
   isSale: false,
+  variantCount: 1,
+  colors: [],
 };
 
 describe('ProductGrid', () => {

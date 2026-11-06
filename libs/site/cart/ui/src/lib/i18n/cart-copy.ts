@@ -86,6 +86,12 @@ const uk = {
   quantityOverflow: 'Для одного товару можна замовити не більше 1000 одиниць.',
   notFound: 'Товару більше немає в кошику.',
   removed: 'Товар видалено з кошика.',
+  variant: 'Варіант',
+  price: 'Ціна',
+  bulkAdd: 'Додати вибране в кошик',
+  bulkEmpty: 'Вкажіть кількість хоча б для одного варіанта.',
+  bulkAdded: 'Вибране додано в кошик.',
+  notInStock: 'Немає в наявності',
 };
 
 export type CartCopy = { [Key in keyof typeof uk]: string };
@@ -176,6 +182,12 @@ const ru: CartCopy = {
   quantityOverflow: 'Для одного товара можно заказать не больше 1000 единиц.',
   notFound: 'Товара больше нет в корзине.',
   removed: 'Товар удалён из корзины.',
+  variant: 'Вариант',
+  price: 'Цена',
+  bulkAdd: 'Добавить выбранное в корзину',
+  bulkEmpty: 'Укажите количество хотя бы для одного варианта.',
+  bulkAdded: 'Выбранное добавлено в корзину.',
+  notInStock: 'Нет в наличии',
 };
 
 export function getCartCopy(locale: Locale): CartCopy {
