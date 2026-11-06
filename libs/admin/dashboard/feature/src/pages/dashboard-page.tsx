@@ -17,7 +17,11 @@ const dayFormat = new Intl.DateTimeFormat('uk-UA', {
 });
 
 /** «Огляд» («Робочий стіл»): what needs attention, today's orders, and the newest orders. */
-export function DashboardPage({ siteRefreshAction, useViewerName }: DashboardRouteOptions) {
+export function DashboardPage({
+  siteRefreshAction,
+  useViewerName,
+  workTasksCard,
+}: DashboardRouteOptions) {
   const [now] = useState(() => new Date());
   const name = useViewerName();
   const { failed, isLoading, items, orders } = useDashboardOverview(now);
@@ -81,6 +85,7 @@ export function DashboardPage({ siteRefreshAction, useViewerName }: DashboardRou
             {orders ? <LatestOrdersTable orders={orders.latestOrders} /> : null}
           </Stack>
           <Stack spacing={3} sx={{ minWidth: 0 }}>
+            {workTasksCard}
             {orders ? (
               <TodayCard
                 draftCount={orders.draftCount}

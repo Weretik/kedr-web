@@ -4,7 +4,12 @@ import {
   useGetAdminWorkReportQuery,
 } from '@admin/work/data-access';
 import { emptyWorkTaskInput, lastDaysPeriod, workPeriodIssue } from '@admin/work/model';
-import { WorkActivityList, WorkTaskPanel, WorkTaskSummaryList } from '@admin/work/ui';
+import {
+  WorkActivityList,
+  WorkAssigneeField,
+  WorkTaskPanel,
+  WorkTaskSummaryList,
+} from '@admin/work/ui';
 import AddIcon from '@mui/icons-material/Add';
 import {
   Alert,
@@ -22,11 +27,10 @@ import { useMemo, useState } from 'react';
 
 import { workErrorMessage } from '../errors/work-error-message';
 
-import type { StaffMember } from '../work.routes';
-import type { WorkPeriod, WorkTaskInput } from '@admin/work/model';
+import type { WorkPeriod, WorkPerson, WorkTaskInput } from '@admin/work/model';
 
 interface WorkReportPageProps {
-  staff: readonly StaffMember[];
+  staff: readonly WorkPerson[];
   staffLoading: boolean;
 }
 
@@ -37,7 +41,8 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
   const [userId, setUserId] = useState('');
   const [preset, setPreset] = useState<Preset>('7');
   const [custom, setCustom] = useState<WorkPeriod>(() => lastDaysPeriod(30));
-  const [giving, setGiving] = useState(false);
+  /** Whom «Дати задачу» gives the task to; starts as the person of the report. */
+  const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [error, setError] = useState<string>();
   const [notice, setNotice] = useState<string | null>(null);
   const [give, given] = useCreateAdminWorkTaskMutation();
@@ -57,9 +62,10 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
   const save = async (input: WorkTaskInput) => {
     setError(undefined);
     try {
-      await give({ ownerUserId: selected, input }).unwrap();
-      setGiving(false);
-      setNotice('Задачу додано в «План» цієї людини.');
+      await give({ ownerUserId: assigneeId ?? selected, input }).unwrap();
+      const name = staff.find((member) => member.id === assigneeId)?.name;
+      setAssigneeId(null);
+      setNotice(name ? `Задачу додано в «План»: ${name}.` : 'Задачу додано в «План».');
     } catch (cause) {
       setError(workErrorMessage(cause));
     }
@@ -73,7 +79,7 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
             disabled={!person}
             onClick={() => {
               setError(undefined);
-              setGiving(true);
+              setAssigneeId(selected);
             }}
             startIcon={<AddIcon />}
             variant="contained"
@@ -189,14 +195,21 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
           </Box>
         )
       ) : null}
-      {giving && person ? (
+      {assigneeId ? (
         <WorkTaskPanel
           error={error}
           initial={emptyWorkTaskInput}
-          onCancel={() => setGiving(false)}
+          leadingFields={
+            <WorkAssigneeField
+              disabled={given.isLoading}
+              onChange={setAssigneeId}
+              people={staff}
+              value={assigneeId}
+            />
+          }
+          onCancel={() => setAssigneeId(null)}
           onSave={(input) => void save(input)}
           saving={given.isLoading}
-          subtitle={person.name}
           title="Нова задача"
         />
       ) : null}

@@ -9,6 +9,7 @@ const api = vi.hoisted(() => ({
   tasks: vi.fn(),
   report: vi.fn(),
   create: vi.fn(),
+  give: vi.fn(),
   move: vi.fn(),
 }));
 
@@ -19,6 +20,7 @@ vi.mock('@admin/work/data-access', () => ({
   useUpdateMyWorkTaskMutation: () => [vi.fn(), { isLoading: false }],
   useChangeMyWorkTaskStatusMutation: () => [api.move, { isLoading: false }],
   useDeleteMyWorkTaskMutation: () => [vi.fn(), { isLoading: false }],
+  useCreateAdminWorkTaskMutation: () => [api.give, { isLoading: false }],
 }));
 
 const task: WorkTask = {
@@ -44,6 +46,7 @@ describe('MyTasksPage', () => {
       isLoading: false,
     });
     api.create.mockReset();
+    api.give.mockReset();
     api.move.mockReset();
   });
 
@@ -60,6 +63,37 @@ describe('MyTasksPage', () => {
     await waitFor(() => expect(api.create).toHaveBeenCalledOnce());
     expect(api.create.mock.calls[0][0]).toEqual({ title: 'Мета-описи для «Ручки»', details: '' });
     expect(await screen.findByText('Задачу додано в «План».')).toBeDefined();
+  });
+
+  it('lets an administrator give the new task to another person', async () => {
+    api.give.mockReturnValue({ unwrap: () => Promise.resolve(task) });
+    render(
+      <MyTasksPage
+        assignees={{
+          selfId: 'admin',
+          people: [
+            { id: 'admin', name: 'Віталій', roleLabel: 'Адміністратор' },
+            { id: 'seo', name: 'Антон', roleLabel: 'SEO-спеціаліст' },
+          ],
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Нова задача' }));
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Для кого' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Антон · SEO-спеціаліст' }));
+    fireEvent.change(screen.getByRole('textbox', { name: 'Задача' }), {
+      target: { value: 'Тексти для категорії «Замки»' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти' }));
+
+    await waitFor(() => expect(api.give).toHaveBeenCalledOnce());
+    expect(api.give.mock.calls[0][0]).toEqual({
+      ownerUserId: 'seo',
+      input: { title: 'Тексти для категорії «Замки»', details: '' },
+    });
+    expect(api.create).not.toHaveBeenCalled();
+    expect(await screen.findByText('Задачу додано в «План»: Антон.')).toBeDefined();
   });
 
   it('asks what was done before closing a task', async () => {

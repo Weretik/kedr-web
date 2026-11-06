@@ -20,12 +20,15 @@ interface WorkTaskPanelProps {
   onSave: (input: WorkTaskInput) => void;
   /** Shown only for an existing own task. */
   onDelete?: () => void;
+  /** Fields above the title, such as «Для кого» when an administrator gives a task. */
+  leadingFields?: ReactNode;
 }
 
 /** Title and details of a task in the right panel. Mount it per task (key). */
 export function WorkTaskPanel({
   error,
   initial,
+  leadingFields,
   onCancel,
   onDelete,
   onSave,
@@ -68,6 +71,7 @@ export function WorkTaskPanel({
     >
       <Box sx={{ display: 'grid', gap: 2 }}>
         {error ? <Alert severity="error">{error}</Alert> : null}
+        {leadingFields}
         <CountedTextField
           error={touched ? issues.title : undefined}
           hint="Коротко: що треба зробити."

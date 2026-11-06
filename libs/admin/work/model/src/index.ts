@@ -25,3 +25,4 @@ export { lastDaysPeriod, workPeriodDays } from './mappers/work-period';
 export { workPeriodIssue, workTaskIssues, workTaskResultIssue } from './validators/work-task-rules';
 export type { WorkTaskIssues } from './validators/work-task-rules';
 export { formatWorkDay, formatWorkDayTime, formatWorkTime } from './mappers/work-dates';
+export type { WorkPerson } from './entities/work-person';

@@ -1,17 +1,19 @@
 import {
   useChangeMyWorkTaskStatusMutation,
+  useCreateAdminWorkTaskMutation,
   useCreateMyWorkTaskMutation,
   useDeleteMyWorkTaskMutation,
   useGetMyWorkTasksQuery,
   useUpdateMyWorkTaskMutation,
 } from '@admin/work/data-access';
 import { emptyWorkTaskInput } from '@admin/work/model';
-import { WorkBoard, WorkTaskDonePanel, WorkTaskPanel } from '@admin/work/ui';
+import { WorkAssigneeField, WorkBoard, WorkTaskDonePanel, WorkTaskPanel } from '@admin/work/ui';
 import { Alert, Button } from '@mui/material';
 import { useState } from 'react';
 
 import { workErrorMessage } from '../errors/work-error-message';
 
+import type { WorkAssignees } from '../work.routes';
 import type { WorkTask, WorkTaskInput, WorkTaskStatus } from '@admin/work/model';
 
 type Editing =
@@ -22,24 +24,36 @@ interface MyTasksBoardProps {
   creating: boolean;
   onCreatingChange: (creating: boolean) => void;
   onNotice: (message: string) => void;
+  /** For an administrator: people a new task may be given to. Null for everyone else. */
+  assignees: WorkAssignees | null;
 }
 
 /** The own board with its right panels: new task, edit, and «Готово» with the result. */
-export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBoardProps) {
+export function MyTasksBoard({
+  assignees,
+  creating,
+  onCreatingChange,
+  onNotice,
+}: MyTasksBoardProps) {
   const tasks = useGetMyWorkTasksQuery();
   const [create, created] = useCreateMyWorkTaskMutation();
   const [update, updated] = useUpdateMyWorkTaskMutation();
   const [move, moved] = useChangeMyWorkTaskStatusMutation();
   const [remove, removed] = useDeleteMyWorkTaskMutation();
+  const [give, given] = useCreateAdminWorkTaskMutation();
+  const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [editing, setEditing] = useState<Editing | null>(null);
   const [movingId, setMovingId] = useState<number | null>(null);
   const [error, setError] = useState<string>();
 
   const current: Editing | null = creating ? { kind: 'new' } : editing;
-  const saving = created.isLoading || updated.isLoading || moved.isLoading || removed.isLoading;
+  const saving =
+    created.isLoading || updated.isLoading || moved.isLoading || removed.isLoading || given.isLoading;
+  const ownerId = assigneeId ?? assignees?.selfId ?? null;
 
   const close = () => {
     setEditing(null);
+    setAssigneeId(null);
     setError(undefined);
     onCreatingChange(false);
   };
@@ -58,7 +72,13 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
   const save = (input: WorkTaskInput) => {
     if (current?.kind === 'edit')
       void run(() => update({ id: current.task.id, input }).unwrap(), 'Задачу збережено.');
-    else void run(() => create(input).unwrap(), 'Задачу додано в «План».');
+    else if (assignees && ownerId && ownerId !== assignees.selfId) {
+      const name = assignees.people.find((person) => person.id === ownerId)?.name ?? '';
+      void run(
+        () => give({ ownerUserId: ownerId, input }).unwrap(),
+        `Задачу додано в «План»: ${name}.`,
+      );
+    } else void run(() => create(input).unwrap(), 'Задачу додано в «План».');
   };
 
   const onMove = async (task: WorkTask, status: WorkTaskStatus) => {
@@ -101,6 +121,16 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
           error={error}
           initial={emptyWorkTaskInput}
           key="new"
+          leadingFields={
+            assignees && ownerId ? (
+              <WorkAssigneeField
+                disabled={saving}
+                onChange={setAssigneeId}
+                people={assignees.people}
+                value={ownerId}
+              />
+            ) : undefined
+          }
           onCancel={close}
           onSave={save}
           saving={saving}

@@ -4,3 +4,5 @@ export { WorkActivityList } from './details/work-activity-list';
 export { WorkTaskSummaryList } from './details/work-task-summary-list';
 export { WorkTaskDonePanel } from './forms/work-task-done-panel';
 export { WorkTaskPanel } from './forms/work-task-panel';
+export { WorkAssigneeField } from './forms/work-assignee-field';
+export { WorkTasksOverviewCard } from './details/work-tasks-overview-card';

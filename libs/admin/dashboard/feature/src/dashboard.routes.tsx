@@ -10,6 +10,8 @@ export interface DashboardRouteOptions {
   useViewerName: () => string | null;
   /** The app's «Оновити сайт зараз» action for the «Сайт» card. */
   siteRefreshAction: ReactNode;
+  /** The app's «Мої задачі» card: open tasks of the signed-in person; renders nothing without them. */
+  workTasksCard?: ReactNode;
 }
 
 export function createDashboardRoutes(options: DashboardRouteOptions): RouteObject[] {
@@ -20,6 +22,7 @@ export function createDashboardRoutes(options: DashboardRouteOptions): RouteObje
         <DashboardPage
           siteRefreshAction={options.siteRefreshAction}
           useViewerName={options.useViewerName}
+          workTasksCard={options.workTasksCard}
         />
       ),
     },
