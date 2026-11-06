@@ -30,4 +30,7 @@
   },
   // Environment variables and secrets live in the Cloudflare dashboard; deploys must not wipe them.
   "keep_vars": true,
+  // esbuild keepNames adds __name() calls inside functions; next-themes serializes its theme function into an inline
+  // <script>, where __name does not exist, so the theme script threw "__name is not defined" in the browser.
+  "keep_names": false,
 }
