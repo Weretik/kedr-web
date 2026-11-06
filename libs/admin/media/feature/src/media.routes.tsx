@@ -9,7 +9,7 @@ export interface MediaRoutesOptions {
   useCanDelete: () => boolean;
 }
 
-/** `/media` is open to every staff role (Manager and Admin), as the backend policy CanManageMedia. */
+/** `/media` is open to every staff role (Manager, Seo, and Admin), as the backend policy CanManageMedia. */
 export function createMediaRoutes({ useCanDelete }: MediaRoutesOptions): RouteObject[] {
   function MediaRoute() {
     return <MediaPage canDelete={useCanDelete()} />;

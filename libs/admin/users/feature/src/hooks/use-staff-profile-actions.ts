@@ -88,7 +88,7 @@ export function useStaffProfileActions(onSuccess: (message: string) => void) {
       if (value.toLowerCase() === account.email.toLowerCase()) return;
       confirmation.request({
         title: 'Змінити email?',
-        description: `Новий логін для ${account.fullName || account.email}: ${value}. Менеджер вийде з системи на всіх пристроях.`,
+        description: `Новий логін для ${account.fullName || account.email}: ${value}. Користувач вийде з системи на всіх пристроях.`,
         confirmLabel: 'Змінити email',
         successMessage: 'Email змінено.',
         run: () => changeEmail({ userId: account.id, email: value }).unwrap(),

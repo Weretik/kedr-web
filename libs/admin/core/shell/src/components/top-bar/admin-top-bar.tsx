@@ -21,7 +21,7 @@ export function AdminTopBar({
   onOpenNavigation,
   currentOrderPositionCount,
 }: AdminTopBarProps) {
-  const title = useAdminShellUser()?.isAdmin ? 'Кабінет адміністратора' : 'Кабінет менеджера';
+  const title = useAdminShellUser()?.cabinetTitle ?? 'Кабінет менеджера';
 
   return (
     <AppBar

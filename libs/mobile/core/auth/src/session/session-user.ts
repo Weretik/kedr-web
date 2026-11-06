@@ -1,4 +1,5 @@
-export type SessionRole = 'Admin' | 'Manager' | 'User';
+/** `Seo` signs in to the admin only; the mobile app stays for Admin and Manager. */
+export type SessionRole = 'Admin' | 'Seo' | 'Manager' | 'User';
 
 export interface SessionUser {
   avatarUrl: string | null;

@@ -1,4 +1,4 @@
-export type StaffRole = 'Admin' | 'Manager';
+export type StaffRole = 'Admin' | 'Seo' | 'Manager';
 
 export interface StaffAccount {
   id: string;
@@ -16,9 +16,10 @@ export interface CreateStaffAccountInput {
   password: string;
 }
 
-export const staffRoles: readonly StaffRole[] = ['Manager', 'Admin'];
+export const staffRoles: readonly StaffRole[] = ['Manager', 'Seo', 'Admin'];
 
 export const staffRoleLabels: Record<StaffRole, string> = {
   Admin: 'Адміністратор',
+  Seo: 'SEO-спеціаліст',
   Manager: 'Менеджер',
 };

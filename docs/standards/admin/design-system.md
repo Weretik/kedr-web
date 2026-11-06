@@ -91,12 +91,12 @@ Rules:
 - **Navigation item:** «Огляд» and the items of the collapsed drawer are 44 px high with an icon, 12 px radius, muted text at rest and a light overlay on hover; the active one has a green-tinted background with light-green text and `aria-current="page"`. Items inside an open block have **no icon**: 36 px high, indented, a small dot on the left; the active one has light-green text and a green dot with a soft halo, no filled background.
 - **Navigation blocks:** «Огляд» stands alone at the top, then collapsible blocks. The block heading is a 44 px button in sentence case with the block icon (Продаж: shopping bag, Каталог: box, Сайт: globe, Система: gear), an optional counter, and a chevron; an open block has a soft overlay. The block with the current page opens automatically; the user may open several. If a block with the current page is closed, a small green dot next to the heading keeps the user oriented. A counter pill (`groupCounts` prop) appears only above zero and only for something that needs action, such as new orders; no "all good" counters. Collapsed to icons, headings disappear, items show their own icons and blocks are separated by a thin line. A block with no items for the user's role is hidden. Blocks, icons and items are configured in `navigation-groups.tsx`.
 
-  | Block   | Put here                                                                                      | Visible to     |
-  | ------- | --------------------------------------------------------------------------------------------- | -------------- |
-  | Продаж  | Orders, customers, order documents: everything about a deal with a client                     | Manager, Admin |
-  | Каталог | Products, categories, brands, media library                                                   | Manager, Admin |
-  | Сайт    | Content a site visitor sees: articles, gallery, FAQ, company contacts                         | Manager, Admin |
-  | Система | Access and legal data of the company: users, requisites (`access` in `navigation-groups.tsx`) | Admin only     |
+  | Block   | Put here                                                                                      | Visible to          |
+  | ------- | --------------------------------------------------------------------------------------------- | ------------------- |
+  | Продаж  | Orders, customers, order documents: everything about a deal with a client                     | Manager, Seo, Admin |
+  | Каталог | Products, categories, brands, media library                                                   | Manager, Seo, Admin |
+  | Сайт    | Content a site visitor sees: articles, gallery, FAQ, company contacts                         | Manager, Seo, Admin |
+  | Система | Access and legal data of the company: users, requisites (`access` in `navigation-groups.tsx`) | Admin only          |
 
   A new page goes into the block by its subject, never into a new block by default. Add a block only when no existing one fits, and record it in this table.
 

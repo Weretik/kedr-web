@@ -21,6 +21,8 @@ const renderNavigation = (
           email: 'staff@kedr.ua',
           fullName: 'Staff',
           roleLabel: 'Роль',
+          roleBadge: 'Role',
+          cabinetTitle: 'Кабінет',
         }}
       >
         <AdminNavigation groupCounts={groupCounts} />

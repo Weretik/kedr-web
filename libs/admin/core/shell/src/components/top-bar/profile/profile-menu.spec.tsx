@@ -13,6 +13,8 @@ const manager: AdminShellUser = {
   email: 'olena@kedr.ua',
   fullName: 'Олена Коваль',
   roleLabel: 'Менеджер',
+  roleBadge: 'Manager',
+  cabinetTitle: 'Кабінет менеджера',
   isAdmin: false,
 };
 

@@ -5,7 +5,7 @@ import type { RouteObject } from 'react-router-dom';
 const CompanyContactsPage = lazy(() => import('./pages/company-contacts-page'));
 const CompanyRequisitesPage = lazy(() => import('./pages/company-requisites-page'));
 
-/** Open to every staff role (Manager and Admin), as the backend policy CanManageContent. */
+/** Open to every staff role (Manager, Seo, and Admin), as the backend policy CanManageContent. */
 export const companyRoutes: RouteObject[] = [
   { path: 'company-contacts', element: <CompanyContactsPage /> },
 ];
