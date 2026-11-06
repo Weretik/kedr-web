@@ -17,14 +17,16 @@ export function ProductVariants({
   dictionary: CatalogDictionary;
 }) {
   if (product.variantCount < 2) return null;
-  const shown = product.colors.slice(0, MAX_SWATCHES);
-  const more = product.colors.length - shown.length;
+  // Only values with a color or texture make a dot; a grey dot says nothing.
+  const painted = product.colors.filter((color) => color.hex || color.textureUrl);
+  const shown = painted.slice(0, MAX_SWATCHES);
+  const more = painted.length - shown.length;
   return (
     <span className="inline-flex flex-wrap items-center gap-1.5">
       {shown.length > 0 && (
         <span
           role="img"
-          aria-label={`${dictionary.colors}: ${product.colors.map((color) => color.name).join(', ')}`}
+          aria-label={`${dictionary.colors}: ${painted.map((color) => color.name).join(', ')}`}
           className="inline-flex items-center gap-1"
         >
           {shown.map((color) => (
@@ -33,7 +35,7 @@ export function ProductVariants({
               title={color.name}
               className="size-3.5 rounded-full border border-black/15 bg-cover bg-center"
               style={{
-                backgroundColor: color.hex ?? 'var(--muted)',
+                backgroundColor: color.hex ?? undefined,
                 backgroundImage: color.textureUrl ? `url(${color.textureUrl})` : undefined,
               }}
             />

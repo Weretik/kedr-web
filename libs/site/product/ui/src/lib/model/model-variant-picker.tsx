@@ -46,41 +46,46 @@ export function ModelVariantPicker({
               <span className="font-medium">{chosen?.name}</span>
             </p>
             <ul className="mt-2 flex flex-wrap gap-2">
-              {group.options.map((option) => (
-                <li key={option.key}>
-                  <Link
-                    href={option.href}
-                    scroll={false}
-                    replace
-                    aria-current={option.selected ? 'true' : undefined}
-                    aria-label={group.display === 'swatch' ? option.name : undefined}
-                    title={group.display === 'swatch' ? option.name : undefined}
-                    className={cn(
-                      'inline-flex min-h-10 items-center justify-center rounded-lg border text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                      group.display === 'swatch' ? 'size-10 p-1' : 'px-3.5',
-                      option.selected
-                        ? 'border-brand ring-1 ring-brand'
-                        : 'border-border hover:border-foreground/40',
-                    )}
-                  >
-                    {group.display === 'swatch' ? (
-                      <span
-                        aria-hidden
-                        className="size-full rounded-md border border-black/10 bg-muted bg-cover bg-center"
-                        style={
-                          option.textureUrl
-                            ? { backgroundImage: `url("${option.textureUrl}")` }
-                            : option.hex
-                              ? { backgroundColor: option.hex }
-                              : undefined
-                        }
-                      />
-                    ) : (
-                      option.name
-                    )}
-                  </Link>
-                </li>
-              ))}
+              {group.options.map((option) => {
+                // A value without a color or texture in «Ознаки» reads as its name, never as an empty square.
+                const swatch =
+                  group.display === 'swatch' && Boolean(option.hex || option.textureUrl);
+                return (
+                  <li key={option.key}>
+                    <Link
+                      href={option.href}
+                      scroll={false}
+                      replace
+                      aria-current={option.selected ? 'true' : undefined}
+                      aria-label={swatch ? option.name : undefined}
+                      title={swatch ? option.name : undefined}
+                      className={cn(
+                        'inline-flex min-h-10 items-center justify-center rounded-lg border text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                        swatch ? 'size-10 p-1' : 'px-3.5',
+                        option.selected
+                          ? 'border-brand ring-1 ring-brand'
+                          : 'border-border hover:border-foreground/40',
+                      )}
+                    >
+                      {swatch ? (
+                        <span
+                          aria-hidden
+                          className="size-full rounded-md border border-black/10 bg-muted bg-cover bg-center"
+                          style={
+                            option.textureUrl
+                              ? { backgroundImage: `url("${option.textureUrl}")` }
+                              : option.hex
+                                ? { backgroundColor: option.hex }
+                                : undefined
+                          }
+                        />
+                      ) : (
+                        option.name
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );

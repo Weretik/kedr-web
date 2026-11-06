@@ -53,6 +53,18 @@ describe('ProductGrid', () => {
 
     expect(screen.queryByRole('img')).toBeNull();
   });
+
+  it('draws dots only for colors that have a color or texture', () => {
+    const colors = [
+      { slug: 'chornyi', name: 'Чорний', hex: '#1f1f1f', textureUrl: null },
+      { slug: 'satyn', name: 'Сатин', hex: null, textureUrl: null },
+    ];
+    render(<ProductGrid locale="uk" products={[{ ...product, variantCount: 3, colors }]} />);
+
+    expect(screen.getByRole('img', { name: 'Кольори: Чорний' })).toBeTruthy();
+    expect(screen.queryByTitle('Сатин')).toBeNull();
+    expect(screen.getByText('3 варіанти')).toBeTruthy();
+  });
 });
 
 describe('ProductList', () => {
