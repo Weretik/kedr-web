@@ -49,6 +49,8 @@ The workaround from opennextjs-cloudflare issue #1464 (forcing `skipCrossRequest
 
 `robots.txt` and other prerendered output are built once, so indexing variables must be set for the build as well as for the runtime. `wrangler.jsonc` has `keep_vars: true`, so a deploy keeps variables set in the dashboard.
 
+`wrangler.jsonc` sets `keep_names: false`. With esbuild keepNames on, the server bundle wraps functions in `__name()`, and code that serializes a function into an inline `<script>` (the `next-themes` theme script) then fails in the browser with `__name is not defined`.
+
 ## Domain cutover
 
 Step 9 of the [migration plan](../../../specs/site/migration/README.md): remove `classkedr.com.ua` (and `www`) from the Pages project's custom domains, add them to the `kedr-site` Worker, then set the production variables and redeploy. Rollback is the reverse move of the custom domain.
