@@ -32,15 +32,21 @@ interface AttributeEditPanelProps {
   canEdit: boolean;
   onClose: () => void;
   onNotice: (message: string) => void;
+  /** Opens the panel right on this value's form (`null`: a new value). */
+  initialValueEdit?: ValueEdit;
 }
 
 /** The value being edited: `null` while adding a new one. */
 type ValueEdit = { value: CatalogAttributeValue | null } | undefined;
 
+const textureOf = (value: CatalogAttributeValue | null | undefined): SwatchTexture | null =>
+  value?.swatchMediaFileId ? { id: value.swatchMediaFileId, url: value.swatchImageUrl } : null;
+
 /** Everything of one attribute: its settings, values with swatches, and 1C spellings. */
 export function AttributeEditPanel({
   attributeId,
   canEdit,
+  initialValueEdit,
   onClose,
   onNotice,
   open,
@@ -50,9 +56,9 @@ export function AttributeEditPanel({
   const [createValue, createState] = useCreateAttributeValueMutation();
   const [updateValue, valueState] = useUpdateAttributeValueMutation();
   const [attributeError, setAttributeError] = useState<string | null>(null);
-  const [valueEdit, setValueEdit] = useState<ValueEdit>();
+  const [valueEdit, setValueEdit] = useState<ValueEdit>(initialValueEdit);
   const [valueError, setValueError] = useState<string | null>(null);
-  const [texture, setTexture] = useState<SwatchTexture | null>(null);
+  const [texture, setTexture] = useState<SwatchTexture | null>(textureOf(initialValueEdit?.value));
   const picker = useTexturePicker((file) => setTexture({ id: file.id, url: file.url }));
   const details = query.data;
   const valueSaving = createState.isLoading || valueState.isLoading;
@@ -70,9 +76,7 @@ export function AttributeEditPanel({
 
   const openValue = (value: CatalogAttributeValue | null) => {
     setValueError(null);
-    setTexture(
-      value?.swatchMediaFileId ? { id: value.swatchMediaFileId, url: value.swatchImageUrl } : null,
-    );
+    setTexture(textureOf(value));
     setValueEdit({ value });
   };
 

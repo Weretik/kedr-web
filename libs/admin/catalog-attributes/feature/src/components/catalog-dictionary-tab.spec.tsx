@@ -129,7 +129,18 @@ describe('CatalogDictionaryTab', () => {
       change: { nameUk: 'Колір', nameRu: null, isFilterable: true, sortOrder: 10 },
     });
     expect(await screen.findByText('Властивість збережено.')).toBeTruthy();
-    expect(screen.getByText('Не підтверджено')).toBeTruthy();
+    expect(screen.getAllByText('Не підтверджено').length).toBeGreaterThan(0);
+  });
+
+  it('shows the chosen attribute with its values by role and opens a value in the panel', () => {
+    renderPage(true);
+    expect(screen.getByText('Перемикачі моделей')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Колір / декор' })).toBeTruthy();
+    const row = screen.getByRole('row', { name: /Хром/ });
+    expect(within(row).getByText('CP')).toBeTruthy();
+    fireEvent.click(within(row).getByRole('button', { name: 'Редагувати значення Хром' }));
+    expect(screen.getByText('Редагування ознаки')).toBeTruthy();
+    expect(screen.getByRole('form', { name: 'Значення Хром' })).toBeTruthy();
   });
 
   it('lets an admin create an attribute and opens it', async () => {
