@@ -3,6 +3,7 @@ export const PRODUCT_CACHE_TAGS = {
   all: 'catalog',
   products: 'catalog:products',
   index: 'catalog:products:index',
+  models: 'catalog:models',
   product: (sku: string) => 'product:' + sku,
   // The complete slug is still a cache key. Bound tags to Next's 256-character limit.
   slug: (slug: string) => 'product:slug:' + slug.slice(0, 200),

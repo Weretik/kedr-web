@@ -1,27 +1,38 @@
 import type { operations } from '@shared/api-contracts';
 import type { ListingQuery, ListingSort } from '@site/catalog/model';
 
-type PublicProductsQuery = NonNullable<operations['getPublicProducts']['parameters']['query']>;
+type CategoryModelsQuery = NonNullable<
+  operations['getPublicCategorySiteModels']['parameters']['query']
+>;
+type ModelSort = NonNullable<CategoryModelsQuery['sort']>;
 
-const API_SORT: Record<ListingSort, NonNullable<PublicProductsQuery['sort']>> = {
-  availability: 'AvailabilityThenName',
-  'price-asc': 'PriceAsc',
-  'price-desc': 'PriceDesc',
-  new: 'IdDesc',
-  name: 'NameAsc',
+const API_SORT: Record<ListingSort, ModelSort> = {
+  availability: 'default',
+  'price-asc': 'price_asc',
+  'price-desc': 'price_desc',
+  new: 'new',
+  name: 'name_asc',
 };
 
 /** What a listing asks for besides the visitor's choices: one category subtree or a search term. */
-export type ProductListScope = { categoryId: number } | { searchTerm: string };
+export type ProductListScope = { categorySlug: string } | { searchTerm: string };
 
-/** API query of `getPublicProducts` for one listing page; the view does not reach the API. */
+/**
+ * API query of the site models list for one listing page; the view does not reach the API. Attribute filters
+ * go only to a category (`attribute:value,value`); the search takes none.
+ */
 export function toProductListRequest(
   scope: ProductListScope,
   query: ListingQuery,
-): PublicProductsQuery {
+): CategoryModelsQuery {
+  const filter =
+    'categorySlug' in scope
+      ? Object.entries(query.attributes).map(([slug, values]) => `${slug}:${values.join(',')}`)
+      : [];
   return {
-    ...scope,
-    availability: query.inStock ? 'InStock' : 'All',
+    ...('searchTerm' in scope ? { search: scope.searchTerm } : {}),
+    ...(filter.length ? { filter } : {}),
+    inStock: query.inStock || undefined,
     isSale: query.isSale || undefined,
     isNew: query.isNew || undefined,
     priceFrom: query.priceFrom ?? undefined,

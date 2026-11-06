@@ -3,7 +3,13 @@ export type {
   CatalogSection,
   CatalogTreeNode,
   ProductSummary,
+  ProductSwatch,
 } from './lib/entities/catalog-model';
+export type {
+  ListingExactMatch,
+  ListingFilter,
+  ListingFilterValue,
+} from './lib/entities/listing-filter';
 export type {
   CategoryContent,
   CategoryDetails,
@@ -20,9 +26,11 @@ export {
   listingHref,
   parseListingQuery,
   serializeListingQuery,
+  toggleAttributeValue,
   withoutFilters,
 } from './lib/listing/listing-query';
 export type {
+  ListingAttributes,
   ListingPageSize,
   ListingQuery,
   ListingSort,

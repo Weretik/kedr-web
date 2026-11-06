@@ -5,8 +5,11 @@ export { CheckoutLoading } from './lib/checkout/checkout-loading';
 export { CheckoutView } from './lib/checkout/checkout-view';
 export { CartPurchaseControl } from './lib/purchase/cart-purchase-control';
 export { CartQuickAddButton } from './lib/purchase/cart-quick-add-button';
+export { CartBulkAddTable } from './lib/purchase/cart-bulk-add-table';
 export type {
   BasketProps,
+  CartBulkAddTableProps,
+  CartBulkRowView,
   CartLineView,
   CartDrawerProps,
   CartHeaderButtonProps,

@@ -79,3 +79,25 @@ export type CartPurchaseControlProps = {
   added: boolean;
   message?: string | null;
 };
+
+/** One row of the variants table; `price` is already formatted, null when the price is on request. */
+export type CartBulkRowView = {
+  id: string;
+  title: string;
+  details: string;
+  href: string;
+  price: string | null;
+  purchasable: boolean;
+  current: boolean;
+};
+
+export type CartBulkAddTableProps = {
+  locale: Locale;
+  rows: readonly CartBulkRowView[];
+  quantities: Readonly<Record<string, number>>;
+  onQuantityChange: (id: string, quantity: number) => void;
+  onAdd: (opener: HTMLElement) => void;
+  disabled: boolean;
+  /** A cart notice or `bulk-empty` / `bulk-added`. */
+  message: string | null;
+};

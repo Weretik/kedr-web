@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { ProductPhoto } from './product-photo';
 import { ProductPrice } from './product-price';
+import { ProductVariants } from './product-variants';
 import { StockLabel } from './stock-label';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
@@ -11,7 +12,10 @@ import type { ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
-/** Compact list for buyers who know what they need: photo, name, SKU, stock, price, and cart action in one row. */
+/**
+ * Compact list for buyers who know what they need: photo, name, the article of a product or the variants of a
+ * model, stock, price, and cart action in one row.
+ */
 export function ProductTable({
   locale,
   products,
@@ -72,12 +76,21 @@ export function ProductTable({
                   {product.name}
                 </Link>
               </td>
-              <td className="px-3 py-2 text-muted-foreground tabular-nums">{product.sku}</td>
+              <td className="px-3 py-2 text-xs text-muted-foreground tabular-nums">
+                {product.sku ?? (
+                  <ProductVariants locale={locale} product={product} dictionary={dictionary} />
+                )}
+              </td>
               <td className="px-3 py-2 text-xs text-muted-foreground">
                 <StockLabel inStock={product.inStock} dictionary={dictionary} />
               </td>
               <td className="px-3 py-2 text-right font-semibold whitespace-nowrap tabular-nums">
-                <ProductPrice price={product.price} locale={locale} dictionary={dictionary} />
+                <ProductPrice
+                  price={product.price}
+                  locale={locale}
+                  dictionary={dictionary}
+                  from={product.variantCount > 1}
+                />
               </td>
               {renderAction && <td className="px-3 py-2 text-right">{renderAction(product)}</td>}
             </tr>

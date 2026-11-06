@@ -39,4 +39,11 @@ export const ru: ProductDictionary = {
   helpTitle: 'Нужна помощь с выбором?',
   helpText: 'Обратитесь к менеджеру — поможем с вашим заказом.',
   contactManager: 'Связаться с менеджером',
+  modelProduct: 'Выбранный вариант',
+  variantPicker: 'Выбор варианта',
+  inStockAlternatives: 'Есть в наличии:',
+  allVariants: 'Все варианты',
+  description: 'Описание',
+  characteristics: 'Характеристики',
+  otherModels: 'Другие модели в категории',
 };

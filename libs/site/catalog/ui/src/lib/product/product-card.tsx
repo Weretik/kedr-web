@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { ProductPhoto } from './product-photo';
 import { ProductPrice } from './product-price';
+import { ProductVariants } from './product-variants';
 import { StockLabel } from './stock-label';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
@@ -14,7 +15,10 @@ import type { ReactNode } from 'react';
 // Two columns on phones, three on tablets, four on desktops inside the 80rem container.
 const PHOTO_SIZES = '(min-width: 1024px) 18rem, (min-width: 640px) 33vw, 50vw';
 
-/** Product tile: photo or placeholder, badges, name link, SKU, stock state, retail price, and cart action. */
+/**
+ * Model tile: photo or placeholder, badges, name link, then the article of a single product or the colors and
+ * number of variants of a model, stock state, the price («від» for a model), and the cart action of a product.
+ */
 export function ProductCard({
   locale,
   product,
@@ -57,14 +61,22 @@ export function ProductCard({
         </Link>
       </h3>
       <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-        <span>
-          {dictionary.sku} {product.sku}
-        </span>
+        {product.sku !== null && (
+          <span>
+            {dictionary.sku} {product.sku}
+          </span>
+        )}
+        <ProductVariants locale={locale} product={product} dictionary={dictionary} />
         <StockLabel inStock={product.inStock} dictionary={dictionary} />
       </p>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
         <p className="text-base font-semibold">
-          <ProductPrice price={product.price} locale={locale} dictionary={dictionary} />
+          <ProductPrice
+            price={product.price}
+            locale={locale}
+            dictionary={dictionary}
+            from={product.variantCount > 1}
+          />
         </p>
         {action}
       </div>

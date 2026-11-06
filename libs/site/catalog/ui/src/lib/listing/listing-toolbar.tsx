@@ -9,7 +9,7 @@ import { ViewLink } from './toolbar-controls';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 import { ToolbarPopover } from '../popover/toolbar-popover';
 
-import type { ListingQuery, ListingView } from '@site/catalog/model';
+import type { ListingFilter, ListingQuery, ListingView } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 
 type ListingToolbarProps = {
@@ -19,15 +19,24 @@ type ListingToolbarProps = {
   query: ListingQuery;
   /** Entries that are not listing choices but belong to the URL, such as the search term `q`. */
   extra?: Record<string, string>;
+  /** Attribute filters of a final category, shown in the phone filter panel. */
+  filters?: readonly ListingFilter[];
 };
 
+const NO_FILTERS: readonly ListingFilter[] = [];
 const NO_EXTRA: Record<string, string> = {};
 
 /**
  * Row above the products: sort and the card or table view. On phones and tablets the filters, which sit in the
  * left column on desktop, open from an icon here; a dot on it marks active filters.
  */
-export function ListingToolbar({ locale, path, query, extra = NO_EXTRA }: ListingToolbarProps) {
+export function ListingToolbar({
+  locale,
+  path,
+  query,
+  extra = NO_EXTRA,
+  filters = NO_FILTERS,
+}: ListingToolbarProps) {
   const dictionary = getCatalogDictionary(locale);
   const viewHref = (view: ListingView) => listingHref(path, { ...query, view }, extra);
 
@@ -41,7 +50,14 @@ export function ListingToolbar({ locale, path, query, extra = NO_EXTRA }: Listin
           panelClassName="right-auto left-0 w-72"
         >
           {(close) => (
-            <FilterForm locale={locale} path={path} query={query} extra={extra} onDone={close} />
+            <FilterForm
+              locale={locale}
+              path={path}
+              query={query}
+              extra={extra}
+              filters={filters}
+              onDone={close}
+            />
           )}
         </ToolbarPopover>
       </div>

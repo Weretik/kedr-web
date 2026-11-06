@@ -31,6 +31,14 @@ export type ProductDetailViewProps = {
   purchaseAction?: ReactNode;
   /** One-tap add for the phone buy bar; the bar is omitted without it. */
   stickyPurchaseAction?: ReactNode;
+  /** Model page (spec site/product/002): the model name as the heading. */
+  title?: string;
+  /** Model page: short text and switchers above the price. */
+  options?: ReactNode;
+  /** Model page: in-stock alternatives below the price. */
+  notice?: ReactNode;
+  /** Model page: variants, texts, and other models below the product grid. */
+  sections?: ReactNode;
 };
 
 const PURCHASE_PANEL_ID = 'product-purchase';
@@ -47,6 +55,10 @@ export function ProductDetailView({
   phone,
   purchaseAction,
   stickyPurchaseAction,
+  title,
+  options,
+  notice,
+  sections,
 }: ProductDetailViewProps) {
   const dictionary = getProductDictionary(locale);
   const showStickyBar =
@@ -89,7 +101,13 @@ export function ProductDetailView({
           media={product.media}
         />
         <div className="min-w-0">
-          <ProductIdentity locale={locale} product={product} categoryHref={categoryHref} />
+          <ProductIdentity
+            locale={locale}
+            product={product}
+            categoryHref={categoryHref}
+            title={title}
+          />
+          {options}
           <ProductPurchasePanel
             id={PURCHASE_PANEL_ID}
             locale={locale}
@@ -97,10 +115,12 @@ export function ProductDetailView({
             phone={phone}
             purchaseAction={purchaseAction}
           />
+          {notice}
           <ProductWholesaleCallout locale={locale} />
           <ProductServiceLinks locale={locale} />
         </div>
       </div>
+      {sections}
       <ProductHelp locale={locale} phone={phone} />
       {showStickyBar && (
         <ProductStickyBar

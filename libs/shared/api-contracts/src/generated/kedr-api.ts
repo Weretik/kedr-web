@@ -2987,6 +2987,8 @@ export interface components {
             isAccepted: boolean;
             /** @description Colors of the model's products when color is one of its axes. */
             colors: components["schemas"]["PublicSiteModelSwatch"][];
+            /** @description The 1C code of the only on-site product of a one-product model, for adding it to the cart from the list; null for a model of several products. */
+            productId: number | null;
         };
         PublicSiteModelFilterValue: {
             slug: string;

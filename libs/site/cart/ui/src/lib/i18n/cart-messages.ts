@@ -26,6 +26,8 @@ export function cartMessage(locale: Locale, code: string): string {
     'not-found': copy.notFound,
     removed: copy.removed,
     added: copy.added,
+    'bulk-empty': copy.bulkEmpty,
+    'bulk-added': copy.bulkAdded,
   };
   return Object.prototype.hasOwnProperty.call(messages, code) ? messages[code]! : code;
 }

@@ -34,7 +34,7 @@ describe('catalog JSON-LD', () => {
       'ru',
       [
         {
-          id: 7,
+          id: '7',
           sku: 7,
           slug: 'zavisa-agb',
           name: 'Завіса',
@@ -43,6 +43,8 @@ describe('catalog JSON-LD', () => {
           inStock: true,
           isNew: false,
           isSale: false,
+          variantCount: 1,
+          colors: [],
         },
       ],
       config,

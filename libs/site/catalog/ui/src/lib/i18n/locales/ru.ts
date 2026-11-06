@@ -3,6 +3,9 @@ import type { CatalogDictionary } from '../catalog-dictionary';
 export const ru: CatalogDictionary = {
   allInCategory: (count) => `Все ${count}`,
   products: { one: 'товар', few: 'товара', many: 'товаров' },
+  variants: { one: 'вариант', few: 'варианта', many: 'вариантов' },
+  fromPrice: 'от',
+  colors: 'Цвета',
   priceOnRequest: 'Цена по запросу',
   retailPrice: 'Розничная цена',
   isNew: 'Новинка',

@@ -4,4 +4,6 @@ export { CheckoutPage } from './lib/checkout/checkout-page';
 export {
   renderCartPurchaseAction,
   renderCartQuickAddAction,
+  renderCartBulkAddAction,
 } from './lib/purchase/render-cart-purchase-action';
+export type { CartBulkAddInput } from './lib/purchase/render-cart-purchase-action';

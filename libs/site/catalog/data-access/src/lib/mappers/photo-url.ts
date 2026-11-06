@@ -1,8 +1,3 @@
-import type { components } from '@shared/api-contracts';
-import type { ProductSummary } from '@site/catalog/model';
-
-type ProductListItem = components['schemas']['ProductListItem'];
-
 /** Product photos are served by this CDN; keep in sync with `images.remotePatterns` in `apps/site/next.config.ts`. */
 export const PRODUCT_IMAGE_HOST = 'images-kedr.cdn.express';
 
@@ -15,18 +10,4 @@ export function toProductPhotoUrl(photo: string | null | undefined): string | nu
   } catch {
     return null;
   }
-}
-
-export function mapProductSummary(item: ProductListItem): ProductSummary {
-  return {
-    id: item.id,
-    sku: item.id,
-    slug: item.productSlug,
-    name: item.name.trim(),
-    price: typeof item.price === 'number' && item.price > 0 ? item.price : null,
-    photoUrl: toProductPhotoUrl(item.photo),
-    inStock: item.inStock,
-    isNew: item.isNew,
-    isSale: item.isSale,
-  };
 }

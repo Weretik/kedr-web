@@ -3,6 +3,9 @@ import type { CatalogDictionary } from '../catalog-dictionary';
 export const uk: CatalogDictionary = {
   allInCategory: (count) => `Усі ${count}`,
   products: { one: 'товар', few: 'товари', many: 'товарів' },
+  variants: { one: 'варіант', few: 'варіанти', many: 'варіантів' },
+  fromPrice: 'від',
+  colors: 'Кольори',
   priceOnRequest: 'Ціна за запитом',
   retailPrice: 'Роздрібна ціна',
   isNew: 'Новинка',
