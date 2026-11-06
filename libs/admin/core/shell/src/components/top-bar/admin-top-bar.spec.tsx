@@ -48,6 +48,8 @@ describe('AdminTopBar and sidebar role labels', () => {
             fullName: 'Олена',
             isAdmin,
             roleLabel: isAdmin ? 'Адміністратор' : 'Менеджер',
+            roleBadge: isAdmin ? 'Admin' : 'Manager',
+            cabinetTitle: isAdmin ? 'Кабінет адміністратора' : 'Кабінет менеджера',
           }}
         >
           <AdminTopBar currentOrderPositionCount={0} onOpenNavigation={() => undefined} />

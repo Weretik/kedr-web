@@ -45,7 +45,7 @@ export function AdminSidebar({
   onToggleCollapsed,
 }: AdminSidebarProps) {
   const toggleLabel = isCollapsed ? 'Розгорнути меню' : 'Згорнути меню';
-  const roleBadge = useAdminShellUser()?.isAdmin === false ? 'Manager' : 'Admin';
+  const roleBadge = useAdminShellUser()?.roleBadge ?? 'Admin';
 
   return (
     <Box

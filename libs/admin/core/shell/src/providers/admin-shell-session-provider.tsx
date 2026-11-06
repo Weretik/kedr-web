@@ -9,7 +9,11 @@ export interface AdminShellUser {
   email: string;
   fullName: string;
   roleLabel: string;
-  /** Admin sees "ADMIN" and "Кабінет адміністратора"; a manager sees the manager variants. */
+  /** Short role mark under the logo, for example "Admin". */
+  roleBadge: string;
+  /** Top bar title, for example "Кабінет адміністратора". */
+  cabinetTitle: string;
+  /** Opens menu items marked `access: 'admin'`. */
   isAdmin: boolean;
   avatarUrl: string | null;
   canManageUsers: boolean;

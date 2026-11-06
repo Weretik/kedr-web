@@ -301,7 +301,7 @@ export interface paths {
         };
         /**
          * List admin product rows
-         * @description Policy CanManageProducts (Manager and Admin).
+         * @description Policy CanManageProducts (Manager, Seo, and Admin).
          */
         get: operations["getAdminProducts"];
         put?: never;
@@ -321,7 +321,7 @@ export interface paths {
         };
         /**
          * List all admin product rows
-         * @description Policy CanManageProducts (Manager and Admin). Returns the unpaged admin row model.
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). Returns the unpaged admin row model.
          */
         get: operations["getAllAdminProducts"];
         put?: never;
@@ -341,7 +341,7 @@ export interface paths {
         };
         /**
          * Get one admin product by slug
-         * @description Policy CanManageProducts (Manager and Admin).
+         * @description Policy CanManageProducts (Manager, Seo, and Admin).
          */
         get: operations["getAdminProductBySlug"];
         put?: never;
@@ -383,7 +383,7 @@ export interface paths {
         };
         /**
          * Get the photos and the scheme linked to a product
-         * @description Policies CanManageProducts and CanManageMedia (Manager and Admin). Photos come in gallery order; file names are read from the media library.
+         * @description Policies CanManageProducts and CanManageMedia (Manager, Seo, and Admin). Photos come in gallery order; file names are read from the media library.
          */
         get: operations["getAdminProductMedia"];
         /**
@@ -502,7 +502,7 @@ export interface paths {
         get?: never;
         /**
          * Change a group slug
-         * @description Admin only. The old slug goes to the slug history and is never given to another group.
+         * @description Admin or Seo only. The old slug goes to the slug history and is never given to another group.
          */
         put: operations["changeAdminProductGroupSlug"];
         post?: never;
@@ -1060,7 +1060,7 @@ export interface paths {
         put?: never;
         /**
          * Create an admin order for asynchronous 1C delivery
-         * @description Policy CanManageOrders (Manager and Admin).
+         * @description Policy CanManageOrders (Manager, Seo, and Admin).
          */
         post: operations["createAdminOrder"];
         delete?: never;
@@ -1095,7 +1095,7 @@ export interface paths {
         };
         /**
          * Get the current 1C delivery status for an admin order
-         * @description Policy CanManageOrders (Manager and Admin).
+         * @description Policy CanManageOrders (Manager, Seo, and Admin).
          */
         get: operations["getAdminOrderSyncStatus"];
         put?: never;
@@ -1117,7 +1117,7 @@ export interface paths {
         put?: never;
         /**
          * Schedule a failed order for another 1C delivery cycle
-         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Policy CanManageOrders (Manager and Admin).
+         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
          */
         post: operations["retryAdminOrderSync"];
         delete?: never;
@@ -1135,7 +1135,7 @@ export interface paths {
         };
         /**
          * Orders today, drafts, 1C problems and the newest orders
-         * @description Requires `CanManageOrders` (Manager or Admin). Lists hold at most 5 rows, newest first.
+         * @description Requires `CanManageOrders` (Manager, Seo, or Admin). Lists hold at most 5 rows, newest first.
          */
         get: operations["getAdminWorkspaceOverview"];
         put?: never;
@@ -1416,12 +1416,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List administrators and managers
+         * List administrators, SEO specialists, and managers
          * @description Policy `CanManageUsers` (role Admin). Customers are not listed.
          */
         get: operations["getStaffAccounts"];
         put?: never;
-        /** Create an administrator or manager */
+        /** Create an administrator, SEO specialist, or manager */
         post: operations["createStaffAccount"];
         delete?: never;
         options?: never;
@@ -1479,7 +1479,7 @@ export interface paths {
         get?: never;
         /**
          * Set a new password for a staff account
-         * @description Managers only; ends the account's existing sessions. An administrator account (including the caller's) returns 403 — administrators change their own password in the profile.
+         * @description Manager and Seo accounts only; ends the account's existing sessions. An administrator account (including the caller's) returns 403 — administrators change their own password in the profile.
          */
         put: operations["setStaffPassword"];
         post?: never;
@@ -1499,7 +1499,7 @@ export interface paths {
         get?: never;
         /**
          * Change a manager's name
-         * @description Managers only; an administrator target returns 403.
+         * @description Manager and Seo accounts only; an administrator target returns 403.
          */
         put: operations["changeStaffName"];
         post?: never;
@@ -1519,7 +1519,7 @@ export interface paths {
         get?: never;
         /**
          * Change a manager's sign-in email
-         * @description Managers only. Ends the manager's sessions (mobile at once, browser within 5 minutes).
+         * @description Manager and Seo accounts only. Ends the manager's sessions (mobile at once, browser within 5 minutes).
          */
         put: operations["changeStaffEmail"];
         post?: never;
@@ -1539,7 +1539,7 @@ export interface paths {
         get?: never;
         /**
          * Upload a manager's avatar
-         * @description Managers only. Same limits as `uploadMyAvatar`.
+         * @description Manager and Seo accounts only. Same limits as `uploadMyAvatar`.
          */
         put: operations["uploadStaffAvatar"];
         post?: never;
@@ -1559,7 +1559,7 @@ export interface paths {
         };
         /**
          * The signed-in staff account's profile
-         * @description Policy `RequireManagerRole` (Manager or Admin). Customers get 403.
+         * @description Policy `RequireManagerRole` (Manager, Seo, or Admin). Customers get 403.
          */
         get: operations["getMyProfile"];
         put?: never;
@@ -1840,12 +1840,12 @@ export interface paths {
         };
         /**
          * Get the company contacts for editing
-         * @description Requires `CanManageContent` (Manager or Admin).
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
          */
         get: operations["getAdminCompanyContacts"];
         /**
          * Replace all company contacts
-         * @description Requires `CanManageContent` (Manager or Admin). All fields are required and replaced at once.
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). All fields are required and replaced at once.
          */
         put: operations["updateAdminCompanyContacts"];
         post?: never;
@@ -1948,7 +1948,7 @@ export interface paths {
         };
         /**
          * List the documents with their published edition and waiting draft
-         * @description Requires `CanManageContent` (Manager or Admin). Always four items, in a fixed order.
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Always four items, in a fixed order.
          */
         get: operations["getAdminLegalDocuments"];
         put?: never;
@@ -2064,7 +2064,7 @@ export interface paths {
         };
         /**
          * List the gallery cards with previews
-         * @description Requires `CanManageContent` (Manager or Admin).
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
          */
         get: operations["getAdminGallery"];
         put?: never;
@@ -2208,7 +2208,7 @@ export interface paths {
         };
         /**
          * List the home page FAQ and brands
-         * @description Requires `CanManageContent` (Manager or Admin).
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
          */
         get: operations["getAdminHomeBlocks"];
         put?: never;
@@ -2376,12 +2376,12 @@ export interface paths {
         };
         /**
          * Get both languages for editing
-         * @description Requires `CanManageContent` (Manager or Admin).
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
          */
         get: operations["getAdminWholesalePage"];
         /**
          * Replace both languages at once
-         * @description Requires `CanManageContent` (Manager or Admin). Every text is required. Repeating it is safe.
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Every text is required. Repeating it is safe.
          */
         put: operations["updateAdminWholesalePage"];
         post?: never;
@@ -2420,7 +2420,7 @@ export interface paths {
         };
         /**
          * List every site page with its texts
-         * @description Requires `CanManageContent` (Manager or Admin). Pages never saved have empty values.
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Pages never saved have empty values.
          */
         get: operations["listAdminPageSeo"];
         put?: never;
@@ -2441,7 +2441,7 @@ export interface paths {
         get?: never;
         /**
          * Replace the texts of one page
-         * @description Requires `CanManageContent` (Manager or Admin). Values are trimmed; an empty or missing value returns that text to the site default. The first save creates the page row. Repeating it is safe.
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Values are trimmed; an empty or missing value returns that text to the site default. The first save creates the page row. Repeating it is safe.
          */
         put: operations["updateAdminPageSeo"];
         post?: never;
@@ -2460,7 +2460,7 @@ export interface paths {
         };
         /**
          * Article drafts, legacy covers and document drafts
-         * @description Requires `CanManageContent` (Manager or Admin).
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
          */
         get: operations["getAdminContentOverview"];
         put?: never;
@@ -2480,7 +2480,7 @@ export interface paths {
         };
         /**
          * Products without a photo and categories without site text
-         * @description Requires `CanManageProducts` (Manager or Admin). Deleted products and categories are not counted.
+         * @description Requires `CanManageProducts` (Manager, Seo, or Admin). Deleted products and categories are not counted.
          */
         get: operations["getAdminCatalogOverview"];
         put?: never;
@@ -2500,7 +2500,7 @@ export interface paths {
         };
         /**
          * Products, prices, categories and price types for offline work
-         * @description Requires `CanManageOrders` (Manager or Admin); the app sends its bearer token. Deleted products and categories are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
+         * @description Requires `CanManageOrders` (Manager, Seo, or Admin); the app sends its bearer token. Deleted products and categories are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
          */
         get: operations["getMobileCatalogSnapshot"];
         put?: never;
@@ -2520,7 +2520,7 @@ export interface paths {
         };
         /**
          * Customers and their price rules for offline work
-         * @description Requires `CanManageOrders` (Manager or Admin); the app sends its bearer token. Deleted customers are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
+         * @description Requires `CanManageOrders` (Manager, Seo, or Admin); the app sends its bearer token. Deleted customers are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
          */
         get: operations["getMobileCustomersSnapshot"];
         put?: never;
@@ -2542,7 +2542,7 @@ export interface paths {
         put?: never;
         /**
          * Ask the public site to drop its cached content and catalog
-         * @description Requires `CanManageContent` (Manager or Admin). No request body.
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). No request body.
          */
         post: operations["refreshSite"];
         delete?: never;
@@ -2676,6 +2676,116 @@ export interface paths {
          * @description Up to 500 IDs; unknown IDs are ignored and not counted.
          */
         post: operations["moveAdminMediaFiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The caller's board
+         * @description Open tasks and tasks done in the last 30 days, most recently changed first.
+         */
+        get: operations["getMyWorkTasks"];
+        put?: never;
+        /** Create an own task in «План» */
+        post: operations["createMyWorkTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/tasks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change an own task's title and details */
+        put: operations["updateMyWorkTask"];
+        post?: never;
+        /** Delete an own task */
+        delete: operations["deleteMyWorkTask"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/tasks/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Move an own task to another column
+         * @description `InProgress` and `Done` set the start time once; `Done` sets the completion time and keeps `result`; leaving `Done` clears both.
+         */
+        put: operations["changeMyWorkTaskStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The caller's own report */
+        get: operations["getMyWorkReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/work/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Put a task on a staff member's board */
+        post: operations["createAdminWorkTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/work/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A staff member's report */
+        get: operations["getAdminWorkReport"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3885,7 +3995,7 @@ export interface components {
             /** Format: email */
             email: string;
             fullName: string;
-            roles: ("Admin" | "Manager" | "User")[];
+            roles: ("Admin" | "Seo" | "Manager" | "User")[];
             /**
              * Format: uri
              * @description Public 256×256 WebP avatar on the CDN; null when the user has none
@@ -3902,7 +4012,7 @@ export interface components {
             refreshToken: string;
         };
         /** @enum {string} */
-        StaffRole: "Admin" | "Manager";
+        StaffRole: "Admin" | "Seo" | "Manager";
         StaffAccountResponse: {
             /** Format: uuid */
             id: string;
@@ -3946,7 +4056,7 @@ export interface components {
             email: string;
             fullName: string;
             /** @enum {string} */
-            role: "Admin" | "Manager";
+            role: "Admin" | "Seo" | "Manager";
             /**
              * Format: uri
              * @description Public 256×256 WebP; null when there is none
@@ -4593,6 +4703,82 @@ export interface components {
             /** Format: int64 */
             folderId?: number | null;
         };
+        /** @enum {string} */
+        WorkTaskStatus: "Planned" | "InProgress" | "Done";
+        WorkTask: {
+            /** Format: int64 */
+            id: number;
+            /** Format: uuid */
+            ownerUserId: string;
+            /** Format: uuid */
+            createdByUserId: string;
+            /** @description False when an administrator gave the task («Від адміністратора»). */
+            createdByOwner: boolean;
+            title: string;
+            details: string | null;
+            status: components["schemas"]["WorkTaskStatus"];
+            /** @description What was done; only for `Done`. */
+            result: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            startedAt: string | null;
+            /** Format: date-time */
+            completedAt: string | null;
+        };
+        SaveWorkTaskRequest: {
+            title: string;
+            details?: string | null;
+        };
+        ChangeWorkTaskStatusRequest: {
+            status: components["schemas"]["WorkTaskStatus"];
+            result?: string | null;
+        };
+        WorkActivity: {
+            /** Format: int64 */
+            id: number;
+            /** Format: uuid */
+            userId: string;
+            /** @description Sign-in email at the time of the change. */
+            userEmail: string;
+            /** @description Controller name without `Admin`, for example `Categories`, `PageSeo`, `MediaFiles`. */
+            area: string;
+            /** @description Action method name, for example `UpdateContent`. */
+            operation: string;
+            /** @enum {string} */
+            method: "POST" | "PUT" | "PATCH" | "DELETE";
+            /** @description Route values in name order, for example `id=12, lang=uk`; may be empty. */
+            target: string;
+            /** @description How many times the same change was saved within 10 minutes. */
+            count: number;
+            /** Format: date-time */
+            firstAt: string;
+            /** Format: date-time */
+            occurredAt: string;
+        };
+        WorkReport: {
+            /** Format: uuid */
+            userId: string;
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            /** @description Finished in the period. */
+            doneTasks: components["schemas"]["WorkTask"][];
+            /** @description Not finished now. */
+            openTasks: components["schemas"]["WorkTask"][];
+            /** @description Newest first, at most 2000. */
+            activity: components["schemas"]["WorkActivity"][];
+            activityTruncated: boolean;
+        };
+        CreateWorkTaskForUserRequest: {
+            /** Format: uuid */
+            ownerUserId: string;
+            title: string;
+            details?: string | null;
+        };
     };
     responses: {
         /** @description Input validation failed. */
@@ -4709,6 +4895,17 @@ export interface components {
                 };
             };
         };
+        /** @description Invalid input; each error names its field (`title`, `status`, `to`, …). */
+        "responses-Invalid": {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
     };
     parameters: {
         Lang: "uk" | "ru";
@@ -4747,6 +4944,10 @@ export interface components {
         ItemId: number;
         RowId: number;
         Id: number;
+        /** @description First Kyiv calendar day of the period. */
+        From: string;
+        /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
+        To: string;
     };
     requestBodies: never;
     headers: never;
@@ -5078,7 +5279,7 @@ export interface operations {
     getAdminCategories: {
         parameters: {
             query?: {
-                /** @description `true` lists soft-deleted categories only (flat, newest first). Admin role only. */
+                /** @description `true` lists soft-deleted categories only (flat, newest first). Admin or Seo role only. */
                 deleted?: boolean;
             };
             header?: never;
@@ -5103,7 +5304,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role, or `deleted=true` without the Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5140,7 +5341,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5188,7 +5389,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5236,7 +5437,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5280,7 +5481,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5329,7 +5530,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5363,7 +5564,7 @@ export interface operations {
                 problemsOnly?: boolean;
                 /** @description Lists only products that need review for this reason code, for example `no_name`. */
                 problemReason?: string;
-                /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin role only. */
+                /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin or Seo role only. */
                 deleted?: boolean;
                 sort?: components["parameters"]["ProductSort"];
                 page?: components["parameters"]["Page"];
@@ -5392,7 +5593,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role, or `deleted=true` without the Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5426,7 +5627,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5463,7 +5664,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5511,7 +5712,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5555,7 +5756,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5603,7 +5804,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5647,7 +5848,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5695,7 +5896,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5740,7 +5941,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5779,7 +5980,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5816,7 +6017,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5864,7 +6065,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5912,7 +6113,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5960,7 +6161,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6010,7 +6211,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6049,7 +6250,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6091,7 +6292,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6125,7 +6326,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6159,7 +6360,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6198,7 +6399,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6234,7 +6435,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6282,7 +6483,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6330,7 +6531,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6378,7 +6579,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6423,7 +6624,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6472,7 +6673,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6515,7 +6716,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6559,7 +6760,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6608,7 +6809,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6653,7 +6854,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6703,7 +6904,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6753,7 +6954,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6794,7 +6995,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6833,7 +7034,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6870,7 +7071,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6918,7 +7119,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -6966,7 +7167,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7015,7 +7216,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7056,7 +7257,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7097,7 +7298,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7138,7 +7339,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7175,7 +7376,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7223,7 +7424,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Admin role. */
+            /** @description Signed in without the Admin or Seo role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7317,7 +7518,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7381,7 +7582,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7420,7 +7621,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7463,7 +7664,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7511,7 +7712,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7559,7 +7760,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7610,7 +7811,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7666,7 +7867,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7718,7 +7919,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7777,7 +7978,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7829,7 +8030,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7887,7 +8088,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7943,7 +8144,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -7993,7 +8194,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -8049,7 +8250,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -8099,7 +8300,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -8160,7 +8361,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -8197,7 +8398,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9355,7 +9556,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9394,7 +9595,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9430,7 +9631,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9478,7 +9679,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9519,7 +9720,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9568,7 +9769,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9616,7 +9817,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Signed in without the Manager or Admin role. */
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9684,7 +9885,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9740,7 +9941,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9976,7 +10177,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10012,7 +10213,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10066,7 +10267,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10116,7 +10317,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10174,7 +10375,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10222,7 +10423,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10283,7 +10484,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10352,7 +10553,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10389,7 +10590,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10426,7 +10627,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10476,7 +10677,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10515,7 +10716,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10550,7 +10751,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10594,7 +10795,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10656,7 +10857,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10693,7 +10894,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10732,7 +10933,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10767,7 +10968,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10811,7 +11012,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10855,7 +11056,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10894,7 +11095,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10929,7 +11130,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10973,7 +11174,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11050,7 +11251,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11106,7 +11307,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11176,7 +11377,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11223,7 +11424,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11257,7 +11458,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11291,7 +11492,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11337,7 +11538,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11383,7 +11584,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11417,7 +11618,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11469,7 +11670,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11508,7 +11709,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11556,7 +11757,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11660,7 +11861,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11707,7 +11908,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11757,7 +11958,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11805,7 +12006,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11904,7 +12105,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -11966,7 +12167,337 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a Manager or Admin. */
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMyWorkTasks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The caller's tasks. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"][];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createMyWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveWorkTaskRequest"];
+            };
+        };
+        responses: {
+            /** @description The new task. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateMyWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveWorkTaskRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved task. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteMyWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    changeMyWorkTaskStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeWorkTaskStatusRequest"];
+            };
+        };
+        responses: {
+            /** @description The moved task. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMyWorkReport: {
+        parameters: {
+            query: {
+                /** @description First Kyiv calendar day of the period. */
+                from: components["parameters"]["From"];
+                /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
+                to: components["parameters"]["To"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The report. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkReport"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAdminWorkTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWorkTaskForUserRequest"];
+            };
+        };
+        responses: {
+            /** @description The new task, with `createdByOwner` false. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkReport: {
+        parameters: {
+            query: {
+                userId: string;
+                /** @description First Kyiv calendar day of the period. */
+                from: components["parameters"]["From"];
+                /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
+                to: components["parameters"]["To"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The report. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkReport"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an Admin. */
             403: {
                 headers: {
                     [name: string]: unknown;

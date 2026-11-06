@@ -1,6 +1,6 @@
 # Admin Мій кабінет
 
-**Entry point:** `/profile`, created by [createProfileRoutes](../../../libs/admin/users/feature/src/profile.routes.tsx) inside the staff session in [AppRouter](../../../apps/admin/src/app/router/app-router.tsx); the header menu item "Мій кабінет" opens it. Every staff member (Admin or Manager) has it. SDD: [staff profile and avatars](../../specs/admin/users/001-staff-profile-and-avatars/README.md).
+**Entry point:** `/profile`, created by [createProfileRoutes](../../../libs/admin/users/feature/src/profile.routes.tsx) inside the staff session in [AppRouter](../../../apps/admin/src/app/router/app-router.tsx); the header menu item "Мій кабінет" opens it. Every staff member (Admin, Seo, or Manager) has it. SDD: [staff profile and avatars](../../specs/admin/users/001-staff-profile-and-avatars/README.md).
 
 - [ProfilePage](../../../libs/admin/users/feature/src/pages/profile-page.tsx) shows [ProfilePhotoCard](../../../libs/admin/users/ui/src/components/profile/profile-photo-card.tsx) (photo, upload, remove, limits) and [ProfileDetailsCard](../../../libs/admin/users/ui/src/components/profile/profile-details-card.tsx) (name, email, role, password).
 - A manager changes the name and photo. An admin also changes the email and password; both forms ask for the current password ([ChangeEmailPanel](../../../libs/admin/users/ui/src/panels/profile/change-email-panel.tsx), [ChangePasswordPanel](../../../libs/admin/users/ui/src/panels/profile/change-password-panel.tsx)); every form opens in the right edit panel.

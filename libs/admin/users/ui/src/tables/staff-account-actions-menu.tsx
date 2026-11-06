@@ -1,4 +1,4 @@
-import { avatarAcceptedTypes, staffRoleLabels } from '@admin/users/model';
+import { avatarAcceptedTypes, staffRoleLabels, staffRoles } from '@admin/users/model';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
@@ -28,10 +28,10 @@ export function StaffAccountActionsMenu({
   onAction,
 }: StaffAccountActionsMenuProps) {
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
-  const otherRole: StaffRole = account.role === 'Admin' ? 'Manager' : 'Admin';
+  const otherRoles = staffRoles.filter((role) => role !== account.role);
   const menuId = `staff-actions-${account.id}`;
-  // Profile data and passwords are edited for managers only; an admin edits their own in the cabinet.
-  const canEditProfile = account.role === 'Manager';
+  // Profile data and passwords are edited for managers and SEO specialists; an admin edits their own in the cabinet.
+  const canEditProfile = account.role !== 'Admin';
 
   const run = (action: StaffAccountAction) => {
     setAnchorElement(null);
@@ -90,12 +90,15 @@ export function StaffAccountActionsMenu({
               <Divider key="divider" />,
             ]
           : null}
-        <MenuItem
-          disabled={isCurrentUser}
-          onClick={() => run({ type: 'changeRole', role: otherRole })}
-        >
-          Зробити: {staffRoleLabels[otherRole].toLowerCase()}
-        </MenuItem>
+        {otherRoles.map((role) => (
+          <MenuItem
+            disabled={isCurrentUser}
+            key={role}
+            onClick={() => run({ type: 'changeRole', role })}
+          >
+            Зробити: {staffRoleLabels[role].toLowerCase()}
+          </MenuItem>
+        ))}
         <MenuItem
           disabled={isCurrentUser && !account.isBlocked}
           onClick={() => run({ type: 'setBlocked', blocked: !account.isBlocked })}
