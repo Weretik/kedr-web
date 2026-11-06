@@ -2741,6 +2741,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/work/tasks/{id}/steps/{index}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Tick or untick one step of an own task */
+        put: operations["setMyWorkTaskStep"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/work/report": {
         parameters: {
             query?: never;
@@ -4705,6 +4722,10 @@ export interface components {
         };
         /** @enum {string} */
         WorkTaskStatus: "Planned" | "InProgress" | "Done";
+        WorkTaskStep: {
+            title: string;
+            isDone: boolean;
+        };
         WorkTask: {
             /** Format: int64 */
             id: number;
@@ -4719,7 +4740,18 @@ export interface components {
             status: components["schemas"]["WorkTaskStatus"];
             /** @description What was done; only for `Done`. */
             result: string | null;
-            /** Format: date-time */
+            /**
+             * Format: date
+             * @description Day the task should be done by; null means no deadline.
+             */
+            dueDate: string | null;
+            /** @description Not `Done` and the due day has passed in Kyiv. */
+            isOverdue: boolean;
+            steps: components["schemas"]["WorkTaskStep"][];
+            /**
+             * Format: date-time
+             * @description When the task was set.
+             */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
@@ -4731,10 +4763,17 @@ export interface components {
         SaveWorkTaskRequest: {
             title: string;
             details?: string | null;
+            /** Format: date */
+            dueDate?: string | null;
+            /** @description The whole list in order; it replaces the saved one. */
+            steps?: components["schemas"]["WorkTaskStep"][] | null;
         };
         ChangeWorkTaskStatusRequest: {
             status: components["schemas"]["WorkTaskStatus"];
             result?: string | null;
+        };
+        SetWorkTaskStepRequest: {
+            isDone: boolean;
         };
         WorkActivity: {
             /** Format: int64 */
@@ -4778,6 +4817,10 @@ export interface components {
             ownerUserId: string;
             title: string;
             details?: string | null;
+            /** Format: date */
+            dueDate?: string | null;
+            /** @description The whole list in order; it replaces the saved one. */
+            steps?: components["schemas"]["WorkTaskStep"][] | null;
         };
     };
     responses: {
@@ -12378,6 +12421,56 @@ export interface operations {
                 content?: never;
             };
             /** @description No such task of the caller. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    setMyWorkTaskStep: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+                /** @description Position of the step, from 0. */
+                index: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetWorkTaskStepRequest"];
+            };
+        };
+        responses: {
+            /** @description The task with the step changed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkTask"];
+                };
+            };
+            400: components["responses"]["responses-Invalid"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such task of the caller or no step at that position. */
             404: {
                 headers: {
                     [name: string]: unknown;

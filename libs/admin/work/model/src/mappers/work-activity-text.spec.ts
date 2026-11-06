@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { groupWorkActivityByDay, workActivityArea, workActivityTarget } from './work-activity-text';
 import { lastDaysPeriod, workPeriodDays } from './work-period';
+import { emptyWorkTaskInput } from '../entities/work-task';
 import { workPeriodIssue, workTaskIssues } from '../validators/work-task-rules';
 
 import type { WorkActivity } from '../entities/work-report';
@@ -54,6 +55,20 @@ describe('work period and task rules', () => {
     expect(workPeriodIssue({ from: '2026-11-06', to: '2026-11-05' })).toBeDefined();
     expect(workPeriodIssue({ from: '2026-01-01', to: '2026-11-06' })).toBeDefined();
     expect(workPeriodIssue({ from: '2026-11-01', to: '2026-11-06' })).toBeUndefined();
-    expect(workTaskIssues({ title: '  ', details: '' }).title).toBeDefined();
+    expect(workTaskIssues({ ...emptyWorkTaskInput, title: '  ' }).title).toBeDefined();
+    const tooManySteps = Array.from({ length: 31 }, (_, index) => ({
+      title: `Крок ${index}`,
+      isDone: false,
+    }));
+    expect(
+      workTaskIssues({ ...emptyWorkTaskInput, title: 'Задача', steps: tooManySteps }).steps,
+    ).toBeDefined();
+    expect(
+      workTaskIssues({
+        ...emptyWorkTaskInput,
+        title: 'Задача',
+        steps: [{ title: ' ', isDone: false }],
+      }),
+    ).toEqual({});
   });
 });

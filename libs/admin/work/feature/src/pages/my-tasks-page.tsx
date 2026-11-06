@@ -8,8 +8,15 @@ import { useMemo, useState } from 'react';
 
 import { MyTasksBoard } from '../components/my-tasks-board';
 
+import type { WorkAssignees } from '../work.routes';
+
+interface MyTasksPageProps {
+  /** Administrator only: whom a new task may be given to. */
+  assignees?: WorkAssignees | null;
+}
+
 /** «Мої задачі»: the own board and what the signed-in staff member changed in the last 7 days. */
-export function MyTasksPage() {
+export function MyTasksPage({ assignees = null }: MyTasksPageProps) {
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const period = useMemo(() => lastDaysPeriod(7), []);
@@ -29,7 +36,12 @@ export function MyTasksPage() {
         Ставте собі задачі й переносьте їх «План → В роботі → Готово». Коли закриваєте задачу,
         напишіть, що зроблено. Адміністратор бачить задачі та список ваших змін в адмінці.
       </Typography>
-      <MyTasksBoard creating={creating} onCreatingChange={setCreating} onNotice={setNotice} />
+      <MyTasksBoard
+        assignees={assignees}
+        creating={creating}
+        onCreatingChange={setCreating}
+        onNotice={setNotice}
+      />
       <SectionCard title="Що я змінив за 7 днів">
         {report.isError ? (
           <Alert severity="error">Не вдалося завантажити зміни.</Alert>

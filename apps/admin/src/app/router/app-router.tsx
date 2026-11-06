@@ -37,7 +37,7 @@ import { useGetStaffAccountsQuery } from '@admin/users/data-access';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
 import { staffRoleLabels } from '@admin/users/model';
 import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
-import { createWorkReportRoutes, myTasksRoutes } from '@admin/work/feature';
+import { createMyTasksRoutes, createWorkReportRoutes, MyTasksOverview } from '@admin/work/feature';
 import { useMemo } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
@@ -45,7 +45,8 @@ import { CustomerPicker } from '../customer-picker';
 import { toShellUser } from './shell-user';
 
 import type { SessionUser } from '@admin/core/auth';
-import type { StaffMember } from '@admin/work/feature';
+import type { WorkAssignees } from '@admin/work/feature';
+import type { WorkPerson } from '@admin/work/model';
 
 function AdminShellRoute({ user }: { user: SessionUser }) {
   const { lines } = useCurrentOrderSet();
@@ -74,13 +75,15 @@ const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
 const dashboardRoutes = createDashboardRoutes({
   siteRefreshAction: <SiteRefreshButton variant="text" />,
   useViewerName: useSignedInUserName,
+  workTasksCard: <MyTasksOverview />,
 });
 
 const workReportRoutes = createWorkReportRoutes({ useStaffMembers });
+const myTasksRoutes = createMyTasksRoutes({ useAssignees: useWorkAssignees });
 
-/** People for «Звіт роботи»: the staff list the admin already manages on «Користувачі». */
-function useStaffMembers(): { staff: readonly StaffMember[]; loading: boolean } {
-  const { data, isLoading } = useGetStaffAccountsQuery();
+/** People for «Звіт роботи» and «Для кого»: the staff list the admin manages on «Користувачі». */
+function useStaffMembers(skip = false): { staff: readonly WorkPerson[]; loading: boolean } {
+  const { data, isLoading } = useGetStaffAccountsQuery(undefined, { skip });
   const staff = useMemo(
     () =>
       (data ?? []).map((account) => ({
@@ -91,6 +94,16 @@ function useStaffMembers(): { staff: readonly StaffMember[]; loading: boolean } 
     [data],
   );
   return { staff, loading: isLoading };
+}
+
+/** An administrator may give a new task to anyone on «Мої задачі»; others only to themselves. */
+function useWorkAssignees(): WorkAssignees | null {
+  const session = useAdminSession();
+  const admin = session.status === 'authenticated' && canManageUsers(session.user);
+  const { staff } = useStaffMembers(!admin);
+  if (session.status !== 'authenticated' || !admin) return null;
+  const selfId = session.user.id;
+  return staff.some((person) => person.id === selfId) ? { people: staff, selfId } : null;
 }
 
 function useCanEditCatalog(): boolean {

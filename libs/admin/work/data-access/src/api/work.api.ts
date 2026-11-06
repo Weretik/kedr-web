@@ -9,6 +9,7 @@ import {
 
 import type {
   ChangeWorkTaskStatusBody,
+  SetWorkTaskStepBody,
   CreateWorkTaskForUserBody,
 } from '../contracts/work.contract';
 import type {
@@ -61,6 +62,15 @@ export const workApi = baseApi
         transformResponse: mapWorkTask,
         invalidatesTags: [tasksTag, reportTag],
       }),
+      setMyWorkTaskStep: build.mutation<WorkTask, { id: number; index: number; isDone: boolean }>({
+        query: ({ id, index, isDone }) => ({
+          url: `/api/work/tasks/${id}/steps/${index}`,
+          method: 'PUT',
+          data: { isDone } satisfies SetWorkTaskStepBody,
+        }),
+        transformResponse: mapWorkTask,
+        invalidatesTags: [tasksTag, reportTag],
+      }),
       deleteMyWorkTask: build.mutation<void, number>({
         query: (id) => ({ url: `/api/work/tasks/${id}`, method: 'DELETE' }),
         invalidatesTags: [tasksTag, reportTag],
@@ -92,6 +102,7 @@ export const {
   useCreateAdminWorkTaskMutation,
   useCreateMyWorkTaskMutation,
   useDeleteMyWorkTaskMutation,
+  useSetMyWorkTaskStepMutation,
   useGetAdminWorkReportQuery,
   useGetMyWorkReportQuery,
   useGetMyWorkTasksQuery,

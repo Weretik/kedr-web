@@ -2,6 +2,8 @@ import { workPeriodMaxDays } from '../entities/work-report';
 import {
   workTaskDetailsMaxLength,
   workTaskResultMaxLength,
+  workTaskStepMaxLength,
+  workTaskStepsMaxCount,
   workTaskTitleMaxLength,
 } from '../entities/work-task';
 import { workPeriodDays } from '../mappers/work-period';
@@ -19,6 +21,12 @@ export function workTaskIssues(input: WorkTaskInput): WorkTaskIssues {
     issues.title = `Не довше ${workTaskTitleMaxLength} символів.`;
   if (input.details.trim().length > workTaskDetailsMaxLength)
     issues.details = `Не довше ${workTaskDetailsMaxLength} символів.`;
+  const steps = input.steps.filter((step) => step.title.trim());
+  if (steps.length > workTaskStepsMaxCount)
+    issues.steps = `Не більше ${workTaskStepsMaxCount} кроків.`;
+  else if (steps.some((step) => step.title.trim().length > workTaskStepMaxLength))
+    issues.steps = `Крок не довший за ${workTaskStepMaxLength} символів.`;
+  if (input.dueDate && !/^\d{4}-\d{2}-\d{2}$/.test(input.dueDate)) issues.dueDate = 'Вкажіть дату.';
   return issues;
 }
 
