@@ -1,18 +1,39 @@
-import { categoryChoice, shortCategoryPath, toCodeDecision } from '@admin/catalog-attributes/model';
+import {
+  initialCategoryMeanings,
+  initialMeanings,
+  isMeaningsDecided,
+  shortCategoryPath,
+  toCodeDecision,
+} from '@admin/catalog-attributes/model';
 import { StatusPill } from '@admin/shared/ui';
-import { Alert, Box, Button, MenuItem, Select, Skeleton, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  MenuItem,
+  Select,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 
 import { CodeInName } from './code-in-name';
+import { CodeMeaningsEditor } from './code-meanings-editor';
 
+import type { MeaningRowSlotProps } from './code-meanings-editor';
 import type {
-  CatalogAttributeValue,
+  CategoryMeaningsDraft,
   CodeCategory,
-  CodeChoice,
   CodeDecision,
+  CodeMeaning,
   CodeProducts,
+  MeaningsDraft,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
+import type { ComponentType } from 'react';
 
 /** Products shown per category before «Показати всі». */
 const previewSize = 5;
@@ -22,7 +43,8 @@ interface CodeWorkspaceProps {
   products: CodeProducts | undefined;
   productsLoading: boolean;
   productsError: boolean;
-  values: readonly CatalogAttributeValue[];
+  /** A meaning row connected to the attribute values. */
+  MeaningRow: ComponentType<MeaningRowSlotProps>;
   canEdit: boolean;
   saving: boolean;
   error: string | null;
@@ -31,21 +53,18 @@ interface CodeWorkspaceProps {
   onSkip: () => void;
 }
 
-function ValueOptions({ values }: { values: readonly CatalogAttributeValue[] }) {
-  return values.map((value) => (
-    <MenuItem key={value.id} value={String(value.id)}>
-      {value.nameUk} ({value.code})
-    </MenuItem>
-  ));
+/** «Колір: Золото · Конфігурація: Z» */
+function meaningsText(meanings: readonly CodeMeaning[]): string {
+  return meanings.map((meaning) => `${meaning.attributeName}: ${meaning.valueName}`).join(' · ');
 }
 
 function CategoryGroup(props: {
   code: string;
   category: CodeCategory;
-  choice: CodeChoice;
-  values: readonly CatalogAttributeValue[];
+  draft: CategoryMeaningsDraft;
+  MeaningRow: ComponentType<MeaningRowSlotProps>;
   canEdit: boolean;
-  onChange: (choice: CodeChoice) => void;
+  onChange: (draft: CategoryMeaningsDraft) => void;
 }) {
   const { category } = props;
   const [all, setAll] = useState(false);
@@ -70,20 +89,36 @@ function CategoryGroup(props: {
         </Typography>
         {props.canEdit ? (
           <Select
-            aria-label={`Значення в категорії ${path}`}
-            onChange={(event) => props.onChange(event.target.value as CodeChoice)}
+            aria-label={`Розшифровка в категорії ${path}`}
+            onChange={(event) =>
+              props.onChange({
+                ...props.draft,
+                mode: event.target.value as CategoryMeaningsDraft['mode'],
+              })
+            }
             size="small"
             sx={{ minWidth: 220 }}
-            value={props.choice}
+            value={props.draft.mode}
           >
             <MenuItem value="inherit">Як для всіх</MenuItem>
-            {ValueOptions({ values: props.values })}
-            <MenuItem value="none">Без значення</MenuItem>
+            <MenuItem value="own">Своя розшифровка</MenuItem>
+            <MenuItem value="none">Нічого не означає</MenuItem>
           </Select>
         ) : category.hasOwnValue ? (
-          <Typography variant="body2">Тут: {category.valueName ?? 'без значення'}</Typography>
+          <Typography variant="body2">
+            Тут:{' '}
+            {category.meanings.length > 0 ? meaningsText(category.meanings) : 'нічого не означає'}
+          </Typography>
         ) : null}
       </Stack>
+      {props.canEdit && props.draft.mode === 'own' ? (
+        <CodeMeaningsEditor
+          label={`у категорії ${path}`}
+          onChange={(rows) => props.onChange({ ...props.draft, rows })}
+          Row={props.MeaningRow}
+          rows={props.draft.rows}
+        />
+      ) : null}
       <Box component="ul" sx={{ display: 'grid', gap: 0.5, listStyle: 'none', m: 0, p: 0 }}>
         {shown.map((product) => (
           <Box
@@ -114,22 +149,23 @@ function CategoryGroup(props: {
 }
 
 /**
- * One code of «Не розшифровані коди» (spec catalog/008): its products grouped by category, with the code highlighted
- * in each name, one value for all products and, where the code means something else, a value per category.
+ * One code of «Не розшифровані коди» (spec catalog/008, 009): its products grouped by category, with the code
+ * highlighted in each name; what the code means for all products as «ознака → значення» rows in any attributes
+ * and, where the code means something else, a decoding per category.
  */
 export function CodeWorkspace(props: CodeWorkspaceProps) {
-  const { code, products, values } = props;
-  const [all, setAll] = useState<CodeChoice | ''>(code.valueId === null ? '' : `${code.valueId}`);
-  const [own, setOwn] = useState<Record<number, CodeChoice>>({});
+  const { code, products } = props;
+  const [all, setAll] = useState<MeaningsDraft>(() => initialMeanings(code));
+  const [own, setOwn] = useState<Record<number, CategoryMeaningsDraft>>({});
   const categories = products?.categories ?? [];
-  const choices = Object.fromEntries(
+  const drafts = Object.fromEntries(
     categories.map((category) => [
       category.categoryId,
-      own[category.categoryId] ?? categoryChoice(category),
+      own[category.categoryId] ?? initialCategoryMeanings(category, code.attributeId),
     ]),
-  ) as Record<number, CodeChoice>;
+  ) as Record<number, CategoryMeaningsDraft>;
   const nothingChosen =
-    all === '' && Object.values(choices).every((choice) => choice === 'inherit');
+    !isMeaningsDecided(all) && Object.values(drafts).every((draft) => draft.mode === 'inherit');
 
   return (
     <Stack spacing={2} sx={{ minWidth: 0 }}>
@@ -159,44 +195,51 @@ export function CodeWorkspace(props: CodeWorkspaceProps) {
             {products ? `, ${categories.length} категоріях` : ''}.{code.note ? ` ${code.note}` : ''}
           </Typography>
         </Box>
-        {code.valueId === null ? (
+        {code.meanings.length === 0 ? (
           <StatusPill label="Не розшифровано" tone="error" />
         ) : (
-          <StatusPill label={`Припущення: ${code.valueName ?? ''}`} tone="warning" />
+          <StatusPill label={`Припущення: ${meaningsText(code.meanings)}`} tone="warning" />
         )}
       </Stack>
 
       {props.canEdit ? (
         <Stack
-          direction="row"
-          sx={{
-            alignItems: 'center',
-            bgcolor: 'background.default',
-            borderRadius: 3,
-            flexWrap: 'wrap',
-            gap: 1.5,
-            p: 1.5,
-          }}
-          useFlexGap
+          component="section"
+          aria-label="Розшифровка для всіх товарів"
+          spacing={1}
+          sx={{ bgcolor: 'background.default', borderRadius: 3, p: 1.5 }}
         >
-          <Typography sx={{ fontWeight: 700 }} variant="body2">
-            Для всіх товарів:
-          </Typography>
-          <Select
-            aria-label="Значення для всіх товарів"
-            displayEmpty
-            onChange={(event) => setAll(event.target.value as CodeChoice | '')}
-            size="small"
-            sx={{ minWidth: 240 }}
-            value={all}
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1, justifyContent: 'space-between' }}
+            useFlexGap
           >
-            <MenuItem value="">— не вибрано —</MenuItem>
-            {ValueOptions({ values })}
-            <MenuItem value="none">Без значення (не фільтрувати)</MenuItem>
-          </Select>
-          <Typography color="text.secondary" variant="caption">
-            Значення категорії має пріоритет.
-          </Typography>
+            <Typography sx={{ fontWeight: 700 }} variant="body2">
+              Що означає код для всіх товарів
+            </Typography>
+            <Typography color="text.secondary" variant="caption">
+              Оберіть ознаку, потім значення. Розшифровка категорії має пріоритет.
+            </Typography>
+          </Stack>
+          {all.nothing ? null : (
+            <CodeMeaningsEditor
+              label="для всіх товарів"
+              onChange={(rows) => setAll({ ...all, rows })}
+              Row={props.MeaningRow}
+              rows={all.rows}
+            />
+          )}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={all.nothing}
+                onChange={(event) => setAll({ ...all, nothing: event.target.checked })}
+                size="small"
+              />
+            }
+            label="Код нічого не означає (не фільтрувати)"
+            slotProps={{ typography: { variant: 'body2' } }}
+          />
         </Stack>
       ) : null}
 
@@ -216,11 +259,11 @@ export function CodeWorkspace(props: CodeWorkspaceProps) {
             <CategoryGroup
               canEdit={props.canEdit}
               category={category}
-              choice={choices[category.categoryId]}
               code={code.rawValue}
+              draft={drafts[category.categoryId]}
               key={category.categoryId}
-              onChange={(choice) => setOwn({ ...own, [category.categoryId]: choice })}
-              values={values}
+              MeaningRow={props.MeaningRow}
+              onChange={(draft) => setOwn({ ...own, [category.categoryId]: draft })}
             />
           ))}
         </Stack>
@@ -234,7 +277,7 @@ export function CodeWorkspace(props: CodeWorkspaceProps) {
           </Button>
           <Button
             disabled={props.saving || nothingChosen || !products}
-            onClick={() => props.onSave(toCodeDecision(all, choices))}
+            onClick={() => props.onSave(toCodeDecision(all, drafts))}
             variant="contained"
           >
             {props.saving ? 'Збереження…' : 'Зберегти і далі'}

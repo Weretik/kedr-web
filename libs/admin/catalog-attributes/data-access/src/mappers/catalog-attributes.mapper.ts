@@ -15,6 +15,7 @@ import type {
   CategoryFilter,
   CodeDecision,
   CodeDecisionResult,
+  CodeMeaningChoice,
   CodeProducts,
   NewCatalogAttribute,
   UnresolvedCode,
@@ -99,20 +100,29 @@ export function mapCodeProducts(response: unknown): CodeProducts {
   };
 }
 
-/** The decision as the backend takes it; `categories` is sent only when the screen lists them. */
+/**
+ * The decision as the backend takes it; `categories` and `meanings` are sent only when the screen gives them
+ * (spec catalog/008, 009).
+ */
 export function toCodeDecisionBody(decision: CodeDecision): DecideCodeBody {
   return {
     valueId: decision.valueId,
     applyToAll: decision.applyToAll ?? true,
+    ...(decision.meanings ? { meanings: decision.meanings.map(toMeaningBody) } : {}),
     ...(decision.categories
       ? {
-          categories: decision.categories.map(({ categoryId, valueId }) => ({
+          categories: decision.categories.map(({ categoryId, valueId, meanings }) => ({
             categoryId,
             valueId,
+            ...(meanings ? { meanings: meanings.map(toMeaningBody) } : {}),
           })),
         }
       : {}),
   };
+}
+
+function toMeaningBody({ attributeId, valueId }: CodeMeaningChoice) {
+  return { attributeId, valueId };
 }
 
 export function mapCategoryFilters(response: unknown): CategoryFilter[] {

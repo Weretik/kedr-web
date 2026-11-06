@@ -22,16 +22,27 @@ export {
 } from './entities/category-filter';
 export { moveFilter } from './entities/category-filter';
 export type {
+  CategoryMeaningsDraft,
   CodeCategory,
   CodeCategoryDecision,
-  CodeChoice,
   CodeDecision,
   CodeDecisionResult,
+  CodeMeaning,
+  CodeMeaningChoice,
   CodeProduct,
   CodeProducts,
+  MeaningDraft,
+  MeaningsDraft,
   UnresolvedCode,
 } from './entities/unresolved-code';
 export { codeDecisionNotice } from './entities/unresolved-code';
-export { categoryChoice, shortCategoryPath, toCodeDecision } from './mappers/code-decision';
+export {
+  completeMeanings,
+  initialCategoryMeanings,
+  initialMeanings,
+  isMeaningsDecided,
+  shortCategoryPath,
+  toCodeDecision,
+} from './mappers/code-decision';
 export type { AttributeRole } from './mappers/attribute-role';
 export { attributeRole, attributeRoles, groupAttributesByRole } from './mappers/attribute-role';

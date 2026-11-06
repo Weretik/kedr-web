@@ -1,11 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { CodeMeaningRow } from './components/codes/code-meaning-row';
 import { CodeWorkspace } from './components/codes/code-workspace';
 import { AttributeValueForm } from './forms/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
 
+import type { MeaningRowSlotProps } from './components/codes/code-meanings-editor';
 import type {
+  CatalogAttribute,
   CatalogAttributeValue,
   CategoryFilter,
   CodeProducts,
@@ -23,6 +26,7 @@ const code = (aliasId: number, valueId: number | null): UnresolvedCode => ({
   isConfirmed: false,
   note: null,
   productCount: 4,
+  meanings: [],
 });
 
 const filter = (attributeId: number, name: string): CategoryFilter => ({
@@ -134,6 +138,7 @@ describe('catalog attributes ui', () => {
           valueId: null,
           valueName: null,
           products: [{ productId: 60, name: 'KEDR ручка R08.148-AL-SN/CP', photo: '' }],
+          meanings: [],
         },
         {
           categoryId: 7,
@@ -142,14 +147,41 @@ describe('catalog attributes ui', () => {
           valueId: null,
           valueName: null,
           products: [{ productId: 26363, name: 'Дверне полотно ALIANO AL-06', photo: '' }],
+          meanings: [],
         },
       ],
     };
+    const material: CatalogAttribute = {
+      id: 2,
+      code: 'material_code',
+      nameUk: 'Матеріал',
+      nameRu: null,
+      kind: 'enum',
+      unit: null,
+      slug: 'material',
+      isFilterable: false,
+      isVariantAxis: false,
+      sortOrder: 0,
+      isEditedManually: false,
+      valueCount: 1,
+      productCount: 0,
+    };
+    const Row = (props: MeaningRowSlotProps) => (
+      <CodeMeaningRow
+        {...props}
+        attributes={[material]}
+        creating={false}
+        onCreateValue={() => Promise.resolve(undefined)}
+        values={[value(5, 'Алюміній', 'ALUMINIUM')]}
+        valuesLoading={false}
+      />
+    );
     render(
       <CodeWorkspace
         canEdit
         code={{ ...code(1, null), rawValue: 'AL', productCount: 2 }}
         error={null}
+        MeaningRow={Row}
         onRetry={vi.fn()}
         onSave={onSave}
         onSkip={vi.fn()}
@@ -157,20 +189,23 @@ describe('catalog attributes ui', () => {
         productsError={false}
         productsLoading={false}
         saving={false}
-        values={[value(5, 'Алюміній', 'ALUMINIUM')]}
       />,
     );
 
     expect(screen.getByRole('region', { name: 'Ручки > На планці' })).toBeTruthy();
     expect(screen.getAllByText('AL').some((node) => node.tagName === 'MARK')).toBe(true);
-    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Значення для всіх товарів' }));
+    expect(
+      screen.getByRole('combobox', { name: 'Розшифровка в категорії Korfad' }).textContent,
+    ).toBe('Нічого не означає');
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Значення 1 для всіх товарів' }));
     fireEvent.click(screen.getByRole('option', { name: 'Алюміній (ALUMINIUM)' }));
     fireEvent.click(screen.getByRole('button', { name: 'Зберегти і далі' }));
 
     expect(onSave).toHaveBeenCalledWith({
-      valueId: 5,
+      valueId: null,
       applyToAll: true,
-      categories: [{ categoryId: 7, valueId: null }],
+      meanings: [{ attributeId: 2, valueId: 5 }],
+      categories: [{ categoryId: 7, valueId: null, meanings: [] }],
     });
   });
 

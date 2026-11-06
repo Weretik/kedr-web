@@ -16,6 +16,7 @@ const api = vi.hoisted(() => ({
   create: vi.fn(),
   updateValue: vi.fn(),
   decide: vi.fn(),
+  createValue: vi.fn(),
 }));
 
 vi.mock('@admin/catalog-attributes/data-access', () => ({
@@ -26,7 +27,7 @@ vi.mock('@admin/catalog-attributes/data-access', () => ({
   useGetCategoryFiltersQuery: () => ({ data: undefined, isError: false, isLoading: false }),
   useUpdateCatalogAttributeMutation: () => [api.update, { isLoading: false }],
   useCreateCatalogAttributeMutation: () => [api.create, { isLoading: false }],
-  useCreateAttributeValueMutation: () => [vi.fn(), { isLoading: false }],
+  useCreateAttributeValueMutation: () => [api.createValue, { isLoading: false }],
   useUpdateAttributeValueMutation: () => [api.updateValue, { isLoading: false }],
   useUploadAttributeSwatchMutation: () => [vi.fn(), { isLoading: false }],
   useDecideAttributeCodeMutation: () => [api.decide, { isLoading: false }],
@@ -215,6 +216,7 @@ describe('CatalogDictionaryTab', () => {
       isConfirmed: false,
       note: null,
       productCount: 9,
+      meanings: [],
     };
     api.codes.mockReturnValue({
       data: [zcn, { ...zcn, aliasId: 5, rawValue: 'BK', productCount: 3 }],
@@ -233,6 +235,7 @@ describe('CatalogDictionaryTab', () => {
             valueId: null,
             valueName: null,
             products: [{ productId: 1377, name: 'KEDR циліндр ZINK M70 ZCN (40T*30)', photo: '' }],
+            meanings: [],
           },
         ],
       },
@@ -247,17 +250,104 @@ describe('CatalogDictionaryTab', () => {
     expect(screen.getByRole('heading', { name: /ZCN/ })).toBeTruthy();
     expect(screen.getByText('серія ZINK', { exact: false })).toBeTruthy();
     fireEvent.mouseDown(
-      screen.getByRole('combobox', { name: 'Значення в категорії Циліндри > серія ZINK' }),
+      screen.getByRole('combobox', { name: 'Розшифровка в категорії Циліндри > серія ZINK' }),
+    );
+    fireEvent.click(screen.getByRole('option', { name: 'Своя розшифровка' }));
+    fireEvent.mouseDown(
+      screen.getByRole('combobox', { name: 'Значення 1 у категорії Циліндри > серія ZINK' }),
     );
     fireEvent.click(screen.getByRole('option', { name: 'Хром (CR)' }));
     fireEvent.click(screen.getByRole('button', { name: 'Зберегти і далі' }));
 
     expect(api.decide).toHaveBeenCalledWith({
       aliasId: 4,
-      decision: { valueId: null, applyToAll: false, categories: [{ categoryId: 11, valueId: 8 }] },
+      decision: {
+        valueId: null,
+        applyToAll: false,
+        meanings: [],
+        categories: [{ categoryId: 11, valueId: null, meanings: [{ attributeId: 3, valueId: 8 }] }],
+      },
     });
     expect(await screen.findByText(/Код «ZCN» збережено/)).toBeTruthy();
     expect(screen.getByRole('heading', { name: /BK/ })).toBeTruthy();
+  });
+
+  it('decodes a composite code for all products in two attributes, adding a missing value', async () => {
+    const configuration = { ...attribute, id: 9, code: 'configuration', nameUk: 'Конфігурація' };
+    const zValue = { ...details.values[0], id: 20, code: 'Z', nameUk: 'Z', swatchHex: null };
+    api.list.mockReturnValue({
+      data: [attribute, configuration],
+      isError: false,
+      isFetching: false,
+    });
+    api.one.mockImplementation((id: number) => ({
+      data: id === 9 ? { ...details, attribute: configuration, values: [] } : details,
+      isError: false,
+      isFetching: false,
+    }));
+    api.createValue.mockReturnValue({
+      unwrap: () => Promise.resolve({ ...details, attribute: configuration, values: [zValue] }),
+    });
+    api.codes.mockReturnValue({
+      data: [
+        {
+          aliasId: 6,
+          attributeId: 9,
+          attributeName: 'Конфігурація',
+          scope: 'mechanical_cylinder',
+          rawValue: 'ZCG',
+          valueId: null,
+          valueName: null,
+          isConfirmed: false,
+          note: null,
+          productCount: 14,
+          meanings: [],
+        },
+      ],
+      isError: false,
+      isFetching: false,
+    });
+    api.codeProducts.mockReturnValue({
+      data: { aliasId: 6, rawValue: 'ZCG', categories: [] },
+      isError: false,
+      isFetching: false,
+    });
+    api.decide.mockReturnValue({
+      unwrap: () => Promise.resolve({ code: { rawValue: 'ZCG' }, valuesConfirmed: 0 }),
+    });
+    renderPage(true, 'codes');
+
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Значення 1 для всіх товарів' }));
+    fireEvent.click(screen.getByRole('option', { name: '+ Нове значення…' }));
+    fireEvent.change(screen.getByLabelText('Нове значення'), { target: { value: 'Z' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Додати' }));
+    expect(
+      await screen.findByRole('combobox', { name: 'Значення 1 для всіх товарів' }),
+    ).toBeTruthy();
+    expect(api.createValue).toHaveBeenCalledWith(
+      expect.objectContaining({ attributeId: 9, change: expect.objectContaining({ nameUk: 'Z' }) }),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Ще ознака' }));
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Ознака 2 для всіх товарів' }));
+    expect(screen.queryByRole('option', { name: 'Конфігурація' })).toBeNull();
+    fireEvent.click(screen.getByRole('option', { name: 'Колір / декор' }));
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Значення 2 для всіх товарів' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Хром (CR)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти і далі' }));
+
+    expect(api.decide).toHaveBeenCalledWith({
+      aliasId: 6,
+      decision: {
+        valueId: null,
+        applyToAll: true,
+        categories: [],
+        meanings: [
+          { attributeId: 9, valueId: 20 },
+          { attributeId: 3, valueId: 8 },
+        ],
+      },
+    });
   });
 
   it('lists only categories shown on the site and marks a final one without filters', () => {
