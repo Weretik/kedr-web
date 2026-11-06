@@ -79,8 +79,8 @@ tools/architecture/project-boundary-rules.mjs       # product-feature → catalo
 - **D-11. Тексты автоматические:** H1 «{предмет категории} {значение}» (цвет строчными), строка под H1 и описание для Google из числа моделей. Тексты категории на странице значения не повторяются. Ручные тексты страниц значений в админке — следующим шагом (нужен backend).
 - **D-12. ProductGroup.** Модель из нескольких товаров размечается `ProductGroup`: `productGroupID` = слаг модели, `variesBy` (цвет, размер), `hasVariant` с названием, кодом 1С, адресом варианта, фото, цветом и размером; цена — только «від»: `AggregateOffer` с `lowPrice`, без `highPrice` и без цен вариантов. Модель из одного товара сохраняет `Product` с `Offer`.
 
-- **SC-08 (D-07, D-08).** Конечная категория показывает ссылки «Колір: Хром 12, Золото 9…» на страницы значений; значение с одной моделью ссылки не получает.
-- **SC-09 (D-07, D-11).** `/catalog/zavisy/khrom`: крошки с «Хром», H1 «Завіси хром», число моделей и строка, список моделей с цветом хром, отмеченный «Хром» и «Усі» обратно в категорию; canonical — сам адрес.
+- **SC-08 (D-07, D-08).** ~~Ссылки «Колір: Хром 12…» над списком~~ убраны владельцем 2026-11-06: цвет и размер выбираются только в фильтрах слева (выбор одного значения ведёт 308 на его страницу), Google находит страницы значений по карте сайта.
+- **SC-09 (D-07, D-11).** `/catalog/zavisy/khrom`: крошки с «Хром», H1 «Завіси хром», число моделей и строка, список моделей с цветом хром, «Хром» отмечен в фильтре слева; canonical — сам адрес.
 - **SC-10 (D-10).** `/catalog/zavisy?kolir=khrom&sort=name` отвечает 308 на `/catalog/zavisy/khrom?sort=name`; `?kolir=khrom&inStock=true` остаётся в категории.
 - **SC-11 (D-08).** Карта сайта каталога перечисляет страницы значений с двумя и более моделями; недоступный список категории роняет карту (5xx), а не публикует неполную.
 - **SC-12 (D-12).** Страница модели из нескольких товаров отдаёт `ProductGroup` с `lowPrice` и без `highPrice`.
@@ -89,12 +89,10 @@ tools/architecture/project-boundary-rules.mjs       # product-feature → catalo
 libs/site/catalog/
   model/   landing/listing-landing.ts         # коды color/size, порог 2, путь, поиск значения, H1, query без/со значением
   seo/     metadata/category-metadata.ts      # buildLandingMetadata
-  ui/      listing/landing-links.tsx          # ссылки на страницы значений
-           category/category-header.tsx       # + countOf, intro
+  ui/      category/category-header.tsx       # + countOf, intro
            listing/listing-toolbar.tsx        # + filterPath/filterQuery для панели фильтров
   feature/ landing/landing-page.tsx           # CategoryValuePage, loadLandingOrRespond
-           landing/landing-link-groups.ts     # группы ссылок из нефильтрованного списка
-           category/category-page.tsx         # ссылки, 308 одного значения, loadBaseListing
+           category/category-page.tsx         # 308 одного значения, loadBaseListing
            listing/product-listing.tsx        # + landing, filterPath
            routing/category-routing.ts        # generateLandingMetadata, карта сайта со значениями
 libs/site/product/

@@ -101,7 +101,7 @@ describe('loadLandingOrRespond', () => {
 });
 
 describe('CategoryValuePage', () => {
-  it('renders the value trail, the automatic heading and line, and links to the other values', async () => {
+  it('renders the value trail, and the automatic heading and line', async () => {
     getCategory.mockResolvedValue({ kind: 'ok', category });
     getCatalogTree.mockResolvedValue([]);
     getProductListPage
@@ -122,13 +122,7 @@ describe('CategoryValuePage', () => {
       screen.getByText('Завіси хром: 12 моделей. Продаємо оптом і в роздріб, доставка по Україні.'),
     ).toBeTruthy();
     expect(screen.getByRole('navigation', { name: 'Ви тут' }).textContent).toContain('Хром');
-    expect(screen.getByRole('link', { name: /Хром/ }).getAttribute('aria-current')).toBe('page');
-    expect(screen.getByRole('link', { name: /Золото/ }).getAttribute('href')).toBe(
-      '/uk/catalog/zavisy/zoloto',
-    );
-    expect(screen.getByRole('link', { name: 'Усі' }).getAttribute('href')).toBe(
-      '/uk/catalog/zavisy',
-    );
+    expect(screen.queryByRole('link', { name: /Золото/ })).toBeNull();
     expect(screen.queryByText('Текст категорії')).toBeNull();
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       '/uk/catalog/zavisy/khrom',

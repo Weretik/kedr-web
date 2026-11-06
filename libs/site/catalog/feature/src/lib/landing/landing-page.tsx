@@ -1,13 +1,12 @@
 import { getCatalogTree } from '@site/catalog/data-access';
 import { categoryPath, findLanding, landingHeading, landingPath } from '@site/catalog/model';
 import { buildBreadcrumbListJsonLd, categorySubject } from '@site/catalog/seo';
-import { Breadcrumbs, CategoryHeader, LandingLinks, getCatalogDictionary } from '@site/catalog/ui';
+import { Breadcrumbs, CategoryHeader, getCatalogDictionary } from '@site/catalog/ui';
 import { localizedPath, pluralize } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { landingLinkGroups } from './landing-link-groups';
 import { categoryChips } from '../category/category-chips';
 import { categoryCrumbs } from '../category/category-crumbs';
 import { loadBaseListing, loadCategoryOrRespond } from '../category/category-page';
@@ -15,15 +14,10 @@ import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 
 import type { RenderListingPurchaseAction } from '../listing/listing-purchase';
-import type {
-  CategoryDetails,
-  ListingLanding,
-  ProductListPage,
-  SearchParamsRecord,
-} from '@site/catalog/model';
+import type { CategoryDetails, ListingLanding, SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 
-type LoadedLanding = { category: CategoryDetails; landing: ListingLanding; base: ProductListPage };
+type LoadedLanding = { category: CategoryDetails; landing: ListingLanding };
 
 type CategoryValuePageProps = {
   locale: Locale;
@@ -49,12 +43,12 @@ export async function loadLandingOrRespond(
   if (!base) throw new Error(`Catalog API is unavailable for the list of "${slug}"`);
   const landing = findLanding(base.filters, value);
   if (!landing) notFound();
-  return { category, landing, base };
+  return { category, landing };
 }
 
 /**
  * A value page of a final category, «Завіси хром» (spec site/product/002 stage 7): the category trail with the
- * value, an automatic heading and opening line, links to the other values, then the category's listing with the
+ * value, an automatic heading and opening line, then the category's listing with the
  * value applied. Admin texts of value pages come later, so the category's own text is not repeated here.
  */
 export async function CategoryValuePage({
@@ -64,7 +58,7 @@ export async function CategoryValuePage({
   searchParams,
   renderPurchaseAction,
 }: CategoryValuePageProps) {
-  const [{ category, landing, base }, tree] = await Promise.all([
+  const [{ category, landing }, tree] = await Promise.all([
     loadLandingOrRespond(locale, slug, value, searchParams),
     getCatalogTree(locale),
   ]);
@@ -88,10 +82,6 @@ export async function CategoryValuePage({
         intro={dictionary.landingIntro(heading, count)}
         chips={categoryChips(category.children, category.id, tree)}
         activeId={category.id}
-      />
-      <LandingLinks
-        locale={locale}
-        groups={landingLinkGroups(locale, category.slug, base.filters, landing)}
       />
       <Suspense fallback={<ListingSkeleton />}>
         <ProductListing

@@ -13,7 +13,7 @@ import {
   withoutAttribute,
 } from '@site/catalog/model';
 import { buildBreadcrumbListJsonLd } from '@site/catalog/seo';
-import { Breadcrumbs, CategoryContent, CategoryHeader, LandingLinks } from '@site/catalog/ui';
+import { Breadcrumbs, CategoryContent, CategoryHeader } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
 import { notFound, permanentRedirect } from 'next/navigation';
@@ -21,7 +21,6 @@ import { Suspense } from 'react';
 
 import { categoryChips } from './category-chips';
 import { categoryCrumbs } from './category-crumbs';
-import { landingLinkGroups } from '../landing/landing-link-groups';
 import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 import { CATEGORY_PLACEHOLDER_SLUG } from '../routing/category-routing';
@@ -78,8 +77,8 @@ export async function loadCategoryOrRespond(
 }
 
 /**
- * The unfiltered list of a final category, for its value page links and redirects; null elsewhere. A failed load
- * throws on a value page (its own loader) and only drops the links here.
+ * The unfiltered list of a final category, for the redirect to a value page; null elsewhere. A failed load
+ * throws on a value page (its own loader) and only skips the redirect here.
  */
 export async function loadBaseListing(
   locale: Locale,
@@ -138,10 +137,6 @@ export async function CategoryPage({
         productCount={category.productCount}
         chips={categoryChips(category.children, category.id, tree)}
         activeId={category.id}
-      />
-      <LandingLinks
-        locale={locale}
-        groups={landingLinkGroups(locale, category.slug, base?.filters ?? [])}
       />
       <Suspense fallback={<ListingSkeleton />}>
         <ProductListing
