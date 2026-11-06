@@ -1,7 +1,9 @@
 import { SectionCard } from '@admin/shared/ui';
 import AddIcon from '@mui/icons-material/Add';
-import { Alert, Autocomplete, Button, Chip, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Chip, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
+
+import { CreatablePicker } from '../common/creatable-picker';
 
 import type { AttributeOption, SiteModelAxis } from '@admin/site-models/model';
 
@@ -12,16 +14,22 @@ interface SiteModelAxesCardProps {
   busy: boolean;
   error: string | null;
   onChange: (attributeIds: number[]) => void;
+  /** Creates a list attribute with this name (spec catalog/007 M-06) and returns its id. */
+  onCreateAttribute: (name: string) => Promise<number | undefined>;
 }
 
 const maxAxes = 6;
 
-/** «Чим відрізняються товари»: the switchers of the model page, in order. */
+/**
+ * «Чим відрізняються товари»: the switchers of the model page, in order. A name no attribute has offers «Створити
+ * ознаку», so a new switcher is added without leaving the model.
+ */
 export function SiteModelAxesCard({
   axes,
   busy,
   error,
   onChange,
+  onCreateAttribute,
   options,
 }: SiteModelAxesCardProps) {
   const [adding, setAdding] = useState(false);
@@ -74,17 +82,19 @@ export function SiteModelAxesCard({
         </Stack>
       )}
       {adding ? (
-        <Autocomplete
-          autoHighlight
-          getOptionLabel={(option) => option.name}
+        <CreatablePicker
+          ariaLabel="Ознака"
+          autoFocus
+          createText="Створити ознаку"
+          label="Ознака"
           onBlur={() => setAdding(false)}
-          onChange={(_event, option) => {
+          onCreate={onCreateAttribute}
+          onPick={(id) => {
             setAdding(false);
-            if (option) onChange([...ids, option.id]);
+            onChange([...ids, id]);
           }}
-          openOnFocus
-          options={[...available]}
-          renderInput={(params) => <TextField {...params} label="Ознака" size="small" />}
+          options={available}
+          value={null}
         />
       ) : null}
     </SectionCard>

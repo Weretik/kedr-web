@@ -3,6 +3,8 @@ import { baseApi } from '@admin/shared/api-client';
 import {
   mapAttributeOptions,
   mapAttributeValueOptions,
+  mapCreatedAttributeId,
+  mapCreatedValueId,
   mapProductAttributes,
   toSetProductAttributeBody,
 } from '../mappers/product-attributes.mapper';
@@ -46,6 +48,55 @@ export const productAttributesApi = baseApi.injectEndpoints({
       providesTags: (_result, _error, attributeId) => [
         { type: 'CatalogAttributes', id: attributeId },
       ],
+    }),
+    /**
+     * A new list attribute made from the model card (spec catalog/007 M-06): a site filter and a model switcher.
+     * Returns its id.
+     */
+    createAttributeOption: build.mutation<number, string>({
+      query: (nameUk) => ({
+        url: '/api/admin/catalog-attributes',
+        method: 'POST',
+        data: {
+          nameUk,
+          nameRu: null,
+          kind: 'enum',
+          unit: null,
+          code: null,
+          slug: null,
+          isFilterable: true,
+          isVariantAxis: true,
+          sortOrder: 100,
+        },
+      }),
+      transformResponse: mapCreatedAttributeId,
+      invalidatesTags: (_result, error) =>
+        error ? [] : [{ type: 'CatalogAttributes', id: 'LIST' }],
+    }),
+    /** A new value of an attribute made from the model card. Returns its id. */
+    createAttributeValueOption: build.mutation<number, { attributeId: number; nameUk: string }>({
+      query: ({ attributeId, nameUk }) => ({
+        url: `/api/admin/catalog-attributes/${attributeId}/values`,
+        method: 'POST',
+        data: {
+          nameUk,
+          nameRu: null,
+          code: null,
+          slug: null,
+          sortOrder: 100,
+          swatchHex: null,
+          swatchMediaFileId: null,
+        },
+      }),
+      transformResponse: (response: unknown, _meta, { nameUk }) =>
+        mapCreatedValueId(response, nameUk),
+      invalidatesTags: (_result, error, { attributeId }) =>
+        error
+          ? []
+          : [
+              { type: 'CatalogAttributes', id: attributeId },
+              { type: 'CatalogAttributes', id: 'LIST' },
+            ],
     }),
     setProductAttribute: build.mutation<
       ProductAttributes,
@@ -91,6 +142,8 @@ export const productAttributesApi = baseApi.injectEndpoints({
 
 export const {
   useAcceptProductReviewMutation,
+  useCreateAttributeOptionMutation,
+  useCreateAttributeValueOptionMutation,
   useGetAttributeOptionsQuery,
   useGetAttributeValueOptionsQuery,
   useGetProductAttributesQuery,

@@ -150,6 +150,7 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
               onEditAttributes={(product) =>
                 setEdited({ productId: product.productId, name: product.name })
               }
+              onCreateValue={editor.createValue}
               onFillFromNames={() => void editor.fillFromNames(model.id)}
               onRemove={(product) => void editor.removeProduct(model.id, product.productId)}
               onSetValue={(productId, attributeId, valueId) =>
@@ -181,6 +182,7 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
                 busy={editor.axesBusy}
                 error={editor.errors.axes ?? null}
                 onChange={(attributeIds) => void editor.setAxes(model.id, attributeIds)}
+                onCreateAttribute={editor.createAttribute}
                 options={attributeOptions.data ?? []}
               />
               <SiteModelCharacteristicsCard characteristics={model.characteristics} />

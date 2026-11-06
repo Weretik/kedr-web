@@ -3,8 +3,9 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
-import { Alert, Box, Button, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 
+import { CreatablePicker } from '../common/creatable-picker';
 import { ProductThumb } from '../common/product-thumb';
 import { SiteProblemPills } from '../common/site-problem-pills';
 
@@ -22,6 +23,8 @@ interface SiteModelProductsCardProps {
   busy: boolean;
   error: string | null;
   onSetValue: (productId: number, attributeId: number, valueId: number) => void;
+  /** Adds a value with this name to the attribute and returns its id. */
+  onCreateValue: (attributeId: number, name: string) => Promise<number | undefined>;
   onEditAttributes: (product: SiteModelProduct) => void;
   onRemove: (product: SiteModelProduct) => void;
   onFillFromNames: () => void;
@@ -30,8 +33,8 @@ interface SiteModelProductsCardProps {
 
 /**
  * The products of a model, one row each: a large photo, the full name on top, the axis
- * pickers under it, then «Чого бракує» and the actions. An empty value of an on-site
- * product is a problem.
+ * pickers under it (a typed value nothing matches offers «Створити значення»), then «Чого
+ * бракує» and the actions. An empty value of an on-site product is a problem.
  */
 export function SiteModelProductsCard(props: SiteModelProductsCardProps) {
   const { axes, busy, products } = props;
@@ -103,7 +106,12 @@ function ProductRow(
           >
             {axes.map((axis) => {
               const value = product.values.find((item) => item.attributeId === axis.attributeId);
-              const options = axisValues[axis.attributeId] ?? [];
+              const loaded = axisValues[axis.attributeId] ?? [];
+              // The product's own value stays shown while the attribute's values load.
+              const options =
+                value?.valueId && !loaded.some((option) => option.id === value.valueId)
+                  ? [...loaded, { id: value.valueId, name: value.name ?? '' }]
+                  : loaded;
               return (
                 <Stack key={axis.attributeId} spacing={0.5} sx={{ minWidth: 0 }}>
                   <Typography
@@ -113,29 +121,19 @@ function ProductRow(
                   >
                     {axis.name}
                   </Typography>
-                  <Select
-                    aria-label={`${axis.name}: ${product.name}`}
-                    disabled={busy || options.length === 0}
-                    displayEmpty
+                  <CreatablePicker
+                    ariaLabel={`${axis.name}: ${product.name}`}
+                    createText="Створити значення"
+                    disabled={busy}
+                    emptyText="—"
                     error={!value?.valueId && product.exportToSite}
-                    fullWidth
-                    onChange={(event) =>
-                      props.onSetValue(
-                        product.productId,
-                        axis.attributeId,
-                        Number(event.target.value),
-                      )
+                    onCreate={(name) => props.onCreateValue(axis.attributeId, name)}
+                    onPick={(valueId) =>
+                      props.onSetValue(product.productId, axis.attributeId, valueId)
                     }
-                    renderValue={() => value?.name ?? '—'}
-                    size="small"
-                    value={value?.valueId ? String(value.valueId) : ''}
-                  >
-                    {options.map((option) => (
-                      <MenuItem key={option.id} value={String(option.id)}>
-                        {option.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    options={options}
+                    value={value?.valueId ?? null}
+                  />
                 </Stack>
               );
             })}
