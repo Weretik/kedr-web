@@ -3570,10 +3570,10 @@ export interface components {
             nameUk: string;
             nameRu?: string | null;
             /**
-             * @description `enum` - a list of values; `number` - a number in `unit`.
+             * @description `enum` - a list of values; `yesno` - a list with «Так» and «Ні» created at once; `number` - a number in `unit`.
              * @enum {string}
              */
-            kind: "enum" | "number";
+            kind: "enum" | "number" | "yesno";
             unit?: string | null;
             code?: string | null;
             slug?: string | null;
@@ -3637,6 +3637,12 @@ export interface components {
             mediaFileId: number;
             url: string;
         };
+        AdminCodeMeaning: {
+            attributeId: number;
+            attributeName: string;
+            valueId: number;
+            valueName: string;
+        };
         AdminUnresolvedCode: {
             aliasId: number;
             attributeId: number;
@@ -3650,11 +3656,20 @@ export interface components {
             note?: string | null;
             /** @description On-site products whose review mentions the code (spec catalog/007 M-01). */
             productCount: number;
+            /** @description What the code means for all products (spec catalog/009), the value of its own attribute first. */
+            meanings: components["schemas"]["AdminCodeMeaning"][];
+        };
+        CodeMeaning: {
+            attributeId: number;
+            /** @description A value of that attribute. */
+            valueId: number;
         };
         DecideAttributeCodeCategory: {
             categoryId: number;
             /** @description Null: the code means nothing in this category. */
             valueId?: number | null;
+            /** @description The whole decoding in this category (spec catalog/009); replaces valueId when given. */
+            meanings?: components["schemas"]["CodeMeaning"][] | null;
         };
         DecideAttributeCodeRequest: {
             valueId?: number | null;
@@ -3665,6 +3680,8 @@ export interface components {
             applyToAll: boolean;
             /** @description The whole list of the code's own decodings per category; null leaves them as they are. */
             categories?: components["schemas"]["DecideAttributeCodeCategory"][] | null;
+            /** @description The whole decoding for all products (spec catalog/009): values of any attributes, at most one per attribute; empty when the code means nothing to filter by. Replaces valueId when given. */
+            meanings?: components["schemas"]["CodeMeaning"][] | null;
         };
         DecideAttributeCodeResponse: {
             code: components["schemas"]["AdminUnresolvedCode"];
@@ -3685,6 +3702,8 @@ export interface components {
             valueId?: number | null;
             valueName?: string | null;
             products: components["schemas"]["AdminCodeProduct"][];
+            /** @description The category's own decoding (spec catalog/009); empty when it has none or the code means nothing there. */
+            meanings: components["schemas"]["AdminCodeMeaning"][];
         };
         AdminCodeProducts: {
             aliasId: number;

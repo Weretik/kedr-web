@@ -17,7 +17,15 @@ paths:
       tags: [Admin product attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Panel, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductAttributes' } } } }
+        '200':
+          {
+            description: Panel,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductAttributes' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -37,9 +45,21 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/SetProductAttributeRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/SetProductAttributeRequest' } },
+          }
       responses:
-        '200': { description: Panel after the change, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductAttributes' } } } }
+        '200':
+          {
+            description: Panel after the change,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductAttributes' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -57,7 +77,15 @@ paths:
       tags: [Admin product attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Panel after the change, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductAttributes' } } } }
+        '200':
+          {
+            description: Panel after the change,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductAttributes' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -72,7 +100,15 @@ paths:
       tags: [Admin product attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Panel after the change, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductAttributes' } } } }
+        '200':
+          {
+            description: Panel after the change,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductAttributes' } },
+              },
+          }
         '400': { description: 'The product has no recognized attributes yet, or invalid input.' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -86,7 +122,15 @@ paths:
       tags: [Admin product attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Panel after the change, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductAttributes' } } } }
+        '200':
+          {
+            description: Panel after the change,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductAttributes' } },
+              },
+          }
         '400': { description: 'The product has no recognized attributes yet, or invalid input.' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -98,7 +142,21 @@ paths:
       tags: [Admin catalog attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Attributes in order, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminCatalogAttributeListItem' } } } } }
+        '200':
+          {
+            description: Attributes in order,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: '#/components/schemas/AdminCatalogAttributeListItem' },
+                      },
+                  },
+              },
+          }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
     post:
@@ -111,9 +169,21 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/CreateCatalogAttributeRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/CreateCatalogAttributeRequest' } },
+          }
       responses:
-        '200': { description: The new attribute, content: { application/json: { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } } } }
+        '200':
+          {
+            description: The new attribute,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -126,7 +196,15 @@ paths:
       tags: [Admin catalog attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Attribute, content: { application/json: { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } } } }
+        '200':
+          {
+            description: Attribute,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -139,9 +217,21 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/UpdateCatalogAttributeRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/UpdateCatalogAttributeRequest' } },
+          }
       responses:
-        '200': { description: Attribute, content: { application/json: { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } } } }
+        '200':
+          {
+            description: Attribute,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -157,9 +247,21 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/CreateAttributeValueRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/CreateAttributeValueRequest' } },
+          }
       responses:
-        '200': { description: Attribute with the new value, content: { application/json: { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } } } }
+        '200':
+          {
+            description: Attribute with the new value,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -176,9 +278,21 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/UpdateAttributeValueRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/UpdateAttributeValueRequest' } },
+          }
       responses:
-        '200': { description: Attribute, content: { application/json: { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } } } }
+        '200':
+          {
+            description: Attribute,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminCatalogAttribute' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -203,7 +317,15 @@ paths:
               properties:
                 file: { type: string, format: binary }
       responses:
-        '200': { description: The picture in the media library, content: { application/json: { schema: { $ref: '#/components/schemas/AdminAttributeSwatchUpload' } } } }
+        '200':
+          {
+            description: The picture in the media library,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminAttributeSwatchUpload' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -217,7 +339,18 @@ paths:
       tags: [Admin catalog attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Codes, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminUnresolvedCode' } } } } }
+        '200':
+          {
+            description: Codes,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      { type: array, items: { $ref: '#/components/schemas/AdminUnresolvedCode' } },
+                  },
+              },
+          }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
   /api/admin/catalog-attributes/codes/{aliasId}/products:
@@ -232,7 +365,12 @@ paths:
       tags: [Admin catalog attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Products by category, content: { application/json: { schema: { $ref: '#/components/schemas/AdminCodeProducts' } } } }
+        '200':
+          {
+            description: Products by category,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AdminCodeProducts' } } },
+          }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
         '404': { description: Code not found. }
@@ -252,9 +390,21 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/DecideAttributeCodeRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/DecideAttributeCodeRequest' } },
+          }
       responses:
-        '200': { description: Decision, content: { application/json: { schema: { $ref: '#/components/schemas/DecideAttributeCodeResponse' } } } }
+        '200':
+          {
+            description: Decision,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/DecideAttributeCodeResponse' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -266,7 +416,18 @@ paths:
       tags: [Admin catalog attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Reasons, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminProblemReason' } } } } }
+        '200':
+          {
+            description: Reasons,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      { type: array, items: { $ref: '#/components/schemas/AdminProblemReason' } },
+                  },
+              },
+          }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
   /api/admin/catalog-attributes/category-filters/{categoryId}:
@@ -279,7 +440,21 @@ paths:
       tags: [Admin catalog attributes]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Filters, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminCategoryAttributeFilter' } } } } }
+        '200':
+          {
+            description: Filters,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: '#/components/schemas/AdminCategoryAttributeFilter' },
+                      },
+                  },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -292,22 +467,52 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/SetCategoryAttributeFiltersRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/SetCategoryAttributeFiltersRequest' } },
+          }
       responses:
-        '200': { description: Filters, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminCategoryAttributeFilter' } } } } }
+        '200':
+          {
+            description: Filters,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: '#/components/schemas/AdminCategoryAttributeFilter' },
+                      },
+                  },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
         '404': { description: Category not found. }
 components:
   responses:
-    ValidationError: { description: Input validation failed, content: { application/json: { schema: { type: array, items: { type: object, additionalProperties: true } } } } }
+    ValidationError:
+      {
+        description: Input validation failed,
+        content:
+          {
+            application/json:
+              { schema: { type: array, items: { type: object, additionalProperties: true } } },
+          },
+      }
   schemas:
     AdminAttributeProblem:
       type: object
       required: [code]
       properties:
-        code: { type: string, description: 'Stable reason code, for example `unresolved_color`, `no_name`, `same_variants`.' }
+        code:
+          {
+            type: string,
+            description: 'Stable reason code, for example `unresolved_color`, `no_name`, `same_variants`.',
+          }
         text: { type: [string, 'null'], description: Recognizer explanation. }
     AdminProductReview:
       type: object
@@ -327,8 +532,16 @@ components:
         number: { type: [number, 'null'] }
         source: { type: string, enum: [import, parser, manual] }
         isLocked: { type: boolean }
-        isConfirmed: { type: boolean, description: False while the decoding behind the value is not confirmed; such values stay off filters. }
-        hasAutomatic: { type: boolean, description: Whether «Повернути автоматичне» brings an automatic value back. }
+        isConfirmed:
+          {
+            type: boolean,
+            description: False while the decoding behind the value is not confirmed; such values stay off filters.,
+          }
+        hasAutomatic:
+          {
+            type: boolean,
+            description: Whether «Повернути автоматичне» brings an automatic value back.,
+          }
     AdminProductAttribute:
       type: object
       required: [attributeId, code, name, kind, isVariantAxis, values]
@@ -346,7 +559,11 @@ components:
       properties:
         productId: { type: integer }
         originalName: { type: string, description: The 1C name; never changed. }
-        baseName: { type: [string, 'null'], description: 'Name without color, size, and side; used for grouping.' }
+        baseName:
+          {
+            type: [string, 'null'],
+            description: 'Name without color, size, and side; used for grouping.',
+          }
         review: { $ref: '#/components/schemas/AdminProductReview' }
         attributes: { type: array, items: { $ref: '#/components/schemas/AdminProductAttribute' } }
     SetProductAttributeRequest:
@@ -365,7 +582,20 @@ components:
               number: { type: [number, 'null'] }
     AdminCatalogAttributeListItem:
       type: object
-      required: [id, code, nameUk, kind, slug, isFilterable, isVariantAxis, sortOrder, isEditedManually, valueCount, productCount]
+      required:
+        [
+          id,
+          code,
+          nameUk,
+          kind,
+          slug,
+          isFilterable,
+          isVariantAxis,
+          sortOrder,
+          isEditedManually,
+          valueCount,
+          productCount,
+        ]
       properties:
         id: { type: integer }
         code: { type: string }
@@ -397,7 +627,8 @@ components:
         slug: { type: string }
         sortOrder: { type: integer }
         swatchHex: { type: [string, 'null'], pattern: '^#[0-9A-F]{6}$' }
-        swatchMediaFileId: { type: [integer, 'null'], description: Media-library texture of a decor. }
+        swatchMediaFileId:
+          { type: [integer, 'null'], description: Media-library texture of a decor. }
         swatchImageUrl: { type: [string, 'null'] }
         isEditedManually: { type: boolean }
         productCount: { type: integer }
@@ -433,12 +664,21 @@ components:
       properties:
         nameUk: { type: string, maxLength: 120 }
         nameRu: { type: [string, 'null'], maxLength: 120 }
-        kind: { type: string, enum: [enum, number], description: '`enum` - a list of values; `number` - a number in `unit`.' }
+        kind:
+          {
+            type: string,
+            enum: [enum, number, yesno],
+            description: '`enum` - a list of values; `yesno` - a list with «Так» and «Ні» created at once; `number` - a number in `unit`.',
+          }
         unit: { type: [string, 'null'], maxLength: 16 }
         code: { type: [string, 'null'], maxLength: 64, pattern: '^[a-z0-9_]+$' }
         slug: { type: [string, 'null'], maxLength: 80, pattern: '^[a-z0-9]+(-[a-z0-9]+)*$' }
         isFilterable: { type: boolean }
-        isVariantAxis: { type: boolean, description: The products of a model may differ by it (offered as a model switcher). }
+        isVariantAxis:
+          {
+            type: boolean,
+            description: The products of a model may differ by it (offered as a model switcher).,
+          }
         sortOrder: { type: integer, minimum: 0, maximum: 100000 }
     CreateAttributeValueRequest:
       type: object
@@ -462,33 +702,80 @@ components:
         swatchMediaFileId: { type: [integer, 'null'], minimum: 1 }
     AdminUnresolvedCode:
       type: object
-      required: [aliasId, attributeId, attributeName, scope, rawValue, isConfirmed, productCount]
+      required:
+        [aliasId, attributeId, attributeName, scope, rawValue, isConfirmed, productCount, meanings]
       properties:
         aliasId: { type: integer }
         attributeId: { type: integer }
         attributeName: { type: string }
         scope: { type: string }
         rawValue: { type: string }
-        valueId: { type: [integer, 'null'], description: 'Decoding picked by an assistant, not confirmed yet.' }
+        valueId:
+          {
+            type: [integer, 'null'],
+            description: 'Decoding picked by an assistant, not confirmed yet.',
+          }
         valueName: { type: [string, 'null'] }
         isConfirmed: { type: boolean }
         note: { type: [string, 'null'] }
-        productCount: { type: integer, description: On-site products whose review mentions the code (spec catalog/007 M-01). }
+        productCount:
+          {
+            type: integer,
+            description: On-site products whose review mentions the code (spec catalog/007 M-01).,
+          }
+        meanings:
+          type: array
+          description: What the code means for all products (spec catalog/009), the value of its own attribute first.
+          items: { $ref: '#/components/schemas/AdminCodeMeaning' }
+    AdminCodeMeaning:
+      type: object
+      required: [attributeId, attributeName, valueId, valueName]
+      properties:
+        attributeId: { type: integer }
+        attributeName: { type: string }
+        valueId: { type: integer }
+        valueName: { type: string }
+    CodeMeaning:
+      type: object
+      required: [attributeId, valueId]
+      properties:
+        attributeId: { type: integer, minimum: 1 }
+        valueId: { type: integer, minimum: 1, description: A value of that attribute. }
     DecideAttributeCodeRequest:
       type: object
       properties:
         valueId: { type: [integer, 'null'], minimum: 1 }
-        applyToAll: { type: boolean, default: true, description: 'False keeps the code undecided for all products.' }
+        applyToAll:
+          {
+            type: boolean,
+            default: true,
+            description: 'False keeps the code undecided for all products.',
+          }
         categories:
           type: [array, 'null']
           description: The whole list of the code's own decodings per category; null leaves them as they are.
           items: { $ref: '#/components/schemas/DecideAttributeCodeCategory' }
+        meanings:
+          type: [array, 'null']
+          description: >-
+            The whole decoding for all products (spec catalog/009): values of any attributes, at most one per attribute;
+            empty when the code means nothing to filter by. Replaces valueId when given.
+          items: { $ref: '#/components/schemas/CodeMeaning' }
     DecideAttributeCodeCategory:
       type: object
       required: [categoryId]
       properties:
         categoryId: { type: integer, minimum: 1 }
-        valueId: { type: [integer, 'null'], minimum: 1, description: 'Null: the code means nothing in this category.' }
+        valueId:
+          {
+            type: [integer, 'null'],
+            minimum: 1,
+            description: 'Null: the code means nothing in this category.',
+          }
+        meanings:
+          type: [array, 'null']
+          description: The whole decoding in this category (spec catalog/009); replaces valueId when given.
+          items: { $ref: '#/components/schemas/CodeMeaning' }
     AdminCodeProducts:
       type: object
       required: [aliasId, rawValue, categories]
@@ -498,14 +785,23 @@ components:
         categories: { type: array, items: { $ref: '#/components/schemas/AdminCodeCategory' } }
     AdminCodeCategory:
       type: object
-      required: [categoryId, categoryPath, hasOwnValue, products]
+      required: [categoryId, categoryPath, hasOwnValue, products, meanings]
       properties:
         categoryId: { type: integer }
-        categoryPath: { type: string, description: 'Full path, for example «Фурнітура > Ручки > На планці».' }
-        hasOwnValue: { type: boolean, description: 'The category has its own decoding; otherwise it follows the one for all.' }
+        categoryPath:
+          { type: string, description: 'Full path, for example «Фурнітура > Ручки > На планці».' }
+        hasOwnValue:
+          {
+            type: boolean,
+            description: 'The category has its own decoding; otherwise it follows the one for all.',
+          }
         valueId: { type: [integer, 'null'] }
         valueName: { type: [string, 'null'] }
         products: { type: array, items: { $ref: '#/components/schemas/AdminCodeProduct' } }
+        meanings:
+          type: array
+          description: The category's own decoding (spec catalog/009); empty when it has none or the code means nothing there.
+          items: { $ref: '#/components/schemas/AdminCodeMeaning' }
     AdminCodeProduct:
       type: object
       required: [productId, name, photo]

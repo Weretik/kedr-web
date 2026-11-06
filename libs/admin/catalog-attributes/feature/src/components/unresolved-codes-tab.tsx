@@ -1,6 +1,5 @@
 import {
   useDecideAttributeCodeMutation,
-  useGetCatalogAttributeQuery,
   useGetCodeProductsQuery,
   useGetUnresolvedCodesQuery,
 } from '@admin/catalog-attributes/data-access';
@@ -10,6 +9,7 @@ import { Box, Card } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useState } from 'react';
 
+import { ConnectedCodeMeaningRow } from './connected-code-meaning-row';
 import { catalogAttributesErrorMessage } from '../errors/catalog-attributes-error-message';
 
 import type { CodeDecision } from '@admin/catalog-attributes/model';
@@ -20,8 +20,9 @@ interface UnresolvedCodesTabProps {
 }
 
 /**
- * «Не розшифровані коди» (spec catalog/008): the queue of codes on the left, the chosen code on the right with its
- * products by category; the owner decodes it for all products or per category and goes on to the next code.
+ * «Не розшифровані коди» (spec catalog/008, 009): the queue of codes on the left, the chosen code on the right with
+ * its products by category; the owner decodes it as «ознака → значення» rows for all products or per category and
+ * goes on to the next code.
  */
 export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProps) {
   const query = useGetUnresolvedCodesQuery();
@@ -30,7 +31,6 @@ export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProp
   const [error, setError] = useState<string | null>(null);
   const code = codes.find((item) => item.aliasId === selectedId) ?? codes[0];
   const products = useGetCodeProductsQuery(code?.aliasId ?? skipToken);
-  const values = useGetCatalogAttributeQuery(code?.attributeId ?? skipToken);
   const [decide, decideState] = useDecideAttributeCodeMutation();
 
   const select = (aliasId: number | undefined) => {
@@ -81,6 +81,7 @@ export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProp
             code={code}
             error={error}
             key={code.aliasId}
+            MeaningRow={ConnectedCodeMeaningRow}
             onRetry={() => products.refetch()}
             onSave={(decision) => void save(decision)}
             onSkip={() => select(nextId())}
@@ -88,7 +89,6 @@ export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProp
             productsError={products.isError}
             productsLoading={products.isFetching}
             saving={decideState.isLoading}
-            values={values.data?.values ?? []}
           />
         </Card>
       ) : null}

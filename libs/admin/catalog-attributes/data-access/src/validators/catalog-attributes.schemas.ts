@@ -48,6 +48,13 @@ export const catalogAttributeDetailsSchema = z.object({
   ),
 });
 
+const codeMeaningSchema = z.object({
+  attributeId: z.number().int().min(1),
+  attributeName: z.string(),
+  valueId: z.number().int().min(1),
+  valueName: z.string(),
+});
+
 export const unresolvedCodeSchema = z.object({
   aliasId: z.number().int().min(1),
   attributeId: z.number().int().min(1),
@@ -59,6 +66,7 @@ export const unresolvedCodeSchema = z.object({
   isConfirmed: z.boolean(),
   note: z.string().nullish(),
   productCount: z.number().int().nonnegative(),
+  meanings: z.array(codeMeaningSchema).default([]),
 });
 
 export const codeDecisionResultSchema = z.object({
@@ -83,6 +91,7 @@ export const codeProductsSchema = z.object({
           photo: z.string(),
         }),
       ),
+      meanings: z.array(codeMeaningSchema).default([]),
     }),
   ),
 });

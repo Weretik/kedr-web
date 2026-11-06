@@ -48,7 +48,7 @@ interface NewAttributeFieldsProps {
   onChange: (draft: NewAttributeDraft) => void;
 }
 
-/** Fields of «Нова ознака»: names, list or number, unit, site filter, model switcher, order. */
+/** Fields of «Нова ознака»: names, list, «Так / Ні» or number, unit, site filter, model switcher, order. */
 export function NewAttributeFields({ draft, onChange, touched }: NewAttributeFieldsProps) {
   const set = (patch: Partial<NewAttributeDraft>) => onChange({ ...draft, ...patch });
   const name = draft.nameUk.trim();
@@ -76,7 +76,9 @@ export function NewAttributeFields({ draft, onChange, touched }: NewAttributeFie
         helperText={
           draft.kind === 'enum'
             ? 'Значення ви додасте в панелі ознаки після створення.'
-            : 'Число, наприклад довжина в мм.'
+            : draft.kind === 'yesno'
+              ? 'Значення «Так» і «Ні» з’являться одразу.'
+              : 'Число, наприклад довжина в мм.'
         }
         label="Тип"
         onChange={(event) => set({ kind: event.target.value as NewAttributeDraft['kind'] })}
@@ -84,6 +86,7 @@ export function NewAttributeFields({ draft, onChange, touched }: NewAttributeFie
         value={draft.kind}
       >
         <MenuItem value="enum">Список значень</MenuItem>
+        <MenuItem value="yesno">Так / Ні</MenuItem>
         <MenuItem value="number">Число</MenuItem>
       </TextField>
       {draft.kind === 'number' ? (
