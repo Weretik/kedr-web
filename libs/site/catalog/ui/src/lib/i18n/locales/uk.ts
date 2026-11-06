@@ -5,6 +5,11 @@ export const uk: CatalogDictionary = {
   products: { one: 'товар', few: 'товари', many: 'товарів' },
   variants: { one: 'варіант', few: 'варіанти', many: 'варіантів' },
   fromPrice: 'від',
+  models: { one: 'модель', few: 'моделі', many: 'моделей' },
+  landingLinks: 'Добірки',
+  allValues: 'Усі',
+  landingIntro: (heading: string, count: string) =>
+    `${heading}: ${count}. Продаємо оптом і в роздріб, доставка по Україні.`,
   colors: 'Кольори',
   priceOnRequest: 'Ціна за запитом',
   retailPrice: 'Роздрібна ціна',

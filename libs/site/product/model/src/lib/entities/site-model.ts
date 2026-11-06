@@ -8,6 +8,8 @@ export type SiteModelAxisValue = {
 
 /** A switcher of the model page (color, size, side). */
 export type SiteModelAxis = {
+  /** Attribute code (`color`, `size`, `side`); slugs can be renamed, codes cannot. */
+  code: string;
   slug: string;
   name: string;
   display: 'swatch' | 'button';

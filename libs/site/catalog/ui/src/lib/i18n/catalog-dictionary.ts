@@ -14,6 +14,13 @@ export type CatalogDictionary = {
   /** Before the lowest price of a model of several products. */
   fromPrice: string;
   colors: string;
+  /** «модель» forms for the count of a value page. */
+  models: PluralForms;
+  /** Links to the value pages of a final category, and the link back to all values. */
+  landingLinks: string;
+  allValues: string;
+  /** Opening line of a value page («Завіси хром: 12 моделей. …»). */
+  landingIntro: (heading: string, count: string) => string;
   priceOnRequest: string;
   retailPrice: string;
   isNew: string;

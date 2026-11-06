@@ -21,6 +21,7 @@ const photoUrl = (value: string | null | undefined) =>
   mapProductMedia([value], null, null)[0]?.url ?? null;
 
 const mapAxis = (axis: ApiSiteModelAxis): SiteModelAxis => ({
+  code: axis.code,
   slug: axis.slug,
   name: axis.name,
   display: axis.display === 'swatch' ? 'swatch' : 'button',

@@ -5,6 +5,8 @@ import {
   listingHref,
   parseListingQuery,
   productPath,
+  withAttributeValue,
+  withoutAttribute,
   withoutFilters,
 } from '@site/catalog/model';
 import { buildProductItemListJsonLd } from '@site/catalog/seo';
@@ -26,7 +28,7 @@ import { listingPurchaseDescriptor } from './listing-purchase';
 
 import type { RenderListingPurchaseAction } from './listing-purchase';
 import type { ProductListScope } from '@site/catalog/data-access';
-import type { SearchParamsRecord } from '@site/catalog/model';
+import type { ListingLanding, SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';
 
@@ -39,6 +41,12 @@ type ProductListingProps = {
   /** URL entries that are not listing choices, such as the search term `q`. */
   extra?: Record<string, string>;
   renderPurchaseAction?: RenderListingPurchaseAction;
+  /**
+   * A value page (`/catalog/zavisy/khrom`): its value is part of the list but not of the links, which stay on
+   * `path`; the filters send their choices to `filterPath`, the category, with the value checked.
+   */
+  landing?: ListingLanding;
+  filterPath?: string;
 };
 
 /**
@@ -52,10 +60,15 @@ export async function ProductListing({
   searchParams,
   extra,
   renderPurchaseAction,
+  landing,
+  filterPath = path,
 }: ProductListingProps) {
   const dictionary = getCatalogDictionary(locale);
-  const query = parseListingQuery(await searchParams);
-  const page = await getProductListPage(locale, scope, query);
+  const parsed = parseListingQuery(await searchParams);
+  // Links of a value page keep its value in the path; the list and the filters include it.
+  const query = landing ? withoutAttribute(parsed, landing.attribute) : parsed;
+  const listQuery = landing ? withAttributeValue(query, landing.attribute, landing.value) : query;
+  const page = await getProductListPage(locale, scope, listQuery);
 
   // An exact 1C code opens its model with that product chosen (spec site/product/002 D-06).
   if (page?.exactMatch && 'searchTerm' in scope && query.page === 1) {
@@ -70,14 +83,22 @@ export async function ProductListing({
       <aside aria-label={dictionary.filters} className="hidden lg:block">
         <FilterForm
           locale={locale}
-          path={path}
-          query={query}
+          path={filterPath}
+          query={listQuery}
           extra={extra ?? {}}
           filters={filters}
         />
       </aside>
       <div className="grid min-w-0 content-start gap-4">
-        <ListingToolbar locale={locale} path={path} query={query} extra={extra} filters={filters} />
+        <ListingToolbar
+          locale={locale}
+          path={path}
+          filterPath={filterPath}
+          query={query}
+          filterQuery={listQuery}
+          extra={extra}
+          filters={filters}
+        />
         {content}
       </div>
     </div>

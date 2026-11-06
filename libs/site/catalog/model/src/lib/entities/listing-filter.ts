@@ -10,6 +10,8 @@ export type ListingFilterValue = {
 
 /** An attribute filter of a final category («Фільтри категорій» in the admin), in display order. */
 export type ListingFilter = {
+  /** Attribute code from the dictionary (`color`, `size`, `side`…); slugs can be renamed, codes cannot. */
+  code: string;
   slug: string;
   name: string;
   display: 'swatch' | 'button' | 'checkbox';

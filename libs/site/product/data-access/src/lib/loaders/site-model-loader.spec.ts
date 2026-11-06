@@ -81,6 +81,7 @@ describe('getSiteModel', () => {
         mainProductSlug: 'zavisa-1',
         axes: [
           {
+            code: 'color',
             slug: 'kolir',
             name: 'Колір',
             display: 'swatch',

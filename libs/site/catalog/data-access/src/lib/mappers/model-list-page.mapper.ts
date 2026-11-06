@@ -40,6 +40,7 @@ export function mapModelCard(card: ModelCard): ProductSummary {
 }
 
 const mapFilter = (filter: Filter): ListingFilter => ({
+  code: filter.code,
   slug: filter.slug,
   name: filter.name,
   display: filter.display,

@@ -37,6 +37,7 @@ const model: SiteModel = {
   mainProductSlug: 'zavisa-2',
   axes: [
     {
+      code: 'color',
       slug: 'kolir',
       name: 'Колір',
       display: 'swatch',
@@ -46,6 +47,7 @@ const model: SiteModel = {
       ],
     },
     {
+      code: 'size',
       slug: 'rozmir',
       name: 'Розмір',
       display: 'button',

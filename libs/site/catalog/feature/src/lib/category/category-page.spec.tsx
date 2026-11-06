@@ -23,6 +23,47 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
+const colorFilter = {
+  code: 'color',
+  slug: 'kolir',
+  name: 'Колір',
+  display: 'swatch',
+  values: [
+    { slug: 'khrom', name: 'Хром', hex: '#c9ced3', textureUrl: null, count: 12, selected: false },
+    {
+      slug: 'bile-zoloto',
+      name: 'Біле золото',
+      hex: null,
+      textureUrl: null,
+      count: 1,
+      selected: false,
+    },
+  ],
+};
+
+const basePage = {
+  items: [],
+  page: 1,
+  pageSize: 20,
+  totalPages: 1,
+  totalRecords: 13,
+  filters: [colorFilter],
+  exactMatch: null,
+};
+
+const tree = [
+  {
+    id: 1,
+    slug: 'furnitura-dlia-dverei',
+    name: 'Фурнітура для дверей',
+    productCount: 5,
+    children: [
+      { id: 9, slug: 'ruchky', name: 'Ручки', productCount: 2, children: [] },
+      { id: 10, slug: 'zamky', name: 'Замки', productCount: 3, children: [] },
+    ],
+  },
+];
+
 const category = {
   id: 9,
   slug: 'ruchky',
@@ -79,21 +120,16 @@ describe('loadCategoryOrRespond', () => {
 });
 
 describe('CategoryPage', () => {
-  it('renders breadcrumbs, the admin H1, sibling chips, text, and breadcrumb JSON-LD before the listing', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
     getCategory.mockResolvedValue({ kind: 'ok', category });
-    getCatalogTree.mockResolvedValue([
-      {
-        id: 1,
-        slug: 'furnitura-dlia-dverei',
-        name: 'Фурнітура для дверей',
-        productCount: 5,
-        children: [
-          { id: 9, slug: 'ruchky', name: 'Ручки', productCount: 2, children: [] },
-          { id: 10, slug: 'zamky', name: 'Замки', productCount: 3, children: [] },
-        ],
-      },
-    ]);
-    getProductListPage.mockReturnValue(new Promise(() => undefined));
+    getCatalogTree.mockResolvedValue(tree);
+  });
+
+  it('renders breadcrumbs, the admin H1, sibling chips, value links, text, and breadcrumb JSON-LD before the listing', async () => {
+    getProductListPage
+      .mockResolvedValueOnce(basePage)
+      .mockReturnValue(new Promise(() => undefined));
 
     render(await CategoryPage({ locale: 'uk', slug: 'ruchky', searchParams: Promise.resolve({}) }));
 
@@ -103,9 +139,47 @@ describe('CategoryPage', () => {
       '/uk/catalog/zamky',
     );
     expect(screen.getByRole('link', { name: /Ручки/ }).getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('link', { name: /Хром/ }).getAttribute('href')).toBe(
+      '/uk/catalog/ruchky/khrom',
+    );
+    expect(screen.queryByRole('link', { name: /Біле золото/ })).toBeNull();
     expect(screen.getByText('Опис')).toBeTruthy();
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       'BreadcrumbList',
     );
+  });
+
+  it('moves one color with its own page to that page, keeping the other choices', async () => {
+    getProductListPage.mockResolvedValue(basePage);
+
+    await expect(
+      CategoryPage({
+        locale: 'uk',
+        slug: 'ruchky',
+        searchParams: Promise.resolve({ kolir: 'khrom', sort: 'name' }),
+      }),
+    ).rejects.toThrow('REDIRECT /uk/catalog/ruchky/khrom?sort=name');
+  });
+
+  it('keeps a value without its own page and several choices in the query', async () => {
+    getProductListPage
+      .mockResolvedValueOnce(basePage)
+      .mockReturnValue(new Promise(() => undefined));
+    await CategoryPage({
+      locale: 'uk',
+      slug: 'ruchky',
+      searchParams: Promise.resolve({ kolir: 'bile-zoloto' }),
+    });
+
+    getProductListPage
+      .mockResolvedValueOnce(basePage)
+      .mockReturnValue(new Promise(() => undefined));
+    await CategoryPage({
+      locale: 'uk',
+      slug: 'ruchky',
+      searchParams: Promise.resolve({ kolir: 'khrom', inStock: 'true' }),
+    });
+
+    expect(permanentRedirect).not.toHaveBeenCalled();
   });
 });

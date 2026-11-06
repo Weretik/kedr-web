@@ -89,6 +89,7 @@ describe('mapModelListPage', () => {
 
     expect(page.filters).toEqual([
       {
+        code: 'color',
         slug: 'kolir',
         name: 'Колір',
         display: 'swatch',
