@@ -1,66 +1,86 @@
 import {
   useGetCategoryFiltersQuery,
-  useGetFilterCategoriesQuery,
   useSetCategoryFiltersMutation,
 } from '@admin/catalog-attributes/data-access';
-import { CategoryFiltersEditor } from '@admin/catalog-attributes/ui';
+import {
+  countFinalWithoutFilters,
+  filterCategoryTree,
+  findFilterCategory,
+} from '@admin/catalog-attributes/model';
+import { CategoryFiltersEditor, FilterCategoriesTree } from '@admin/catalog-attributes/ui';
 import { PageLoader, SectionCard } from '@admin/shared/ui';
-import { Alert, Autocomplete, Button, Stack, TextField } from '@mui/material';
+import { useGetSiteModelCategoriesQuery } from '@admin/site-models/data-access';
+import { Alert, Box, Button, Typography } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useState } from 'react';
 
 import { catalogAttributesErrorMessage } from '../errors/catalog-attributes-error-message';
 
-import type { CategoryFilter, FilterCategoryOption } from '@admin/catalog-attributes/model';
+import type { CategoryFilter } from '@admin/catalog-attributes/model';
 
 interface CategoryFiltersTabProps {
   canEdit: boolean;
   onNotice: (message: string) => void;
 }
 
-/** «Фільтри категорій»: which properties a category offers as filters on the site. */
+/**
+ * «Фільтри категорій»: which properties a final category shown on the site offers as filters, and in which order.
+ * The tree is the one of «Моделі» (spec catalog/007 R-18, R-20).
+ */
 export function CategoryFiltersTab({ canEdit, onNotice }: CategoryFiltersTabProps) {
-  const categories = useGetFilterCategoriesQuery();
-  const [category, setCategory] = useState<FilterCategoryOption | null>(null);
-  const filters = useGetCategoryFiltersQuery(category?.id ?? skipToken);
+  const categories = useGetSiteModelCategoriesQuery();
+  const nodes = filterCategoryTree(categories.data ?? []);
+  const [selectedId, setSelectedId] = useState<number>();
+  const selected = findFilterCategory(nodes, selectedId);
+  const filters = useGetCategoryFiltersQuery(selected?.category.id ?? skipToken);
   const [setFilters, setState] = useSetCategoryFiltersMutation();
   const [error, setError] = useState<string | null>(null);
+  const withoutFilters = countFinalWithoutFilters(nodes);
 
   const save = async (next: CategoryFilter[]) => {
-    if (!category) return;
+    if (!selected) return;
     setError(null);
     try {
-      await setFilters({ categoryId: category.id, filters: next }).unwrap();
+      await setFilters({ categoryId: selected.category.id, filters: next }).unwrap();
       onNotice('Фільтри категорії збережено.');
     } catch (failure) {
       setError(catalogAttributesErrorMessage(failure));
     }
   };
 
+  if (categories.isError)
+    return (
+      <Alert
+        action={<Button onClick={() => void categories.refetch()}>Повторити</Button>}
+        severity="error"
+      >
+        Не вдалося завантажити категорії.
+      </Alert>
+    );
+
   return (
-    <Stack spacing={2}>
-      <Autocomplete
-        getOptionLabel={(option) => option.name}
-        isOptionEqualToValue={(option, value) => option.id === value.id}
-        loading={categories.isFetching}
-        onChange={(_event, option) => {
+    <Box
+      sx={{
+        alignItems: 'start',
+        display: 'grid',
+        gap: 2,
+        gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: '320px minmax(0, 760px)' },
+      }}
+    >
+      <FilterCategoriesTree
+        loading={categories.isLoading}
+        nodes={nodes}
+        onSelect={(node) => {
           setError(null);
-          setCategory(option);
+          setSelectedId(node.category.id);
         }}
-        options={categories.data ?? []}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            error={categories.isError}
-            helperText={categories.isError ? 'Не вдалося завантажити категорії.' : undefined}
-            label="Категорія"
-          />
-        )}
-        sx={{ maxWidth: 560 }}
-        value={category}
+        selectedId={selectedId}
       />
-      {category ? (
-        <SectionCard title={`Фільтри: ${category.name}`}>
+      {selected ? (
+        <SectionCard title={selected.path}>
+          <Typography color="text.secondary" variant="body2">
+            Так фільтри стоятимуть на сторінці категорії, згори вниз.
+          </Typography>
           {filters.isLoading ? (
             <PageLoader label="Завантаження фільтрів" />
           ) : filters.isError || !filters.data ? (
@@ -75,13 +95,18 @@ export function CategoryFiltersTab({ canEdit, onNotice }: CategoryFiltersTabProp
               canEdit={canEdit}
               error={error}
               filters={filters.data}
-              key={`${category.id}-${filters.fulfilledTimeStamp ?? 0}`}
+              key={`${selected.category.id}-${filters.fulfilledTimeStamp ?? 0}`}
               onSave={(next) => void save(next)}
               saving={setState.isLoading}
             />
           )}
         </SectionCard>
-      ) : null}
-    </Stack>
+      ) : (
+        <Typography color="text.secondary" sx={{ p: 2 }} variant="body2">
+          Виберіть кінцеву категорію зліва.
+          {withoutFilters > 0 ? ` Без фільтрів: ${withoutFilters}.` : ''}
+        </Typography>
+      )}
+    </Box>
   );
 }

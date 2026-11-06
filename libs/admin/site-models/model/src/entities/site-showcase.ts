@@ -47,8 +47,12 @@ export interface SiteModelCategory {
   onSiteProducts: number;
   acceptedModels: number;
   proposedModels: number;
-  /** Accepted models with a problem plus on-site products outside accepted models. */
+  /** Accepted models with a problem. */
   problemCount: number;
+  /** On-site products in no model: the hard error. */
+  loneProducts: number;
+  /** Attributes the category itself offers as site filters (without subcategories). */
+  filterCount: number;
 }
 
 /** Problem counts of «Огляд» and the summary tiles. */

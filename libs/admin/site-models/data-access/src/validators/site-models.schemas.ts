@@ -11,23 +11,6 @@ const page = <T extends z.ZodTypeAny>(item: T) =>
     pageSize: z.number().int().min(1),
   });
 
-export const siteModelListSchema = page(
-  z.object({
-    id: z.number().int().min(1),
-    categoryId: z.number().int(),
-    categoryName: z.string(),
-    name: z.string(),
-    slug: z.string(),
-    status,
-    productCount: z.number().int().nonnegative(),
-    onSiteCount: z.number().int().nonnegative(),
-    minPrice: z.number().nullish(),
-    photo: z.string(),
-    axes: z.array(z.string()),
-    problems,
-  }),
-);
-
 export const siteModelSchema = z.object({
   id: z.number().int().min(1),
   categoryId: z.number().int(),
@@ -125,6 +108,8 @@ export const siteModelCategoriesSchema = z.array(
     acceptedModels: z.number().int().nonnegative(),
     proposedModels: z.number().int().nonnegative(),
     problemCount: z.number().int().nonnegative(),
+    loneProducts: z.number().int().nonnegative(),
+    filterCount: z.number().int().nonnegative(),
   }),
 );
 

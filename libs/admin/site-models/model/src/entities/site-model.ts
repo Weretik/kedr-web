@@ -4,22 +4,6 @@ export type SiteModelStatus = 'proposed' | 'accepted';
 export type SiteModelLanguage = 'uk' | 'ru';
 export type SiteModelAxisDisplay = 'swatch' | 'button' | 'checkbox';
 
-/** A row of the «Моделі» list. */
-export interface SiteModelListItem {
-  id: number;
-  categoryId: number;
-  categoryName: string;
-  name: string;
-  slug: string;
-  status: SiteModelStatus;
-  productCount: number;
-  onSiteCount: number;
-  minPrice: number | null;
-  photo: string;
-  axes: readonly string[];
-  problems: readonly SiteModelProblem[];
-}
-
 /** A switcher of the model page: the attribute that tells its products apart. */
 export interface SiteModelAxis {
   attributeId: number;
