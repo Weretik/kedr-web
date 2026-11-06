@@ -28,6 +28,7 @@ const code: UnresolvedCode = {
   isConfirmed: false,
   note: null,
   productCount: 181,
+  meanings: [],
 };
 
 describe('catalog attributes model', () => {
