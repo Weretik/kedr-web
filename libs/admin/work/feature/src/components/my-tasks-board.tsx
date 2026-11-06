@@ -1,29 +1,19 @@
 import {
   useChangeMyWorkTaskStatusMutation,
-<<<<<<< HEAD
   useCreateAdminWorkTaskMutation,
-=======
->>>>>>> origin/claude/project-thread-9r9gtc
   useCreateMyWorkTaskMutation,
   useDeleteMyWorkTaskMutation,
   useGetMyWorkTasksQuery,
   useUpdateMyWorkTaskMutation,
 } from '@admin/work/data-access';
 import { emptyWorkTaskInput } from '@admin/work/model';
-<<<<<<< HEAD
 import { WorkAssigneeField, WorkBoard, WorkTaskDonePanel, WorkTaskPanel } from '@admin/work/ui';
-=======
-import { WorkBoard, WorkTaskDonePanel, WorkTaskPanel } from '@admin/work/ui';
->>>>>>> origin/claude/project-thread-9r9gtc
 import { Alert, Button } from '@mui/material';
 import { useState } from 'react';
 
 import { workErrorMessage } from '../errors/work-error-message';
 
-<<<<<<< HEAD
 import type { WorkAssignees } from '../work.routes';
-=======
->>>>>>> origin/claude/project-thread-9r9gtc
 import type { WorkTask, WorkTaskInput, WorkTaskStatus } from '@admin/work/model';
 
 type Editing =
@@ -34,7 +24,6 @@ interface MyTasksBoardProps {
   creating: boolean;
   onCreatingChange: (creating: boolean) => void;
   onNotice: (message: string) => void;
-<<<<<<< HEAD
   /** For an administrator: people a new task may be given to. Null for everyone else. */
   assignees: WorkAssignees | null;
 }
@@ -46,28 +35,18 @@ export function MyTasksBoard({
   onCreatingChange,
   onNotice,
 }: MyTasksBoardProps) {
-=======
-}
-
-/** The own board with its right panels: new task, edit, and «Готово» with the result. */
-export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBoardProps) {
->>>>>>> origin/claude/project-thread-9r9gtc
   const tasks = useGetMyWorkTasksQuery();
   const [create, created] = useCreateMyWorkTaskMutation();
   const [update, updated] = useUpdateMyWorkTaskMutation();
   const [move, moved] = useChangeMyWorkTaskStatusMutation();
   const [remove, removed] = useDeleteMyWorkTaskMutation();
-<<<<<<< HEAD
   const [give, given] = useCreateAdminWorkTaskMutation();
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
-=======
->>>>>>> origin/claude/project-thread-9r9gtc
   const [editing, setEditing] = useState<Editing | null>(null);
   const [movingId, setMovingId] = useState<number | null>(null);
   const [error, setError] = useState<string>();
 
   const current: Editing | null = creating ? { kind: 'new' } : editing;
-<<<<<<< HEAD
   const saving =
     created.isLoading || updated.isLoading || moved.isLoading || removed.isLoading || given.isLoading;
   const ownerId = assigneeId ?? assignees?.selfId ?? null;
@@ -75,12 +54,6 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
   const close = () => {
     setEditing(null);
     setAssigneeId(null);
-=======
-  const saving = created.isLoading || updated.isLoading || moved.isLoading || removed.isLoading;
-
-  const close = () => {
-    setEditing(null);
->>>>>>> origin/claude/project-thread-9r9gtc
     setError(undefined);
     onCreatingChange(false);
   };
@@ -99,7 +72,6 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
   const save = (input: WorkTaskInput) => {
     if (current?.kind === 'edit')
       void run(() => update({ id: current.task.id, input }).unwrap(), 'Задачу збережено.');
-<<<<<<< HEAD
     else if (assignees && ownerId && ownerId !== assignees.selfId) {
       const name = assignees.people.find((person) => person.id === ownerId)?.name ?? '';
       void run(
@@ -107,9 +79,6 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
         `Задачу додано в «План»: ${name}.`,
       );
     } else void run(() => create(input).unwrap(), 'Задачу додано в «План».');
-=======
-    else void run(() => create(input).unwrap(), 'Задачу додано в «План».');
->>>>>>> origin/claude/project-thread-9r9gtc
   };
 
   const onMove = async (task: WorkTask, status: WorkTaskStatus) => {
@@ -152,7 +121,6 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
           error={error}
           initial={emptyWorkTaskInput}
           key="new"
-<<<<<<< HEAD
           leadingFields={
             assignees && ownerId ? (
               <WorkAssigneeField
@@ -163,8 +131,6 @@ export function MyTasksBoard({ creating, onCreatingChange, onNotice }: MyTasksBo
               />
             ) : undefined
           }
-=======
->>>>>>> origin/claude/project-thread-9r9gtc
           onCancel={close}
           onSave={save}
           saving={saving}
