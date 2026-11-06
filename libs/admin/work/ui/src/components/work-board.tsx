@@ -12,10 +12,18 @@ interface WorkBoardProps {
   busyTaskId?: number | null;
   onEdit: (task: WorkTask) => void;
   onMove: (task: WorkTask, status: WorkTaskStatus) => void;
+  onToggleStep?: (task: WorkTask, index: number, isDone: boolean) => void;
 }
 
 /** «План / В роботі / Готово» side by side from `md`, one under another on phones. */
-export function WorkBoard({ busyTaskId, loading, onEdit, onMove, tasks }: WorkBoardProps) {
+export function WorkBoard({
+  busyTaskId,
+  loading,
+  onEdit,
+  onMove,
+  onToggleStep,
+  tasks,
+}: WorkBoardProps) {
   return (
     <Box
       sx={{
@@ -52,6 +60,7 @@ export function WorkBoard({ busyTaskId, loading, onEdit, onMove, tasks }: WorkBo
                     key={task.id}
                     onEdit={onEdit}
                     onMove={onMove}
+                    onToggleStep={onToggleStep}
                     task={task}
                   />
                 ))}

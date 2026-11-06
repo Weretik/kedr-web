@@ -38,7 +38,10 @@ export function MyTasksPage({ assignees = null }: MyTasksPageProps) {
       </Typography>
       <MyTasksBoard
         assignees={assignees}
-        creating={creating} onCreatingChange={setCreating} onNotice={setNotice} />
+        creating={creating}
+        onCreatingChange={setCreating}
+        onNotice={setNotice}
+      />
       <SectionCard title="Що я змінив за 7 днів">
         {report.isError ? (
           <Alert severity="error">Не вдалося завантажити зміни.</Alert>

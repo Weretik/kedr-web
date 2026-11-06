@@ -4,9 +4,10 @@ import {
   useCreateMyWorkTaskMutation,
   useDeleteMyWorkTaskMutation,
   useGetMyWorkTasksQuery,
+  useSetMyWorkTaskStepMutation,
   useUpdateMyWorkTaskMutation,
 } from '@admin/work/data-access';
-import { emptyWorkTaskInput } from '@admin/work/model';
+import { emptyWorkTaskInput, workTaskInputOf } from '@admin/work/model';
 import { WorkAssigneeField, WorkBoard, WorkTaskDonePanel, WorkTaskPanel } from '@admin/work/ui';
 import { Alert, Button } from '@mui/material';
 import { useState } from 'react';
@@ -41,6 +42,7 @@ export function MyTasksBoard({
   const [move, moved] = useChangeMyWorkTaskStatusMutation();
   const [remove, removed] = useDeleteMyWorkTaskMutation();
   const [give, given] = useCreateAdminWorkTaskMutation();
+  const [setStep] = useSetMyWorkTaskStepMutation();
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [editing, setEditing] = useState<Editing | null>(null);
   const [movingId, setMovingId] = useState<number | null>(null);
@@ -48,7 +50,11 @@ export function MyTasksBoard({
 
   const current: Editing | null = creating ? { kind: 'new' } : editing;
   const saving =
-    created.isLoading || updated.isLoading || moved.isLoading || removed.isLoading || given.isLoading;
+    created.isLoading ||
+    updated.isLoading ||
+    moved.isLoading ||
+    removed.isLoading ||
+    given.isLoading;
   const ownerId = assigneeId ?? assignees?.selfId ?? null;
 
   const close = () => {
@@ -97,6 +103,17 @@ export function MyTasksBoard({
     }
   };
 
+  const toggleStep = async (task: WorkTask, index: number, isDone: boolean) => {
+    setMovingId(task.id);
+    try {
+      await setStep({ id: task.id, index, isDone }).unwrap();
+    } catch (cause) {
+      onNotice(workErrorMessage(cause));
+    } finally {
+      setMovingId(null);
+    }
+  };
+
   if (tasks.isError)
     return (
       <Alert action={<Button onClick={() => tasks.refetch()}>Повторити</Button>} severity="error">
@@ -114,6 +131,7 @@ export function MyTasksBoard({
           setEditing({ kind: 'edit', task });
         }}
         onMove={(task, status) => void onMove(task, status)}
+        onToggleStep={(task, index, isDone) => void toggleStep(task, index, isDone)}
         tasks={tasks.data ?? []}
       />
       {current?.kind === 'new' ? (
@@ -140,7 +158,7 @@ export function MyTasksBoard({
       {current?.kind === 'edit' ? (
         <WorkTaskPanel
           error={error}
-          initial={{ title: current.task.title, details: current.task.details ?? '' }}
+          initial={workTaskInputOf(current.task)}
           key={current.task.id}
           onCancel={close}
           onDelete={() => void run(() => remove(current.task.id).unwrap(), 'Задачу видалено.')}

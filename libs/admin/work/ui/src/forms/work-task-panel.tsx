@@ -4,8 +4,10 @@ import {
   workTaskIssues,
   workTaskTitleMaxLength,
 } from '@admin/work/model';
-import { Alert, Box, Button } from '@mui/material';
+import { Alert, Box, Button, TextField } from '@mui/material';
 import { useState } from 'react';
+
+import { WorkTaskStepsField } from './work-task-steps-field';
 
 import type { WorkTaskInput } from '@admin/work/model';
 import type { ReactNode } from 'react';
@@ -88,6 +90,21 @@ export function WorkTaskPanel({
           multiline
           onChange={(value) => setInput({ ...input, details: value })}
           value={input.details}
+        />
+        <TextField
+          error={Boolean(issues.dueDate)}
+          helperText={issues.dueDate ?? 'Необовʼязково. Після цього дня задача стане простроченою.'}
+          label="Виконати до"
+          onChange={(event) => setInput({ ...input, dueDate: event.target.value })}
+          slotProps={{ inputLabel: { shrink: true } }}
+          type="date"
+          value={input.dueDate}
+        />
+        <WorkTaskStepsField
+          disabled={saving}
+          error={issues.steps}
+          onChange={(steps) => setInput({ ...input, steps })}
+          steps={input.steps}
         />
       </Box>
     </AdminEditPanel>

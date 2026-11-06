@@ -1,6 +1,20 @@
 import { RowEditAction } from '@admin/shared/ui';
-import { formatWorkDayTime } from '@admin/work/model';
-import { Box, Button, Card, Stack, Typography } from '@mui/material';
+import {
+  formatWorkDayTime,
+  formatWorkShortDay,
+  formatWorkShortDayOf,
+  workTaskStepProgress,
+} from '@admin/work/model';
+import {
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Chip,
+  FormControlLabel,
+  Stack,
+  Typography,
+} from '@mui/material';
 
 import type { WorkTask, WorkTaskStatus } from '@admin/work/model';
 
@@ -10,6 +24,8 @@ interface WorkTaskCardProps {
   onEdit: (task: WorkTask) => void;
   /** «Готово» opens the result panel; other moves happen at once. */
   onMove: (task: WorkTask, status: WorkTaskStatus) => void;
+  /** Ticks a step at once; without it the steps are read-only. */
+  onToggleStep?: (task: WorkTask, index: number, isDone: boolean) => void;
 }
 
 const moves: Record<
@@ -25,9 +41,19 @@ const moves: Record<
 };
 
 /** One task on the board: title, details, who gave it, the result when done, and moves to other columns. */
-export function WorkTaskCard({ busy, onEdit, onMove, task }: WorkTaskCardProps) {
+export function WorkTaskCard({ busy, onEdit, onMove, onToggleStep, task }: WorkTaskCardProps) {
+  const progress = workTaskStepProgress(task);
   return (
-    <Card sx={{ display: 'grid', gap: 1, p: 2 }} variant="outlined">
+    <Card
+      sx={{
+        borderColor: task.isOverdue ? 'error.main' : undefined,
+        borderLeftWidth: task.isOverdue ? 4 : undefined,
+        display: 'grid',
+        gap: 1,
+        p: 2,
+      }}
+      variant="outlined"
+    >
       <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start' }}>
         <Typography sx={{ flex: 1, fontWeight: 600, overflowWrap: 'anywhere' }} variant="body2">
           {task.title}
@@ -47,6 +73,60 @@ export function WorkTaskCard({ busy, onEdit, onMove, task }: WorkTaskCardProps) 
           {task.details}
         </Typography>
       ) : null}
+      {task.dueDate || task.isOverdue ? (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
+          useFlexGap
+        >
+          {task.isOverdue ? <Chip color="error" label="Прострочено" size="small" /> : null}
+          {task.dueDate ? (
+            <Typography
+              color={task.isOverdue ? 'error' : 'text.secondary'}
+              sx={{ fontWeight: task.isOverdue ? 600 : undefined }}
+              variant="caption"
+            >
+              Виконати до {formatWorkShortDay(task.dueDate)}
+            </Typography>
+          ) : null}
+        </Stack>
+      ) : null}
+      {progress.total > 0 ? (
+        <Box>
+          <Typography color="text.secondary" variant="caption">
+            Кроки {progress.done} / {progress.total}
+          </Typography>
+          <Stack>
+            {task.steps.map((step, index) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={step.isDone}
+                    disabled={busy || !onToggleStep}
+                    onChange={(event) => onToggleStep?.(task, index, event.target.checked)}
+                    size="small"
+                  />
+                }
+                key={index}
+                label={
+                  <Typography
+                    color={step.isDone ? 'text.secondary' : 'text.primary'}
+                    sx={{
+                      overflowWrap: 'anywhere',
+                      textDecoration: step.isDone ? 'line-through' : undefined,
+                    }}
+                    variant="body2"
+                  >
+                    {step.title}
+                  </Typography>
+                }
+                sx={{ alignItems: 'flex-start', mr: 0, '& .MuiCheckbox-root': { py: 0.25 } }}
+              />
+            ))}
+          </Stack>
+        </Box>
+      ) : null}
       {task.status === 'Done' && task.result ? (
         <Box sx={{ bgcolor: 'action.hover', borderRadius: 1, px: 1.5, py: 1 }}>
           <Typography color="text.secondary" variant="caption">
@@ -59,9 +139,10 @@ export function WorkTaskCard({ busy, onEdit, onMove, task }: WorkTaskCardProps) 
       ) : null}
       <Typography color="text.secondary" variant="caption">
         {task.createdByOwner ? '' : 'Від адміністратора · '}
+        Поставлено {formatWorkShortDayOf(task.createdAt)}
         {task.status === 'Done' && task.completedAt
-          ? `Виконано ${formatWorkDayTime(task.completedAt)}`
-          : `Змінено ${formatWorkDayTime(task.updatedAt)}`}
+          ? ` · Виконано ${formatWorkDayTime(task.completedAt)}`
+          : ''}
       </Typography>
       <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }} useFlexGap>
         {moves[task.status].map((move) => (

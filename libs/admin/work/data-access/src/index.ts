@@ -3,6 +3,7 @@ export {
   useCreateAdminWorkTaskMutation,
   useCreateMyWorkTaskMutation,
   useDeleteMyWorkTaskMutation,
+  useSetMyWorkTaskStepMutation,
   useGetAdminWorkReportQuery,
   useGetMyWorkReportQuery,
   useGetMyWorkTasksQuery,

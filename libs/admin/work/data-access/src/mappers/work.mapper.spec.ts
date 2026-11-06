@@ -11,6 +11,9 @@ const task = {
   details: null,
   status: 'Done',
   result: '12 текстів',
+  dueDate: null,
+  isOverdue: false,
+  steps: [],
   createdAt: '2026-11-06T08:00:00Z',
   updatedAt: '2026-11-06T09:00:00Z',
   startedAt: '2026-11-06T08:30:00Z',
@@ -35,10 +38,20 @@ describe('work mapper', () => {
     ).toThrow();
   });
 
-  it('trims the input and sends empty details as null', () => {
-    expect(toSaveWorkTaskBody({ title: '  Задача ', details: '  ' })).toEqual({
-      title: 'Задача',
-      details: null,
-    });
+  it('trims the input, sends empty details and date as null and drops empty steps', () => {
+    expect(
+      toSaveWorkTaskBody({ title: '  Задача ', details: '  ', dueDate: '', steps: [] }),
+    ).toEqual({ title: 'Задача', details: null, dueDate: null, steps: [] });
+    expect(
+      toSaveWorkTaskBody({
+        title: 'Задача',
+        details: '',
+        dueDate: '2026-11-10',
+        steps: [
+          { title: ' Title ', isDone: true },
+          { title: '  ', isDone: false },
+        ],
+      }).steps,
+    ).toEqual([{ title: 'Title', isDone: true }]);
   });
 });

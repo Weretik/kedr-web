@@ -12,6 +12,9 @@ const toTask = (row: z.infer<typeof workTaskSchema>): WorkTask => ({
   details: row.details,
   status: row.status,
   result: row.result,
+  dueDate: row.dueDate,
+  isOverdue: row.isOverdue,
+  steps: row.steps.map((step) => ({ title: step.title, isDone: step.isDone })),
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
   startedAt: row.startedAt,
@@ -32,8 +35,12 @@ export function mapWorkReport(value: unknown): WorkReport {
   };
 }
 
-/** Trimmed text; empty details are sent as null. */
+/** Trimmed text; empty details and date are sent as null, empty step lines are dropped. */
 export const toSaveWorkTaskBody = (input: WorkTaskInput): SaveWorkTaskBody => ({
   title: input.title.trim(),
   details: input.details.trim() || null,
+  dueDate: input.dueDate || null,
+  steps: input.steps
+    .map((step) => ({ title: step.title.trim(), isDone: step.isDone }))
+    .filter((step) => step.title),
 });

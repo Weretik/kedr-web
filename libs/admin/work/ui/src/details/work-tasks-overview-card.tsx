@@ -1,37 +1,54 @@
 import { SectionCard } from '@admin/shared/ui';
-import { Box, Button, ButtonBase, Typography } from '@mui/material';
+import { alpha, Box, Button, ButtonBase, Typography } from '@mui/material';
 
 interface WorkTasksOverviewCardProps {
   /** Open tasks an administrator gave this person. */
   fromAdmin: number;
   planned: number;
   inProgress: number;
+  /** Open tasks past their due day. */
+  overdue: number;
   /** The «Мої задачі» page. */
   href: string;
 }
 
-/** «Мої задачі» on «Огляд»: how many open tasks wait, with a way to the board. */
+/**
+ * «Мої задачі» on «Огляд»: orange while open tasks wait, red with «Прострочено» once any is late.
+ * The app shows it only when there is at least one open task.
+ */
 export function WorkTasksOverviewCard({
   fromAdmin,
   href,
   inProgress,
+  overdue,
   planned,
 }: WorkTasksOverviewCardProps) {
+  const tone = overdue > 0 ? 'error' : 'warning';
   return (
     <SectionCard
       action={
-        <Button href={href} size="small">
+        <Button color={tone} href={href} size="small">
           Відкрити задачі
         </Button>
       }
+      sx={{
+        bgcolor: (theme) => alpha(theme.palette[tone].main, 0.06),
+        border: 2,
+        borderColor: `${tone}.main`,
+      }}
       title="Мої задачі"
     >
+      {overdue > 0 ? (
+        <Typography color="error" sx={{ fontWeight: 700, mb: 1.5 }} variant="body2">
+          Прострочено: {overdue}
+        </Typography>
+      ) : null}
       <Box sx={{ display: 'grid', gap: 1.5, gridTemplateColumns: '1fr 1fr' }}>
-        <Tile accent href={href} label="У плані" value={planned} />
-        <Tile href={href} label="В роботі" value={inProgress} />
+        <Tile href={href} label="У плані" tone={tone} value={planned} />
+        <Tile href={href} label="В роботі" tone={tone} value={inProgress} />
       </Box>
       {fromAdmin > 0 ? (
-        <Typography color="primary.dark" sx={{ fontWeight: 600, mt: 1.5 }} variant="body2">
+        <Typography color="text.secondary" sx={{ fontWeight: 600, mt: 1.5 }} variant="body2">
           Від адміністратора: {fromAdmin}
         </Typography>
       ) : null}
@@ -40,14 +57,14 @@ export function WorkTasksOverviewCard({
 }
 
 function Tile({
-  accent = false,
   href,
   label,
+  tone,
   value,
 }: {
-  accent?: boolean;
   href: string;
   label: string;
+  tone: 'error' | 'warning';
   value: number;
 }) {
   return (
@@ -56,7 +73,7 @@ function Tile({
       href={href}
       sx={{
         alignItems: 'flex-start',
-        bgcolor: accent ? 'primary.light' : 'action.hover',
+        bgcolor: (theme) => alpha(theme.palette[tone].main, 0.12),
         borderRadius: 3,
         display: 'flex',
         flexDirection: 'column',
@@ -66,11 +83,7 @@ function Tile({
         textAlign: 'left',
       }}
     >
-      <Typography
-        color={accent ? 'primary.dark' : 'text.secondary'}
-        sx={{ fontWeight: 600 }}
-        variant="body2"
-      >
+      <Typography color={`${tone}.dark`} sx={{ fontWeight: 600 }} variant="body2">
         {label}
       </Typography>
       <Typography component="span" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }} variant="h4">

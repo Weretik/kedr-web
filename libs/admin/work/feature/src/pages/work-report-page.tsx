@@ -36,6 +36,8 @@ interface WorkReportPageProps {
 
 type Preset = '7' | '30' | 'custom';
 
+const overdueText = (count: number) => (count > 0 ? `, прострочено ${count}` : '');
+
 /** «Звіт роботи» for the administrator: one person, one period, tasks and changes. */
 export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
   const [userId, setUserId] = useState('');
@@ -178,7 +180,11 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
                   tasks={report.data.doneTasks}
                 />
               </SectionCard>
-              <SectionCard title={`Відкриті задачі · ${report.data.openTasks.length}`}>
+              <SectionCard
+                title={`Відкриті задачі · ${report.data.openTasks.length}${overdueText(
+                  report.data.openTasks.filter((task) => task.isOverdue).length,
+                )}`}
+              >
                 <WorkTaskSummaryList
                   emptyText="Відкритих задач немає."
                   tasks={report.data.openTasks}

@@ -17,6 +17,9 @@ const base: WorkTask = {
   details: null,
   status: 'Planned',
   result: null,
+  dueDate: null,
+  isOverdue: false,
+  steps: [],
   createdAt: '2026-11-06T08:00:00Z',
   updatedAt: '2026-11-06T08:00:00Z',
   startedAt: null,
@@ -40,6 +43,18 @@ describe('MyTasksOverview', () => {
     expect(screen.getByRole('link', { name: 'У плані: 2' }).getAttribute('href')).toBe('/my-tasks');
     expect(screen.getByRole('link', { name: 'В роботі: 1' })).toBeDefined();
     expect(screen.getByText('Від адміністратора: 1')).toBeDefined();
+  });
+
+  it('says how many open tasks are overdue', () => {
+    api.tasks.mockReturnValue({
+      data: [
+        { ...base, id: 1, dueDate: '2026-11-01', isOverdue: true },
+        { ...base, id: 2 },
+      ],
+    });
+    render(<MyTasksOverview />);
+
+    expect(screen.getByText('Прострочено: 1')).toBeDefined();
   });
 
   it('shows nothing without open tasks', () => {

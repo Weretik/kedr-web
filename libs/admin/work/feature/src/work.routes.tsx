@@ -34,7 +34,9 @@ interface WorkReportRoutesOptions {
 }
 
 /** «Звіт роботи»: Admin only, as the backend policy RequireAdminRole; AppRouter wraps it in RequireRole. */
-export function createWorkReportRoutes({ useStaffMembers }: WorkReportRoutesOptions): RouteObject[] {
+export function createWorkReportRoutes({
+  useStaffMembers,
+}: WorkReportRoutesOptions): RouteObject[] {
   function WorkReportRoute() {
     const { loading, staff } = useStaffMembers();
     return <WorkReportPage staff={staff} staffLoading={loading} />;
