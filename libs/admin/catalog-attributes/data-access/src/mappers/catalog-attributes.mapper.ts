@@ -4,6 +4,7 @@ import {
   categoryFilterSchema,
   codeDecisionResultSchema,
   codeProductsSchema,
+  swatchUploadSchema,
   unresolvedCodeSchema,
 } from '../validators/catalog-attributes.schemas';
 
@@ -17,6 +18,7 @@ import type {
   CodeProducts,
   NewCatalogAttribute,
   UnresolvedCode,
+  UploadedSwatch,
 } from '@admin/catalog-attributes/model';
 import type { components } from '@shared/api-contracts';
 import type { z } from 'zod';
@@ -128,4 +130,10 @@ function toCode(dto: z.infer<typeof unresolvedCodeSchema>): UnresolvedCode {
     valueName: dto.valueName ?? null,
     note: dto.note ?? null,
   };
+}
+
+/** A color or decor picture just put into the media library (CDN `swatches/`). */
+export function mapSwatchUpload(response: unknown): UploadedSwatch {
+  const { mediaFileId, url } = swatchUploadSchema.parse(response);
+  return { id: mediaFileId, url };
 }

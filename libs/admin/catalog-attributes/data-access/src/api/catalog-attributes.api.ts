@@ -6,6 +6,7 @@ import {
   mapCategoryFilters,
   mapCodeDecisionResult,
   mapCodeProducts,
+  mapSwatchUpload,
   mapUnresolvedCodes,
   toCodeDecisionBody,
   toNewAttributeBody,
@@ -23,6 +24,7 @@ import type {
   CodeProducts,
   NewCatalogAttribute,
   UnresolvedCode,
+  UploadedSwatch,
 } from '@admin/catalog-attributes/model';
 
 const listTag = { type: 'CatalogAttributes' as const, id: 'LIST' };
@@ -96,6 +98,15 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
       transformResponse: mapCatalogAttributeDetails,
       invalidatesTags: (_result, error, { attributeId }) =>
         error ? [] : [{ type: 'CatalogAttributes', id: attributeId }, 'Products'],
+    }),
+    /** Puts a color or decor picture into the media library (CDN `swatches/`); the value takes it on save. */
+    uploadAttributeSwatch: build.mutation<UploadedSwatch, Blob>({
+      query: (file) => {
+        const form = new FormData();
+        form.append('file', file);
+        return { url: '/api/admin/catalog-attributes/swatches', method: 'POST', data: form };
+      },
+      transformResponse: mapSwatchUpload,
     }),
     getUnresolvedCodes: build.query<UnresolvedCode[], void>({
       query: () => ({ url: '/api/admin/catalog-attributes/unresolved-codes', method: 'GET' }),
@@ -175,4 +186,5 @@ export const {
   useSetCategoryFiltersMutation,
   useUpdateAttributeValueMutation,
   useUpdateCatalogAttributeMutation,
+  useUploadAttributeSwatchMutation,
 } = catalogAttributesApi;

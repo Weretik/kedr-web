@@ -3,6 +3,7 @@ import {
   useGetCatalogAttributeQuery,
   useUpdateAttributeValueMutation,
   useUpdateCatalogAttributeMutation,
+  useUploadAttributeSwatchMutation,
 } from '@admin/catalog-attributes/data-access';
 import {
   AttributeAliasesCard,
@@ -55,6 +56,7 @@ export function AttributeEditPanel({
   const [updateAttribute, attributeState] = useUpdateCatalogAttributeMutation();
   const [createValue, createState] = useCreateAttributeValueMutation();
   const [updateValue, valueState] = useUpdateAttributeValueMutation();
+  const [uploadSwatch, uploadState] = useUploadAttributeSwatchMutation();
   const [attributeError, setAttributeError] = useState<string | null>(null);
   const [valueEdit, setValueEdit] = useState<ValueEdit>(initialValueEdit);
   const [valueError, setValueError] = useState<string | null>(null);
@@ -80,6 +82,15 @@ export function AttributeEditPanel({
     setValueEdit({ value });
   };
 
+  const uploadTexture = async (file: File) => {
+    setValueError(null);
+    try {
+      setTexture(await uploadSwatch(file).unwrap());
+    } catch (error) {
+      setValueError(catalogAttributesErrorMessage(error));
+    }
+  };
+
   const saveValue = async (change: CatalogAttributeValueChange) => {
     if (attributeId === undefined || !valueEdit) return;
     setValueError(null);
@@ -96,7 +107,7 @@ export function AttributeEditPanel({
 
   return (
     <AdminEditPanel
-      busy={attributeState.isLoading || valueSaving}
+      busy={attributeState.isLoading || valueSaving || uploadState.isLoading}
       onClose={onClose}
       open={open && attributeId !== undefined}
       subtitle={details?.attribute.nameUk}
@@ -129,9 +140,11 @@ export function AttributeEditPanel({
                     key={valueEdit.value?.id ?? 'new'}
                     onCancel={() => setValueEdit(undefined)}
                     onPickTexture={picker.onOpen}
+                    onUploadTexture={(file) => void uploadTexture(file)}
                     onSave={(change) => void saveValue(change)}
                     saving={valueSaving}
                     texture={texture}
+                    uploading={uploadState.isLoading}
                     value={valueEdit.value}
                   />
                 ) : null
@@ -158,7 +171,7 @@ export function AttributeEditPanel({
         page={picker.page}
         pageCount={picker.pageCount}
         search={picker.search}
-        title="Текстура з медіатеки"
+        title="Картинка з медіатеки"
       />
     </AdminEditPanel>
   );

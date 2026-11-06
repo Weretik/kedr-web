@@ -7,6 +7,7 @@ export type {
   CatalogAttributeValue,
   CatalogAttributeValueChange,
   NewCatalogAttribute,
+  UploadedSwatch,
 } from './entities/catalog-attribute';
 export { attributeKindLabel, isSwatchHex } from './entities/catalog-attribute';
 export type {

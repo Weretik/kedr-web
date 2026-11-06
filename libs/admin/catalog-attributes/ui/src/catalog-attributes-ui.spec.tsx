@@ -69,6 +69,45 @@ describe('catalog attributes ui', () => {
     });
   });
 
+  it('uploads a picture from the computer and saves the value with it', () => {
+    const onSave = vi.fn();
+    const onUploadTexture = vi.fn();
+    const props = {
+      error: null,
+      onCancel: vi.fn(),
+      onPickTexture: vi.fn(),
+      onSave,
+      onUploadTexture,
+      saving: false,
+      value: null,
+    };
+    const { rerender } = render(<AttributeValueForm {...props} texture={null} />);
+    fireEvent.change(screen.getByLabelText(/Назва українською/), { target: { value: 'Горіх' } });
+    fireEvent.click(screen.getByLabelText('Картинка'));
+    expect(screen.getByText('Картинку не вибрано.')).toBeTruthy();
+    expect((screen.getByRole('button', { name: 'Зберегти' }) as HTMLButtonElement).disabled).toBe(
+      true,
+    );
+
+    const file = new File(['x'], 'horikh.jpg', { type: 'image/jpeg' });
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    expect(input.accept).toBe('image/jpeg,image/png,image/webp');
+    fireEvent.change(input, { target: { files: [file] } });
+    expect(onUploadTexture).toHaveBeenCalledWith(file);
+
+    rerender(
+      <AttributeValueForm {...props} texture={{ id: 77, url: 'https://cdn/swatches/a.jpg' }} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти' }));
+    expect(onSave).toHaveBeenCalledWith({
+      nameUk: 'Горіх',
+      nameRu: null,
+      sortOrder: 0,
+      swatchHex: null,
+      swatchMediaFileId: 77,
+    });
+  });
+
   it('shows the products of a code by category and decides it for all and per category', () => {
     const onSave = vi.fn();
     const value = (id: number, nameUk: string, valueCode: string): CatalogAttributeValue => ({

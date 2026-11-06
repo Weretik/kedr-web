@@ -943,6 +943,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/catalog-attributes/swatches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a color or decor picture for a value (Admin)
+         * @description JPEG, PNG, or WebP up to 5 MB, stored as it is on the CDN under `swatches/` and in the media library folder «Кольори» (created when missing). No value changes: send `mediaFileId` as `swatchMediaFileId` with the value create or update.
+         */
+        post: operations["uploadAdminAttributeSwatch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/catalog-attributes/unresolved-codes": {
         parameters: {
             query?: never;
@@ -3611,6 +3631,11 @@ export interface components {
             sortOrder: number;
             swatchHex?: string | null;
             swatchMediaFileId?: number | null;
+        };
+        AdminAttributeSwatchUpload: {
+            /** Format: int64 */
+            mediaFileId: number;
+            url: string;
         };
         AdminUnresolvedCode: {
             aliasId: number;
@@ -7325,6 +7350,62 @@ export interface operations {
             };
             /** @description Value not found in this attribute. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    uploadAdminAttributeSwatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The picture in the media library */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAttributeSwatchUpload"];
+                };
+            };
+            400: components["responses"]["components-responses-ValidationError"];
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Admin or Seo role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The request is larger than the upload limit. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The CDN is not configured. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
