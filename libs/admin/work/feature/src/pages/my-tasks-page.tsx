@@ -8,6 +8,7 @@ import { useMemo, useState } from 'react';
 
 import { MyTasksBoard } from '../components/my-tasks-board';
 
+<<<<<<< HEAD
 import type { WorkAssignees } from '../work.routes';
 
 interface MyTasksPageProps {
@@ -17,6 +18,10 @@ interface MyTasksPageProps {
 
 /** «Мої задачі»: the own board and what the signed-in staff member changed in the last 7 days. */
 export function MyTasksPage({ assignees = null }: MyTasksPageProps) {
+=======
+/** «Мої задачі»: the own board and what the signed-in staff member changed in the last 7 days. */
+export function MyTasksPage() {
+>>>>>>> origin/claude/project-thread-9r9gtc
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const period = useMemo(() => lastDaysPeriod(7), []);
@@ -36,9 +41,13 @@ export function MyTasksPage({ assignees = null }: MyTasksPageProps) {
         Ставте собі задачі й переносьте їх «План → В роботі → Готово». Коли закриваєте задачу,
         напишіть, що зроблено. Адміністратор бачить задачі та список ваших змін в адмінці.
       </Typography>
+<<<<<<< HEAD
       <MyTasksBoard
         assignees={assignees}
         creating={creating} onCreatingChange={setCreating} onNotice={setNotice} />
+=======
+      <MyTasksBoard creating={creating} onCreatingChange={setCreating} onNotice={setNotice} />
+>>>>>>> origin/claude/project-thread-9r9gtc
       <SectionCard title="Що я змінив за 7 днів">
         {report.isError ? (
           <Alert severity="error">Не вдалося завантажити зміни.</Alert>

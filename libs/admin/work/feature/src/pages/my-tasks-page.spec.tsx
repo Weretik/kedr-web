@@ -9,7 +9,10 @@ const api = vi.hoisted(() => ({
   tasks: vi.fn(),
   report: vi.fn(),
   create: vi.fn(),
+<<<<<<< HEAD
   give: vi.fn(),
+=======
+>>>>>>> origin/claude/project-thread-9r9gtc
   move: vi.fn(),
 }));
 
@@ -20,7 +23,10 @@ vi.mock('@admin/work/data-access', () => ({
   useUpdateMyWorkTaskMutation: () => [vi.fn(), { isLoading: false }],
   useChangeMyWorkTaskStatusMutation: () => [api.move, { isLoading: false }],
   useDeleteMyWorkTaskMutation: () => [vi.fn(), { isLoading: false }],
+<<<<<<< HEAD
   useCreateAdminWorkTaskMutation: () => [api.give, { isLoading: false }],
+=======
+>>>>>>> origin/claude/project-thread-9r9gtc
 }));
 
 const task: WorkTask = {
@@ -46,7 +52,10 @@ describe('MyTasksPage', () => {
       isLoading: false,
     });
     api.create.mockReset();
+<<<<<<< HEAD
     api.give.mockReset();
+=======
+>>>>>>> origin/claude/project-thread-9r9gtc
     api.move.mockReset();
   });
 
@@ -65,6 +74,7 @@ describe('MyTasksPage', () => {
     expect(await screen.findByText('Задачу додано в «План».')).toBeDefined();
   });
 
+<<<<<<< HEAD
   it('lets an administrator give the new task to another person', async () => {
     api.give.mockReturnValue({ unwrap: () => Promise.resolve(task) });
     render(
@@ -96,6 +106,8 @@ describe('MyTasksPage', () => {
     expect(await screen.findByText('Задачу додано в «План»: Антон.')).toBeDefined();
   });
 
+=======
+>>>>>>> origin/claude/project-thread-9r9gtc
   it('asks what was done before closing a task', async () => {
     api.move.mockReturnValue({ unwrap: () => Promise.resolve(task) });
     render(<MyTasksPage />);

@@ -4,12 +4,16 @@ import {
   useGetAdminWorkReportQuery,
 } from '@admin/work/data-access';
 import { emptyWorkTaskInput, lastDaysPeriod, workPeriodIssue } from '@admin/work/model';
+<<<<<<< HEAD
 import {
   WorkActivityList,
   WorkAssigneeField,
   WorkTaskPanel,
   WorkTaskSummaryList,
 } from '@admin/work/ui';
+=======
+import { WorkActivityList, WorkTaskPanel, WorkTaskSummaryList } from '@admin/work/ui';
+>>>>>>> origin/claude/project-thread-9r9gtc
 import AddIcon from '@mui/icons-material/Add';
 import {
   Alert,
@@ -27,10 +31,18 @@ import { useMemo, useState } from 'react';
 
 import { workErrorMessage } from '../errors/work-error-message';
 
+<<<<<<< HEAD
 import type { WorkPeriod, WorkPerson, WorkTaskInput } from '@admin/work/model';
 
 interface WorkReportPageProps {
   staff: readonly WorkPerson[];
+=======
+import type { StaffMember } from '../work.routes';
+import type { WorkPeriod, WorkTaskInput } from '@admin/work/model';
+
+interface WorkReportPageProps {
+  staff: readonly StaffMember[];
+>>>>>>> origin/claude/project-thread-9r9gtc
   staffLoading: boolean;
 }
 
@@ -41,8 +53,12 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
   const [userId, setUserId] = useState('');
   const [preset, setPreset] = useState<Preset>('7');
   const [custom, setCustom] = useState<WorkPeriod>(() => lastDaysPeriod(30));
+<<<<<<< HEAD
   /** Whom «Дати задачу» gives the task to; starts as the person of the report. */
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
+=======
+  const [giving, setGiving] = useState(false);
+>>>>>>> origin/claude/project-thread-9r9gtc
   const [error, setError] = useState<string>();
   const [notice, setNotice] = useState<string | null>(null);
   const [give, given] = useCreateAdminWorkTaskMutation();
@@ -62,10 +78,16 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
   const save = async (input: WorkTaskInput) => {
     setError(undefined);
     try {
+<<<<<<< HEAD
       await give({ ownerUserId: assigneeId ?? selected, input }).unwrap();
       const name = staff.find((member) => member.id === assigneeId)?.name;
       setAssigneeId(null);
       setNotice(name ? `Задачу додано в «План»: ${name}.` : 'Задачу додано в «План».');
+=======
+      await give({ ownerUserId: selected, input }).unwrap();
+      setGiving(false);
+      setNotice('Задачу додано в «План» цієї людини.');
+>>>>>>> origin/claude/project-thread-9r9gtc
     } catch (cause) {
       setError(workErrorMessage(cause));
     }
@@ -79,7 +101,11 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
             disabled={!person}
             onClick={() => {
               setError(undefined);
+<<<<<<< HEAD
               setAssigneeId(selected);
+=======
+              setGiving(true);
+>>>>>>> origin/claude/project-thread-9r9gtc
             }}
             startIcon={<AddIcon />}
             variant="contained"
@@ -195,6 +221,7 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
           </Box>
         )
       ) : null}
+<<<<<<< HEAD
       {assigneeId ? (
         <WorkTaskPanel
           error={error}
@@ -210,6 +237,16 @@ export function WorkReportPage({ staff, staffLoading }: WorkReportPageProps) {
           onCancel={() => setAssigneeId(null)}
           onSave={(input) => void save(input)}
           saving={given.isLoading}
+=======
+      {giving && person ? (
+        <WorkTaskPanel
+          error={error}
+          initial={emptyWorkTaskInput}
+          onCancel={() => setGiving(false)}
+          onSave={(input) => void save(input)}
+          saving={given.isLoading}
+          subtitle={person.name}
+>>>>>>> origin/claude/project-thread-9r9gtc
           title="Нова задача"
         />
       ) : null}

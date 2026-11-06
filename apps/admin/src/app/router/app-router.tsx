@@ -37,7 +37,11 @@ import { useGetStaffAccountsQuery } from '@admin/users/data-access';
 import { createProfileRoutes, createUsersRoutes, profilePath } from '@admin/users/feature';
 import { staffRoleLabels } from '@admin/users/model';
 import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
+<<<<<<< HEAD
 import { createMyTasksRoutes, createWorkReportRoutes, MyTasksOverview } from '@admin/work/feature';
+=======
+import { createWorkReportRoutes, myTasksRoutes } from '@admin/work/feature';
+>>>>>>> origin/claude/project-thread-9r9gtc
 import { useMemo } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
@@ -45,8 +49,12 @@ import { CustomerPicker } from '../customer-picker';
 import { toShellUser } from './shell-user';
 
 import type { SessionUser } from '@admin/core/auth';
+<<<<<<< HEAD
 import type { WorkAssignees } from '@admin/work/feature';
 import type { WorkPerson } from '@admin/work/model';
+=======
+import type { StaffMember } from '@admin/work/feature';
+>>>>>>> origin/claude/project-thread-9r9gtc
 
 function AdminShellRoute({ user }: { user: SessionUser }) {
   const { lines } = useCurrentOrderSet();
@@ -79,11 +87,18 @@ const dashboardRoutes = createDashboardRoutes({
 });
 
 const workReportRoutes = createWorkReportRoutes({ useStaffMembers });
+<<<<<<< HEAD
 const myTasksRoutes = createMyTasksRoutes({ useAssignees: useWorkAssignees });
 
 /** People for «Звіт роботи» and «Для кого»: the staff list the admin manages on «Користувачі». */
 function useStaffMembers(skip = false): { staff: readonly WorkPerson[]; loading: boolean } {
   const { data, isLoading } = useGetStaffAccountsQuery(undefined, { skip });
+=======
+
+/** People for «Звіт роботи»: the staff list the admin already manages on «Користувачі». */
+function useStaffMembers(): { staff: readonly StaffMember[]; loading: boolean } {
+  const { data, isLoading } = useGetStaffAccountsQuery();
+>>>>>>> origin/claude/project-thread-9r9gtc
   const staff = useMemo(
     () =>
       (data ?? []).map((account) => ({
@@ -96,6 +111,7 @@ function useStaffMembers(skip = false): { staff: readonly WorkPerson[]; loading:
   return { staff, loading: isLoading };
 }
 
+<<<<<<< HEAD
 /** An administrator may give a new task to anyone on «Мої задачі»; others only to themselves. */
 function useWorkAssignees(): WorkAssignees | null {
   const session = useAdminSession();
@@ -106,6 +122,8 @@ function useWorkAssignees(): WorkAssignees | null {
   return staff.some((person) => person.id === selfId) ? { people: staff, selfId } : null;
 }
 
+=======
+>>>>>>> origin/claude/project-thread-9r9gtc
 function useCanEditCatalog(): boolean {
   const session = useAdminSession();
   return session.status === 'authenticated' && canEditCatalog(session.user);
