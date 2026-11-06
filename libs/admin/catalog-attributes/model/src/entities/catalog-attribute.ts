@@ -62,11 +62,14 @@ export interface CatalogAttributeChange {
   sortOrder: number;
 }
 
-/** A new attribute an Admin adds («Нова ознака»): a list of values or a number. */
+/**
+ * A new attribute an Admin adds («Нова ознака»): a list of values, «Так / Ні» (a list created with the values «Так»
+ * and «Ні»), or a number.
+ */
 export interface NewCatalogAttribute {
   nameUk: string;
   nameRu: string | null;
-  kind: 'enum' | 'number';
+  kind: 'enum' | 'yesno' | 'number';
   unit: string | null;
   isFilterable: boolean;
   isVariantAxis: boolean;

@@ -5,6 +5,7 @@ import { CodeMeaningRow } from './components/codes/code-meaning-row';
 import { CodeWorkspace } from './components/codes/code-workspace';
 import { AttributeValueForm } from './forms/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
+import { emptyNewAttribute, toNewAttribute } from './forms/new-attribute-fields';
 
 import type { MeaningRowSlotProps } from './components/codes/code-meanings-editor';
 import type {
@@ -40,6 +41,12 @@ const filter = (attributeId: number, name: string): CategoryFilter => ({
 });
 
 describe('catalog attributes ui', () => {
+  it('creates a «Так / Ні» attribute without a unit', () => {
+    expect(
+      toNewAttribute({ ...emptyNewAttribute, nameUk: ' Пакування ', kind: 'yesno', unit: 'мм' }),
+    ).toMatchObject({ nameUk: 'Пакування', kind: 'yesno', unit: null });
+  });
+
   it('saves a new value with a valid color only', () => {
     const onSave = vi.fn();
     render(

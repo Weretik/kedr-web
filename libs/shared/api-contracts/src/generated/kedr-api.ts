@@ -3570,10 +3570,10 @@ export interface components {
             nameUk: string;
             nameRu?: string | null;
             /**
-             * @description `enum` - a list of values; `number` - a number in `unit`.
+             * @description `enum` - a list of values; `yesno` - a list with «Так» and «Ні» created at once; `number` - a number in `unit`.
              * @enum {string}
              */
-            kind: "enum" | "number";
+            kind: "enum" | "number" | "yesno";
             unit?: string | null;
             code?: string | null;
             slug?: string | null;
