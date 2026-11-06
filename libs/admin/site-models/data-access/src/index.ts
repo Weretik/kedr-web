@@ -1,5 +1,7 @@
 export {
   useAcceptProductReviewMutation,
+  useCreateAttributeOptionMutation,
+  useCreateAttributeValueOptionMutation,
   useGetAttributeOptionsQuery,
   useGetAttributeValueOptionsQuery,
   useGetProductAttributesQuery,

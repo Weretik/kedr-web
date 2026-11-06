@@ -1,6 +1,8 @@
 import {
   useAcceptSiteModelsMutation,
   useAddSiteModelProductsMutation,
+  useCreateAttributeOptionMutation,
+  useCreateAttributeValueOptionMutation,
   useFillSiteModelFromNamesMutation,
   useGetSiteModelQuery,
   useRemoveSiteModelProductMutation,
@@ -30,6 +32,21 @@ export function useSiteModelEditor(id: number | undefined, onNotice: (text: stri
   const [fill, fillState] = useFillSiteModelFromNamesMutation();
   const [setText, textState] = useSetSiteModelTextMutation();
   const [setValue, valueState] = useSetProductAttributeMutation();
+  const [createAttribute, createAttributeState] = useCreateAttributeOptionMutation();
+  const [createValue, createValueState] = useCreateAttributeValueOptionMutation();
+
+  /** Creates something; returns its id, or `undefined` with the error shown in its block. */
+  const create = async (place: ErrorPlace, change: () => Promise<number>, notice: string) => {
+    setErrors((current) => ({ ...current, [place]: undefined }));
+    try {
+      const id = await change();
+      onNotice(notice);
+      return id;
+    } catch (cause) {
+      setErrors((current) => ({ ...current, [place]: siteModelsErrorMessage(cause) }));
+      return undefined;
+    }
+  };
 
   /** Runs a change; returns whether it worked and shows its error in its block. */
   const run = async (place: ErrorPlace, change: () => Promise<unknown>, notice?: string) => {
@@ -52,9 +69,13 @@ export function useSiteModelEditor(id: number | undefined, onNotice: (text: stri
     errors,
     clearError: (place: ErrorPlace) => setErrors((current) => ({ ...current, [place]: undefined })),
     headerBusy: acceptState.isLoading || renameState.isLoading,
-    axesBusy: axesState.isLoading,
+    axesBusy: axesState.isLoading || createAttributeState.isLoading,
     productsBusy:
-      removeState.isLoading || fillState.isLoading || valueState.isLoading || addState.isLoading,
+      removeState.isLoading ||
+      fillState.isLoading ||
+      valueState.isLoading ||
+      addState.isLoading ||
+      createValueState.isLoading,
     adding: addState.isLoading,
     textSaving: textState.isLoading,
     renaming: renameState.isLoading,
@@ -77,6 +98,16 @@ export function useSiteModelEditor(id: number | undefined, onNotice: (text: stri
     setValue: (productId: number, attributeId: number, valueId: number) =>
       run('products', () =>
         setValue({ productId, attributeId, input: { valueIds: [valueId] } }).unwrap(),
+      ),
+    /** A new list attribute from «Чим відрізняються товари»; the caller adds it as a switcher. */
+    createAttribute: (name: string) =>
+      create('axes', () => createAttribute(name).unwrap(), `Ознаку «${name}» створено`),
+    /** A new value of an axis from a product row; the caller sets it on the product. */
+    createValue: (attributeId: number, name: string) =>
+      create(
+        'products',
+        () => createValue({ attributeId, nameUk: name }).unwrap(),
+        `Значення «${name}» створено`,
       ),
     saveText: (modelId: number, language: SiteModelLanguage, text: SiteModelTextInput) =>
       run('texts', () => setText({ id: modelId, language, text }).unwrap(), 'Тексти збережено'),

@@ -1,6 +1,7 @@
 import {
   attributeOptionsSchema,
   attributeValuesSchema,
+  createdAttributeSchema,
   productAttributesSchema,
 } from '../validators/product-attributes.schemas';
 
@@ -63,6 +64,20 @@ export function mapAttributeValueOptions(response: unknown): AttributeValueOptio
   return attributeValuesSchema
     .parse(response)
     .values.map((value) => ({ id: value.id, name: value.nameUk }));
+}
+
+/** The id of an attribute just created. */
+export function mapCreatedAttributeId(response: unknown): number {
+  return createdAttributeSchema.parse(response).attribute.id;
+}
+
+/** The id of the value just created with this name: the newest one when names repeat. */
+export function mapCreatedValueId(response: unknown, nameUk: string): number {
+  const values = attributeValuesSchema.parse(response).values;
+  const created = values.filter((value) => value.nameUk === nameUk.trim());
+  const id = Math.max(...created.map((value) => value.id));
+  if (!Number.isFinite(id)) throw new Error('The created value is missing from the response.');
+  return id;
 }
 
 export function toSetProductAttributeBody(input: ProductAttributeInput): SetProductAttributeBody {

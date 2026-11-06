@@ -49,3 +49,7 @@ export const attributeOptionsSchema = z.array(
 export const attributeValuesSchema = z.object({
   values: z.array(z.object({ id: z.number().int().min(1), nameUk: z.string() })),
 });
+
+export const createdAttributeSchema = z.object({
+  attribute: z.object({ id: z.number().int().min(1) }),
+});

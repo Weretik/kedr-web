@@ -29,6 +29,8 @@ vi.mock('@admin/site-models/data-access', () => ({
   useFillSiteModelFromNamesMutation: api.idle,
   useSetSiteModelTextMutation: api.idle,
   useSetProductAttributeMutation: api.idle,
+  useCreateAttributeOptionMutation: api.idle,
+  useCreateAttributeValueOptionMutation: api.idle,
 }));
 
 const category: SiteModelCategory = {
