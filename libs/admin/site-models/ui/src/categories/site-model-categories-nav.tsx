@@ -1,7 +1,7 @@
 import { siteCategoryAncestors, siteCategoryTree } from '@admin/site-models/model';
 import { Box, Button, Card, Skeleton, Stack, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { useState } from 'react';
 
 import type { SiteCategoryNode, SiteModelCategory } from '@admin/site-models/model';
@@ -108,7 +108,11 @@ export function SiteModelCategoriesNav({
             expandedItems={expanded ?? []}
             expansionTrigger="iconContainer"
             onExpandedItemsChange={(_event, ids) => setExpanded(ids)}
-            onSelectedItemsChange={(_event, id) => {
+            onSelectedItemsChange={(event, id) => {
+              // The arrow only opens the branch; it does not pick the category.
+              const target = event?.target;
+              if (target instanceof Element && target.closest(`.${treeItemClasses.iconContainer}`))
+                return;
               if (id) onSelect(Number(id));
             }}
             selectedItems={selectedId === undefined ? null : String(selectedId)}
