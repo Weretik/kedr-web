@@ -10,4 +10,5 @@ export {
   useSetCategoryFiltersMutation,
   useUpdateAttributeValueMutation,
   useUpdateCatalogAttributeMutation,
+  useUploadAttributeSwatchMutation,
 } from './api/catalog-attributes.api';

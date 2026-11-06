@@ -96,3 +96,8 @@ export const categoryFilterSchema = z.object({
   isEditedManually: z.boolean(),
   productCount: z.number().int().nonnegative(),
 });
+
+export const swatchUploadSchema = z.object({
+  mediaFileId: z.number().int().min(1),
+  url: z.string(),
+});

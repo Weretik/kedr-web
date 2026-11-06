@@ -17,24 +17,28 @@ import { AttributeSwatch } from '../swatch/attribute-swatch';
 import type {
   CatalogAttributeValue,
   CatalogAttributeValueChange,
+  UploadedSwatch,
 } from '@admin/catalog-attributes/model';
 
 type SwatchKind = 'none' | 'color' | 'texture';
 
-/** A decor picture chosen from «Медіа». */
-export interface SwatchTexture {
-  id: number;
-  url: string | null;
-}
+/** A color or decor picture: uploaded from the computer or chosen in «Медіа». */
+export type SwatchTexture = UploadedSwatch;
+
+const pictureTypes = 'image/jpeg,image/png,image/webp';
 
 interface AttributeValueFormProps {
   /** The value being changed; empty when a person adds one. */
   value: CatalogAttributeValue | null;
-  /** The texture picked in the library, owned by the page so the picker can set it. */
+  /** The picture uploaded or picked in the library, owned by the page so the picker can set it. */
   texture: SwatchTexture | null;
   saving: boolean;
+  /** A picture is being uploaded to the CDN. */
+  uploading?: boolean;
   error: string | null;
   onPickTexture: () => void;
+  /** Uploads a picture from the computer to the CDN folder `swatches/`. */
+  onUploadTexture?: (file: File) => void;
   onCancel: () => void;
   onSave: (change: CatalogAttributeValueChange) => void;
 }
@@ -46,16 +50,18 @@ function initialKind(value: CatalogAttributeValue | null): SwatchKind {
 }
 
 /**
- * Name, order, and swatch of one value (a color, a decor texture, or only text), edited in place inside the values
- * list of the attribute panel.
+ * Name, order, and swatch of one value (a color, a picture of the finish, or only text), edited in place inside the
+ * values list of the attribute panel. The picture is uploaded from the computer or chosen in «Медіа».
  */
 export function AttributeValueForm({
   error,
   onCancel,
   onPickTexture,
   onSave,
+  onUploadTexture,
   saving,
   texture,
+  uploading = false,
   value,
 }: AttributeValueFormProps) {
   const [nameUk, setNameUk] = useState(value?.nameUk ?? '');
@@ -69,7 +75,7 @@ export function AttributeValueForm({
   const nameValid = nameUk.trim() !== '' && nameUk.trim().length <= 128;
   const hexValid = kind !== 'color' || (hex !== '' && isSwatchHex(hex));
   const textureValid = kind !== 'texture' || texture !== null;
-  const canSave = !saving && nameValid && orderValid && hexValid && textureValid;
+  const canSave = !saving && !uploading && nameValid && orderValid && hexValid && textureValid;
 
   return (
     <Box
@@ -131,7 +137,7 @@ export function AttributeValueForm({
           <RadioGroup onChange={(_event, next) => setKind(next as SwatchKind)} row value={kind}>
             <FormControlLabel control={<Radio />} label="Лише текст" value="none" />
             <FormControlLabel control={<Radio />} label="Колір" value="color" />
-            <FormControlLabel control={<Radio />} label="Текстура" value="texture" />
+            <FormControlLabel control={<Radio />} label="Картинка" value="texture" />
           </RadioGroup>
         </Box>
         {kind === 'color' ? (
@@ -154,16 +160,35 @@ export function AttributeValueForm({
           </Stack>
         ) : null}
         {kind === 'texture' ? (
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{ alignItems: 'center', flexWrap: 'wrap', rowGap: 1 }}
+          >
             {texture ? (
-              <AttributeSwatch hex={null} imageUrl={texture.url} label="Текстура" size={44} />
+              <AttributeSwatch hex={null} imageUrl={texture.url} label="Картинка" size={44} />
             ) : (
               <Typography color="error" variant="body2">
-                Текстуру не вибрано.
+                Картинку не вибрано.
               </Typography>
             )}
-            <Button onClick={onPickTexture} variant="outlined">
-              {texture ? 'Змінити' : 'Вибрати з медіатеки'}
+            {onUploadTexture ? (
+              <Button component="label" disabled={uploading} variant="outlined">
+                {uploading ? 'Завантаження…' : 'Завантажити з комп’ютера'}
+                <input
+                  accept={pictureTypes}
+                  hidden
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = '';
+                    if (file) onUploadTexture(file);
+                  }}
+                  type="file"
+                />
+              </Button>
+            ) : null}
+            <Button disabled={uploading} onClick={onPickTexture} variant="outlined">
+              Вибрати з медіатеки
             </Button>
           </Stack>
         ) : null}

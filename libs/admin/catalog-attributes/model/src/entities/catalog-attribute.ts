@@ -33,6 +33,12 @@ export interface CatalogAttributeValue {
   productCount: number;
 }
 
+/** A color or decor picture of a value in «Медіа» (uploaded to the CDN `swatches/` or picked in the library). */
+export interface UploadedSwatch {
+  id: number;
+  url: string | null;
+}
+
 /** How a value is written in 1C names; without a value the code is not decoded. */
 export interface CatalogAttributeAlias {
   id: number;

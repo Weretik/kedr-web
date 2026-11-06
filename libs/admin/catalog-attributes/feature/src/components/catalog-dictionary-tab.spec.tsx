@@ -28,6 +28,7 @@ vi.mock('@admin/catalog-attributes/data-access', () => ({
   useCreateCatalogAttributeMutation: () => [api.create, { isLoading: false }],
   useCreateAttributeValueMutation: () => [vi.fn(), { isLoading: false }],
   useUpdateAttributeValueMutation: () => [api.updateValue, { isLoading: false }],
+  useUploadAttributeSwatchMutation: () => [vi.fn(), { isLoading: false }],
   useDecideAttributeCodeMutation: () => [api.decide, { isLoading: false }],
   useSetCategoryFiltersMutation: () => [vi.fn(), { isLoading: false }],
 }));
