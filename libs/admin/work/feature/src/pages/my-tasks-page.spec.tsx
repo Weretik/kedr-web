@@ -72,7 +72,8 @@ describe('MyTasksPage', () => {
     fireEvent.change(screen.getByRole('textbox', { name: 'Що зроблено' }), {
       target: { value: 'Написав описи для 12 категорій' },
     });
-    fireEvent.click(screen.getAllByRole('button', { name: 'Готово' }).at(-1) as HTMLElement);
+    const doneButtons = screen.getAllByRole('button', { name: 'Готово' });
+    fireEvent.click(doneButtons[doneButtons.length - 1]);
 
     await waitFor(() => expect(api.move).toHaveBeenCalledOnce());
     expect(api.move.mock.calls[0][0]).toEqual({
