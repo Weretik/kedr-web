@@ -78,7 +78,7 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
     <Card
       component="article"
       aria-label={model.name}
-      sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, minWidth: 0 }}
+      sx={{ minWidth: 0, overflow: 'visible' }}
       variant="outlined"
     >
       <Stack spacing={1.5} sx={{ px: { xs: 2, md: 3 }, pt: 2.5 }}>
@@ -135,7 +135,7 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
         </Tabs>
       </Stack>
 
-      <Stack spacing={3} sx={{ flex: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, md: 3 } }}>
+      <Stack spacing={3} sx={{ p: { xs: 2, md: 3 } }}>
         {tab === 'products' ? (
           <>
             <SiteModelProductsCard
@@ -201,11 +201,17 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
         direction="row"
         spacing={1}
         sx={{
+          bgcolor: 'background.paper',
+          borderBottomLeftRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
           borderColor: 'divider',
           borderTop: 1,
+          bottom: 0,
           justifyContent: 'flex-end',
+          position: 'sticky',
           px: { xs: 2, md: 3 },
           py: 1.5,
+          zIndex: 1,
         }}
       >
         {proposed ? (

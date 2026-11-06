@@ -29,7 +29,8 @@ const emptyTexts: Record<SiteQueueView, string> = {
   all: 'У цій категорії немає товарів на сайті.',
 };
 
-const queueHeight = { md: 'calc(100vh - 290px)' };
+/** Only the queue list scrolls, beside the page; the open model takes the height it needs. */
+const queueListHeight = { xs: 360, md: 'calc(100vh - 140px)' };
 
 /** «Моделі» of «Вітрина сайту»: the queue on the left, the open model beside it (canvas variant B). */
 export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void }) {
@@ -113,20 +114,21 @@ export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void
       </Stack>
       <Box
         sx={{
-          alignItems: 'stretch',
+          alignItems: 'start',
           display: 'grid',
           gap: 2,
           gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: '320px minmax(0, 1fr)' },
-          height: queueHeight,
         }}
       >
         <Card
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            maxHeight: { xs: 360, md: 'none' },
+            maxHeight: queueListHeight,
             minHeight: 0,
             p: 1,
+            position: { md: 'sticky' },
+            top: { md: 16 },
           }}
           variant="outlined"
         >
@@ -141,7 +143,7 @@ export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void
             totalCount={showcase.data?.totalCount ?? 0}
           />
         </Card>
-        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, minWidth: 0 }}>
+        <Box sx={{ minWidth: 0 }}>
           {modelId ? (
             <SiteModelPane
               hasNext={next !== undefined && next !== selectedKey}
