@@ -106,7 +106,6 @@ export function FilterCategoriesTree({
             if (node && node.children.length === 0) onSelect(node);
           }}
           selectedItems={selectedId === undefined ? null : String(selectedId)}
-          sx={{ maxHeight: { md: 'calc(100vh - 300px)' }, overflowY: 'auto' }}
         >
           <Nodes nodes={nodes} />
         </SimpleTreeView>
