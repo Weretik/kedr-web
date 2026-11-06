@@ -11,6 +11,7 @@ const api = vi.hoisted(() => ({
   list: vi.fn(),
   one: vi.fn(),
   codes: vi.fn(),
+  codeProducts: vi.fn(),
   update: vi.fn(),
   create: vi.fn(),
   updateValue: vi.fn(),
@@ -21,6 +22,7 @@ vi.mock('@admin/catalog-attributes/data-access', () => ({
   useGetCatalogAttributesQuery: api.list,
   useGetCatalogAttributeQuery: api.one,
   useGetUnresolvedCodesQuery: api.codes,
+  useGetCodeProductsQuery: api.codeProducts,
   useGetCategoryFiltersQuery: () => ({ data: undefined, isError: false, isLoading: false }),
   useUpdateCatalogAttributeMutation: () => [api.update, { isLoading: false }],
   useCreateCatalogAttributeMutation: () => [api.create, { isLoading: false }],
@@ -112,6 +114,7 @@ describe('CatalogDictionaryTab', () => {
     api.list.mockReturnValue({ data: [attribute], isError: false, isFetching: false });
     api.one.mockReturnValue({ data: details, isError: false, isLoading: false });
     api.codes.mockReturnValue({ data: [], isError: false, isFetching: false });
+    api.codeProducts.mockReturnValue({ data: undefined, isError: false, isFetching: false });
     api.update.mockReturnValue({ unwrap: () => Promise.resolve(details) });
   });
 
@@ -188,34 +191,61 @@ describe('CatalogDictionaryTab', () => {
     expect(await screen.findByText('Значення збережено.')).toBeTruthy();
   });
 
-  it('decides a code in the side panel', async () => {
+  it('decides the first code of the queue and goes on', async () => {
+    const zcn = {
+      aliasId: 4,
+      attributeId: 3,
+      attributeName: 'Колір',
+      scope: 'general',
+      rawValue: 'ZCN',
+      valueId: null,
+      valueName: null,
+      isConfirmed: false,
+      note: null,
+      productCount: 9,
+    };
     api.codes.mockReturnValue({
-      data: [
-        {
-          aliasId: 4,
-          attributeId: 3,
-          attributeName: 'Колір',
-          scope: 'general',
-          rawValue: 'ZCN',
-          valueId: null,
-          valueName: null,
-          isConfirmed: false,
-          note: null,
-          productCount: 9,
-        },
-      ],
+      data: [zcn, { ...zcn, aliasId: 5, rawValue: 'BK', productCount: 3 }],
+      isError: false,
+      isFetching: false,
+    });
+    api.codeProducts.mockReturnValue({
+      data: {
+        aliasId: 4,
+        rawValue: 'ZCN',
+        categories: [
+          {
+            categoryId: 11,
+            categoryPath: 'Фурнітура > Циліндри > серія ZINK',
+            hasOwnValue: false,
+            valueId: null,
+            valueName: null,
+            products: [{ productId: 1377, name: 'KEDR циліндр ZINK M70 ZCN (40T*30)', photo: '' }],
+          },
+        ],
+      },
       isError: false,
       isFetching: false,
     });
     api.decide.mockReturnValue({
-      unwrap: () => Promise.resolve({ code: {}, valuesConfirmed: 9 }),
+      unwrap: () => Promise.resolve({ code: { rawValue: 'ZCN' }, valuesConfirmed: 0 }),
     });
     renderPage(true, 'codes');
-    fireEvent.click(screen.getByRole('button', { name: 'Розшифрувати код ZCN' }));
-    expect(screen.getByText('«ZCN» у ознаці «Колір»')).toBeTruthy();
-    fireEvent.click(screen.getByRole('radio', { name: /Хром \(CR\)/ }));
-    fireEvent.click(screen.getByRole('button', { name: 'Зберегти для 9 тов.' }));
-    expect(api.decide).toHaveBeenCalledWith({ aliasId: 4, decision: { valueId: 8 } });
+
+    expect(screen.getByRole('heading', { name: /ZCN/ })).toBeTruthy();
+    expect(screen.getByText('серія ZINK', { exact: false })).toBeTruthy();
+    fireEvent.mouseDown(
+      screen.getByRole('combobox', { name: 'Значення в категорії Циліндри > серія ZINK' }),
+    );
+    fireEvent.click(screen.getByRole('option', { name: 'Хром (CR)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти і далі' }));
+
+    expect(api.decide).toHaveBeenCalledWith({
+      aliasId: 4,
+      decision: { valueId: null, applyToAll: false, categories: [{ categoryId: 11, valueId: 8 }] },
+    });
+    expect(await screen.findByText(/Код «ZCN» збережено/)).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /BK/ })).toBeTruthy();
   });
 
   it('lists only categories shown on the site and marks a final one without filters', () => {

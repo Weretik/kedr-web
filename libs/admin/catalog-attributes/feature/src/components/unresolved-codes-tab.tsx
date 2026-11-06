@@ -1,67 +1,97 @@
 import {
   useDecideAttributeCodeMutation,
   useGetCatalogAttributeQuery,
+  useGetCodeProductsQuery,
   useGetUnresolvedCodesQuery,
 } from '@admin/catalog-attributes/data-access';
 import { codeDecisionNotice } from '@admin/catalog-attributes/model';
-import { CodeDecisionPanel, UnresolvedCodesDataGrid } from '@admin/catalog-attributes/ui';
-import { Card } from '@mui/material';
+import { CodeQueueList, CodeWorkspace } from '@admin/catalog-attributes/ui';
+import { Box, Card } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useState } from 'react';
 
 import { catalogAttributesErrorMessage } from '../errors/catalog-attributes-error-message';
 
-import type { UnresolvedCode } from '@admin/catalog-attributes/model';
+import type { CodeDecision } from '@admin/catalog-attributes/model';
 
 interface UnresolvedCodesTabProps {
   canEdit: boolean;
   onNotice: (message: string) => void;
 }
 
-/** «Не розшифровані коди»: the owner decides what each 1C code means, in the right-side panel. */
+/**
+ * «Не розшифровані коди» (spec catalog/008): the queue of codes on the left, the chosen code on the right with its
+ * products by category; the owner decodes it for all products or per category and goes on to the next code.
+ */
 export function UnresolvedCodesTab({ canEdit, onNotice }: UnresolvedCodesTabProps) {
   const query = useGetUnresolvedCodesQuery();
-  const [code, setCode] = useState<UnresolvedCode>();
+  const codes = query.data ?? [];
+  const [selectedId, setSelectedId] = useState<number>();
   const [error, setError] = useState<string | null>(null);
+  const code = codes.find((item) => item.aliasId === selectedId) ?? codes[0];
+  const products = useGetCodeProductsQuery(code?.aliasId ?? skipToken);
   const values = useGetCatalogAttributeQuery(code?.attributeId ?? skipToken);
   const [decide, decideState] = useDecideAttributeCodeMutation();
 
-  const save = async (valueId: number | null) => {
+  const select = (aliasId: number | undefined) => {
+    setError(null);
+    setSelectedId(aliasId);
+  };
+  const nextId = () => {
+    const index = codes.findIndex((item) => item.aliasId === code?.aliasId);
+    return codes[index + 1]?.aliasId ?? codes[0]?.aliasId;
+  };
+
+  const save = async (decision: CodeDecision) => {
     if (!code) return;
     setError(null);
+    const next = nextId();
     try {
-      const result = await decide({ aliasId: code.aliasId, decision: { valueId } }).unwrap();
-      setCode(undefined);
+      const result = await decide({ aliasId: code.aliasId, decision }).unwrap();
       onNotice(codeDecisionNotice(result));
+      select(next === code.aliasId ? undefined : next);
     } catch (failure) {
       setError(catalogAttributesErrorMessage(failure));
     }
   };
 
   return (
-    <>
-      <Card sx={{ overflow: 'hidden' }} variant="outlined">
-        <UnresolvedCodesDataGrid
-          canEdit={canEdit}
+    <Box
+      sx={{
+        alignItems: 'start',
+        display: 'grid',
+        gap: 2,
+        gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: '300px minmax(0, 1fr)' },
+      }}
+    >
+      <Card sx={{ p: 1 }} variant="outlined">
+        <CodeQueueList
+          codes={codes}
           error={query.isError}
           loading={query.isFetching}
-          onDecide={(next) => {
-            setError(null);
-            setCode(next);
-          }}
           onRetry={() => query.refetch()}
-          rows={query.data ?? []}
+          onSelect={select}
+          selectedId={code?.aliasId}
         />
       </Card>
-      <CodeDecisionPanel
-        code={code}
-        error={error}
-        onClose={() => setCode(undefined)}
-        onSave={(valueId) => void save(valueId)}
-        saving={decideState.isLoading}
-        values={values.data?.values ?? []}
-        valuesLoading={values.isFetching}
-      />
-    </>
+      {code ? (
+        <Card sx={{ p: { xs: 2, md: 3 } }} variant="outlined">
+          <CodeWorkspace
+            canEdit={canEdit}
+            code={code}
+            error={error}
+            key={code.aliasId}
+            onRetry={() => products.refetch()}
+            onSave={(decision) => void save(decision)}
+            onSkip={() => select(nextId())}
+            products={products.data}
+            productsError={products.isError}
+            productsLoading={products.isFetching}
+            saving={decideState.isLoading}
+            values={values.data?.values ?? []}
+          />
+        </Card>
+      ) : null}
+    </Box>
   );
 }

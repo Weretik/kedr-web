@@ -975,9 +975,31 @@ export interface paths {
         get?: never;
         /**
          * Decode a code (Admin)
-         * @description A value of the code's attribute, or null when the code means nothing to filter by. Product values that waited only for this confirmation become confirmed at once; codes decoded for the first time reach products at the next recognition run. The dictionary import no longer changes the code.
+         * @description With applyToAll (default true): a value of the code's attribute for all products, or null when the code means nothing to filter by. Product values that waited only for this confirmation become confirmed at once. The dictionary import no longer changes the code. categories, when sent, replaces the code's own decodings per category (spec catalog/008): they win over the decoding for all; a category left out follows it. The products whose names contain the code are recognized again at once.
          */
         put: operations["decideAdminAttributeCode"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/codes/{aliasId}/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                aliasId: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * Where a code occurs (spec catalog/008)
+         * @description On-site, not deleted products whose original 1C names contain the code, grouped by category (most products first), with the code's own decoding in each category.
+         */
+        get: operations["getAdminAttributeCodeProducts"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -3602,12 +3624,45 @@ export interface components {
             /** @description On-site products whose review mentions the code (spec catalog/007 M-01). */
             productCount: number;
         };
+        DecideAttributeCodeCategory: {
+            categoryId: number;
+            /** @description Null: the code means nothing in this category. */
+            valueId?: number | null;
+        };
         DecideAttributeCodeRequest: {
             valueId?: number | null;
+            /**
+             * @description False keeps the code undecided for all products.
+             * @default true
+             */
+            applyToAll: boolean;
+            /** @description The whole list of the code's own decodings per category; null leaves them as they are. */
+            categories?: components["schemas"]["DecideAttributeCodeCategory"][] | null;
         };
         DecideAttributeCodeResponse: {
             code: components["schemas"]["AdminUnresolvedCode"];
             valuesConfirmed: number;
+        };
+        AdminCodeProduct: {
+            productId: number;
+            /** @description Original 1C name. */
+            name: string;
+            photo: string;
+        };
+        AdminCodeCategory: {
+            categoryId: number;
+            /** @description Full path, for example «Фурнітура > Ручки > На планці». */
+            categoryPath: string;
+            /** @description The category has its own decoding; otherwise it follows the one for all. */
+            hasOwnValue: boolean;
+            valueId?: number | null;
+            valueName?: string | null;
+            products: components["schemas"]["AdminCodeProduct"][];
+        };
+        AdminCodeProducts: {
+            aliasId: number;
+            rawValue: string;
+            categories: components["schemas"]["AdminCodeCategory"][];
         };
         AdminProblemReason: {
             code: string;
@@ -7342,6 +7397,49 @@ export interface operations {
                 content?: never;
             };
             /** @description Signed in without the Admin or Seo role. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Code not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminAttributeCodeProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                aliasId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Products by category */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCodeProducts"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Signed in without the Manager, Seo, or Admin role. */
             403: {
                 headers: {
                     [name: string]: unknown;

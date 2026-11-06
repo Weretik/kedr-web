@@ -3,6 +3,7 @@ import {
   catalogAttributeSchema,
   categoryFilterSchema,
   codeDecisionResultSchema,
+  codeProductsSchema,
   unresolvedCodeSchema,
 } from '../validators/catalog-attributes.schemas';
 
@@ -11,7 +12,9 @@ import type {
   CatalogAttributeDetails,
   CatalogAttributeValueChange,
   CategoryFilter,
+  CodeDecision,
   CodeDecisionResult,
+  CodeProducts,
   NewCatalogAttribute,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
@@ -20,6 +23,7 @@ import type { z } from 'zod';
 
 type UpdateValueBody = components['schemas']['UpdateAttributeValueRequest'];
 type CreateAttributeBody = components['schemas']['CreateCatalogAttributeRequest'];
+type DecideCodeBody = components['schemas']['DecideAttributeCodeRequest'];
 
 export function mapCatalogAttributes(response: unknown): CatalogAttribute[] {
   return catalogAttributeSchema.array().parse(response).map(toAttribute);
@@ -79,6 +83,34 @@ export function mapUnresolvedCodes(response: unknown): UnresolvedCode[] {
 export function mapCodeDecisionResult(response: unknown): CodeDecisionResult {
   const dto = codeDecisionResultSchema.parse(response);
   return { code: toCode(dto.code), valuesConfirmed: dto.valuesConfirmed };
+}
+
+export function mapCodeProducts(response: unknown): CodeProducts {
+  const dto = codeProductsSchema.parse(response);
+  return {
+    ...dto,
+    categories: dto.categories.map((category) => ({
+      ...category,
+      valueId: category.valueId ?? null,
+      valueName: category.valueName ?? null,
+    })),
+  };
+}
+
+/** The decision as the backend takes it; `categories` is sent only when the screen lists them. */
+export function toCodeDecisionBody(decision: CodeDecision): DecideCodeBody {
+  return {
+    valueId: decision.valueId,
+    applyToAll: decision.applyToAll ?? true,
+    ...(decision.categories
+      ? {
+          categories: decision.categories.map(({ categoryId, valueId }) => ({
+            categoryId,
+            valueId,
+          })),
+        }
+      : {}),
+  };
 }
 
 export function mapCategoryFilters(response: unknown): CategoryFilter[] {

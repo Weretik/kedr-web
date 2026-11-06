@@ -66,6 +66,27 @@ export const codeDecisionResultSchema = z.object({
   valuesConfirmed: z.number().int().nonnegative(),
 });
 
+export const codeProductsSchema = z.object({
+  aliasId: z.number().int().min(1),
+  rawValue: z.string(),
+  categories: z.array(
+    z.object({
+      categoryId: z.number().int().min(1),
+      categoryPath: z.string(),
+      hasOwnValue: z.boolean(),
+      valueId: z.number().int().nullish(),
+      valueName: z.string().nullish(),
+      products: z.array(
+        z.object({
+          productId: z.number().int().min(1),
+          name: z.string(),
+          photo: z.string(),
+        }),
+      ),
+    }),
+  ),
+});
+
 export const categoryFilterSchema = z.object({
   attributeId: z.number().int().min(1),
   code: z.string(),

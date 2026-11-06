@@ -5,7 +5,9 @@ import {
   mapCatalogAttributes,
   mapCategoryFilters,
   mapCodeDecisionResult,
+  mapCodeProducts,
   mapUnresolvedCodes,
+  toCodeDecisionBody,
   toNewAttributeBody,
   toValueBody,
 } from '../mappers/catalog-attributes.mapper';
@@ -18,12 +20,17 @@ import type {
   CategoryFilter,
   CodeDecision,
   CodeDecisionResult,
+  CodeProducts,
   NewCatalogAttribute,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
 
 const listTag = { type: 'CatalogAttributes' as const, id: 'LIST' };
 const codesTag = { type: 'CatalogAttributes' as const, id: 'CODES' };
+const codeProductsTag = (aliasId: number) => ({
+  type: 'CatalogAttributes' as const,
+  id: `code-products-${aliasId}`,
+});
 const filtersTag = (categoryId: number) => ({
   type: 'CatalogAttributes' as const,
   id: `filters-${categoryId}`,
@@ -102,11 +109,19 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
       query: ({ aliasId, decision }) => ({
         url: `/api/admin/catalog-attributes/codes/${aliasId}`,
         method: 'PUT',
-        data: decision,
+        data: toCodeDecisionBody(decision),
       }),
       transformResponse: mapCodeDecisionResult,
-      invalidatesTags: (_result, error) =>
-        error ? [] : [codesTag, 'CatalogAttributes', 'Products'],
+      invalidatesTags: (_result, error, { aliasId }) =>
+        error ? [] : [codesTag, codeProductsTag(aliasId), 'CatalogAttributes', 'Products'],
+    }),
+    getCodeProducts: build.query<CodeProducts, number>({
+      query: (aliasId) => ({
+        url: `/api/admin/catalog-attributes/codes/${aliasId}/products`,
+        method: 'GET',
+      }),
+      transformResponse: mapCodeProducts,
+      providesTags: (_result, _error, aliasId) => [codeProductsTag(aliasId)],
     }),
     getCategoryFilters: build.query<CategoryFilter[], number>({
       query: (categoryId) => ({
@@ -155,6 +170,7 @@ export const {
   useGetCatalogAttributeQuery,
   useGetCatalogAttributesQuery,
   useGetCategoryFiltersQuery,
+  useGetCodeProductsQuery,
   useGetUnresolvedCodesQuery,
   useSetCategoryFiltersMutation,
   useUpdateAttributeValueMutation,
