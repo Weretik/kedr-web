@@ -545,7 +545,7 @@ export interface paths {
         };
         /**
          * «Вітрина сайту» - models with their on-site products, variant values, and problems
-         * @description One row per model with on-site products and one row per on-site product in no model (spec catalog/007 R-19). On site means exported from 1C, not deleted, and in a category shown on the site (R-18). Rows with products outside accepted models come first, then other rows with problems, then by name. `categoryId` takes the category with its subcategories; `search` matches part of the model or product name, or a 1C code exactly.
+         * @description One row per model with on-site products and one row per on-site product in no model (spec catalog/007 R-19). On site means exported from 1C, not deleted, and in a category shown on the site (R-18). Products in no model come first, then other rows with problems, then by name. `categoryId` takes the category with its subcategories; `status` keeps proposed models, accepted models, or products in no model (`none`); `search` matches part of the model or product name, or a 1C code exactly.
          */
         get: operations["getAdminSiteShowcase"];
         put?: never;
@@ -3295,11 +3295,15 @@ export interface components {
             onSiteProducts: number;
             acceptedModels: number;
             proposedModels: number;
-            /** @description Accepted models with a problem plus on-site products outside accepted models. */
+            /** @description Accepted models with a problem. */
             problemCount: number;
+            /** @description On-site products in no model (the hard error). */
+            loneProducts: number;
+            /** @description Attributes this category itself offers as site filters, without subcategories. */
+            filterCount: number;
         };
         SiteModelHealth: {
-            /** @description On-site products outside an accepted model: the hard error of «Огляд». */
+            /** @description On-site products in no model, proposed or accepted: the hard error of «Огляд». */
             productsWithoutModel: number;
             productsWithoutAttributes: number;
             productsMissingAxisValue: number;
@@ -6058,6 +6062,7 @@ export interface operations {
         parameters: {
             query?: {
                 categoryId?: number;
+                status?: "proposed" | "accepted" | "none";
                 problem?: "any" | "no_model" | "no_attributes" | "missing_axis_value" | "same_combination";
                 search?: string;
                 page?: number;

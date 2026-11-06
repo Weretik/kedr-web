@@ -71,7 +71,7 @@ export function attentionItems({
       tone: 'error',
       title: `Товари на сайті без моделі: ${catalog.siteModels.productsWithoutModel}`,
       detail: 'На сайті вони не мають своєї сторінки',
-      href: '/site-showcase?problem=no_model',
+      href: '/site-showcase?view=lone',
       actionLabel: 'Відкрити товари без моделі',
     });
   }
@@ -111,7 +111,7 @@ export function attentionItems({
         ]
           .filter(Boolean)
           .join(' · ') || null,
-      href: '/site-showcase?problem=any',
+      href: '/site-showcase?view=all',
       actionLabel: 'Відкрити вітрину сайту',
     });
   }
@@ -132,8 +132,8 @@ export function attentionItems({
         ]
           .filter(Boolean)
           .join(' · ') || null,
-      href: '/site-models?status=accepted&problem=any',
-      actionLabel: 'Відкрити моделі',
+      href: '/site-showcase?view=problems',
+      actionLabel: 'Відкрити моделі з проблемами',
     });
   }
 
@@ -153,9 +153,9 @@ export function attentionItems({
       kind: 'site-proposed-models',
       tone: 'note',
       title: `Запропоновані моделі: ${site.proposedModels}`,
-      detail: 'Перегляньте й прийміть, щоб товари отримали свої сторінки',
-      href: '/site-models?status=proposed',
-      actionLabel: 'Переглянути пропозиції',
+      detail: 'Перегляньте кожну й погодьте, щоб товари отримали свої сторінки',
+      href: '/site-showcase',
+      actionLabel: 'Перевірити моделі',
     });
   }
 

@@ -19,6 +19,8 @@ const documentedCrossDomainFlows = new Set([
   'admin-catalog-attributes-feature->admin-media-data-access',
   'admin-catalog-attributes-feature->admin-media-model',
   'admin-catalog-attributes-feature->admin-media-ui',
+  // «Фільтри категорій» lists the categories shown on the site, as «Моделі» does (Catalog 007 stage 4c).
+  'admin-catalog-attributes-feature->admin-site-models-data-access',
   // Products are priced for the selected customer (Kedr Manager stage 4).
   'mobile-catalog-feature->mobile-customers-data-access',
   // The calculation is priced from the catalog for the selected customer (Kedr Manager stage 5).

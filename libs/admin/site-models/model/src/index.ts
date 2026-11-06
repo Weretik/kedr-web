@@ -33,7 +33,6 @@ export type {
   SiteModelAxisDisplay,
   SiteModelCharacteristic,
   SiteModelLanguage,
-  SiteModelListItem,
   SiteModelProduct,
   SiteModelProductValue,
   SiteModelStatus,
@@ -54,11 +53,16 @@ export type {
   SiteShowcaseRow,
   SiteShowcaseValue,
 } from './entities/site-showcase';
-export type { SiteModelsQuery, SiteShowcaseQuery } from './queries/site-models-queries';
-export type { SiteCategoryNode } from './entities/site-category-tree';
+export type { SiteShowcaseQuery, SiteShowcaseStatus } from './queries/site-models-queries';
+export type { SiteQueueView } from './entities/site-queue';
 export {
-  isFinalSiteCategory,
-  siteCategoryAncestors,
-  siteCategoryTree,
-} from './entities/site-category-tree';
-export { defaultSiteModelsPageSize, siteModelsPageSizes } from './queries/site-models-queries';
+  isSiteQueueView,
+  nextSiteQueueKey,
+  similarSiteModels,
+  siteQueueCounts,
+  siteQueueFilter,
+  siteQueueViewLabels,
+  siteQueueViews,
+} from './entities/site-queue';
+export type { SiteCategoryNode } from './entities/site-category-tree';
+export { siteCategoryAncestors, siteCategoryTree } from './entities/site-category-tree';

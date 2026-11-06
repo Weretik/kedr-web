@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AttributeValueDialog } from './dialogs/attribute-value-dialog';
+import { AttributeValueForm } from './forms/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
 import { UnresolvedCodesDataGrid } from './tables/unresolved-codes-data-grid';
 
@@ -34,7 +34,7 @@ describe('catalog attributes ui', () => {
   it('saves a new value with a valid color only', () => {
     const onSave = vi.fn();
     render(
-      <AttributeValueDialog
+      <AttributeValueForm
         error={null}
         onCancel={vi.fn()}
         onPickTexture={vi.fn()}

@@ -5,7 +5,6 @@ import {
   mapCatalogAttributes,
   mapCategoryFilters,
   mapCodeDecisionResult,
-  mapFilterCategories,
   mapUnresolvedCodes,
   toNewAttributeBody,
   toValueBody,
@@ -19,7 +18,6 @@ import type {
   CategoryFilter,
   CodeDecision,
   CodeDecisionResult,
-  FilterCategoryOption,
   NewCatalogAttribute,
   UnresolvedCode,
 } from '@admin/catalog-attributes/model';
@@ -110,10 +108,6 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
       invalidatesTags: (_result, error) =>
         error ? [] : [codesTag, 'CatalogAttributes', 'Products'],
     }),
-    getFilterCategories: build.query<FilterCategoryOption[], void>({
-      query: () => ({ url: '/api/categories', method: 'GET' }),
-      transformResponse: mapFilterCategories,
-    }),
     getCategoryFilters: build.query<CategoryFilter[], number>({
       query: (categoryId) => ({
         url: `/api/admin/catalog-attributes/category-filters/${categoryId}`,
@@ -138,6 +132,8 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
         },
       }),
       transformResponse: mapCategoryFilters,
+      // The «Фільтри категорій» tree shows each category's filter count from the site models data.
+      invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
       async onQueryStarted({ categoryId }, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -159,7 +155,6 @@ export const {
   useGetCatalogAttributeQuery,
   useGetCatalogAttributesQuery,
   useGetCategoryFiltersQuery,
-  useGetFilterCategoriesQuery,
   useGetUnresolvedCodesQuery,
   useSetCategoryFiltersMutation,
   useUpdateAttributeValueMutation,

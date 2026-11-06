@@ -4,7 +4,7 @@ import {
   mapSiteModel,
   mapSiteShowcase,
   toSetSiteModelTextBody,
-  toSiteModelsParams,
+  toSiteShowcaseParams,
 } from './site-models.mapper';
 
 describe('site models mapper', () => {
@@ -84,16 +84,16 @@ describe('site models mapper', () => {
   });
 
   it('leaves empty filters out of the query and trims texts', () => {
-    expect(toSiteModelsParams({ search: '  ', page: 2, pageSize: 50, status: 'proposed' })).toEqual(
-      {
-        categoryId: undefined,
-        problem: undefined,
-        search: undefined,
-        page: 2,
-        pageSize: 50,
-        status: 'proposed',
-      },
-    );
+    expect(
+      toSiteShowcaseParams({ search: '  ', page: 2, pageSize: 50, status: 'proposed' }),
+    ).toEqual({
+      categoryId: undefined,
+      problem: undefined,
+      search: undefined,
+      page: 2,
+      pageSize: 50,
+      status: 'proposed',
+    });
     expect(
       toSetSiteModelTextBody({
         shortDescription: ' a ',

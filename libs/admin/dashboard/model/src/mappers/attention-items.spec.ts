@@ -101,7 +101,7 @@ describe('attentionItems', () => {
     expect(items[0]).toMatchObject({
       tone: 'error',
       title: 'Товари на сайті без моделі: 12',
-      href: '/site-showcase?problem=no_model',
+      href: '/site-showcase?view=lone',
     });
     expect(items[2]).toMatchObject({
       title: 'Товари на сайті з неповними ознаками: 5',
@@ -109,9 +109,9 @@ describe('attentionItems', () => {
     });
     expect(items[3]).toMatchObject({
       detail: 'без SEO 40 · без фото 1',
-      href: '/site-models?status=accepted&problem=any',
+      href: '/site-showcase?view=problems',
     });
-    expect(items[5].href).toBe('/site-models?status=proposed');
+    expect(items[5].href).toBe('/site-showcase');
   });
 
   it('links a single problem straight to its page', () => {

@@ -27,6 +27,7 @@ function TreeNodes({
       count === 'models'
         ? category.acceptedModels + category.proposedModels
         : category.onSiteProducts;
+    const problems = category.problemCount + category.loneProducts;
     return (
       <TreeItem
         itemId={String(category.id)}
@@ -36,14 +37,14 @@ function TreeNodes({
             <Typography component="span" sx={{ overflowWrap: 'anywhere' }} variant="body2">
               {category.name}
             </Typography>
-            {category.problemCount > 0 ? (
+            {problems > 0 ? (
               <Typography
-                aria-label={`Проблем: ${category.problemCount}`}
+                aria-label={`Проблем: ${problems}`}
                 component="span"
                 sx={{ color: 'error.main', fontWeight: 700 }}
                 variant="caption"
               >
-                {category.problemCount}
+                {problems}
               </Typography>
             ) : null}
             <Typography
