@@ -39,6 +39,7 @@ const model: SiteModel = {
 describe('model card', () => {
   it('marks an empty axis value and lets a person pick it', () => {
     const onSetValue = vi.fn();
+    const onRemove = vi.fn();
     render(
       <SiteModelProductsCard
         axes={model.axes}
@@ -48,7 +49,7 @@ describe('model card', () => {
         onAdd={vi.fn()}
         onEditAttributes={vi.fn()}
         onFillFromNames={vi.fn()}
-        onRemove={vi.fn()}
+        onRemove={onRemove}
         onSetValue={onSetValue}
         products={model.products}
       />,
@@ -58,6 +59,9 @@ describe('model card', () => {
     fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Сторона: Ручка Rio L' }));
     fireEvent.click(screen.getByRole('option', { name: 'Ліва' }));
     expect(onSetValue).toHaveBeenCalledWith(7, 1, 5);
+    expect(screen.queryByText(/грн/)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Прибрати з моделі: Ручка Rio L' }));
+    expect(onRemove).toHaveBeenCalledWith(model.products[0]);
   });
 
   it('saves the texts of one language and shows the Google preview', async () => {
