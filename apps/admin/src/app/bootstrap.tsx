@@ -5,9 +5,11 @@ import { createRoot } from 'react-dom/client';
 import { App } from './app';
 import { AppProviders } from './providers/app-providers';
 import { reportApiError, reportCriticalError } from './services/error-reporting-service';
+import { reloadOnStaleBuild } from './services/stale-build-reload';
 
 export const bootstrapAdminApp = (authInitialization: Promise<void>) => {
   configureApiErrorNotifier(reportApiError);
+  reloadOnStaleBuild();
 
   createRoot(document.getElementById('root')!, {
     onCaughtError: (error, errorInfo) => reportCriticalError(error, errorInfo.componentStack),
