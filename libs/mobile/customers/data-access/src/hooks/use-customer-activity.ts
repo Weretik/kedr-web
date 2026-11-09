@@ -1,5 +1,6 @@
 import { useLocalDatabase, useLocalQuery } from '@mobile/core/local-db';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import {
   fetchCustomerActivity,
@@ -8,6 +9,21 @@ import {
 import { readCachedActivity, saveActivity } from '../activity/customer-activity-store';
 
 import type { CustomerActivity } from '@mobile/customers/model';
+
+const activityKey = (counterpartyId: string) => ['customer-activity', counterpartyId] as const;
+
+/**
+ * Marks a customer's orders and drafts as outdated, so an open list reads them again at once and a closed one on
+ * its next open: used when the send queue delivers a new order or a draft change.
+ */
+export function useRefreshCustomerActivity(): (counterpartyId: string) => void {
+  const queryClient = useQueryClient();
+  return useCallback(
+    (counterpartyId: string) =>
+      void queryClient.invalidateQueries({ queryKey: activityKey(counterpartyId) }),
+    [queryClient],
+  );
+}
 
 export interface CustomerActivityState {
   activity: CustomerActivity | null;
@@ -37,7 +53,7 @@ export function useCustomerActivity(
       saveActivity(db, counterpartyId, activity);
       return activity;
     },
-    queryKey: ['customer-activity', counterpartyId],
+    queryKey: activityKey(counterpartyId),
     staleTime: 0,
   });
 

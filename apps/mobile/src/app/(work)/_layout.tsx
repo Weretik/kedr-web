@@ -3,7 +3,7 @@ import { useKeepEssentialPhotos } from '@mobile/catalog/feature';
 import { useMobileSession } from '@mobile/core/auth';
 import { LocalDatabaseProvider } from '@mobile/core/local-db';
 import { useConnectivity, WorkLayout } from '@mobile/core/shell';
-import { useSelectedCustomerSummary } from '@mobile/customers/feature';
+import { useRefreshCustomerActivity, useSelectedCustomerSummary } from '@mobile/customers/feature';
 import { SyncProvider, SyncStatusStrip } from '@mobile/sync/feature';
 
 export default function WorkAreaLayout() {
@@ -29,8 +29,10 @@ function WorkArea({
   const hasCustomer = useSelectedCustomerSummary() !== null;
   // Main photos and schemes go to the device on Wi‑Fi after each catalog version (R-008).
   useKeepEssentialPhotos(isUnmetered);
-  // Orders and drafts waiting in the send queue go out whenever the network is there (R-011).
-  useOutboxRunner(isOnline);
+  // Orders and drafts waiting in the send queue go out whenever the network is there (R-011); once one arrives,
+  // that customer's order and draft lists read again, so a saved draft shows in «Чернетки» at once.
+  const refreshActivity = useRefreshCustomerActivity();
+  useOutboxRunner(isOnline, (entry) => refreshActivity(entry.counterpartyId));
   const badges = useCalculationBadges();
 
   return (
