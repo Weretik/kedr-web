@@ -16,7 +16,15 @@ export default function CalculationRoute() {
       title="Розрахунок"
     >
       <View style={styles.column}>
-        <CalculationPanel isOnline={isOnline} />
+        <CalculationPanel
+          isOnline={isOnline}
+          onOpenLine={(productId) =>
+            router.push({
+              params: { productId: productId.toString() },
+              pathname: '/calculation/line/[productId]',
+            })
+          }
+        />
       </View>
     </WorkScreen>
   );

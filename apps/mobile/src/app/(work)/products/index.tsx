@@ -23,7 +23,17 @@ export default function ProductsRoute() {
             pathname: '/products/[productId]',
           })
         }
-        sidePanel={<CalculationPanel isOnline={isOnline} />}
+        sidePanel={
+          <CalculationPanel
+            isOnline={isOnline}
+            onOpenLine={(productId) =>
+              router.push({
+                params: { productId: productId.toString() },
+                pathname: '/products/line/[productId]',
+              })
+            }
+          />
+        }
       />
     </WorkScreen>
   );

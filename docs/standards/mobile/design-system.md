@@ -92,13 +92,13 @@ Numbers (prices, quantities, codes, totals) use tabular figures. Text follows sy
 
 ## Layout patterns
 
-- **Customer bar.** After a customer is chosen, every working screen starts with a white card: avatar with initials, customer name, «Ціни: Опт 2», and a «Змінити» chip. On tablets it is the top header with the price type, debt «—» and draft count.
-- **Customer gate.** Until a customer is chosen, «Товари», «Розрахунок» and «Замовлення» show a lock icon in the tab bar and cannot be opened; «Клієнт» and «Кабінет» stay open.
-- **Tab bar (phone).** White bar, 5 tabs with icon and label: Клієнт, Товари, Розрахунок · N, Замовлення, Кабінет. Active tab in `accentText`.
+- **Screen header.** A compact title (`sectionTitle`, 20) and under it one thin customer line: the name in `secondaryStrong`, «· ціни Опт» and a chevron; a tap opens customer choice. No card, no avatar. The 1C asterisk is dropped from price type names.
+- **Customer gate.** Until a customer is chosen, «Товари», «Розрахунок» and «Замовлення» show a lock icon in the tab bar; a tap on one opens customer choice. «Кабінет» stays open.
+- **Tab bar (phone).** White bar, 4 tabs with icon and label: Товари, Розрахунок, Замовлення, Кабінет; the calculation count is a green badge on the icon. Customer choice opens from the customer line, not a tab. Active tab in `accentText`.
 - **Rail (tablet, wide).** 76 dp white rail on the left with the logo, the same sections and the avatar at the bottom; on `wide` the calculation is a 360 dp panel on the right that is always visible.
 - **Product row.** 64 dp white thumbnail, name (2 lines), «Код · залишок», client price, and a 40 dp «+» button in `action`; out of stock the button is grey and disabled and the stock says «немає в наявності». Tablet `wide` shows the same data as table columns: Фото, Товар, Код, Залишок, Ціна клієнта, action.
 - **Product detail.** Segmented «Фото N/M | Схема» over a white photo stage (330 dp high on phone, full height on tablet) with a full-screen button; thumbnails below, the scheme thumbnail labeled «Схема». Full screen supports pinch zoom, double tap and swipe between photos and the scheme. A bottom bar shows «Ціна для <клієнт> · N шт» and «Додати в розрахунок».
-- **Calculation line.** Name and line sum, stepper (− qty +), unit price, and the signed adjustment pill or field «± ₴/шт». The footer shows the adjustment total, «Разом» and two buttons: «Чернетка» (outlined) and «Відправити в 1С» (filled).
+- **Calculation line.** One compact row on a white list with dividers: name (2 lines), «Код · 3 × 2 243,00 грн», the line sum on the right and a grey «+56/шт» mark when the price is changed. A tap opens the line sheet (quantity stepper, «Знижка − | Націнка +» switch, hryvnias per piece, the lowest allowed price, line sum, «Готово», «Прибрати з розрахунку»); a swipe left shows a red «Прибрати», and a dark bar offers «Скасувати» for 5 s. The footer stays under the list: «N позицій · M шт · знижка/націнка», the total, a small «Чернетка» icon button and a wide «Відправити в 1С».
 - **Offline notes.** Under the customer bar a `warning` strip «Без мережі · дані від HH:MM»; in the calculation an `informational` note that the order will queue.
 - **Customer card.** Header with avatar, name, phone and price type; two tiles «Заборгованість» and «Взаєморозрахунки» showing «—» and one line why; contact rows; segmented «Замовлення | Чернетки · N»; order rows with number, date, status pill and sum.
 
@@ -120,7 +120,7 @@ Shared components live in `@mobile/shared/ui`; `CustomerBar`, `TabBar` and `NavR
 | `QuantityStepper`   | − qty +, 36 high                                                                        |
 | `Card`, `ListRow`   | White, 1 px border, `radius.lg`                                                         |
 | `Avatar`            | Photo or initials on a stable color                                                     |
-| `CustomerBar`       | Customer bar pattern above                                                              |
+| `CustomerBar`       | Thin customer line of the screen header above                                           |
 | `TabBar`, `NavRail` | Phone tabs and tablet rail, both with the customer gate                                 |
 | `StateView`         | Loading, empty, offline-stale, error; text and action                                   |
 | `ZoomViewer`        | Full-screen photos and scheme with pinch zoom                                           |

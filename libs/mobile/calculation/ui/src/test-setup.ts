@@ -34,3 +34,19 @@ defineGlobal('URLSearchParams', globalThis.URLSearchParams);
 if (typeof global.structuredClone === 'undefined') {
   global.structuredClone = (object) => JSON.parse(JSON.stringify(object));
 }
+
+// Reanimated does not start under Jest: a swipeable row renders its content and its actions side by side.
+jest.mock('react-native-gesture-handler/ReanimatedSwipeable', () => {
+  const { createElement } = jest.requireActual('react');
+  const { View } = jest.requireActual('react-native');
+  return {
+    __esModule: true,
+    default: ({
+      children,
+      renderRightActions,
+    }: {
+      children: unknown;
+      renderRightActions?: () => unknown;
+    }) => createElement(View, null, children, renderRightActions?.()),
+  };
+});

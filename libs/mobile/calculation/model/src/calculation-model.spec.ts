@@ -3,6 +3,7 @@ import {
   adjustmentProblem,
   applyOutcome,
   calculationTotals,
+  positionsLabel,
   changedPrices,
   clampQuantity,
   formatAdjustment,
@@ -51,7 +52,20 @@ describe('lines and totals', () => {
       isSendable: true,
       lineCount: 1,
       totalKopecks: 160_800,
+      unitCount: 4,
     });
+  });
+
+  it('names the number of lines in Ukrainian', () => {
+    expect([1, 2, 5, 11, 21, 22, 112].map(positionsLabel)).toEqual([
+      '1 позиція',
+      '2 позиції',
+      '5 позицій',
+      '11 позицій',
+      '21 позиція',
+      '22 позиції',
+      '112 позицій',
+    ]);
   });
 
   it('marks lines that cannot be sent', () => {
