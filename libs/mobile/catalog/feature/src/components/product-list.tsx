@@ -10,8 +10,9 @@ import {
 } from '@mobile/catalog/model';
 import { ProductRow } from '@mobile/catalog/ui';
 import { AppText, Chip, createStyles, SearchField, StateView, useStyles } from '@mobile/shared/ui';
+import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, ScrollView, View, type ListRenderItem } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 export interface ProductListProps {
   counterpartyId: string | null;
@@ -154,16 +155,13 @@ export function ProductList({
           title="Нічого не знайдено"
         />
       ) : (
-        <FlatList
+        <FlashList
           contentContainerStyle={styles.list}
           data={shown}
-          initialNumToRender={10}
+          ItemSeparatorComponent={RowGap}
           keyExtractor={keyOf}
           keyboardShouldPersistTaps="handled"
-          maxToRenderPerBatch={8}
-          removeClippedSubviews
           renderItem={renderItem}
-          windowSize={7}
         />
       )}
     </View>
@@ -172,10 +170,16 @@ export function ProductList({
 
 const keyOf = (product: PricedProduct) => product.id.toString();
 
+function RowGap() {
+  const styles = useStyles(stylesSheet);
+  return <View style={styles.gap} />;
+}
+
 const stylesSheet = createStyles((theme) => ({
   chips: { gap: theme.space.sm },
   container: { flex: 1, gap: theme.space.md },
   count: { flex: 1, textAlign: 'right' },
   filters: { alignItems: 'center', flexDirection: 'row', gap: theme.space.sm },
-  list: { gap: theme.space.sm, paddingBottom: theme.space.xxl },
+  gap: { height: theme.space.sm },
+  list: { paddingBottom: theme.space.xxl },
 }));

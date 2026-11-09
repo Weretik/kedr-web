@@ -1,7 +1,12 @@
 module.exports = {
   displayName: 'mobile-shared-ui',
   preset: 'jest-expo',
+  // FlashList ships ES modules: transform it like the other React Native packages.
+  transformIgnorePatterns: require('jest-expo/jest-preset').transformIgnorePatterns.map((pattern) =>
+    pattern.replace('(?!(', '(?!(@shopify/flash-list|'),
+  ),
   setupFilesAfterEnv: [
+    '@shopify/flash-list/jestSetup',
     '<rootDir>/src/test-setup.ts',
     '<rootDir>/src/testing/vector-icons-mock.tsx',
   ],

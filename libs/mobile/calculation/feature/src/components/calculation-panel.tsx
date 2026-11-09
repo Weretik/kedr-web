@@ -83,6 +83,7 @@ function CustomerCalculation({
           <Button label="Видалити чернетку" onPress={controller.deleteDraft} variant="text" />
         </View>
       ) : null}
+      {/* Lines keep their own quantity input state, so FlashList recycling would mix it up between rows. */}
       <FlatList
         contentContainerStyle={styles.lines}
         data={lines}

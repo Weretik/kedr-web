@@ -48,6 +48,7 @@ function ViewerPages({
 
   return (
     <GestureHandlerRootView style={styles.root}>
+      {/* A short horizontal pager of a few photos: FlashList recycling brings nothing here. */}
       <FlatList
         data={images}
         getItemLayout={(_, item) => ({ index: item, length: width, offset: width * item })}

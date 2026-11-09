@@ -50,11 +50,11 @@ function seed(): LocalDatabase {
   return db;
 }
 
-const wrapperFor =
-  (db: LocalDatabase) =>
-  ({ children }: { children: ReactNode }) => (
-    <LocalDatabaseProvider database={db}>{children}</LocalDatabaseProvider>
-  );
+function wrapperFor(db: LocalDatabase) {
+  return function DatabaseWrapper({ children }: { children: ReactNode }) {
+    return <LocalDatabaseProvider database={db}>{children}</LocalDatabaseProvider>;
+  };
+}
 
 async function addProducts(db: LocalDatabase, ids: number[]) {
   const { result } = await renderHook(() => useAddToCalculation(), { wrapper: wrapperFor(db) });
