@@ -24,10 +24,12 @@ export function useCalculationController(counterpartyId: string, customerName: s
   const products = usePricedProducts(counterpartyId);
   const outbox = useOutbox();
 
-  const lines = useMemo(() => {
-    const byId = new Map(products.map((product) => [product.id, product]));
-    return calculation.lines.map((line) => priceLine(line, byId.get(line.productId) ?? null));
-  }, [calculation.lines, products]);
+  // The lookup is built once per catalog, not on every quantity tap.
+  const byId = useMemo(() => new Map(products.map((product) => [product.id, product])), [products]);
+  const lines = useMemo(
+    () => calculation.lines.map((line) => priceLine(line, byId.get(line.productId) ?? null)),
+    [byId, calculation.lines],
+  );
   const totals = calculationTotals(lines);
   const entries = outbox.filter(
     (entry) => entry.counterpartyId === counterpartyId && entry.kind !== 'draft-delete',

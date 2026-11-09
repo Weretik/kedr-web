@@ -6,11 +6,12 @@ import {
 } from '@mobile/calculation/ui';
 import { useSelectedCustomer } from '@mobile/customers/data-access';
 import { formatDate } from '@mobile/shared/model';
-import { AppText, Button, StateView, TextField } from '@mobile/shared/ui';
+import { AppText, Button, StateView } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { CommentField } from './comment-field';
 import { ConfirmSend, SaveDraftForm } from './finish-step';
 import { useCalculationController } from '../hooks/use-calculation-controller';
 
@@ -88,13 +89,7 @@ function CustomerCalculation({
         keyExtractor={(line) => line.productId.toString()}
         keyboardShouldPersistTaps="handled"
         ListFooterComponent={
-          <TextField
-            label="Коментар до замовлення"
-            maxLength={1000}
-            multiline
-            onChangeText={controller.setComment}
-            value={calculation.comment ?? ''}
-          />
+          <CommentField onSave={controller.setComment} value={calculation.comment ?? ''} />
         }
         ListHeaderComponent={queue ?? undefined}
         renderItem={({ item }) => (
