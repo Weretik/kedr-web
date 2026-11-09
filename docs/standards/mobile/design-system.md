@@ -106,24 +106,24 @@ Numbers (prices, quantities, codes, totals) use tabular figures. Text follows sy
 
 Shared components live in `@mobile/shared/ui`; `CustomerBar`, `TabBar` and `NavRail` live in `@mobile/core/shell`; domain components compose them in their `ui` libraries.
 
-| Component           | Notes                                                                           |
-| ------------------- | ------------------------------------------------------------------------------- |
-| `AppText`, `Icon`   | Only text component (type scale + tone); icons by tone (MaterialCommunityIcons) |
-| `BrandMark`         | Green square with «К»: rail and auth screens                                    |
-| `Button`            | `filled`, `outlined`, `text`, `destructive`; 48 high                            |
-| `IconButton`        | 40–48, square with `radius.md`; accessible label required                       |
-| `TextField`         | Label above, 48 high, optional leading icon and trailing action (show password) |
-| `SearchField`       | `TextField` with search icon                                                    |
-| `SegmentedControl`  | Two or three segments on `surfaceMuted`                                         |
-| `Chip`              | Filter and category chips; selected = ink fill, white text                      |
-| `StatusPill`        | Kind + label                                                                    |
-| `QuantityStepper`   | − qty +, 36 high                                                                |
-| `Card`, `ListRow`   | White, 1 px border, `radius.lg`                                                 |
-| `Avatar`            | Photo or initials on a stable color                                             |
-| `CustomerBar`       | Customer bar pattern above                                                      |
-| `TabBar`, `NavRail` | Phone tabs and tablet rail, both with the customer gate                         |
-| `StateView`         | Loading, empty, offline-stale, error; text and action                           |
-| `ZoomViewer`        | Full-screen photos and scheme with pinch zoom                                   |
+| Component           | Notes                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| `AppText`, `Icon`   | Only text component (type scale + tone); icons by tone (MaterialCommunityIcons)         |
+| `BrandMark`         | Green square with «К»: rail and auth screens                                            |
+| `Button`            | `filled`, `outlined`, `text`, `destructive`; 48 high                                    |
+| `IconButton`        | 40–48, square with `radius.md`; accessible label required; `selected` toggle = ink fill |
+| `TextField`         | Label above, 48 high, optional leading icon and trailing action (show password)         |
+| `SearchField`       | `TextField` with search icon                                                            |
+| `SegmentedControl`  | Two or three segments on `surfaceMuted`                                                 |
+| `Chip`              | Filter and category chips; selected = ink fill, white text                              |
+| `StatusPill`        | Kind + label                                                                            |
+| `QuantityStepper`   | − qty +, 36 high                                                                        |
+| `Card`, `ListRow`   | White, 1 px border, `radius.lg`                                                         |
+| `Avatar`            | Photo or initials on a stable color                                                     |
+| `CustomerBar`       | Customer bar pattern above                                                              |
+| `TabBar`, `NavRail` | Phone tabs and tablet rail, both with the customer gate                                 |
+| `StateView`         | Loading, empty, offline-stale, error; text and action                                   |
+| `ZoomViewer`        | Full-screen photos and scheme with pinch zoom                                           |
 
 ## Motion
 
