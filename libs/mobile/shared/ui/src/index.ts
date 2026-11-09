@@ -41,5 +41,4 @@ export { StatusPill, type StatusPillProps } from './components/feedback/status-p
 export { Avatar, initialsOf, type AvatarProps } from './components/surfaces/avatar';
 export { Card } from './components/surfaces/card';
 export { ListRow, type ListRowProps } from './components/surfaces/list-row';
-export { Sheet, type SheetProps } from './components/surfaces/sheet';
 export { BrandMark } from './components/surfaces/brand-mark';

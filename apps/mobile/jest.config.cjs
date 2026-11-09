@@ -32,7 +32,6 @@ module.exports = {
     '^@mobile/shared/config$': `${libs}/mobile/shared/config/src/index.ts`,
     '^@mobile/shared/model$': `${libs}/mobile/shared/model/src/index.ts`,
     '^@mobile/shared/ui$': `${libs}/mobile/shared/ui/src/index.ts`,
-    '^@gorhom/bottom-sheet$': `${modules}/@gorhom/bottom-sheet/mock.js`,
     '^@react-native-async-storage/async-storage$': `${modules}/@react-native-async-storage/async-storage/jest/async-storage-mock.js`,
     '^@react-native-community/netinfo$': `${libs}/mobile/core/shell/src/test-mocks/netinfo.ts`,
     '^react$': `${modules}/react/index.js`,

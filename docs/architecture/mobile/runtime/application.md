@@ -55,7 +55,6 @@ The root `_layout.tsx` connects one `AppProviders` from `@mobile/core/shell`. Th
 1. `GestureHandlerRootView`;
 2. `SafeAreaProvider`;
 3. navigation `ThemeProvider` with colors from the current «Офіс» theme;
-4. `BottomSheetModalProvider` for the one `Sheet`;
-5. connectivity context, status bar, then the Expo Router navigator.
+4. connectivity context, status bar, then the Expo Router navigator.
 
 Feature, UI components, and data-access do not create their own global providers. Small shared UI state (theme choice, later the selected customer) lives in Zustand stores.

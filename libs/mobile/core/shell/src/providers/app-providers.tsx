@@ -1,4 +1,3 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppThemeProvider, darkTheme, lightTheme } from '@mobile/shared/ui';
 import { ThemeProvider } from 'expo-router/react-navigation';
 import { StatusBar } from 'expo-status-bar';
@@ -28,12 +27,10 @@ export function AppProviders({ children }: Readonly<{ children: ReactNode }>) {
       <AppThemeProvider themeName={themeName}>
         <SafeAreaProvider>
           <ThemeProvider value={toNavigationTheme(themes[themeName], dark)}>
-            <BottomSheetModalProvider>
-              <ConnectivityProvider>
-                <StatusBar style={dark ? 'light' : 'dark'} />
-                {children}
-              </ConnectivityProvider>
-            </BottomSheetModalProvider>
+            <ConnectivityProvider>
+              <StatusBar style={dark ? 'light' : 'dark'} />
+              {children}
+            </ConnectivityProvider>
           </ThemeProvider>
         </SafeAreaProvider>
       </AppThemeProvider>

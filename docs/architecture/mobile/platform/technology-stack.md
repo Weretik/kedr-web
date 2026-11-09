@@ -57,7 +57,6 @@ Expo's online version check was not reachable from the build environment, so ver
 
 | Package                     | Version    | Source                 |
 | --------------------------- | ---------- | ---------------------- |
-| `@gorhom/bottom-sheet`      | `^5.2.14`  | latest 5.x             |
 | `zustand`                   | `^5.0.16`  | latest 5.x             |
 | `expo-local-authentication` | `~58.0.2`  | SDK 58 bundled version |
 | `expo-screen-orientation`   | `~58.0.3`  | SDK 58 bundled version |

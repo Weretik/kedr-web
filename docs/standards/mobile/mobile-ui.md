@@ -8,6 +8,7 @@
 - Visual style, tokens, layout patterns, components, and motion follow the [design system «Офіс»](design-system.md).
 - Every screen works at the three widths `phone`, `tablet` and `wide` and in both orientations on tablets.
 - Before choosing a built-in UI component, list, gesture, or device API, check the [UI and platform capabilities catalog](../../architecture/mobile/platform/ui-capabilities.md). Do not bring desktop Admin tables into mobile screens.
+- A bottom sheet is an Expo Router route with `presentation: 'formSheet'` (`sheetAllowedDetents`, `sheetGrabberVisible`), drawn natively by the platform; do not add a JavaScript sheet library (`@gorhom/bottom-sheet` was removed on 2026-11-09). A confirmation inside a screen stays inline, as in the calculation.
 
 ## Lists
 

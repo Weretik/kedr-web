@@ -30,7 +30,6 @@ module.exports = {
     '^@mobile/shared/config$': '<rootDir>/../../shared/config/src/index.ts',
     '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
     '^@mobile/shared/ui$': '<rootDir>/../../shared/ui/src/index.ts',
-    '^@gorhom/bottom-sheet$': `${root}/node_modules/@gorhom/bottom-sheet/mock.js`,
     '^@react-native-async-storage/async-storage$': `${root}/node_modules/@react-native-async-storage/async-storage/jest/async-storage-mock.js`,
   },
   transform: {
