@@ -69,7 +69,7 @@ describe('customer queries', () => {
   it('re-reads the list after a sync', async () => {
     const db = seed();
     const { result } = await renderHook(() => useCustomers(), { wrapper: wrapperFor(db) });
-    expect(result.current.map((customer) => customer.name)).toEqual(['Альфа', 'Будсервіс-Захід']);
+    expect(result.current?.map((customer) => customer.name)).toEqual(['Альфа', 'Будсервіс-Захід']);
 
     db.delete(customers).run();
     await act(async () => markLocalDataChanged());
