@@ -126,7 +126,31 @@ export async function unlockSession(): Promise<boolean> {
   return true;
 }
 
-/** Connects the API client and restores the session saved on the device. */
+/** The server's answer for the saved tokens; a rejected session ends, a network failure keeps the saved one. */
+async function confirmSession(): Promise<'confirmed' | 'offline' | 'rejected'> {
+  try {
+    const user = await loadUser();
+    if (!user) {
+      await endSession();
+      return 'rejected';
+    }
+    await rememberSession(user);
+    // The server may have changed the name, photo or roles; a locked session stays locked.
+    const state = getMobileSessionState();
+    if (state.status === 'authenticated' || state.status === 'locked') {
+      setMobileSessionState({ status: state.status, user });
+    }
+    return 'confirmed';
+  } catch {
+    return 'offline';
+  }
+}
+
+/**
+ * Connects the API client and restores the session saved on the device. A session confirmed within the last seven
+ * days opens at once and is confirmed with the server in the background, so a slow or missing network never holds
+ * the splash screen; otherwise the server must confirm it first.
+ */
 export async function initializeMobileAuth(now: () => number = Date.now): Promise<void> {
   configureMobileAuth({
     getAccessToken: () => tokens?.accessToken ?? null,
@@ -134,24 +158,21 @@ export async function initializeMobileAuth(now: () => number = Date.now): Promis
     refreshAccessToken,
   });
 
-  try {
-    tokens = await readStoredTokens();
-    const user = await loadUser();
-    if (!user) {
-      await endSession();
-      return;
-    }
-
-    await rememberSession(user);
-    await openSavedSession(user);
-  } catch {
-    // Offline start: the saved session works for seven days after the last confirmation.
-    const saved = tokens ? await readSavedSession().catch(() => null) : null;
-    if (saved && isWithinOfflineWindow(saved.lastRefreshedAt, now())) {
-      currentUser = saved.user;
-      await openSavedSession(saved.user);
-    } else {
-      setMobileSessionState({ status: 'anonymous' });
-    }
+  tokens = await readStoredTokens().catch(() => null);
+  if (!tokens) {
+    setMobileSessionState({ status: 'anonymous' });
+    return;
   }
+
+  const saved = await readSavedSession().catch(() => null);
+  if (saved && isWithinOfflineWindow(saved.lastRefreshedAt, now())) {
+    currentUser = saved.user;
+    await openSavedSession(saved.user);
+    await confirmSession();
+    return;
+  }
+
+  const result = await confirmSession();
+  if (result === 'offline') setMobileSessionState({ status: 'anonymous' });
+  else if (result === 'confirmed' && currentUser) await openSavedSession(currentUser);
 }
