@@ -1,18 +1,21 @@
 import { UnistylesRuntime } from 'react-native-unistyles';
 
-import { applyThemePreference, useThemePreference } from './theme-preference-store';
+import { useThemePreference } from './theme-preference-store';
+import { applyUnistylesTheme } from './use-theme-name';
 
 describe('theme preference', () => {
-  it('pins a chosen theme and follows the system otherwise', () => {
+  it('switches Unistyles to the theme the app chose', () => {
     const setAdaptive = jest.spyOn(UnistylesRuntime, 'setAdaptiveThemes');
     const setTheme = jest.spyOn(UnistylesRuntime, 'setTheme');
+    Object.defineProperty(UnistylesRuntime, 'hasAdaptiveThemes', {
+      configurable: true,
+      value: true,
+    });
 
-    applyThemePreference('dark');
+    applyUnistylesTheme('dark');
+
     expect(setAdaptive).toHaveBeenLastCalledWith(false);
     expect(setTheme).toHaveBeenLastCalledWith('dark');
-
-    applyThemePreference('system');
-    expect(setAdaptive).toHaveBeenLastCalledWith(true);
   });
 
   it('remembers the choice', () => {
