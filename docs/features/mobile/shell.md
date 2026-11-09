@@ -7,7 +7,7 @@
 - [WorkLayout](../../../libs/mobile/core/shell/src/navigation/work-layout.tsx) is the signed-in area `(work)`: tabs Клієнт, Товари, Розрахунок, Замовлення, Кабінет from [work-tabs](../../../libs/mobile/core/shell/src/navigation/work-tabs.ts). [WorkNavigation](../../../libs/mobile/core/shell/src/navigation/work-navigation.tsx) draws the [TabBar](../../../libs/mobile/core/shell/src/navigation/tab-bar.tsx) on phones and the 76 dp [NavRail](../../../libs/mobile/core/shell/src/navigation/nav-rail.tsx) on tablets.
 - `WorkLayout` takes a `statusStrip` slot: the app passes the [sync status strip](sync.md), drawn above the phone tab bar or under the rail items, so the shell does not depend on the sync domain.
 - Customer gate: without a customer, «Товари», «Розрахунок» and «Замовлення» show a lock and do not open, and a link into them lands on `/customer`. Until the customer stage the [work layout route](../../../apps/mobile/src/app/%28work%29/_layout.tsx) passes `hasCustomer={false}`.
-- Phones stay in portrait, tablets turn freely ([orientation policy](../../../libs/mobile/core/shell/src/providers/orientation-policy.ts)). The theme choice «Як у системі / Світла / Темна» is a persisted Zustand store ([theme-preference-store](../../../libs/mobile/core/shell/src/theme/theme-preference-store.ts)).
+- Phones stay in portrait, tablets turn freely ([orientation policy](../../../libs/mobile/core/shell/src/providers/orientation-policy.ts)). The theme choice «Як у системі / Світла / Темна» is a persisted Zustand store ([theme-preference-store](../../../libs/mobile/core/shell/src/theme/theme-preference-store.ts)). The shell picks the theme itself ([use-theme-name](../../../libs/mobile/core/shell/src/theme/use-theme-name.ts)), sets it in Unistyles and, on a change, mounts the screens again and reopens the open one ([theme-repaint](../../../libs/mobile/core/shell/src/providers/theme-repaint.tsx)): on a device Unistyles did not repaint views that stayed mounted.
 - [WorkScreen](../../../libs/mobile/core/shell/src/layout/work-screen.tsx) is the screen frame; [CustomerBar](../../../libs/mobile/core/shell/src/customer/customer-bar.tsx) tops products, calculation and orders. Customer choice and products are live ([customers](customers.md), [products](catalog.md)); calculation and orders are placeholders until their stages.
 
 ## Structure diagram
@@ -44,7 +44,7 @@ apps/mobile/
 libs/mobile/core/shell/src/
 ├── navigation/  # work-tabs, work-layout, work-navigation, tab-bar, nav-rail, work-nav-item
 ├── providers/  # app-providers, connectivity-context, orientation-policy
-├── theme/  # theme-preference-store, theme-preference-control, navigation-theme
+├── theme/  # theme-preference-store, theme-preference-control, use-theme-name, navigation-theme
 ├── layout/work-screen.tsx  # screen frame
 └── customer/customer-bar.tsx  # chosen customer bar
 

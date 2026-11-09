@@ -8,6 +8,7 @@ export {
   getLocalDataVersion,
   markLocalDataChanged,
   subscribeLocalData,
+  type LocalDataScope,
 } from './database/local-data-version';
 export { getLocalDatabase } from './database/open-local-database';
 export {

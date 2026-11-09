@@ -8,6 +8,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   moduleNameMapper: {
+    '^@mobile/shared/model$': '<rootDir>/../../shared/model/src/index.ts',
     '^@mobile/core/local-db/testing$': '<rootDir>/../../core/local-db/src/testing.ts',
     '^@mobile/core/local-db$': '<rootDir>/../../core/local-db/src/index.ts',
     '^@mobile/catalog/model$': '<rootDir>/../model/src/index.ts',

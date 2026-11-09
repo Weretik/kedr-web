@@ -11,16 +11,20 @@ import type { OutboxEntry } from '@mobile/calculation/model';
 
 export function useStoredCalculation(counterpartyId: string): StoredCalculation {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- `version` re-runs the read after every change.
-  return useMemo(() => readCalculation(db, counterpartyId), [db, counterpartyId, version]);
+  const version = useLocalDataVersion('calculation');
+  return useMemo(() => {
+    void version; // re-runs the read after every change
+    return readCalculation(db, counterpartyId);
+  }, [db, counterpartyId, version]);
 }
 
 export function useOutbox(): OutboxEntry[] {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- `version` re-runs the read after every change.
-  return useMemo(() => readOutbox(db), [db, version]);
+  const version = useLocalDataVersion('calculation');
+  return useMemo(() => {
+    void version; // re-runs the read after every change
+    return readOutbox(db);
+  }, [db, version]);
 }
 
 let running = false;

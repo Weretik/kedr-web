@@ -16,6 +16,12 @@ import {
 import type { SnapshotFetcher } from '../client/snapshot-client';
 import type { LocalDatabase } from '@mobile/core/local-db';
 
+/**
+ * Lets the screen draw a frame between the heavy steps of a sync (checking the body, writing the tables), so a tap
+ * during a sync is answered between them instead of after the whole run.
+ */
+const yieldToScreen = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 export interface SyncDependencies {
   db: LocalDatabase;
   fetchSnapshot: SnapshotFetcher;
@@ -51,13 +57,16 @@ export async function syncResource(
     return { resource, kind: 'not-modified', syncedAt };
   }
 
+  await yieldToScreen();
   if (resource === 'catalog') {
     const parsed = catalogSnapshotSchema.safeParse(response.body);
     if (!parsed.success) return { resource, kind: 'failed', reason: 'invalid-data' };
+    await yieldToScreen();
     replaceCatalog(db, parsed.data, response.etag || `"${parsed.data.version}"`, syncedAt);
   } else {
     const parsed = customersSnapshotSchema.safeParse(response.body);
     if (!parsed.success) return { resource, kind: 'failed', reason: 'invalid-data' };
+    await yieldToScreen();
     replaceCustomers(db, parsed.data, response.etag || `"${parsed.data.version}"`, syncedAt);
   }
 

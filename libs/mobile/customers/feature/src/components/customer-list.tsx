@@ -2,7 +2,7 @@ import { useCustomers, useSelectedCustomerStore } from '@mobile/customers/data-a
 import { groupByLetter, searchCustomers, type Customer } from '@mobile/customers/model';
 import { CustomerRow } from '@mobile/customers/ui';
 import { AppText, SearchField, StateView } from '@mobile/shared/ui';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SectionList, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -28,29 +28,48 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
   const select = useSelectedCustomerStore((state) => state.select);
   const [query, setQuery] = useState('');
 
-  const sections = useMemo<Section[]>(() => {
-    if (query.trim().length > 0) {
-      const found = searchCustomers(customers, query);
-      return found.length > 0 ? [{ data: found, key: 'found', title: 'Знайдено' }] : [];
-    }
+  // The A–Я sections change only after a sync; picking a customer changes only «Недавні» (R-003).
+  const letters = useMemo<Section[]>(
+    () =>
+      groupByLetter(customers).map((section) => ({
+        data: section.data,
+        key: `letter-${section.letter}`,
+        title: section.letter,
+      })),
+    [customers],
+  );
+  const recent = useMemo(() => {
     const byId = new Map(customers.map((customer) => [customer.counterpartyId, customer]));
-    const recent = recentIds
+    return recentIds
       .map((id) => byId.get(id))
       .filter((customer): customer is Customer => customer !== undefined);
-    const letters = groupByLetter(customers).map((section) => ({
-      data: section.data,
-      key: `letter-${section.letter}`,
-      title: section.letter,
-    }));
+  }, [customers, recentIds]);
+  const found = useMemo(
+    () => (query.trim().length > 0 ? searchCustomers(customers, query) : null),
+    [customers, query],
+  );
+
+  const sections = useMemo<Section[]>(() => {
+    if (found) return found.length > 0 ? [{ data: found, key: 'found', title: 'Знайдено' }] : [];
     return recent.length > 0
       ? [{ data: recent, key: 'recent', title: 'Недавні' }, ...letters]
       : letters;
-  }, [customers, query, recentIds]);
+  }, [found, letters, recent]);
 
-  const pick = (counterpartyId: string) => {
-    select(counterpartyId);
-    onPicked(counterpartyId);
-  };
+  const pick = useCallback(
+    (counterpartyId: string) => {
+      select(counterpartyId);
+      onPicked(counterpartyId);
+    },
+    [onPicked, select],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: Customer }) => (
+      <CustomerRow customer={item} onPick={pick} selected={item.counterpartyId === selectedId} />
+    ),
+    [pick, selectedId],
+  );
 
   return (
     <View style={styles.container}>
@@ -77,13 +96,8 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
           contentContainerStyle={styles.list}
           keyExtractor={(customer, index) => `${customer.counterpartyId}-${index}`}
           keyboardShouldPersistTaps="handled"
-          renderItem={({ item }) => (
-            <CustomerRow
-              customer={item}
-              onPress={() => pick(item.counterpartyId)}
-              selected={item.counterpartyId === selectedId}
-            />
-          )}
+          initialNumToRender={16}
+          renderItem={renderItem}
           renderSectionHeader={({ section }) => (
             <AppText
               accessibilityRole="header"

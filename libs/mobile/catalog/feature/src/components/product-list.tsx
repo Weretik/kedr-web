@@ -3,15 +3,15 @@ import {
   categoryPath,
   childrenOf,
   filterProducts,
-  sortProducts,
+  sortNameOrdered,
   withDescendants,
   type PricedProduct,
   type ProductSort,
 } from '@mobile/catalog/model';
 import { ProductRow } from '@mobile/catalog/ui';
 import { AppText, Chip, SearchField, StateView } from '@mobile/shared/ui';
-import { useDeferredValue, useMemo, useState } from 'react';
-import { FlatList, ScrollView, View } from 'react-native';
+import { useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { FlatList, ScrollView, View, type ListRenderItem } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
 export interface ProductListProps {
@@ -57,17 +57,37 @@ export function ProductList({
   const path = categoryId === null ? [] : categoryPath(categories, categoryId);
   const children = childrenOf(categories, categoryId);
 
-  const shown = useMemo(
+  // Products arrive in name order, so filtering keeps it and only a price sort reorders.
+  const filtered = useMemo(
     () =>
-      sortProducts(
-        filterProducts(products, {
-          categoryIds: categoryId === null ? null : withDescendants(categories, categoryId),
-          inStockOnly,
-          query: deferredQuery,
-        }),
-        sort,
-      ),
-    [categories, categoryId, deferredQuery, inStockOnly, products, sort],
+      filterProducts(products, {
+        categoryIds: categoryId === null ? null : withDescendants(categories, categoryId),
+        inStockOnly,
+        query: deferredQuery,
+      }),
+    [categories, categoryId, deferredQuery, inStockOnly, products],
+  );
+  const shown = useMemo(() => sortNameOrdered(filtered, sort), [filtered, sort]);
+
+  // Rows are memoized, so they get stable handlers that always call the latest props.
+  const handlers = useRef({ onAdd, onOpen });
+  useLayoutEffect(() => {
+    handlers.current = { onAdd, onOpen };
+  });
+  const open = useCallback((productId: number) => handlers.current.onOpen(productId), []);
+  const add = useCallback((product: PricedProduct) => handlers.current.onAdd?.(product), []);
+  const canAddRows = onAdd !== undefined;
+  const renderItem = useCallback<ListRenderItem<PricedProduct>>(
+    ({ item }) => (
+      <ProductRow
+        isOnline={isOnline}
+        onAdd={canAddRows ? add : undefined}
+        onOpen={open}
+        product={item}
+        selected={item.id === openedId}
+      />
+    ),
+    [add, canAddRows, isOnline, open, openedId],
   );
 
   if (products.length === 0) {
@@ -137,24 +157,20 @@ export function ProductList({
         <FlatList
           contentContainerStyle={styles.list}
           data={shown}
-          initialNumToRender={12}
-          keyExtractor={(product) => product.id.toString()}
+          initialNumToRender={10}
+          keyExtractor={keyOf}
           keyboardShouldPersistTaps="handled"
-          renderItem={({ item }) => (
-            <ProductRow
-              isOnline={isOnline}
-              onAdd={onAdd ? () => onAdd(item) : undefined}
-              onOpen={() => onOpen(item.id)}
-              product={item}
-              selected={item.id === openedId}
-            />
-          )}
+          maxToRenderPerBatch={8}
+          removeClippedSubviews
+          renderItem={renderItem}
           windowSize={7}
         />
       )}
     </View>
   );
 }
+
+const keyOf = (product: PricedProduct) => product.id.toString();
 
 const styles = StyleSheet.create((theme) => ({
   chips: { gap: theme.space.sm },

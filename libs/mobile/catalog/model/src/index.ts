@@ -23,6 +23,7 @@ export {
   filterProducts,
   matchesProduct,
   normalizeQuery,
+  sortNameOrdered,
   sortProducts,
   type ProductFilter,
   type ProductSort,

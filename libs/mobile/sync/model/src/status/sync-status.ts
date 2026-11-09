@@ -2,11 +2,14 @@
 export const syncResources = ['catalog', 'customers'] as const;
 export type SyncResource = (typeof syncResources)[number];
 
-/** Sync runs on start, on network return and every 15 minutes while online (R-015). */
-export const syncIntervalMs = 15 * 60 * 1000;
+/** Automatic sync runs once a day: on start or network return when the data is a day old (R-015). */
+export const syncIntervalMs = 24 * 60 * 60 * 1000;
 
-/** Data older than this is shown as stale in the shell strip. */
-export const staleAfterMs = 60 * 60 * 1000;
+/** How often an open app checks whether the daily sync is due. */
+export const syncCheckMs = 60 * 60 * 1000;
+
+/** Data older than this is shown as stale in the shell strip: the daily sync was missed. */
+export const staleAfterMs = 2 * syncIntervalMs;
 
 /** What one resource sync did. */
 export type ResourceSyncOutcome =
@@ -21,6 +24,11 @@ export function oldestSyncedAt(syncedAt: Partial<Record<SyncResource, number>>):
   const times = syncResources.map((resource) => syncedAt[resource]);
   if (times.some((time) => time === undefined)) return null;
   return Math.min(...(times as number[]));
+}
+
+/** Whether the daily automatic sync should run: some resource was never stored or is a day old. */
+export function isSyncDue(syncedAt: number | null, now: number): boolean {
+  return syncedAt === null || now - syncedAt >= syncIntervalMs;
 }
 
 export function isStale(syncedAt: number | null, now: number): boolean {

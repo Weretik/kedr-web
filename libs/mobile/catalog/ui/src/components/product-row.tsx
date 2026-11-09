@@ -1,6 +1,7 @@
 import { canAdd, formatStock, isOutOfStock, type PricedProduct } from '@mobile/catalog/model';
 import { formatKopecks } from '@mobile/shared/model';
 import { AppText, IconButton, StatusPill } from '@mobile/shared/ui';
+import { memo } from 'react';
 import { Pressable, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -8,16 +9,16 @@ import { ProductImage } from './product-image';
 
 export interface ProductRowProps {
   isOnline: boolean | null;
-  onOpen: () => void;
+  onOpen: (productId: number) => void;
   /** Present once the calculation exists; disabled when the product is out of stock or has no price. */
-  onAdd?: () => void;
+  onAdd?: (product: PricedProduct) => void;
   product: PricedProduct;
   /** Marks the product whose detail is open next to the list (tablet). */
   selected?: boolean;
 }
 
-/** Photo, name, code, stock and the customer's price (R-005, R-006). */
-export function ProductRow({
+/** Photo, name, code, stock and the customer's price (R-005, R-006); memoized for long lists. */
+export const ProductRow = memo(function ProductRow({
   isOnline,
   onAdd,
   onOpen,
@@ -34,7 +35,7 @@ export function ProductRow({
         accessibilityHint="Відкриває картку товару"
         accessibilityLabel={`${product.name}, ${price}`}
         accessibilityRole="button"
-        onPress={onOpen}
+        onPress={() => onOpen(product.id)}
         style={({ pressed }) => styles.main(pressed)}
       >
         <View style={styles.thumb}>
@@ -69,13 +70,13 @@ export function ProductRow({
           accessibilityLabel={`Додати ${product.name}`}
           disabled={!canAdd(product)}
           icon="plus"
-          onPress={onAdd}
+          onPress={() => onAdd(product)}
           variant="filled"
         />
       ) : null}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create((theme) => ({
   main: (pressed: boolean) => ({
