@@ -85,9 +85,10 @@ describe('catalog queries (SC-006)', () => {
     const db = seed();
     const pricing = readCustomerPricing(db, 'c-1');
 
+    // In name order, reading only the customer's price types.
     expect(readPricedProducts(db, pricing).map((p) => [p.id, p.priceKopecks])).toEqual([
-      [101, 20_000],
       [201, 30_000],
+      [101, 20_000],
     ]);
     expect(readPricedProduct(db, 101, null)?.priceKopecks).toBeNull();
     expect(readCustomerPricing(db, 'missing')).toBeNull();
@@ -121,7 +122,7 @@ describe('photo downloads (SC-010)', () => {
 
     await renderHook(() => useEssentialPhotoDownload(true, driver), { wrapper: wrapperFor(db) });
     await waitFor(() => expect(usePhotoDownloadStore.getState().essentialVersion).toBe('"v1"'));
-    expect(driver.prefetch).toHaveBeenCalledWith(['a.jpg', 's.png', 'c.jpg']);
+    expect(driver.prefetch).toHaveBeenCalledWith(['c.jpg', 'a.jpg', 's.png']);
   });
 
   it('downloads every photo on request and remembers the catalog version', async () => {

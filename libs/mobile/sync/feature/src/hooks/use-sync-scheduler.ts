@@ -1,5 +1,5 @@
 import { readSyncState, syncAll, type SnapshotFetcher } from '@mobile/sync/data-access';
-import { syncIntervalMs, type SyncResource } from '@mobile/sync/model';
+import { isSyncDue, oldestSyncedAt, syncCheckMs, type SyncResource } from '@mobile/sync/model';
 import { useEffect, useEffectEvent, useRef } from 'react';
 
 import { syncStatusActions, useSyncStatus } from '../state/sync-status-store';
@@ -14,9 +14,17 @@ export interface SyncSchedulerOptions {
   now?: () => number;
 }
 
+function storedSyncedAt(db: LocalDatabase): Partial<Record<SyncResource, number>> {
+  const syncedAt: Partial<Record<SyncResource, number>> = {};
+  for (const [resource, state] of Object.entries(readSyncState(db))) {
+    if (state) syncedAt[resource as SyncResource] = state.syncedAt;
+  }
+  return syncedAt;
+}
+
 /**
- * Runs the snapshot sync on start, when the network returns, every 15 minutes while online and on request
- * (R-015). Only one run at a time; a run never blocks the screens because tables are swapped in one transaction.
+ * Runs the snapshot sync once a day while online (checked on start, on network return and every hour) and at once
+ * on request, «Оновити дані» (R-015). Only one run at a time.
  */
 export function useSyncScheduler({
   db,
@@ -26,6 +34,7 @@ export function useSyncScheduler({
 }: SyncSchedulerOptions): void {
   const requestedAt = useSyncStatus((state) => state.requestedAt);
   const runningRef = useRef(false);
+  const handledRequestRef = useRef(requestedAt);
 
   const run = useEffectEvent(async (database: LocalDatabase) => {
     if (runningRef.current) return;
@@ -40,22 +49,26 @@ export function useSyncScheduler({
     }
   });
 
+  const runIfDue = useEffectEvent((database: LocalDatabase) => {
+    if (isSyncDue(oldestSyncedAt(storedSyncedAt(database)), now())) void run(database);
+  });
+
   useEffect(() => {
     if (!db) return;
-    const stored = readSyncState(db);
-    const syncedAt: Partial<Record<SyncResource, number>> = {};
-    for (const [resource, state] of Object.entries(stored)) {
-      if (state) syncedAt[resource as SyncResource] = state.syncedAt;
-    }
-    syncStatusActions.loaded(syncedAt);
+    syncStatusActions.loaded(storedSyncedAt(db));
     return () => syncStatusActions.reset();
   }, [db]);
 
   useEffect(() => {
     if (!db || isOnline !== true) return;
 
-    void run(db);
-    const timer = setInterval(() => void run(db), syncIntervalMs);
+    if (requestedAt !== handledRequestRef.current) {
+      handledRequestRef.current = requestedAt;
+      void run(db);
+    } else {
+      runIfDue(db);
+    }
+    const timer = setInterval(() => runIfDue(db), syncCheckMs);
     return () => clearInterval(timer);
   }, [db, isOnline, requestedAt]);
 }

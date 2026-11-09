@@ -1,4 +1,5 @@
 import {
+  normalizeQuery,
   parentsOf,
   resolvePriceKopecks,
   type Category,
@@ -14,7 +15,8 @@ import {
   products,
   type LocalDatabase,
 } from '@mobile/core/local-db';
-import { eq } from 'drizzle-orm';
+import { sortByText } from '@mobile/shared/model';
+import { eq, inArray } from 'drizzle-orm';
 
 export function readCategories(db: LocalDatabase): Category[] {
   return db.select().from(categories).all();
@@ -82,18 +84,48 @@ const productColumns = {
   stock: products.stock,
 };
 
+/** Products in name order with the category parents; the part of the catalog that does not depend on a customer. */
+export interface CatalogBase {
+  parents: ReturnType<typeof parentsOf>;
+  products: Product[];
+}
+
+export function readCatalogBase(db: LocalDatabase): CatalogBase {
+  return {
+    parents: parentsOf(readCategories(db)),
+    products: sortByText(db.select(productColumns).from(products).all(), (product) =>
+      normalizeQuery(product.name),
+    ),
+  };
+}
+
+/** Only the price types the customer can get: the default and those of the category rules. */
+function readCustomerPrices(db: LocalDatabase, pricing: CustomerPricing) {
+  const priceTypeIds = [...new Set([pricing.defaultPriceTypeId, ...pricing.rules.values()])];
+  return pricesByProduct(
+    db.select().from(productPrices).where(inArray(productPrices.priceTypeId, priceTypeIds)).all(),
+  );
+}
+
+/** The base products with the customer's price (R-005), in name order; no prices are read without a customer. */
+export function priceCatalog(
+  db: LocalDatabase,
+  base: CatalogBase,
+  pricing: CustomerPricing | null,
+): PricedProduct[] {
+  if (!pricing) return base.products.map((product) => ({ ...product, priceKopecks: null }));
+  const prices = readCustomerPrices(db, pricing);
+  return base.products.map((product) =>
+    priceWith(product, prices.get(product.id), pricing, base.parents),
+  );
+}
+
 /** Every synced product with the customer's price (R-005); about 2.5 thousand rows, filtered in memory. */
 export function readPricedProducts(
   db: LocalDatabase,
   pricing: CustomerPricing | null,
 ): PricedProduct[] {
-  const parents = parentsOf(readCategories(db));
-  const prices = pricesByProduct(db.select().from(productPrices).all());
-  return db
-    .select(productColumns)
-    .from(products)
-    .all()
-    .map((product) => priceWith(product, prices.get(product.id), pricing, parents));
+  return priceCatalog(db, readCatalogBase(db), pricing);
 }
 
 export function readPricedProduct(

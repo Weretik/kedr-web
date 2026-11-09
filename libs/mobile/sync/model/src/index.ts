@@ -3,8 +3,10 @@ export { customersSnapshotSchema, type CustomersSnapshot } from './snapshots/cus
 export { toKopecks, toNullableKopecks } from './snapshots/money';
 export {
   isStale,
+  isSyncDue,
   oldestSyncedAt,
   staleAfterMs,
+  syncCheckMs,
   syncIntervalMs,
   syncResources,
   type ResourceSyncOutcome,

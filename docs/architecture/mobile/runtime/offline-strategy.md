@@ -18,7 +18,7 @@ Sign-out empties every table and the sync status. Tokens never go to SQLite or A
 
 ## Sync
 
-The sync service runs on start, when the network returns, every 15 minutes while online and on «Оновити дані зараз». Each snapshot uses `If-None-Match`; `304` keeps the data. A new body is validated with zod and swaps the tables in one transaction, so a screen sees either the old or the new data. A broken body keeps the old data; `401`/`403` stops the run. Until the first snapshot is stored, the work area shows progress or «Немає мережі»; afterwards it never blocks, and the status strip says how old the data is.
+The automatic sync runs once a day: on start, when the network returns and on an hourly check, it runs only when the stored data is a day old. «Оновити дані зараз» syncs at once. Each snapshot uses `If-None-Match`; `304` keeps the data. A new body is validated with zod and swaps the tables in one transaction, so a screen sees either the old or the new data. A broken body keeps the old data; `401`/`403` stops the run. Until the first snapshot is stored, the work area shows progress or «Немає мережі»; afterwards it never blocks, and the status strip says how old the data is.
 
 ## Send queue
 
