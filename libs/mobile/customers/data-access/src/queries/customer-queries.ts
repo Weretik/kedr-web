@@ -4,6 +4,7 @@ import {
   customers,
   priceTypes,
   type LocalDatabase,
+  type LocalReader,
 } from '@mobile/core/local-db';
 import {
   compareNames,
@@ -14,8 +15,8 @@ import {
 import { eq } from 'drizzle-orm';
 
 /** Every synced customer in A–Я order; the list is small enough to filter in memory while typing. */
-export function readCustomers(db: LocalDatabase): Customer[] {
-  return sortCustomersByName(db.select().from(customers).all());
+export async function readCustomers(reader: LocalReader): Promise<Customer[]> {
+  return sortCustomersByName(await reader.select().from(customers).all());
 }
 
 /** The customer with the names of the default price type and of each rule's category and price type. */

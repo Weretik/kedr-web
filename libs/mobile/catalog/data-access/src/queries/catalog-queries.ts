@@ -14,38 +14,51 @@ import {
   productPrices,
   products,
   type LocalDatabase,
+  type LocalReader,
 } from '@mobile/core/local-db';
 import { sortByText } from '@mobile/shared/model';
 import { eq, inArray } from 'drizzle-orm';
 
-export function readCategories(db: LocalDatabase): Category[] {
-  return db.select().from(categories).all();
+export async function readCategories(reader: LocalReader): Promise<Category[]> {
+  return reader.select().from(categories).all();
 }
 
-/** The customer's default price type and category rules, or null for a customer the device does not know. */
-export function readCustomerPricing(
-  db: LocalDatabase,
-  counterpartyId: string,
-): CustomerPricing | null {
-  const customer = db
-    .select({ defaultPriceTypeId: customers.defaultPriceTypeId })
-    .from(customers)
-    .where(eq(customers.counterpartyId, counterpartyId))
-    .get();
-  if (!customer) return null;
+interface PricingRows {
+  customer: { defaultPriceTypeId: number } | undefined;
+  rules: readonly { categoryId: number; priceTypeId: number }[];
+}
 
-  const rules = db
-    .select({
-      categoryId: customerCategoryPriceTypes.categoryId,
-      priceTypeId: customerCategoryPriceTypes.priceTypeId,
-    })
-    .from(customerCategoryPriceTypes)
-    .where(eq(customerCategoryPriceTypes.counterpartyId, counterpartyId))
-    .all();
+function pricingQueries(db: LocalReader, counterpartyId: string) {
+  return {
+    customer: db
+      .select({ defaultPriceTypeId: customers.defaultPriceTypeId })
+      .from(customers)
+      .where(eq(customers.counterpartyId, counterpartyId)),
+    rules: db
+      .select({
+        categoryId: customerCategoryPriceTypes.categoryId,
+        priceTypeId: customerCategoryPriceTypes.priceTypeId,
+      })
+      .from(customerCategoryPriceTypes)
+      .where(eq(customerCategoryPriceTypes.counterpartyId, counterpartyId)),
+  };
+}
+
+function pricingOf({ customer, rules }: PricingRows): CustomerPricing | null {
+  if (!customer) return null;
   return {
     defaultPriceTypeId: customer.defaultPriceTypeId,
     rules: new Map(rules.map((rule) => [rule.categoryId, rule.priceTypeId])),
   };
+}
+
+/** The customer's default price type and category rules, or null for a customer the device does not know. */
+export async function readCustomerPricing(
+  reader: LocalReader,
+  counterpartyId: string,
+): Promise<CustomerPricing | null> {
+  const queries = pricingQueries(reader, counterpartyId);
+  return pricingOf({ customer: await queries.customer.get(), rules: await queries.rules.all() });
 }
 
 function pricesByProduct(
@@ -90,53 +103,101 @@ export interface CatalogBase {
   products: Product[];
 }
 
-export function readCatalogBase(db: LocalDatabase): CatalogBase {
+export async function readCatalogBase(reader: LocalReader): Promise<CatalogBase> {
+  const [categoryRows, productRows] = await Promise.all([
+    readCategories(reader),
+    reader.select(productColumns).from(products).all(),
+  ]);
   return {
-    parents: parentsOf(readCategories(db)),
-    products: sortByText(db.select(productColumns).from(products).all(), (product) =>
-      normalizeQuery(product.name),
-    ),
+    parents: parentsOf(categoryRows),
+    products: sortByText(productRows, (product) => normalizeQuery(product.name)),
   };
 }
 
 /** Only the price types the customer can get: the default and those of the category rules. */
-function readCustomerPrices(db: LocalDatabase, pricing: CustomerPricing) {
+async function readCustomerPrices(reader: LocalReader, pricing: CustomerPricing) {
   const priceTypeIds = [...new Set([pricing.defaultPriceTypeId, ...pricing.rules.values()])];
   return pricesByProduct(
-    db.select().from(productPrices).where(inArray(productPrices.priceTypeId, priceTypeIds)).all(),
+    await reader
+      .select()
+      .from(productPrices)
+      .where(inArray(productPrices.priceTypeId, priceTypeIds))
+      .all(),
   );
 }
 
 /** The base products with the customer's price (R-005), in name order; no prices are read without a customer. */
-export function priceCatalog(
-  db: LocalDatabase,
+export async function priceCatalog(
+  reader: LocalReader,
   base: CatalogBase,
   pricing: CustomerPricing | null,
-): PricedProduct[] {
+): Promise<PricedProduct[]> {
   if (!pricing) return base.products.map((product) => ({ ...product, priceKopecks: null }));
-  const prices = readCustomerPrices(db, pricing);
+  const prices = await readCustomerPrices(reader, pricing);
   return base.products.map((product) =>
     priceWith(product, prices.get(product.id), pricing, base.parents),
   );
 }
 
 /** Every synced product with the customer's price (R-005); about 2.5 thousand rows, filtered in memory. */
-export function readPricedProducts(
-  db: LocalDatabase,
+export async function readPricedProducts(
+  reader: LocalReader,
   pricing: CustomerPricing | null,
-): PricedProduct[] {
-  return priceCatalog(db, readCatalogBase(db), pricing);
+): Promise<PricedProduct[]> {
+  return priceCatalog(reader, await readCatalogBase(reader), pricing);
 }
 
-export function readPricedProduct(
-  db: LocalDatabase,
+export async function readPricedProduct(
+  reader: LocalReader,
   productId: number,
   pricing: CustomerPricing | null,
-): PricedProduct | null {
-  const product = db.select(productColumns).from(products).where(eq(products.id, productId)).get();
+): Promise<PricedProduct | null> {
+  const [product, priceRows, categoryRows] = await Promise.all([
+    reader.select(productColumns).from(products).where(eq(products.id, productId)).get(),
+    reader.select().from(productPrices).where(eq(productPrices.productId, productId)).all(),
+    readCategories(reader),
+  ]);
   if (!product) return null;
+  const prices = pricesByProduct(priceRows);
+  return priceWith(product, prices.get(productId), pricing, parentsOf(categoryRows));
+}
+
+/**
+ * The products of a calculation with the customer's price, read at once for the open calculation: a few rows by
+ * key, so it stays synchronous and the lines never show without prices.
+ */
+export function readLineProducts(
+  db: LocalDatabase,
+  productIds: readonly number[],
+  counterpartyId: string,
+): Map<number, PricedProduct> {
+  if (productIds.length === 0) return new Map();
+  // The same two reads as `pricingQueries`, on the synchronous connection.
+  const pricing = pricingOf({
+    customer: db
+      .select({ defaultPriceTypeId: customers.defaultPriceTypeId })
+      .from(customers)
+      .where(eq(customers.counterpartyId, counterpartyId))
+      .get(),
+    rules: db
+      .select({
+        categoryId: customerCategoryPriceTypes.categoryId,
+        priceTypeId: customerCategoryPriceTypes.priceTypeId,
+      })
+      .from(customerCategoryPriceTypes)
+      .where(eq(customerCategoryPriceTypes.counterpartyId, counterpartyId))
+      .all(),
+  });
+  const ids = [...productIds];
+  const rows = db.select(productColumns).from(products).where(inArray(products.id, ids)).all();
   const prices = pricesByProduct(
-    db.select().from(productPrices).where(eq(productPrices.productId, productId)).all(),
+    db.select().from(productPrices).where(inArray(productPrices.productId, ids)).all(),
   );
-  return priceWith(product, prices.get(productId), pricing, parentsOf(readCategories(db)));
+  const parents = parentsOf(db.select().from(categories).all());
+  return new Map(
+    rows.map((product) => [
+      product.id,
+      priceWith(product, prices.get(product.id), pricing, parents),
+    ]),
+  );
 }

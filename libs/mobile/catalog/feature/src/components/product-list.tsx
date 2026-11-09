@@ -5,6 +5,7 @@ import {
   filterProducts,
   sortNameOrdered,
   withDescendants,
+  type Category,
   type PricedProduct,
   type ProductSort,
 } from '@mobile/catalog/model';
@@ -39,6 +40,9 @@ const nextSort: Record<ProductSort, ProductSort> = {
  * Search by name or code, category and subcategory chips, «Лише в наявності» and sorting; every row shows the
  * chosen customer's price (R-005–R-007, SC-008).
  */
+const noCategories: Category[] = [];
+const noProducts: PricedProduct[] = [];
+
 export function ProductList({
   counterpartyId,
   isOnline,
@@ -47,8 +51,10 @@ export function ProductList({
   openedId = null,
 }: Readonly<ProductListProps>) {
   const styles = useStyles(stylesSheet);
-  const categories = useCategories();
-  const products = usePricedProducts(counterpartyId);
+  const loadedCategories = useCategories();
+  const loadedProducts = usePricedProducts(counterpartyId);
+  const categories = loadedCategories ?? noCategories;
+  const products = loadedProducts ?? noProducts;
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -91,6 +97,7 @@ export function ProductList({
     [add, canAddRows, isOnline, open, openedId],
   );
 
+  if (loadedProducts === undefined) return <StateView kind="loading" title="Читаємо каталог" />;
   if (products.length === 0) {
     return (
       <StateView

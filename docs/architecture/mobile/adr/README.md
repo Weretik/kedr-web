@@ -7,5 +7,6 @@
 - [ADR-0005: Offline-first with a local database and a send queue](0005-offline-first-local-database.md)
 - [ADR-0006: Own UI components on Unistyles instead of React Native Paper](0006-own-ui-on-unistyles.md) — styling replaced by ADR-0007
 - [ADR-0007: Plain React Native styles with a theme context instead of Unistyles](0007-plain-react-native-styles.md)
+- [ADR-0008: TanStack Query for large local reads and server reads](0008-tanstack-query-reads.md)
 
 Create new decisions following the structure of existing ADRs in this directory.

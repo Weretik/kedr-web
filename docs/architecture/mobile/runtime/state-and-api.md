@@ -5,11 +5,16 @@
 | State                                          | Owner                                                                                             |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | Catalog, customers, calculations, send queue   | Local SQLite database (`@mobile/core/local-db`, Drizzle), read through domain `data-access` hooks |
+| A customer's orders and drafts, an order       | TanStack Query in the domain `data-access`, with the saved local copy offline                     |
 | Selected customer, theme choice, sync status   | Small Zustand stores in the owning domain or `core/shell`                                         |
 | Session and tokens                             | `@mobile/core/auth` with Expo SecureStore                                                         |
 | Screen-only values (search text, an open step) | The component                                                                                     |
 
-Screens re-read local data after a sync through `useLocalDataVersion()`. Do not copy database rows into a store.
+Screens never query the database directly; domain `data-access` hooks do ([ADR-0008](../adr/0008-tanstack-query-reads.md)):
+
+- A whole list (catalog, customers, categories, a product page) uses `useLocalAsyncQuery(scopes, key, read)`: it runs on the read connection off the JavaScript thread, is cached by TanStack Query under `key`, and is `undefined` until the first read, so the screen shows `loading`. The key must hold every input of the read.
+- A few rows by key that a write needs at once (the open calculation, its line products, the chosen customer, the send queue) use the synchronous `useLocalQuery(scopes, read)`.
+- Both re-read when a write bumps one of their scopes with `markLocalDataChanged`. Do not copy database rows into a store.
 
 ## API
 

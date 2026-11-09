@@ -2,12 +2,12 @@
 
 ## Current test stack
 
-Mobile uses Expo SDK 58, React Native 0.88, Expo Router, Redux Toolkit/RTK Query, and Axios. Tests use Jest 30, `jest-expo` 58, and React Native Testing Library 14. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
+Mobile uses Expo SDK 58, React Native 0.88, Expo Router, Zustand, TanStack Query, Drizzle over `expo-sqlite`, and Axios. Tests use Jest 30, `jest-expo` 58, and React Native Testing Library 14. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
 
 | Level               | Target                                       | What to check                                                    |
 | ------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
 | Unit                | corresponding `*:test`                       | pure functions, Zod validation, mappers, reducers                |
-| Focused integration | corresponding `*:test`                       | state, providers, RTK Query/Axios boundary, connectivity         |
+| Focused integration | corresponding `*:test`                       | state, providers, TanStack Query/Axios boundary, connectivity    |
 | Component           | `mobile:test`, domain `*:test`, `shell:test` | screens, accessible roles/names, and user actions                |
 | Integration         | corresponding `*:test`                       | Expo Router boundary, storage, connectivity, and native adapters |
 | Mobile E2E          | unavailable                                  | critical journey on a built app after a separate enabler         |

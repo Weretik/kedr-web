@@ -5,6 +5,7 @@ import {
   formatStock,
   isOutOfStock,
   productImages,
+  type Category,
   type PricedProduct,
 } from '@mobile/catalog/model';
 import { ProductGallery, ZoomViewer } from '@mobile/catalog/ui';
@@ -34,6 +35,8 @@ export interface ProductDetailProps {
 const SIDE_BY_SIDE_MIN_WIDTH = 520;
 
 /** Large photos and scheme, name, code, category, stock and the customer's price (R-005–R-008). */
+const noCategories: Category[] = [];
+
 export function ProductDetail({
   counterpartyId,
   customerName,
@@ -43,11 +46,12 @@ export function ProductDetail({
 }: Readonly<ProductDetailProps>) {
   const styles = useStyles(stylesSheet);
   const product = usePricedProduct(productId, counterpartyId);
-  const categories = useCategories();
+  const categories = useCategories() ?? noCategories;
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   // The column width, not the screen class, decides: a tablet column can be as narrow as a phone.
   const [width, setWidth] = useState(0);
 
+  if (product === undefined) return <StateView kind="loading" title="Читаємо товар" />;
   if (!product) {
     return (
       <StateView

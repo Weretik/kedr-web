@@ -37,9 +37,12 @@ function flatten(sections: readonly Section[]): Item[] {
  * Search by name, phone or code; with an empty query the recent customers come first, then the A–Я list
  * (R-003, SC-004). Picking a row makes it the selected customer.
  */
+const noCustomers: Customer[] = [];
+
 export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
   const styles = useStyles(stylesSheet);
-  const customers = useCustomers();
+  const loaded = useCustomers();
+  const customers = loaded ?? noCustomers;
   const recentIds = useSelectedCustomerStore((state) => state.recentIds);
   const selectedId = useSelectedCustomerStore((state) => state.selectedId);
   const select = useSelectedCustomerStore((state) => state.select);
@@ -114,7 +117,9 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
         placeholder="Назва, телефон або код"
         value={query}
       />
-      {customers.length === 0 ? (
+      {loaded === undefined ? (
+        <StateView kind="loading" title="Читаємо клієнтів" />
+      ) : customers.length === 0 ? (
         <StateView
           kind="empty"
           message="Клієнти з’являться після синхронізації даних."

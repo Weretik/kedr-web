@@ -53,7 +53,8 @@ describe('CustomerChoice', () => {
     const onOpenCard = jest.fn();
     await inDb(seed(), <CustomerChoice isOnline onOpenCard={onOpenCard} />);
 
-    expect(screen.getByRole('header', { name: 'А' })).toBeTruthy();
+    // The list is read off the screen's thread, so it appears a moment after the first render.
+    expect(await screen.findByRole('header', { name: 'А' })).toBeTruthy();
     await fireEvent.changeText(screen.getByLabelText('Пошук клієнта'), '111 22');
     expect(screen.queryByText('Будсервіс')).toBeNull();
     await fireEvent.press(screen.getByText('Альфа'));
@@ -69,7 +70,7 @@ describe('CustomerChoice', () => {
     await act(async () => useSelectedCustomerStore.getState().select('c-2'));
     await inDb(seed(), <CustomerChoice isOnline onOpenCard={jest.fn()} />);
 
-    expect(screen.getByRole('header', { name: 'Недавні' })).toBeTruthy();
+    expect(await screen.findByRole('header', { name: 'Недавні' })).toBeTruthy();
   });
 
   it('keeps the list and the card side by side on a tablet', async () => {
@@ -78,7 +79,7 @@ describe('CustomerChoice', () => {
     await inDb(seed(), <CustomerChoice isOnline={false} onOpenCard={onOpenCard} />);
 
     expect(screen.getByText('Оберіть клієнта')).toBeTruthy();
-    await fireEvent.press(screen.getByText('Будсервіс'));
+    await fireEvent.press(await screen.findByText('Будсервіс'));
 
     expect(onOpenCard).not.toHaveBeenCalled();
     expect(screen.getByText('Код 1С')).toBeTruthy();

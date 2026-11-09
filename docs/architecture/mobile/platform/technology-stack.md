@@ -25,6 +25,7 @@ The [UI and platform capabilities catalog](ui-capabilities.md) lists approved UI
 | ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Client state | Zustand (replacing Redux Toolkit)                          | Small UI state shared by screens: selected customer, filters. Keep local state in the component.              |
 | Server state | Local SQLite database + sync service (replacing RTK Query) | Screens read the local database; the sync service and the send queue are the only network writers (ADR-0005). |
+| Read cache   | TanStack Query                                             | Large local reads off the JavaScript thread and online-only reads (ADR-0008).                                 |
 | Forms        | React Hook Form                                            | Manages form values, errors, and submit state.                                                                |
 | Validation   | Zod                                                        | Describes data schemas and form validation; connects to React Hook Form through a resolver.                   |
 
