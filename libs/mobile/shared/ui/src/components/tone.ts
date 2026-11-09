@@ -1,7 +1,11 @@
 import type { ColorRoles, StatusKind } from '../theme/palette';
 
-/** Text and icon colors a component may ask for; status kinds use their text color. */
-export type Tone = 'accent' | 'default' | 'disabled' | 'onAction' | 'secondary' | StatusKind;
+/**
+ * Text and icon colors a component may ask for; status kinds use their text color. `inverse` sits on an ink
+ * (text-colored) fill, such as a selected chip, in both themes.
+ */
+export type Tone =
+  'accent' | 'default' | 'disabled' | 'inverse' | 'onAction' | 'secondary' | StatusKind;
 
 export function toneColor(colors: ColorRoles, tone: Tone): string {
   switch (tone) {
@@ -11,6 +15,8 @@ export function toneColor(colors: ColorRoles, tone: Tone): string {
       return colors.text;
     case 'disabled':
       return colors.textDisabled;
+    case 'inverse':
+      return colors.background;
     case 'onAction':
       return colors.onAction;
     case 'secondary':

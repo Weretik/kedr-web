@@ -23,7 +23,7 @@ export function Chip({ icon, label, onPress, selected = false }: Readonly<ChipPr
       onPress={onPress}
       style={({ pressed }) => styles.chip(selected, pressed)}
     >
-      {icon ? <Icon name={icon} size={16} tone={selected ? 'onAction' : 'default'} /> : null}
+      {icon ? <Icon name={icon} size={16} tone={selected ? 'inverse' : 'default'} /> : null}
       <AppText style={styles.label(selected)} variant="caption">
         {label}
       </AppText>

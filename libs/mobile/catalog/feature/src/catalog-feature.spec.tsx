@@ -117,6 +117,15 @@ describe('ProductCatalog', () => {
     expect(onOpenProduct).toHaveBeenCalledWith(101);
   });
 
+  it('keeps sort and stock filter in a one-line summary', async () => {
+    await inDb(seed(), <ProductCatalog isOnline onOpenProduct={jest.fn()} />);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Сортування: за назвою' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Лише в наявності' }));
+
+    expect(screen.getByText(/шт\. · спочатку дешевші · лише в наявності$/)).toBeTruthy();
+  });
+
   it('opens the detail next to the list on a tablet', async () => {
     mockBreakpoint = 'tablet';
     const onOpenProduct = jest.fn();

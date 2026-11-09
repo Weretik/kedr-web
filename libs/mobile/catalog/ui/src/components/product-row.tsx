@@ -16,7 +16,10 @@ export interface ProductRowProps {
   selected?: boolean;
 }
 
-/** Photo, name, code, stock and the customer's price (R-005, R-006); memoized for long lists. */
+/**
+ * Photo, name, code, stock and the customer's price (R-005, R-006); memoized for long lists. The price sits under
+ * the name, so on a phone the name gets the whole row width.
+ */
 export const ProductRow = memo(function ProductRow({
   isOnline,
   onAdd,
@@ -55,15 +58,14 @@ export const ProductRow = memo(function ProductRow({
             {outOfStock ? '' : ` · ${formatStock(product.stock)}`}
           </AppText>
           {outOfStock ? <StatusPill kind="warning" label="немає в наявності" /> : null}
+          <AppText
+            numeric
+            tone={product.priceKopecks === null ? 'secondary' : 'default'}
+            variant={product.priceKopecks === null ? 'secondary' : 'price'}
+          >
+            {price}
+          </AppText>
         </View>
-        <AppText
-          numeric
-          style={styles.price}
-          tone={product.priceKopecks === null ? 'secondary' : 'default'}
-          variant={product.priceKopecks === null ? 'secondary' : 'price'}
-        >
-          {price}
-        </AppText>
       </Pressable>
       {onAdd ? (
         <IconButton
@@ -86,7 +88,6 @@ const stylesSheet = createStyles((theme) => ({
     gap: theme.space.md,
     opacity: pressed ? theme.motion.pressedOpacity : 1,
   }),
-  price: { maxWidth: 120, textAlign: 'right' },
   row: (selected: boolean) => ({
     alignItems: 'center',
     backgroundColor: theme.colors.surface,
@@ -98,5 +99,5 @@ const stylesSheet = createStyles((theme) => ({
     padding: theme.space.md,
   }),
   text: { flex: 1, gap: 2 },
-  thumb: { height: 64, width: 64 },
+  thumb: { height: 56, width: 56 },
 }));

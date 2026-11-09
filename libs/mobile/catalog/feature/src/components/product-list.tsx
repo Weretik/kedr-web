@@ -10,7 +10,15 @@ import {
   type ProductSort,
 } from '@mobile/catalog/model';
 import { ProductRow } from '@mobile/catalog/ui';
-import { AppText, Chip, createStyles, SearchField, StateView, useStyles } from '@mobile/shared/ui';
+import {
+  AppText,
+  Chip,
+  createStyles,
+  IconButton,
+  SearchField,
+  StateView,
+  useStyles,
+} from '@mobile/shared/ui';
 import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -26,9 +34,9 @@ export interface ProductListProps {
 }
 
 const sortLabels: Record<ProductSort, string> = {
-  name: 'За назвою',
-  'price-asc': 'Спочатку дешевші',
-  'price-desc': 'Спочатку дорожчі',
+  name: 'за назвою',
+  'price-asc': 'спочатку дешевші',
+  'price-desc': 'спочатку дорожчі',
 };
 const nextSort: Record<ProductSort, ProductSort> = {
   name: 'price-asc',
@@ -38,7 +46,8 @@ const nextSort: Record<ProductSort, ProductSort> = {
 
 /**
  * Search by name or code, category and subcategory chips, «Лише в наявності» and sorting; every row shows the
- * chosen customer's price (R-005–R-007, SC-008).
+ * chosen customer's price (R-005–R-007, SC-008). The header stays compact so the list keeps most of a phone screen:
+ * search with two toggle buttons, one chip row, and one summary line.
  */
 const noCategories: Category[] = [];
 const noProducts: PricedProduct[] = [];
@@ -110,16 +119,36 @@ export function ProductList({
 
   return (
     <View style={styles.container}>
-      <SearchField
-        accessibilityLabel="Пошук товару"
-        onChangeText={setQuery}
-        placeholder="Назва або код"
-        value={query}
-      />
+      <View style={styles.toolbar}>
+        <View style={styles.search}>
+          <SearchField
+            accessibilityLabel="Пошук товару"
+            onChangeText={setQuery}
+            placeholder="Назва або код"
+            value={query}
+          />
+        </View>
+        <IconButton
+          accessibilityLabel="Лише в наявності"
+          icon="package-variant-closed-check"
+          onPress={() => setInStockOnly((value) => !value)}
+          selected={inStockOnly}
+          variant="outlined"
+        />
+        <IconButton
+          accessibilityLabel={`Сортування: ${sortLabels[sort]}`}
+          icon="sort"
+          onPress={() => setSort(nextSort[sort])}
+          selected={sort !== 'name'}
+          variant="outlined"
+        />
+      </View>
       <ScrollView
         contentContainerStyle={styles.chips}
         horizontal
+        keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}
+        style={styles.chipRow}
       >
         <Chip
           icon={categoryId === null ? undefined : 'arrow-left'}
@@ -143,18 +172,11 @@ export function ProductList({
           />
         ))}
       </ScrollView>
-      <View style={styles.filters}>
-        <Chip
-          icon={inStockOnly ? 'check' : undefined}
-          label="Лише в наявності"
-          onPress={() => setInStockOnly((value) => !value)}
-          selected={inStockOnly}
-        />
-        <Chip icon="sort" label={sortLabels[sort]} onPress={() => setSort(nextSort[sort])} />
-        <AppText style={styles.count} tone="secondary" variant="secondary">
-          {`${shown.length} шт.`}
-        </AppText>
-      </View>
+      <AppText numberOfLines={1} numeric tone="secondary" variant="secondary">
+        {[`${shown.length} шт.`, sortLabels[sort], inStockOnly ? 'лише в наявності' : null]
+          .filter(Boolean)
+          .join(' · ')}
+      </AppText>
       {shown.length === 0 ? (
         <StateView
           kind="empty"
@@ -183,10 +205,12 @@ function RowGap() {
 }
 
 const stylesSheet = createStyles((theme) => ({
-  chips: { gap: theme.space.sm },
-  container: { flex: 1, gap: theme.space.md },
-  count: { flex: 1, textAlign: 'right' },
-  filters: { alignItems: 'center', flexDirection: 'row', gap: theme.space.sm },
+  // A horizontal ScrollView grows to fill a column by default; the chip row keeps its own height.
+  chipRow: { flexGrow: 0, flexShrink: 0 },
+  chips: { alignItems: 'center', gap: theme.space.sm },
+  container: { flex: 1, gap: theme.space.sm },
   gap: { height: theme.space.sm },
   list: { paddingBottom: theme.space.xxl },
+  search: { flex: 1 },
+  toolbar: { alignItems: 'center', flexDirection: 'row', gap: theme.space.sm },
 }));
