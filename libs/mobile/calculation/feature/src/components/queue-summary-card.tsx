@@ -1,6 +1,5 @@
 import { useOutbox } from '@mobile/calculation/data-access';
-import { AppText, Card } from '@mobile/shared/ui';
-import { StyleSheet } from 'react-native-unistyles';
+import { AppText, Card, createStyles, useStyles } from '@mobile/shared/ui';
 
 /** Orders and draft changes not yet on the server; signing out deletes them (R-016, SC-023). */
 export function useQueuedCount(): number {
@@ -9,6 +8,7 @@ export function useQueuedCount(): number {
 
 /** The send queue in the cabinet: shown only while something waits or was returned. */
 export function QueueSummaryCard({ isOnline }: Readonly<{ isOnline: boolean | null }>) {
+  const styles = useStyles(stylesSheet);
   const entries = useOutbox().filter((entry) => entry.state !== 'done');
   if (entries.length === 0) return null;
   const returned = entries.filter((entry) => entry.state === 'needs-review').length;
@@ -32,6 +32,6 @@ export function QueueSummaryCard({ isOnline }: Readonly<{ isOnline: boolean | nu
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.xs },
 }));

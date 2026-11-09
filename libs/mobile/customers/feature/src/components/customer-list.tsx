@@ -1,10 +1,10 @@
 import { useCustomers, useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { groupByLetter, searchCustomers, type Customer } from '@mobile/customers/model';
 import { CustomerRow } from '@mobile/customers/ui';
-import { AppText, SearchField, StateView } from '@mobile/shared/ui';
+import { AppText, createStyles, SearchField, StateView, useStyles } from '@mobile/shared/ui';
+import { FlashList } from '@shopify/flash-list';
 import { useCallback, useMemo, useState } from 'react';
-import { SectionList, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
+import { View } from 'react-native';
 
 export interface CustomerListProps {
   /** Called after the customer becomes the selected one. */
@@ -17,12 +17,32 @@ interface Section {
   data: Customer[];
 }
 
+/** FlashList has no sections: headers and customers go in one list, told apart by type. */
+type Item =
+  | { kind: 'header'; key: string; title: string }
+  | { customer: Customer; key: string; kind: 'customer' };
+
+function flatten(sections: readonly Section[]): Item[] {
+  const items: Item[] = [];
+  for (const section of sections) {
+    items.push({ key: section.key, kind: 'header', title: section.title });
+    for (const customer of section.data) {
+      items.push({ customer, key: `${section.key}:${customer.counterpartyId}`, kind: 'customer' });
+    }
+  }
+  return items;
+}
+
 /**
  * Search by name, phone or code; with an empty query the recent customers come first, then the A–Я list
  * (R-003, SC-004). Picking a row makes it the selected customer.
  */
+const noCustomers: Customer[] = [];
+
 export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
-  const customers = useCustomers();
+  const styles = useStyles(stylesSheet);
+  const loaded = useCustomers();
+  const customers = loaded ?? noCustomers;
   const recentIds = useSelectedCustomerStore((state) => state.recentIds);
   const selectedId = useSelectedCustomerStore((state) => state.selectedId);
   const select = useSelectedCustomerStore((state) => state.select);
@@ -64,11 +84,29 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
     [onPicked, select],
   );
 
+  const items = useMemo(() => flatten(sections), [sections]);
+
   const renderItem = useCallback(
-    ({ item }: { item: Customer }) => (
-      <CustomerRow customer={item} onPick={pick} selected={item.counterpartyId === selectedId} />
-    ),
-    [pick, selectedId],
+    ({ item }: { item: Item }) =>
+      item.kind === 'header' ? (
+        <AppText
+          accessibilityRole="header"
+          style={styles.header}
+          tone="secondary"
+          variant="caption"
+        >
+          {item.title}
+        </AppText>
+      ) : (
+        <View style={styles.row}>
+          <CustomerRow
+            customer={item.customer}
+            onPick={pick}
+            selected={item.customer.counterpartyId === selectedId}
+          />
+        </View>
+      ),
+    [pick, selectedId, styles],
   );
 
   return (
@@ -79,7 +117,9 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
         placeholder="Назва, телефон або код"
         value={query}
       />
-      {customers.length === 0 ? (
+      {loaded === undefined ? (
+        <StateView kind="loading" title="Читаємо клієнтів" />
+      ) : customers.length === 0 ? (
         <StateView
           kind="empty"
           message="Клієнти з’являться після синхронізації даних."
@@ -92,32 +132,26 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
           title="Нічого не знайдено"
         />
       ) : (
-        <SectionList
+        <FlashList
           contentContainerStyle={styles.list}
-          keyExtractor={(customer, index) => `${customer.counterpartyId}-${index}`}
+          data={items}
+          extraData={selectedId}
+          getItemType={itemType}
+          keyExtractor={itemKey}
           keyboardShouldPersistTaps="handled"
-          initialNumToRender={16}
           renderItem={renderItem}
-          renderSectionHeader={({ section }) => (
-            <AppText
-              accessibilityRole="header"
-              style={styles.header}
-              tone="secondary"
-              variant="caption"
-            >
-              {section.title}
-            </AppText>
-          )}
-          sections={sections}
-          stickySectionHeadersEnabled={false}
         />
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const itemType = (item: Item) => item.kind;
+const itemKey = (item: Item) => item.key;
+
+const stylesSheet = createStyles((theme) => ({
   container: { flex: 1, gap: theme.space.md },
   header: { paddingBottom: theme.space.xs, paddingTop: theme.space.md },
-  list: { gap: theme.space.sm, paddingBottom: theme.space.xxl },
+  list: { paddingBottom: theme.space.xxl },
+  row: { paddingBottom: theme.space.sm },
 }));

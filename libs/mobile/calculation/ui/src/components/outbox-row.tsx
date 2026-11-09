@@ -1,7 +1,6 @@
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, ListRow, StatusPill } from '@mobile/shared/ui';
+import { AppText, createStyles, ListRow, StatusPill, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import type { OutboxEntry } from '@mobile/calculation/model';
 
@@ -28,6 +27,7 @@ function titleOf(entry: OutboxEntry): string {
  * server's reason when returned (R-011, R-012, SC-016).
  */
 export function OutboxRow({ entry, onOpen }: Readonly<OutboxRowProps>) {
+  const styles = useStyles(stylesSheet);
   const total = entry.kind === 'order-create' ? formatKopecks(entry.payload.totalKopecks) : null;
   const subtitle =
     entry.state === 'needs-review'
@@ -62,6 +62,6 @@ export function OutboxRow({ entry, onOpen }: Readonly<OutboxRowProps>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   trailing: { alignItems: 'flex-end', gap: theme.space.xs },
 }));

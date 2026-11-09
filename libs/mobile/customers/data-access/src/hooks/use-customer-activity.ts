@@ -1,5 +1,5 @@
-import { useLocalDatabase } from '@mobile/core/local-db';
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useLocalDatabase, useLocalQuery } from '@mobile/core/local-db';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   fetchCustomerActivity,
@@ -18,8 +18,8 @@ export interface CustomerActivityState {
 }
 
 /**
- * Shows the cached orders and drafts at once and refreshes them from the order workspace while online
- * (R-004, R-013). Offline the card keeps the last lists with their time. Key the caller by `counterpartyId`.
+ * Shows the saved orders and drafts at once and refreshes them from the order workspace while online and each time
+ * the screen opens (R-004, R-013). Offline the card keeps the last lists with their time.
  */
 export function useCustomerActivity(
   counterpartyId: string,
@@ -28,33 +28,22 @@ export function useCustomerActivity(
   now: () => number = Date.now,
 ): CustomerActivityState {
   const db = useLocalDatabase();
-  const [state, setState] = useState<CustomerActivityState>(() => ({
-    activity: readCachedActivity(db, counterpartyId),
-    failed: false,
-    // The card is keyed by customer, so a first online read starts as loading.
-    loading: isOnline === true,
-  }));
-
-  const refresh = useEffectEvent((isActive: () => boolean) => {
-    fetcher(counterpartyId)
-      .then((lists) => {
-        const activity = { ...lists, fetchedAt: now() };
-        saveActivity(db, counterpartyId, activity);
-        if (isActive()) setState({ activity, failed: false, loading: false });
-      })
-      .catch(() => {
-        if (isActive()) setState((current) => ({ ...current, failed: true, loading: false }));
-      });
+  // The saved copy is read once per customer; the query result replaces it after a refresh.
+  const saved = useLocalQuery([], (database) => readCachedActivity(database, counterpartyId));
+  const query = useQuery({
+    enabled: isOnline === true,
+    queryFn: async () => {
+      const activity = { ...(await fetcher(counterpartyId)), fetchedAt: now() };
+      saveActivity(db, counterpartyId, activity);
+      return activity;
+    },
+    queryKey: ['customer-activity', counterpartyId],
+    staleTime: 0,
   });
 
-  useEffect(() => {
-    if (isOnline !== true) return;
-    let active = true;
-    refresh(() => active);
-    return () => {
-      active = false;
-    };
-  }, [db, counterpartyId, isOnline]);
-
-  return state;
+  return {
+    activity: query.data ?? saved,
+    failed: query.isError,
+    loading: query.isFetching,
+  };
 }

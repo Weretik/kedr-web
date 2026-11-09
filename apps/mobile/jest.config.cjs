@@ -4,10 +4,14 @@ const modules = '<rootDir>/../../node_modules';
 module.exports = {
   displayName: 'mobile',
   preset: 'jest-expo',
+  // FlashList ships ES modules: transform it like the other React Native packages.
+  transformIgnorePatterns: require('jest-expo/jest-preset').transformIgnorePatterns.map((pattern) =>
+    pattern.replace('(?!(', '(?!(@shopify/flash-list|'),
+  ),
   moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
   setupFilesAfterEnv: [
+    '@shopify/flash-list/jestSetup',
     '<rootDir>/src/test-setup.ts',
-    '<rootDir>/../../libs/mobile/shared/ui/src/testing/unistyles-mock.ts',
     '<rootDir>/../../libs/mobile/shared/ui/src/testing/vector-icons-mock.tsx',
   ],
   moduleNameMapper: {
@@ -28,7 +32,6 @@ module.exports = {
     '^@mobile/shared/config$': `${libs}/mobile/shared/config/src/index.ts`,
     '^@mobile/shared/model$': `${libs}/mobile/shared/model/src/index.ts`,
     '^@mobile/shared/ui$': `${libs}/mobile/shared/ui/src/index.ts`,
-    '^@gorhom/bottom-sheet$': `${modules}/@gorhom/bottom-sheet/mock.js`,
     '^@react-native-async-storage/async-storage$': `${modules}/@react-native-async-storage/async-storage/jest/async-storage-mock.js`,
     '^@react-native-community/netinfo$': `${libs}/mobile/core/shell/src/test-mocks/netinfo.ts`,
     '^react$': `${modules}/react/index.js`,

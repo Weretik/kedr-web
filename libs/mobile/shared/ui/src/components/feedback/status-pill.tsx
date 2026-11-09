@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 
 import type { StatusKind } from '../../theme/palette';
@@ -12,6 +12,7 @@ export interface StatusPillProps {
 
 /** A problem or state with its word; never an «all OK» badge. */
 export function StatusPill({ kind, label }: Readonly<StatusPillProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.pill(kind)}>
       <AppText numberOfLines={1} tone={kind} variant="caption">
@@ -21,7 +22,7 @@ export function StatusPill({ kind, label }: Readonly<StatusPillProps>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   pill: (kind: StatusKind) => ({
     alignSelf: 'flex-start',
     backgroundColor: theme.colors.status[kind].background,

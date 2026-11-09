@@ -1,6 +1,5 @@
-import { AppText, Avatar, Button, Card } from '@mobile/shared/ui';
+import { AppText, Avatar, Button, Card, createStyles, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ProfileHeaderProps {
   name: string;
@@ -25,6 +24,7 @@ export function ProfileHeader({
   onRemovePhoto,
   roleLabel,
 }: Readonly<ProfileHeaderProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <Card style={styles.card}>
       <View style={styles.row}>
@@ -63,7 +63,7 @@ export function ProfileHeader({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.space.sm },
   card: { gap: theme.space.md },
   row: { alignItems: 'center', flexDirection: 'row', gap: theme.space.md },

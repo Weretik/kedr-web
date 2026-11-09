@@ -1,7 +1,6 @@
 import { useSelectedCustomerStore } from '@mobile/customers/data-access';
-import { StateView, useBreakpoint } from '@mobile/shared/ui';
+import { createStyles, StateView, useBreakpoint, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { CustomerCard } from './customer-card';
 import { CustomerList } from './customer-list';
@@ -17,6 +16,7 @@ const keepCardInPlace = () => undefined;
 
 /** Phone shows the list and opens the card; tablet keeps the list and the card side by side (R-003). */
 export function CustomerChoice({ isOnline, onOpenCard }: Readonly<CustomerChoiceProps>) {
+  const styles = useStyles(stylesSheet);
   const isPhone = useBreakpoint() === 'phone';
   const selectedId = useSelectedCustomerStore((state) => state.selectedId);
 
@@ -38,7 +38,7 @@ export function CustomerChoice({ isOnline, onOpenCard }: Readonly<CustomerChoice
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { flex: 3 },
   list: { flex: 2, maxWidth: 420 },
   split: { flex: 1, flexDirection: 'row', gap: theme.space.lg },

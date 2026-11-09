@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 
 export interface AvatarProps {
@@ -24,6 +24,7 @@ export function initialsOf(name: string): string {
 
 /** Photo, or initials on the accent container. */
 export function Avatar({ name, photoUrl, size = 40 }: Readonly<AvatarProps>) {
+  const styles = useStyles(stylesSheet);
   if (photoUrl) {
     return (
       <Image
@@ -46,7 +47,7 @@ export function Avatar({ name, photoUrl, size = 40 }: Readonly<AvatarProps>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   initials: (size: number) => ({
     alignItems: 'center',
     backgroundColor: theme.colors.accentContainer,

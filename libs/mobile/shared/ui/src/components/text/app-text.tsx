@@ -1,6 +1,6 @@
 import { Text, type TextProps } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { tabularNumbers, type TypeVariant } from '../../theme/typography';
 import { toneColor, type Tone } from '../tone';
 
@@ -21,6 +21,7 @@ export function AppText({
   variant = 'body',
   ...props
 }: Readonly<AppTextProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <Text
       {...props}
@@ -29,7 +30,7 @@ export function AppText({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   text: (variant: TypeVariant, tone: Tone, align: AppTextProps['align']) => ({
     ...theme.type[variant],
     color: toneColor(theme.colors, tone),

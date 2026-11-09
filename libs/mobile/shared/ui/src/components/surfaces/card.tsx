@@ -1,12 +1,14 @@
 import { View, type ViewProps } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
+
+import { createStyles, useStyles } from '../../theme/create-styles';
 
 /** White surface, 1 px border, `radius.lg`; no shadow. */
 export function Card({ style, ...props }: Readonly<ViewProps>) {
+  const styles = useStyles(stylesSheet);
   return <View {...props} style={[styles.card, style]} />;
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: {
     backgroundColor: theme.colors.surface,
     borderColor: theme.colors.outlineVariant,

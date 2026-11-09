@@ -13,7 +13,7 @@ import {
   priceLine,
   type CalculationLine,
 } from '@mobile/calculation/model';
-import { usePricedProducts } from '@mobile/catalog/data-access';
+import { useLineProducts } from '@mobile/catalog/data-access';
 import { useLocalDatabase } from '@mobile/core/local-db';
 import { useMemo } from 'react';
 
@@ -21,11 +21,13 @@ import { useMemo } from 'react';
 export function useCalculationController(counterpartyId: string, customerName: string) {
   const db = useLocalDatabase();
   const calculation = useStoredCalculation(counterpartyId);
-  const products = usePricedProducts(counterpartyId);
+  const productIds = useMemo(
+    () => calculation.lines.map((line) => line.productId),
+    [calculation.lines],
+  );
+  const byId = useLineProducts(productIds, counterpartyId);
   const outbox = useOutbox();
 
-  // The lookup is built once per catalog, not on every quantity tap.
-  const byId = useMemo(() => new Map(products.map((product) => [product.id, product])), [products]);
   const lines = useMemo(
     () => calculation.lines.map((line) => priceLine(line, byId.get(line.productId) ?? null)),
     [byId, calculation.lines],

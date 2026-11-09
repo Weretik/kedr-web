@@ -40,5 +40,8 @@ export const productPrices = sqliteTable(
     priceTypeId: integer('price_type_id').notNull(),
     amountKopecks: integer('amount_kopecks').notNull(),
   },
-  (table) => [primaryKey({ columns: [table.productId, table.priceTypeId] })],
+  (table) => [
+    primaryKey({ columns: [table.productId, table.priceTypeId] }),
+    index('product_prices_type_idx').on(table.priceTypeId, table.productId, table.amountKopecks),
+  ],
 );

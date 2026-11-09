@@ -1,7 +1,6 @@
-import { AppText, Card } from '@mobile/shared/ui';
+import { AppText, Card, createStyles, useStyles } from '@mobile/shared/ui';
 import { type ReactNode } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface FormFrameProps {
   title: string;
@@ -13,6 +12,7 @@ export interface FormFrameProps {
 
 /** Title, fields, the error and the actions of a cabinet form; «Зберігаємо…» while it sends. */
 export function FormFrame({ actions, busy, children, error, title }: Readonly<FormFrameProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <Card style={styles.card}>
       <AppText accessibilityRole="header" variant="bodyStrong">
@@ -37,7 +37,7 @@ export function FormFrame({ actions, busy, children, error, title }: Readonly<Fo
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   actions: {
     alignItems: 'center',
     flexDirection: 'row',

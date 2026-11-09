@@ -40,13 +40,13 @@ export function useSyncScheduler({
     if (runningRef.current) return;
     runningRef.current = true;
     syncStatusActions.started();
+    // No `finally`: React Compiler cannot compile it yet; syncAll reports failures, so both branches end here.
     try {
       syncStatusActions.finished(await syncAll({ db: database, fetchSnapshot, now }));
     } catch {
       syncStatusActions.finished([]);
-    } finally {
-      runningRef.current = false;
     }
+    runningRef.current = false;
   });
 
   const runIfDue = useEffectEvent((database: LocalDatabase) => {

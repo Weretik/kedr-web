@@ -1,6 +1,5 @@
-import { AppText, IconButton } from '@mobile/shared/ui';
+import { AppText, createStyles, IconButton, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ReviewBannerProps {
   reason: string;
@@ -9,6 +8,7 @@ export interface ReviewBannerProps {
 
 /** Why the server returned the order or draft; changed lines are outlined below (R-012, SC-017). */
 export function ReviewBanner({ onClose, reason }: Readonly<ReviewBannerProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View accessibilityRole="alert" style={styles.banner}>
       <View style={styles.text}>
@@ -27,7 +27,7 @@ export function ReviewBanner({ onClose, reason }: Readonly<ReviewBannerProps>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   banner: {
     alignItems: 'flex-start',
     backgroundColor: theme.colors.status.warning.background,

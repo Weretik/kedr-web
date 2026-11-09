@@ -1,10 +1,8 @@
-import { useUnistyles } from 'react-native-unistyles';
+import { useWindowDimensions } from 'react-native';
 
-import type { Breakpoint } from '../theme/breakpoints';
+import { breakpointFor, type Breakpoint } from '../theme/breakpoints';
 
-/** Current width class; `phone` until Unistyles reports one. */
+/** Current width class: `phone`, `tablet` or `wide`. */
 export function useBreakpoint(): Breakpoint {
-  const { rt } = useUnistyles();
-
-  return (rt.breakpoint as Breakpoint | undefined) ?? 'phone';
+  return breakpointFor(useWindowDimensions().width);
 }

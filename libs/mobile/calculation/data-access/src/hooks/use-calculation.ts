@@ -1,5 +1,5 @@
-import { useLocalDatabase, useLocalDataVersion, type LocalDatabase } from '@mobile/core/local-db';
-import { useEffect, useEffectEvent, useMemo } from 'react';
+import { useLocalDatabase, useLocalQuery, type LocalDatabase } from '@mobile/core/local-db';
+import { useEffect, useEffectEvent } from 'react';
 
 import { orderWorkspaceApi, type OrderWorkspaceApi } from '../api/order-workspace-api';
 import { drainOutbox } from '../runner/outbox-runner';
@@ -10,21 +10,11 @@ import { readOutbox } from '../store/outbox-store';
 import type { OutboxEntry } from '@mobile/calculation/model';
 
 export function useStoredCalculation(counterpartyId: string): StoredCalculation {
-  const db = useLocalDatabase();
-  const version = useLocalDataVersion('calculation');
-  return useMemo(() => {
-    void version; // re-runs the read after every change
-    return readCalculation(db, counterpartyId);
-  }, [db, counterpartyId, version]);
+  return useLocalQuery(['calculation'], (db) => readCalculation(db, counterpartyId));
 }
 
 export function useOutbox(): OutboxEntry[] {
-  const db = useLocalDatabase();
-  const version = useLocalDataVersion('calculation');
-  return useMemo(() => {
-    void version; // re-runs the read after every change
-    return readOutbox(db);
-  }, [db, version]);
+  return useLocalQuery(['calculation'], readOutbox);
 }
 
 let running = false;

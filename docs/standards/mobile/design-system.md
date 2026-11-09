@@ -8,17 +8,18 @@ The character is calm and businesslike, close to the Kedr Admin: light ground, w
 
 ## Where the tokens live
 
-Tokens are code in `@mobile/shared/ui` (`libs/mobile/shared/ui/src/theme/`), registered with `react-native-unistyles`. Feature and UI code reads them through `StyleSheet.create((theme, rt) => …)`; no hex values, font names, radii or durations in components. A new token goes into the theme first and onto this page second.
+Tokens are code in `@mobile/shared/ui` (`libs/mobile/shared/ui/src/theme/`), given to the app by `AppThemeProvider`. Feature and UI code reads them through `createStyles((theme, rt) => …)` and `useStyles(sheet)`, or `useAppTheme()`; no hex values, font names, radii or durations in components. A new token goes into the theme first and onto this page second.
 
-| File             | Owns                                            |
-| ---------------- | ----------------------------------------------- |
-| `palette.ts`     | Brand colors and light/dark color roles         |
-| `typography.ts`  | Font family, type scale, tabular figures        |
-| `shape.ts`       | Radii, spacing, touch targets, borders          |
-| `breakpoints.ts` | `phone`, `tablet`, `wide`                       |
-| `unistyles.ts`   | Registers themes and breakpoints with Unistyles |
-| `motion.ts`      | Durations and the press feedback                |
-| `themes.ts`      | Assembled `light` and `dark` Unistyles themes   |
+| File               | Owns                                                                      |
+| ------------------ | ------------------------------------------------------------------------- |
+| `palette.ts`       | Brand colors and light/dark color roles                                   |
+| `typography.ts`    | Font family, type scale, tabular figures                                  |
+| `shape.ts`         | Radii, spacing, touch targets, borders                                    |
+| `breakpoints.ts`   | `phone`, `tablet`, `wide`                                                 |
+| `app-theme.tsx`    | Theme context, `useAppTheme` (theme, width class, insets)                 |
+| `create-styles.ts` | `createStyles` / `useStyles`: style sheets built once per theme and width |
+| `motion.ts`        | Durations and the press feedback                                          |
+| `themes.ts`        | Assembled `light` and `dark` themes                                       |
 
 ## Color
 
@@ -87,7 +88,7 @@ Numbers (prices, quantities, codes, totals) use tabular figures. Text follows sy
 | `radius.pill` | 999                                 | Chips, status pills                       |
 | `space`       | 4-pt grid: 4, 8, 12, 16, 20, 24, 28 | Side padding 16; gap between rows 8       |
 | Touch target  | min 44×44 (buttons 48 high)         | Every pressable                           |
-| Border        | 1 px `outlineVariant`               | Cards and rows; no shadows except sheets  |
+| Border        | 1 px `outlineVariant`               | Cards and rows; no shadows                |
 
 ## Layout patterns
 
@@ -121,7 +122,6 @@ Shared components live in `@mobile/shared/ui`; `CustomerBar`, `TabBar` and `NavR
 | `Avatar`            | Photo or initials on a stable color                                             |
 | `CustomerBar`       | Customer bar pattern above                                                      |
 | `TabBar`, `NavRail` | Phone tabs and tablet rail, both with the customer gate                         |
-| `Sheet`             | One bottom sheet wrapper                                                        |
 | `StateView`         | Loading, empty, offline-stale, error; text and action                           |
 | `ZoomViewer`        | Full-screen photos and scheme with pinch zoom                                   |
 

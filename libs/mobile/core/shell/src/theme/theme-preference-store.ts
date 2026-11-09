@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Storage from 'expo-sqlite/kv-store';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type ThemePreference = 'dark' | 'light' | 'system';
 
@@ -9,17 +8,31 @@ interface ThemePreferenceState {
   setPreference: (preference: ThemePreference) => void;
 }
 
-/** «Як у системі» follows the phone; «Світла» and «Темна» pin the theme. The shell applies it (`useThemeName`). */
-export const useThemePreference = create<ThemePreferenceState>()(
-  persist(
-    (set) => ({
-      preference: 'system',
-      setPreference: (preference) => set({ preference }),
-    }),
-    {
-      name: 'kedr.mobile.theme-preference',
-      partialize: ({ preference }) => ({ preference }),
-      storage: createJSONStorage(() => AsyncStorage),
-    },
-  ),
-);
+const storageKey = 'kedr.mobile.theme';
+
+// Read synchronously, so the first frame already has the chosen theme.
+function readStoredPreference(): ThemePreference {
+  try {
+    const stored = Storage.getItemSync(storageKey);
+    return stored === 'dark' || stored === 'light' ? stored : 'system';
+  } catch {
+    return 'system';
+  }
+}
+
+function storePreference(preference: ThemePreference): void {
+  try {
+    Storage.setItemSync(storageKey, preference);
+  } catch {
+    // Not saved: the choice still applies until the app is closed.
+  }
+}
+
+/** «Як у системі» follows the phone; «Світла» and «Темна» pin the theme (`useThemeName`). */
+export const useThemePreference = create<ThemePreferenceState>()((set) => ({
+  preference: readStoredPreference(),
+  setPreference: (preference) => {
+    storePreference(preference);
+    set({ preference });
+  },
+}));

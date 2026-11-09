@@ -7,9 +7,16 @@ import {
   ORDER_SYNC_STATUSES,
   type OrderSyncStatus,
 } from '@mobile/shared/model';
-import { AppText, Card, StateView, StatusPill } from '@mobile/shared/ui';
+import {
+  AppText,
+  Card,
+  createStyles,
+  StateView,
+  StatusPill,
+  useAppTheme,
+  useStyles,
+} from '@mobile/shared/ui';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import type { OrderDetail } from '@mobile/orders/model';
 
@@ -31,7 +38,8 @@ export function OrderDetailScreen({
   isOnline,
   orderId,
 }: Readonly<OrderDetailScreenProps>) {
-  const { theme } = useUnistyles();
+  const styles = useStyles(stylesSheet);
+  const { theme } = useAppTheme();
   const state = useOrderDetail(orderId, isOnline, fetcher);
 
   switch (state.kind) {
@@ -59,6 +67,7 @@ export function OrderDetailScreen({
 }
 
 function OrderView({ order }: Readonly<{ order: OrderDetail }>) {
+  const styles = useStyles(stylesSheet);
   const status = isKnownStatus(order.syncStatus) ? order.syncStatus : null;
   const kind = status ? getOrderSyncStatusKind(status) : null;
   return (
@@ -107,7 +116,7 @@ function OrderView({ order }: Readonly<{ order: OrderDetail }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   content: { gap: theme.space.md, paddingBottom: theme.space.xxl },
   line: { alignItems: 'flex-start', flexDirection: 'row', gap: theme.space.md },
   lines: { gap: theme.space.md },

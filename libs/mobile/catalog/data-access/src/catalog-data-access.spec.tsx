@@ -3,19 +3,24 @@ import {
   customerCategoryPriceTypes,
   customers,
   LocalDatabaseProvider,
+  markLocalDataChanged,
   productPrices,
   products,
+  readerOf,
   syncState,
   type LocalDatabase,
 } from '@mobile/core/local-db';
 import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { eq } from 'drizzle-orm';
 
+import { usePricedProducts } from './hooks/use-catalog';
 import { useAllPhotosDownload, useEssentialPhotoDownload } from './hooks/use-photo-downloads';
 import { downloadImages, type ImageCacheDriver } from './media/image-cache';
 import { usePhotoDownloadStore } from './media/photo-download-store';
 import {
   readCustomerPricing,
+  readLineProducts,
   readPricedProduct,
   readPricedProducts,
 } from './queries/catalog-queries';
@@ -81,17 +86,44 @@ function wrapperFor(db: LocalDatabase) {
 }
 
 describe('catalog queries (SC-006)', () => {
-  it('prices products by the customer rule of a parent category and the default elsewhere', () => {
+  it('prices products by the customer rule of a parent category and the default elsewhere', async () => {
     const db = seed();
-    const pricing = readCustomerPricing(db, 'c-1');
+    const reader = readerOf(db);
+    const pricing = await readCustomerPricing(reader, 'c-1');
 
     // In name order, reading only the customer's price types.
-    expect(readPricedProducts(db, pricing).map((p) => [p.id, p.priceKopecks])).toEqual([
+    const priced = await readPricedProducts(reader, pricing);
+    expect(priced.map((p) => [p.id, p.priceKopecks])).toEqual([
       [201, 30_000],
       [101, 20_000],
     ]);
-    expect(readPricedProduct(db, 101, null)?.priceKopecks).toBeNull();
-    expect(readCustomerPricing(db, 'missing')).toBeNull();
+    expect((await readPricedProduct(reader, 101, null))?.priceKopecks).toBeNull();
+    expect(await readCustomerPricing(reader, 'missing')).toBeNull();
+  });
+
+  it('prices the lines of a calculation at once, by id', () => {
+    const lines = readLineProducts(seed(), [101], 'c-1');
+
+    expect([...lines.values()].map((p) => [p.id, p.priceKopecks])).toEqual([[101, 20_000]]);
+    expect(readLineProducts(seed(), [], 'c-1').size).toBe(0);
+  });
+
+  it('shows the priced list once read and keeps it while a sync re-reads', async () => {
+    const db = seed();
+    const { result } = await renderHook(() => usePricedProducts('c-1'), {
+      wrapper: wrapperFor(db),
+    });
+
+    await waitFor(() =>
+      expect(result.current?.map((p) => p.priceKopecks)).toEqual([30_000, 20_000]),
+    );
+    db.update(productPrices)
+      .set({ amountKopecks: 40_000 })
+      .where(eq(productPrices.productId, 201))
+      .run();
+    await act(async () => markLocalDataChanged('catalog'));
+
+    await waitFor(() => expect(result.current?.[0]?.priceKopecks).toBe(40_000));
   });
 });
 

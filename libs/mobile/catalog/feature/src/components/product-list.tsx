@@ -5,14 +5,15 @@ import {
   filterProducts,
   sortNameOrdered,
   withDescendants,
+  type Category,
   type PricedProduct,
   type ProductSort,
 } from '@mobile/catalog/model';
 import { ProductRow } from '@mobile/catalog/ui';
-import { AppText, Chip, SearchField, StateView } from '@mobile/shared/ui';
+import { AppText, Chip, createStyles, SearchField, StateView, useStyles } from '@mobile/shared/ui';
+import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, ScrollView, View, type ListRenderItem } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
+import { ScrollView, View } from 'react-native';
 
 export interface ProductListProps {
   counterpartyId: string | null;
@@ -39,6 +40,9 @@ const nextSort: Record<ProductSort, ProductSort> = {
  * Search by name or code, category and subcategory chips, «Лише в наявності» and sorting; every row shows the
  * chosen customer's price (R-005–R-007, SC-008).
  */
+const noCategories: Category[] = [];
+const noProducts: PricedProduct[] = [];
+
 export function ProductList({
   counterpartyId,
   isOnline,
@@ -46,8 +50,11 @@ export function ProductList({
   onOpen,
   openedId = null,
 }: Readonly<ProductListProps>) {
-  const categories = useCategories();
-  const products = usePricedProducts(counterpartyId);
+  const styles = useStyles(stylesSheet);
+  const loadedCategories = useCategories();
+  const loadedProducts = usePricedProducts(counterpartyId);
+  const categories = loadedCategories ?? noCategories;
+  const products = loadedProducts ?? noProducts;
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -90,6 +97,7 @@ export function ProductList({
     [add, canAddRows, isOnline, open, openedId],
   );
 
+  if (loadedProducts === undefined) return <StateView kind="loading" title="Читаємо каталог" />;
   if (products.length === 0) {
     return (
       <StateView
@@ -154,16 +162,13 @@ export function ProductList({
           title="Нічого не знайдено"
         />
       ) : (
-        <FlatList
+        <FlashList
           contentContainerStyle={styles.list}
           data={shown}
-          initialNumToRender={10}
+          ItemSeparatorComponent={RowGap}
           keyExtractor={keyOf}
           keyboardShouldPersistTaps="handled"
-          maxToRenderPerBatch={8}
-          removeClippedSubviews
           renderItem={renderItem}
-          windowSize={7}
         />
       )}
     </View>
@@ -172,10 +177,16 @@ export function ProductList({
 
 const keyOf = (product: PricedProduct) => product.id.toString();
 
-const styles = StyleSheet.create((theme) => ({
+function RowGap() {
+  const styles = useStyles(stylesSheet);
+  return <View style={styles.gap} />;
+}
+
+const stylesSheet = createStyles((theme) => ({
   chips: { gap: theme.space.sm },
   container: { flex: 1, gap: theme.space.md },
   count: { flex: 1, textAlign: 'right' },
   filters: { alignItems: 'center', flexDirection: 'row', gap: theme.space.sm },
-  list: { gap: theme.space.sm, paddingBottom: theme.space.xxl },
+  gap: { height: theme.space.sm },
+  list: { paddingBottom: theme.space.xxl },
 }));

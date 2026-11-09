@@ -21,8 +21,8 @@ Do not place HTTP calls, business logic, complex UI, or domain types in a route.
 
 ```text
 apps/mobile/
-├── index.ts                         # Unistyles themes first, then Expo Router
-├── babel.config.js                  # Unistyles Babel plugin
+├── index.ts                         # Expo Router entry
+├── babel.config.js                  # babel-preset-expo
 └── src/app/                         # Expo Router routes and layouts only
     ├── _layout.tsx                  # fonts, providers, session split
     ├── login.tsx
@@ -50,12 +50,11 @@ Feature owns the scenario and screen; the app owns only the URL and Expo Router 
 
 ## Providers
 
-The root `_layout.tsx` connects one `AppProviders` from `@mobile/core/shell`. Themes are not a provider: Unistyles is configured once when `@mobile/shared/ui` is first imported by the app entry. The provider order is:
+The root `_layout.tsx` connects one `AppProviders` from `@mobile/core/shell`. The theme is React state: `AppProviders` gives it to every screen through `AppThemeProvider` ([ADR-0007](../adr/0007-plain-react-native-styles.md)). The provider order is:
 
 1. `GestureHandlerRootView`;
 2. `SafeAreaProvider`;
 3. navigation `ThemeProvider` with colors from the current «Офіс» theme;
-4. `BottomSheetModalProvider` for the one `Sheet`;
-5. connectivity context, status bar, then the Expo Router navigator.
+4. connectivity context, status bar, then the Expo Router navigator.
 
 Feature, UI components, and data-access do not create their own global providers. Small shared UI state (theme choice, later the selected customer) lives in Zustand stores.

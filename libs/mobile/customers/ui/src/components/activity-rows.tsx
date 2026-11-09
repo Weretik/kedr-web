@@ -10,9 +10,8 @@ import {
   ORDER_SYNC_STATUSES,
   type OrderSyncStatus,
 } from '@mobile/shared/model';
-import { AppText, ListRow, StatusPill } from '@mobile/shared/ui';
+import { AppText, createStyles, ListRow, StatusPill, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 const isKnownStatus = (status: string): status is OrderSyncStatus =>
   (ORDER_SYNC_STATUSES as readonly string[]).includes(status);
@@ -24,6 +23,7 @@ export function OrderRow({
   onOpen,
   order,
 }: Readonly<{ order: CustomerOrder; onOpen?: () => void }>) {
+  const styles = useStyles(stylesSheet);
   const status = isKnownStatus(order.syncStatus) ? order.syncStatus : null;
   const kind = status ? getOrderSyncStatusKind(status) : null;
   const showPill = status !== null && (kind === 'error' || kind === 'warning');
@@ -64,6 +64,6 @@ export function DraftRow({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   trailing: { alignItems: 'flex-end', gap: theme.space.xs },
 }));

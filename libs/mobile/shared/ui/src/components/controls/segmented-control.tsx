@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 
 export interface Segment<TValue extends string> {
@@ -22,6 +22,7 @@ export function SegmentedControl<TValue extends string>({
   segments,
   value,
 }: Readonly<SegmentedControlProps<TValue>>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View accessibilityLabel={accessibilityLabel} accessibilityRole="tablist" style={styles.track}>
       {segments.map((segment) => {
@@ -50,7 +51,7 @@ export function SegmentedControl<TValue extends string>({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   segment: (selected: boolean) => ({
     alignItems: 'center',
     backgroundColor: selected ? theme.colors.surface : 'transparent',

@@ -41,6 +41,17 @@ describe('local database', () => {
     expect(db.select().from(productPrices).get()?.amountKopecks).toBe(15050);
   });
 
+  it("reads a customer's prices by price type through an index", () => {
+    const db = createTestLocalDatabase();
+    const plan = db.all<{ detail: string }>(
+      sql`EXPLAIN QUERY PLAN SELECT product_id, amount_kopecks FROM product_prices WHERE price_type_id IN (2, 3)`,
+    );
+
+    expect(plan.map((step) => step.detail).join(' ')).toContain(
+      'USING COVERING INDEX product_prices_type_idx',
+    );
+  });
+
   it('runs again without changes', () => {
     const db = createTestLocalDatabase();
 

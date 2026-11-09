@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { openDatabaseSync } from 'expo-sqlite';
 
 import { migrateLocalDatabase, schema, type LocalDatabase } from './local-database';
+import { openLocalReader, type LocalReader } from './local-reader';
 
 const databaseName = 'kedr-manager.db';
 
@@ -17,4 +18,14 @@ export function getLocalDatabase(): LocalDatabase {
   migrateLocalDatabase(db);
   database = db;
   return db;
+}
+
+let reader: LocalReader | null = null;
+
+/** The read connection for screens, opened after the main one has migrated the file. */
+export function getLocalReader(): LocalReader {
+  if (reader) return reader;
+  getLocalDatabase();
+  reader = openLocalReader(databaseName);
+  return reader;
 }

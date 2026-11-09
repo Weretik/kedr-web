@@ -1,11 +1,11 @@
 import { allImageUrls, essentialImageUrls } from '@mobile/catalog/model';
-import { syncState, useLocalDatabase, useLocalDataVersion } from '@mobile/core/local-db';
+import { syncState, useLocalQuery, useLocalReader } from '@mobile/core/local-db';
 import { eq } from 'drizzle-orm';
-import { useEffect, useEffectEvent, useMemo } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { downloadImages, expoImageCache, type ImageCacheDriver } from '../media/image-cache';
 import { usePhotoDownloadStore } from '../media/photo-download-store';
-import { readPricedProducts } from '../queries/catalog-queries';
+import { readCatalogBase } from '../queries/catalog-queries';
 
 import type { LocalDatabase } from '@mobile/core/local-db';
 
@@ -14,12 +14,7 @@ function catalogVersion(db: LocalDatabase): string | null {
 }
 
 function useCatalogVersion(): string | null {
-  const db = useLocalDatabase();
-  const version = useLocalDataVersion('catalog');
-  return useMemo(() => {
-    void version; // re-runs the read after a catalog sync
-    return catalogVersion(db);
-  }, [db, version]);
+  return useLocalQuery(['catalog'], catalogVersion);
 }
 
 /**
@@ -30,21 +25,24 @@ export function useEssentialPhotoDownload(
   isUnmetered: boolean,
   driver: ImageCacheDriver = expoImageCache,
 ): void {
-  const db = useLocalDatabase();
+  const reader = useLocalReader();
   const version = useCatalogVersion();
   const essentialVersion = usePhotoDownloadStore((state) => state.essentialVersion);
 
   const download = useEffectEvent((catalog: string, isActive: () => boolean) => {
-    const urls = essentialImageUrls(readPricedProducts(db, null));
-    void downloadImages(
-      urls,
-      driver,
-      () => undefined,
-      () => !isActive(),
-    ).then((progress) => {
-      if (isActive() && progress.failedBatches === 0)
-        usePhotoDownloadStore.getState().essentialDone(catalog);
-    });
+    void readCatalogBase(reader)
+      .then(({ products }) =>
+        downloadImages(
+          essentialImageUrls(products),
+          driver,
+          () => undefined,
+          () => !isActive(),
+        ),
+      )
+      .then((progress) => {
+        if (isActive() && progress.failedBatches === 0)
+          usePhotoDownloadStore.getState().essentialDone(catalog);
+      });
   });
 
   useEffect(() => {
@@ -72,7 +70,7 @@ let stopRequested = false;
 
 /** «Завантажити всі фото»: every photo and scheme of the catalog, with progress (R-008). */
 export function useAllPhotosDownload(driver: ImageCacheDriver = expoImageCache): AllPhotosDownload {
-  const db = useLocalDatabase();
+  const reader = useLocalReader();
   const version = useCatalogVersion();
   const all = usePhotoDownloadStore((state) => state.all);
   const allVersion = usePhotoDownloadStore((state) => state.allVersion);
@@ -81,16 +79,20 @@ export function useAllPhotosDownload(driver: ImageCacheDriver = expoImageCache):
     if (all.status === 'running') return;
     stopRequested = false;
     const store = usePhotoDownloadStore.getState();
-    const urls = allImageUrls(readPricedProducts(db, null));
-    void downloadImages(
-      urls,
-      driver,
-      (progress) => store.allProgress('running', progress),
-      () => stopRequested,
-    ).then((progress) => {
-      if (stopRequested) store.allProgress('stopped', progress);
-      else store.allDone(version ?? '', progress);
-    });
+    store.allProgress('running', null);
+    void readCatalogBase(reader)
+      .then(({ products }) =>
+        downloadImages(
+          allImageUrls(products),
+          driver,
+          (progress) => store.allProgress('running', progress),
+          () => stopRequested,
+        ),
+      )
+      .then((progress) => {
+        if (stopRequested) store.allProgress('stopped', progress);
+        else store.allDone(version ?? '', progress);
+      });
   };
 
   return {

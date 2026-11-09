@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { fetchOrderDetail, type OrderDetailFetcher } from '../api/order-detail-client';
 
@@ -10,34 +10,24 @@ export type OrderDetailState =
   | { kind: 'offline' }
   | { kind: 'ready'; order: OrderDetail };
 
-/** Reads the order online; offline the screen says it opens with the network (R-013). Key the caller by order. */
+/**
+ * Reads the order online and keeps it in the query cache, so reopening it shows it at once while it refreshes;
+ * offline an order not read before says it opens with the network (R-013).
+ */
 export function useOrderDetail(
   orderId: number,
   isOnline: boolean | null,
   fetcher: OrderDetailFetcher = fetchOrderDetail,
 ): OrderDetailState {
-  const [loaded, setLoaded] = useState<OrderDetailState | null>(null);
-
-  const load = useEffectEvent((isActive: () => boolean) => {
-    fetcher(orderId)
-      .then((order) => {
-        if (isActive()) setLoaded({ kind: 'ready', order });
-      })
-      .catch(() => {
-        if (isActive()) setLoaded({ kind: 'failed' });
-      });
+  const query = useQuery({
+    enabled: isOnline === true,
+    queryFn: () => fetcher(orderId),
+    queryKey: ['order-detail', orderId],
+    staleTime: 0,
   });
 
-  useEffect(() => {
-    if (isOnline !== true) return;
-    let active = true;
-    load(() => active);
-    return () => {
-      active = false;
-    };
-  }, [orderId, isOnline]);
-
-  if (loaded?.kind === 'ready') return loaded;
+  if (query.data) return { kind: 'ready', order: query.data };
   if (isOnline === false) return { kind: 'offline' };
-  return loaded ?? { kind: 'loading' };
+  if (query.isError) return { kind: 'failed' };
+  return { kind: 'loading' };
 }

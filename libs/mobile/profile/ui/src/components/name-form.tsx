@@ -34,6 +34,8 @@ export function NameForm({ busy, error, initialName, onCancel, onSave }: Readonl
       title="Імʼя"
     >
       <TextField
+        // The form opens on the manager's tap to type a name, so the keyboard comes up at once.
+        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         error={shownError}
         label="Імʼя та прізвище"

@@ -107,6 +107,42 @@ describe('mobile auth session', () => {
     expect(saveSession).not.toHaveBeenCalled();
   });
 
+  it('opens a recent session before the server answers and then takes its changes', async () => {
+    const now = Date.UTC(2026, 10, 8, 9, 0);
+    let answer: (user: typeof manager) => void = () => undefined;
+    jest.mocked(readStoredTokens).mockResolvedValue({ accessToken: 'a1', refreshToken: 'r1' });
+    jest.mocked(requestCurrentUser).mockReturnValue(
+      new Promise((resolve) => {
+        answer = resolve;
+      }),
+    );
+    jest.mocked(readSavedSession).mockResolvedValue({ lastRefreshedAt: now - day, user: manager });
+
+    const started = initializeMobileAuth(() => now);
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(getMobileSessionState()).toEqual({ status: 'authenticated', user: manager });
+
+    answer({ ...manager, fullName: 'Олена Коваль' });
+    await started;
+    expect(getMobileSessionState()).toEqual({
+      status: 'authenticated',
+      user: { ...manager, fullName: 'Олена Коваль' },
+    });
+  });
+
+  it('closes a recent session that the server rejects', async () => {
+    const now = Date.UTC(2026, 10, 8, 9, 0);
+    jest.mocked(readStoredTokens).mockResolvedValue({ accessToken: 'a1', refreshToken: 'r1' });
+    jest.mocked(requestCurrentUser).mockResolvedValue(null);
+    jest.mocked(requestRefresh).mockResolvedValue(null);
+    jest.mocked(readSavedSession).mockResolvedValue({ lastRefreshedAt: now - day, user: manager });
+
+    await initializeMobileAuth(() => now);
+
+    expect(getMobileSessionState()).toEqual({ status: 'anonymous' });
+    expect(clearStoredTokens).toHaveBeenCalled();
+  });
+
   it('asks to sign in offline after seven days (SC-019)', async () => {
     const now = Date.UTC(2026, 10, 8, 9, 0);
     jest.mocked(readStoredTokens).mockResolvedValue({ accessToken: 'a1', refreshToken: 'r1' });

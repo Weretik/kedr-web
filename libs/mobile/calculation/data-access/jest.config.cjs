@@ -5,8 +5,12 @@ const root = '<rootDir>/../../../..';
 module.exports = {
   displayName: 'mobile-calculation-data-access',
   preset: 'jest-expo',
+  // FlashList ships ES modules: transform it like the other React Native packages.
+  transformIgnorePatterns: require('jest-expo/jest-preset').transformIgnorePatterns.map((pattern) =>
+    pattern.replace('(?!(', '(?!(@shopify/flash-list|'),
+  ),
   moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  setupFilesAfterEnv: ['@shopify/flash-list/jestSetup', '<rootDir>/src/test-setup.ts'],
   moduleNameMapper: {
     '^@mobile/core/local-db/testing$': '<rootDir>/../../core/local-db/src/testing.ts',
     '^@mobile/core/local-db$': '<rootDir>/../../core/local-db/src/index.ts',

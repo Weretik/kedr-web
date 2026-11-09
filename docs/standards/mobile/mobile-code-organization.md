@@ -6,7 +6,7 @@
 - A route file in `apps/mobile/src/app` is a thin Expo Router adapter: it connects a public screen from `feature` and contains no HTTP, storage, or domain logic.
 - Root providers, theme, store, connectivity, and shell belong to `@mobile/core/shell`; features must not duplicate them.
 - `model` does not depend on React, HTTP, Expo Router, or platform APIs.
-- `data-access` owns private DTOs, mappers, local database queries (Drizzle) and server calls; DTOs and transport errors do not leave the library. Old libraries still use RTK Query until they are replaced ([ADR-0005](../../architecture/mobile/adr/0005-offline-first-local-database.md)).
+- `data-access` owns private DTOs, mappers, local database queries (Drizzle) and server calls; DTOs and transport errors do not leave the library. Reads follow [ADR-0008](../../architecture/mobile/adr/0008-tanstack-query-reads.md): a whole list through `useLocalAsyncQuery` (off the JavaScript thread), a few rows by key through `useLocalQuery`, an online-only read through TanStack Query `useQuery`; never Redux or RTK Query, never a hand-written loading/caching hook.
 - `ui` receives domain data and callbacks through props; it does not import API hooks, router, or storage.
 
 ## Structure and platform APIs
@@ -19,3 +19,15 @@
 - The local database owns server data; the sync service in `@mobile/sync` is the only code that writes synced tables, and the send queue is the only path that sends drafts and orders. Small UI state (selected customer, filters) lives in a Zustand store of its domain.
 - Isolate platform APIs: NetInfo belongs in the connectivity adapter, SecureStore and local authentication in the auth adapter, SQLite in `@mobile/core/local-db`.
 - Add `*.ios.tsx`, `*.android.tsx`, or `*.native.tsx` only for real platform differences; do not duplicate shared logic.
+
+## React Compiler
+
+- React Compiler is on for the app (`experiments.reactCompiler` in `apps/mobile/app.json`), and the mobile library tests run the same compiler output (`.babelrc.js` test env), so a test catches what the compiler changes.
+- Do not add `useMemo`, `useCallback`, or `memo` for speed in new code; the compiler memoizes components and hooks. Keep one only when a value must stay the same object for a reason other than speed.
+- A memo must use every input it depends on: the compiler drops a dependency that the memo body does not read (`void version` does not count). Read local data through `useLocalQuery` or `useLocalAsyncQuery` from `@mobile/core/local-db`, which re-read when one of their scopes changes.
+- Do not write a `try … finally` in a component or hook: the compiler skips such a function. End both branches with the same statement instead.
+- `'use no memo'` is allowed only with a comment saying why; today only `useStyles`, which writes the shared style cache on purpose.
+
+## Speed
+
+- Judge speed only in release mode: `--no-dev --minify` while developing and an EAS `preview` build before a merge, by the [speed checks](../../architecture/mobile/workflow/testing.md#speed-checks).

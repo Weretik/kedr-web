@@ -1,4 +1,9 @@
-export { useCategories, usePricedProduct, usePricedProducts } from './hooks/use-catalog';
+export {
+  useCategories,
+  useLineProducts,
+  usePricedProduct,
+  usePricedProducts,
+} from './hooks/use-catalog';
 export {
   useAllPhotosDownload,
   useEssentialPhotoDownload,

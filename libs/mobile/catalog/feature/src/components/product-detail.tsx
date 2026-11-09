@@ -5,14 +5,22 @@ import {
   formatStock,
   isOutOfStock,
   productImages,
+  type Category,
   type PricedProduct,
 } from '@mobile/catalog/model';
 import { ProductGallery, ZoomViewer } from '@mobile/catalog/ui';
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, Button, Card, StateView, StatusPill } from '@mobile/shared/ui';
+import {
+  AppText,
+  Button,
+  Card,
+  createStyles,
+  StateView,
+  StatusPill,
+  useStyles,
+} from '@mobile/shared/ui';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ProductDetailProps {
   counterpartyId: string | null;
@@ -27,6 +35,8 @@ export interface ProductDetailProps {
 const SIDE_BY_SIDE_MIN_WIDTH = 520;
 
 /** Large photos and scheme, name, code, category, stock and the customer's price (R-005–R-008). */
+const noCategories: Category[] = [];
+
 export function ProductDetail({
   counterpartyId,
   customerName,
@@ -34,12 +44,14 @@ export function ProductDetail({
   onAdd,
   productId,
 }: Readonly<ProductDetailProps>) {
+  const styles = useStyles(stylesSheet);
   const product = usePricedProduct(productId, counterpartyId);
-  const categories = useCategories();
+  const categories = useCategories() ?? noCategories;
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   // The column width, not the screen class, decides: a tablet column can be as narrow as a phone.
   const [width, setWidth] = useState(0);
 
+  if (product === undefined) return <StateView kind="loading" title="Читаємо товар" />;
   if (!product) {
     return (
       <StateView
@@ -115,6 +127,7 @@ export function ProductDetail({
 }
 
 function Line({ label, value }: Readonly<{ label: string; value: string }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.line}>
       <AppText style={styles.label} tone="secondary" variant="secondary">
@@ -127,7 +140,7 @@ function Line({ label, value }: Readonly<{ label: string; value: string }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.sm },
   content: { gap: theme.space.md, paddingBottom: theme.space.xxl },
   label: { width: 88 },

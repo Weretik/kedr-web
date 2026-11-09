@@ -1,6 +1,5 @@
-import { AppText, Avatar, Chip } from '@mobile/shared/ui';
+import { AppText, Avatar, Chip, createStyles, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface CustomerBarCustomer {
   name: string;
@@ -14,6 +13,7 @@ export interface CustomerBarProps {
 
 /** The chosen customer on top of every working screen, with «Змінити». */
 export function CustomerBar({ customer, onChange }: Readonly<CustomerBarProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.bar}>
       <Avatar name={customer?.name ?? '?'} size={40} />
@@ -32,7 +32,7 @@ export function CustomerBar({ customer, onChange }: Readonly<CustomerBarProps>) 
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   bar: {
     alignItems: 'center',
     backgroundColor: theme.colors.surface,

@@ -1,9 +1,8 @@
 import { canAdd, formatStock, isOutOfStock, type PricedProduct } from '@mobile/catalog/model';
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, IconButton, StatusPill } from '@mobile/shared/ui';
+import { AppText, createStyles, IconButton, StatusPill, useStyles } from '@mobile/shared/ui';
 import { memo } from 'react';
 import { Pressable, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { ProductImage } from './product-image';
 
@@ -25,6 +24,7 @@ export const ProductRow = memo(function ProductRow({
   product,
   selected = false,
 }: Readonly<ProductRowProps>) {
+  const styles = useStyles(stylesSheet);
   const outOfStock = isOutOfStock(product);
   const price =
     product.priceKopecks === null ? 'Ціну уточнюйте' : formatKopecks(product.priceKopecks);
@@ -78,7 +78,7 @@ export const ProductRow = memo(function ProductRow({
   );
 });
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   main: (pressed: boolean) => ({
     alignItems: 'center',
     flex: 1,

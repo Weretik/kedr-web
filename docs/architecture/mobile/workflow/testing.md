@@ -2,12 +2,12 @@
 
 ## Current test stack
 
-Mobile uses Expo SDK 58, React Native 0.88, Expo Router, Redux Toolkit/RTK Query, and Axios. Tests use Jest 30, `jest-expo` 58, and React Native Testing Library 14. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
+Mobile uses Expo SDK 58, React Native 0.88, Expo Router, Zustand, TanStack Query, Drizzle over `expo-sqlite`, and Axios. Tests use Jest 30, `jest-expo` 58, and React Native Testing Library 14. App and library configs are separate `jest.config.cjs` files; platform mocks live only at actual Expo, storage, network, and native UI boundaries.
 
 | Level               | Target                                       | What to check                                                    |
 | ------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
 | Unit                | corresponding `*:test`                       | pure functions, Zod validation, mappers, reducers                |
-| Focused integration | corresponding `*:test`                       | state, providers, RTK Query/Axios boundary, connectivity         |
+| Focused integration | corresponding `*:test`                       | state, providers, TanStack Query/Axios boundary, connectivity    |
 | Component           | `mobile:test`, domain `*:test`, `shell:test` | screens, accessible roles/names, and user actions                |
 | Integration         | corresponding `*:test`                       | Expo Router boundary, storage, connectivity, and native adapters |
 | Mobile E2E          | unavailable                                  | critical journey on a built app after a separate enabler         |
@@ -33,6 +33,15 @@ npx nx export mobile
 - Place route-file tests in `apps/mobile/src/__tests__`, and library tests beside the code outside `apps/mobile/src/app`.
 
 For new behavior, follow Red → Green → Refactor → Regression in the [testing rules](../../../standards/shared/testing-rules.md). Compilation/setup failure is not a valid Red.
+
+## Speed checks
+
+Speed is judged only in release mode. The development client and Expo Go run debug JavaScript with dev checks and are several times slower, so a slow screen there is not a finding and a fast one is not proof.
+
+- **Quick check while developing:** `npx expo start --dev-client --no-dev --minify` runs the same JavaScript as a release build in the installed development client.
+- **Check before a merge that touches lists, the local database, sync, theme or navigation:** an EAS `preview` build (`eas build --profile preview`, an installable APK) on a real Android phone and, for layout changes, a tablet.
+- Walk the same path every time and write the result in the PR: open the app cold; open the catalog; type a search; switch the customer; scroll the catalog and the customer list fast; change a quantity in a calculation of 20 lines; switch the theme; run «Оновити дані». Each step should answer within about 300 ms and never freeze the screen; a sync may take longer but the screens stay usable.
+- A step that is slow on the preview build is a bug with its own task, measured again after the fix on the same device.
 
 ## Mobile E2E enabler
 

@@ -1,6 +1,6 @@
 # Builds, distribution and updates
 
-Kedr Manager uses native modules (Unistyles with Nitro, SQLite, SecureStore, local authentication, image picker), so it does **not** run in Expo Go. Every device runs an EAS build: a development client for daily work, or an internal build for managers.
+Kedr Manager uses native modules (SQLite, SecureStore, local authentication, image picker) and the dev client, so it does **not** run in Expo Go. Every device runs an EAS build: a development client for daily work, or an internal build for managers.
 
 ## Identity
 

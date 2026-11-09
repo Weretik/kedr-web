@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 import { Icon } from '../text/icon';
 
@@ -26,6 +26,7 @@ export function ListRow({
   title,
   trailing,
 }: Readonly<ListRowProps>) {
+  const styles = useStyles(stylesSheet);
   const content = (
     <>
       {leading}
@@ -59,7 +60,7 @@ export function ListRow({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   row: (pressed: boolean) => ({
     alignItems: 'center',
     backgroundColor: theme.colors.surface,

@@ -6,10 +6,9 @@ import {
 } from '@mobile/calculation/ui';
 import { useSelectedCustomer } from '@mobile/customers/data-access';
 import { formatDate } from '@mobile/shared/model';
-import { AppText, Button, StateView } from '@mobile/shared/ui';
+import { AppText, Button, createStyles, StateView, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { CommentField } from './comment-field';
 import { ConfirmSend, SaveDraftForm } from './finish-step';
@@ -44,6 +43,7 @@ function CustomerCalculation({
   customerName,
   isOnline,
 }: Readonly<{ counterpartyId: string; customerName: string; isOnline: boolean | null }>) {
+  const styles = useStyles(stylesSheet);
   const controller = useCalculationController(counterpartyId, customerName);
   const { calculation, changedIds, entries, lines, totals } = controller;
   const [step, setStep] = useState<Step>('edit');
@@ -83,6 +83,7 @@ function CustomerCalculation({
           <Button label="Видалити чернетку" onPress={controller.deleteDraft} variant="text" />
         </View>
       ) : null}
+      {/* Lines keep their own quantity input state, so FlashList recycling would mix it up between rows. */}
       <FlatList
         contentContainerStyle={styles.lines}
         data={lines}
@@ -139,7 +140,7 @@ function CustomerCalculation({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   container: { flex: 1, gap: theme.space.md },
   draft: { alignItems: 'center', flexDirection: 'row', gap: theme.space.sm },
   draftTitle: { flex: 1 },

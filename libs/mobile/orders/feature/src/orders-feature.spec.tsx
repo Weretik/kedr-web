@@ -178,6 +178,7 @@ describe('OrderDetailScreen', () => {
   it('shows lines with adjustments and the total', async () => {
     await render(
       <OrderDetailScreen fetcher={jest.fn().mockResolvedValue(order)} isOnline orderId={42} />,
+      { wrapper: wrapperFor(seed()) },
     );
     await act(async () => undefined);
 
@@ -187,7 +188,9 @@ describe('OrderDetailScreen', () => {
   });
 
   it('says it opens with the network', async () => {
-    await render(<OrderDetailScreen isOnline={false} orderId={42} />);
+    await render(<OrderDetailScreen isOnline={false} orderId={42} />, {
+      wrapper: wrapperFor(seed()),
+    });
     expect(screen.getByText('Замовлення відкриється, коли з’явиться мережа.')).toBeTruthy();
   });
 });

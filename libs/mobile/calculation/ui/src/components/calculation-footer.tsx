@@ -1,7 +1,6 @@
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, Button } from '@mobile/shared/ui';
+import { AppText, Button, createStyles, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import type { CalculationTotals } from '@mobile/calculation/model';
 
@@ -21,6 +20,7 @@ export function CalculationFooter({
   onSend,
   totals,
 }: Readonly<CalculationFooterProps>) {
+  const styles = useStyles(stylesSheet);
   const disabled = !totals.isSendable;
   return (
     <View style={styles.footer}>
@@ -57,7 +57,7 @@ export function CalculationFooter({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   actions: {
     flexDirection: 'row',
     flexWrap: 'wrap',
