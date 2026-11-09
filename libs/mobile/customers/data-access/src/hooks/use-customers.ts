@@ -39,8 +39,10 @@ function readDetailsShared(
 export function useCustomers(): Customer[] {
   const db = useLocalDatabase();
   const version = useLocalDataVersion();
-  // `version` re-runs the read after a sync.
-  return useMemo(() => readCustomers(db), [db, version]);
+  return useMemo(() => {
+    void version; // A new version re-runs the read after a sync.
+    return readCustomers(db);
+  }, [db, version]);
 }
 
 export function useCustomerDetails(counterpartyId: string | null): CustomerDetails | null {
