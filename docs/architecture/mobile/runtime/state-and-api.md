@@ -20,7 +20,7 @@ Screens never query the database directly; domain `data-access` hooks do ([ADR-0
 
 - `@mobile/shared/api-client` owns one Axios instance (`apiClient`), the bearer and refresh interceptor (`configureMobileAuth`) and error normalization (`toApiError`).
 - Domain `data-access` calls `apiClient`, validates responses with zod and maps DTOs to Mobile models; feature and UI never receive DTOs. Generated request/response types from `@shared/api-contracts` may be used inside `data-access`.
-- Network writes go through the send queue (`calculation/data-access`); the few online-only calls (profile, order and draft detail) live in their domain's `data-access`.
+- Network writes go through the send queue (`calculation/data-access`); the few online-only calls (profile, order and draft detail) live in their domain's `data-access`. Online-only reads use TanStack Query `useQuery` with `enabled` tied to the network state and `staleTime: 0`, so a screen shows the cached result at once and refreshes it each time it opens; a hand-written loading/caching hook is not allowed.
 - Public `ApiError` and error codes stay aligned with `@admin/shared/api-client`; shared backend error shapes are in the [Admin and Mobile API architecture](../../api/README.md).
 
 `EXPO_PUBLIC_API_BASE_URL` contains only a public API base address. Do not pass tokens, passwords, or other secrets through Expo public environment variables.

@@ -1,3 +1,4 @@
+import { queryWrapper } from '@mobile/core/local-db/testing';
 import { act, renderHook } from '@testing-library/react-native';
 
 import { useOrderDetail } from './hooks/use-order-detail';
@@ -19,7 +20,9 @@ const order: OrderDetail = {
 describe('useOrderDetail', () => {
   it('reads the order online', async () => {
     const fetcher = jest.fn().mockResolvedValue(order);
-    const { result } = await renderHook(() => useOrderDetail(42, true, fetcher));
+    const { result } = await renderHook(() => useOrderDetail(42, true, fetcher), {
+      wrapper: queryWrapper(),
+    });
     await act(async () => undefined);
 
     expect(fetcher).toHaveBeenCalledWith(42);
@@ -28,7 +31,9 @@ describe('useOrderDetail', () => {
 
   it('says the order opens with the network', async () => {
     const fetcher = jest.fn();
-    const { result } = await renderHook(() => useOrderDetail(42, false, fetcher));
+    const { result } = await renderHook(() => useOrderDetail(42, false, fetcher), {
+      wrapper: queryWrapper(),
+    });
 
     expect(fetcher).not.toHaveBeenCalled();
     expect(result.current).toEqual({ kind: 'offline' });
@@ -36,7 +41,9 @@ describe('useOrderDetail', () => {
 
   it('reports a failed read', async () => {
     const fetcher = jest.fn().mockRejectedValue(new Error('404'));
-    const { result } = await renderHook(() => useOrderDetail(42, true, fetcher));
+    const { result } = await renderHook(() => useOrderDetail(42, true, fetcher), {
+      wrapper: queryWrapper(),
+    });
     await act(async () => undefined);
 
     expect(result.current).toEqual({ kind: 'failed' });
