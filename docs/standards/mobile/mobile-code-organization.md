@@ -27,3 +27,7 @@
 - A memo must use every input it depends on: the compiler drops a dependency that the memo body does not read (`void version` does not count). Read local data through `useLocalQuery` or `useLocalAsyncQuery` from `@mobile/core/local-db`, which re-read when one of their scopes changes.
 - Do not write a `try … finally` in a component or hook: the compiler skips such a function. End both branches with the same statement instead.
 - `'use no memo'` is allowed only with a comment saying why; today only `useStyles`, which writes the shared style cache on purpose.
+
+## Speed
+
+- Judge speed only in release mode: `--no-dev --minify` while developing and an EAS `preview` build before a merge, by the [speed checks](../../architecture/mobile/workflow/testing.md#speed-checks).

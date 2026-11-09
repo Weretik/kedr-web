@@ -34,6 +34,15 @@ npx nx export mobile
 
 For new behavior, follow Red → Green → Refactor → Regression in the [testing rules](../../../standards/shared/testing-rules.md). Compilation/setup failure is not a valid Red.
 
+## Speed checks
+
+Speed is judged only in release mode. The development client and Expo Go run debug JavaScript with dev checks and are several times slower, so a slow screen there is not a finding and a fast one is not proof.
+
+- **Quick check while developing:** `npx expo start --dev-client --no-dev --minify` runs the same JavaScript as a release build in the installed development client.
+- **Check before a merge that touches lists, the local database, sync, theme or navigation:** an EAS `preview` build (`eas build --profile preview`, an installable APK) on a real Android phone and, for layout changes, a tablet.
+- Walk the same path every time and write the result in the PR: open the app cold; open the catalog; type a search; switch the customer; scroll the catalog and the customer list fast; change a quantity in a calculation of 20 lines; switch the theme; run «Оновити дані». Each step should answer within about 300 ms and never freeze the screen; a sync may take longer but the screens stay usable.
+- A step that is slow on the preview build is a bug with its own task, measured again after the fix on the same device.
+
 ## Mobile E2E enabler
 
 Detox, Maestro, and Appium are not currently installed, and an Android SDK was not found in the current environment. When a feature needs mobile E2E, create one `EN-*` task to select and run a runner:
