@@ -37,19 +37,3 @@ if (typeof global.structuredClone === 'undefined') {
 
 // The native random source is not in Jest; Node's gives the queue real ids.
 jest.mock('expo-crypto', () => ({ randomUUID: () => jest.requireActual('crypto').randomUUID() }));
-
-// Reanimated does not start under Jest: a swipeable row renders its content and its actions side by side.
-jest.mock('react-native-gesture-handler/ReanimatedSwipeable', () => {
-  const { createElement } = jest.requireActual('react');
-  const { View } = jest.requireActual('react-native');
-  return {
-    __esModule: true,
-    default: ({
-      children,
-      renderRightActions,
-    }: {
-      children: unknown;
-      renderRightActions?: () => unknown;
-    }) => createElement(View, null, children, renderRightActions?.()),
-  };
-});
