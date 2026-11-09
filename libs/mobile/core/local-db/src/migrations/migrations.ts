@@ -95,4 +95,9 @@ export const migrations: readonly (readonly string[])[] = [
       order_number TEXT
     )`,
   ],
+  [
+    // A customer's catalog reads the prices of two or three price types; without this index SQLite scanned every
+    // price row. It holds the amount too, so the read never touches the table.
+    `CREATE INDEX product_prices_type_idx ON product_prices (price_type_id, product_id, amount_kopecks)`,
+  ],
 ];
