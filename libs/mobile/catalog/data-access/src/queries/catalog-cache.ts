@@ -8,28 +8,37 @@ import {
   type CatalogBase,
 } from './catalog-queries';
 
+export interface CatalogVersions {
+  catalogVersion: number;
+  /** Customer price rules live with the customers. */
+  customersVersion: number;
+}
+
 interface CacheEntry {
   base: CatalogBase;
+  catalogVersion: number;
+  customersVersion: number;
   db: LocalDatabase;
   /** Counterparty id ('' without a customer) → the priced list. */
   priced: Map<string, PricedProduct[]>;
-  version: number;
 }
 
 let entry: CacheEntry | null = null;
 const maxPricedLists = 4;
 
 /**
- * The priced catalog of the local data version, shared by every screen: the catalog, the calculation and the photo
- * download read it once per version and customer instead of on every mount.
+ * The priced catalog, shared by the catalog and the calculation: products are read once per catalog sync, prices
+ * once per customer until the catalog or the customers change.
  */
 export function cachedPricedProducts(
   db: LocalDatabase,
-  version: number,
+  { catalogVersion, customersVersion }: CatalogVersions,
   counterpartyId: string | null,
 ): PricedProduct[] {
-  if (entry?.db !== db || entry.version !== version) {
-    entry = { base: readCatalogBase(db), db, priced: new Map(), version };
+  if (entry?.db !== db || entry.catalogVersion !== catalogVersion) {
+    entry = { base: readCatalogBase(db), catalogVersion, customersVersion, db, priced: new Map() };
+  } else if (entry.customersVersion !== customersVersion) {
+    entry = { ...entry, customersVersion, priced: new Map() };
   }
   const key = counterpartyId ?? '';
   const known = entry.priced.get(key);

@@ -85,7 +85,7 @@ export function writeCalculation(db: LocalDatabase, calculation: StoredCalculati
         .run();
     }
   });
-  markLocalDataChanged();
+  markLocalDataChanged('calculation');
 }
 
 export function updateCalculation(

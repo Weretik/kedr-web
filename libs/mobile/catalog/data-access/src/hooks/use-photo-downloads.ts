@@ -15,9 +15,11 @@ function catalogVersion(db: LocalDatabase): string | null {
 
 function useCatalogVersion(): string | null {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- `version` re-runs the read after a sync.
-  return useMemo(() => catalogVersion(db), [db, version]);
+  const version = useLocalDataVersion('catalog');
+  return useMemo(() => {
+    void version; // re-runs the read after a catalog sync
+    return catalogVersion(db);
+  }, [db, version]);
 }
 
 /**

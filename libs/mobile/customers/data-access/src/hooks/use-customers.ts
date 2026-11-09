@@ -11,7 +11,8 @@ interface DetailsRead {
   counterpartyId: string;
   db: LocalDatabase;
   value: CustomerDetails | null;
-  version: number;
+  /** Customers and catalog versions: the details name price types and categories from the catalog. */
+  version: string;
 }
 
 // The shell, the tabs and the open screen all ask for the chosen customer at once; the last read is shared until
@@ -21,7 +22,7 @@ let lastRead: DetailsRead | null = null;
 function readDetailsShared(
   db: LocalDatabase,
   counterpartyId: string,
-  version: number,
+  version: string,
 ): CustomerDetails | null {
   if (
     lastRead?.db === db &&
@@ -38,7 +39,7 @@ function readDetailsShared(
 /** All synced customers; re-read after every sync. */
 export function useCustomers(): Customer[] {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
+  const version = useLocalDataVersion('customers');
   return useMemo(() => {
     void version; // A new version re-runs the read after a sync.
     return readCustomers(db);
@@ -47,7 +48,7 @@ export function useCustomers(): Customer[] {
 
 export function useCustomerDetails(counterpartyId: string | null): CustomerDetails | null {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
+  const version = `${useLocalDataVersion('customers')}:${useLocalDataVersion('catalog')}`;
   return useMemo(
     () => (counterpartyId ? readDetailsShared(db, counterpartyId, version) : null),
     [db, counterpartyId, version],

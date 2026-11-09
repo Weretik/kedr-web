@@ -91,7 +91,7 @@ export function replaceCatalog(
     );
     saveSyncState(tx, 'catalog', etag, now);
   });
-  markLocalDataChanged();
+  markLocalDataChanged('catalog');
 }
 
 /** Replaces the customers and their price rules in one transaction. */
@@ -133,7 +133,7 @@ export function replaceCustomers(
     );
     saveSyncState(tx, 'customers', etag, now);
   });
-  markLocalDataChanged();
+  markLocalDataChanged('customers');
 }
 
 function saveSyncState(tx: Transaction, resource: SyncResource, etag: string, now: number): void {

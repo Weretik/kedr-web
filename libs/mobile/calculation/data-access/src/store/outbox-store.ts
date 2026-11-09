@@ -29,10 +29,10 @@ export function readOutbox(db: LocalDatabase): OutboxEntry[] {
 export function saveEntry(db: LocalDatabase, entry: OutboxEntry): void {
   const row = { ...entry, payload: entry.payload as unknown };
   db.insert(outbox).values(row).onConflictDoUpdate({ set: row, target: outbox.id }).run();
-  markLocalDataChanged();
+  markLocalDataChanged('calculation');
 }
 
 export function deleteEntry(db: LocalDatabase, id: string): void {
   db.delete(outbox).where(eq(outbox.id, id)).run();
-  markLocalDataChanged();
+  markLocalDataChanged('calculation');
 }

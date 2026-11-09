@@ -8,7 +8,7 @@ import type { Category, PricedProduct } from '@mobile/catalog/model';
 
 export function useCategories(): Category[] {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
+  const version = useLocalDataVersion('catalog');
   return useMemo(() => {
     void version; // re-runs the read after a sync
     return readCategories(db);
@@ -18,10 +18,11 @@ export function useCategories(): Category[] {
 /** Every product with the customer's price in name order; prices stay null without a customer. */
 export function usePricedProducts(counterpartyId: string | null): PricedProduct[] {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
+  const catalogVersion = useLocalDataVersion('catalog');
+  const customersVersion = useLocalDataVersion('customers');
   return useMemo(
-    () => cachedPricedProducts(db, version, counterpartyId),
-    [db, counterpartyId, version],
+    () => cachedPricedProducts(db, { catalogVersion, customersVersion }, counterpartyId),
+    [db, counterpartyId, catalogVersion, customersVersion],
   );
 }
 
@@ -30,7 +31,7 @@ export function usePricedProduct(
   counterpartyId: string | null,
 ): PricedProduct | null {
   const db = useLocalDatabase();
-  const version = useLocalDataVersion();
+  const version = `${useLocalDataVersion('catalog')}:${useLocalDataVersion('customers')}`;
   return useMemo(() => {
     void version; // re-runs the read after a sync
     return readPricedProduct(
