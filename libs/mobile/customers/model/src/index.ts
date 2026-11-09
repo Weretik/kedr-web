@@ -12,6 +12,7 @@ export { formatDate, formatHryvnias, formatKopecks } from '@mobile/shared/model'
 export {
   compareNames,
   groupByLetter,
+  sortCustomersByName,
   matchesCustomer,
   normalizeText,
   searchCustomers,

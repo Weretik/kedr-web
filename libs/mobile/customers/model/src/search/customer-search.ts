@@ -1,3 +1,5 @@
+import { compareText, sortByText } from '@mobile/shared/model';
+
 import type { Customer } from '../entities/customer';
 
 const quotes = /[«»"'“”„’`]/g;
@@ -29,15 +31,18 @@ export function matchesCustomer(customer: Customer, query: string): boolean {
 /** Customers that fit the query; names that start with it come first, then the rest, each in A–Я order. */
 export function searchCustomers(customers: readonly Customer[], query: string): Customer[] {
   const text = normalizeText(query);
-  const found = customers.filter((customer) => matchesCustomer(customer, query));
-  const startsWith = (customer: Customer) => normalizeText(customer.name).startsWith(text);
-  return found.sort(
-    (a, b) => Number(startsWith(b)) - Number(startsWith(a)) || compareNames(a.name, b.name),
+  // The key puts names that start with the text first ("0"), then the rest ("1"), each in A–Я order.
+  return sortByText(
+    customers.filter((customer) => matchesCustomer(customer, query)),
+    (customer) => {
+      const name = normalizeText(customer.name);
+      return `${name.startsWith(text) ? '0' : '1'}${name}`;
+    },
   );
 }
 
 export function compareNames(a: string, b: string): number {
-  return normalizeText(a).localeCompare(normalizeText(b), 'uk');
+  return compareText(normalizeText(a), normalizeText(b));
 }
 
 export interface CustomerSection {
@@ -51,12 +56,19 @@ export interface CustomerSection {
  */
 export function groupByLetter(customers: readonly Customer[]): CustomerSection[] {
   const sections = new Map<string, Customer[]>();
-  for (const customer of [...customers].sort((a, b) => compareNames(a.name, b.name))) {
+  for (const customer of sortCustomersByName(customers)) {
     const first = normalizeText(customer.name).charAt(0).toLocaleUpperCase('uk');
     const letter = /\p{L}/u.test(first) ? first : '#';
-    sections.set(letter, [...(sections.get(letter) ?? []), customer]);
+    const section = sections.get(letter);
+    if (section) section.push(customer);
+    else sections.set(letter, [customer]);
   }
   return [...sections.entries()]
-    .sort(([a], [b]) => (a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'uk')))
+    .sort(([a], [b]) => (a === '#' ? 1 : b === '#' ? -1 : compareText(a, b)))
     .map(([letter, data]) => ({ data, letter }));
+}
+
+/** Customers in A–Я order of their names without quotes. */
+export function sortCustomersByName(customers: readonly Customer[]): Customer[] {
+  return sortByText(customers, (customer) => normalizeText(customer.name));
 }

@@ -12,6 +12,9 @@ export interface CustomerChoiceProps {
   onOpenCard: (counterpartyId: string) => void;
 }
 
+/** Tablet: the card opens next to the list, so picking needs nothing more (and stays one stable callback). */
+const keepCardInPlace = () => undefined;
+
 /** Phone shows the list and opens the card; tablet keeps the list and the card side by side (R-003). */
 export function CustomerChoice({ isOnline, onOpenCard }: Readonly<CustomerChoiceProps>) {
   const isPhone = useBreakpoint() === 'phone';
@@ -22,7 +25,7 @@ export function CustomerChoice({ isOnline, onOpenCard }: Readonly<CustomerChoice
   return (
     <View style={styles.split}>
       <View style={styles.list}>
-        <CustomerList onPicked={() => undefined} />
+        <CustomerList onPicked={keepCardInPlace} />
       </View>
       <View style={styles.card}>
         {selectedId ? (

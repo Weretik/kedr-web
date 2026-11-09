@@ -1,3 +1,5 @@
+import { compareText } from '@mobile/shared/model';
+
 import type { Category } from '../entities/product';
 import type { CategoryParents } from '../pricing/customer-price';
 
@@ -6,7 +8,7 @@ export function parentsOf(categories: readonly Category[]): CategoryParents {
 }
 
 const byOrder = (a: Category, b: Category) =>
-  a.sortOrder - b.sortOrder || a.name.localeCompare(b.name, 'uk');
+  a.sortOrder - b.sortOrder || compareText(a.name, b.name);
 
 /** Direct children of a category, or the roots for null, in catalog order. */
 export function childrenOf(categories: readonly Category[], parentId: number | null): Category[] {

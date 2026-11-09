@@ -1,3 +1,5 @@
+import { sortByText } from '@mobile/shared/model';
+
 import { isOutOfStock, type PricedProduct } from '../entities/product';
 
 export type ProductSort = 'name' | 'price-asc' | 'price-desc';
@@ -42,21 +44,19 @@ export function filterProducts<T extends PricedProduct>(
   );
 }
 
-const byName = (a: PricedProduct, b: PricedProduct) =>
-  normalizeQuery(a.name).localeCompare(normalizeQuery(b.name), 'uk');
-
 /** By name, or by the customer's price with unpriced products last. */
 export function sortProducts<T extends PricedProduct>(
   products: readonly T[],
   sort: ProductSort,
 ): T[] {
-  const sorted = [...products];
-  if (sort === 'name') return sorted.sort(byName);
+  // Names are normalized once and compared with one collator; the price order is stable, so ties keep A–Я.
+  const byName = sortByText(products, (product) => normalizeQuery(product.name));
+  if (sort === 'name') return byName;
   const direction = sort === 'price-asc' ? 1 : -1;
-  return sorted.sort((a, b) => {
+  return byName.sort((a, b) => {
     if (a.priceKopecks === null || b.priceKopecks === null) {
-      return Number(a.priceKopecks === null) - Number(b.priceKopecks === null) || byName(a, b);
+      return Number(a.priceKopecks === null) - Number(b.priceKopecks === null);
     }
-    return (a.priceKopecks - b.priceKopecks) * direction || byName(a, b);
+    return (a.priceKopecks - b.priceKopecks) * direction;
   });
 }
