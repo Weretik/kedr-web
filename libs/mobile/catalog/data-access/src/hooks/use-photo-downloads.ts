@@ -1,7 +1,7 @@
 import { allImageUrls, essentialImageUrls } from '@mobile/catalog/model';
-import { syncState, useLocalDatabase, useLocalDataVersion } from '@mobile/core/local-db';
+import { syncState, useLocalDatabase, useLocalQuery } from '@mobile/core/local-db';
 import { eq } from 'drizzle-orm';
-import { useEffect, useEffectEvent, useMemo } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { downloadImages, expoImageCache, type ImageCacheDriver } from '../media/image-cache';
 import { usePhotoDownloadStore } from '../media/photo-download-store';
@@ -14,12 +14,7 @@ function catalogVersion(db: LocalDatabase): string | null {
 }
 
 function useCatalogVersion(): string | null {
-  const db = useLocalDatabase();
-  const version = useLocalDataVersion('catalog');
-  return useMemo(() => {
-    void version; // re-runs the read after a catalog sync
-    return catalogVersion(db);
-  }, [db, version]);
+  return useLocalQuery(['catalog'], catalogVersion);
 }
 
 /**

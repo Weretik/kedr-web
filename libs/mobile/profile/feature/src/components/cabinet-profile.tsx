@@ -61,14 +61,14 @@ export function CabinetProfile({
     setBusy(true);
     setError(null);
     setNotice(null);
+    // No `finally`: React Compiler cannot compile it yet, and both branches end the same way.
     try {
       setNotice(await action());
       setEditing(null);
     } catch (failure) {
       setError(messageOf(failure));
-    } finally {
-      setBusy(false);
     }
+    setBusy(false);
   };
 
   const open = (next: Editing) => {

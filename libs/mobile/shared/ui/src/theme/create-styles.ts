@@ -25,6 +25,9 @@ export function createStyles<TStyles extends StyleEntries<TStyles>>(
 
 /** The sheet's styles for the current theme, width and insets; rebuilt only when one of them changes. */
 export function useStyles<TStyles>(sheet: AppStyleSheet<TStyles>): TStyles {
+  // The shared cache is written on purpose during render, so React Compiler leaves this one hook alone;
+  // the styles it returns change identity only with the key, which keeps the callers' memoization correct.
+  'use no memo';
   const { rt, theme } = useAppTheme();
   const { bottom, left, right, top } = rt.insets;
   const key = `${rt.themeName}|${rt.breakpoint}|${top}|${right}|${bottom}|${left}`;

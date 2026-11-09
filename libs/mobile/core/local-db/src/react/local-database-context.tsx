@@ -1,4 +1,4 @@
-import { createContext, use, useSyncExternalStore, type ReactNode } from 'react';
+import { createContext, use, useMemo, useSyncExternalStore, type ReactNode } from 'react';
 
 import {
   getLocalDataVersion,
@@ -32,4 +32,27 @@ export function useLocalDatabase(): LocalDatabase {
 export function useLocalDataVersion(scope: LocalDataScope): number {
   const read = () => getLocalDataVersion(scope);
   return useSyncExternalStore(subscribeLocalData, read, read);
+}
+
+/**
+ * Rows read from the device database for a screen. The read runs again only when one of its scopes changes or the
+ * read itself changes (React Compiler keeps an inline read stable until the values it uses change).
+ */
+export function useLocalQuery<T>(
+  scopes: readonly LocalDataScope[],
+  read: (database: LocalDatabase) => T,
+): T {
+  const database = useLocalDatabase();
+  const snapshot = () => scopes.map(getLocalDataVersion).join(':');
+  const version = useSyncExternalStore(subscribeLocalData, snapshot, snapshot);
+  return useMemo(() => readAt(version, database, read), [database, read, version]);
+}
+
+/** Takes the version as an input so the compiler keeps it as a dependency of the memo. */
+function readAt<T>(
+  _version: string,
+  database: LocalDatabase,
+  read: (database: LocalDatabase) => T,
+): T {
+  return read(database);
 }

@@ -1,4 +1,4 @@
-import { useLocalDatabase, useLocalDataVersion } from '@mobile/core/local-db';
+import { useLocalDatabase, useLocalDataVersion, useLocalQuery } from '@mobile/core/local-db';
 import { useMemo } from 'react';
 
 import { readCustomerDetails, readCustomers } from '../queries/customer-queries';
@@ -38,12 +38,7 @@ function readDetailsShared(
 
 /** All synced customers; re-read after every sync. */
 export function useCustomers(): Customer[] {
-  const db = useLocalDatabase();
-  const version = useLocalDataVersion('customers');
-  return useMemo(() => {
-    void version; // A new version re-runs the read after a sync.
-    return readCustomers(db);
-  }, [db, version]);
+  return useLocalQuery(['customers'], readCustomers);
 }
 
 export function useCustomerDetails(counterpartyId: string | null): CustomerDetails | null {

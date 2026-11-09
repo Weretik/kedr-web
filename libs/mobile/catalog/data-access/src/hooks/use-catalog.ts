@@ -1,4 +1,4 @@
-import { useLocalDatabase, useLocalDataVersion } from '@mobile/core/local-db';
+import { useLocalDatabase, useLocalDataVersion, useLocalQuery } from '@mobile/core/local-db';
 import { useMemo } from 'react';
 
 import { cachedPricedProducts } from '../queries/catalog-cache';
@@ -7,12 +7,7 @@ import { readCategories, readCustomerPricing, readPricedProduct } from '../queri
 import type { Category, PricedProduct } from '@mobile/catalog/model';
 
 export function useCategories(): Category[] {
-  const db = useLocalDatabase();
-  const version = useLocalDataVersion('catalog');
-  return useMemo(() => {
-    void version; // re-runs the read after a sync
-    return readCategories(db);
-  }, [db, version]);
+  return useLocalQuery(['catalog'], readCategories);
 }
 
 /** Every product with the customer's price in name order; prices stay null without a customer. */
@@ -30,14 +25,11 @@ export function usePricedProduct(
   productId: number,
   counterpartyId: string | null,
 ): PricedProduct | null {
-  const db = useLocalDatabase();
-  const version = `${useLocalDataVersion('catalog')}:${useLocalDataVersion('customers')}`;
-  return useMemo(() => {
-    void version; // re-runs the read after a sync
-    return readPricedProduct(
+  return useLocalQuery(['catalog', 'customers'], (db) =>
+    readPricedProduct(
       db,
       productId,
       counterpartyId ? readCustomerPricing(db, counterpartyId) : null,
-    );
-  }, [db, productId, counterpartyId, version]);
+    ),
+  );
 }

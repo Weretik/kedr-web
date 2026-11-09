@@ -29,13 +29,13 @@ export function LoginScreen() {
     setError(null);
     setSubmitting(true);
 
+    // No `finally`: React Compiler cannot compile it yet, and both branches end the same way.
     try {
       await login({ email: email.trim(), password });
     } catch (loginError) {
       setError(getLoginErrorMessage(loginError));
-    } finally {
-      setSubmitting(false);
     }
+    setSubmitting(false);
   };
 
   return (

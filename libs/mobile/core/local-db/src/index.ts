@@ -15,5 +15,6 @@ export {
   LocalDatabaseProvider,
   useLocalDatabase,
   useLocalDataVersion,
+  useLocalQuery,
 } from './react/local-database-context';
 export * from './schema';

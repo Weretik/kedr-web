@@ -19,3 +19,11 @@
 - The local database owns server data; the sync service in `@mobile/sync` is the only code that writes synced tables, and the send queue is the only path that sends drafts and orders. Small UI state (selected customer, filters) lives in a Zustand store of its domain.
 - Isolate platform APIs: NetInfo belongs in the connectivity adapter, SecureStore and local authentication in the auth adapter, SQLite in `@mobile/core/local-db`.
 - Add `*.ios.tsx`, `*.android.tsx`, or `*.native.tsx` only for real platform differences; do not duplicate shared logic.
+
+## React Compiler
+
+- React Compiler is on for the app (`experiments.reactCompiler` in `apps/mobile/app.json`), and the mobile library tests run the same compiler output (`.babelrc.js` test env), so a test catches what the compiler changes.
+- Do not add `useMemo`, `useCallback`, or `memo` for speed in new code; the compiler memoizes components and hooks. Keep one only when a value must stay the same object for a reason other than speed.
+- A memo must use every input it depends on: the compiler drops a dependency that the memo body does not read (`void version` does not count). Read local data through `useLocalQuery(scopes, read)` from `@mobile/core/local-db`, which re-reads when one of its scopes changes.
+- Do not write a `try … finally` in a component or hook: the compiler skips such a function. End both branches with the same statement instead.
+- `'use no memo'` is allowed only with a comment saying why; today only `useStyles`, which writes the shared style cache on purpose.
