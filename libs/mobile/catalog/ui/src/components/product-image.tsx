@@ -1,8 +1,7 @@
-import { AppText, Icon } from '@mobile/shared/ui';
+import { AppText, createStyles, Icon, useStyles } from '@mobile/shared/ui';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ProductImageProps {
   accessibilityLabel: string;
@@ -22,6 +21,7 @@ export function ProductImage({
   isOnline,
   url,
 }: Readonly<ProductImageProps>) {
+  const styles = useStyles(stylesSheet);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const failed = url === null || failedUrl === url;
 
@@ -56,7 +56,7 @@ export function ProductImage({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   frame: {
     backgroundColor: theme.colors.photoFrame,
     borderColor: theme.colors.outlineVariant,

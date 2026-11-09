@@ -1,6 +1,5 @@
 import { useAllPhotosDownload } from '@mobile/catalog/data-access';
-import { AppText, Button, Card } from '@mobile/shared/ui';
-import { StyleSheet } from 'react-native-unistyles';
+import { AppText, Button, Card, createStyles, useStyles } from '@mobile/shared/ui';
 
 export interface PhotoDownloadCardProps {
   isOnline: boolean | null;
@@ -12,6 +11,7 @@ export interface PhotoDownloadCardProps {
  * on Wi‑Fi without asking; this adds the rest.
  */
 export function PhotoDownloadCard({ isOnline, isUnmetered }: Readonly<PhotoDownloadCardProps>) {
+  const styles = useStyles(stylesSheet);
   const download = useAllPhotosDownload();
   const running = download.status === 'running';
 
@@ -47,6 +47,6 @@ export function PhotoDownloadCard({ isOnline, isUnmetered }: Readonly<PhotoDownl
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.sm },
 }));

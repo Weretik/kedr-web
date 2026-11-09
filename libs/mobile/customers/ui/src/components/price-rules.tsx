@@ -1,6 +1,5 @@
-import { AppText, Card } from '@mobile/shared/ui';
+import { AppText, Card, createStyles, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import type { CustomerPriceRule } from '@mobile/customers/model';
 
@@ -11,6 +10,7 @@ export interface PriceRulesProps {
 
 /** The customer's price type and the categories priced by another type, as in Admin. */
 export function PriceRules({ defaultPriceTypeName, rules }: Readonly<PriceRulesProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <Card style={styles.card}>
       <View style={styles.line}>
@@ -40,7 +40,7 @@ export function PriceRules({ defaultPriceTypeName, rules }: Readonly<PriceRulesP
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.sm },
   label: { flex: 1 },
   line: { alignItems: 'center', flexDirection: 'row', gap: theme.space.md },

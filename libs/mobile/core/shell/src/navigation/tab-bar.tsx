@@ -1,6 +1,5 @@
-import { AppText, Icon } from '@mobile/shared/ui';
+import { AppText, createStyles, Icon, useStyles } from '@mobile/shared/ui';
 import { Pressable, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { navItemAccessibilityLabel, navItemLabel, type WorkNavItem } from './work-nav-item';
 
@@ -11,6 +10,7 @@ export function TabBar({
   items,
   statusStrip,
 }: Readonly<{ items: readonly WorkNavItem[]; statusStrip?: ReactNode }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View>
       {statusStrip}
@@ -45,7 +45,7 @@ export function TabBar({
   );
 }
 
-const styles = StyleSheet.create((theme, rt) => ({
+const stylesSheet = createStyles((theme, rt) => ({
   bar: {
     backgroundColor: theme.colors.surface,
     borderTopColor: theme.colors.outlineVariant,

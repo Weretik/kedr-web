@@ -1,6 +1,6 @@
 # ADR-0006: Own UI components on Unistyles instead of React Native Paper
 
-**Status:** Accepted\
+**Status:** Accepted; styling replaced by [ADR-0007](0007-plain-react-native-styles.md) on 2026-11-09\
 **Date:** 2026-11-05
 
 ## Context

@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 import { Icon, type IconName } from '../text/icon';
 
@@ -13,6 +13,7 @@ export interface ChipProps {
 
 /** Filter and category chip; selected = ink fill with white text. */
 export function Chip({ icon, label, onPress, selected = false }: Readonly<ChipProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <Pressable
       accessibilityLabel={label}
@@ -30,7 +31,7 @@ export function Chip({ icon, label, onPress, selected = false }: Readonly<ChipPr
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   chip: (selected: boolean, pressed: boolean) => ({
     alignItems: 'center',
     backgroundColor: selected ? theme.colors.text : theme.colors.surface,

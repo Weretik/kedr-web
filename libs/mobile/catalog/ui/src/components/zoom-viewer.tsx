@@ -1,8 +1,7 @@
-import { AppText, IconButton } from '@mobile/shared/ui';
+import { AppText, createStyles, IconButton, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { FlatList, Modal, useWindowDimensions, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { ZoomableImage } from './zoomable-image';
 
@@ -36,6 +35,7 @@ function ViewerPages({
   initialIndex,
   onClose,
 }: Readonly<ZoomViewerProps & { initialIndex: number }>) {
+  const styles = useStyles(stylesSheet);
   const { height, width } = useWindowDimensions();
   const [index, setIndex] = useState(initialIndex);
   const [zoomed, setZoomed] = useState(false);
@@ -87,7 +87,7 @@ function ViewerPages({
   );
 }
 
-const styles = StyleSheet.create((theme, rt) => ({
+const stylesSheet = createStyles((theme, rt) => ({
   label: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radius.pill,

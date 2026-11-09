@@ -1,6 +1,7 @@
 import { ActivityIndicator, Pressable, View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { useAppTheme } from '../../theme/app-theme';
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 import { Icon, type IconName } from '../text/icon';
 import { toneColor, type Tone } from '../tone';
@@ -34,7 +35,8 @@ export function Button({
   onPress,
   variant = 'filled',
 }: Readonly<ButtonProps>) {
-  const { theme } = useUnistyles();
+  const styles = useStyles(stylesSheet);
+  const { theme } = useAppTheme();
   const inactive = disabled || loading;
   const tone: Tone = inactive && variant !== 'filled' ? 'disabled' : labelTone[variant];
 
@@ -62,7 +64,7 @@ export function Button({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   button: (variant: ButtonVariant, inactive: boolean, pressed: boolean) => ({
     alignItems: 'center',
     backgroundColor:

@@ -1,7 +1,6 @@
-import { StateView } from '@mobile/shared/ui';
+import { createStyles, StateView, useStyles } from '@mobile/shared/ui';
 import { oldestSyncedAt } from '@mobile/sync/model';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { syncStatusActions, useSyncStatus } from '../state/sync-status-store';
 
@@ -17,6 +16,7 @@ export interface SyncGateProps {
  * After that it never blocks: later syncs run in the background.
  */
 export function SyncGate({ children, isOnline }: Readonly<SyncGateProps>) {
+  const styles = useStyles(stylesSheet);
   const loaded = useSyncStatus((state) => state.loaded);
   const hasData = useSyncStatus((state) => oldestSyncedAt(state.syncedAt) !== null);
   const running = useSyncStatus((state) => state.running);
@@ -55,7 +55,7 @@ export function SyncGate({ children, isOnline }: Readonly<SyncGateProps>) {
   return <View style={styles.screen}>{state}</View>;
 }
 
-const styles = StyleSheet.create((theme, rt) => ({
+const stylesSheet = createStyles((theme, rt) => ({
   screen: {
     backgroundColor: theme.colors.background,
     flex: 1,

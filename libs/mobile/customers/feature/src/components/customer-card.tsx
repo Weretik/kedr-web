@@ -5,10 +5,18 @@ import {
 } from '@mobile/customers/data-access';
 import { formatDate } from '@mobile/customers/model';
 import { CustomerMoney, DraftRow, OrderRow, PriceRules } from '@mobile/customers/ui';
-import { AppText, Avatar, Card, SegmentedControl, StateView } from '@mobile/shared/ui';
+import {
+  AppText,
+  Avatar,
+  Card,
+  createStyles,
+  SegmentedControl,
+  StateView,
+  useAppTheme,
+  useStyles,
+} from '@mobile/shared/ui';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 export interface CustomerCardProps {
   counterpartyId: string;
@@ -29,6 +37,7 @@ const tabs = [
  * `counterpartyId` so another customer starts with its own cached lists.
  */
 export function CustomerCard({ counterpartyId, fetcher, isOnline }: Readonly<CustomerCardProps>) {
+  const styles = useStyles(stylesSheet);
   const customer = useCustomerDetails(counterpartyId);
 
   if (!customer) {
@@ -69,6 +78,7 @@ export function CustomerCard({ counterpartyId, fetcher, isOnline }: Readonly<Cus
 }
 
 function Contact({ label, value }: Readonly<{ label: string; value: string }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.contact}>
       <AppText style={styles.contactLabel} tone="secondary" variant="secondary">
@@ -86,7 +96,8 @@ function CustomerActivitySection({
   fetcher,
   isOnline,
 }: Readonly<CustomerCardProps>) {
-  const { theme } = useUnistyles();
+  const styles = useStyles(stylesSheet);
+  const { theme } = useAppTheme();
   const { activity, failed, loading } = useCustomerActivity(counterpartyId, isOnline, fetcher);
   const [tab, setTab] = useState<ActivityTab>('orders');
 
@@ -127,6 +138,7 @@ function CustomerActivitySection({
 }
 
 function Empty({ text }: Readonly<{ text: string }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <AppText align="center" style={styles.empty} tone="secondary" variant="secondary">
       {text}
@@ -146,7 +158,7 @@ function activityNote(fetchedAt: number | null, isOnline: boolean | null, failed
   return null;
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   activity: { gap: theme.space.sm },
   contact: { flexDirection: 'row', gap: theme.space.md },
   contactLabel: { width: 72 },

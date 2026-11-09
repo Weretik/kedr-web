@@ -21,7 +21,7 @@ This document records the current workspace; it does not declare violations acce
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Site            | Next.js 16 App Router, React 19, shadcn/ui (Radix), Tailwind CSS v4, server `fetch` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
-| Mobile          | Expo 58, React Native 0.88, Expo Router, Unistyles, Zustand, Axios                  |
+| Mobile          | Expo 58, React Native 0.88, Expo Router, own theme context, Zustand, Axios          |
 | Contracts       | OpenAPI snapshot → `openapi-typescript` → `@shared/api-contracts`                   |
 
 ## Applications and library groups

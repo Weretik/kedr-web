@@ -1,7 +1,6 @@
-import { AppText, Button, Card } from '@mobile/shared/ui';
+import { AppText, Button, Card, createStyles, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface SignOutSectionProps {
   /** Orders and drafts still waiting to be sent; signing out deletes them with the other device data. */
@@ -11,6 +10,7 @@ export interface SignOutSectionProps {
 
 /** «Вийти»; with a non-empty queue it first warns that the queued work will be lost (SC-023). */
 export function SignOutSection({ onSignOut, queuedCount }: Readonly<SignOutSectionProps>) {
+  const styles = useStyles(stylesSheet);
   const [confirming, setConfirming] = useState(false);
 
   if (!confirming) {
@@ -40,7 +40,7 @@ export function SignOutSection({ onSignOut, queuedCount }: Readonly<SignOutSecti
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   actions: {
     flexDirection: 'row',
     flexWrap: 'wrap',

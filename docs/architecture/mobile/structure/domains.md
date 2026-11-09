@@ -40,7 +40,7 @@ Create new libraries only when their responsibility appears; do not create them 
 
 `core` does not contain products, orders, or other domain logic.
 
-`shared/ui` contains the «Офіс» tokens, the Unistyles themes and breakpoints, and reusable presentational components; it does not own stores, the work area, or global providers.
+`shared/ui` contains the «Офіс» tokens, the themes, the theme context, `createStyles` and breakpoints, and reusable presentational components; it does not own stores, the work area, or global providers.
 
 ## Business domains
 

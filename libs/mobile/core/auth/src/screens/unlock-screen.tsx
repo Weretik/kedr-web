@@ -1,7 +1,6 @@
-import { AppText, Avatar, BrandMark, Button } from '@mobile/shared/ui';
+import { AppText, Avatar, BrandMark, Button, createStyles, useStyles } from '@mobile/shared/ui';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { AuthFrame } from '../components/auth-frame';
 import { logout, unlockSession } from '../session/mobile-auth';
@@ -10,6 +9,7 @@ import type { SessionUser } from '../session/session-user';
 
 /** Saved session behind quick unlock; the manager can also sign in with the password. */
 export function UnlockScreen({ user }: Readonly<{ user: SessionUser }>) {
+  const styles = useStyles(stylesSheet);
   const [failed, setFailed] = useState(false);
 
   const unlock = async () => setFailed(!(await unlockSession()));
@@ -48,7 +48,7 @@ export function UnlockScreen({ user }: Readonly<{ user: SessionUser }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   user: { alignItems: 'center', flexDirection: 'row', gap: theme.space.md },
   userText: { flex: 1, gap: 2 },
 }));

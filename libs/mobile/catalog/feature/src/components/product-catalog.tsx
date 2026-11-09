@@ -1,8 +1,7 @@
 import { useSelectedCustomer } from '@mobile/customers/data-access';
-import { Button, StateView, useBreakpoint } from '@mobile/shared/ui';
+import { Button, createStyles, StateView, useBreakpoint, useStyles } from '@mobile/shared/ui';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { ProductDetail } from './product-detail';
 import { ProductList } from './product-list';
@@ -29,6 +28,7 @@ export function ProductCatalog({
   onOpenProduct,
   sidePanel,
 }: Readonly<ProductCatalogProps>) {
+  const styles = useStyles(stylesSheet);
   const breakpoint = useBreakpoint();
   const isPhone = breakpoint === 'phone';
   const showPanel = breakpoint === 'wide' && sidePanel !== undefined;
@@ -134,7 +134,7 @@ export function ProductScreen({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   back: { alignSelf: 'flex-start' },
   detail: { flex: 3 },
   list: { flex: 2, maxWidth: 480 },

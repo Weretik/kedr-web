@@ -1,7 +1,6 @@
-import { AppText } from '@mobile/shared/ui';
+import { AppText, createStyles, useStyles } from '@mobile/shared/ui';
 import { type ReactNode } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface WorkScreenProps {
   children: ReactNode;
@@ -15,6 +14,7 @@ export interface WorkScreenProps {
  * phone tab bar the bottom one, so a tablet in landscape pads the right side and the bottom here (R-017).
  */
 export function WorkScreen({ children, headerRight, title }: Readonly<WorkScreenProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.screen}>
       {title ? (
@@ -30,7 +30,7 @@ export function WorkScreen({ children, headerRight, title }: Readonly<WorkScreen
   );
 }
 
-const styles = StyleSheet.create((theme, rt) => ({
+const stylesSheet = createStyles((theme, rt) => ({
   body: { flex: 1, gap: theme.space.md },
   header: { alignItems: 'center', flexDirection: 'row', gap: theme.space.md, minHeight: 48 },
   screen: {

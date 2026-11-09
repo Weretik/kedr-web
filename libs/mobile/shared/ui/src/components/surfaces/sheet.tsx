@@ -6,8 +6,9 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { useAppTheme } from '../../theme/app-theme';
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 
 export interface SheetProps {
@@ -23,8 +24,9 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => (
 
 /** The one bottom sheet of the app; sized by its content. Needs `SheetHost` in the providers. */
 export function Sheet({ children, onClose, open, title }: Readonly<SheetProps>) {
+  const styles = useStyles(stylesSheet);
   const ref = useRef<BottomSheetModal>(null);
-  const { theme } = useUnistyles();
+  const { theme } = useAppTheme();
 
   useEffect(() => {
     if (open) ref.current?.present();
@@ -54,7 +56,7 @@ export function Sheet({ children, onClose, open, title }: Readonly<SheetProps>) 
   );
 }
 
-const styles = StyleSheet.create((theme, rt) => ({
+const stylesSheet = createStyles((theme, rt) => ({
   content: {
     gap: theme.space.md,
     paddingBottom: rt.insets.bottom + theme.space.lg,

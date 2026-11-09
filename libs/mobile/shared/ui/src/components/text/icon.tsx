@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { type ComponentProps } from 'react';
-import { useUnistyles } from 'react-native-unistyles';
 
+import { useAppTheme } from '../../theme/app-theme';
 import { toneColor, type Tone } from '../tone';
 
 export type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -14,7 +14,7 @@ export interface IconProps {
 
 /** Decorative icon; the pressable around it carries the accessible label. */
 export function Icon({ name, size = 22, tone = 'default' }: Readonly<IconProps>) {
-  const { theme } = useUnistyles();
+  const { theme } = useAppTheme();
 
   return (
     <MaterialCommunityIcons

@@ -6,8 +6,9 @@ import {
   type TextInputInstance,
   type TextInputProps,
 } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { useAppTheme } from '../../theme/app-theme';
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 import { Icon, type IconName } from '../text/icon';
 
@@ -30,7 +31,8 @@ export function TextField({
   secret = false,
   ...props
 }: Readonly<TextFieldProps>) {
-  const { theme } = useUnistyles();
+  const styles = useStyles(stylesSheet);
+  const { theme } = useAppTheme();
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const hasError = Boolean(error);
@@ -82,7 +84,7 @@ export function TextField({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   action: {
     alignItems: 'center',
     height: theme.sizes.touch,

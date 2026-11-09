@@ -1,7 +1,6 @@
-import { AppText, Icon } from '@mobile/shared/ui';
+import { AppText, createStyles, Icon, useStyles } from '@mobile/shared/ui';
 import { isStale, oldestSyncedAt } from '@mobile/sync/model';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { formatSyncTime } from './format-sync-time';
 import { useMinuteClock } from '../hooks/use-minute-clock';
@@ -20,6 +19,7 @@ export interface SyncStatusStripProps {
  * Normal offline work is not an error, so the strip is neutral; it shows nothing when data is fresh.
  */
 export function SyncStatusStrip({ isOnline, layout, now }: Readonly<SyncStatusStripProps>) {
+  const styles = useStyles(stylesSheet);
   const clock = useMinuteClock();
   const at = now ?? clock;
   const syncedAt = useSyncStatus((state) => oldestSyncedAt(state.syncedAt));
@@ -53,7 +53,7 @@ export function SyncStatusStrip({ isOnline, layout, now }: Readonly<SyncStatusSt
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   strip: (layout: 'bar' | 'rail') =>
     layout === 'bar'
       ? {

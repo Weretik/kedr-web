@@ -1,7 +1,6 @@
-import { AppText, Button, Card } from '@mobile/shared/ui';
+import { AppText, Button, Card, createStyles, useStyles } from '@mobile/shared/ui';
 import { oldestSyncedAt, type SyncFailureReason } from '@mobile/sync/model';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { formatSyncTime } from './format-sync-time';
 import { useMinuteClock } from '../hooks/use-minute-clock';
@@ -22,6 +21,7 @@ const failureTexts: Record<SyncFailureReason, string> = {
 
 /** When the catalog and customers were last updated and «Оновити дані зараз» (R-014, R-016). */
 export function SyncInfoCard({ isOnline, now }: Readonly<SyncInfoCardProps>) {
+  const styles = useStyles(stylesSheet);
   const clock = useMinuteClock();
   const syncedAt = useSyncStatus((state) => oldestSyncedAt(state.syncedAt));
   const running = useSyncStatus((state) => state.running);
@@ -53,7 +53,7 @@ export function SyncInfoCard({ isOnline, now }: Readonly<SyncInfoCardProps>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.md },
   text: { gap: 2 },
 }));

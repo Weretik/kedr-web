@@ -6,10 +6,9 @@ import {
   type CustomerActivityFetcher,
 } from '@mobile/customers/data-access';
 import { DraftRow, OrderRow } from '@mobile/customers/ui';
-import { AppText, SegmentedControl } from '@mobile/shared/ui';
+import { AppText, createStyles, SegmentedControl, useAppTheme, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { useOpenSavedWork } from '../hooks/use-open-saved-work';
 
@@ -33,6 +32,7 @@ const tabs = [
  * and a returned order open in the calculation (R-010–R-013).
  */
 export function OrdersScreen(props: Readonly<OrdersScreenProps>) {
+  const styles = useStyles(stylesSheet);
   const customer = useSelectedCustomer();
   const entries = useOutbox();
   if (!customer) return null;
@@ -97,7 +97,8 @@ function ActivityLists({
   onOpenCalculation,
   onOpenOrder,
 }: Readonly<OrdersScreenProps & { counterpartyId: string }>) {
-  const { theme } = useUnistyles();
+  const styles = useStyles(stylesSheet);
+  const { theme } = useAppTheme();
   const { activity, failed, loading } = useCustomerActivity(counterpartyId, isOnline, fetcher);
   const { notice, openDraft, opening } = useOpenSavedWork(
     counterpartyId,
@@ -156,6 +157,7 @@ function ActivityLists({
 }
 
 function Empty({ text }: Readonly<{ text: string }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <AppText align="center" style={styles.empty} tone="secondary" variant="secondary">
       {text}
@@ -163,7 +165,7 @@ function Empty({ text }: Readonly<{ text: string }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   content: { gap: theme.space.lg, paddingBottom: theme.space.xxl },
   empty: { paddingVertical: theme.space.lg },
   section: { gap: theme.space.sm },

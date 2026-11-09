@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { Icon, type IconName } from '../text/icon';
 
 import type { Tone } from '../tone';
@@ -21,6 +21,7 @@ export function IconButton({
   onPress,
   variant = 'plain',
 }: Readonly<IconButtonProps>) {
+  const styles = useStyles(stylesSheet);
   const tone: Tone = disabled ? 'disabled' : variant === 'filled' ? 'onAction' : 'default';
 
   return (
@@ -38,7 +39,7 @@ export function IconButton({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   button: (variant: IconButtonProps['variant'], disabled: boolean, pressed: boolean) => ({
     alignItems: 'center',
     backgroundColor:

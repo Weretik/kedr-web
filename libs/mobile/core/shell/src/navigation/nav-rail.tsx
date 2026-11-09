@@ -1,6 +1,5 @@
-import { AppText, Avatar, BrandMark, Icon } from '@mobile/shared/ui';
+import { AppText, Avatar, BrandMark, createStyles, Icon, useStyles } from '@mobile/shared/ui';
 import { Pressable, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { navItemAccessibilityLabel, navItemLabel, type WorkNavItem } from './work-nav-item';
 
@@ -17,6 +16,7 @@ export function NavRail({
   items,
   statusStrip,
 }: Readonly<{ account?: RailAccount; items: readonly WorkNavItem[]; statusStrip?: ReactNode }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.rail} testID="work-nav-rail">
       <BrandMark />
@@ -54,7 +54,7 @@ export function NavRail({
   );
 }
 
-const styles = StyleSheet.create((theme, rt) => ({
+const stylesSheet = createStyles((theme, rt) => ({
   item: (focused: boolean) => ({
     alignItems: 'center',
     backgroundColor: focused ? theme.colors.accentContainer : 'transparent',

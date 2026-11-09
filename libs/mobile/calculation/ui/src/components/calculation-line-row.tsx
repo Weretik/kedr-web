@@ -3,14 +3,15 @@ import { formatKopecks } from '@mobile/shared/model';
 import {
   AppText,
   Card,
+  createStyles,
   IconButton,
   QuantityStepper,
   StatusPill,
   TextField,
+  useStyles,
 } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface CalculationLineRowProps {
   line: PricedLine;
@@ -34,6 +35,7 @@ export function CalculationLineRow({
   onChangeQuantity,
   onRemove,
 }: Readonly<CalculationLineRowProps>) {
+  const styles = useStyles(stylesSheet);
   const [text, setText] = useState(() => fieldText(line.adjustmentKopecks));
   const [typingError, setTypingError] = useState<string | null>(null);
   const name = line.product?.name ?? `Товар ${line.productId}`;
@@ -111,7 +113,7 @@ export function CalculationLineRow({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   adjustment: { minWidth: 120, flexGrow: 1, maxWidth: 180 },
   amount: { alignItems: 'flex-end', flexGrow: 1, gap: 2 },
   card: (changed: boolean) => ({

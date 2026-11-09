@@ -1,8 +1,7 @@
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, Button, TextField } from '@mobile/shared/ui';
+import { AppText, Button, createStyles, TextField, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ConfirmSendProps {
   customerName: string;
@@ -22,6 +21,7 @@ export function ConfirmSend({
   onConfirm,
   totalKopecks,
 }: Readonly<ConfirmSendProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View accessibilityRole="alert" style={styles.step}>
       <AppText variant="bodyStrong">{`Відправити замовлення для ${customerName}?`}</AppText>
@@ -48,11 +48,14 @@ export interface SaveDraftFormProps {
 
 /** A draft gets a name; an opened draft keeps its own (R-010). */
 export function SaveDraftForm({ initialTitle, onCancel, onSave }: Readonly<SaveDraftFormProps>) {
+  const styles = useStyles(stylesSheet);
   const [title, setTitle] = useState(initialTitle);
   const trimmed = title.trim();
   return (
     <View style={styles.step}>
       <TextField
+        // The form opens on the manager's tap to type a name, so the keyboard comes up at once.
+        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         error={trimmed.length > 200 ? 'Не довше 200 символів' : null}
         label="Назва чернетки"
@@ -72,7 +75,7 @@ export function SaveDraftForm({ initialTitle, onCancel, onSave }: Readonly<SaveD
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   actions: { flexDirection: 'row', gap: theme.space.sm, justifyContent: 'flex-end' },
   step: {
     borderColor: theme.colors.outlineVariant,

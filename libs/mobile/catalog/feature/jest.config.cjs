@@ -8,7 +8,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'html', 'tsx', 'jsx'],
   setupFilesAfterEnv: [
     '<rootDir>/src/test-setup.ts',
-    '<rootDir>/../../shared/ui/src/testing/unistyles-mock.ts',
     '<rootDir>/../../shared/ui/src/testing/vector-icons-mock.tsx',
   ],
   moduleNameMapper: {

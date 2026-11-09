@@ -10,13 +10,13 @@ import {
 import { ThemePreferenceControl, useConnectivity, WorkScreen } from '@mobile/core/shell';
 import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { CabinetProfile, SignOutSection } from '@mobile/profile/feature';
-import { AppText, useBreakpoint } from '@mobile/shared/ui';
+import { AppText, createStyles, useBreakpoint, useStyles } from '@mobile/shared/ui';
 import { clearDeviceData, SyncInfoCard } from '@mobile/sync/feature';
 import { ScrollView, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 /** «Кабінет»: profile, data and queue, theme, quick unlock, photos and sign-out (R-016). */
 export default function CabinetRoute() {
+  const styles = useStyles(stylesSheet);
   const session = useMobileSession();
   const user = session.status === 'authenticated' ? session.user : null;
   const connectivity = useConnectivity();
@@ -81,7 +81,7 @@ async function signOut() {
   useSelectedCustomerStore.getState().clear();
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   column: { flex: 1, gap: theme.space.md, maxWidth: 560 },
   columns: { alignItems: 'flex-start', flexDirection: 'row', gap: theme.space.xl },
   content: { gap: theme.space.md, paddingBottom: theme.space.xxl },

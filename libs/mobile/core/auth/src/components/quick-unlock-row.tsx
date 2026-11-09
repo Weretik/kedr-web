@@ -1,12 +1,11 @@
-import { ListRow } from '@mobile/shared/ui';
+import { ListRow, useAppTheme } from '@mobile/shared/ui';
 import { Switch } from 'react-native';
-import { useUnistyles } from 'react-native-unistyles';
 
 import { useQuickUnlockSetting } from '../session/quick-unlock-setting';
 
 /** Cabinet row: open the app with a fingerprint, face or device code. */
 export function QuickUnlockRow() {
-  const { theme } = useUnistyles();
+  const { theme } = useAppTheme();
   const { available, enabled, setEnabled } = useQuickUnlockSetting();
 
   return (

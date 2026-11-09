@@ -1,8 +1,7 @@
 import { productImages, type Product } from '@mobile/catalog/model';
-import { IconButton, SegmentedControl } from '@mobile/shared/ui';
+import { createStyles, IconButton, SegmentedControl, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { ProductImage } from './product-image';
 
@@ -24,6 +23,7 @@ export function ProductGallery({
   product,
   sideBySide = false,
 }: Readonly<ProductGalleryProps>) {
+  const styles = useStyles(stylesSheet);
   const images = productImages(product);
   const photoCount = product.photos.length;
   const schemeIndex = product.scheme ? photoCount : null;
@@ -125,6 +125,7 @@ interface StageProps {
 }
 
 function Stage({ index, isOnline, label, onOpenFullScreen, url }: Readonly<StageProps>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.stage}>
       <Pressable
@@ -146,7 +147,7 @@ function Stage({ index, isOnline, label, onOpenFullScreen, url }: Readonly<Stage
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   fill: { flex: 1 },
   fullScreen: { position: 'absolute', right: theme.space.sm, top: theme.space.sm },
   gallery: { gap: theme.space.sm },

@@ -7,10 +7,9 @@ import {
 } from '@mobile/profile/data-access';
 import { profileErrorMessage, roleLabel } from '@mobile/profile/model';
 import { EmailForm, NameForm, PasswordForm, ProfileHeader } from '@mobile/profile/ui';
-import { AppText, Button } from '@mobile/shared/ui';
+import { AppText, Button, createStyles, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface CabinetUser {
   fullName: string;
@@ -50,6 +49,7 @@ export function CabinetProfile({
   pickPhoto = pickSquarePhoto,
   user,
 }: Readonly<CabinetProfileProps>) {
+  const styles = useStyles(stylesSheet);
   const [editing, setEditing] = useState<Editing>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -194,7 +194,7 @@ export function CabinetProfile({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.space.sm },
   container: { gap: theme.space.md },
 }));

@@ -1,6 +1,7 @@
 import { ActivityIndicator, View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { useAppTheme } from '../../theme/app-theme';
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { Button } from '../controls/button';
 import { AppText } from '../text/app-text';
 import { Icon, type IconName } from '../text/icon';
@@ -23,7 +24,8 @@ const icons: Record<Exclude<StateViewKind, 'loading'>, IconName> = {
 
 /** Loading, empty, locked, offline and error states: a title, one line why, one action. */
 export function StateView({ action, kind, message, title }: Readonly<StateViewProps>) {
-  const { theme } = useUnistyles();
+  const styles = useStyles(stylesSheet);
+  const { theme } = useAppTheme();
 
   return (
     <View
@@ -49,7 +51,7 @@ export function StateView({ action, kind, message, title }: Readonly<StateViewPr
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   container: {
     alignItems: 'center',
     flex: 1,

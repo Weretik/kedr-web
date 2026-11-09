@@ -1,10 +1,9 @@
 import { useCustomers, useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { groupByLetter, searchCustomers, type Customer } from '@mobile/customers/model';
 import { CustomerRow } from '@mobile/customers/ui';
-import { AppText, SearchField, StateView } from '@mobile/shared/ui';
+import { AppText, createStyles, SearchField, StateView, useStyles } from '@mobile/shared/ui';
 import { useCallback, useMemo, useState } from 'react';
 import { SectionList, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface CustomerListProps {
   /** Called after the customer becomes the selected one. */
@@ -22,6 +21,7 @@ interface Section {
  * (R-003, SC-004). Picking a row makes it the selected customer.
  */
 export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
+  const styles = useStyles(stylesSheet);
   const customers = useCustomers();
   const recentIds = useSelectedCustomerStore((state) => state.recentIds);
   const selectedId = useSelectedCustomerStore((state) => state.selectedId);
@@ -116,7 +116,7 @@ export function CustomerList({ onPicked }: Readonly<CustomerListProps>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   container: { flex: 1, gap: theme.space.md },
   header: { paddingBottom: theme.space.xs, paddingTop: theme.space.md },
   list: { gap: theme.space.sm, paddingBottom: theme.space.xxl },

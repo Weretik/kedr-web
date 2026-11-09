@@ -9,10 +9,17 @@ import {
 } from '@mobile/catalog/model';
 import { ProductGallery, ZoomViewer } from '@mobile/catalog/ui';
 import { formatKopecks } from '@mobile/shared/model';
-import { AppText, Button, Card, StateView, StatusPill } from '@mobile/shared/ui';
+import {
+  AppText,
+  Button,
+  Card,
+  createStyles,
+  StateView,
+  StatusPill,
+  useStyles,
+} from '@mobile/shared/ui';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ProductDetailProps {
   counterpartyId: string | null;
@@ -34,6 +41,7 @@ export function ProductDetail({
   onAdd,
   productId,
 }: Readonly<ProductDetailProps>) {
+  const styles = useStyles(stylesSheet);
   const product = usePricedProduct(productId, counterpartyId);
   const categories = useCategories();
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
@@ -115,6 +123,7 @@ export function ProductDetail({
 }
 
 function Line({ label, value }: Readonly<{ label: string; value: string }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View style={styles.line}>
       <AppText style={styles.label} tone="secondary" variant="secondary">
@@ -127,7 +136,7 @@ function Line({ label, value }: Readonly<{ label: string; value: string }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.sm },
   content: { gap: theme.space.md, paddingBottom: theme.space.xxl },
   label: { width: 88 },

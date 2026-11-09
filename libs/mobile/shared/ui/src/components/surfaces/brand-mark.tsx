@@ -1,10 +1,11 @@
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 
 /** Green square with «К»: the rail and the login screen. */
 export function BrandMark({ size = 44 }: Readonly<{ size?: number }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View accessibilityLabel="Кедр" accessibilityRole="image" style={styles.mark(size)}>
       <AppText style={styles.letter(size)} variant="sectionTitle">
@@ -14,7 +15,7 @@ export function BrandMark({ size = 44 }: Readonly<{ size?: number }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   letter: (size: number) => ({
     color: '#FFFFFF',
     fontSize: Math.round(size * 0.5),

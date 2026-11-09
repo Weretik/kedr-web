@@ -3,7 +3,6 @@ module.exports = {
   preset: 'jest-expo',
   setupFilesAfterEnv: [
     '<rootDir>/src/test-setup.ts',
-    '<rootDir>/src/testing/unistyles-mock.ts',
     '<rootDir>/src/testing/vector-icons-mock.tsx',
   ],
   transform: { '[.][jt]sx?$': ['babel-jest', { configFile: __dirname + '/.babelrc.js' }] },

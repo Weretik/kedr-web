@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
+import { createStyles, useStyles } from '../../theme/create-styles';
 import { AppText } from '../text/app-text';
 import { Icon } from '../text/icon';
 
@@ -21,6 +21,7 @@ export function QuantityStepper({
   onChange,
   value,
 }: Readonly<QuantityStepperProps>) {
+  const styles = useStyles(stylesSheet);
   const canDecrease = value > min;
   const canIncrease = value < max;
 
@@ -65,7 +66,7 @@ export function QuantityStepper({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   step: {
     alignItems: 'center',
     height: theme.sizes.stepper,

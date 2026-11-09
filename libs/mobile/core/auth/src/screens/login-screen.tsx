@@ -1,7 +1,14 @@
-import { AppText, BrandMark, Button, Card, TextField } from '@mobile/shared/ui';
+import {
+  AppText,
+  BrandMark,
+  Button,
+  Card,
+  createStyles,
+  TextField,
+  useStyles,
+} from '@mobile/shared/ui';
 import { useRef, useState } from 'react';
 import { View, type TextInputInstance } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { getLoginErrorMessage } from './login-error-message';
 import { AuthFrame } from '../components/auth-frame';
@@ -9,6 +16,7 @@ import { login } from '../session/mobile-auth';
 
 /** Sign-in with the Kedr Admin email and password (R-001). */
 export function LoginScreen() {
+  const styles = useStyles(stylesSheet);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +86,7 @@ export function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   brand: { gap: theme.space.sm },
   form: { gap: theme.space.lg },
 }));

@@ -9,10 +9,9 @@ import {
   type ProductSort,
 } from '@mobile/catalog/model';
 import { ProductRow } from '@mobile/catalog/ui';
-import { AppText, Chip, SearchField, StateView } from '@mobile/shared/ui';
+import { AppText, Chip, createStyles, SearchField, StateView, useStyles } from '@mobile/shared/ui';
 import { useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, ScrollView, View, type ListRenderItem } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ProductListProps {
   counterpartyId: string | null;
@@ -46,6 +45,7 @@ export function ProductList({
   onOpen,
   openedId = null,
 }: Readonly<ProductListProps>) {
+  const styles = useStyles(stylesSheet);
   const categories = useCategories();
   const products = usePricedProducts(counterpartyId);
   const [query, setQuery] = useState('');
@@ -172,7 +172,7 @@ export function ProductList({
 
 const keyOf = (product: PricedProduct) => product.id.toString();
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   chips: { gap: theme.space.sm },
   container: { flex: 1, gap: theme.space.md },
   count: { flex: 1, textAlign: 'right' },

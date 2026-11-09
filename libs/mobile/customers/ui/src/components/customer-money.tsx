@@ -1,7 +1,6 @@
 import { formatKopecks } from '@mobile/customers/model';
-import { AppText, Card } from '@mobile/shared/ui';
+import { AppText, Card, createStyles, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface CustomerMoneyProps {
   balanceKopecks: number | null;
@@ -10,6 +9,7 @@ export interface CustomerMoneyProps {
 
 /** Debt and balance; while 1C does not send them both are «—» with one note why (R-004). */
 export function CustomerMoney({ balanceKopecks, debtKopecks }: Readonly<CustomerMoneyProps>) {
+  const styles = useStyles(stylesSheet);
   const waitingFor1C = debtKopecks === null && balanceKopecks === null;
 
   return (
@@ -28,6 +28,7 @@ export function CustomerMoney({ balanceKopecks, debtKopecks }: Readonly<Customer
 }
 
 function Value({ label, value }: Readonly<{ label: string; value: string }>) {
+  const styles = useStyles(stylesSheet);
   return (
     <View accessibilityLabel={`${label}: ${value}`} style={styles.value}>
       <AppText tone="secondary" variant="caption">
@@ -40,7 +41,7 @@ function Value({ label, value }: Readonly<{ label: string; value: string }>) {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   card: { gap: theme.space.sm },
   value: { flex: 1, gap: 2 },
   values: { flexDirection: 'row', gap: theme.space.lg },

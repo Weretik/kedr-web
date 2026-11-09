@@ -1,3 +1,4 @@
+import { createStyles, useStyles } from '@mobile/shared/ui';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -7,7 +8,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { StyleSheet } from 'react-native-unistyles';
 
 export interface ZoomableImageProps {
   accessibilityLabel: string;
@@ -29,6 +29,7 @@ export function ZoomableImage({
   url,
   width,
 }: Readonly<ZoomableImageProps>) {
+  const styles = useStyles(stylesSheet);
   const [zoomed, setZoomed] = useState(false);
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
@@ -114,7 +115,7 @@ export function ZoomableImage({
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   fill: { flex: 1 },
   page: { backgroundColor: theme.colors.photoFrame, overflow: 'hidden' },
 }));

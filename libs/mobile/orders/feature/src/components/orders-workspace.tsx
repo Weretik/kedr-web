@@ -1,7 +1,6 @@
-import { StateView, useBreakpoint } from '@mobile/shared/ui';
+import { createStyles, StateView, useBreakpoint, useStyles } from '@mobile/shared/ui';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
 
 import { OrderDetailScreen } from './order-detail-screen';
 import { OrdersScreen, type OrdersScreenProps } from './orders-screen';
@@ -15,6 +14,7 @@ export interface OrdersWorkspaceProps extends OrdersScreenProps {
 
 /** Phone opens an order on its own screen; a tablet keeps the lists and the opened order side by side (R-017). */
 export function OrdersWorkspace({ detailFetcher, ...props }: Readonly<OrdersWorkspaceProps>) {
+  const styles = useStyles(stylesSheet);
   const isPhone = useBreakpoint() === 'phone';
   const [openedId, setOpenedId] = useState<number | null>(null);
 
@@ -45,7 +45,7 @@ export function OrdersWorkspace({ detailFetcher, ...props }: Readonly<OrdersWork
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const stylesSheet = createStyles((theme) => ({
   detail: { flex: 3 },
   list: { flex: 2, maxWidth: 480 },
   split: { flex: 1, flexDirection: 'row', gap: theme.space.lg },
