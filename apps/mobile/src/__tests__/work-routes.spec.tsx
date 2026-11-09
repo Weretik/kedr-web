@@ -3,10 +3,12 @@ import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-librar
 
 import WorkAreaLayout from '../app/(work)/_layout';
 import CabinetRoute from '../app/(work)/cabinet';
-import CalculationRoute from '../app/(work)/calculation';
+import CalculationLayout from '../app/(work)/calculation/_layout';
+import CalculationRoute from '../app/(work)/calculation/index';
 import CustomerChoiceRoute from '../app/(work)/customer/index';
+import SectionLayout from '../app/(work)/orders/_layout';
 import OrdersRoute from '../app/(work)/orders/index';
-import SectionLayout from '../app/(work)/products/_layout';
+import ProductsLayout from '../app/(work)/products/_layout';
 import ProductsRoute from '../app/(work)/products/index';
 import IndexRoute from '../app/index';
 
@@ -63,6 +65,7 @@ jest.mock('@mobile/customers/feature', () => {
     CustomerCard: () => null,
     CustomerChoice: () => <Text>Оберіть клієнта</Text>,
     useSelectedCustomerSummary: () => mockCustomer,
+    useRefreshCustomerActivity: () => jest.fn(),
   };
 });
 
@@ -84,11 +87,12 @@ const manager = {
 const routes = {
   '(work)/_layout': WorkAreaLayout,
   '(work)/cabinet': CabinetRoute,
-  '(work)/calculation': CalculationRoute,
+  '(work)/calculation/_layout': CalculationLayout,
+  '(work)/calculation/index': CalculationRoute,
   '(work)/customer/_layout': SectionLayout,
   '(work)/customer/index': CustomerChoiceRoute,
   '(work)/orders/_layout': SectionLayout,
-  '(work)/products/_layout': SectionLayout,
+  '(work)/products/_layout': ProductsLayout,
   '(work)/orders/index': OrdersRoute,
   '(work)/products/index': ProductsRoute,
   index: IndexRoute,
@@ -149,6 +153,6 @@ describe('working area with a customer', () => {
 
     expect(screen).toHavePathname('/products');
     expect(screen.getByText('ТОВ «Альфа»')).toBeTruthy();
-    expect(screen.getByText('Ціни: Оптова')).toBeTruthy();
+    expect(screen.getByText(/ціни Оптова/)).toBeTruthy();
   });
 });

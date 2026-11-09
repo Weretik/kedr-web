@@ -10,6 +10,7 @@ import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 
+import { CalculationLineSheet } from './components/calculation-line-sheet';
 import { CalculationPanel } from './components/calculation-panel';
 import { QueueSummaryCard } from './components/queue-summary-card';
 import { useAddToCalculation, useCalculationBadges } from './hooks/use-add-to-calculation';
@@ -70,44 +71,88 @@ describe('CalculationPanel', () => {
     await select('c-1');
   });
 
-  it('prices lines, applies a discount and totals them (SC-011)', async () => {
+  it('prices lines, applies a discount in the line sheet and totals them (SC-011)', async () => {
     const db = seed();
     await addProducts(db, [7, 7, 7, 7]);
-    await render(<CalculationPanel isOnline />, { wrapper: wrapperFor(db) });
+    const onOpenLine = jest.fn();
+    await render(<CalculationPanel isOnline onOpenLine={onOpenLine} />, {
+      wrapper: wrapperFor(db),
+    });
+    await fireEvent.press(screen.getByRole('button', { name: /^Петля дверна, 4 × / }));
+    expect(onOpenLine).toHaveBeenCalledWith(7);
 
+    const sheet = await render(<CalculationLineSheet onClose={jest.fn()} productId={7} />, {
+      wrapper: wrapperFor(db),
+    });
+    await fireEvent.press(screen.getByRole('tab', { name: 'Знижка −' }));
     await fireEvent.changeText(
       screen.getByLabelText('Знижка або націнка, гривень за штуку: Петля дверна'),
-      '-10',
+      '10',
     );
+    await sheet.unmount();
 
-    expect(screen.getByText('−10 ₴/шт')).toBeTruthy();
-    expect(screen.getByText(/Знижка −40,00/)).toBeTruthy();
-    expect(screen.getByText(/Разом 1\s?608,00/)).toBeTruthy();
+    await render(<CalculationPanel isOnline onOpenLine={onOpenLine} />, {
+      wrapper: wrapperFor(db),
+    });
+    expect(screen.getByText('−10/шт')).toBeTruthy();
+    expect(screen.getByText(/знижка −40,00/)).toBeTruthy();
+    expect(screen.getByLabelText(/Разом 1\s?608,00/)).toBeTruthy();
   });
 
   it('stops a discount below 1 ₴ (SC-012)', async () => {
     const db = seed();
     await addProducts(db, [8]);
-    await render(<CalculationPanel isOnline />, { wrapper: wrapperFor(db) });
-
+    await render(<CalculationLineSheet onClose={jest.fn()} productId={8} />, {
+      wrapper: wrapperFor(db),
+    });
+    await fireEvent.press(screen.getByRole('tab', { name: 'Знижка −' }));
     await fireEvent.changeText(
       screen.getByLabelText('Знижка або націнка, гривень за штуку: Ручка мала'),
-      '-5',
+      '5',
     );
-
     expect(screen.getByText('Ціна не може бути нижче 1 ₴: найбільша знижка −4')).toBeTruthy();
+
+    await render(<CalculationPanel isOnline onOpenLine={jest.fn()} />, { wrapper: wrapperFor(db) });
     expect(screen.getByRole('button', { name: 'Відправити в 1С' })).toBeDisabled();
+  });
+
+  it('removes a line with a swipe and brings it back with «Скасувати»', async () => {
+    const db = seed();
+    await addProducts(db, [7, 8]);
+    await render(<CalculationPanel isOnline onOpenLine={jest.fn()} />, { wrapper: wrapperFor(db) });
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Прибрати Петля дверна' }));
+    expect(screen.queryByText('Петля дверна')).toBeNull();
+    expect(screen.getByText('Прибрано «Петля дверна»')).toBeTruthy();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Скасувати' }));
+    expect(screen.getByText('Петля дверна')).toBeTruthy();
+    expect(screen.queryByText('Прибрано «Петля дверна»')).toBeNull();
+  });
+
+  it('closes the line sheet once its line is removed', async () => {
+    const db = seed();
+    await addProducts(db, [7]);
+    const onClose = jest.fn();
+    await render(<CalculationLineSheet onClose={onClose} productId={7} />, {
+      wrapper: wrapperFor(db),
+    });
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Прибрати з розрахунку' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('keeps a calculation per customer (SC-013)', async () => {
     const db = seed();
     await addProducts(db, [7, 8]);
     await select('c-2');
-    const view = await render(<CalculationPanel isOnline />, { wrapper: wrapperFor(db) });
+    const view = await render(<CalculationPanel isOnline onOpenLine={jest.fn()} />, {
+      wrapper: wrapperFor(db),
+    });
     expect(screen.getByText('Розрахунок порожній')).toBeTruthy();
 
     await select('c-1');
-    await view.rerender(<CalculationPanel isOnline />);
+    await view.rerender(<CalculationPanel isOnline onOpenLine={jest.fn()} />);
     expect(screen.getByText('Петля дверна')).toBeTruthy();
     expect(screen.getByText('Ручка мала')).toBeTruthy();
   });
@@ -115,7 +160,9 @@ describe('CalculationPanel', () => {
   it('confirms the total and queues the order offline (SC-015, SC-016)', async () => {
     const db = seed();
     await addProducts(db, [7]);
-    await render(<CalculationPanel isOnline={false} />, { wrapper: wrapperFor(db) });
+    await render(<CalculationPanel isOnline={false} onOpenLine={jest.fn()} />, {
+      wrapper: wrapperFor(db),
+    });
 
     await fireEvent.press(screen.getByRole('button', { name: 'Відправити в 1С' }));
     expect(screen.getByText('Відправити замовлення для Будмаркет?')).toBeTruthy();
@@ -134,7 +181,7 @@ describe('CalculationPanel', () => {
   it('saves a named draft through the queue (SC-014)', async () => {
     const db = seed();
     await addProducts(db, [7]);
-    await render(<CalculationPanel isOnline />, { wrapper: wrapperFor(db) });
+    await render(<CalculationPanel isOnline onOpenLine={jest.fn()} />, { wrapper: wrapperFor(db) });
 
     await fireEvent.press(screen.getByRole('button', { name: 'Чернетка' }));
     await fireEvent.changeText(screen.getByLabelText('Назва чернетки'), 'Об’єкт на Подолі');
@@ -158,7 +205,7 @@ describe('CalculationPanel', () => {
       title: 'Подол',
       version: 'v3',
     });
-    await render(<CalculationPanel isOnline />, { wrapper: wrapperFor(db) });
+    await render(<CalculationPanel isOnline onOpenLine={jest.fn()} />, { wrapper: wrapperFor(db) });
 
     expect(screen.getByText('Чернетка «Подол»')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Видалити чернетку' }));

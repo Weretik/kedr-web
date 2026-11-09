@@ -79,6 +79,8 @@ export function clampQuantity(quantity: number, stock: number): number {
 
 export interface CalculationTotals {
   lineCount: number;
+  /** All pieces across the lines, «4 шт» in the summary. */
+  unitCount: number;
   adjustmentKopecks: number;
   totalKopecks: number;
   /** Every line is priced and has no problem: the calculation may be sent or saved. */
@@ -91,7 +93,21 @@ export function calculationTotals(lines: readonly PricedLine[]): CalculationTota
     isSendable: lines.length > 0 && lines.every((line) => line.problem === null),
     lineCount: lines.length,
     totalKopecks: lines.reduce((sum, line) => sum + (line.lineKopecks ?? 0), 0),
+    unitCount: lines.reduce((sum, line) => sum + line.quantity, 0),
   };
+}
+
+/** «1 позиція», «2 позиції», «5 позицій». */
+export function positionsLabel(count: number): string {
+  const tens = count % 100;
+  const ones = count % 10;
+  const word =
+    ones === 1 && tens !== 11
+      ? 'позиція'
+      : ones >= 2 && ones <= 4 && (tens < 12 || tens > 14)
+        ? 'позиції'
+        : 'позицій';
+  return `${count} ${word}`;
 }
 
 /** Adds a product or one more of it; the result never passes the stock. */

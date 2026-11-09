@@ -10,8 +10,10 @@ export default function ProductsRoute() {
   const addToCalculation = useAddToCalculation();
 
   return (
-    <WorkScreen title="Товари">
-      <CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />
+    <WorkScreen
+      subheader={<CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />}
+      title="Товари"
+    >
       <ProductCatalog
         isOnline={isOnline}
         onAdd={addToCalculation}
@@ -21,7 +23,17 @@ export default function ProductsRoute() {
             pathname: '/products/[productId]',
           })
         }
-        sidePanel={<CalculationPanel isOnline={isOnline} />}
+        sidePanel={
+          <CalculationPanel
+            isOnline={isOnline}
+            onOpenLine={(productId) =>
+              router.push({
+                params: { productId: productId.toString() },
+                pathname: '/products/line/[productId]',
+              })
+            }
+          />
+        }
       />
     </WorkScreen>
   );

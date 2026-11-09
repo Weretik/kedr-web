@@ -93,6 +93,8 @@ export async function drainOutbox(
   db: LocalDatabase,
   api: OrderWorkspaceApi,
   env: QueueEnvironment = deviceEnvironment,
+  /** Called after an order or draft change reached the server, so lists of that customer can refresh. */
+  onDelivered?: (entry: OutboxEntry) => void,
 ): Promise<RunResult> {
   for (const entry of readOutbox(db)) {
     if (entry.state === 'done' && entry.createdAt < env.now() - keepDoneMs)
@@ -116,6 +118,7 @@ export async function drainOutbox(
     if (outcome.kind === 'sent' && entry.kind === 'order-create' && entry.payload.sourceDraft) {
       enqueueDraftDelete(db, entry.counterpartyId, entry.payload.sourceDraft, env);
     }
+    if (outcome.kind === 'sent') onDelivered?.(entry);
     if (outcome.kind === 'retry') return 'waiting';
   }
 }

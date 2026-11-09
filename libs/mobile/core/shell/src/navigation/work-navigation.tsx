@@ -13,14 +13,17 @@ export interface WorkNavigationProps extends Pick<
   'emitter' | 'navigateToTab' | 'state'
 > {
   account?: RailAccount;
-  /** Count shown next to a label, e.g. `{ calculation: 3 }` → «Розрахунок · 3». */
+  /** Count shown as a badge on a tab icon, e.g. `{ calculation: 3 }`. */
   badges?: Partial<Record<WorkTabName, number>>;
   hasCustomer: boolean;
   /** Sync status from the app, drawn above the phone tab bar or under the rail items. */
   statusStrip?: (layout: 'bar' | 'rail') => ReactNode;
 }
 
-/** Tab bar on phones, rail on tablets; both lock the sections that need a customer. */
+/**
+ * Tab bar on phones, rail on tablets; both lock the sections that need a customer, and a locked section opens
+ * customer choice instead.
+ */
 export function WorkNavigation({
   account,
   badges = {},
@@ -32,10 +35,11 @@ export function WorkNavigation({
 }: Readonly<WorkNavigationProps>) {
   const breakpoint = useBreakpoint();
   const focusedName = state.routes[state.index]?.name;
+  const customerRoute = state.routes.find((candidate) => candidate.name === 'customer');
 
   const items: WorkNavItem[] = workTabs.flatMap((tab) => {
     const route = state.routes.find((candidate) => candidate.name === tab.name);
-    if (!route) return [];
+    if (!route || !tab.inNavigation) return [];
 
     const locked = tab.needsCustomer && !hasCustomer;
     const focused = focusedName === tab.name;
@@ -47,7 +51,10 @@ export function WorkNavigation({
         key: route.key,
         locked,
         onPress: () => {
-          if (locked) return;
+          if (locked) {
+            if (customerRoute && focusedName !== 'customer') navigateToTab(customerRoute.key);
+            return;
+          }
           const event = emitter.emit({
             canPreventDefault: true,
             target: route.key,

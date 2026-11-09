@@ -3,29 +3,36 @@ import {
   CalculationLineRow,
   OutboxRow,
   ReviewBanner,
+  UndoBar,
 } from '@mobile/calculation/ui';
 import { useSelectedCustomer } from '@mobile/customers/data-access';
 import { formatDate } from '@mobile/shared/model';
 import { AppText, Button, createStyles, StateView, useStyles } from '@mobile/shared/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 
 import { CommentField } from './comment-field';
 import { ConfirmSend, SaveDraftForm } from './finish-step';
 import { useCalculationController } from '../hooks/use-calculation-controller';
+import { useRemovedLineStore } from '../hooks/use-removed-line';
 
 export interface CalculationPanelProps {
   isOnline: boolean | null;
+  /** Opens one line's quantity and price, usually as a sheet. */
+  onOpenLine: (productId: number) => void;
 }
+
+/** How long «Скасувати» stays after a line is removed. */
+const undoMs = 5_000;
 
 type Step = 'confirm' | 'draft' | 'edit';
 
 /**
- * The chosen customer's calculation: lines with quantity and «± ₴/шт», comment, totals, «Чернетка» and
- * «Відправити в 1С», and what is on its way to the server (R-009–R-012). On a wide tablet it stands next to the
- * products (R-017).
+ * The chosen customer's calculation as a compact work sheet: one line per product (a tap opens quantity and price, a
+ * swipe removes it with «Скасувати»), the comment, and under the list the total, «Чернетка» and «Відправити в 1С»,
+ * plus what is on its way to the server (R-009–R-012). On a wide tablet it stands next to the products (R-017).
  */
-export function CalculationPanel({ isOnline }: Readonly<CalculationPanelProps>) {
+export function CalculationPanel({ isOnline, onOpenLine }: Readonly<CalculationPanelProps>) {
   const customer = useSelectedCustomer();
   if (!customer) return null;
   return (
@@ -34,6 +41,7 @@ export function CalculationPanel({ isOnline }: Readonly<CalculationPanelProps>) 
       customerName={customer.name}
       isOnline={isOnline}
       key={customer.counterpartyId}
+      onOpenLine={onOpenLine}
     />
   );
 }
@@ -42,11 +50,30 @@ function CustomerCalculation({
   counterpartyId,
   customerName,
   isOnline,
-}: Readonly<{ counterpartyId: string; customerName: string; isOnline: boolean | null }>) {
+  onOpenLine,
+}: Readonly<{
+  counterpartyId: string;
+  customerName: string;
+  isOnline: boolean | null;
+  onOpenLine: (productId: number) => void;
+}>) {
   const styles = useStyles(stylesSheet);
   const controller = useCalculationController(counterpartyId, customerName);
   const { calculation, changedIds, entries, lines, totals } = controller;
   const [step, setStep] = useState<Step>('edit');
+  const removed = useRemovedLineStore((state) =>
+    state.removed?.counterpartyId === counterpartyId ? state.removed : null,
+  );
+
+  useEffect(() => {
+    if (!removed) return;
+    const timer = setTimeout(() => useRemovedLineStore.getState().forget(), undoMs);
+    return () => clearTimeout(timer);
+  }, [removed]);
+
+  const undo = removed ? (
+    <UndoBar message={`Прибрано «${removed.name}»`} onUndo={controller.restoreRemoved} />
+  ) : null;
 
   const queue =
     entries.length > 0 ? (
@@ -66,6 +93,7 @@ function CustomerCalculation({
           message="Додайте товари кнопкою «+» у каталозі."
           title="Розрахунок порожній"
         />
+        {undo}
       </View>
     );
   }
@@ -83,26 +111,29 @@ function CustomerCalculation({
           <Button label="Видалити чернетку" onPress={controller.deleteDraft} variant="text" />
         </View>
       ) : null}
-      {/* Lines keep their own quantity input state, so FlashList recycling would mix it up between rows. */}
+      {/* A half-open swipe belongs to its row, so FlashList recycling would show it on another product. */}
       <FlatList
         contentContainerStyle={styles.lines}
         data={lines}
+        ItemSeparatorComponent={LineDivider}
         keyExtractor={(line) => line.productId.toString()}
         keyboardShouldPersistTaps="handled"
         ListFooterComponent={
-          <CommentField onSave={controller.setComment} value={calculation.comment ?? ''} />
+          <View style={styles.comment}>
+            <CommentField onSave={controller.setComment} value={calculation.comment ?? ''} />
+          </View>
         }
         ListHeaderComponent={queue ?? undefined}
         renderItem={({ item }) => (
           <CalculationLineRow
             changed={changedIds.has(item.productId)}
             line={item}
-            onChangeAdjustment={(kopecks) => controller.setAdjustment(item.productId, kopecks)}
-            onChangeQuantity={(quantity) => controller.setQuantity(item.productId, quantity)}
-            onRemove={() => controller.remove(item.productId)}
+            onOpen={onOpenLine}
+            onRemove={controller.remove}
           />
         )}
       />
+      {undo}
       {step === 'edit' ? (
         <CalculationFooter
           onSaveDraft={() => setStep('draft')}
@@ -140,10 +171,17 @@ function CustomerCalculation({
   );
 }
 
+function LineDivider() {
+  const styles = useStyles(stylesSheet);
+  return <View style={styles.divider} />;
+}
+
 const stylesSheet = createStyles((theme) => ({
-  container: { flex: 1, gap: theme.space.md },
+  comment: { paddingTop: theme.space.md },
+  container: { flex: 1, gap: theme.space.sm },
+  divider: { backgroundColor: theme.colors.outlineVariant, height: theme.sizes.border },
   draft: { alignItems: 'center', flexDirection: 'row', gap: theme.space.sm },
   draftTitle: { flex: 1 },
-  lines: { gap: theme.space.sm, paddingBottom: theme.space.lg },
+  lines: { paddingBottom: theme.space.lg },
   queue: { gap: theme.space.xs, paddingBottom: theme.space.sm },
 }));

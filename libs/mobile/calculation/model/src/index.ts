@@ -10,6 +10,7 @@ export {
   addProduct,
   calculationTotals,
   clampQuantity,
+  positionsLabel,
   priceLine,
   type CalculationLine,
   type CalculationTotals,

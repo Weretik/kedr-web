@@ -11,10 +11,20 @@ export default function CalculationRoute() {
   const isOnline = useConnectivity()?.isOnline ?? null;
 
   return (
-    <WorkScreen title="Розрахунок">
+    <WorkScreen
+      subheader={<CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />}
+      title="Розрахунок"
+    >
       <View style={styles.column}>
-        <CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />
-        <CalculationPanel isOnline={isOnline} />
+        <CalculationPanel
+          isOnline={isOnline}
+          onOpenLine={(productId) =>
+            router.push({
+              params: { productId: productId.toString() },
+              pathname: '/calculation/line/[productId]',
+            })
+          }
+        />
       </View>
     </WorkScreen>
   );

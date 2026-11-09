@@ -5,17 +5,20 @@ export type WorkTabName = 'cabinet' | 'calculation' | 'customer' | 'orders' | 'p
 export interface WorkTab {
   activeIcon: IconName;
   icon: IconName;
+  /** Shown in the tab bar and rail; the customer section opens from the customer line on each screen instead. */
+  inNavigation: boolean;
   label: string;
   /** Opens only after a customer is chosen. */
   needsCustomer: boolean;
   name: WorkTabName;
 }
 
-/** The five sections of the app, in tab bar and rail order. */
+/** The five sections of the app, in tab bar and rail order; four of them are tabs. */
 export const workTabs: readonly WorkTab[] = [
   {
     activeIcon: 'account',
     icon: 'account-outline',
+    inNavigation: false,
     label: 'Клієнт',
     name: 'customer',
     needsCustomer: false,
@@ -23,6 +26,7 @@ export const workTabs: readonly WorkTab[] = [
   {
     activeIcon: 'view-grid',
     icon: 'view-grid-outline',
+    inNavigation: true,
     label: 'Товари',
     name: 'products',
     needsCustomer: true,
@@ -30,6 +34,7 @@ export const workTabs: readonly WorkTab[] = [
   {
     activeIcon: 'calculator-variant',
     icon: 'calculator-variant-outline',
+    inNavigation: true,
     label: 'Розрахунок',
     name: 'calculation',
     needsCustomer: true,
@@ -37,6 +42,7 @@ export const workTabs: readonly WorkTab[] = [
   {
     activeIcon: 'receipt-text',
     icon: 'receipt-text-outline',
+    inNavigation: true,
     label: 'Замовлення',
     name: 'orders',
     needsCustomer: true,
@@ -44,6 +50,7 @@ export const workTabs: readonly WorkTab[] = [
   {
     activeIcon: 'cog',
     icon: 'cog-outline',
+    inNavigation: true,
     label: 'Кабінет',
     name: 'cabinet',
     needsCustomer: false,

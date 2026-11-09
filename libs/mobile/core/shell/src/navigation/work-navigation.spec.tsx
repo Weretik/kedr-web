@@ -14,7 +14,7 @@ const routes = ['customer', 'products', 'calculation', 'orders', 'cabinet'].map(
   name,
 }));
 
-const renderNavigation = async (hasCustomer: boolean) => {
+const renderNavigation = async (hasCustomer: boolean, index = 0) => {
   const navigateToTab = jest.fn();
   const emitter = { emit: jest.fn(() => ({ defaultPrevented: false })) };
   await render(
@@ -24,7 +24,7 @@ const renderNavigation = async (hasCustomer: boolean) => {
       emitter={emitter as never}
       hasCustomer={hasCustomer}
       navigateToTab={navigateToTab}
-      state={{ index: 0, routes } as never}
+      state={{ index, routes } as never}
     />,
   );
   return { navigateToTab };
@@ -34,8 +34,12 @@ describe('WorkNavigation', () => {
   beforeEach(() => jest.mocked(useBreakpoint).mockReturnValue('phone'));
 
   it('locks products, calculation and orders until a customer is chosen (SC-003)', async () => {
-    const { navigateToTab } = await renderNavigation(false);
+    // From the cabinet a locked tab opens customer choice.
+    const fromCabinet = await renderNavigation(false, 4);
+    await fireEvent.press(screen.getByRole('tab', { name: 'Товари, спочатку оберіть клієнта' }));
+    expect(fromCabinet.navigateToTab).toHaveBeenCalledWith('customer-key');
 
+    const { navigateToTab } = await renderNavigation(false);
     await fireEvent.press(screen.getByRole('tab', { name: 'Товари, спочатку оберіть клієнта' }));
     expect(navigateToTab).not.toHaveBeenCalled();
 
@@ -43,12 +47,15 @@ describe('WorkNavigation', () => {
     expect(navigateToTab).toHaveBeenCalledWith('cabinet-key');
   });
 
-  it('opens every section once a customer is chosen and counts calculation lines', async () => {
+  it('opens the four tabs once a customer is chosen and counts calculation lines', async () => {
     const { navigateToTab } = await renderNavigation(true);
 
     await fireEvent.press(screen.getByRole('tab', { name: 'Товари' }));
     expect(navigateToTab).toHaveBeenCalledWith('products-key');
-    expect(screen.getByText('Розрахунок · 3')).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'Розрахунок · 3' })).toBeTruthy();
+    expect(screen.getByText('3')).toBeTruthy();
+    // Customer choice opens from the customer line on each screen, not from a tab.
+    expect(screen.queryByRole('tab', { name: /^Клієнт/ })).toBeNull();
   });
 
   it('draws a tab bar on phones and a rail on tablets (SC-024)', async () => {

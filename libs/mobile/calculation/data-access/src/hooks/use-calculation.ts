@@ -21,27 +21,33 @@ let running = false;
 let runAgain = false;
 
 /** One pass at a time; a change that lands while a pass runs gets one more pass afterwards. */
-function startDrain(db: LocalDatabase, api: OrderWorkspaceApi, env: QueueEnvironment): void {
+function startDrain(
+  db: LocalDatabase,
+  api: OrderWorkspaceApi,
+  env: QueueEnvironment,
+  onDelivered?: (entry: OutboxEntry) => void,
+): void {
   if (running) {
     runAgain = true;
     return;
   }
   running = true;
-  void drainOutbox(db, api, env).finally(() => {
+  void drainOutbox(db, api, env, onDelivered).finally(() => {
     running = false;
     if (runAgain) {
       runAgain = false;
-      startDrain(db, api, env);
+      startDrain(db, api, env, onDelivered);
     }
   });
 }
 
 /**
  * Runs the send queue while online: on start, when the network returns, after every queue change, and when the
- * next retry is due (R-011, SC-016).
+ * next retry is due (R-011, SC-016). `onDelivered` hears each order or draft change the server accepted.
  */
 export function useOutboxRunner(
   isOnline: boolean | null,
+  onDelivered?: (entry: OutboxEntry) => void,
   api: OrderWorkspaceApi = orderWorkspaceApi,
   env: QueueEnvironment = deviceEnvironment,
 ): void {
@@ -55,7 +61,7 @@ export function useOutboxRunner(
       null,
     );
 
-  const run = useEffectEvent(() => startDrain(db, api, env));
+  const run = useEffectEvent(() => startDrain(db, api, env, onDelivered));
 
   useEffect(() => {
     if (isOnline !== true || nextAttemptAt === null) return;

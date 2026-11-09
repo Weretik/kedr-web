@@ -14,6 +14,7 @@ module.exports = {
     '@shopify/flash-list/jestSetup',
     '<rootDir>/src/test-setup.ts',
     '<rootDir>/../../shared/ui/src/testing/vector-icons-mock.tsx',
+    '<rootDir>/../../shared/ui/src/testing/swipeable-mock.tsx',
   ],
   moduleNameMapper: {
     '^@mobile/core/local-db/testing$': '<rootDir>/../../core/local-db/src/testing.ts',

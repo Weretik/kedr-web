@@ -243,7 +243,12 @@ describe('send queue', () => {
     fillCalculation(db);
     const created = enqueueDraftSave(db, customer, 'Новий об’єкт', env);
     expect(readCalculation(db, customer).lines).toEqual([]);
-    await drainOutbox(db, api, env);
+    const delivered = jest.fn();
+    await drainOutbox(db, api, env, delivered);
+    // The customer's draft list refreshes once the server has the draft.
+    expect(delivered).toHaveBeenCalledWith(
+      expect.objectContaining({ counterpartyId: customer, kind: 'draft-save' }),
+    );
     expect(api.createDraft).toHaveBeenCalledWith(
       expect.objectContaining({ note: 'Самовивіз', title: 'Новий об’єкт' }),
       created.idempotencyKey,

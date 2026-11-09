@@ -8,8 +8,10 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { CalculationFooter } from './components/calculation-footer';
 import { CalculationLineRow } from './components/calculation-line-row';
+import { LineEditor } from './components/line-editor';
 import { OutboxRow } from './components/outbox-row';
 import { ReviewBanner } from './components/review-banner';
+import { UndoBar } from './components/undo-bar';
 
 const product: LineProduct = {
   id: 7,
@@ -18,55 +20,94 @@ const product: LineProduct = {
   stock: 10,
 };
 
-const handlers = () => ({
+const editorHandlers = () => ({
   onChangeAdjustment: jest.fn(),
   onChangeQuantity: jest.fn(),
+  onDone: jest.fn(),
   onRemove: jest.fn(),
 });
 
 describe('CalculationLineRow', () => {
-  it('shows a discount in red terms and the line amount (SC-011)', async () => {
+  it('shows quantity × price, the line amount and the per-piece mark (SC-011)', async () => {
     const line = priceLine({ adjustmentKopecks: -1_000, productId: 7, quantity: 4 }, product);
-    await render(<CalculationLineRow line={line} {...handlers()} />);
+    await render(<CalculationLineRow line={line} onOpen={jest.fn()} onRemove={jest.fn()} />);
 
-    expect(screen.getByText('−10 ₴/шт')).toBeTruthy();
+    expect(screen.getByText(/Код 7 · 4 × 402,00/)).toBeTruthy();
     expect(screen.getByText(/1\s?608,00/)).toBeTruthy();
-    expect(screen.getByDisplayValue('−10')).toBeTruthy();
+    expect(screen.getByText('−10/шт')).toBeTruthy();
   });
 
-  it('passes a typed adjustment on and explains a wrong one', async () => {
-    const props = handlers();
+  it('opens the line on a tap and removes it from the swipe action', async () => {
+    const onOpen = jest.fn();
+    const onRemove = jest.fn();
     const line = priceLine({ adjustmentKopecks: 0, productId: 7, quantity: 1 }, product);
-    await render(<CalculationLineRow line={line} {...props} />);
+    await render(<CalculationLineRow line={line} onOpen={onOpen} onRemove={onRemove} />);
+
+    await fireEvent.press(screen.getByRole('button', { name: /^Петля дверна, 1 × / }));
+    expect(onOpen).toHaveBeenCalledWith(7);
+    await fireEvent.press(screen.getByRole('button', { name: 'Прибрати Петля дверна' }));
+    expect(onRemove).toHaveBeenCalledWith(7);
+  });
+
+  it('marks a line the server changed and a line with a problem', async () => {
+    const line = priceLine(
+      { adjustmentKopecks: -500, productId: 7, quantity: 1 },
+      { ...product, priceKopecks: 500 },
+    );
+    await render(
+      <CalculationLineRow changed line={line} onOpen={jest.fn()} onRemove={jest.fn()} />,
+    );
+
+    expect(screen.getByText('змінено на сервері')).toBeTruthy();
+    expect(screen.getByText('Ціна не може бути нижче 1 ₴: найбільша знижка −4')).toBeTruthy();
+  });
+});
+
+describe('LineEditor', () => {
+  it('turns the sign switch and the amount into a per-piece adjustment', async () => {
+    const props = editorHandlers();
+    const line = priceLine({ adjustmentKopecks: 0, productId: 7, quantity: 1 }, product);
+    await render(<LineEditor line={line} {...props} />);
     const field = screen.getByLabelText('Знижка або націнка, гривень за штуку: Петля дверна');
 
-    await fireEvent.changeText(field, '+5');
+    await fireEvent.changeText(field, '5');
     expect(props.onChangeAdjustment).toHaveBeenLastCalledWith(500);
+
+    await fireEvent.press(screen.getByRole('tab', { name: 'Знижка −' }));
+    expect(props.onChangeAdjustment).toHaveBeenLastCalledWith(-500);
 
     await fireEvent.changeText(field, 'abc');
     expect(screen.getByText('Введіть суму в гривнях, наприклад −10 або 5')).toBeTruthy();
   });
 
-  it('says how far a discount may go below 1 ₴ (SC-012)', async () => {
-    const line = priceLine(
-      { adjustmentKopecks: -500, productId: 7, quantity: 1 },
-      { ...product, priceKopecks: 500 },
-    );
-    await render(<CalculationLineRow line={line} {...handlers()} />);
+  it('opens with the saved discount, shows the floor and the line amount (SC-012)', async () => {
+    const line = priceLine({ adjustmentKopecks: -1_000, productId: 7, quantity: 4 }, product);
+    await render(<LineEditor line={line} {...editorHandlers()} />);
 
-    expect(screen.getByText('Ціна не може бути нижче 1 ₴: найбільша знижка −4')).toBeTruthy();
+    expect(screen.getByDisplayValue('10')).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'Знижка −', selected: true })).toBeTruthy();
+    expect(screen.getByText('Найбільша знижка −411 грн: ціна не нижче 1 грн')).toBeTruthy();
+    expect(screen.getByText(/1\s?608,00/)).toBeTruthy();
   });
 
-  it('marks a line the server changed', async () => {
-    const line = priceLine({ adjustmentKopecks: 0, productId: 7, quantity: 1 }, product);
-    await render(<CalculationLineRow changed line={line} {...handlers()} />);
+  it('changes the quantity, closes and removes', async () => {
+    const props = editorHandlers();
+    const line = priceLine({ adjustmentKopecks: 0, productId: 7, quantity: 2 }, product);
+    await render(<LineEditor line={line} {...props} />);
 
-    expect(screen.getByText('змінено на сервері')).toBeTruthy();
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Збільшити кількість: Петля дверна' }),
+    );
+    expect(props.onChangeQuantity).toHaveBeenCalledWith(3);
+    await fireEvent.press(screen.getByRole('button', { name: 'Готово' }));
+    expect(props.onDone).toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Прибрати з розрахунку' }));
+    expect(props.onRemove).toHaveBeenCalled();
   });
 });
 
 describe('CalculationFooter', () => {
-  it('shows the adjustment total and total, and stops sending a line with a problem', async () => {
+  it('sums lines and pieces, shows the total, and stops sending a line with a problem', async () => {
     const good = priceLine({ adjustmentKopecks: -1_000, productId: 7, quantity: 4 }, product);
     const onSend = jest.fn();
     const { rerender } = await render(
@@ -76,7 +117,8 @@ describe('CalculationFooter', () => {
         totals={calculationTotals([good])}
       />,
     );
-    expect(screen.getByText(/Знижка −40,00/)).toBeTruthy();
+    expect(screen.getByText(/1 позиція · 4 шт · знижка −40,00/)).toBeTruthy();
+    expect(screen.getByLabelText(/Разом 1\s?608,00/)).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Відправити в 1С' }));
     expect(onSend).toHaveBeenCalled();
 
@@ -92,7 +134,15 @@ describe('CalculationFooter', () => {
       />,
     );
     expect(screen.getByRole('button', { name: 'Відправити в 1С' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Чернетка' })).toBeDisabled();
     expect(screen.getByText('Виправте позначені рядки')).toBeTruthy();
+  });
+
+  it('undoes from the undo bar', async () => {
+    const onUndo = jest.fn();
+    await render(<UndoBar message="Прибрано «Петля дверна»" onUndo={onUndo} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Скасувати' }));
+    expect(onUndo).toHaveBeenCalled();
   });
 });
 
