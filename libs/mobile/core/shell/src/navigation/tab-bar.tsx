@@ -1,11 +1,12 @@
-import { AppText, createStyles, Icon, useStyles } from '@mobile/shared/ui';
+import { AppText, createStyles, useStyles } from '@mobile/shared/ui';
 import { Pressable, View } from 'react-native';
 
-import { navItemAccessibilityLabel, navItemLabel, type WorkNavItem } from './work-nav-item';
+import { NavIcon } from './nav-icon';
+import { navItemAccessibilityLabel, type WorkNavItem } from './work-nav-item';
 
 import type { ReactNode } from 'react';
 
-/** Phone: white bottom bar with five tabs; locked tabs show a lock and do not open. */
+/** Phone: white bottom bar with four tabs; a locked tab shows a lock and opens customer choice. */
 export function TabBar({
   items,
   statusStrip,
@@ -24,19 +25,13 @@ export function TabBar({
             onPress={item.onPress}
             style={styles.item}
           >
-            <Icon
-              name={
-                item.locked ? 'lock-outline' : item.focused ? item.tab.activeIcon : item.tab.icon
-              }
-              size={24}
-              tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
-            />
+            <NavIcon item={item} />
             <AppText
               numberOfLines={1}
               tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
               variant="tabLabel"
             >
-              {navItemLabel(item)}
+              {item.tab.label}
             </AppText>
           </Pressable>
         ))}

@@ -1,7 +1,8 @@
-import { AppText, Avatar, BrandMark, createStyles, Icon, useStyles } from '@mobile/shared/ui';
+import { AppText, Avatar, BrandMark, createStyles, useStyles } from '@mobile/shared/ui';
 import { Pressable, View } from 'react-native';
 
-import { navItemAccessibilityLabel, navItemLabel, type WorkNavItem } from './work-nav-item';
+import { NavIcon } from './nav-icon';
+import { navItemAccessibilityLabel, type WorkNavItem } from './work-nav-item';
 
 import type { ReactNode } from 'react';
 
@@ -30,20 +31,14 @@ export function NavRail({
             onPress={item.onPress}
             style={styles.item(item.focused)}
           >
-            <Icon
-              name={
-                item.locked ? 'lock-outline' : item.focused ? item.tab.activeIcon : item.tab.icon
-              }
-              size={24}
-              tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
-            />
+            <NavIcon item={item} />
             <AppText
               align="center"
               numberOfLines={2}
               tone={item.locked ? 'disabled' : item.focused ? 'accent' : 'secondary'}
               variant="tabLabel"
             >
-              {navItemLabel(item)}
+              {item.tab.label}
             </AppText>
           </Pressable>
         ))}

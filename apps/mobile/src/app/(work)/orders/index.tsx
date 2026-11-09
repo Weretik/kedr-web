@@ -8,8 +8,10 @@ export default function OrdersRoute() {
   const isOnline = useConnectivity()?.isOnline ?? null;
 
   return (
-    <WorkScreen title="Замовлення">
-      <CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />
+    <WorkScreen
+      subheader={<CustomerBar customer={customer} onChange={() => router.navigate('/customer')} />}
+      title="Замовлення"
+    >
       <OrdersWorkspace
         isOnline={isOnline}
         onOpenCalculation={() => router.navigate('/calculation')}

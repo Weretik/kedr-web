@@ -26,6 +26,7 @@ export const typeScale = {
   price: style(fontFaces.bold, 16, 22),
   screenTitle: style(fontFaces.bold, 26, 32),
   secondary: style(fontFaces.regular, 13, 18),
+  secondaryStrong: style(fontFaces.semiBold, 13, 18),
   sectionTitle: style(fontFaces.bold, 20, 26),
   tabLabel: style(fontFaces.medium, 11, 14),
   total: style(fontFaces.bold, 24, 30),

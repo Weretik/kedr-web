@@ -10,8 +10,8 @@ export interface WorkNavItem {
   tab: WorkTab;
 }
 
-export const navItemLabel = (item: WorkNavItem): string =>
-  item.badge ? `${item.tab.label} · ${item.badge}` : item.tab.label;
-
-export const navItemAccessibilityLabel = (item: WorkNavItem): string =>
-  item.locked ? `${navItemLabel(item)}, спочатку оберіть клієнта` : navItemLabel(item);
+/** «Розрахунок · 3» for screen readers; the count itself is drawn as a badge on the icon. */
+export const navItemAccessibilityLabel = (item: WorkNavItem): string => {
+  const label = item.badge ? `${item.tab.label} · ${item.badge}` : item.tab.label;
+  return item.locked ? `${label}, спочатку оберіть клієнта` : label;
+};

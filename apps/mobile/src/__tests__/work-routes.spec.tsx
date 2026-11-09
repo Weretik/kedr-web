@@ -63,6 +63,7 @@ jest.mock('@mobile/customers/feature', () => {
     CustomerCard: () => null,
     CustomerChoice: () => <Text>Оберіть клієнта</Text>,
     useSelectedCustomerSummary: () => mockCustomer,
+    useRefreshCustomerActivity: () => jest.fn(),
   };
 });
 
@@ -149,6 +150,6 @@ describe('working area with a customer', () => {
 
     expect(screen).toHavePathname('/products');
     expect(screen.getByText('ТОВ «Альфа»')).toBeTruthy();
-    expect(screen.getByText('Ціни: Оптова')).toBeTruthy();
+    expect(screen.getByText(/ціни Оптова/)).toBeTruthy();
   });
 });
