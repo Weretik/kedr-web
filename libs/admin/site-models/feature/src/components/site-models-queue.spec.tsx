@@ -92,7 +92,7 @@ function Address() {
   return <output aria-label="Адреса">{location.search}</output>;
 }
 
-const renderQueue = (entry = '/site-showcase') =>
+const renderQueue = (entry = '/site-showcase?view=review') =>
   render(
     <MemoryRouter initialEntries={[entry]}>
       <SiteModelsQueue onNotice={vi.fn()} />
@@ -122,6 +122,14 @@ describe('SiteModelsQueue', () => {
     api.add.mockReturnValue({ unwrap: () => Promise.resolve(model(1, 'Завіса 100×75')) });
   });
 
+  it('opens «Усі» first by default', () => {
+    renderQueue('/site-showcase');
+    const views = screen.getAllByRole('button', { name: /·/ });
+    expect(views[0]?.textContent).toMatch(/^Усі/);
+    expect(views[0]?.getAttribute('aria-pressed')).toBe('true');
+    expect(api.showcase).toHaveBeenCalledWith(expect.not.objectContaining({ status: 'proposed' }));
+  });
+
   it('opens the first proposal with the counts of the views', () => {
     renderQueue();
     expect(screen.getByRole('button', { name: 'На перевірку · 2' })).toBeTruthy();
@@ -138,7 +146,9 @@ describe('SiteModelsQueue', () => {
     renderQueue();
     fireEvent.click(screen.getByRole('button', { name: 'Погодити і далі' }));
     expect(api.accept).toHaveBeenCalledWith([1]);
-    await waitFor(() => expect(screen.getByLabelText('Адреса').textContent).toBe('?item=m2'));
+    await waitFor(() =>
+      expect(screen.getByLabelText('Адреса').textContent).toBe('?view=review&item=m2'),
+    );
   });
 
   it('merges a similar proposal into the open model', () => {

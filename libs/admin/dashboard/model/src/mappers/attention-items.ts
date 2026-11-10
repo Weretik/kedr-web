@@ -111,7 +111,7 @@ export function attentionItems({
         ]
           .filter(Boolean)
           .join(' · ') || null,
-      href: '/site-showcase?view=all',
+      href: '/site-showcase',
       actionLabel: 'Відкрити вітрину сайту',
     });
   }
@@ -154,7 +154,7 @@ export function attentionItems({
       tone: 'note',
       title: `Запропоновані моделі: ${site.proposedModels}`,
       detail: 'Перегляньте кожну й погодьте, щоб товари отримали свої сторінки',
-      href: '/site-showcase',
+      href: '/site-showcase?view=review',
       actionLabel: 'Перевірити моделі',
     });
   }

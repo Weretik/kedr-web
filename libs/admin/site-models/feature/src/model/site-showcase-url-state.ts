@@ -48,13 +48,13 @@ function legacyView(params: URLSearchParams): SiteQueueView {
   if (problem === 'no_model') return 'lone';
   if (params.get('status') === 'proposed') return 'review';
   if (problem) return 'problems';
-  return 'review';
+  return 'all';
 }
 
 /** The address of the queue state: only what differs from the default. */
 export function writeSiteQueueState(state: SiteQueueState): URLSearchParams {
   const params = new URLSearchParams();
-  if (state.view !== 'review') params.set('view', state.view);
+  if (state.view !== 'all') params.set('view', state.view);
   if (state.categoryId) params.set('categoryId', String(state.categoryId));
   if (state.search) params.set('search', state.search);
   if (state.item) params.set('item', state.item);

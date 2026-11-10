@@ -7,7 +7,8 @@ import type { SiteShowcaseQuery } from '../queries/site-models-queries';
  */
 export type SiteQueueView = 'review' | 'problems' | 'lone' | 'all';
 
-export const siteQueueViews: readonly SiteQueueView[] = ['review', 'problems', 'lone', 'all'];
+/** «Усі» comes first and opens by default (owner, 2026-11-10). */
+export const siteQueueViews: readonly SiteQueueView[] = ['all', 'review', 'problems', 'lone'];
 
 export const siteQueueViewLabels: Record<SiteQueueView, string> = {
   review: 'На перевірку',

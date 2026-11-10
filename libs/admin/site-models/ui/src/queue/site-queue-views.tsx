@@ -9,7 +9,7 @@ interface SiteQueueViewsProps {
   onChange: (view: SiteQueueView) => void;
 }
 
-/** «На перевірку · N / З проблемами · N / Без моделі · N / Усі · N»; «Без моделі» only while there are such. */
+/** «Усі · N / На перевірку · N / З проблемами · N / Без моделі · N»; «Без моделі» only while there are such. */
 export function SiteQueueViews({ counts, onChange, value }: SiteQueueViewsProps) {
   const views = siteQueueViews.filter(
     (view) => view !== 'lone' || value === 'lone' || (counts?.lone ?? 0) > 0,
