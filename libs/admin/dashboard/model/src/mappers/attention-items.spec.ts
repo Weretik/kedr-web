@@ -111,7 +111,7 @@ describe('attentionItems', () => {
       detail: 'без SEO 40 · без фото 1',
       href: '/site-showcase?view=problems',
     });
-    expect(items[5].href).toBe('/site-showcase');
+    expect(items[5].href).toBe('/site-showcase?view=review');
   });
 
   it('links a single problem straight to its page', () => {

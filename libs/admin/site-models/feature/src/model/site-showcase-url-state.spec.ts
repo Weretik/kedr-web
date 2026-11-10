@@ -21,7 +21,9 @@ describe('«Вітрина сайту» address', () => {
     expect(writeSiteQueueState(state).toString()).toBe(
       'view=problems&categoryId=11&search=rio&item=m5',
     );
-    expect(writeSiteQueueState({ view: 'review' }).toString()).toBe('');
+    expect(writeSiteQueueState({ view: 'all' }).toString()).toBe('');
+    expect(writeSiteQueueState({ view: 'review' }).toString()).toBe('view=review');
+    expect(readSiteQueueState(new URLSearchParams()).view).toBe('all');
     expect(readSiteQueueState(new URLSearchParams('item=x1')).item).toBeUndefined();
   });
 
@@ -36,7 +38,7 @@ describe('«Вітрина сайту» address', () => {
       legacySiteShowcasePath('models', new URLSearchParams('status=accepted&problem=any')),
     ).toBe('/site-showcase?view=problems');
     expect(legacySiteShowcasePath('model', new URLSearchParams(), '42')).toBe(
-      '/site-showcase?view=all&item=m42',
+      '/site-showcase?item=m42',
     );
     expect(legacySiteShowcasePath('attributes', new URLSearchParams('tab=filters'))).toBe(
       '/site-showcase?tab=filters',
