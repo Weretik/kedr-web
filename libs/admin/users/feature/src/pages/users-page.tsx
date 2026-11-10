@@ -9,6 +9,7 @@ import { ChangeConfirmationDialog } from '../components/change-confirmation-dial
 import { StaffEditPanels } from '../components/staff-edit-panels';
 import { SuccessSnackbar } from '../components/success-snackbar';
 import { useStaffAccountActions } from '../hooks/use-staff-account-actions';
+import { useStaffCandidateSearch } from '../hooks/use-staff-candidate-search';
 import { isStaffProfileAction, useStaffProfileActions } from '../hooks/use-staff-profile-actions';
 
 import type { StaffAccount } from '@admin/users/model';
@@ -23,6 +24,7 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const actions = useStaffAccountActions(setSuccessMessage);
   const profileActions = useStaffProfileActions(setSuccessMessage);
+  const candidateSearch = useStaffCandidateSearch();
 
   const handleAction = (account: StaffAccount, action: StaffAccountAction) => {
     if (isStaffProfileAction(action)) {
@@ -64,8 +66,13 @@ export default function UsersPage({ currentUserId }: UsersPageProps) {
         />
       </Card>
       <CreateStaffPanel
+        candidates={candidateSearch.candidates}
+        candidatesLoading={candidateSearch.loading}
         error={actions.error}
+        onCandidateSearch={candidateSearch.onSearch}
         onClose={actions.closeDialogs}
+        onGrant={actions.submitGrant}
+        onModeChange={actions.clearError}
         onSubmit={actions.submitCreate}
         open={actions.isCreateOpen}
         submitting={actions.creating}

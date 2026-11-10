@@ -1,5 +1,8 @@
-import type { StaffAccountResponse } from '../contracts/staff-account.contract';
-import type { StaffAccount } from '@admin/users/model';
+import type {
+  StaffAccountResponse,
+  StaffCandidateResponse,
+} from '../contracts/staff-account.contract';
+import type { StaffAccount, StaffCandidate } from '@admin/users/model';
 
 export const mapStaffAccount = (response: StaffAccountResponse): StaffAccount => ({
   id: response.id,
@@ -12,3 +15,11 @@ export const mapStaffAccount = (response: StaffAccountResponse): StaffAccount =>
 
 export const mapStaffAccounts = (response: StaffAccountResponse[]): StaffAccount[] =>
   response.map(mapStaffAccount);
+
+export const mapStaffCandidates = (response: StaffCandidateResponse[]): StaffCandidate[] =>
+  response.map((candidate) => ({
+    id: candidate.id,
+    email: candidate.email,
+    fullName: candidate.fullName,
+    isCustomer: candidate.isCustomer,
+  }));

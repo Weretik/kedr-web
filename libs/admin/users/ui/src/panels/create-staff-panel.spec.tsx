@@ -52,4 +52,47 @@ describe('CreateStaffPanel', () => {
     );
     await waitFor(() => expect(onClose).toHaveBeenCalled());
   });
+  it('gives an existing customer staff access', async () => {
+    const onGrant = vi.fn().mockResolvedValue(true);
+    const onCandidateSearch = vi.fn();
+    render(
+      <CreateStaffPanel
+        candidates={[
+          { id: 'u-1', email: 'client@kedr.ua', fullName: 'ФОП Клієнт', isCustomer: true },
+        ]}
+        error={null}
+        onCandidateSearch={onCandidateSearch}
+        onClose={vi.fn()}
+        onGrant={onGrant}
+        onSubmit={vi.fn()}
+        open
+        submitting={false}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'З бази' }));
+    expect(screen.queryByLabelText(/^Email/)).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Надати доступ' }));
+    expect(onGrant).not.toHaveBeenCalled();
+    expect(screen.getByText('Оберіть користувача зі списку.')).toBeTruthy();
+
+    const picker = screen.getByRole('combobox', { name: /Користувач із бази/ });
+    fireEvent.change(picker, { target: { value: 'client' } });
+    expect(onCandidateSearch).toHaveBeenCalledWith('client');
+    fireEvent.click(await screen.findByRole('option', { name: /ФОП Клієнт/ }));
+
+    expect(screen.getByLabelText(/Імʼя/)).toHaveProperty('value', 'ФОП Клієнт');
+    fireEvent.change(screen.getByLabelText(/Новий пароль/), { target: { value: 'password-1' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Надати доступ' }));
+
+    await waitFor(() =>
+      expect(onGrant).toHaveBeenCalledWith({
+        userId: 'u-1',
+        fullName: 'ФОП Клієнт',
+        role: 'Manager',
+        password: 'password-1',
+      }),
+    );
+  });
 });

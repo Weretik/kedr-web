@@ -1,4 +1,5 @@
 import type { CreateStaffAccountInput } from '../entities/staff-account';
+import type { GrantStaffAccessInput } from '../entities/staff-candidate';
 
 /** Matches the server rule for staff passwords. */
 export const minStaffPasswordLength = 8;
@@ -35,6 +36,32 @@ export const validateStaffAccountInput = (
   const emailError = validateEmail(input.email);
   if (emailError) {
     errors.email = emailError;
+  }
+
+  const fullNameError = validateFullName(input.fullName);
+  if (fullNameError) {
+    errors.fullName = fullNameError;
+  }
+
+  const passwordError = validateStaffPassword(input.password);
+  if (passwordError) {
+    errors.password = passwordError;
+  }
+
+  return errors;
+};
+
+export type GrantStaffAccessFieldErrors = Partial<
+  Record<'userId' | 'fullName' | 'password', string>
+>;
+
+export const validateGrantStaffAccessInput = (
+  input: GrantStaffAccessInput,
+): GrantStaffAccessFieldErrors => {
+  const errors: GrantStaffAccessFieldErrors = {};
+
+  if (!input.userId) {
+    errors.userId = 'Оберіть користувача зі списку.';
   }
 
   const fullNameError = validateFullName(input.fullName);
