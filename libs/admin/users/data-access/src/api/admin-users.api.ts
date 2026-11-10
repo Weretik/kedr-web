@@ -1,14 +1,25 @@
 import { baseApi } from '@admin/shared/api-client';
 
-import { mapStaffAccount, mapStaffAccounts } from '../mappers/staff-account.mapper';
+import {
+  mapStaffAccount,
+  mapStaffAccounts,
+  mapStaffCandidates,
+} from '../mappers/staff-account.mapper';
 import { mapAvatarUrl, toAvatarForm } from '../mappers/staff-profile.mapper';
 
 import type {
   ChangeStaffEmailBody,
   CreateStaffAccountBody,
+  GrantStaffAccessBody,
 } from '../contracts/staff-account.contract';
 import type { ChangeNameBody } from '../contracts/staff-profile.contract';
-import type { CreateStaffAccountInput, StaffAccount, StaffRole } from '@admin/users/model';
+import type {
+  CreateStaffAccountInput,
+  GrantStaffAccessInput,
+  StaffAccount,
+  StaffCandidate,
+  StaffRole,
+} from '@admin/users/model';
 
 const root = '/api/admin/users';
 const userUrl = (userId: string, action: string) =>
@@ -31,6 +42,24 @@ export const adminUsersApi = baseApi.injectEndpoints({
           role: input.role,
           password: input.password,
         } satisfies CreateStaffAccountBody,
+      }),
+      transformResponse: mapStaffAccount,
+      invalidatesTags: ['StaffAccounts'],
+    }),
+    searchStaffCandidates: build.query<StaffCandidate[], string>({
+      query: (search) => ({ url: `${root}/candidates`, method: 'GET', params: { search } }),
+      transformResponse: mapStaffCandidates,
+      providesTags: ['StaffAccounts'],
+    }),
+    grantStaffAccess: build.mutation<StaffAccount, GrantStaffAccessInput>({
+      query: ({ userId, ...input }) => ({
+        url: userUrl(userId, 'staff-access'),
+        method: 'POST',
+        data: {
+          fullName: input.fullName.trim(),
+          role: input.role,
+          password: input.password,
+        } satisfies GrantStaffAccessBody,
       }),
       transformResponse: mapStaffAccount,
       invalidatesTags: ['StaffAccounts'],
@@ -96,7 +125,9 @@ export const {
   useChangeStaffRoleMutation,
   useCreateStaffAccountMutation,
   useGetStaffAccountsQuery,
+  useGrantStaffAccessMutation,
   useRemoveStaffAvatarMutation,
+  useSearchStaffCandidatesQuery,
   useSetStaffBlockedMutation,
   useSetStaffPasswordMutation,
   useUploadStaffAvatarMutation,

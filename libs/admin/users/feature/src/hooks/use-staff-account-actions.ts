@@ -1,19 +1,25 @@
 import {
   useChangeStaffRoleMutation,
   useCreateStaffAccountMutation,
+  useGrantStaffAccessMutation,
   useSetStaffBlockedMutation,
 } from '@admin/users/data-access';
 import { useState } from 'react';
 
 import { describeConfirmation } from './staff-action-confirmation';
-import { getStaffErrorMessage } from '../errors/staff-error-message';
+import { getStaffErrorMessage, isStaffConflict } from '../errors/staff-error-message';
 
 import type { ConfirmableAction, PendingConfirmation } from './staff-action-confirmation';
-import type { CreateStaffAccountInput, StaffAccount } from '@admin/users/model';
+import type {
+  CreateStaffAccountInput,
+  GrantStaffAccessInput,
+  StaffAccount,
+} from '@admin/users/model';
 
-/** Create, role and blocking on the users page; each dialog shows its own server error. */
+/** Create, staff access for an existing account, role and blocking on the users page; each dialog shows its own server error. */
 export function useStaffAccountActions(onSuccess: (message: string) => void) {
   const [createStaff, createState] = useCreateStaffAccountMutation();
+  const [grantAccess, grantState] = useGrantStaffAccessMutation();
   const [changeRole, changeRoleState] = useChangeStaffRoleMutation();
   const [setBlocked, setBlockedState] = useSetStaffBlockedMutation();
 
@@ -44,7 +50,27 @@ export function useStaffAccountActions(onSuccess: (message: string) => void) {
       onSuccess(`Користувача ${input.email.trim()} створено.`);
       return true;
     } catch (createError) {
-      setError(getStaffErrorMessage(createError));
+      setError(
+        isStaffConflict(createError)
+          ? 'Користувач з таким email вже є в базі (наприклад, як клієнт). Оберіть його на вкладці «З бази».'
+          : getStaffErrorMessage(createError),
+      );
+      return false;
+    }
+  };
+
+  const submitGrant = async (input: GrantStaffAccessInput): Promise<boolean> => {
+    try {
+      const account = await grantAccess(input).unwrap();
+      setError(null);
+      onSuccess(`Користувач ${account.email} отримав доступ до адмінки.`);
+      return true;
+    } catch (grantError) {
+      setError(
+        isStaffConflict(grantError)
+          ? 'Цей користувач уже має доступ до адмінки.'
+          : getStaffErrorMessage(grantError),
+      );
       return false;
     }
   };
@@ -72,11 +98,13 @@ export function useStaffAccountActions(onSuccess: (message: string) => void) {
     confirm,
     confirmation,
     confirming: changeRoleState.isLoading || setBlockedState.isLoading,
-    creating: createState.isLoading,
+    clearError: () => setError(null),
+    creating: createState.isLoading || grantState.isLoading,
     error,
     isCreateOpen,
     openCreate,
     startAction,
     submitCreate,
+    submitGrant,
   };
 }

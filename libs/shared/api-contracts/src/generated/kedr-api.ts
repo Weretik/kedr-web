@@ -1471,6 +1471,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/users/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Find existing accounts without staff access
+         * @description Up to 20 accounts without a staff role (usually customers imported from 1C) whose email or name contains the search text, case ignored, ordered by email.
+         */
+        get: operations["searchStaffCandidates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/staff-access": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Give an existing account a staff role and a password
+         * @description The account gets the role, the name, and a new password; its email stays. A customer keeps the customer role, orders and prices, and signs in on the site with the new password too. Its active refresh sessions end. Later 1C customer syncs no longer change the email, name, password, or block state of a staff account, and a customer removed from 1C keeps the staff account without the customer role.
+         */
+        post: operations["grantStaffAccess"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/users/{userId}/role": {
         parameters: {
             query?: never;
@@ -4148,6 +4188,20 @@ export interface components {
         CreateStaffAccountRequest: {
             /** Format: email */
             email: string;
+            fullName: string;
+            role: components["schemas"]["StaffRole"];
+            /** Format: password */
+            password: string;
+        };
+        StaffCandidateResponse: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            fullName: string;
+            /** @description The account has the customer role */
+            isCustomer: boolean;
+        };
+        GrantStaffAccessRequest: {
             fullName: string;
             role: components["schemas"]["StaffRole"];
             /** Format: password */
@@ -8948,7 +9002,114 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Email already used */
+            /** @description Email already used; give the existing account access through grantStaffAccess instead */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    searchStaffCandidates: {
+        parameters: {
+            query: {
+                search: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Matching accounts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffCandidateResponse"][];
+                };
+            };
+            /** @description Search shorter than 2 characters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    grantStaffAccess: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
+                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
+            };
+            path: {
+                userId: components["parameters"]["UserId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GrantStaffAccessRequest"];
+            };
+        };
+        responses: {
+            /** @description Staff access given */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffAccountResponse"];
+                };
+            };
+            /** @description Invalid name, role or password */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No account with this ID */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The account already has staff access */
             409: {
                 headers: {
                     [name: string]: unknown;

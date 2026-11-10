@@ -1,4 +1,8 @@
-import { validateStaffAccountInput, validateStaffPassword } from './staff-account-rules';
+import {
+  validateGrantStaffAccessInput,
+  validateStaffAccountInput,
+  validateStaffPassword,
+} from './staff-account-rules';
 
 describe('staff account rules', () => {
   it('accepts a complete account', () => {
@@ -26,5 +30,20 @@ describe('staff account rules', () => {
   it('requires at least 8 password characters', () => {
     expect(validateStaffPassword('1234567')).toBeDefined();
     expect(validateStaffPassword('12345678')).toBeUndefined();
+  });
+  it('needs a picked account, a name and a password to give staff access', () => {
+    expect(
+      Object.keys(
+        validateGrantStaffAccessInput({ userId: '', fullName: '', role: 'Manager', password: '' }),
+      ).sort(),
+    ).toEqual(['fullName', 'password', 'userId']);
+    expect(
+      validateGrantStaffAccessInput({
+        userId: 'u-1',
+        fullName: 'Клієнт',
+        role: 'Seo',
+        password: 'password-1',
+      }),
+    ).toEqual({});
   });
 });

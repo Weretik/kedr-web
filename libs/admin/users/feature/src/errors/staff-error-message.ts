@@ -28,6 +28,10 @@ const validationMessage = (fieldErrors: Record<string, string[]>): string => {
   return details.length > 0 ? `Перевірте дані: ${details.join(' ')}` : 'Перевірте введені дані.';
 };
 
+/** True for a 409: the email is taken or the account already has staff access. */
+export const isStaffConflict = (error: unknown): boolean =>
+  isApiError(error) && error.status === 409;
+
 /** Turns an RTK Query error from the users or profile API into a message for the dialog. */
 export const getStaffErrorMessage = (error: unknown): string => {
   if (!isApiError(error)) {
