@@ -192,7 +192,11 @@
       "@admin/work/model": ["./libs/admin/work/model/src/index.ts"],
       "@admin/work/data-access": ["./libs/admin/work/data-access/src/index.ts"],
       "@admin/work/ui": ["./libs/admin/work/ui/src/index.ts"],
-      "@admin/work/feature": ["./libs/admin/work/feature/src/index.ts"]
+      "@admin/work/feature": ["./libs/admin/work/feature/src/index.ts"],
+      "@admin/seo-settings/model": ["./libs/admin/seo-settings/model/src/index.ts"],
+      "@admin/seo-settings/data-access": ["./libs/admin/seo-settings/data-access/src/index.ts"],
+      "@admin/seo-settings/ui": ["./libs/admin/seo-settings/ui/src/index.ts"],
+      "@admin/seo-settings/feature": ["./libs/admin/seo-settings/feature/src/index.ts"]
     }
   }
 }

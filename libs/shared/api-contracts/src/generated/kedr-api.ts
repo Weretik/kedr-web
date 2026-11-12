@@ -2533,6 +2533,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/content/seo-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read the codes the site places on every page
+         * @description Public, because the site renders pages for anonymous visitors. Never returns who edited.
+         */
+        get: operations["getSiteSeoSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/seo-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read the settings for editing
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminSiteSeoSettings"];
+        /**
+         * Replace all settings
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Ids are trimmed and upper-cased; for a verification code the whole meta tag may be sent and its `content` is kept. A blank or missing value removes that code or picture. A new picture must be in the media library. Repeating it is safe.
+         */
+        put: operations["updateAdminSiteSeoSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/content/overview": {
         parameters: {
             query?: never;
@@ -4699,6 +4743,54 @@ export interface components {
             titleRu?: string | null;
             descriptionUk?: string | null;
             descriptionRu?: string | null;
+        };
+        SiteShareImage: {
+            /** Format: uri */
+            url: string;
+            width: number | null;
+            height: number | null;
+        };
+        SiteSeoSettings: {
+            /** @example G-AB12CD34EF */
+            googleAnalyticsId: string | null;
+            /** @example GTM-AB12CD3 */
+            googleTagManagerId: string | null;
+            googleSiteVerification: string | null;
+            bingSiteVerification: string | null;
+            /** @description Null when none is chosen or its file was deleted; the site keeps its own picture then. */
+            shareImage: components["schemas"]["SiteShareImage"] | null;
+        };
+        AdminSiteShareImage: {
+            /** Format: int64 */
+            mediaFileId: number;
+            /** Format: uri */
+            url: string | null;
+            fileName: string | null;
+            width: number | null;
+            height: number | null;
+            /** @description The file was deleted from the media library. */
+            missing: boolean;
+        };
+        AdminSiteSeoSettings: {
+            googleAnalyticsId: string | null;
+            googleTagManagerId: string | null;
+            googleSiteVerification: string | null;
+            bingSiteVerification: string | null;
+            shareImage: components["schemas"]["AdminSiteShareImage"] | null;
+            /** Format: date-time */
+            updatedAt: string;
+            /** @description Who saved the last change; null for the migration row. */
+            updatedBy: string | null;
+        };
+        SaveSiteSeoSettingsRequest: {
+            googleAnalyticsId?: string | null;
+            googleTagManagerId?: string | null;
+            /** @description The code or the whole meta tag. */
+            googleSiteVerification?: string | null;
+            /** @description The code or the whole meta tag. */
+            bingSiteVerification?: string | null;
+            /** Format: int64 */
+            shareImageMediaFileId?: number | null;
         };
         AdminContentOverviewDraft: {
             /** Format: int64 */
@@ -11830,6 +11922,126 @@ export interface operations {
             };
             /** @description Not a Manager, Seo, or Admin. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getSiteSeoSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The settings; empty codes are null. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteSeoSettings"];
+                };
+            };
+            /** @description The settings row is missing (the migration was not applied). */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminSiteSeoSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The settings with the chosen picture and who saved them. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteSeoSettings"];
+                };
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The settings row is missing. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminSiteSeoSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveSiteSeoSettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved settings. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteSeoSettings"];
+                };
+            };
+            /** @description An id or code of another shape, or a picture not in the media library; `errors` names the field. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a Manager, Seo, or Admin. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The settings row is missing. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

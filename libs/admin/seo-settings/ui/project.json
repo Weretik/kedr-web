@@ -1,0 +1,20 @@
+{
+  "name": "admin-seo-settings-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/seo-settings/ui/src",
+  "projectType": "library",
+  "tags": ["scope:admin", "domain:seo-settings", "type:ui"],
+  "targets": {
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}
