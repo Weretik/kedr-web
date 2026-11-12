@@ -2,6 +2,7 @@ import { DeliveryPaymentPage } from '@site/content/feature';
 import { buildDeliveryPaymentMetadata } from '@site/content/seo';
 import { isLocale } from '@site/core/i18n';
 import { withPageSeo } from '@site/shared/page-seo';
+import { withSiteSharePicture } from '@site/shared/seo-settings';
 import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
@@ -11,7 +12,9 @@ export async function generateMetadata({
 }: PageProps<'/[locale]/delivery-and-payment'>): Promise<Metadata> {
   const { locale } = await params;
   return isLocale(locale)
-    ? withPageSeo(locale, 'DeliveryPayment', buildDeliveryPaymentMetadata(locale))
+    ? withSiteSharePicture(
+        withPageSeo(locale, 'DeliveryPayment', buildDeliveryPaymentMetadata(locale)),
+      )
     : {};
 }
 

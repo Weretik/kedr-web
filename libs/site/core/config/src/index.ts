@@ -1,4 +1,5 @@
 export { COMPANY } from './lib/company';
+export { DEFAULT_OG_IMAGE } from './lib/share-image';
 export { FALLBACK_COMPANY_CONTACTS, formatUaPhone, viberChatLink } from './lib/company-contacts';
 export type { CompanyContacts } from './lib/company-contacts';
 export { createSiteConfig, siteConfig } from './lib/site-config';

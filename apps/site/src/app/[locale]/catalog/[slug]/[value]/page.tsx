@@ -1,6 +1,7 @@
 import { renderCartQuickAddAction } from '@site/cart/feature';
 import { CategoryValuePage, generateLandingMetadata } from '@site/catalog/feature';
 import { isLocale } from '@site/core/i18n';
+import { withSiteSharePicture } from '@site/shared/seo-settings';
 import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
@@ -12,7 +13,9 @@ export async function generateMetadata({
   searchParams,
 }: PageProps<'/[locale]/catalog/[slug]/[value]'>): Promise<Metadata> {
   const { locale, slug, value } = await params;
-  return isLocale(locale) ? generateLandingMetadata(locale, slug, value, searchParams) : {};
+  return isLocale(locale)
+    ? withSiteSharePicture(generateLandingMetadata(locale, slug, value, searchParams))
+    : {};
 }
 
 export default async function Page({

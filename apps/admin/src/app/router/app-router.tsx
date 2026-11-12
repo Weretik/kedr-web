@@ -31,6 +31,7 @@ import {
 } from '@admin/orders/feature';
 import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
+import { seoSettingsRoutes } from '@admin/seo-settings/feature';
 import { createSiteModelsRoutes } from '@admin/site-models/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { useGetStaffAccountsQuery } from '@admin/users/data-access';
@@ -156,6 +157,7 @@ export function AppRouter() {
         ...homeContentRoutes,
         ...wholesaleContentRoutes,
         ...pageSeoRoutes,
+        ...seoSettingsRoutes,
         ...profileRoutes,
         ...myTasksRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },

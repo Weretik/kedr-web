@@ -118,6 +118,7 @@
       "@admin/articles/feature": ["./libs/admin/articles/feature/src/index.ts"],
       "@site/shared/company": ["./libs/site/shared/company/src/index.ts"],
       "@site/shared/page-seo": ["./libs/site/shared/page-seo/src/index.ts"],
+      "@site/shared/seo-settings": ["./libs/site/shared/seo-settings/src/index.ts"],
       "@admin/company/model": ["./libs/admin/company/model/src/index.ts"],
       "@admin/company/data-access": ["./libs/admin/company/data-access/src/index.ts"],
       "@admin/company/ui": ["./libs/admin/company/ui/src/index.ts"],
@@ -192,7 +193,11 @@
       "@admin/work/model": ["./libs/admin/work/model/src/index.ts"],
       "@admin/work/data-access": ["./libs/admin/work/data-access/src/index.ts"],
       "@admin/work/ui": ["./libs/admin/work/ui/src/index.ts"],
-      "@admin/work/feature": ["./libs/admin/work/feature/src/index.ts"]
+      "@admin/work/feature": ["./libs/admin/work/feature/src/index.ts"],
+      "@admin/seo-settings/model": ["./libs/admin/seo-settings/model/src/index.ts"],
+      "@admin/seo-settings/data-access": ["./libs/admin/seo-settings/data-access/src/index.ts"],
+      "@admin/seo-settings/ui": ["./libs/admin/seo-settings/ui/src/index.ts"],
+      "@admin/seo-settings/feature": ["./libs/admin/seo-settings/feature/src/index.ts"]
     }
   }
 }

@@ -10,6 +10,7 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
@@ -84,6 +85,7 @@ export const navigationGroups: NavigationGroup[] = [
       { icon: <GavelOutlinedIcon />, label: 'Документи', to: '/documents' },
       { icon: <CollectionsOutlinedIcon />, label: 'Галерея', to: '/gallery' },
       { icon: <TravelExploreOutlinedIcon />, label: 'SEO сторінок', to: '/page-seo' },
+      { icon: <InsightsOutlinedIcon />, label: 'Налаштування SEO сайту', to: '/seo-settings' },
     ],
   },
   {
