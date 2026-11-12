@@ -1,4 +1,4 @@
-import { COMPANY, siteConfig } from '@site/core/config';
+import { COMPANY, DEFAULT_OG_IMAGE, siteConfig } from '@site/core/config';
 import { LOCALES, OPEN_GRAPH_LOCALES } from '@site/core/i18n';
 
 import { buildCanonicalPath, buildLanguageAlternates } from './alternates';
@@ -8,13 +8,8 @@ import type { SiteConfig } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { Metadata } from 'next';
 
-/** Shared preview for links to pages without their own picture (1200×630, in `apps/site/public`). */
-export const DEFAULT_OG_IMAGE = {
-  url: '/assets/og/kedr-og.jpg',
-  width: 1200,
-  height: 630,
-  alt: COMPANY.name,
-} as const;
+/** Shared preview for links to pages without their own picture; kept here for existing imports. */
+export { DEFAULT_OG_IMAGE };
 
 export type PageMetadataInput = {
   locale: Locale;

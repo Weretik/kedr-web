@@ -5,6 +5,7 @@ import {
   getCategoryStaticParams,
 } from '@site/catalog/feature';
 import { LOCALES, isLocale } from '@site/core/i18n';
+import { withSiteSharePicture } from '@site/shared/seo-settings';
 import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
@@ -25,7 +26,9 @@ export async function generateMetadata({
   searchParams,
 }: PageProps<'/[locale]/catalog/[slug]'>): Promise<Metadata> {
   const { locale, slug } = await params;
-  return isLocale(locale) ? generateCategoryMetadata(locale, slug, searchParams) : {};
+  return isLocale(locale)
+    ? withSiteSharePicture(generateCategoryMetadata(locale, slug, searchParams))
+    : {};
 }
 
 export default async function Page({

@@ -1,5 +1,6 @@
 import { ArticlesPage, generateArticlesMetadata } from '@site/content/feature';
 import { isLocale } from '@site/core/i18n';
+import { withSiteSharePicture } from '@site/shared/seo-settings';
 import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
@@ -9,7 +10,9 @@ export async function generateMetadata({
   searchParams,
 }: PageProps<'/[locale]/articles'>): Promise<Metadata> {
   const { locale } = await params;
-  return isLocale(locale) ? generateArticlesMetadata(locale, searchParams) : {};
+  return isLocale(locale)
+    ? withSiteSharePicture(generateArticlesMetadata(locale, searchParams))
+    : {};
 }
 
 export default async function Page({ params, searchParams }: PageProps<'/[locale]/articles'>) {

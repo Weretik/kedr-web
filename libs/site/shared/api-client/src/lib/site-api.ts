@@ -14,6 +14,7 @@ export type PublicGetPath = Extract<
   | `/api/content/{lang}/${string}`
   | '/api/content/contacts'
   | '/api/content/requisites'
+  | '/api/content/seo-settings'
 >;
 
 type GetOperation<P extends GetPath> = paths[P] extends { get: infer Operation }

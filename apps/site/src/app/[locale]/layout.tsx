@@ -1,9 +1,16 @@
 import { CartHeaderAction, CartRuntime } from '@site/cart/feature';
 import { getCatalogNavigation } from '@site/catalog/feature';
 import { LOCALES, LOCALE_LANGUAGE_TAGS, isLocale } from '@site/core/i18n';
-import { JsonLd, buildOrganizationJsonLd, buildRootMetadata } from '@site/core/seo';
+import {
+  JsonLd,
+  SiteAnalytics,
+  buildOrganizationJsonLd,
+  buildRootMetadata,
+  buildVerificationMetadata,
+} from '@site/core/seo';
 import { SiteShell, ThemeProvider } from '@site/core/shell';
 import { getCompanyContacts } from '@site/shared/company';
+import { applySharePicture, getSiteSeoSettings } from '@site/shared/seo-settings';
 import { notFound } from 'next/navigation';
 
 import '../global.css';
@@ -17,7 +24,13 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Promise<Metadata> {
   const { locale } = await params;
-  return isLocale(locale) ? buildRootMetadata(locale) : {};
+  if (!isLocale(locale)) return {};
+  // Verification codes and the link-preview picture of the admin «Налаштування SEO сайту».
+  const settings = await getSiteSeoSettings();
+  return {
+    ...applySharePicture(buildRootMetadata(locale), settings.sharePicture),
+    verification: buildVerificationMetadata(settings),
+  };
 }
 
 export const viewport: Viewport = {
@@ -30,9 +43,10 @@ export const viewport: Viewport = {
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const [catalogNavigation, contacts] = await Promise.all([
+  const [catalogNavigation, contacts, seoSettings] = await Promise.all([
     getCatalogNavigation(locale),
     getCompanyContacts(),
+    getSiteSeoSettings(),
   ]);
 
   return (
@@ -57,6 +71,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           </CartRuntime>
         </ThemeProvider>
         <JsonLd data={buildOrganizationJsonLd(locale, contacts)} />
+        <SiteAnalytics
+          googleAnalyticsId={seoSettings.googleAnalyticsId}
+          googleTagManagerId={seoSettings.googleTagManagerId}
+        />
       </body>
     </html>
   );

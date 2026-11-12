@@ -7,6 +7,10 @@ const documentedCrossDomainFlows = new Set([
   'admin-home-content-feature->admin-media-data-access',
   'admin-home-content-feature->admin-media-model',
   'admin-home-content-feature->admin-media-ui',
+  // Site link-preview picture: picked or uploaded from the media library (Content 011).
+  'admin-seo-settings-feature->admin-media-data-access',
+  'admin-seo-settings-feature->admin-media-model',
+  'admin-seo-settings-feature->admin-media-ui',
   // Article cover: picked from the media library (Content 008).
   'admin-articles-feature->admin-media-data-access',
   'admin-articles-feature->admin-media-model',

@@ -5,6 +5,7 @@ import {
 } from '@site/cart/feature';
 import { isLocale } from '@site/core/i18n';
 import { ModelPage, getModelMetadata, getProductStaticParams } from '@site/product/feature';
+import { withSiteSharePicture } from '@site/shared/seo-settings';
 import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
@@ -20,7 +21,7 @@ export const generateStaticParams = getProductStaticParams;
 export async function generateMetadata({ params }: ProductRouteProps): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  return getModelMetadata(locale, slug);
+  return withSiteSharePicture(getModelMetadata(locale, slug));
 }
 
 export default async function Page({ params, searchParams }: ProductRouteProps) {

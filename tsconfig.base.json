@@ -118,6 +118,7 @@
       "@admin/articles/feature": ["./libs/admin/articles/feature/src/index.ts"],
       "@site/shared/company": ["./libs/site/shared/company/src/index.ts"],
       "@site/shared/page-seo": ["./libs/site/shared/page-seo/src/index.ts"],
+      "@site/shared/seo-settings": ["./libs/site/shared/seo-settings/src/index.ts"],
       "@admin/company/model": ["./libs/admin/company/model/src/index.ts"],
       "@admin/company/data-access": ["./libs/admin/company/data-access/src/index.ts"],
       "@admin/company/ui": ["./libs/admin/company/ui/src/index.ts"],

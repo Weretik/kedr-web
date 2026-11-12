@@ -1,3 +1,4 @@
+export { SiteAnalytics } from './lib/analytics/site-analytics';
 export { buildRobotsFile, PRIVATE_PATHS } from './lib/crawling/robots-file';
 export { buildSitemapEntries } from './lib/crawling/sitemap-entries';
 export type { SitemapPage } from './lib/crawling/sitemap-entries';
@@ -12,3 +13,5 @@ export {
 } from './lib/metadata/page-metadata';
 export type { PageMetadataInput } from './lib/metadata/page-metadata';
 export { buildRobotsMeta } from './lib/metadata/robots-policy';
+export { analyticsId, buildVerificationMetadata, tagManagerId } from './lib/metadata/site-codes';
+export type { SiteCodes } from './lib/metadata/site-codes';
