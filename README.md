@@ -2,17 +2,20 @@
 
 [![CI](https://github.com/Weretik/kedr-web/actions/workflows/ci.yml/badge.svg)](https://github.com/Weretik/kedr-web/actions/workflows/ci.yml)
 
-Frontend monorepo for KEDR. It contains the customer-facing storefront, the internal administration panel, and the mobile application. The workspace is managed with [Nx](https://nx.dev), which provides task orchestration, local caching, and affected-project commands.
+Frontend monorepo of the **Kedr** platform: a door hardware wholesaler's public site, staff admin app and offline mobile app for sales managers. The backend, the system overview and the architecture diagrams are in [KedrStore](https://github.com/Weretik/KedrStore#readme). The workspace is managed with [Nx](https://nx.dev).
 
 ## Applications
 
-| Application  | Stack                          | Purpose                                                 |
-| ------------ | ------------------------------ | ------------------------------------------------------- |
-| `storefront` | Angular, PrimeNG, Tailwind CSS | Public web storefront with server-side rendering (SSR). |
-| `admin`      | React, Material UI             | Internal administration panel.                          |
-| `mobile`     | React Native, Expo             | KEDR mobile application.                                |
+| Application  | Stack                                                      | Purpose                                                                                     |
+| ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `site`       | Next.js 16 App Router, shadcn/ui, Tailwind CSS v4, OpenNext | Public catalog site [classkedr.com.ua](https://classkedr.com.ua) on Cloudflare Workers, UA/RU |
+| `admin`      | React 19, Vite, Material UI 9, RTK Query                   | Staff admin app on Cloudflare Pages                                                         |
+| `mobile`     | Expo, React Native, expo-sqlite + Drizzle                  | «Kedr Manager»: offline-first app for sales managers                                         |
+| `storefront` | Angular, PrimeNG                                           | Previous public storefront, replaced by `site`; kept until removal                          |
 
-Shared code lives in `libs/` and is grouped by application and responsibility. Project-level configuration and runnable targets live beside each application in `apps/*/project.json`.
+All clients use TypeScript types generated from the backend OpenAPI snapshot (`libs/shared/api-contracts`).
+
+Key decisions: [Next.js public site](docs/architecture/site/adr/0001-nextjs-public-site.md), [offline-first mobile app](docs/architecture/mobile/adr/0005-offline-first-local-database.md), [admin transport](docs/architecture/admin/adr/0001-admin-axios-transport.md). Feature list: [feature catalog](docs/features/README.md).
 
 ## Prerequisites
 
@@ -38,15 +41,21 @@ npm ci
 Run an application:
 
 ```bash
-# Storefront - http://localhost:4200 by default
-npx nx serve storefront
-
-# Admin panel
+# Admin panel - http://localhost:4200
 npx nx serve admin
 
-# Mobile app - starts Expo development server
-cd apps/mobile
-npx expo start
+# Public site - set KEDR_API_URL in apps/site/.env.local
+npx nx dev site
+
+# Mobile app - Expo dev server; needs a development build, not Expo Go
+npx nx start mobile
+```
+
+Example `apps/site/.env.local` (git-ignored):
+
+```dotenv
+KEDR_API_URL=https://localhost:7230
+KEDR_REVALIDATE_SECRET=<shared-secret>
 ```
 
 Nx is installed locally, so a global Nx installation is not required.
@@ -78,10 +87,12 @@ npm run storefront:start
 
 ```text
 apps/
-  storefront/   # Angular SSR storefront
+  site/         # Next.js public site
+  storefront/   # previous Angular storefront
   admin/        # React administration panel
   mobile/       # Expo / React Native application
 libs/
+  site/         # Site features, SEO, catalog, cart
   storefront/   # Shared storefront features and infrastructure
   admin/        # Shared admin features and infrastructure
   mobile/       # Shared mobile features and infrastructure
