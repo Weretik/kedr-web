@@ -4,14 +4,20 @@
 
 Frontend monorepo of the **Kedr** platform: a door hardware wholesaler's public site, staff admin app and offline mobile app for sales managers. The backend, the system overview and the architecture diagrams are in [KedrStore](https://github.com/Weretik/KedrStore#readme). The workspace is managed with [Nx](https://nx.dev).
 
+| Home (desktop)                               | Product page                                       | Home (phone)                                                                            |
+| -------------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| ![Home page](docs/screenshots/site-home.png) | ![Product page](docs/screenshots/site-product.png) | <img src="docs/screenshots/site-home-phone.png" alt="Home page on a phone" width="220"> |
+
+Live: [classkedr.com.ua](https://classkedr.com.ua). The platform has ~1,070 tests across backend and frontends, and managers work **about 25% faster** than with the old desktop app.
+
 ## Applications
 
-| Application  | Stack                                                      | Purpose                                                                                     |
-| ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `site`       | Next.js 16 App Router, shadcn/ui, Tailwind CSS v4, OpenNext | Public catalog site [classkedr.com.ua](https://classkedr.com.ua) on Cloudflare Workers, UA/RU |
-| `admin`      | React 19, Vite, Material UI 9, RTK Query                   | Staff admin app on Cloudflare Pages                                                         |
-| `mobile`     | Expo, React Native, expo-sqlite + Drizzle                  | «Kedr Manager»: offline-first app for sales managers                                         |
-| `storefront` | Angular, PrimeNG                                           | Previous public storefront, replaced by `site`; kept until removal                          |
+| Application  | Stack                                                       | Purpose                                                                                               |
+| ------------ | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `site`       | Next.js 16 App Router, shadcn/ui, Tailwind CSS v4, OpenNext | Public catalog site [classkedr.com.ua](https://classkedr.com.ua) on Cloudflare Workers, two languages |
+| `admin`      | React 19, Vite, Material UI 9, RTK Query                    | Staff admin app on Cloudflare Pages                                                                   |
+| `mobile`     | Expo, React Native, expo-sqlite + Drizzle                   | «Kedr Manager»: offline-first app for sales managers                                                  |
+| `storefront` | Angular, PrimeNG                                            | Previous public storefront, replaced by `site`; kept until removal                                    |
 
 All clients use TypeScript types generated from the backend OpenAPI snapshot (`libs/shared/api-contracts`).
 
