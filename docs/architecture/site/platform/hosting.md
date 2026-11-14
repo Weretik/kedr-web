@@ -35,7 +35,7 @@ The workaround from opennextjs-cloudflare issue #1464 (forcing `skipCrossRequest
 
 ## Images
 
-`next/image` uses the `IMAGES` binding (Cloudflare Images transformations; the free plan includes 5,000 unique transformations a month). Remote hosts are limited by `images.remotePatterns` in `next.config.ts`.
+`next/image` uses the `IMAGES` binding (Cloudflare Images transformations; the free plan includes 5,000 unique transformations a month). Remote hosts are limited by `images.remotePatterns` in `next.config.mjs`.
 
 ## Environment
 

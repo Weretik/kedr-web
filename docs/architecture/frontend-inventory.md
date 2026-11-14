@@ -16,7 +16,7 @@ This document records the current workspace; it does not declare violations acce
 
 | Area            | Fact                                                                                |
 | --------------- | ----------------------------------------------------------------------------------- |
-| Package manager | npm 11.6.2, `package-lock.json`, Node >=24.18 <25 (24.20.0 recommended)             |
+| Package manager | npm 11.6.2, `package-lock.json`, Node >=24.18 <25 (24.22.1 recommended)             |
 | Workspace       | Nx 23.2, 67 projects including the root npm project (checked 2026-10-19)            |
 | Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Site            | Next.js 16 App Router, React 19, shadcn/ui (Radix), Tailwind CSS v4, server `fetch` |

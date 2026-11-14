@@ -2,7 +2,7 @@
 
 **Code:** `apps/site` and `libs/site/*`
 **Status:** shell and migrated home, catalog, product, content and cart domains are implemented locally; see the [feature catalog](../../features/README.md). Domain cutover and deployment are not verified by this local update.
-**Shell baseline:** checked 2026-10-29 against `apps/site/src/app`, `apps/site/next.config.ts`, `libs/site/*/project.json`, and `next build` output.
+**Shell baseline:** checked 2026-10-29 against `apps/site/src/app`, `apps/site/next.config.mjs`, `libs/site/*/project.json`, and `next build` output.
 **Cart update:** 2026-11-04, source and focused automated verification; see the [cart feature](../../features/site/cart.md). Build, HTTP, browser and live-order verification were not run for this change.
 
 ## Purpose and boundary

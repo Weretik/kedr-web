@@ -19,7 +19,7 @@ Key decisions: [Next.js public site](docs/architecture/site/adr/0001-nextjs-publ
 
 ## Prerequisites
 
-- Node.js **24.18.x or newer in the 24.x line** (`package.json`); `.nvmrc` and `.node-version` recommend 24.20.0
+- Node.js **24.18.x or newer in the 24.x line** (`package.json`); `.nvmrc` and `.node-version` recommend 24.22.1
 - npm (the repository uses `package-lock.json`)
 
 Check your installed Node.js version:

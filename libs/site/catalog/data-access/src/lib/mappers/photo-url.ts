@@ -1,4 +1,4 @@
-/** Product photos are served by this CDN; keep in sync with `images.remotePatterns` in `apps/site/next.config.ts`. */
+/** Product photos are served by this CDN; keep in sync with `images.remotePatterns` in `apps/site/next.config.mjs`. */
 export const PRODUCT_IMAGE_HOST = 'images-kedr.cdn.express';
 
 /** Only HTTPS photos on the image CDN reach `next/image`; anything else falls back to the placeholder. */

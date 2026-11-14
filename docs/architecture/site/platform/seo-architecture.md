@@ -1,7 +1,7 @@
 # SEO architecture — site
 
 **Checked:** 2026-11-01
-**Sources:** `libs/site/core/seo`, `libs/site/core/i18n`, `libs/site/core/config`, `apps/site/src/app/robots.ts`, `apps/site/src/app/sitemap.ts`, `apps/site/next.config.ts`
+**Sources:** `libs/site/core/seo`, `libs/site/core/i18n`, `libs/site/core/config`, `apps/site/src/app/robots.ts`, `apps/site/src/app/sitemap.ts`, `apps/site/next.config.mjs`
 
 Site-wide SEO decisions. Feature specifications apply them in their `design/seo.md` and propose changes here through review. Per-feature findings for the current storefront are in the [feature inventory](../../../specs/site/migration/feature-inventory.md).
 

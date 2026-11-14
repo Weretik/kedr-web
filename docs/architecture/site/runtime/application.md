@@ -1,6 +1,6 @@
 # Site application and routing
 
-**Baseline checked:** 2026-10-30. **Sources:** `apps/site/src/app/**`, `apps/site/src/proxy.ts`, `apps/site/next.config.ts`, `libs/site/core/shell/src/lib/layout/site-shell.tsx`.
+**Baseline checked:** 2026-10-30. **Sources:** `apps/site/src/app/**`, `apps/site/src/proxy.ts`, `apps/site/next.config.mjs`, `libs/site/core/shell/src/lib/layout/site-shell.tsx`.
 **Cart update:** source and focused automated verification on 2026-11-04; build, HTTP, browser and live-order checks were not run for this change.
 
 ## Composition point
@@ -11,9 +11,9 @@
 
 | Path                          | Entry                                  | Owner                                                 | Locale and indexing                                | Status                         |
 | ----------------------------- | -------------------------------------- | ----------------------------------------------------- | -------------------------------------------------- | ------------------------------ |
-| `/`                           | `next.config.ts` redirect              | app                                                   | 308 to `/uk`                                       | exists                         |
+| `/`                           | `next.config.mjs` redirect              | app                                                   | 308 to `/uk`                                       | exists                         |
 | `/uk`, `/ru`                  | `app/[locale]/page.tsx`                | `home/feature`                                        | prerendered, `generateStaticParams`                | exists                         |
-| `/{locale}/categories`        | `next.config.ts` redirect              | app                                                   | 308 to `/{locale}`                                 | exists                         |
+| `/{locale}/categories`        | `next.config.mjs` redirect              | app                                                   | 308 to `/{locale}`                                 | exists                         |
 | path without a locale         | `src/proxy.ts` rewrite                 | app                                                   | 404 from `global-not-found`                        | exists                         |
 | unmatched URL                 | `app/global-not-found.tsx`             | app                                                   | 404, `noindex`, both languages                     | exists                         |
 | `notFound()` inside a page    | `app/[locale]/not-found.tsx`           | app                                                   | 404, `noindex`, inside the shell                   | exists                         |

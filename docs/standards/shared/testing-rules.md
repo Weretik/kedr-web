@@ -11,7 +11,7 @@ This is the single source of stable rules for selecting frontend tests and apply
 | Storefront Angular  | `npm run test:storefront` runs Vitest for `storefront-data-access`: three spec files with focused contract and mapper tests. `npm run typecheck:tests:storefront` checks test TypeScript; `storefront:lint` and `storefront:build` check code and build. Full application coverage does not yet exist.                                                                     |
 | E2E                 | Web: Playwright 1.63, `admin-e2e` project, Chromium only. Mobile: Detox, Maestro, and Appium are absent; mobile E2E requires a separate `EN-*`, a device/build strategy, and an available Android/iOS environment.                                                                                                                                                         |
 
-The package manager is npm with a committed `package-lock.json`. The repository supports Node >=24.18 <25 through `engines`; `.nvmrc` and `.node-version` recommend 24.20.0. Always verify exact targets with `npx nx show project <project> --json`.
+The package manager is npm with a committed `package-lock.json`. The repository supports Node >=24.18 <25 through `engines`; `.nvmrc` and `.node-version` recommend 24.22.1. Always verify exact targets with `npx nx show project <project> --json`.
 
 You may recommend a missing tool in an `EN-*` task. Do not add it to dependencies or create configuration without a concrete scenario need and authorized scope.
 
