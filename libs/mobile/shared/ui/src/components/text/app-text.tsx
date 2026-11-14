@@ -1,7 +1,7 @@
 import { Text, type TextProps } from 'react-native';
 
 import { createStyles, useStyles } from '../../theme/create-styles';
-import { tabularNumbers, type TypeVariant } from '../../theme/typography';
+import { tabularNumbers, type TypeVariant } from '../../theme/tokens/typography';
 import { toneColor, type Tone } from '../tone';
 
 export interface AppTextProps extends TextProps {
