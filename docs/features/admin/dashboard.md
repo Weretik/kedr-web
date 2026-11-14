@@ -24,7 +24,7 @@ flowchart LR
 libs/admin/dashboard/
 ├── model/src/
 │   ├── entities/dashboard-overview.ts     # orders, catalog, content blocks
-│   └── mappers/{attention-items,greeting,plural}.ts
+│   └── mappers/{attention-items,greeting,plural}.ts, attention/{order,catalog,content}-attention.ts
 ├── data-access/src/
 │   ├── api/admin-overview.api.ts          # three queries
 │   ├── validators/overview.schemas.ts
