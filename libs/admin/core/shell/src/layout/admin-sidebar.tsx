@@ -2,6 +2,7 @@ import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDou
 import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { AdminLogo } from './admin-logo';
 import { AdminNavigation } from '../navigation/admin-navigation';
 import { sidebarColors } from '../navigation/sidebar-colors';
 import { useAdminShellUser } from '../providers/admin-shell-session-provider';
@@ -12,30 +13,6 @@ interface AdminSidebarProps {
   onNavigate?: () => void;
   /** Shown only for the desktop drawer, which can be collapsed to icons. */
   onToggleCollapsed?: () => void;
-}
-
-function AdminLogo({ isCollapsed }: { isCollapsed: boolean }) {
-  const height = 44;
-
-  if (isCollapsed)
-    return (
-      <Box
-        alt="Логотип Class Kedr"
-        component="img"
-        src="/assets/logo/kedr-emblem.svg"
-        sx={{ borderRadius: '10px', display: 'block', height: 40, width: 40 }}
-      />
-    );
-
-  // The drawer is dark in both color schemes, so only the on-dark logo is used.
-  return (
-    <Box
-      alt="Логотип Class Kedr"
-      component="img"
-      src="/assets/logo/main-logo-on-dark.svg"
-      sx={{ display: 'block', height, width: 'auto' }}
-    />
-  );
 }
 
 export function AdminSidebar({

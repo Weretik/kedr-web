@@ -91,7 +91,7 @@ const isForbiddenName = (name, isFolder) => {
 const effectiveLength = (text) => {
   const style = styleSheetStart.exec(text);
   const body = style ? text.slice(0, style.index) : text;
-  return body.split('\n').length;
+  return body.replace(/\n$/, '').split('\n').length;
 };
 
 const count = (text, pattern) => (text.match(pattern) ?? []).length;
