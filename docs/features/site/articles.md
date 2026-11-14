@@ -8,7 +8,7 @@ Query owner: content/model, `q`, `pageSize`, `page`. Defaults omitted, input bou
 
 ## Джерело та межі
 
-Статті зберігаються в модулі Content KedrStore (схема `content`); шість матеріалів старого storefront перенесено туди міграцією разом з обкладинками. Сайт читає публічний API `GET /api/content/{lang}/articles` і `/{lang}/articles/{slug}` у server-only [article-loaders.ts](../../../libs/site/content/data-access/src/lib/articles/article-loaders.ts) з тегами `content`, `content:articles`, `article:{slug}` і життям 5/10 хв (збій — 1 хв). Обкладинка — `coverUrl` з CDN (`images-kedr.cdn.express/articles/…`); у шести старих статей, поки обкладинку не замінять, — абсолютний URL API (`/api/content/articles/{id}/cover?v=…`, immutable). Обидва хости дозволені в `next.config.ts` images. Пошук у списку йде по заголовку й короткому опису: список API не віддає тексти. Недоступний API дає 500, невідомий slug — 404; при збої під час build пререндериться placeholder-slug, що відповідає 404. Статті редагують в адмінці ([Admin Articles](../admin/articles.md)).
+Статті зберігаються в модулі Content KedrStore (схема `content`); шість матеріалів старого storefront перенесено туди міграцією разом з обкладинками. Сайт читає публічний API `GET /api/content/{lang}/articles` і `/{lang}/articles/{slug}` у server-only [article-loaders.ts](../../../libs/site/content/data-access/src/lib/articles/article-loaders.ts) з тегами `content`, `content:articles`, `article:{slug}` і життям 5/10 хв (збій — 1 хв). Обкладинка — `coverUrl` з CDN (`images-kedr.cdn.express/articles/…`); у шести старих статей, поки обкладинку не замінять, — абсолютний URL API (`/api/content/articles/{id}/cover?v=…`, immutable). Обидва хости дозволені в `next.config.mjs` images. Пошук у списку йде по заголовку й короткому опису: список API не віддає тексти. Недоступний API дає 500, невідомий slug — 404; при збої під час build пререндериться placeholder-slug, що відповідає 404. Статті редагують в адмінці ([Admin Articles](../admin/articles.md)).
 
 List metadata/BreadcrumbList, detail metadata/Article graph делегують core SEO; actual q і nondefault size noindex, search має self canonical без hreflang; звичайні сторінки та detail — self canonical/UK-RU/x-default. Production gate збережений. Sitemap додає список і кожну опубліковану статтю обома мовами з API ([article-sitemap.ts](../../../libs/site/content/feature/src/lib/articles/article-sitemap.ts)), без query/ID/вигаданих дат зміни.
 
@@ -32,8 +32,8 @@ flowchart LR
 
 ```text
 apps/site/
-  article-redirects.ts                       # deployment redirect map
-  next.config.ts                            # includes the six 301 rules
+  article-redirects.mjs                       # deployment redirect map
+  next.config.mjs                            # includes the six 301 rules
   src/app/[locale]/(content)/articles/
     page.tsx                                # thin list + metadata
     [slug]/page.tsx                          # thin detail + parent-locale SSG

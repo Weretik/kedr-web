@@ -1,16 +1,16 @@
 import path from 'node:path';
 
-import { articleRedirects } from './article-redirects';
-
-import type { NextConfig } from 'next';
+import { articleRedirects } from './article-redirects.mjs';
 
 // Nx libraries live outside the app folder, so the workspace root is the build and tracing root.
-const workspaceRoot = path.join(__dirname, '../..');
+const workspaceRoot = path.join(import.meta.dirname, '../..');
 
 // Article covers are served by the API (Content module); keep the host in sync with siteConfig.apiUrl.
 const apiUrl = new URL(process.env['KEDR_API_URL'] || 'https://api.classkedr.com.ua');
 
-const nextConfig: NextConfig = {
+// Plain ESM, not TypeScript: Node loads it natively, so the Nx plugin and the Cloudflare build need no SWC binding to read it.
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   trailingSlash: false,

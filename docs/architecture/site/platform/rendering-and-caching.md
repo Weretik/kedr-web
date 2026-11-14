@@ -1,7 +1,7 @@
 # Rendering and caching — site
 
 **Checked:** 2026-11-01
-**Sources:** `apps/site/next.config.ts`, `apps/site/src/app/**`, `libs/site/shared/api-client/src/lib/site-api.ts`, `libs/site/catalog/data-access/src/lib/loaders/catalog-loaders.ts`
+**Sources:** `apps/site/next.config.mjs`, `apps/site/src/app/**`, `libs/site/shared/api-client/src/lib/site-api.ts`, `libs/site/catalog/data-access/src/lib/loaders/catalog-loaders.ts`
 
 **Cart source update:** 2026-11-04, additionally checked against `cart/feature` runtime/private checkout, `cart/ui` container CSS and `shared/api-client/src/lib/site-order-api.ts`. Focused automated/source evidence is in the [cart feature](../../../features/site/cart.md); no build, HTTP, browser or live-order verification is claimed here.
 
