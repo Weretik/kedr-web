@@ -1,8 +1,8 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { ArticlePage, generateArticleMetadata, getArticleStaticParams } from './article-page';
-import { getArticleSitemapPages } from './article-sitemap';
 import { ArticlesResults, generateArticlesMetadata } from './articles-page';
+import { getArticleSitemapPages } from '../sitemap/article-sitemap';
 
 import type { Article } from '@site/content/model';
 

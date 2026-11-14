@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { ArticleContent } from './article-content';
 import { ArticlesContent } from './articles-content';
 import { ArticlesHeader } from './articles-header';
-import { ArticlesLoading } from './articles-loading';
+import { ArticlesLoading } from './list/articles-loading';
 
 import type { Article, ArticlesListing, ArticlesQuery } from '@site/content/model';
 import type { ImgHTMLAttributes } from 'react';

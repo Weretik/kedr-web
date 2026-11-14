@@ -1,9 +1,9 @@
-import { ReturnsFaq } from './returns-faq';
 import { ReturnsHeader } from './returns-header';
-import { ReturnsPanels } from './returns-panels';
-import { ReturnsPolicy } from './returns-policy';
-import { ReturnsProcess } from './returns-process';
-import { ReturnsSupport } from './returns-support';
+import { ReturnsFaq } from './sections/returns-faq';
+import { ReturnsPanels } from './sections/returns-panels';
+import { ReturnsPolicy } from './sections/returns-policy';
+import { ReturnsProcess } from './sections/returns-process';
+import { ReturnsSupport } from './sections/returns-support';
 
 import type { LegalDocument, ReturnsDictionary } from '@site/content/model';
 import type { CompanyContacts } from '@site/core/config';

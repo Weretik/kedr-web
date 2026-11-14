@@ -7,10 +7,10 @@ import {
 import { localizedPath } from '@site/core/i18n';
 import Link from 'next/link';
 
-import { ArticleCard } from './article-card';
-import { ArticlesPageSizeSelect } from './articles-page-size-select';
-import { ArticlesPagination } from './articles-pagination';
-import { ArticlesSearchForm } from './articles-search-form';
+import { ArticleCard } from './list/article-card';
+import { ArticlesPageSizeSelect } from './list/articles-page-size-select';
+import { ArticlesPagination } from './list/articles-pagination';
+import { ArticlesSearchForm } from './list/articles-search-form';
 
 import type { ArticlesListing } from '@site/content/model';
 import type { Locale } from '@site/core/i18n';

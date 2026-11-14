@@ -10,7 +10,7 @@ import { useRef, useState } from 'react';
 
 import { GalleryFilters } from './gallery-filters';
 import { GalleryGrid } from './gallery-grid';
-import { MediaViewer } from './media-viewer';
+import { MediaViewer } from './media/media-viewer';
 
 import type { GalleryDictionary, GalleryFilter, GalleryMedia } from '@site/content/model';
 

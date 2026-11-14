@@ -1,8 +1,8 @@
-import { RequisitesAdministration } from './requisites-administration';
-import { RequisitesBank } from './requisites-bank';
 import { RequisitesHeader } from './requisites-header';
-import { RequisitesPayment } from './requisites-payment';
-import { RequisitesSupport } from './requisites-support';
+import { RequisitesAdministration } from './sections/requisites-administration';
+import { RequisitesBank } from './sections/requisites-bank';
+import { RequisitesPayment } from './sections/requisites-payment';
+import { RequisitesSupport } from './sections/requisites-support';
 
 import type { RequisitesDetails, RequisitesDictionary } from '@site/content/model';
 
