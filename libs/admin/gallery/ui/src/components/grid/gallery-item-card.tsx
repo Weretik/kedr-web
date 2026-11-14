@@ -1,12 +1,8 @@
 import { galleryItemLabel } from '@admin/gallery/model';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupportedOutlined';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import { Box, Card, Chip, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
+
+import { GalleryItemActions } from './gallery-item-actions';
+import { GalleryItemPreview } from './gallery-item-preview';
 
 import type { GalleryItem } from '@admin/gallery/model';
 import type { DragEvent } from 'react';
@@ -64,69 +60,7 @@ export function GalleryItemCard({
       }}
       variant="outlined"
     >
-      <Box
-        sx={{
-          alignItems: 'center',
-          aspectRatio: '16 / 10',
-          bgcolor: 'action.hover',
-          display: 'flex',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-      >
-        {item.previewUrl ? (
-          <Box
-            alt=""
-            component="img"
-            decoding="async"
-            draggable={false}
-            loading="lazy"
-            src={item.previewUrl}
-            sx={{ height: '100%', objectFit: 'cover', width: '100%' }}
-          />
-        ) : (
-          <ImageNotSupportedOutlinedIcon color="disabled" fontSize="large" />
-        )}
-        {item.kind === 'video' ? (
-          <Box
-            aria-hidden
-            sx={{
-              bgcolor: 'rgba(0,0,0,0.6)',
-              borderRadius: '50%',
-              color: 'common.white',
-              display: 'grid',
-              height: 44,
-              left: '50%',
-              placeItems: 'center',
-              position: 'absolute',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 44,
-            }}
-          >
-            <PlayArrowRoundedIcon />
-          </Box>
-        ) : null}
-        <Chip
-          label={`${index + 1} · ${item.kind === 'video' ? 'Відео' : 'Фото'}`}
-          size="small"
-          sx={{ bgcolor: 'background.paper', left: 8, position: 'absolute', top: 8 }}
-        />
-        <Tooltip title="Перетягніть, щоб змінити порядок">
-          <DragIndicatorIcon
-            aria-hidden
-            sx={{
-              bgcolor: 'background.paper',
-              borderRadius: 1,
-              cursor: disabled ? 'default' : 'grab',
-              position: 'absolute',
-              right: 8,
-              top: 8,
-            }}
-          />
-        </Tooltip>
-      </Box>
+      <GalleryItemPreview disabled={disabled} index={index} item={item} />
       <Stack spacing={0.5} sx={{ flex: 1, px: 1.5, py: 1 }}>
         {item.fileMissing ? (
           <Typography color="warning.main" variant="caption">
@@ -155,50 +89,15 @@ export function GalleryItemCard({
           </Typography>
         ) : null}
       </Stack>
-      <Stack
-        direction="row"
-        sx={{ alignItems: 'center', borderTop: 1, borderColor: 'divider', px: 0.5 }}
-      >
-        <Tooltip title="Раніше">
-          <span>
-            <IconButton
-              aria-label={`Перемістити «${name}» раніше`}
-              disabled={disabled || index === 0}
-              onClick={() => onMove(item, index - 1)}
-              size="small"
-            >
-              <ArrowBackIcon fontSize="small" />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Пізніше">
-          <span>
-            <IconButton
-              aria-label={`Перемістити «${name}» пізніше`}
-              disabled={disabled || index === count - 1}
-              onClick={() => onMove(item, index + 1)}
-              size="small"
-            >
-              <ArrowForwardIcon fontSize="small" />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Box sx={{ flex: 1 }} />
-        <Tooltip title="Назва та підпис">
-          <IconButton aria-label={`Редагувати «${name}»`} onClick={() => onEdit(item)} size="small">
-            <EditOutlinedIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Прибрати з галереї">
-          <IconButton
-            aria-label={`Прибрати «${name}» з галереї`}
-            onClick={() => onRemove(item)}
-            size="small"
-          >
-            <DeleteOutlineIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Stack>
+      <GalleryItemActions
+        count={count}
+        disabled={disabled}
+        index={index}
+        name={name}
+        onEdit={() => onEdit(item)}
+        onMove={(to) => onMove(item, to)}
+        onRemove={() => onRemove(item)}
+      />
     </Card>
   );
 }
