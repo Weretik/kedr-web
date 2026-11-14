@@ -1,10 +1,4 @@
-import {
-  useCreateAttributeValueMutation,
-  useGetCatalogAttributeQuery,
-  useUpdateAttributeValueMutation,
-  useUpdateCatalogAttributeMutation,
-  useUploadAttributeSwatchMutation,
-} from '@admin/catalog-attributes/data-access';
+import { useGetCatalogAttributeQuery } from '@admin/catalog-attributes/data-access';
 import {
   AttributeAliasesCard,
   AttributeSettingsCard,
@@ -15,17 +9,12 @@ import { MediaPickerDialog } from '@admin/media/ui';
 import { AdminEditPanel, PageLoader } from '@admin/shared/ui';
 import { Alert, Button } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
-import { useState } from 'react';
 
-import { catalogAttributesErrorMessage } from '../errors/catalog-attributes-error-message';
+import { useAttributeSettingsSave } from '../hooks/use-attribute-settings-save';
+import { useAttributeValueEditor } from '../hooks/use-attribute-value-editor';
 import { useTexturePicker } from '../hooks/use-texture-picker';
 
-import type {
-  CatalogAttributeChange,
-  CatalogAttributeValue,
-  CatalogAttributeValueChange,
-} from '@admin/catalog-attributes/model';
-import type { SwatchTexture } from '@admin/catalog-attributes/ui';
+import type { ValueEdit } from '../hooks/use-attribute-value-editor';
 
 interface AttributeEditPanelProps {
   attributeId: number | undefined;
@@ -37,12 +26,6 @@ interface AttributeEditPanelProps {
   initialValueEdit?: ValueEdit;
 }
 
-/** The value being edited: `null` while adding a new one. */
-type ValueEdit = { value: CatalogAttributeValue | null } | undefined;
-
-const textureOf = (value: CatalogAttributeValue | null | undefined): SwatchTexture | null =>
-  value?.swatchMediaFileId ? { id: value.swatchMediaFileId, url: value.swatchImageUrl } : null;
-
 /** Everything of one attribute: its settings, values with swatches, and 1C spellings. */
 export function AttributeEditPanel({
   attributeId,
@@ -53,61 +36,14 @@ export function AttributeEditPanel({
   open,
 }: AttributeEditPanelProps) {
   const query = useGetCatalogAttributeQuery(attributeId ?? skipToken);
-  const [updateAttribute, attributeState] = useUpdateCatalogAttributeMutation();
-  const [createValue, createState] = useCreateAttributeValueMutation();
-  const [updateValue, valueState] = useUpdateAttributeValueMutation();
-  const [uploadSwatch, uploadState] = useUploadAttributeSwatchMutation();
-  const [attributeError, setAttributeError] = useState<string | null>(null);
-  const [valueEdit, setValueEdit] = useState<ValueEdit>(initialValueEdit);
-  const [valueError, setValueError] = useState<string | null>(null);
-  const [texture, setTexture] = useState<SwatchTexture | null>(textureOf(initialValueEdit?.value));
-  const picker = useTexturePicker((file) => setTexture({ id: file.id, url: file.url }));
+  const settings = useAttributeSettingsSave(attributeId, onNotice);
+  const values = useAttributeValueEditor(attributeId, initialValueEdit, onNotice);
+  const picker = useTexturePicker((file) => values.setTexture({ id: file.id, url: file.url }));
   const details = query.data;
-  const valueSaving = createState.isLoading || valueState.isLoading;
-
-  const saveAttribute = async (change: CatalogAttributeChange) => {
-    if (attributeId === undefined) return;
-    setAttributeError(null);
-    try {
-      await updateAttribute({ id: attributeId, change }).unwrap();
-      onNotice('Властивість збережено.');
-    } catch (error) {
-      setAttributeError(catalogAttributesErrorMessage(error));
-    }
-  };
-
-  const openValue = (value: CatalogAttributeValue | null) => {
-    setValueError(null);
-    setTexture(textureOf(value));
-    setValueEdit({ value });
-  };
-
-  const uploadTexture = async (file: File) => {
-    setValueError(null);
-    try {
-      setTexture(await uploadSwatch(file).unwrap());
-    } catch (error) {
-      setValueError(catalogAttributesErrorMessage(error));
-    }
-  };
-
-  const saveValue = async (change: CatalogAttributeValueChange) => {
-    if (attributeId === undefined || !valueEdit) return;
-    setValueError(null);
-    try {
-      if (valueEdit.value)
-        await updateValue({ attributeId, valueId: valueEdit.value.id, change }).unwrap();
-      else await createValue({ attributeId, change }).unwrap();
-      setValueEdit(undefined);
-      onNotice('Значення збережено.');
-    } catch (error) {
-      setValueError(catalogAttributesErrorMessage(error));
-    }
-  };
 
   return (
     <AdminEditPanel
-      busy={attributeState.isLoading || valueSaving || uploadState.isLoading}
+      busy={settings.saving || values.saving || values.uploading}
       onClose={onClose}
       open={open && attributeId !== undefined}
       subtitle={details?.attribute.nameUk}
@@ -124,33 +60,33 @@ export function AttributeEditPanel({
           <AttributeSettingsCard
             attribute={details.attribute}
             canEdit={canEdit}
-            error={attributeError}
+            error={settings.error}
             key={details.attribute.id}
-            onSave={(change) => void saveAttribute(change)}
-            saving={attributeState.isLoading}
+            onSave={(change) => void settings.save(change)}
+            saving={settings.saving}
           />
           {details.attribute.kind === 'enum' ? (
             <AttributeValuesCard
               canEdit={canEdit}
-              editing={valueEdit ? (valueEdit.value?.id ?? 'new') : undefined}
+              editing={values.edit ? (values.edit.value?.id ?? 'new') : undefined}
               form={
-                valueEdit ? (
+                values.edit ? (
                   <AttributeValueForm
-                    error={valueError}
-                    key={valueEdit.value?.id ?? 'new'}
-                    onCancel={() => setValueEdit(undefined)}
+                    error={values.error}
+                    key={values.edit.value?.id ?? 'new'}
+                    onCancel={values.close}
                     onPickTexture={picker.onOpen}
-                    onUploadTexture={(file) => void uploadTexture(file)}
-                    onSave={(change) => void saveValue(change)}
-                    saving={valueSaving}
-                    texture={texture}
-                    uploading={uploadState.isLoading}
-                    value={valueEdit.value}
+                    onUploadTexture={(file) => void values.upload(file)}
+                    onSave={(change) => void values.save(change)}
+                    saving={values.saving}
+                    texture={values.texture}
+                    uploading={values.uploading}
+                    value={values.edit.value}
                   />
                 ) : null
               }
-              onAdd={() => openValue(null)}
-              onEdit={openValue}
+              onAdd={() => values.open(null)}
+              onEdit={values.open}
               values={details.values}
             />
           ) : null}
