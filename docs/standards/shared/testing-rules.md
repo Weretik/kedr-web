@@ -31,10 +31,10 @@ Choose the lowest level that proves the specific risk. Do not turn every `SC-*` 
 
 ## Verification scope during implementation
 
-- Implementation order: code and file structure → documentation → one focused automated test run for the changed feature. For documentation-only changes, check only their links and diff. Do not turn code delivery into a separate general testing or visual audit.
+- Implementation order: code and file structure → documentation → one focused automated test run for the changed feature. For documentation-only changes, check only their links and diff. Do not turn code delivery into a separate general testing or visual audit; the full feature audit after implementation is described in the [delivery rules](delivery-rules.md#full-audit-after-the-feature).
 - Check light/dark themes, locale, and responsive breakpoints against wiring and styles in code. Do not open a browser. Before any browser, manual, visual, or E2E check, ask the user separately for permission for that specific check and wait for a direct answer.
 - By default, run one focused automated test for the changed feature. An additional test or narrow lint/typecheck is needed only for a separate uncovered risk within that feature; do not run all commands listed below as a batch.
-- Run a full app or repository test suite, coverage, all lint/typecheck checks, production build, E2E, full architecture audit, or broad regression **only at the user's direct request**. A command appearing in an SDD or checklist is not itself such a request.
+- Run a full app or repository test suite, coverage, all lint/typecheck checks, production build, E2E, a repository-wide architecture audit, or broad regression **only at the user's direct request**. A command appearing in an SDD or checklist is not itself such a request.
 - Run an additional check only for a specific risk that the earlier result did not prove. Do not repeat the same targets after a documentation edit or another change that cannot affect their conclusion.
 - For documentation-only changes, check only changed links, formatting, and diff; runtime tests are unnecessary. For a contract or generation change, verify that boundary narrowly rather than running all frontend regression.
 - In the report, name the minimum checks performed and their limits. Do not mark an unrun full suite as a failure or blocker: it is intentionally outside the current scope until the user requests it.
