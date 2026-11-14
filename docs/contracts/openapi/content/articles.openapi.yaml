@@ -259,7 +259,11 @@ components:
         id: { type: integer, format: int64 }
         slug: { type: string }
         title: { type: string }
-        excerpt: { type: string, description: Short plain-text description for cards and meta description. }
+        excerpt:
+          {
+            type: string,
+            description: Short plain-text description for cards and meta description.,
+          }
         publishedOn: { type: string, format: date }
         coverPath: { $ref: '#/components/schemas/CoverPath' }
         coverUrl: { $ref: '#/components/schemas/CoverUrl' }
@@ -277,7 +281,8 @@ components:
       description: Email (else user name) of who saved the last change; null for articles saved before it was recorded.
     AdminArticleSummary:
       type: object
-      required: [id, slug, title, publishedOn, isPublished, coverPath, coverUrl, updatedAt, updatedBy]
+      required:
+        [id, slug, title, publishedOn, isPublished, coverPath, coverUrl, updatedAt, updatedBy]
       properties:
         id: { type: integer, format: int64 }
         slug: { type: string }
@@ -298,7 +303,19 @@ components:
         bodyHtml: { type: string, minLength: 1, maxLength: 50000 }
     AdminArticle:
       type: object
-      required: [id, slug, publishedOn, isPublished, coverPath, coverUrl, coverMediaFileId, updatedAt, updatedBy, texts]
+      required:
+        [
+          id,
+          slug,
+          publishedOn,
+          isPublished,
+          coverPath,
+          coverUrl,
+          coverMediaFileId,
+          updatedAt,
+          updatedBy,
+          texts,
+        ]
       properties:
         id: { type: integer, format: int64 }
         slug: { type: string }

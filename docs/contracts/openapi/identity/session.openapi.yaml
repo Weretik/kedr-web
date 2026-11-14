@@ -13,9 +13,17 @@ paths:
         Five wrong passwords lock the account for 15 minutes.
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/SessionLoginRequest' } } }
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/SessionLoginRequest' } } }
       responses:
-        '200': { description: Signed in, headers: { Set-Cookie: { schema: { type: string }, description: Session and CSRF cookies } }, content: { application/json: { schema: { $ref: '#/components/schemas/SessionMeResponse' } } } }
+        '200':
+          {
+            description: Signed in,
+            headers:
+              { Set-Cookie: { schema: { type: string }, description: Session and CSRF cookies } },
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/SessionMeResponse' } } },
+          }
         '401': { description: 'Invalid credentials, locked or blocked account' }
         '429': { description: Login rate limit exceeded }
   /api/auth/cookie/logout:
@@ -39,9 +47,17 @@ paths:
       description: Rate-limited by the AuthLogin policy. Returns both tokens in JSON; the app stores them in the device secure store. Sets no cookies.
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/SessionLoginRequest' } } }
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/SessionLoginRequest' } } }
       responses:
-        '200': { description: Token pair, content: { application/json: { schema: { $ref: '#/components/schemas/MobileTokenResponse' } } } }
+        '200':
+          {
+            description: Token pair,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/MobileTokenResponse' } },
+              },
+          }
         '401': { description: 'Invalid credentials, locked or blocked account' }
         '429': { description: Login rate limit exceeded }
   /api/auth/mobile/refresh:
@@ -55,9 +71,27 @@ paths:
         60 seconds ago returns 401 without other effect; one rotated earlier is treated as stolen and ends all of the user's sessions.
       requestBody:
         required: true
-        content: { application/json: { schema: { type: object, required: [refreshToken], properties: { refreshToken: { type: string } } } } }
+        content:
+          {
+            application/json:
+              {
+                schema:
+                  {
+                    type: object,
+                    required: [refreshToken],
+                    properties: { refreshToken: { type: string } },
+                  },
+              },
+          }
       responses:
-        '200': { description: New token pair, content: { application/json: { schema: { $ref: '#/components/schemas/MobileTokenResponse' } } } }
+        '200':
+          {
+            description: New token pair,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/MobileTokenResponse' } },
+              },
+          }
         '401': { description: 'Unknown, expired, revoked, or already rotated refresh token' }
         '429': { description: Refresh rate limit exceeded }
   /api/auth/mobile/logout:
@@ -69,7 +103,13 @@ paths:
       description: Revokes the session of the given refresh token; without it, all of the user's refresh sessions.
       requestBody:
         required: true
-        content: { application/json: { schema: { type: object, properties: { refreshToken: { type: [string, 'null'] } } } } }
+        content:
+          {
+            application/json:
+              {
+                schema: { type: object, properties: { refreshToken: { type: [string, 'null'] } } },
+              },
+          }
       responses:
         '204': { description: Signed out }
         '401': { description: Missing or invalid access token }
@@ -81,7 +121,12 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       description: Works with the browser session cookie and with a mobile bearer token. For a cookie session it reissues a missing CSRF cookie.
       responses:
-        '200': { description: Current user, content: { application/json: { schema: { $ref: '#/components/schemas/SessionMeResponse' } } } }
+        '200':
+          {
+            description: Current user,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/SessionMeResponse' } } },
+          }
         '401': { description: Not signed in }
 components:
   securitySchemes:
@@ -98,7 +143,8 @@ components:
     SessionLoginRequest:
       type: object
       required: [email, password]
-      properties: { email: { type: string, format: email }, password: { type: string, format: password } }
+      properties:
+        { email: { type: string, format: email }, password: { type: string, format: password } }
     MobileTokenResponse:
       type: object
       required: [tokenType, accessToken, expiresIn, refreshToken]
@@ -106,7 +152,8 @@ components:
         tokenType: { type: string, example: Bearer }
         accessToken: { type: string }
         expiresIn: { type: integer, description: Access-token lifetime in seconds }
-        refreshToken: { type: string, description: Random opaque token; send it back to refresh and logout }
+        refreshToken:
+          { type: string, description: Random opaque token; send it back to refresh and logout }
     SessionMeResponse:
       type: object
       required: [userId, email, fullName, roles]
@@ -115,4 +162,9 @@ components:
         email: { type: string, format: email }
         fullName: { type: string }
         roles: { type: array, items: { type: string, enum: [Admin, Seo, Manager, User] } }
-        avatarUrl: { type: [string, 'null'], format: uri, description: 'Public 256×256 WebP avatar on the CDN; null when the user has none' }
+        avatarUrl:
+          {
+            type: [string, 'null'],
+            format: uri,
+            description: 'Public 256×256 WebP avatar on the CDN; null when the user has none',
+          }

@@ -39,8 +39,8 @@ libs/site/content/ui/src/lib/gallery/
   media-viewer.tsx     dialog/navigation/focus return
   video-frame.tsx      provider/lifecycle/recovery
 libs/site/content/seo/src/lib/gallery-{metadata,json-ld}.ts
-libs/site/content/feature/src/lib/gallery-page.tsx     server composition/noscript/JSON-LD
-libs/site/content/feature/src/lib/content-sitemap.ts   existing descriptors + gallery
+libs/site/content/feature/src/lib/gallery/gallery-page.tsx     server composition/noscript/JSON-LD
+libs/site/content/feature/src/lib/sitemap/content-sitemap.ts   existing descriptors + gallery
 libs/site/shared/ui/src/lib/dialog.tsx                 Radix primitive
 ```
 

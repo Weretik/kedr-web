@@ -9,7 +9,18 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       description: Policy `CanManageUsers` (role Admin). Customers are not listed.
       responses:
-        '200': { description: Staff accounts ordered by email, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/StaffAccountResponse' } } } } }
+        '200':
+          {
+            description: Staff accounts ordered by email,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      { type: array, items: { $ref: '#/components/schemas/StaffAccountResponse' } },
+                  },
+              },
+          }
         '401': { description: Not signed in }
         '403': { description: Not an administrator }
     post:
@@ -21,13 +32,27 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/CreateStaffAccountRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/CreateStaffAccountRequest' } },
+          }
       responses:
-        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/StaffAccountResponse' } } } }
+        '201':
+          {
+            description: Created,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/StaffAccountResponse' } },
+              },
+          }
         '400': { description: 'Invalid email, name, role or password' }
         '401': { description: Not signed in }
         '403': { description: Not an administrator }
-        '409': { description: 'Email already used; give the existing account access through grantStaffAccess instead' }
+        '409':
+          {
+            description: 'Email already used; give the existing account access through grantStaffAccess instead',
+          }
   /api/admin/users/candidates:
     get:
       operationId: searchStaffCandidates
@@ -36,9 +61,28 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       description: Up to 20 accounts without a staff role (usually customers imported from 1C) whose email or name contains the search text, case ignored, ordered by email.
       parameters:
-        - { name: search, in: query, required: true, schema: { type: string, minLength: 2, maxLength: 256 } }
+        - {
+            name: search,
+            in: query,
+            required: true,
+            schema: { type: string, minLength: 2, maxLength: 256 },
+          }
       responses:
-        '200': { description: Matching accounts, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/StaffCandidateResponse' } } } } }
+        '200':
+          {
+            description: Matching accounts,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: '#/components/schemas/StaffCandidateResponse' },
+                      },
+                  },
+              },
+          }
         '400': { description: Search shorter than 2 characters }
         '401': { description: Not signed in }
         '403': { description: Not an administrator }
@@ -58,9 +102,17 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/GrantStaffAccessRequest' } } }
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/GrantStaffAccessRequest' } } }
       responses:
-        '200': { description: Staff access given, content: { application/json: { schema: { $ref: '#/components/schemas/StaffAccountResponse' } } } }
+        '200':
+          {
+            description: Staff access given,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/StaffAccountResponse' } },
+              },
+          }
         '400': { description: 'Invalid name, role or password' }
         '401': { description: Not signed in }
         '403': { description: Not an administrator }
@@ -78,7 +130,18 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { type: object, required: [role], properties: { role: { $ref: '#/components/schemas/StaffRole' } } } } }
+        content:
+          {
+            application/json:
+              {
+                schema:
+                  {
+                    type: object,
+                    required: [role],
+                    properties: { role: { $ref: '#/components/schemas/StaffRole' } },
+                  },
+              },
+          }
       responses:
         '204': { description: Role changed }
         '400': { description: Invalid role or own account }
@@ -97,7 +160,14 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { type: object, required: [blocked], properties: { blocked: { type: boolean } } } } }
+        content:
+          {
+            application/json:
+              {
+                schema:
+                  { type: object, required: [blocked], properties: { blocked: { type: boolean } } },
+              },
+          }
       responses:
         '204': { description: Updated }
         '400': { description: Own account }
@@ -116,7 +186,21 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { type: object, required: [password], properties: { password: { type: string, format: password, minLength: 8, maxLength: 128 } } } } }
+        content:
+          {
+            application/json:
+              {
+                schema:
+                  {
+                    type: object,
+                    required: [password],
+                    properties:
+                      {
+                        password: { type: string, format: password, minLength: 8, maxLength: 128 },
+                      },
+                  },
+              },
+          }
       responses:
         '204': { description: Password set }
         '400': { description: Password too short or too weak }
@@ -135,7 +219,11 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: './profile.openapi.yaml#/components/schemas/ChangeNameRequest' } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: './profile.openapi.yaml#/components/schemas/ChangeNameRequest' } },
+          }
       responses:
         '204': { description: Name changed }
         '400': { description: Empty or longer than 100 characters }
@@ -154,7 +242,18 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { type: object, required: [email], properties: { email: { type: string, format: email, maxLength: 256 } } } } }
+        content:
+          {
+            application/json:
+              {
+                schema:
+                  {
+                    type: object,
+                    required: [email],
+                    properties: { email: { type: string, format: email, maxLength: 256 } },
+                  },
+              },
+          }
       responses:
         '204': { description: Email changed }
         '400': { description: Invalid email }
@@ -174,10 +273,25 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { multipart/form-data: { schema: { $ref: './profile.openapi.yaml#/components/schemas/AvatarUploadForm' } } }
+        content:
+          {
+            multipart/form-data:
+              { schema: { $ref: './profile.openapi.yaml#/components/schemas/AvatarUploadForm' } },
+          }
       responses:
-        '200': { description: Stored, content: { application/json: { schema: { $ref: './profile.openapi.yaml#/components/schemas/AvatarResponse' } } } }
-        '400': { description: 'Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB' }
+        '200':
+          {
+            description: Stored,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: './profile.openapi.yaml#/components/schemas/AvatarResponse' } },
+              },
+          }
+        '400':
+          {
+            description: 'Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB',
+          }
         '401': { description: Not signed in }
         '403': { description: 'Not an administrator, or the target is an administrator' }
         '404': { description: No staff account with this ID }
@@ -217,7 +331,12 @@ components:
         fullName: { type: string }
         role: { $ref: '#/components/schemas/StaffRole' }
         isBlocked: { type: boolean }
-        avatarUrl: { type: [string, 'null'], format: uri, description: Public avatar URL; null when the account has none }
+        avatarUrl:
+          {
+            type: [string, 'null'],
+            format: uri,
+            description: Public avatar URL; null when the account has none,
+          }
     CreateStaffAccountRequest:
       type: object
       required: [email, fullName, role, password]

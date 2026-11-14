@@ -71,9 +71,16 @@ components:
       properties:
         salesPhone: { $ref: '#/components/schemas/Phone' }
         email: { type: string, format: email, maxLength: 120 }
-        telegramUrl: { type: string, format: uri, maxLength: 500, description: 'https://t.me/… or https://telegram.me/…' }
+        telegramUrl:
+          {
+            type: string,
+            format: uri,
+            maxLength: 500,
+            description: 'https://t.me/… or https://telegram.me/…',
+          }
         viberPhone: { $ref: '#/components/schemas/Phone' }
-        mapUrl: { type: string, format: uri, maxLength: 500, description: Any https link to the map. }
+        mapUrl:
+          { type: string, format: uri, maxLength: 500, description: Any https link to the map. }
         cityUk: { type: string, minLength: 1, maxLength: 80 }
         cityRu: { type: string, minLength: 1, maxLength: 80 }
     CompanyContacts:

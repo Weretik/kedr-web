@@ -18,7 +18,21 @@ paths:
         - { name: categoryId, in: query, schema: { type: integer, minimum: 1 } }
         - { name: search, in: query, schema: { type: string, maxLength: 100 } }
       responses:
-        '200': { description: Groups, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminProductGroupListItem' } } } } }
+        '200':
+          {
+            description: Groups,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: '#/components/schemas/AdminProductGroupListItem' },
+                      },
+                  },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -36,7 +50,12 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/CreateProductGroupRequest' }
       responses:
-        '200': { description: Created group, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } } }
+        '200':
+          {
+            description: Created group,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -49,7 +68,12 @@ paths:
       tags: [Admin product groups]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Group, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } } }
+        '200':
+          {
+            description: Group,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -66,7 +90,12 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/RenameProductGroupRequest' }
       responses:
-        '200': { description: Group, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } } }
+        '200':
+          {
+            description: Group,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -88,7 +117,12 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/SetProductGroupMainRequest' }
       responses:
-        '200': { description: Group, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } } }
+        '200':
+          {
+            description: Group,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroup' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -108,7 +142,20 @@ paths:
           application/json:
             schema: { $ref: './category-read.openapi.yaml#/components/schemas/ChangeSlugRequest' }
       responses:
-        '200': { description: New slug, content: { application/json: { schema: { $ref: './category-read.openapi.yaml#/components/schemas/ChangeSlugResponse' } } } }
+        '200':
+          {
+            description: New slug,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        $ref: './category-read.openapi.yaml#/components/schemas/ChangeSlugResponse',
+                      },
+                  },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -122,7 +169,15 @@ paths:
       tags: [Admin product groups]
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       responses:
-        '200': { description: Group of the product, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroupMembership' } } } }
+        '200':
+          {
+            description: Group of the product,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductGroupMembership' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -141,18 +196,47 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/SetProductGroupRequest' }
       responses:
-        '200': { description: Group of the product, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductGroupMembership' } } } }
+        '200':
+          {
+            description: Group of the product,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdminProductGroupMembership' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
         '404': { description: Product not found. }
 components:
   responses:
-    ValidationError: { description: Input validation failed, content: { application/json: { schema: { type: array, items: { type: object, additionalProperties: true } } } } }
+    ValidationError:
+      {
+        description: Input validation failed,
+        content:
+          {
+            application/json:
+              { schema: { type: array, items: { type: object, additionalProperties: true } } },
+          },
+      }
   schemas:
     AdminProductGroupMember:
       type: object
-      required: [productId, name, slug, exportToSite, isDeleted, photo, stock, isPinned, isMain, colors, hasSameVariants]
+      required:
+        [
+          productId,
+          name,
+          slug,
+          exportToSite,
+          isDeleted,
+          photo,
+          stock,
+          isPinned,
+          isMain,
+          colors,
+          hasSameVariants,
+        ]
       properties:
         productId: { type: integer }
         name: { type: string, description: Original 1C name. }
@@ -161,12 +245,22 @@ components:
         isDeleted: { type: boolean }
         photo: { type: string, description: First photo URL; empty without photos. }
         stock: { type: number }
-        isPinned: { type: boolean, description: A person put the product here; automation leaves it. }
+        isPinned:
+          { type: boolean, description: A person put the product here; automation leaves it. }
         isMain: { type: boolean }
-        colors: { type: array, items: { type: string }, description: 'Main color first, then the second color.' }
+        colors:
+          {
+            type: array,
+            items: { type: string },
+            description: 'Main color first, then the second color.',
+          }
         size: { type: [string, 'null'] }
         side: { type: [string, 'null'] }
-        hasSameVariants: { type: boolean, description: 'Color, size, and side do not tell it apart from another variant («Однакові варіанти»).' }
+        hasSameVariants:
+          {
+            type: boolean,
+            description: 'Color, size, and side do not tell it apart from another variant («Однакові варіанти»).',
+          }
     AdminProductGroup:
       type: object
       required: [id, categoryId, name, slug, isMainManual, isCreatedManually, members]
@@ -178,13 +272,22 @@ components:
         mainProductId: { type: [integer, 'null'] }
         isMainManual: { type: boolean }
         isCreatedManually: { type: boolean }
-        members: { type: array, items: { $ref: '#/components/schemas/AdminProductGroupMember' }, description: 'Main product first, then by product ID.' }
+        members:
+          {
+            type: array,
+            items: { $ref: '#/components/schemas/AdminProductGroupMember' },
+            description: 'Main product first, then by product ID.',
+          }
     AdminProductGroupMembership:
       type: object
       required: [productId, isPinned]
       properties:
         productId: { type: integer }
-        isPinned: { type: boolean, description: With `group` null it means the product was taken out of groups on purpose. }
+        isPinned:
+          {
+            type: boolean,
+            description: With `group` null it means the product was taken out of groups on purpose.,
+          }
         group: { oneOf: [{ $ref: '#/components/schemas/AdminProductGroup' }, { type: 'null' }] }
     AdminProductGroupListItem:
       type: object
@@ -202,7 +305,8 @@ components:
       properties:
         categoryId: { type: integer, minimum: 1 }
         name: { type: string, minLength: 1, maxLength: 300 }
-        productIds: { type: array, maxItems: 200, items: { type: integer, minimum: 1 }, uniqueItems: true }
+        productIds:
+          { type: array, maxItems: 200, items: { type: integer, minimum: 1 }, uniqueItems: true }
     RenameProductGroupRequest:
       type: object
       required: [name]

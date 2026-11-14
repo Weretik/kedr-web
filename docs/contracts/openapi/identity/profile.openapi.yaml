@@ -9,7 +9,12 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       description: Policy `RequireManagerRole` (Manager, Seo, or Admin). Customers get 403.
       responses:
-        '200': { description: Profile, content: { application/json: { schema: { $ref: '#/components/schemas/ProfileResponse' } } } }
+        '200':
+          {
+            description: Profile,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/ProfileResponse' } } },
+          }
         '401': { description: Not signed in }
         '403': { description: Not a staff account }
   /api/profile/name:
@@ -22,7 +27,8 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/ChangeNameRequest' } } }
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/ChangeNameRequest' } } }
       responses:
         '204': { description: Name changed }
         '400': { description: Empty or longer than 100 characters }
@@ -41,10 +47,19 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { multipart/form-data: { schema: { $ref: '#/components/schemas/AvatarUploadForm' } } }
+        content:
+          { multipart/form-data: { schema: { $ref: '#/components/schemas/AvatarUploadForm' } } }
       responses:
-        '200': { description: Stored, content: { application/json: { schema: { $ref: '#/components/schemas/AvatarResponse' } } } }
-        '400': { description: 'Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB' }
+        '200':
+          {
+            description: Stored,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AvatarResponse' } } },
+          }
+        '400':
+          {
+            description: 'Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB',
+          }
         '401': { description: Not signed in }
         '403': { description: Not a staff account }
         '413': { description: Request body over the upload limit }
@@ -73,7 +88,8 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/ChangeOwnEmailRequest' } } }
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/ChangeOwnEmailRequest' } } }
       responses:
         '204': { description: Email changed }
         '400': { description: Invalid email or wrong current password }
@@ -93,7 +109,10 @@ paths:
         - $ref: './session.openapi.yaml#/components/parameters/CsrfHeader'
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: '#/components/schemas/ChangeOwnPasswordRequest' } } }
+        content:
+          {
+            application/json: { schema: { $ref: '#/components/schemas/ChangeOwnPasswordRequest' } },
+          }
       responses:
         '204': { description: Password changed }
         '400': { description: Wrong current password or new password too short }
@@ -112,7 +131,12 @@ components:
         email: { type: string, format: email }
         fullName: { type: string }
         role: { type: string, enum: [Admin, Seo, Manager] }
-        avatarUrl: { type: [string, 'null'], format: uri, description: Public 256×256 WebP; null when there is none }
+        avatarUrl:
+          {
+            type: [string, 'null'],
+            format: uri,
+            description: Public 256×256 WebP; null when there is none,
+          }
     ChangeNameRequest:
       type: object
       required: [fullName]
@@ -133,7 +157,12 @@ components:
       type: object
       required: [file]
       properties:
-        file: { type: string, format: binary, description: 'image/jpeg, image/png or image/webp, at most 2 MB' }
+        file:
+          {
+            type: string,
+            format: binary,
+            description: 'image/jpeg, image/png or image/webp, at most 2 MB',
+          }
     AvatarResponse:
       type: object
       required: [avatarUrl]

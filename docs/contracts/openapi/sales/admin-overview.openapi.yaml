@@ -28,7 +28,12 @@ components:
       properties:
         ordersToday: { type: integer, minimum: 0, description: Orders created since Kyiv midnight. }
         draftCount: { type: integer, minimum: 0, description: Saved drafts not turned into orders. }
-        syncProblemCount: { type: integer, minimum: 0, description: 'Orders with sync status `BusinessError` or `DeadLetter`.' }
+        syncProblemCount:
+          {
+            type: integer,
+            minimum: 0,
+            description: 'Orders with sync status `BusinessError` or `DeadLetter`.',
+          }
         syncProblems:
           type: array
           maxItems: 5
@@ -46,4 +51,8 @@ components:
         counterpartyName: { type: string }
         createdAtUtc: { type: string, format: date-time }
         syncStatus: { type: string, enum: [BusinessError, DeadLetter] }
-        errorMessage: { type: [string, 'null'], description: 'The last message 1C or the delivery gave, if any.' }
+        errorMessage:
+          {
+            type: [string, 'null'],
+            description: 'The last message 1C or the delivery gave, if any.',
+          }

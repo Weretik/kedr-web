@@ -1,6 +1,6 @@
 # Site wholesale cooperation
 
-**Entry point:** [wholesale route](../../../apps/site/src/app/[locale]/%28content%29/wholesale/page.tsx) renders [WholesalePage](../../../libs/site/content/feature/src/lib/wholesale-page.tsx) at `/uk/wholesale` and `/ru/wholesale`. [Approved SDD](../../specs/site/content/001-wholesale/README.md).
+**Entry point:** [wholesale route](../../../apps/site/src/app/[locale]/%28content%29/wholesale/page.tsx) renders [WholesalePage](../../../libs/site/content/feature/src/lib/wholesale/wholesale-page.tsx) at `/uk/wholesale` and `/ru/wholesale`. [Approved SDD](../../specs/site/content/001-wholesale/README.md).
 
 - Product-specific H1, real hardware category cards, confirmed Class Kedr facts, three order steps, visible FAQ and manager contact. Wholesale prices and specific terms are learned from the manager; no new purchase thresholds or promises.
 - Managers edit the page texts in the [admin «Співпраця»](../admin/wholesale-content.md). `getWholesaleTexts(locale)` in `content/data-access` reads `GET /api/content/{lang}/wholesale` (cache tags `content`, `content:wholesale`, ten-minute life) and `applyWholesaleTexts` puts them over the code dictionary; on an API failure, or texts without exactly three steps or without questions, the page keeps the code copy. More than three questions reuse the three FAQ icons in order.

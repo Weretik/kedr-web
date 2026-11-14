@@ -29,7 +29,11 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
       responses:
-        '200': { description: Product page, content: { application/json: { schema: { $ref: '#/components/schemas/ProductPage' } } } }
+        '200':
+          {
+            description: Product page,
+            content: { application/json: { schema: { $ref: '#/components/schemas/ProductPage' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
   /api/catalog/{lang}/{categorySlug}/products:
     get:
@@ -62,7 +66,11 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
       responses:
-        '200': { description: Product page, content: { application/json: { schema: { $ref: '#/components/schemas/ProductPage' } } } }
+        '200':
+          {
+            description: Product page,
+            content: { application/json: { schema: { $ref: '#/components/schemas/ProductPage' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '404': { description: Unknown or deleted category slug. }
   /api/catalog/{lang}/product/{productSlug}:
@@ -82,7 +90,12 @@ paths:
           schema: { type: string }
         - $ref: '#/components/parameters/PriceTypeId'
       responses:
-        '200': { description: Product, content: { application/json: { schema: { $ref: '#/components/schemas/ProductDetails' } } } }
+        '200':
+          {
+            description: Product,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/ProductDetails' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '404':
           description: >-
@@ -130,10 +143,18 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
       responses:
-        '200': { description: Admin product page, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductPage' } } } }
+        '200':
+          {
+            description: Admin product page,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/AdminProductPage' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
-        '403': { description: 'Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role.' }
+        '403':
+          {
+            description: 'Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role.',
+          }
   /api/admin/products/{id}/slug:
     put:
       operationId: changeAdminProductSlug
@@ -158,7 +179,8 @@ paths:
           description: Slug changed (or already equal).
           content:
             application/json:
-              schema: { $ref: './category-read.openapi.yaml#/components/schemas/ChangeSlugResponse' }
+              schema:
+                { $ref: './category-read.openapi.yaml#/components/schemas/ChangeSlugResponse' }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: Signed in without the Admin or Seo role. }
@@ -171,7 +193,15 @@ paths:
       security: [{ cookieAuth: [] }, { bearerAuth: [] }]
       description: Policy CanManageProducts (Manager, Seo, and Admin). Returns the unpaged admin row model.
       responses:
-        '200': { description: All admin products, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/AdminProduct' } } } } }
+        '200':
+          {
+            description: All admin products,
+            content:
+              {
+                application/json:
+                  { schema: { type: array, items: { $ref: '#/components/schemas/AdminProduct' } } },
+              },
+          }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
   /api/admin/products/{id}/media:
@@ -189,7 +219,12 @@ paths:
         Policies CanManageProducts and CanManageMedia (Manager, Seo, and Admin). Photos come in gallery order; file names
         are read from the media library.
       responses:
-        '200': { description: Product media set, content: { application/json: { schema: { $ref: '#/components/schemas/ProductMedia' } } } }
+        '200':
+          {
+            description: Product media set,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/ProductMedia' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -208,7 +243,12 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/SetProductMediaRequest' }
       responses:
-        '200': { description: Saved set, content: { application/json: { schema: { $ref: '#/components/schemas/ProductMedia' } } } }
+        '200':
+          {
+            description: Saved set,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/ProductMedia' } } },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -226,7 +266,14 @@ paths:
           required: true
           schema: { type: string, minLength: 1, maxLength: 255 }
       responses:
-        '200': { description: Admin product details, content: { application/json: { schema: { $ref: '#/components/schemas/AdminProductDetails' } } } }
+        '200':
+          {
+            description: Admin product details,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/AdminProductDetails' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
         '404': { description: Product not found }
         '401': { description: Not signed in. }
@@ -242,19 +289,51 @@ components:
     IsSale: { name: isSale, in: query, schema: { type: boolean } }
     IsNew: { name: isNew, in: query, schema: { type: boolean } }
     ExportToSite: { name: exportToSite, in: query, schema: { type: boolean } }
-    PriceTypeId: { name: priceTypeId, in: query, schema: { type: integer, minimum: 1, default: 11 } }
+    PriceTypeId:
+      { name: priceTypeId, in: query, schema: { type: integer, minimum: 1, default: 11 } }
     PriceFrom: { name: priceFrom, in: query, schema: { type: number, minimum: 0 } }
     PriceTo: { name: priceTo, in: query, schema: { type: number, minimum: 0 } }
-    ProductSort: { name: sort, in: query, schema: { type: string, enum: [IdAsc, IdDesc, NameAsc, NameDesc, PriceAsc, PriceDesc, CategoryAsc, CategoryDesc, AvailabilityThenName], default: IdAsc } }
+    ProductSort:
+      {
+        name: sort,
+        in: query,
+        schema:
+          {
+            type: string,
+            enum:
+              [
+                IdAsc,
+                IdDesc,
+                NameAsc,
+                NameDesc,
+                PriceAsc,
+                PriceDesc,
+                CategoryAsc,
+                CategoryDesc,
+                AvailabilityThenName,
+              ],
+            default: IdAsc,
+          },
+      }
     Availability:
       name: availability
       in: query
       description: '`InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before.'
       schema: { type: string, enum: [InStock, All] }
     Page: { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
-    PageSize: { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+    PageSize:
+      {
+        name: pageSize,
+        in: query,
+        schema: { type: integer, minimum: 1, maximum: 100, default: 20 },
+      }
   responses:
-    ValidationError: { description: Input validation failed, content: { application/json: { schema: { $ref: '#/components/schemas/ValidationErrors' } } } }
+    ValidationError:
+      {
+        description: Input validation failed,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/ValidationErrors' } } },
+      }
   schemas:
     ValidationErrors: { type: array, items: { type: object, additionalProperties: true } }
     PagedInfo:
@@ -284,7 +363,11 @@ components:
         id: { type: integer }
         name: { type: string }
         productSlug: { type: string }
-        photo: { type: string, description: First photo URL; an empty string when the product has no photo. }
+        photo:
+          {
+            type: string,
+            description: First photo URL; an empty string when the product has no photo.,
+          }
         categoryId: { type: [integer, 'null'] }
         inStock: { type: boolean }
         isSale: { type: boolean }
@@ -292,15 +375,43 @@ components:
         price: { type: [number, 'null'] }
     ProductDetails:
       type: object
-      required: [id, name, productSlug, photo, scheme, photos, stock, categoryName, categorySlug, quantityInPack, breadcrumbs, updatedAt]
+      required:
+        [
+          id,
+          name,
+          productSlug,
+          photo,
+          scheme,
+          photos,
+          stock,
+          categoryName,
+          categorySlug,
+          quantityInPack,
+          breadcrumbs,
+          updatedAt,
+        ]
       properties:
         id: { type: integer, description: 1C product code shown to customers as the article. }
         name: { type: string }
-        productSlug: { type: string, description: Current slug; differs from the request when a former slug was used. }
+        productSlug:
+          {
+            type: string,
+            description: Current slug; differs from the request when a former slug was used.,
+          }
         updatedAt: { type: string, format: date-time }
-        photo: { type: string, description: First photo URL; an empty string when the product has no photo. }
-        scheme: { type: string, description: Scheme URL; an empty string when the product has no scheme. }
-        photos: { type: array, items: { type: string }, description: All photo URLs in gallery order; the first equals photo. }
+        photo:
+          {
+            type: string,
+            description: First photo URL; an empty string when the product has no photo.,
+          }
+        scheme:
+          { type: string, description: Scheme URL; an empty string when the product has no scheme. }
+        photos:
+          {
+            type: array,
+            items: { type: string },
+            description: All photo URLs in gallery order; the first equals photo.,
+          }
         stock: { type: number }
         categoryName: { type: string }
         categorySlug: { type: string }
@@ -313,15 +424,37 @@ components:
       properties: { id: { type: integer }, name: { type: string }, slug: { type: string } }
     AdminProduct:
       type: object
-      required: [id, nameUk, nameRu, productSlug, photo, categoryName, inStock, isSale, isNew, exportToSite, stock, quantityInPack]
+      required:
+        [
+          id,
+          nameUk,
+          nameRu,
+          productSlug,
+          photo,
+          categoryName,
+          inStock,
+          isSale,
+          isNew,
+          exportToSite,
+          stock,
+          quantityInPack,
+        ]
       properties:
         id: { type: integer }
         nameUk: { type: string }
         nameRu: { type: string }
         productSlug: { type: string }
-        photo: { type: string, description: First photo URL; an empty string when the product has no photo. }
+        photo:
+          {
+            type: string,
+            description: First photo URL; an empty string when the product has no photo.,
+          }
         categoryId: { type: [integer, 'null'] }
-        categoryName: { type: string, description: Ukrainian short category name; empty when the reference is unavailable. }
+        categoryName:
+          {
+            type: string,
+            description: Ukrainian short category name; empty when the reference is unavailable.,
+          }
         inStock: { type: boolean }
         isSale: { type: boolean }
         isNew: { type: boolean }
@@ -333,7 +466,11 @@ components:
         quantityInPack: { type: integer }
         isDeleted: { type: boolean }
         deletedAt: { type: [string, 'null'], format: date-time }
-        groupId: { type: [integer, 'null'], description: 'Variant group of the product (spec catalog/006); filled by the paged list only.' }
+        groupId:
+          {
+            type: [integer, 'null'],
+            description: 'Variant group of the product (spec catalog/006); filled by the paged list only.',
+          }
         groupName: { type: [string, 'null'] }
         problems:
           type: array
@@ -341,14 +478,36 @@ components:
           items: { $ref: './attributes.openapi.yaml#/components/schemas/AdminAttributeProblem' }
     AdminProductDetails:
       type: object
-      required: [id, nameUk, nameRu, productSlug, photo, scheme, categoryId, categoryName, inStock, isSale, isNew, exportToSite, price, stock, quantityInPack]
+      required:
+        [
+          id,
+          nameUk,
+          nameRu,
+          productSlug,
+          photo,
+          scheme,
+          categoryId,
+          categoryName,
+          inStock,
+          isSale,
+          isNew,
+          exportToSite,
+          price,
+          stock,
+          quantityInPack,
+        ]
       properties:
         id: { type: integer }
         nameUk: { type: string }
         nameRu: { type: string }
         productSlug: { type: string }
-        photo: { type: string, description: First photo URL; an empty string when the product has no photo. }
-        scheme: { type: string, description: Scheme URL; an empty string when the product has no scheme. }
+        photo:
+          {
+            type: string,
+            description: First photo URL; an empty string when the product has no photo.,
+          }
+        scheme:
+          { type: string, description: Scheme URL; an empty string when the product has no scheme. }
         categoryId: { type: integer }
         categoryName: { type: string }
         inStock: { type: boolean }
@@ -362,15 +521,31 @@ components:
       type: object
       required: [photoIds]
       properties:
-        photoIds: { type: array, maxItems: 20, uniqueItems: true, items: { type: integer, format: int64, minimum: 1 } }
-        schemeId: { type: [integer, 'null'], format: int64, minimum: 1, description: Must not be one of photoIds. }
+        photoIds:
+          {
+            type: array,
+            maxItems: 20,
+            uniqueItems: true,
+            items: { type: integer, format: int64, minimum: 1 },
+          }
+        schemeId:
+          {
+            type: [integer, 'null'],
+            format: int64,
+            minimum: 1,
+            description: Must not be one of photoIds.,
+          }
     ProductMediaItem:
       type: object
       required: [id, url, fileName]
       properties:
         id: { type: integer, format: int64, description: Media library file ID. }
         url: { type: string }
-        fileName: { type: string, description: Library display name; empty if the file was deleted and the link is not yet dropped. }
+        fileName:
+          {
+            type: string,
+            description: Library display name; empty if the file was deleted and the link is not yet dropped.,
+          }
     ProductMedia:
       type: object
       required: [productId, photos, scheme]
