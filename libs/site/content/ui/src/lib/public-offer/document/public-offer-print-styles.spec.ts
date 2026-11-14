@@ -8,12 +8,12 @@ const require = createRequire(resolve(process.cwd(), 'public-offer-css-test.cjs'
 const local = require('next/dist/compiled/postcss-modules-local-by-default');
 const scope = require('next/dist/compiled/postcss-modules-scope');
 
-const projectPath = resolve(process.cwd(), 'src/lib/public-offer/public-offer-print.module.css');
+const projectPath = resolve(process.cwd(), 'src/lib/public-offer/document/public-offer-print.module.css');
 const cssPath = existsSync(projectPath)
   ? projectPath
   : resolve(
       process.cwd(),
-      'libs/site/content/ui/src/lib/public-offer/public-offer-print.module.css',
+      'libs/site/content/ui/src/lib/public-offer/document/public-offer-print.module.css',
     );
 
 let pageClass = '';
