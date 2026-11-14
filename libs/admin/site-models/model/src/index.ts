@@ -68,3 +68,4 @@ export {
 } from './entities/site-queue';
 export type { SiteCategoryNode } from './entities/site-category-tree';
 export { siteCategoryAncestors, siteCategoryTree } from './entities/site-category-tree';
+export { axisValueOptions } from './mappers/axis-value-options';
