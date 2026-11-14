@@ -1,9 +1,8 @@
 import { configureMobileAuth } from '@mobile/shared/api-client';
 
 import { requestCurrentUser, requestLogin, requestLogout, requestRefresh } from './auth-transport';
-import { isWithinOfflineWindow } from './offline-window';
-import { confirmOwner, isQuickUnlockAvailable } from './quick-unlock';
 import { getMobileSessionState, setMobileSessionState } from './session-store';
+import { isWithinOfflineWindow } from '../offline/offline-window';
 import {
   clearStoredTokens,
   readQuickUnlockEnabled,
@@ -12,6 +11,7 @@ import {
   saveSession,
   saveTokens,
 } from '../storage/token-storage';
+import { confirmOwner, isQuickUnlockAvailable } from '../unlock/quick-unlock';
 
 import type { MobileLoginRequest } from './auth-transport';
 import type { SessionUser } from './session-user';

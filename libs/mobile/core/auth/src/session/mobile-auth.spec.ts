@@ -9,7 +9,6 @@ import {
   unlockSession,
   updateSessionUser,
 } from './mobile-auth';
-import { confirmOwner, isQuickUnlockAvailable } from './quick-unlock';
 import { getMobileSessionState } from './session-store';
 import {
   clearStoredTokens,
@@ -19,6 +18,7 @@ import {
   saveSession,
   saveTokens,
 } from '../storage/token-storage';
+import { confirmOwner, isQuickUnlockAvailable } from '../unlock/quick-unlock';
 
 import type { MobileAuthAdapter } from '@mobile/shared/api-client';
 
@@ -29,7 +29,7 @@ jest.mock('./auth-transport', () => ({
   requestLogout: jest.fn(),
   requestRefresh: jest.fn(),
 }));
-jest.mock('./quick-unlock', () => ({
+jest.mock('../unlock/quick-unlock', () => ({
   confirmOwner: jest.fn(),
   isQuickUnlockAvailable: jest.fn().mockResolvedValue(true),
 }));
