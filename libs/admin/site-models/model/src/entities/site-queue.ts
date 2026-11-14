@@ -109,3 +109,16 @@ export function modelAddCandidates(
     .flatMap((row) => row.products)
     .filter((item) => !inModel.has(item.productId));
 }
+
+/** The open row of the queue (the first one by default), what it opens, and the row «Далі» goes to. */
+export function siteQueueSelection(rows: readonly SiteShowcaseRow[], item: string | undefined) {
+  const keys = rows.map((row) => row.key);
+  const selectedKey = item ?? keys[0];
+  const next = nextSiteQueueKey(keys, selectedKey);
+  return {
+    selectedKey,
+    nextKey: next !== selectedKey ? next : undefined,
+    modelId: selectedKey?.startsWith('m') ? Number(selectedKey.slice(1)) : undefined,
+    lone: selectedKey?.startsWith('p') ? rows.find((row) => row.key === selectedKey) : undefined,
+  };
+}

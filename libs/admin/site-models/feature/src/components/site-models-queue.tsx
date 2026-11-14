@@ -1,25 +1,12 @@
-import {
-  useGetSiteModelCategoriesQuery,
-  useGetSiteShowcaseQuery,
-} from '@admin/site-models/data-access';
-import { nextSiteQueueKey, siteQueueCounts, siteQueueFilter } from '@admin/site-models/model';
-import {
-  SiteCategoryPicker,
-  SiteModelsHelpDialog,
-  SiteQueueList,
-  SiteQueueViews,
-} from '@admin/site-models/ui';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { Box, Button, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { SiteModelsHelpDialog, SiteQueueList } from '@admin/site-models/ui';
+import { Box, Card, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 
+import { SiteQueueToolbar } from './queue/site-queue-toolbar';
 import { SiteLoneProductPane } from './site-lone-product-pane';
 import { SiteModelPane } from './site-model-pane';
-import { readSiteQueueState, writeSiteQueueState } from '../model/site-showcase-url-state';
+import { useSiteModelsQueue } from '../hooks/queue/use-site-models-queue';
 
-import type { SiteQueueState } from '../model/site-showcase-url-state';
 import type { SiteQueueView } from '@admin/site-models/model';
 
 const emptyTexts: Record<SiteQueueView, string> = {
@@ -34,84 +21,14 @@ const queueListHeight = { xs: 360, md: 'calc(100vh - 140px)' };
 
 /** «Моделі» of «Вітрина сайту»: the queue on the left, the open model beside it (canvas variant B). */
 export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void }) {
-  const [params, setParams] = useSearchParams();
-  const state = readSiteQueueState(params);
-  const [search, setSearch] = useState(state.search ?? '');
+  const queue = useSiteModelsQueue();
+  const { rows, selection, showcase, state, update } = queue;
+  const { lone, modelId, nextKey, selectedKey } = selection;
   const [help, setHelp] = useState(false);
-  const categories = useGetSiteModelCategoriesQuery();
-  const showcase = useGetSiteShowcaseQuery({
-    categoryId: state.categoryId,
-    search: state.search,
-    ...siteQueueFilter(state.view),
-    page: 1,
-    pageSize: 200,
-  });
-
-  const update = (change: Partial<SiteQueueState>, replace = false) =>
-    setParams(writeSiteQueueState({ ...state, ...change }), { replace });
-
-  // The search goes to the address after a pause in typing.
-  useEffect(() => {
-    const next = search.trim() || undefined;
-    if (next === state.search) return;
-    const timer = setTimeout(() => update({ search: next, item: undefined }, true), 350);
-    return () => clearTimeout(timer);
-  });
-
-  const rows = showcase.data?.items ?? [];
-  const keys = rows.map((row) => row.key);
-  const selectedKey = state.item ?? keys[0];
-  const next = nextSiteQueueKey(keys, selectedKey);
-  const openNext = () => {
-    if (next && next !== selectedKey) update({ item: next });
-  };
-  const counts = categories.data ? siteQueueCounts(categories.data, state.categoryId) : undefined;
-  const lone = selectedKey?.startsWith('p')
-    ? rows.find((row) => row.key === selectedKey)
-    : undefined;
-  const modelId = selectedKey?.startsWith('m') ? Number(selectedKey.slice(1)) : undefined;
 
   return (
     <Stack spacing={2}>
-      <Stack
-        direction="row"
-        spacing={1.5}
-        sx={{ alignItems: 'center', flexWrap: 'wrap' }}
-        useFlexGap
-      >
-        <SiteCategoryPicker
-          categories={categories.data ?? []}
-          loading={categories.isLoading}
-          onSelect={(categoryId) => update({ categoryId, item: undefined })}
-          selectedId={state.categoryId}
-        />
-        <SiteQueueViews
-          counts={counts}
-          onChange={(view) => update({ view, item: undefined })}
-          value={state.view}
-        />
-        <TextField
-          aria-label="Пошук"
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Модель, товар або код 1С"
-          size="small"
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchOutlinedIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{ flex: '1 1 220px', maxWidth: 360 }}
-          type="search"
-          value={search}
-        />
-        <Button onClick={() => setHelp(true)} startIcon={<HelpOutlineOutlinedIcon />}>
-          Як це працює
-        </Button>
-      </Stack>
+      <SiteQueueToolbar onHelp={() => setHelp(true)} queue={queue} />
       <Box
         sx={{
           alignItems: 'start',
@@ -146,10 +63,10 @@ export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void
         <Box sx={{ minWidth: 0 }}>
           {modelId ? (
             <SiteModelPane
-              hasNext={next !== undefined && next !== selectedKey}
+              hasNext={nextKey !== undefined}
               key={modelId}
               modelId={modelId}
-              onNext={openNext}
+              onNext={queue.openNext}
               onNotice={onNotice}
             />
           ) : lone ? (

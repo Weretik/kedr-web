@@ -61,6 +61,7 @@ export {
   modelAddCandidates,
   similarSiteModels,
   siteQueueCounts,
+  siteQueueSelection,
   siteQueueFilter,
   siteQueueViewLabels,
   siteQueueViews,
