@@ -1,23 +1,13 @@
-import { isCategoryContentEmpty } from '@admin/categories/model';
-import { DetailField, DetailFieldList, SectionCard, StatusPill } from '@admin/shared/ui';
+import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import {
-  Alert,
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  Link,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, Chip, Skeleton, Stack, Typography } from '@mui/material';
+
+import { CategoryBreadcrumbs } from './category-breadcrumbs';
+import { CategoryLanguageSummary } from './category-language-summary';
+import { CategorySiteVisibility } from './category-site-visibility';
 
 import type { AdminCategory, CategoryContent, ContentLanguage } from '@admin/categories/model';
 
-const languageLabels: Record<ContentLanguage, string> = { uk: 'Українська', ru: 'Русский' };
 const orDash = (value: string) => value.trim() || '—';
 
 interface CategoryOverviewCardProps {
@@ -38,51 +28,6 @@ interface CategoryOverviewCardProps {
   onEdit?: () => void;
   /** Administrators only: asks to show or hide the category on the site. */
   onToggleSite?: () => void;
-}
-
-function LanguageSummary({
-  content,
-  language,
-}: {
-  content: CategoryContent;
-  language: ContentLanguage;
-}) {
-  const empty = isCategoryContentEmpty(content);
-  return (
-    <Box
-      sx={{
-        border: 1,
-        borderColor: 'divider',
-        borderRadius: '14px',
-        display: 'grid',
-        gap: 1,
-        p: 2,
-      }}
-    >
-      <Typography component="h3" variant="subtitle2">
-        {languageLabels[language]}
-      </Typography>
-      {empty ? (
-        <>
-          <Box>
-            <StatusPill label="Немає тексту" tone="error" />
-          </Box>
-          <Typography color="text.secondary" variant="body2">
-            На сайті буде лише назва категорії.
-          </Typography>
-        </>
-      ) : (
-        <DetailFieldList>
-          <DetailField label="SEO-заголовок" value={orDash(content.seoTitle)} />
-          <DetailField label="Мета-опис" value={orDash(content.metaDescription)} />
-          <DetailField
-            label="Питання та відповіді"
-            value={content.faq.length === 0 ? '—' : String(content.faq.length)}
-          />
-        </DetailFieldList>
-      )}
-    </Box>
-  );
 }
 
 /** Right side of «Категорії»: everything about the selected category at a glance, read-only. */
@@ -114,51 +59,8 @@ export function CategoryOverviewCard({
       title={category.nameUk}
       titleVariant="h5"
     >
-      {ancestors.length > 0 ? (
-        <Breadcrumbs aria-label="Шлях категорії" sx={{ mt: -1 }}>
-          {ancestors.map((ancestor) => (
-            <Link
-              component="button"
-              key={ancestor.id}
-              onClick={() => onSelect(ancestor.id)}
-              type="button"
-              underline="hover"
-              variant="body2"
-            >
-              {ancestor.nameUk}
-            </Link>
-          ))}
-          <Typography color="text.primary" variant="body2">
-            {category.nameUk}
-          </Typography>
-        </Breadcrumbs>
-      ) : null}
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={1.5}
-        sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}
-      >
-        {category.isShownOnSite ? (
-          <Typography variant="body2">Показується на сайті</Typography>
-        ) : (
-          <Box>
-            <StatusPill label="Не показується на сайті" tone="warning" />
-          </Box>
-        )}
-        {onToggleSite ? (
-          <Button
-            color={category.isShownOnSite ? 'inherit' : 'primary'}
-            onClick={onToggleSite}
-            size="small"
-            startIcon={
-              category.isShownOnSite ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />
-            }
-            variant="outlined"
-          >
-            {category.isShownOnSite ? 'Сховати з сайту' : 'Показати на сайті'}
-          </Button>
-        ) : null}
-      </Stack>
+      <CategoryBreadcrumbs ancestors={ancestors} category={category} onSelect={onSelect} />
+      <CategorySiteVisibility category={category} onToggleSite={onToggleSite} />
       <DetailFieldList columns={2}>
         <DetailField label="Назва російською" value={orDash(category.nameRu)} />
         <DetailField label="Назва в 1С" value={orDash(category.sourceName)} />
@@ -202,8 +104,8 @@ export function CategoryOverviewCard({
               gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))' },
             }}
           >
-            <LanguageSummary content={content.uk} language="uk" />
-            <LanguageSummary content={content.ru} language="ru" />
+            <CategoryLanguageSummary content={content.uk} language="uk" />
+            <CategoryLanguageSummary content={content.ru} language="ru" />
           </Box>
         )}
       </Stack>
