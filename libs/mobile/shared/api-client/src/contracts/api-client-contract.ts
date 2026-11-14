@@ -22,6 +22,8 @@ export interface ApiError {
   code: ApiErrorCode;
   fieldErrors?: Record<string, string[]>;
   message: string;
+  /** The server's business error code, such as invalid_quantity. */
+  reason?: string;
   status?: number;
   traceId?: string;
 }

@@ -84,6 +84,8 @@ export function toApiError(error: unknown): ApiError {
   }
 
   const { data, status } = error.response;
+  const businessCode =
+    isRecord(data) && typeof data['code'] === 'string' ? data['code'] : undefined;
   const problemDetails = toProblemDetails(data);
   const fieldErrors = toArdalisFieldErrors(data) ?? problemDetails?.errors;
   const message =
@@ -97,7 +99,14 @@ export function toApiError(error: unknown): ApiError {
   if (status === 404) return { code: 'NotFound', message: 'Ресурс не знайдено.', status };
 
   if (fieldErrors && status >= 400 && status < 500) {
-    return { code: 'Validation', fieldErrors, message, status, traceId: problemDetails?.traceId };
+    return {
+      code: 'Validation',
+      fieldErrors,
+      message,
+      reason: businessCode,
+      status,
+      traceId: problemDetails?.traceId,
+    };
   }
 
   if (status >= 500) {
