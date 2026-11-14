@@ -62,7 +62,7 @@ Create `model` only when there is shared logic or shared types. A small domain c
 
 ## Internal domain-library structure
 
-Each library's `src/index.ts` is only its public API. Do not place internal code beside it “temporarily” or let it accumulate in a large file. The role-folder names for each layer, the nesting order, and the forbidden catch-all names are fixed in the [code organization rules](../../../standards/admin/admin-code-organization.md#role-folders); use them when the corresponding role exists.
+Each library's `src/index.ts` is only its public API. Do not place internal code beside it “temporarily” or let it accumulate in a large file. The role-folder names for each layer, the nesting order, and the forbidden catch-all names are fixed in the [code organization rules](../../../standards/shared/code-organization.md#role-folders); use them when the corresponding role exists.
 
 This does not require creating every folder in advance. It requires keeping roles separate: an endpoint does not contain a DTO parser, a mapper does not contain a React component, and a table does not contain server state or routing. When an Nx boundary prohibits `data-access -> model`, data-access-owned types stay in `data-access/models`; do not weaken global module-boundary rules for a local task.
 
@@ -85,7 +85,7 @@ libs/admin/products/
 
 ## Internal feature structure
 
-A feature library groups pages, components, hooks, `model/`, and `state/` by role first and capability second, as shown in the [code organization rules](../../../standards/admin/admin-code-organization.md#nesting-and-size). If a page becomes an independent business boundary, split it into a separate feature only through a separate architecture decision.
+A feature library groups pages, components, hooks, `model/`, and `state/` by role first and capability second, as shown in the [code organization rules](../../../standards/shared/code-organization.md#nesting-and-size). If a page becomes an independent business boundary, split it into a separate feature only through a separate architecture decision.
 
 ## `admin/shared`
 

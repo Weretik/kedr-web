@@ -33,6 +33,8 @@ jobs:
       - run: npm run contracts:check
       - run: npm run docs:check
       - run: npm run architecture:boundaries
+      - run: npm run architecture:structure:fixtures
+      - run: npm run architecture:structure
       - run: npx nx $NX_MODE -t lint
 
   typecheck:

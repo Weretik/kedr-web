@@ -19,6 +19,8 @@
     "security:audit": "node tools/security/check-npm-audit.mjs",
     "architecture:boundaries": "node tools/architecture/check-project-boundaries.mjs",
     "architecture:boundaries:fixtures": "node --test tools/architecture/check-project-boundaries.spec.mjs",
+    "architecture:structure": "node tools/architecture/check-structure.mjs",
+    "architecture:structure:fixtures": "node --test tools/architecture/check-structure.spec.mjs",
     "test:web": "npm run test:web:unit && npm run test:web:component",
     "test:web:unit": "nx run-many -t vite:test --parallel=1 --projects=admin-shared-api-client,admin-products-data-access,admin-clients-model,admin-clients-data-access,admin-orders-data-access,admin-users-model,admin-users-feature -- --run",
     "test:web:component": "nx run-many -t vite:test --parallel=1 --projects=admin,admin-core-auth,admin-core-shell,admin-products-feature,admin-clients-ui,admin-clients-feature,admin-orders-ui,admin-orders-feature,admin-users-ui -- --run",
