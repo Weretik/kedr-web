@@ -67,8 +67,8 @@ describe('useMyTasksBoard', () => {
     const assignees = {
       selfId: 'me',
       people: [
-        { id: 'me', name: 'Я' },
-        { id: 'olha', name: 'Ольга' },
+        { id: 'me', name: 'Я', roleLabel: 'Адміністратор' },
+        { id: 'olha', name: 'Ольга', roleLabel: 'SEO' },
       ],
     };
     const { result, rerender, onNotice } = setup(assignees);
