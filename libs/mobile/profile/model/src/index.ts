@@ -1,4 +1,4 @@
-export { profileErrorMessage, type ProfileFailure } from './errors/profile-error-message';
+export { profileErrorMessage, type ProfileFailure } from './mappers/profile-error-message';
 export {
   maxEmailLength,
   maxNameLength,

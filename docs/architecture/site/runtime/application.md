@@ -1,6 +1,6 @@
 # Site application and routing
 
-**Baseline checked:** 2026-10-30. **Sources:** `apps/site/src/app/**`, `apps/site/src/proxy.ts`, `apps/site/next.config.mjs`, `libs/site/core/shell/src/lib/site-shell.tsx`.
+**Baseline checked:** 2026-10-30. **Sources:** `apps/site/src/app/**`, `apps/site/src/proxy.ts`, `apps/site/next.config.mjs`, `libs/site/core/shell/src/lib/layout/site-shell.tsx`.
 **Cart update:** source and focused automated verification on 2026-11-04; build, HTTP, browser and live-order checks were not run for this change.
 
 ## Composition point
@@ -17,6 +17,7 @@
 | path without a locale         | `src/proxy.ts` rewrite                 | app                                                   | 404 from `global-not-found`                        | exists                         |
 | unmatched URL                 | `app/global-not-found.tsx`             | app                                                   | 404, `noindex`, both languages                     | exists                         |
 | `notFound()` inside a page    | `app/[locale]/not-found.tsx`           | app                                                   | 404, `noindex`, inside the shell                   | exists                         |
+| root layout failure           | `app/global-error.tsx`                 | app                                                   | 500, both languages, retry button                  | exists                         |
 | `/{locale}/product/{slug}`    | `app/[locale]/product/[slug]/page.tsx` | `product/feature` + injected server purchase callback | existing production gate                           | exists; cart connected locally |
 | `/{locale}/checkout`          | `app/[locale]/checkout/page.tsx`       | `cart/feature`, `cart/seo`                            | private/noindex; neutral frame + request-time leaf | exists locally                 |
 | `/robots.txt`, `/sitemap.xml` | `app/robots.ts`, `app/sitemap.ts`      | `core/seo`                                            | static                                             | exists                         |
@@ -35,7 +36,7 @@ Server Components by default. The main client entry points include:
 - `shared/ui/{sheet,dialog}.tsx` — domain-neutral Radix overlay primitives;
 - `catalog/ui` — `ListingToolbar`, `FilterForm`, `ResultsAnchor`, `MegaMenu`;
 - `cart/feature` — `CartProvider` plus header/drawer/checkout/purchase controllers, all subscribed to one browser/document store; `cart/ui` receives presentation props and callbacks, never transport;
-- `content/ui/src/lib/gallery/gallery-browser.tsx` — the local filter/portion/selection session;
+- `content/ui/src/lib/gallery/page/gallery-browser.tsx` — the local filter/portion/selection session;
 - `content/ui/src/lib/gallery/media-image.tsx` — isolated image loading/error/retry. `MediaViewer` and `VideoFrame` are imported by the gallery client entry point; the page, source, heading, and SEO stay server-owned. See the [gallery feature](../../../features/site/gallery.md).
 
 The regions list uses `<details>` and the mega menu keeps every section's links in the server HTML (hidden until opened), so crawlers see all navigation links. The layout passes the mega menu and section links to `SiteShell` from `@site/catalog/feature`; without the API the shell uses its fixed sections. The search box is a plain GET form to `/{locale}/search?q=`.

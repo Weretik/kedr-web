@@ -6,7 +6,7 @@ export {
   type CustomerActivity,
   type CustomerDraft,
   type CustomerOrder,
-} from './activity/customer-activity';
+} from './entities/customer-activity';
 export type { Customer, CustomerDetails, CustomerPriceRule } from './entities/customer';
 export { formatDate, formatHryvnias, formatKopecks } from '@mobile/shared/model';
 export {
@@ -17,5 +17,14 @@ export {
   normalizeText,
   searchCustomers,
   type CustomerSection,
-} from './search/customer-search';
-export { maxRecentCustomers, pushRecent } from './search/recent-customers';
+} from './queries/customer-search';
+export { maxRecentCustomers, pushRecent } from './queries/recent-customers';
+export { activityNote } from './mappers/activity-note';
+export {
+  customerListSections,
+  flattenSections,
+  letterSections,
+  recentCustomers,
+  type CustomerListItem,
+  type CustomerListSection,
+} from './queries/customer-list-items';

@@ -1,13 +1,13 @@
 'use client';
 
-import { categoryPath } from '@site/catalog/model';
 import { localizedPath } from '@site/core/i18n';
-import { cn } from '@site/shared/ui';
-import { LayoutGridIcon, SearchIcon } from 'lucide-react';
+import { LayoutGridIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useId, useMemo, useRef, useState } from 'react';
 
+import { MegaMenuRail } from './mega-menu-rail';
 import { MegaMenuSearchResults } from './mega-menu-search';
+import { MegaMenuSearchField } from './mega-menu-search-field';
 import { MegaMenuSection } from './mega-menu-section';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 import { useDismiss } from '../popover/use-dismiss';
@@ -80,24 +80,7 @@ export function MegaMenu({
         aria-label={dictionary.catalogMenu}
         className="absolute top-full left-0 z-40 mt-2 w-[min(64rem,calc(100vw-2rem))] rounded-xl border border-border bg-background shadow-lg"
       >
-        <div className="border-b border-border p-3">
-          <label className="relative block">
-            <span className="sr-only">{dictionary.searchCategories}</span>
-            <SearchIcon
-              aria-hidden
-              className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-              strokeWidth={1.75}
-            />
-            <input
-              type="search"
-              value={term}
-              onChange={(event) => setTerm(event.target.value)}
-              placeholder={dictionary.searchCategories}
-              autoComplete="off"
-              className="h-10 w-full rounded-md border border-border bg-muted pr-3 pl-9 text-sm outline-none focus-visible:border-ring"
-            />
-          </label>
-        </div>
+        <MegaMenuSearchField label={dictionary.searchCategories} onChange={setTerm} value={term} />
 
         {term.trim() ? (
           <div className="max-h-[70vh] overflow-y-auto p-3">
@@ -111,32 +94,14 @@ export function MegaMenu({
           </div>
         ) : (
           <div className="grid max-h-[70vh] grid-cols-[15rem_minmax(0,1fr)]">
-            <ul className="overflow-y-auto border-r border-border p-2">
-              {rail.map((section) => (
-                <li
-                  key={section.id}
-                  className={cn(
-                    section.id === firstSeparated && 'mt-2 border-t border-border pt-2',
-                  )}
-                >
-                  <Link
-                    href={localizedPath(locale, categoryPath(section.slug))}
-                    onClick={navigate}
-                    onMouseEnter={() => setActiveId(section.id)}
-                    onFocus={() => setActiveId(section.id)}
-                    className={cn(
-                      'flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm',
-                      section.id === activeId ? 'bg-muted font-medium' : 'hover:bg-muted/60',
-                    )}
-                  >
-                    {section.name}
-                    <span className="text-xs text-muted-foreground tabular-nums">
-                      {section.productCount}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <MegaMenuRail
+              activeId={activeId}
+              firstSeparated={firstSeparated}
+              locale={locale}
+              onActivate={setActiveId}
+              onNavigate={navigate}
+              rail={rail}
+            />
             <div className="overflow-y-auto p-4">
               {tree.map((section) => (
                 <div key={section.id} hidden={section.id !== activeId}>

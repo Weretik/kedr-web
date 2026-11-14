@@ -13,17 +13,15 @@ import { buildProductItemListJsonLd } from '@site/catalog/seo';
 import {
   ListingEmpty,
   ListingPagination,
-  FilterForm,
   ListingSummary,
-  ListingToolbar,
   PerPageLinks,
   ProductList,
-  getCatalogDictionary,
 } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
 import { redirect } from 'next/navigation';
 
+import { ListingFrame } from './listing-frame';
 import { listingPurchaseDescriptor } from './listing-purchase';
 
 import type { RenderListingPurchaseAction } from './listing-purchase';
@@ -63,7 +61,6 @@ export async function ProductListing({
   landing,
   filterPath = path,
 }: ProductListingProps) {
-  const dictionary = getCatalogDictionary(locale);
   const parsed = parseListingQuery(await searchParams);
   // Links of a value page keep its value in the path; the list and the filters include it.
   const query = landing ? withoutAttribute(parsed, landing.attribute) : parsed;
@@ -79,29 +76,17 @@ export async function ProductListing({
 
   const filters = page?.filters ?? [];
   const frame = (content: ReactNode) => (
-    <div className="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8">
-      <aside aria-label={dictionary.filters} className="hidden lg:block">
-        <FilterForm
-          locale={locale}
-          path={filterPath}
-          query={listQuery}
-          extra={extra ?? {}}
-          filters={filters}
-        />
-      </aside>
-      <div className="grid min-w-0 content-start gap-4">
-        <ListingToolbar
-          locale={locale}
-          path={path}
-          filterPath={filterPath}
-          query={query}
-          filterQuery={listQuery}
-          extra={extra}
-          filters={filters}
-        />
-        {content}
-      </div>
-    </div>
+    <ListingFrame
+      locale={locale}
+      path={path}
+      filterPath={filterPath}
+      query={query}
+      listQuery={listQuery}
+      extra={extra}
+      filters={filters}
+    >
+      {content}
+    </ListingFrame>
   );
 
   if (!page) return frame(<ListingEmpty locale={locale} reason="unavailable" />);

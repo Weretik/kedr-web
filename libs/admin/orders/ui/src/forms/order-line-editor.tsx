@@ -11,9 +11,9 @@ import {
   Typography,
 } from '@mui/material';
 
-import { priceLine } from './order-lines/line-pricing';
+import { priceLine } from './line-pricing';
+import { OrderLineRow } from './order-line-row';
 import { PriceAdjustmentText } from '../components/price-adjustment-text';
-import { OrderLineRow } from './order-lines/order-line-row';
 
 import type { CatalogLineInfo, OrderInputLine, OrderQuote } from '@admin/orders/model';
 

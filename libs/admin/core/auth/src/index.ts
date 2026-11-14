@@ -7,6 +7,7 @@ export { initializeAdminAuth, login, logout, refreshSession } from './session/au
 export {
   canDeleteMedia,
   canEditCatalog,
+  canManageBackgroundTasks,
   canManageRequisites,
   canManageUsers,
   isStaff,

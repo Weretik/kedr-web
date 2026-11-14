@@ -17,7 +17,7 @@ import { useLineProducts } from '@mobile/catalog/data-access';
 import { useLocalDatabase } from '@mobile/core/local-db';
 import { useMemo } from 'react';
 
-import { useRemovedLineStore } from './use-removed-line';
+import { useRemovedLineStore } from '../state/removed-line-store';
 
 /** The customer's calculation priced with current customer prices, and what the manager can do with it. */
 export function useCalculationController(counterpartyId: string, customerName: string) {

@@ -4,7 +4,7 @@ import { Button, Stack, Tab, Tabs } from '@mui/material';
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { SiteModelsQueue } from '../components/site-models-queue';
+import { SiteModelsQueue } from '../components/queue/site-models-queue';
 import { readSiteShowcaseTab } from '../model/site-showcase-url-state';
 
 import type { SiteShowcaseTab } from '../model/site-showcase-url-state';

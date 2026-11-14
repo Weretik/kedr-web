@@ -1,7 +1,7 @@
 import { queryWrapper } from '@mobile/core/local-db/testing';
 import { act, renderHook } from '@testing-library/react-native';
 
-import { useOrderDetail } from './hooks/use-order-detail';
+import { useOrderDetail } from './api/use-order-detail';
 
 import type { OrderDetail } from '@mobile/orders/model';
 

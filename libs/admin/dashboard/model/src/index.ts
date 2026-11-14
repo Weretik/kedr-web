@@ -13,6 +13,6 @@ export type {
   AttentionKind,
   AttentionSources,
   AttentionTone,
-} from './mappers/attention-items';
+} from './entities/attention-item';
 export { greeting, kyivDate } from './mappers/greeting';
 export { countUk, pluralUk } from './mappers/plural';

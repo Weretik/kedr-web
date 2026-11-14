@@ -15,9 +15,7 @@ export function AppProviders({ children }: PropsWithChildren) {
       <ThemeProvider defaultMode="system" disableTransitionOnChange noSsr theme={adminTheme}>
         <CssBaseline />
         <ErrorNotificationsProvider>
-          <BrowserRouter basename={appConfig.routerBasename}>
-            {children}
-          </BrowserRouter>
+          <BrowserRouter basename={appConfig.routerBasename}>{children}</BrowserRouter>
         </ErrorNotificationsProvider>
       </ThemeProvider>
     </Provider>

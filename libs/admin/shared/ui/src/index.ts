@@ -15,6 +15,6 @@ export { SlugEditCard } from './lib/slug/slug-edit-card';
 export type { ChangeSlugInput } from './lib/slug/slug-edit-card';
 export { slugChangeErrorMessage, slugMaxLength, validateSlug } from './lib/slug/slug-rules';
 export { PublicAddressCard } from './lib/slug/public-address-card';
-export { CountedTextField } from './lib/inputs/counted-text-field';
+export { CountedTextField } from './lib/inputs/plain-text/counted-text-field';
 export { RichTextEditor } from './lib/inputs/rich-text-editor/rich-text-editor';
 export { RowEditAction } from './lib/table/row-edit-action';

@@ -21,14 +21,16 @@ export {
   LISTING_PAGE_SIZES,
   LISTING_SORTS,
   LISTING_VIEWS,
+  parseListingQuery,
+} from './lib/listing/listing-query';
+export {
   hasListingFilters,
   isIndexableListing,
   listingHref,
-  parseListingQuery,
   serializeListingQuery,
   toggleAttributeValue,
   withoutFilters,
-} from './lib/listing/listing-query';
+} from './lib/listing/listing-query-url';
 export type {
   ListingAttributes,
   ListingPageSize,

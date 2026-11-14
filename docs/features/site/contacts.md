@@ -26,34 +26,39 @@ The route awaits and validates locale params. Main content and BreadcrumbList re
 ## Code structure
 
 ```text
-apps/site/src/app/[locale]/(content)/contacts/page.tsx # thin locale route and metadata delegation
+apps/site/
+  src/app/[locale]/(content)/contacts/
+    page.tsx                            # thin locale route and metadata delegation
 libs/site/content/
-├── model/src/lib/
-│   ├── contacts-types.ts                         # copy and public details contracts
-│   └── contacts-dictionary.ts                    # complete UK/RU copy
-├── ui/src/lib/contacts/
-│   ├── contacts-content.tsx                      # page composition only
-│   ├── contacts-header.tsx                       # breadcrumb, heading, intro and section anchors
-│   ├── contacts-help.tsx                         # preparation and localized useful links
-│   ├── contacts-channels.tsx                     # contact section and responsive grid
-│   ├── contacts-sales.tsx                        # phone panel and clipboard inclusion
-│   ├── contacts-messengers.tsx                   # written contact channels
-│   ├── contacts-location.tsx                     # city, map and visit contact
-│   ├── contacts-wholesale.tsx                    # wholesale contact strip
-│   └── contacts-copy-phone-button.tsx            # only new client island
-├── seo/src/lib/
-│   ├── contacts-metadata.ts                      # localized core metadata wrapper
-│   └── contacts-json-ld.ts                       # absolute two-item BreadcrumbList
-└── feature/src/lib/
-    ├── contacts-page.tsx                         # company/dictionary/UI/JSON-LD composition
-    └── content-sitemap.ts                        # delivery, returns and contacts descriptors
+  feature/src/lib/contacts/
+    contacts-page.tsx                   # company/dictionary/UI/JSON-LD composition
+  feature/src/lib/sitemap/
+    content-sitemap.ts                  # delivery, returns and contacts descriptors
+  model/src/lib/copy/contacts/
+    contacts-types.ts                   # copy and public details contracts
+    contacts-dictionary.ts              # complete UK/RU copy
+  seo/src/lib/json-ld/contacts/
+    contacts-json-ld.ts                 # absolute two-item BreadcrumbList
+  seo/src/lib/metadata/contacts/
+    contacts-metadata.ts                # localized core metadata wrapper
+  ui/src/lib/contacts/page/
+    contacts-content.tsx                # page composition only
+    contacts-header.tsx                 # breadcrumb, heading, intro and section anchors
+    contacts-copy-phone-button.tsx      # only new client island
+  ui/src/lib/contacts/sections/
+    contacts-help.tsx                   # preparation and localized useful links
+    contacts-channels.tsx               # contact section and responsive grid
+    contacts-sales.tsx                  # phone panel and clipboard inclusion
+    contacts-messengers.tsx             # written contact channels
+    contacts-location.tsx               # city, map and visit contact
+    contacts-wholesale.tsx              # wholesale contact strip
 ```
 
 Public exports live in each existing library's `src/index.ts`. No new Nx project, alias, global CSS or shell API is needed. Light/dark colors and responsive stacking use current site tokens; the page is not an embedded copy of the concept HTML.
 
 ## Tests
 
-- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/contacts/contacts-content.spec.tsx src/lib/contacts/contacts-copy-phone-button.spec.tsx` — two locales, section targets, contact destinations, clipboard success/rejection/unavailable/pending/retry and keyboard activation.
+- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/contacts/page/contacts-content.spec.tsx src/lib/contacts/page/contacts-copy-phone-button.spec.tsx` — two locales, section targets, contact destinations, clipboard success/rejection/unavailable/pending/retry and keyboard activation.
 - `site-content-seo`: `npx nx run site-content-seo:vite:test -- --run contacts` — metadata, self canonical, reciprocal alternates/x-default, OG, indexing gates and absolute BreadcrumbList URLs.
 - `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run` — server company-fact integration, BreadcrumbList, no nested main, unique localized sitemap entries and preservation of delivery/returns.
 

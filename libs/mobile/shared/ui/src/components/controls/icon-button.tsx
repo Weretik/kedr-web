@@ -1,9 +1,9 @@
 import { Pressable } from 'react-native';
 
-import { createStyles, useStyles } from '../../theme/create-styles';
+import { createStyles, useStyles } from '../../theme/styling/create-styles';
 import { Icon, type IconName } from '../text/icon';
 
-import type { Tone } from '../tone';
+import type { Tone } from '../text/tone';
 
 export interface IconButtonProps {
   accessibilityLabel: string;

@@ -4,7 +4,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Button, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import { AttributeSwatch } from '../swatch/attribute-swatch';
+import { AttributeSwatch } from '../components/swatch/attribute-swatch';
 
 import type { CatalogAttributeValue } from '@admin/catalog-attributes/model';
 import type { ReactNode } from 'react';

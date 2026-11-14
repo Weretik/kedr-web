@@ -9,7 +9,7 @@ export {
   unlockSession,
   updateSessionUser,
 } from './session/mobile-auth';
-export { isWithinOfflineWindow, offlineWindowDays } from './session/offline-window';
+export { isWithinOfflineWindow, offlineWindowDays } from './offline/offline-window';
 export { isAdmin, isStaff } from './session/session-user';
 export { useMobileSession } from './session/use-mobile-session';
 

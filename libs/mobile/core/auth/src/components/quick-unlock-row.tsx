@@ -1,7 +1,7 @@
 import { ListRow, useAppTheme } from '@mobile/shared/ui';
 import { Switch } from 'react-native';
 
-import { useQuickUnlockSetting } from '../session/quick-unlock-setting';
+import { useQuickUnlockSetting } from '../unlock/quick-unlock-setting';
 
 /** Cabinet row: open the app with a fingerprint, face or device code. */
 export function QuickUnlockRow() {

@@ -3,8 +3,8 @@ import { useMemo } from 'react';
 
 import { ProductsBooleanFilterHeader } from '../tables/cells/products-boolean-filter-header';
 import { ProductsViewActionCell } from '../tables/cells/products-view-action-cell';
-import { productCategoryPath } from '../tables/product-category-path';
-import { productsDataGridColumns } from '../tables/products-data-grid.columns';
+import { productCategoryPath } from '../tables/grid/product-category-path';
+import { productsDataGridColumns } from '../tables/grid/products-data-grid.columns';
 
 import type { ProductBooleanField } from '../tables/cells/products-boolean-filter-header';
 import type { AdminProductListItem, ProductCategoryOption } from '@admin/products/model';

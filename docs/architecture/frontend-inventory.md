@@ -81,13 +81,13 @@ No direct API calls were found in presentation `ui`. Generated DTO imports remai
 
 ## Test and typecheck baseline
 
-| Surface        | Runnable gates                                                                                                                         | Gap                                                                                                       |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                | only the app and shared API client have executable specs; generated empty suites are not characterization |
-| Mobile         | app `typecheck`, `npm run test:mobile` for 12 Nx projects (app, core, shared, and sync libraries), `typecheck:tests:mobile`, export    | no mobile E2E target                                                                                      |
-| Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` for `storefront-data-access`, `typecheck:tests:storefront` | focused specs cover only data-access, not the whole app                                                   |
-| Site           | `site:typecheck`, `site:lint`, `site:build`, `npm run test:site` for six libraries, `typecheck:tests:site`                             | the app itself has no unit tests; rendered HTML is checked with `curl` against `next start`               |
-| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                       | contract generation changes generated source and runs only in API scope                                   |
+| Surface        | Runnable gates                                                                                                                         | Gap                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                | every `admin-*` library with production code has specs; CI runs them all through `test:web` |
+| Mobile         | app `typecheck`, `npm run test:mobile` for 12 Nx projects (app, core, shared, and sync libraries), `typecheck:tests:mobile`, export    | no mobile E2E target                                                                        |
+| Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` for `storefront-data-access`, `typecheck:tests:storefront` | focused specs cover only data-access, not the whole app                                     |
+| Site           | `site:typecheck`, `site:lint`, `site:build`, `npm run test:site` for every `site-*` library, `typecheck:tests:site`                    | the app itself has no unit tests; rendered HTML is checked with `curl` against `next start` |
+| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                       | contract generation changes generated source and runs only in API scope                     |
 
 Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` passed for 62 projects; Nx marked `admin-products-data-access:lint` flaky. `npm run typecheck:tests` passed for Web, Mobile, and Admin E2E configs.
 

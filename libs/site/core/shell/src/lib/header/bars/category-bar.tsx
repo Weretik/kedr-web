@@ -2,7 +2,7 @@ import { localizedPath } from '@site/core/i18n';
 import Link from 'next/link';
 
 import { SHELL_PATHS } from '../../navigation/site-navigation';
-import { CompactActions } from '../compact-actions';
+import { CompactActions } from '../actions/compact-actions';
 
 import type { ShellDictionary } from '../../i18n/shell-dictionary';
 import type { ShellLink } from '../../navigation/catalog-navigation';

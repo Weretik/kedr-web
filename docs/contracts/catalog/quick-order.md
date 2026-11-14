@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`orders.openapi.yaml`](../openapi/catalog/orders.openapi.yaml)
+- OpenAPI: [`quick-orders.openapi.yaml`](../openapi/sales/quick-orders.openapi.yaml)
 - Operation: `createQuickOrder`
 - Generated request: `operations['createQuickOrder']['requestBody']['content']['application/json']`
 - Generated response: `operations['createQuickOrder']['responses'][200]['content']['application/json']`

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
-import { CategoryPage, loadCategoryOrRespond } from './category-page';
+import { loadCategoryOrRespond } from './category-loading';
+import { CategoryPage } from './category-page';
 
 const { getCategory, getCatalogTree, getProductListPage, notFound, permanentRedirect } = vi.hoisted(
   () => ({

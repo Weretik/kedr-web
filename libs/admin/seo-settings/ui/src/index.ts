@@ -1,2 +1,2 @@
-export { SeoSettingsPanel } from './panel/seo-settings-panel';
-export { SeoSettingsView } from './view/seo-settings-view';
+export { SeoSettingsPanel } from './panels/seo-settings-panel';
+export { SeoSettingsView } from './details/seo-settings-view';

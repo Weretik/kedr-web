@@ -1,10 +1,11 @@
 import { contentLanguages, emptyCategoryContent } from '@admin/categories/model';
 
-import type {
-  AdminCategoryContentDto,
-  AdminCategoryContentItemDto,
-  SaveCategoryContentBody,
-} from '../contracts/admin-categories.contract';
+import {
+  adminCategoryContentItemSchema,
+  adminCategoryContentSchema,
+} from '../validators/admin-category.schemas';
+
+import type { SaveCategoryContentBody } from '../contracts/admin-categories.contract';
 import type {
   CategoryContent,
   CategoryContentDraft,
@@ -13,7 +14,8 @@ import type {
 
 export type CategoryContentByLanguage = Record<ContentLanguage, CategoryContent>;
 
-export function mapCategoryContentItem(dto: AdminCategoryContentItemDto): CategoryContent {
+export function mapCategoryContentItem(data: unknown): CategoryContent {
+  const dto = adminCategoryContentItemSchema.parse(data);
   return {
     language: dto.language,
     seoTitle: dto.seoTitle ?? '',
@@ -26,7 +28,8 @@ export function mapCategoryContentItem(dto: AdminCategoryContentItemDto): Catego
 }
 
 /** Every language, with empty content where none is stored yet. */
-export function mapCategoryContent(dto: AdminCategoryContentDto): CategoryContentByLanguage {
+export function mapCategoryContent(data: unknown): CategoryContentByLanguage {
+  const dto = adminCategoryContentSchema.parse(data);
   const stored = new Map(dto.items.map((item) => [item.language, mapCategoryContentItem(item)]));
   return Object.fromEntries(
     contentLanguages.map((language) => [

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   canDeleteMedia,
   canEditCatalog,
+  canManageBackgroundTasks,
   canManageRequisites,
   canManageUsers,
   isStaff,
@@ -31,6 +32,7 @@ describe('session user rules', () => {
 
     expect(canManageUsers(seo)).toBe(false);
     expect(canManageRequisites(seo)).toBe(false);
+    expect(canManageBackgroundTasks(seo)).toBe(false);
     expect(canDeleteMedia(seo)).toBe(false);
   });
 

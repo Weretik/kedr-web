@@ -3,8 +3,8 @@ export {
   snapshotRoutes,
   type SnapshotFetcher,
   type SnapshotResponse,
-} from './client/snapshot-client';
-export { syncAll, syncResource, type SyncDependencies } from './runner/sync-runner';
+} from './api/snapshot-client';
+export { syncAll, syncResource, type SyncDependencies } from './sync/sync-runner';
 export {
   readSyncState,
   replaceCatalog,

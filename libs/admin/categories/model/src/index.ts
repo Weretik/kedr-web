@@ -24,3 +24,8 @@ export {
   filterCategoryTree,
 } from './mappers/category-tree-nodes';
 export type { CategoryTreeNode } from './mappers/category-tree-nodes';
+export {
+  childCategoriesOf,
+  descendantCount,
+  expandableCategoryIds,
+} from './mappers/category-family';

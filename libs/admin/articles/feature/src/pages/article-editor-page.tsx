@@ -1,4 +1,4 @@
-import { useDeleteArticleMutation, useGetAdminArticleQuery } from '@admin/articles/data-access';
+import { useGetAdminArticleQuery } from '@admin/articles/data-access';
 import { ArticleCoverCard, ArticleForm, DeleteArticleDialog } from '@admin/articles/ui';
 import { MediaPickerDialog } from '@admin/media/ui';
 import { useRouteNotice, withNotice } from '@admin/shared/routing';
@@ -8,8 +8,8 @@ import { Alert, Box, Button, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { articleErrorMessage } from '../errors/article-error-message';
 import { useArticleCover } from '../hooks/use-article-cover';
+import { useArticleDelete } from '../hooks/use-article-delete';
 import { useArticleEditor } from '../hooks/use-article-editor';
 
 import type { Article } from '@admin/articles/model';
@@ -21,13 +21,10 @@ export function ArticleEditorPage() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const routeNotice = useRouteNotice();
   const [notice, setNotice] = useState<string | null>(null);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | undefined>();
   const isNew = params['articleId'] === 'new';
   const articleId = Number(params['articleId']);
   const validId = Number.isInteger(articleId) && articleId > 0;
   const query = useGetAdminArticleQuery(articleId, { skip: isNew || !validId });
-  const [deleteArticle, deleteState] = useDeleteArticleMutation();
   const article = isNew ? undefined : query.data;
   const stored: Article | null | undefined = isNew ? null : article;
 
@@ -43,26 +40,17 @@ export function ArticleEditorPage() {
     headingRef.current?.focus();
   }, [articleId, isNew]);
 
-  const confirmDelete = async () => {
-    setDeleteError(undefined);
-    try {
-      await deleteArticle(articleId).unwrap();
-      void navigate('/articles', withNotice('Статтю видалено.'));
-    } catch (error) {
-      setDeleteError(articleErrorMessage(error));
-    }
-  };
+  const deletion = useArticleDelete(
+    articleId,
+    () => void navigate('/articles', withNotice('Статтю видалено.')),
+  );
 
   return (
     <Stack component="section" spacing={3}>
       <AdminDetailHeader
         actions={
           article ? (
-            <Button
-              color="error"
-              onClick={() => setDeleteOpen(true)}
-              startIcon={<DeleteOutlinedIcon />}
-            >
+            <Button color="error" onClick={deletion.ask} startIcon={<DeleteOutlinedIcon />}>
               Видалити
             </Button>
           ) : undefined
@@ -114,14 +102,11 @@ export function ArticleEditorPage() {
       )}
       {article ? (
         <DeleteArticleDialog
-          deleting={deleteState.isLoading}
-          error={deleteError}
-          onCancel={() => {
-            setDeleteOpen(false);
-            setDeleteError(undefined);
-          }}
-          onConfirm={() => void confirmDelete()}
-          open={deleteOpen}
+          deleting={deletion.deleting}
+          error={deletion.error}
+          onCancel={deletion.cancel}
+          onConfirm={() => void deletion.confirm()}
+          open={deletion.open}
           title={article.texts.uk.title}
         />
       ) : null}

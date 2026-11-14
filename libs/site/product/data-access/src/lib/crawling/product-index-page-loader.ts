@@ -5,7 +5,7 @@ import { siteApiGet } from '@site/shared/api-client';
 import { mapModelIndexPage } from '../mappers/model-index.mapper';
 import { mapProductIndexPage } from '../mappers/product-index.mapper';
 
-import type { ProductIndexPageResult } from './product-index.types';
+import type { ProductIndexPageResult } from './product-index-page';
 import type { Locale } from '@site/core/i18n';
 
 /** Cache the complete index, not its pages, so an inconsistency retry actually reads a fresh attempt. */

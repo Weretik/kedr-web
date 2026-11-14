@@ -44,11 +44,9 @@ libs/admin/shared/api-client/src/
 libs/admin/shared/config/src/
 ├── index.ts
 ├── env/
-│   ├── admin-environment.types.ts
-│   └── environment-reader.ts
+│   └── environment-reader.ts   # AdminEnvironment type and env reading
 └── config/
-    ├── app-config.types.ts
-    └── app-config.ts
+    └── app-config.ts           # AppConfig type and createAppConfig
 ```
 
 - Only `env/environment-reader.ts` accesses `import.meta.env` and contains the Vite type reference.

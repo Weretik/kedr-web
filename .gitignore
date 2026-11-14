@@ -78,3 +78,11 @@ apps/site/tsconfig.tsbuildinfo
 .open-next
 .wrangler
 .dev.vars
+
+# Local env overrides and credentials that must never be committed
+.env*.local
+*.pem
+credentials.json
+google-services.json
+GoogleService-Info.plist
+*service-account*.json

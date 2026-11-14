@@ -4,7 +4,7 @@ import { Alert, Button, Stack, TextField } from '@mui/material';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 
 import { DetailHeader } from '../components/detail-header';
-import { useDraftEditForm } from '../hooks/use-draft-edit-form';
+import { useDraftEditForm } from '../hooks/editor/use-draft-edit-form';
 
 import type { CustomerPickerComponent } from '../orders.routes';
 

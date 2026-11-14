@@ -4,7 +4,7 @@ import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
 import { Button, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import { useState } from 'react';
 
-import { siteRefreshedMessage, siteRefreshErrorMessage } from '../messages/site-refresh-messages';
+import { siteRefreshedMessage, siteRefreshErrorMessage } from '../errors/site-refresh-messages';
 
 /**
  * Shows saved site content now instead of after the 10-minute cache: an icon in the top bar, or a labelled button

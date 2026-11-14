@@ -10,4 +10,4 @@ export type {
   ApiErrorCode,
   ApiRequest,
   AuthSessionAdapter,
-} from './contracts/api-client.types';
+} from './contracts/api-client-contract';

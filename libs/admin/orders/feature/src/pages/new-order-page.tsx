@@ -8,10 +8,10 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { CurrentOrderSetAlert } from '../components/current-order-set-alert';
 import { SaveDraftDialog } from '../dialogs/save-draft-dialog';
 import { SubmitOrderDialog } from '../dialogs/submit-order-dialog';
-import { useCustomerPrices } from '../hooks/use-customer-prices';
-import { useOrderQuote } from '../hooks/use-order-quote';
-import { useSaveDraft } from '../hooks/use-save-draft';
-import { useSubmitOrder } from '../hooks/use-submit-order';
+import { useCustomerPrices } from '../hooks/editor/use-customer-prices';
+import { useOrderQuote } from '../hooks/editor/use-order-quote';
+import { useSaveDraft } from '../hooks/editor/use-save-draft';
+import { useSubmitOrder } from '../hooks/editor/use-submit-order';
 import { getCurrentOrderCustomer, setCurrentOrderCustomer } from '../state/current-order-customer';
 import { setCurrentOrderLines, useCurrentOrderSet } from '../state/current-order-set';
 

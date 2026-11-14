@@ -1,7 +1,7 @@
 import { FALLBACK_COMPANY_CONTACTS } from '@site/core/config';
 import { render, screen, within } from '@testing-library/react';
 
-import { SiteShell } from '../site-shell';
+import { SiteShell } from '../layout/site-shell';
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/uk/checkout' }));
 vi.mock('../footer/copyright-year', () => ({ CopyrightYear: () => '2026' }));

@@ -22,6 +22,26 @@ function createAxiosError(status?: number, data?: unknown, code?: string): Axios
 }
 
 describe('toApiError', () => {
+  it('keeps the business code as the reason next to field errors', () => {
+    expect(
+      toApiError(
+        createAxiosError(400, {
+          code: 'invalid_quantity',
+          detail: 'Кількість має бути більшою за нуль.',
+          errors: { quantity: ['Має бути більшою за нуль.'] },
+          traceId: '00-def',
+        }),
+      ),
+    ).toEqual({
+      code: 'Validation',
+      fieldErrors: { quantity: ['Має бути більшою за нуль.'] },
+      message: 'Кількість має бути більшою за нуль.',
+      reason: 'invalid_quantity',
+      status: 400,
+      traceId: '00-def',
+    });
+  });
+
   it('normalizes ASP.NET Problem Details validation errors', () => {
     expect(
       toApiError(

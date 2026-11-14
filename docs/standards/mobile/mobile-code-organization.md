@@ -1,5 +1,9 @@
 # Mobile code rules
 
+**Applies to:** `apps/mobile` and `libs/mobile/**`.
+
+The shared [frontend code organization rules](../shared/code-organization.md) apply in full: [role folders](../shared/code-organization.md#role-folders) (with the mobile `data-access` roles `local/`, `store/`, `sync/`), [one responsibility per file](../shared/code-organization.md#one-responsibility-per-file), [tests](../shared/code-organization.md#tests), and forbidden names. This file adds what is specific to Mobile.
+
 ## Libraries and routing
 
 - Place domain code in `libs/mobile/<domain>/{model,data-access,ui,feature}`.
@@ -8,6 +12,7 @@
 - `model` does not depend on React, HTTP, Expo Router, or platform APIs.
 - `data-access` owns private DTOs, mappers, local database queries (Drizzle) and server calls; DTOs and transport errors do not leave the library. Reads follow [ADR-0008](../../architecture/mobile/adr/0008-tanstack-query-reads.md): a whole list through `useLocalAsyncQuery` (off the JavaScript thread), a few rows by key through `useLocalQuery`, an online-only read through TanStack Query `useQuery`; never Redux or RTK Query, never a hand-written loading/caching hook.
 - `ui` receives domain data and callbacks through props; it does not import API hooks, router, or storage.
+- The one server error parser is `libs/mobile/shared/api-client/src/errors/api-error.ts`; it reads the current KedrStore Ardalis array and ProblemDetails `errors` into the same field errors ([validation and server errors](../shared/code-organization.md#validation-and-server-errors)).
 
 ## Structure and platform APIs
 
@@ -31,3 +36,7 @@
 ## Speed
 
 - Judge speed only in release mode: `--no-dev --minify` while developing and an EAS `preview` build before a merge, by the [speed checks](../../architecture/mobile/workflow/testing.md#speed-checks).
+
+## Known deviations
+
+None: the structure check has no Mobile entries in [the baseline](../../../tools/architecture/structure-baseline.json). A new violation fails `npm run architecture:structure`.

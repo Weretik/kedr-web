@@ -1,13 +1,12 @@
+import { DEFAULT_LISTING_QUERY, parseListingQuery } from './listing-query';
 import {
-  DEFAULT_LISTING_QUERY,
   hasListingFilters,
   isIndexableListing,
   listingHref,
-  parseListingQuery,
   serializeListingQuery,
   toggleAttributeValue,
   withoutFilters,
-} from './listing-query';
+} from './listing-query-url';
 
 describe('listing query', () => {
   it('reads valid values and drops invalid ones', () => {

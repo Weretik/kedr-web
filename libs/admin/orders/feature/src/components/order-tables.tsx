@@ -1,24 +1,28 @@
-import { useGetWorkspaceDraftsQuery, useGetWorkspaceOrdersQuery } from '@admin/orders/data-access';
 import { OrderListGrid } from '@admin/orders/ui';
 import { AdminPageHeader } from '@admin/shared/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { Alert, Button, Card, Stack, Tab, Tabs } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { DraftDeleteDialog } from '../dialogs/draft-delete-dialog';
-import { useDraftDeletion } from '../hooks/use-draft-deletion';
-import { useOrderListUrlState } from '../hooks/use-order-list-url-state';
+import { useDebouncedSearch } from '../hooks/list/use-debounced-search';
+import { useDraftDeletion } from '../hooks/list/use-draft-deletion';
+import { useOrderListRows } from '../hooks/list/use-order-list-rows';
+import { useOrderListUrlState } from '../hooks/list/use-order-list-url-state';
 
-import type { Mode } from '../hooks/use-order-list-url-state';
+import type { Mode } from '../hooks/list/use-order-list-url-state';
 import type { ListQuery } from '@admin/orders/model';
 
 interface Props {
+  /** URL parameter prefix, so two lists on one page keep separate state. */
   prefix: string;
   counterpartyId?: string;
   returnTo?: string;
   panelOnly?: boolean;
 }
+
+/** «Замовлення» and «Чернетки» tabs with search, dates, paging, and draft deletion. */
 export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = false }: Props) {
   const {
     params,
@@ -36,24 +40,12 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
   const location = useLocation();
   const navigate = useNavigate();
   const customer = counterpartyId ?? '';
-  const [searchText, setSearchText] = useState(searchTerm);
-  const [syncedSearch, setSyncedSearch] = useState({ mode, searchTerm });
-  if (syncedSearch.mode !== mode || syncedSearch.searchTerm !== searchTerm) {
-    // The URL is the source of truth: reset the input when it changes outside the field.
-    setSyncedSearch({ mode, searchTerm });
-    setSearchText(searchTerm);
-  }
+  const { text: searchText, setText: setSearchText } = useDebouncedSearch(
+    searchTerm,
+    mode,
+    (text) => update({ Search: text }, true),
+  );
   const deletion = useDraftDeletion();
-  const updateRef = useRef(update);
-  useEffect(() => {
-    updateRef.current = update;
-  });
-  useEffect(() => {
-    if (searchText === searchTerm) return;
-    // Search input commits after debounce; URL state remains the query source of truth.
-    const timeout = window.setTimeout(() => updateRef.current({ Search: searchText }, true), 300);
-    return () => window.clearTimeout(timeout);
-  }, [searchText, searchTerm]);
   const query: ListQuery = useMemo(
     () => ({
       page,
@@ -66,9 +58,7 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
     }),
     [page, pageSize, searchTerm, customer, createdFrom, createdTo, sort, panelOnly],
   );
-  const orders = useGetWorkspaceOrdersQuery(query, { skip: mode !== 'orders' || invalidDateRange });
-  const drafts = useGetWorkspaceDraftsQuery(query, { skip: mode !== 'drafts' || invalidDateRange });
-  const active = mode === 'orders' ? orders : drafts;
+  const list = useOrderListRows(query, mode, invalidDateRange);
   const back = location.pathname.startsWith('/customers/')
     ? `${location.pathname}${location.search}`
     : (returnTo ?? `${location.pathname}${location.search}`);
@@ -111,10 +101,10 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
         )}
         <OrderListGrid
           mode={mode}
-          rows={mode === 'orders' ? (orders.data?.items ?? []) : (drafts.data?.items ?? [])}
-          rowCount={active.data?.pageInfo.totalRecords ?? 0}
-          loading={active.isLoading || active.isFetching}
-          error={active.isError}
+          rows={list.rows}
+          rowCount={list.total}
+          loading={list.loading}
+          error={list.failed}
           page={page}
           pageSize={pageSize}
           search={searchText}
@@ -137,9 +127,7 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
                 }
               : undefined
           }
-          onRetry={() => {
-            void active.refetch();
-          }}
+          onRetry={list.retry}
         />
       </Card>
       {deletion.error && !deletion.selected && <Alert severity="error">{deletion.error}</Alert>}

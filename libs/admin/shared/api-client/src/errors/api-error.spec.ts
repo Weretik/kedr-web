@@ -47,6 +47,28 @@ describe('toApiError', () => {
     });
   });
 
+  it('keeps the business code as the reason next to field errors', () => {
+    const error = new AxiosError('Bad request');
+    error.response = {
+      data: {
+        code: 'invalid_quantity',
+        detail: 'Кількість має бути більшою за нуль.',
+        errors: { quantity: ['Має бути більшою за нуль.'] },
+        traceId: '00-def',
+      },
+      status: 400,
+    } as typeof error.response;
+
+    expect(toApiError(error)).toEqual({
+      code: 'Validation',
+      reason: 'invalid_quantity',
+      status: 400,
+      message: 'Кількість має бути більшою за нуль.',
+      fieldErrors: { quantity: ['Має бути більшою за нуль.'] },
+      traceId: '00-def',
+    });
+  });
+
   it('normalizes Ardalis validation errors', () => {
     const error = new AxiosError('Unprocessable entity');
     error.response = {

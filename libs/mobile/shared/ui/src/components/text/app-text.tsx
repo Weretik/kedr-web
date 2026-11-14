@@ -1,8 +1,8 @@
 import { Text, type TextProps } from 'react-native';
 
-import { createStyles, useStyles } from '../../theme/create-styles';
-import { tabularNumbers, type TypeVariant } from '../../theme/typography';
-import { toneColor, type Tone } from '../tone';
+import { toneColor, type Tone } from './tone';
+import { createStyles, useStyles } from '../../theme/styling/create-styles';
+import { tabularNumbers, type TypeVariant } from '../../theme/tokens/typography';
 
 export interface AppTextProps extends TextProps {
   align?: 'auto' | 'center' | 'left' | 'right';

@@ -18,3 +18,4 @@ export type { MediaFolderNode } from './mappers/media-folder-tree';
 export { defaultMediaFilesQuery, mediaPageSize, uploadFolderId } from './queries/media-files-query';
 export type { MediaFilesQuery, MediaScope } from './queries/media-files-query';
 export { fileNameIssue, folderNameIssue, uploadIssue } from './validators/media-rules';
+export { mediaScopeFromValue, mediaScopeValue } from './queries/media-scope-value';

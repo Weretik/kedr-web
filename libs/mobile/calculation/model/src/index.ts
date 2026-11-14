@@ -5,7 +5,7 @@ export {
   minimumUnitKopecks,
   parseAdjustment,
   type AdjustmentParse,
-} from './adjustment/price-adjustment';
+} from './validators/price-adjustment';
 export {
   addProduct,
   calculationTotals,
@@ -17,7 +17,7 @@ export {
   type LineProblem,
   type LineProduct,
   type PricedLine,
-} from './lines/calculation-line';
+} from './entities/calculation-line';
 export {
   applyOutcome,
   changedPrices,
@@ -32,4 +32,4 @@ export {
   type OutboxReview,
   type OutboxState,
   type SendOutcome,
-} from './outbox/outbox-entry';
+} from './entities/outbox-entry';

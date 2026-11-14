@@ -25,3 +25,12 @@ export type {
   GrantStaffAccessFieldErrors,
   StaffAccountFieldErrors,
 } from './validators/staff-account-rules';
+export {
+  emptyOwnPasswordValues,
+  hasOwnPasswordErrors,
+  ownPasswordChangeErrors,
+} from './validators/own-password-change-rules';
+export type {
+  OwnPasswordErrors,
+  OwnPasswordValues,
+} from './validators/own-password-change-rules';
