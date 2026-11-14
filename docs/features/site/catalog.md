@@ -36,7 +36,7 @@ apps/site/src/app/[locale]/
 libs/site/catalog/
 ├── model/src/lib/  # entities/, paths/, listing/ (URL model), tree/ (search, ancestors), roots/ (site roots)
 ├── data-access/src/lib/  # loaders/ (catalog, category, product), mappers/, requests/, cache-tags.ts
-├── ui/src/lib/  # category/, category-cards/, listing/, popover/, product/, navigation/, catalog-index/, i18n/locales/
+├── ui/src/lib/  # category/, category-cards/, listing/, popover/, product/, navigation/, catalog-index/, i18n/
 ├── seo/src/lib/  # metadata/ (category, hub, search, texts), json-ld/
 └── feature/src/lib/  # category/, listing/, hub/, search/, navigation/, routing/
 libs/site/core/shell/src/lib/navigation/catalog-navigation.ts  # CatalogNavigation prop and fallback

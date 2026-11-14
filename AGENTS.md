@@ -46,7 +46,7 @@ A small fix that restores documented behavior needs no SDD, file-role map, or au
 | Verify changes / hand off for review                          | `$frontend-change-verification` / `$frontend-pr-handoff` | [Testing rules](docs/standards/shared/testing-rules.md)            |
 | Differences between code and documentation                    | `$frontend-docs-sync`                                    | [Documentation index](docs/README.md)                              |
 
-For any new or changed Admin, Mobile, or Site code, apply the [code organization rules](docs/standards/shared/code-organization.md) (role folders, one responsibility per file, tests first; the structure check fails on new violations) and [SDD readiness and delivery rules](docs/standards/shared/delivery-rules.md): plan the file-role map first and compare it with actual code before handoff.
+For any new or changed Admin, Mobile, or Site code, apply the [code organization rules](docs/standards/shared/code-organization.md) (role folders, one responsibility per file, at most six production files per folder and never files mixed with subfolders, tests first; the structure check fails on new violations) and [SDD readiness and delivery rules](docs/standards/shared/delivery-rules.md): plan the file-role map first and compare it with actual code before handoff.
 
 For a new or substantially changed feature, update the [feature catalog](docs/features/README.md) under the [delivery rules](docs/standards/shared/delivery-rules.md); small internal changes do not require rewriting its card.
 

@@ -36,13 +36,13 @@ libs/site/content/
 ├── model/src/lib/copy/wholesale/          # dictionary, types, admin texts over the dictionary
 ├── data-access/src/lib/wholesale/         # cached API read, mapper, cache tags
 ├── ui/src/lib/wholesale/
-│   ├── wholesale-content.tsx        # page composition
-│   ├── wholesale-hero.tsx           # offer/contact panel
-│   ├── wholesale-assortment.tsx     # slot/fallback
-│   ├── wholesale-company.tsx        # sourced facts/help
-│   ├── wholesale-steps.tsx          # order sequence
-│   ├── wholesale-faq.tsx            # visible Q/A
-│   └── wholesale-contact.tsx        # final contact/useful links
+│   ├── page/wholesale-content.tsx       # page composition
+│   ├── page/wholesale-hero.tsx          # offer/contact panel
+│   ├── sections/wholesale-assortment.tsx  # slot/fallback
+│   ├── sections/wholesale-company.tsx   # sourced facts/help
+│   ├── sections/wholesale-steps.tsx     # order sequence
+│   ├── sections/wholesale-faq.tsx       # visible Q/A
+│   └── sections/wholesale-contact.tsx   # final contact/useful links
 ├── seo/src/lib/{metadata,json-ld}/wholesale/  # wholesale-metadata.ts, wholesale-json-ld.ts
 └── feature/src/lib/wholesale/wholesale-page.tsx, sitemap/content-sitemap.ts
 libs/site/catalog/ui/src/lib/category-cards/category-cards.tsx  # optional compact variant

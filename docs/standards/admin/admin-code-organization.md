@@ -21,7 +21,7 @@ Existing code that does not follow these rules yet; `npm run architecture:struct
 | Path under `libs/admin/` or `apps/admin/`       | Deviation                 | Target                                                                                                         |
 | ----------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `apps/admin/src/app/theme/components.ts`        | Over the line limit       | keep: one MUI component override table, split only when it grows                                               |
-| `products/ui/src/tables/products-data-grid.tsx` | Four lines over the limit | keep: only wires the MUI DataGrid props; columns, filters, and the panel width already live in their own hooks |
+| `products/ui/src/tables/grid/products-data-grid.tsx` | Four lines over the limit | keep: only wires the MUI DataGrid props; columns, filters, and the panel width already live in their own hooks |
 
 ### Restructure plan
 

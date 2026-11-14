@@ -39,7 +39,7 @@ libs/site/content/
     returns-dictionary.ts        # dictionary assembly
   seo/src/lib/metadata/returns/
     returns-metadata.ts          # domain metadata through core builder
-  ui/src/lib/returns/
+  ui/src/lib/returns/page/
     returns-content.tsx          # content composition
     returns-header.tsx           # breadcrumb, title and section navigation
   ui/src/lib/returns/sections/
@@ -53,7 +53,7 @@ libs/site/content/
 
 ## Tests
 
-- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/returns/returns-content.spec.tsx` — both languages, headings, anchors, terms/process, phone, full policy and native FAQ.
+- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/returns/page/returns-content.spec.tsx` — both languages, headings, anchors, terms/process, phone, full policy and native FAQ.
 - `site-content-seo`: `npx nx run site-content-seo:vite:test -- --run src/lib/metadata/returns/returns-metadata.spec.ts` — metadata, canonical, alternates and indexing.
 - `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run src/lib/sitemap/content-sitemap.spec.ts` — localized returns URLs and reciprocal alternates.
 

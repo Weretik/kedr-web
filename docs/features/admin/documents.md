@@ -5,7 +5,7 @@
 - The [list](../../../libs/admin/documents/ui/src/tables/legal-documents-list.tsx) shows the four documents with the edition on the site («На сайті: редакція №2 від 10.11.2026») and marks a waiting draft.
 - The [editor](../../../libs/admin/documents/feature/src/pages/legal-document-editor-page.tsx) opens the draft, or the text on the site when there is none. Both languages sit in tabs: the full title and the body in the shared rich text editor with quotes turned on; H2 headings become the sections and the table of contents on the site. `{site}`, `{email}` and `{phone}` in the text are filled by the site with its host and the saved contacts.
 - «Зберегти чернетку» saves without touching the site (the first save creates the draft). «Опублікувати» saves unsaved changes, then publishes: the [dialog](../../../libs/admin/documents/ui/src/dialogs/publish-legal-document-dialog.tsx) asks «Редакція від» for the three legal texts (not earlier than the edition on the site) and publishes delivery & payment with today's date without asking. «Видалити чернетку» drops unpublished changes.
-- [Історія редакцій](../../../libs/admin/documents/ui/src/details/history/legal-document-history.tsx) is collapsed: number, date, who and when published; an old edition opens read-only and its text can be taken into the form.
+- [Історія редакцій](../../../libs/admin/documents/ui/src/details/legal-document-history.tsx) is collapsed: number, date, who and when published; an old edition opens read-only and its text can be taken into the form.
 - The editor names who published the edition on the site and when («Опубліковано: дата · email»), and who saved a waiting draft.
 - After publishing, the site shows the new edition within ten minutes (its cache life).
 

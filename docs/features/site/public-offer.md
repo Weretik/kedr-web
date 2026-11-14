@@ -44,15 +44,16 @@ libs/site/content/
     public-offer-json-ld.ts            # visible BreadcrumbList
   seo/src/lib/metadata/public-offer/
     public-offer-metadata.ts           # localized metadata via core
-  ui/src/lib/public-offer/
-    public-offer-content.tsx           # server responsive composition
-    public-offer-header.tsx            # breadcrumb/title/print placement
+  ui/src/lib/public-offer/document/
     public-offer-document.tsx          # every section of the published edition
-    public-offer-contact.tsx           # configured contact and related links
     public-offer-toc.tsx               # native contents and active link
     use-public-offer-section.ts        # hash/observer/scroll lifecycle
     public-offer-print-button.tsx      # hydrated browser print action
     public-offer-print.module.css      # page-marker-scoped print styles
+  ui/src/lib/public-offer/page/
+    public-offer-content.tsx           # server responsive composition
+    public-offer-header.tsx            # breadcrumb/title/print placement
+    public-offer-contact.tsx           # configured contact and related links
 ```
 
 ## State, source and boundaries

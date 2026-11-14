@@ -2,9 +2,9 @@
 
 **Entry point:** `/profile`, created by [createProfileRoutes](../../../libs/admin/users/feature/src/profile.routes.tsx) inside the staff session in [AppRouter](../../../apps/admin/src/app/router/app-router.tsx); the header menu item "Мій кабінет" opens it. Every staff member (Admin, Seo, or Manager) has it. SDD: [staff profile and avatars](../../specs/admin/users/001-staff-profile-and-avatars/README.md).
 
-- [ProfilePage](../../../libs/admin/users/feature/src/pages/profile-page.tsx) shows [ProfilePhotoCard](../../../libs/admin/users/ui/src/components/profile/profile-photo-card.tsx) (photo, upload, remove, limits) and [ProfileDetailsCard](../../../libs/admin/users/ui/src/components/profile/profile-details-card.tsx) (name, email, role, password).
-- A manager changes the name and photo. An admin also changes the email and password; both forms ask for the current password ([ChangeEmailPanel](../../../libs/admin/users/ui/src/panels/profile/change-email-panel.tsx), [ChangePasswordPanel](../../../libs/admin/users/ui/src/panels/profile/change-password-panel.tsx)); every form opens in the right edit panel.
-- Forms only collect values. [useConfirmedChange](../../../libs/admin/users/feature/src/hooks/use-confirmed-change.ts) holds one pending change and sends it after "confirm" in [ChangeConfirmationDialog](../../../libs/admin/users/feature/src/components/change-confirmation-dialog.tsx); a photo shows a preview there.
+- [ProfilePage](../../../libs/admin/users/feature/src/pages/profile-page.tsx) shows [ProfilePhotoCard](../../../libs/admin/users/ui/src/components/profile-photo-card.tsx) (photo, upload, remove, limits) and [ProfileDetailsCard](../../../libs/admin/users/ui/src/components/profile-details-card.tsx) (name, email, role, password).
+- A manager changes the name and photo. An admin also changes the email and password; both forms ask for the current password ([ChangeEmailPanel](../../../libs/admin/users/ui/src/panels/change-email-panel.tsx), [ChangePasswordPanel](../../../libs/admin/users/ui/src/panels/change-password-panel.tsx)); every form opens in the right edit panel.
+- Forms only collect values. [useConfirmedChange](../../../libs/admin/users/feature/src/hooks/profile/use-confirmed-change.ts) holds one pending change and sends it after "confirm" in [ChangeConfirmationDialog](../../../libs/admin/users/feature/src/components/change-confirmation-dialog.tsx); a photo shows a preview there.
 - [checkAvatarFile](../../../libs/admin/users/feature/src/model/check-avatar-file.ts) checks type, size (≤ 2 MB) and decoded size (≥ 128×128) before upload, with the rules in [avatar-file-rules](../../../libs/admin/users/model/src/validators/avatar-file-rules.ts).
 - After a change, `onProfileChanged` (the app passes `refreshSession` from `@admin/core/auth`) re-reads `me`, so the header shows the new name and photo.
 - Without a photo, [UserAvatar](../../../libs/admin/shared/ui/src/lib/user/user-avatar.tsx) draws the first letter of the name on one of eight colours chosen by a stable hash of the name.
@@ -40,7 +40,7 @@ libs/admin/users/
 └── feature/src/
     ├── profile.routes.tsx  # /profile, profilePath
     ├── pages/profile-page.tsx  # page composition
-    ├── hooks/use-profile-actions.ts, use-confirmed-change.ts, use-avatar-change.ts  # flows
+    ├── hooks/profile/use-profile-actions.ts, use-confirmed-change.ts, use-avatar-change.ts  # flows
     └── model/check-avatar-file.ts  # reads the picked file against the photo limits
 libs/admin/shared/ui/src/lib/user/user-avatar.tsx  # photo or coloured initial
 ```
