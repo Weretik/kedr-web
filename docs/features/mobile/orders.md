@@ -18,8 +18,8 @@
 
 ```text
 libs/mobile/orders/
-├── model/src/detail/  # order detail schema and mapping to kopecks
-├── data-access/src/{api,hooks}/  # order read and useOrderDetail
+├── model/src/entities/  # order detail schema and mapping to kopecks
+├── data-access/src/api/  # order read and useOrderDetail
 └── feature/src/{components,hooks}/  # OrdersScreen, OrderDetailScreen, opening drafts and returned orders
 ```
 
