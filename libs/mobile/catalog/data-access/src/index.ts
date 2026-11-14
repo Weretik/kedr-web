@@ -16,9 +16,5 @@ export {
   type ImageCacheDriver,
 } from './cache/image-cache';
 export { usePhotoDownloadStore } from './store/photo-download-store';
-export {
-  readCategories,
-  readCustomerPricing,
-  readPricedProduct,
-  readPricedProducts,
-} from './local/catalog-queries';
+export { readCategories, readPricedProduct, readPricedProducts } from './local/catalog-queries';
+export { readCustomerPricing } from './local/customer-pricing-queries';

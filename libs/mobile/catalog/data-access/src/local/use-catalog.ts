@@ -4,11 +4,11 @@ import {
   priceCatalog,
   readCatalogBase,
   readCategories,
-  readCustomerPricing,
-  readLineProducts,
   readPricedProduct,
   type CatalogBase,
 } from './catalog-queries';
+import { readCustomerPricing } from './customer-pricing-queries';
+import { readLineProducts } from './line-product-queries';
 
 import type { Category, PricedProduct } from '@mobile/catalog/model';
 import type { LocalReader } from '@mobile/core/local-db';

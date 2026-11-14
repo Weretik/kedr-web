@@ -16,12 +16,9 @@ import { eq } from 'drizzle-orm';
 
 import { downloadImages, type ImageCacheDriver } from './cache/image-cache';
 import { useAllPhotosDownload, useEssentialPhotoDownload } from './cache/use-photo-downloads';
-import {
-  readCustomerPricing,
-  readLineProducts,
-  readPricedProduct,
-  readPricedProducts,
-} from './local/catalog-queries';
+import { readPricedProduct, readPricedProducts } from './local/catalog-queries';
+import { readCustomerPricing } from './local/customer-pricing-queries';
+import { readLineProducts } from './local/line-product-queries';
 import { usePricedProducts } from './local/use-catalog';
 import { usePhotoDownloadStore } from './store/photo-download-store';
 
