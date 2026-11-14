@@ -1,4 +1,4 @@
-export { GalleryGrid } from './cards/gallery-grid';
+export { GalleryGrid } from './components/grid/gallery-grid';
 export { AddVideoPanel } from './panels/add-video-panel';
 export type { YoutubeLinkState } from './panels/add-video-panel';
 export { EditGalleryItemPanel } from './panels/edit-gallery-item-panel';

@@ -1,4 +1,4 @@
-export { AttributeSwatch } from './swatch/attribute-swatch';
+export { AttributeSwatch } from './components/swatch/attribute-swatch';
 export { AttributeList } from './components/attributes/attribute-list';
 export { AttributeOverview } from './components/attributes/attribute-overview';
 export { CodeQueueList } from './components/codes/code-queue-list';
@@ -18,4 +18,4 @@ export {
   toNewAttribute,
 } from './forms/new-attribute-fields';
 export type { NewAttributeDraft } from './forms/new-attribute-fields';
-export { FilterCategoriesTree } from './trees/filter-categories-tree';
+export { FilterCategoriesTree } from './components/trees/filter-categories-tree';

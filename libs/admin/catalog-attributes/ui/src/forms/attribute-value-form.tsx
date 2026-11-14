@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-import { AttributeSwatch } from '../swatch/attribute-swatch';
+import { AttributeSwatch } from '../components/swatch/attribute-swatch';
 
 import type {
   CatalogAttributeValue,

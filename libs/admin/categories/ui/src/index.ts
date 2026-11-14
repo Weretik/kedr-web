@@ -3,5 +3,5 @@ export { CategoryContentForm } from './forms/category-content/category-content-f
 export { CategoryContentView } from './details/category-content-view';
 export { CategoriesDataGrid } from './tables/categories-data-grid';
 export { CategoryOverviewCard } from './details/category-overview-card';
-export { CategoryTreeNav } from './navigation/category-tree-nav';
+export { CategoryTreeNav } from './components/navigation/category-tree-nav';
 export { CategorySiteVisibilityDialog } from './dialogs/category-site-visibility-dialog';
