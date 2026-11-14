@@ -1,7 +1,7 @@
 import { useQuoteWorkspaceOrderMutation } from '@admin/orders/data-access';
 import { useEffect, useMemo, useState } from 'react';
 
-import { quoteErrorMessage } from '../errors/quote-error-message';
+import { quoteErrorMessage } from '../../errors/quote-error-message';
 
 import type { OrderInputLine, OrderQuote } from '@admin/orders/model';
 

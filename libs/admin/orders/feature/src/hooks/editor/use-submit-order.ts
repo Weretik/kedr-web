@@ -6,10 +6,10 @@ import { withNotice } from '@admin/shared/routing';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { clearCurrentOrder } from '../state/current-order-set';
-import { keyForRequest } from '../state/idempotency-key';
+import { clearCurrentOrder } from '../../state/current-order-set';
+import { keyForRequest } from '../../state/idempotency-key';
 
-import type { PendingRequest } from '../state/idempotency-key';
+import type { PendingRequest } from '../../state/idempotency-key';
 import type { OrderInputLine, OrderQuote } from '@admin/orders/model';
 
 export function useSubmitOrder(
