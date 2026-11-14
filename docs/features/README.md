@@ -25,6 +25,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Articles](admin/articles.md)                     | `/articles`, `/articles/new`, `/articles/:articleId` | Site articles UK/RU, cover, drafts; all staff edit                                                  |
 | [Company contacts](admin/company-contacts.md)     | `/company-contacts`                                  | Site phone, email, Telegram, Viber, map, city; all staff edit                                       |
 | [Company requisites](admin/company-requisites.md) | `/company-requisites`                                | ФОП, code, IBAN, bank, МФО with change history; Admins only                                         |
+| [Фонові задачі](admin/background-tasks.md)        | `/background-tasks`, `/background-tasks/:key`        | Schedules, last success and failure, history, run now; Admins only                                  |
 | [Site documents](admin/documents.md)              | `/documents`, `/documents/:kind`                     | Offer, privacy, returns, delivery UK/RU; editions; all staff                                        |
 | [Site gallery](admin/gallery.md)                  | `/gallery`                                           | Photos from the media library and YouTube videos by link; order, UK/RU titles; all staff            |
 | [Оновити сайт зараз](admin/site-refresh.md)       | top bar, all routes                                  | Drops the site content and catalogue cache now; all staff                                           |

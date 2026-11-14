@@ -4,6 +4,7 @@ import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
 import { companyAdminRoutes, companyRoutes } from '@admin/company/feature';
 import {
+  canManageBackgroundTasks,
   canManageRequisites,
   canManageUsers,
   LoginPage,
@@ -25,6 +26,7 @@ import {
 } from '@admin/orders/feature';
 import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
+import { backgroundTasksRoutes } from '@admin/scheduling/feature';
 import { seoSettingsRoutes } from '@admin/seo-settings/feature';
 import { createSiteModelsRoutes } from '@admin/site-models/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
@@ -96,6 +98,10 @@ export function AppRouter() {
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: workReportRoutes },
+        {
+          element: <RequireRole allow={canManageBackgroundTasks} />,
+          children: backgroundTasksRoutes,
+        },
         { path: '*', element: <NotFoundPage /> },
       ],
     },
