@@ -11,7 +11,7 @@ import SmartDisplayOutlinedIcon from '@mui/icons-material/SmartDisplayOutlined';
 import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 
-import { MediaPickerDialog } from '../components/media-picker-dialog';
+import { MediaPickerDialog } from '../components/media-picker/media-picker-dialog';
 import { useGalleryActions } from '../hooks/use-gallery-actions';
 import { useYoutubeLink } from '../hooks/use-youtube-link';
 

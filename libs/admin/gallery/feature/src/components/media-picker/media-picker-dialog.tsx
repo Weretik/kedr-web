@@ -1,26 +1,13 @@
-import { galleryPhotosPerAdd } from '@admin/gallery/model';
-import { mediaAcceptedTypes } from '@admin/media/model';
+import { uploadFolderId } from '@admin/media/model';
 import { MediaDropZone, MediaFileGrid } from '@admin/media/ui';
 import { PageIssues } from '@admin/shared/ui';
-import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  Pagination,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Pagination, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import { useMediaBrowse } from '../hooks/use-media-browse';
-import { usePhotoUploads } from '../hooks/use-photo-uploads';
-
-import type { ChangeEvent } from 'react';
+import { MediaPickerActions } from './media-picker-actions';
+import { MediaPickerToolbar } from './media-picker-toolbar';
+import { useMediaBrowse } from '../../hooks/use-media-browse';
+import { usePhotoUploads } from '../../hooks/use-photo-uploads';
 
 interface MediaPickerDialogProps {
   open: boolean;
@@ -31,9 +18,6 @@ interface MediaPickerDialogProps {
   onCancel: () => void;
   onAdd: (ids: number[]) => void;
 }
-
-const allValue = 'all';
-const rootValue = 'root';
 
 /**
  * Picks pictures from the media library, or uploads new ones from the computer straight into the chosen folder
@@ -52,9 +36,7 @@ export function MediaPickerDialog({
   const { changeScope, files, options, page, scope, search, searching, setPage, setSearch } =
     useMediaBrowse(open);
 
-  const scopeValue =
-    scope.kind === 'folder' ? String(scope.folderId) : scope.kind === 'root' ? rootValue : allValue;
-  const uploadFolder = scope.kind === 'folder' ? scope.folderId : null;
+  const uploadFolder = uploadFolderId(scope);
   const uploadTarget =
     scope.kind === 'folder'
       ? `у папку «${options.find((option) => option.id === scope.folderId)?.label ?? ''}»`
@@ -65,7 +47,6 @@ export function MediaPickerDialog({
   const visible = (pageData?.items ?? []).filter((file) => !inGallery.has(file.id));
   const hiddenCount = (pageData?.items.length ?? 0) - visible.length;
   const selectedSet = new Set(selected);
-  const tooMany = selected.length > galleryPhotosPerAdd;
 
   const toggle = (id: number) =>
     setSelected((current) =>
@@ -75,11 +56,6 @@ export function MediaPickerDialog({
     const ids = await uploads.upload(picked, uploadFolder);
     if (ids.length > 0)
       setSelected((current) => [...current, ...ids.filter((id) => !current.includes(id))]);
-  };
-  const pick = (event: ChangeEvent<HTMLInputElement>) => {
-    const picked = Array.from(event.target.files ?? []);
-    event.target.value = '';
-    if (picked.length > 0) void startUpload(picked);
   };
   const close = () => {
     setSelected([]);
@@ -97,56 +73,15 @@ export function MediaPickerDialog({
             revealKey={uploads.issues.join('|')}
             title="Не все вдалося"
           />
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <TextField
-              label="Папка"
-              onChange={(event) => {
-                const value = event.target.value;
-                changeScope(
-                  value === allValue
-                    ? { kind: 'all' }
-                    : value === rootValue
-                      ? { kind: 'root' }
-                      : { kind: 'folder', folderId: Number(value) },
-                );
-              }}
-              select
-              sx={{ minWidth: 260 }}
-              value={scopeValue}
-            >
-              <MenuItem value={allValue}>Уся медіатека</MenuItem>
-              <MenuItem value={rootValue}>Без папки</MenuItem>
-              {options.map((option) => (
-                <MenuItem key={option.id} value={String(option.id)}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              fullWidth
-              label="Пошук за назвою файлу"
-              onChange={(event) => setSearch(event.target.value)}
-              value={search}
-            />
-            <Button
-              component="label"
-              disabled={uploads.progress !== null}
-              startIcon={<UploadOutlinedIcon />}
-              sx={{ flexShrink: 0 }}
-              variant="outlined"
-            >
-              {uploads.progress
-                ? `Завантаження ${uploads.progress.done} / ${uploads.progress.total}`
-                : 'Завантажити з комп’ютера'}
-              <input
-                accept={mediaAcceptedTypes.join(',')}
-                hidden
-                multiple
-                onChange={pick}
-                type="file"
-              />
-            </Button>
-          </Stack>
+          <MediaPickerToolbar
+            folderOptions={options}
+            onFiles={(picked) => void startUpload(picked)}
+            onScopeChange={changeScope}
+            onSearchChange={setSearch}
+            progress={uploads.progress}
+            scope={scope}
+            search={search}
+          />
           <MediaDropZone
             disabled={uploads.progress !== null}
             onFiles={(dropped) => void startUpload(dropped)}
@@ -184,27 +119,13 @@ export function MediaPickerDialog({
           </MediaDropZone>
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'space-between', px: 3 }}>
-        <Typography color={tooMany ? 'error' : 'text.secondary'} variant="body2">
-          {tooMany
-            ? `За раз можна додати до ${galleryPhotosPerAdd} фото.`
-            : selected.length > 0
-              ? `Вибрано: ${selected.length}. Додадуться в кінець у порядку вибору.`
-              : 'Натисніть на фото, щоб вибрати.'}
-        </Typography>
-        <Stack direction="row" spacing={1}>
-          <Button disabled={adding} onClick={close}>
-            Скасувати
-          </Button>
-          <Button
-            disabled={adding || selected.length === 0 || tooMany || uploads.progress !== null}
-            onClick={() => onAdd(selected)}
-            variant="contained"
-          >
-            {adding ? 'Додавання…' : 'Додати в галерею'}
-          </Button>
-        </Stack>
-      </DialogActions>
+      <MediaPickerActions
+        adding={adding}
+        busy={uploads.progress !== null}
+        onAdd={() => onAdd(selected)}
+        onCancel={close}
+        selectedCount={selected.length}
+      />
     </Dialog>
   );
 }
