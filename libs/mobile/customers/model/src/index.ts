@@ -20,3 +20,11 @@ export {
 } from './queries/customer-search';
 export { maxRecentCustomers, pushRecent } from './queries/recent-customers';
 export { activityNote } from './mappers/activity-note';
+export {
+  customerListSections,
+  flattenSections,
+  letterSections,
+  recentCustomers,
+  type CustomerListItem,
+  type CustomerListSection,
+} from './queries/customer-list-items';
