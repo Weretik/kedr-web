@@ -10,9 +10,9 @@ import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { useSelectedCustomerStore } from '@mobile/customers/data-access';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 
-import { CalculationLineSheet } from './components/calculation-line-sheet';
-import { CalculationPanel } from './components/calculation-panel';
-import { QueueSummaryCard } from './components/queue-summary-card';
+import { CalculationLineSheet } from './components/calculation/calculation-line-sheet';
+import { CalculationPanel } from './components/calculation/calculation-panel';
+import { QueueSummaryCard } from './components/draft/queue-summary-card';
 import { useAddToCalculation, useCalculationBadges } from './hooks/use-add-to-calculation';
 
 import type { ReactNode } from 'react';

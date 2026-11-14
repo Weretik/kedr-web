@@ -1,7 +1,7 @@
 import { AppText, createStyles, Icon, useStyles } from '@mobile/shared/ui';
 import { View } from 'react-native';
 
-import type { WorkNavItem } from './work-nav-item';
+import type { WorkNavItem } from '../work/work-nav-item';
 
 /** The section icon with its count as a small badge, so the label stays short enough for a phone. */
 export function NavIcon({ item }: Readonly<{ item: WorkNavItem }>) {

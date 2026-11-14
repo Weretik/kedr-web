@@ -1,5 +1,5 @@
-import { breakpointFor } from './tokens/breakpoints';
-import { darkColors, lightColors } from './tokens/palette';
+import { breakpointFor } from './breakpoints';
+import { darkColors, lightColors } from './palette';
 
 const channel = (hex: string, offset: number) => {
   const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;

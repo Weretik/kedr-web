@@ -2,7 +2,7 @@ import { AppText, Avatar, BrandMark, createStyles, useStyles } from '@mobile/sha
 import { Pressable, View } from 'react-native';
 
 import { NavIcon } from './nav-icon';
-import { navItemAccessibilityLabel, type WorkNavItem } from './work-nav-item';
+import { navItemAccessibilityLabel, type WorkNavItem } from '../work/work-nav-item';
 
 import type { ReactNode } from 'react';
 

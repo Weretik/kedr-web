@@ -1,6 +1,6 @@
 import { useAppTheme, type AppRuntime } from './app-theme';
 
-import type { AppTheme } from './themes';
+import type { AppTheme } from '../tokens/themes';
 import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 type Style = ImageStyle | TextStyle | ViewStyle;

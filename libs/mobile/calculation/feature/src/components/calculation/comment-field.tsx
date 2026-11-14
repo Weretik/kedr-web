@@ -1,6 +1,6 @@
 import { TextField } from '@mobile/shared/ui';
 
-import { useDebouncedText } from '../hooks/use-debounced-text';
+import { useDebouncedText } from '../../hooks/use-debounced-text';
 
 /**
  * «Коментар до замовлення»: typing stays in the field and is saved a moment after the manager stops, or at once when

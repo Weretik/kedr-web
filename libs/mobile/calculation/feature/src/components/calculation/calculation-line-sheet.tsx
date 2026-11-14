@@ -3,7 +3,7 @@ import { useSelectedCustomer } from '@mobile/customers/data-access';
 import { useEffect, useEffectEvent } from 'react';
 import { ScrollView } from 'react-native';
 
-import { useCalculationController } from '../hooks/use-calculation-controller';
+import { useCalculationController } from '../../hooks/use-calculation-controller';
 
 export interface CalculationLineSheetProps {
   productId: number;

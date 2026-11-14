@@ -1,8 +1,8 @@
 import { useBreakpoint } from '@mobile/shared/ui';
 
-import { NavRail, type RailAccount } from './nav-rail';
-import { TabBar } from './tab-bar';
 import { workTabs, type WorkTabName } from './work-tabs';
+import { NavRail, type RailAccount } from '../bars/nav-rail';
+import { TabBar } from '../bars/tab-bar';
 
 import type { WorkNavItem } from './work-nav-item';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';

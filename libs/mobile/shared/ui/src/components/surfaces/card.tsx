@@ -1,6 +1,6 @@
 import { View, type ViewProps } from 'react-native';
 
-import { createStyles, useStyles } from '../../theme/create-styles';
+import { createStyles, useStyles } from '../../theme/styling/create-styles';
 
 /** White surface, 1 px border, `radius.lg`; no shadow. */
 export function Card({ style, ...props }: Readonly<ViewProps>) {

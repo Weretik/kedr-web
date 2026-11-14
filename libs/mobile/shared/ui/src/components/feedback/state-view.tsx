@@ -1,7 +1,7 @@
 import { ActivityIndicator, View } from 'react-native';
 
-import { useAppTheme } from '../../theme/app-theme';
-import { createStyles, useStyles } from '../../theme/create-styles';
+import { useAppTheme } from '../../theme/styling/app-theme';
+import { createStyles, useStyles } from '../../theme/styling/create-styles';
 import { Button } from '../controls/button';
 import { AppText } from '../text/app-text';
 import { Icon, type IconName } from '../text/icon';

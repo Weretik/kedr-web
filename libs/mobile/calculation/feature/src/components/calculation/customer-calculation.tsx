@@ -3,10 +3,10 @@ import { createStyles, StateView, useStyles } from '@mobile/shared/ui';
 import { FlatList, View } from 'react-native';
 
 import { CommentField } from './comment-field';
-import { CalculationFinish } from './finish/calculation-finish';
-import { SourceDraftBar } from './source-draft-bar';
-import { useCalculationController } from '../hooks/use-calculation-controller';
-import { useRemovedLineUndo } from '../hooks/use-removed-line-undo';
+import { useCalculationController } from '../../hooks/use-calculation-controller';
+import { useRemovedLineUndo } from '../../hooks/use-removed-line-undo';
+import { SourceDraftBar } from '../draft/source-draft-bar';
+import { CalculationFinish } from '../finish/calculation-finish';
 
 interface CustomerCalculationProps {
   counterpartyId: string;
