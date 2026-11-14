@@ -8,7 +8,7 @@ import {
   readLineProducts,
   readPricedProduct,
   type CatalogBase,
-} from '../queries/catalog-queries';
+} from './catalog-queries';
 
 import type { Category, PricedProduct } from '@mobile/catalog/model';
 import type { LocalReader } from '@mobile/core/local-db';

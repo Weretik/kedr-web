@@ -1,4 +1,4 @@
-import type { CalculationLine } from '../lines/calculation-line';
+import type { CalculationLine } from './calculation-line';
 
 export type OutboxKind = 'draft-delete' | 'draft-save' | 'order-create';
 

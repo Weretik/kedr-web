@@ -6,8 +6,8 @@ export {
   type ServerQuote,
 } from './api/order-workspace-api';
 export { toWorkspaceFailure, WorkspaceError, type WorkspaceFailure } from './api/workspace-failure';
-export { useOutbox, useOutboxRunner, useStoredCalculation } from './hooks/use-calculation';
-export { drainOutbox, type RunResult } from './runner/outbox-runner';
+export { useOutbox, useOutboxRunner, useStoredCalculation } from './local/use-calculation';
+export { drainOutbox, type RunResult } from './sync/outbox-runner';
 export {
   deviceEnvironment,
   enqueueDraftDelete,

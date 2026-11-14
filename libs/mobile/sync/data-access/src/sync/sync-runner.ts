@@ -13,7 +13,7 @@ import {
   touchSyncState,
 } from '../store/snapshot-store';
 
-import type { SnapshotFetcher } from '../client/snapshot-client';
+import type { SnapshotFetcher } from '../api/snapshot-client';
 import type { LocalDatabase } from '@mobile/core/local-db';
 
 /**

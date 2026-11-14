@@ -1,7 +1,7 @@
 import { compareText } from '@mobile/shared/model';
 
+import type { CategoryParents } from './customer-price';
 import type { Category } from '../entities/product';
-import type { CategoryParents } from '../pricing/customer-price';
 
 export function parentsOf(categories: readonly Category[]): CategoryParents {
   return new Map(categories.map((category) => [category.id, category.parentId]));

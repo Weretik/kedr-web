@@ -3,9 +3,9 @@ import { syncState, useLocalQuery, useLocalReader } from '@mobile/core/local-db'
 import { eq } from 'drizzle-orm';
 import { useEffect, useEffectEvent } from 'react';
 
-import { downloadImages, expoImageCache, type ImageCacheDriver } from '../media/image-cache';
-import { usePhotoDownloadStore } from '../media/photo-download-store';
-import { readCatalogBase } from '../queries/catalog-queries';
+import { downloadImages, expoImageCache, type ImageCacheDriver } from './image-cache';
+import { readCatalogBase } from '../local/catalog-queries';
+import { usePhotoDownloadStore } from '../store/photo-download-store';
 
 import type { LocalDatabase } from '@mobile/core/local-db';
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchOrderDetail, type OrderDetailFetcher } from '../api/order-detail-client';
+import { fetchOrderDetail, type OrderDetailFetcher } from './order-detail-client';
 
 import type { OrderDetail } from '@mobile/orders/model';
 

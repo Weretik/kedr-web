@@ -1,7 +1,6 @@
 import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 
 import { WorkspaceError } from './api/workspace-failure';
-import { drainOutbox } from './runner/outbox-runner';
 import {
   enqueueDraftSave,
   enqueueOrder,
@@ -10,6 +9,7 @@ import {
 } from './store/calculation-actions';
 import { readCalculation, updateCalculation, writeCalculation } from './store/calculation-store';
 import { readOutbox } from './store/outbox-store';
+import { drainOutbox } from './sync/outbox-runner';
 
 import type { OrderWorkspaceApi, ServerQuote } from './api/order-workspace-api';
 import type { LocalDatabase } from '@mobile/core/local-db';

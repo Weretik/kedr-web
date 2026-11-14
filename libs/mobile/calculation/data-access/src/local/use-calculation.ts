@@ -2,10 +2,10 @@ import { useLocalDatabase, useLocalQuery, type LocalDatabase } from '@mobile/cor
 import { useEffect, useEffectEvent } from 'react';
 
 import { orderWorkspaceApi, type OrderWorkspaceApi } from '../api/order-workspace-api';
-import { drainOutbox } from '../runner/outbox-runner';
 import { deviceEnvironment, type QueueEnvironment } from '../store/calculation-actions';
 import { readCalculation, type StoredCalculation } from '../store/calculation-store';
 import { readOutbox } from '../store/outbox-store';
+import { drainOutbox } from '../sync/outbox-runner';
 
 import type { OutboxEntry } from '@mobile/calculation/model';
 

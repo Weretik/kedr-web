@@ -1,8 +1,8 @@
 import { useLocalAsyncQuery, useLocalDatabase, useLocalDataVersion } from '@mobile/core/local-db';
 import { useMemo } from 'react';
 
-import { readCustomerDetails, readCustomers } from '../queries/customer-queries';
-import { useSelectedCustomerStore } from '../selection/selected-customer-store';
+import { readCustomerDetails, readCustomers } from './customer-queries';
+import { useSelectedCustomerStore } from '../store/selected-customer-store';
 
 import type { LocalDatabase } from '@mobile/core/local-db';
 import type { Customer, CustomerDetails } from '@mobile/customers/model';

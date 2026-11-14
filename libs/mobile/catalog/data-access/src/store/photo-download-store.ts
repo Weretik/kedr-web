@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import type { DownloadProgress } from './image-cache';
+import type { DownloadProgress } from '../cache/image-cache';
 
 export type PhotoDownloadStatus = 'done' | 'idle' | 'running' | 'stopped';
 

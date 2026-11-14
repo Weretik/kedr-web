@@ -1,6 +1,6 @@
 import { launchImageLibraryAsync } from 'expo-image-picker';
 
-import type { PickedPhoto } from '../api/profile-api';
+import type { PickedPhoto } from './profile-api';
 
 /**
  * Opens the gallery with a square crop; JPEG at 70 % keeps a phone photo well under the 2 MB limit. Null when the

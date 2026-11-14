@@ -1,4 +1,4 @@
-import { adjustmentProblem } from '../adjustment/price-adjustment';
+import { adjustmentProblem } from '../validators/price-adjustment';
 
 /**
  * What a line needs to know about its product: the catalog's priced product fits it as is, so the calculation

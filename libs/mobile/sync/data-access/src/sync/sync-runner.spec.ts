@@ -4,7 +4,7 @@ import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { syncAll } from './sync-runner';
 import { readSyncState } from '../store/snapshot-store';
 
-import type { SnapshotFetcher, SnapshotResponse } from '../client/snapshot-client';
+import type { SnapshotFetcher, SnapshotResponse } from '../api/snapshot-client';
 import type { CatalogSnapshot, CustomersSnapshot } from '@mobile/sync/model';
 
 const catalog = (amount: number): CatalogSnapshot => ({

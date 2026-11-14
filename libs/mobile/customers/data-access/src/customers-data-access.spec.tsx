@@ -10,11 +10,11 @@ import {
 import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
-import { readCachedActivity } from './activity/customer-activity-store';
-import { useCustomerActivity } from './hooks/use-customer-activity';
-import { useCustomers, useSelectedCustomer } from './hooks/use-customers';
-import { readCustomerDetails } from './queries/customer-queries';
-import { useSelectedCustomerStore } from './selection/selected-customer-store';
+import { useCustomerActivity } from './api/use-customer-activity';
+import { readCachedActivity } from './local/customer-activity-store';
+import { readCustomerDetails } from './local/customer-queries';
+import { useCustomers, useSelectedCustomer } from './local/use-customers';
+import { useSelectedCustomerStore } from './store/selected-customer-store';
 
 import type { ReactNode } from 'react';
 

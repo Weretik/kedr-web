@@ -2,11 +2,8 @@ import { useLocalDatabase, useLocalQuery } from '@mobile/core/local-db';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import {
-  fetchCustomerActivity,
-  type CustomerActivityFetcher,
-} from '../activity/customer-activity-client';
-import { readCachedActivity, saveActivity } from '../activity/customer-activity-store';
+import { fetchCustomerActivity, type CustomerActivityFetcher } from './customer-activity-client';
+import { readCachedActivity, saveActivity } from '../local/customer-activity-store';
 
 import type { CustomerActivity } from '@mobile/customers/model';
 
