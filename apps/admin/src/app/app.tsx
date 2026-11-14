@@ -44,7 +44,5 @@ export function App({ authInitialization }: AppProps) {
     );
   }
 
-  return (
-    <AppRouter />
-  );
+  return <AppRouter />;
 }
