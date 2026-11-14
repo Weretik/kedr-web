@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { DeletedProductsPanel } from '../components/deleted-products-panel';
 import { ProductEditPanel } from '../components/product-edit-panel';
 import { ProductsPageToolbar } from '../components/products-page-toolbar';
+import { useProductEditPanel } from '../hooks/use-product-edit-panel';
 import { useProductsListData } from '../hooks/use-products-list-data';
 import { useProductsListState } from '../hooks/use-products-list-state';
 import { addProductFeedback } from '../model/add-product-feedback';
 import { toProductsGridFilterModel } from '../model/products-grid-filters';
 
-import type { EditedProduct } from '../components/product-edit-panel';
 import type { AddProductFeedback } from '../model/add-product-feedback';
 import type { ProductsListMode } from '../model/products-url-state';
 import type { AddProductResult } from '../products.routes';
@@ -34,10 +34,7 @@ export function ProductsPage({
 }) {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState<AddProductFeedback | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-  // The last edited product stays set after closing so its panel can reopen without a reload.
-  const [editedProduct, setEditedProduct] = useState<EditedProduct | undefined>();
-  const [editOpen, setEditOpen] = useState(false);
+  const editPanel = useProductEditPanel();
   const list = useProductsListState(canSeeDeleted);
   const { activeQuery, categoriesQuery, rowCount } = useProductsListData(list.mode, list.urlState);
   const { currentQuery, mode, search } = list;
@@ -49,10 +46,6 @@ export function ProductsPage({
     },
     [navigate, search],
   );
-  const editProduct = useCallback((product: AdminProductListItem) => {
-    setEditedProduct({ id: product.id, nameUk: product.nameUk, productSlug: product.productSlug });
-    setEditOpen(true);
-  }, []);
 
   return (
     <Stack component="section" spacing={3}>
@@ -99,7 +92,7 @@ export function ProductsPage({
             onPageSizeChange={list.changePageSize}
             onRetry={activeQuery.refetch}
             onSortChange={list.changeSort}
-            onEditProduct={editProduct}
+            onEditProduct={editPanel.edit}
             onViewProduct={viewProduct}
             onAddProduct={
               onAddProduct
@@ -117,15 +110,12 @@ export function ProductsPage({
       </Card>
       <ProductEditPanel
         canEditSlug={canEditSlug}
-        onClose={() => setEditOpen(false)}
-        onSlugChanged={(slug) => {
-          setEditedProduct((current) => current && { ...current, productSlug: slug });
-          setNotice(`Нова адреса: ${slug}`);
-        }}
-        open={editOpen}
-        product={editedProduct}
+        onClose={editPanel.close}
+        onSlugChanged={editPanel.slugChanged}
+        open={editPanel.open}
+        product={editPanel.product}
       />
-      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
+      <NoticeSnackbar message={editPanel.notice} onClose={editPanel.clearNotice} />
     </Stack>
   );
 }
