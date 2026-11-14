@@ -31,4 +31,16 @@ describe('staff account mapper', () => {
       { id: 'u-2', email: 'client@kedr.ua', fullName: 'Клієнт', isCustomer: true },
     ]);
   });
+
+  it('rejects a response with an unknown role instead of passing it on', () => {
+    expect(() =>
+      mapStaffAccount({
+        id: 'u-3',
+        email: 'x@kedr.ua',
+        fullName: 'X',
+        role: 'Owner',
+        isBlocked: false,
+      }),
+    ).toThrow();
+  });
 });
