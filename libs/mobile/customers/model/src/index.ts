@@ -19,3 +19,4 @@ export {
   type CustomerSection,
 } from './queries/customer-search';
 export { maxRecentCustomers, pushRecent } from './queries/recent-customers';
+export { activityNote } from './mappers/activity-note';
