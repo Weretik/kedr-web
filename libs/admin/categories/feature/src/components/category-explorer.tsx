@@ -1,13 +1,5 @@
-import {
-  useGetCategoryContentQuery,
-  useSetCategorySiteVisibilityMutation,
-} from '@admin/categories/data-access';
-import {
-  buildCategoryTree,
-  categoryAncestorIds,
-  filterCategoryTree,
-  missingContentLanguages,
-} from '@admin/categories/model';
+import { useGetCategoryContentQuery } from '@admin/categories/data-access';
+import { childCategoriesOf, descendantCount } from '@admin/categories/model';
 import {
   CategoryOverviewCard,
   CategorySiteVisibilityDialog,
@@ -15,14 +7,16 @@ import {
 } from '@admin/categories/ui';
 import { NoticeSnackbar } from '@admin/shared/ui';
 import { Box, Typography } from '@mui/material';
-import { useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useRef, useState } from 'react';
 
 import { CategoryEditPanel } from './category-edit-panel';
+import { useCategorySiteVisibility } from '../hooks/explorer/use-category-site-visibility';
+import { useCategoryTreeView } from '../hooks/explorer/use-category-tree-view';
 
-import type { AdminCategory, CategoryTreeNode } from '@admin/categories/model';
+import type { AdminCategory } from '@admin/categories/model';
 
 const publicPathPrefix = '/uk/catalog/';
+const phoneQuery = '(max-width: 899.95px)';
 
 interface CategoryExplorerProps {
   categories: readonly AdminCategory[];
@@ -32,21 +26,7 @@ interface CategoryExplorerProps {
   canEdit: boolean;
 }
 
-const hasMissingText = (category: AdminCategory) =>
-  (missingContentLanguages(category)?.length ?? 0) > 0;
-
-const collectIds = (nodes: readonly CategoryTreeNode[], into: string[] = []) => {
-  for (const node of nodes) {
-    if (node.children.length > 0) into.push(String(node.category.id));
-    collectIds(node.children, into);
-  }
-  return into;
-};
-
-/**
- * «Провідник» layout of the category list: the tree on the left, the selected category on the
- * right. The selection lives in `?category=` so a link or the back button returns to it.
- */
+/** «Провідник» layout of the category list: the tree on the left, the selected category on the right. */
 export function CategoryExplorer({
   canEdit,
   categories,
@@ -54,90 +34,20 @@ export function CategoryExplorer({
   loading,
   onRetry,
 }: CategoryExplorerProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState('');
-  const [onlyMissingText, setOnlyMissingText] = useState(false);
-  const [expanded, setExpanded] = useState<string[] | null>(null);
+  const view = useCategoryTreeView(categories);
+  const { selected } = view;
   const [editOpen, setEditOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-  const [visibilityOpen, setVisibilityOpen] = useState(false);
-  const [visibilityError, setVisibilityError] = useState<string | null>(null);
-  const [setSiteVisibility, visibilityState] = useSetCategorySiteVisibilityMutation();
+  const visibility = useCategorySiteVisibility(selected, setNotice);
   const overviewRef = useRef<HTMLDivElement>(null);
-
-  const byId = useMemo(() => new Map(categories.map((row) => [row.id, row])), [categories]);
-  const tree = useMemo(() => buildCategoryTree(categories), [categories]);
-  const filtered = useMemo(
-    () => filterCategoryTree(tree, search, onlyMissingText ? hasMissingText : undefined),
-    [tree, search, onlyMissingText],
-  );
-  const missingTextCount = useMemo(() => categories.filter(hasMissingText).length, [categories]);
-  const filtering = Boolean(search.trim()) || onlyMissingText;
-
-  const requestedId = Number(searchParams.get('category'));
-  const selected = byId.get(requestedId) ?? tree[0]?.category;
-  const ancestorIds = useMemo(
-    () => (selected ? categoryAncestorIds(selected.id, byId) : []),
-    [byId, selected],
-  );
-
-  // Until the person expands or collapses something, the path to the selected category is open.
-  const expandedIds = filtering ? collectIds(filtered.tree) : (expanded ?? ancestorIds.map(String));
-
   const contentQuery = useGetCategoryContentQuery(selected?.id ?? 0, { skip: !selected });
 
   const select = (categoryId: number) => {
-    setSearchParams(
-      (current) => {
-        const next = new URLSearchParams(current);
-        next.set('category', String(categoryId));
-        return next;
-      },
-      { replace: true },
-    );
-    // Opening a category from the overview keeps its path visible in the tree.
-    setExpanded((current) => {
-      const path = categoryAncestorIds(categoryId, byId).map(String);
-      const base = current ?? ancestorIds.map(String);
-      return [...new Set([...base, ...path])];
-    });
+    view.select(categoryId);
     // On phones the overview is under the tree; bring it into view.
-    if (window.matchMedia?.('(max-width: 899.95px)').matches)
+    if (window.matchMedia?.(phoneQuery).matches)
       overviewRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   };
-
-  const descendantCount = useMemo(
-    () =>
-      selected
-        ? categories.filter((row) => categoryAncestorIds(row.id, byId).includes(selected.id)).length
-        : 0,
-    [byId, categories, selected],
-  );
-
-  const toggleSite = async () => {
-    if (!selected) return;
-    setVisibilityError(null);
-    try {
-      await setSiteVisibility({
-        id: selected.id,
-        isShownOnSite: !selected.isShownOnSite,
-      }).unwrap();
-      setVisibilityOpen(false);
-      setNotice(
-        selected.isShownOnSite ? 'Категорію сховано з сайту.' : 'Категорію показано на сайті.',
-      );
-    } catch {
-      setVisibilityError('Не вдалося змінити показ на сайті. Спробуйте ще раз.');
-    }
-  };
-
-  const childCategories = useMemo(
-    () =>
-      categories
-        .filter((row) => selected !== undefined && row.parentId === selected.id)
-        .sort((left, right) => left.sortOrder - right.sortOrder || left.id - right.id),
-    [categories, selected],
-  );
 
   return (
     <Box
@@ -150,40 +60,31 @@ export function CategoryExplorer({
     >
       <CategoryTreeNav
         error={error}
-        expandedIds={expandedIds}
+        expandedIds={view.expandedIds}
         loading={loading}
-        missingTextCount={missingTextCount}
-        onOnlyMissingTextChange={setOnlyMissingText}
-        onlyMissingText={onlyMissingText}
-        onExpandedChange={(ids) => {
-          if (!filtering) setExpanded(ids);
-        }}
+        missingTextCount={view.missingTextCount}
+        onOnlyMissingTextChange={view.setOnlyMissingText}
+        onlyMissingText={view.onlyMissingText}
+        onExpandedChange={view.setExpanded}
         onRetry={onRetry}
-        onSearchChange={setSearch}
+        onSearchChange={view.setSearch}
         onSelect={select}
-        search={search}
+        search={view.search}
         selectedId={selected?.id}
-        tree={filtered.tree}
+        tree={view.tree}
       />
       <Box ref={overviewRef} sx={{ minWidth: 0, scrollMarginTop: 88 }}>
         {selected ? (
           <CategoryOverviewCard
-            ancestors={ancestorIds.flatMap((id) => byId.get(id) ?? [])}
+            ancestors={view.ancestors}
             category={selected}
-            childCategories={childCategories}
+            childCategories={childCategoriesOf(categories, selected.id)}
             content={contentQuery.data}
             contentError={contentQuery.isError}
             contentLoading={contentQuery.isLoading}
             detailsHref={`/categories/${selected.id}?category=${selected.id}`}
             onEdit={canEdit ? () => setEditOpen(true) : undefined}
-            onToggleSite={
-              canEdit
-                ? () => {
-                    setVisibilityError(null);
-                    setVisibilityOpen(true);
-                  }
-                : undefined
-            }
+            onToggleSite={canEdit ? visibility.ask : undefined}
             onRetryContent={() => contentQuery.refetch()}
             onSelect={select}
             pathPrefix={publicPathPrefix}
@@ -202,14 +103,14 @@ export function CategoryExplorer({
           open={editOpen}
         />
       ) : null}
-      {visibilityOpen && selected ? (
+      {visibility.open && selected ? (
         <CategorySiteVisibilityDialog
           category={selected}
-          descendantCount={descendantCount}
-          error={visibilityError}
-          onCancel={() => setVisibilityOpen(false)}
-          onConfirm={() => void toggleSite()}
-          submitting={visibilityState.isLoading}
+          descendantCount={descendantCount(categories, selected.id, view.byId)}
+          error={visibility.error}
+          onCancel={visibility.cancel}
+          onConfirm={() => void visibility.confirm()}
+          submitting={visibility.submitting}
         />
       ) : null}
       <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
