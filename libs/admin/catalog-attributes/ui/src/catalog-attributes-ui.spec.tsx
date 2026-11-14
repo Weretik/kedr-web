@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { CodeMeaningRow } from './components/codes/code-meaning-row';
 import { CodeWorkspace } from './components/codes/code-workspace';
-import { AttributeValueForm } from './forms/attribute-value-form';
+import { AttributeValueForm } from './forms/attribute-value/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
 import { emptyNewAttribute, toNewAttribute } from './forms/new-attribute-fields';
 
