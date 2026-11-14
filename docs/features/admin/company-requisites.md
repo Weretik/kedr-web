@@ -4,7 +4,7 @@
 
 - One [form](../../../libs/admin/company/ui/src/forms/company-requisites-form.tsx) on the [page](../../../libs/admin/company/feature/src/pages/company-requisites-page.tsx): ФОП name, ЄДРПОУ/РНОКПП, extract number, IBAN, bank and МФО. All fields are required and saved together.
 - The IBAN may be typed with spaces; the [save body](../../../libs/admin/company/data-access/src/mappers/company-requisites.mapper.ts) sends it without them. The [local rules](../../../libs/admin/company/model/src/validators/company-requisites-rules.ts) mirror the backend: code 8 or 10 digits, `UA` + 27 digits with a valid mod-97 checksum, a 6-digit МФО equal to digits 5–10 of the IBAN. A server field error lands under its field.
-- The [history](../../../libs/admin/company/ui/src/history/company-requisites-history.tsx) beside the form lists the 50 latest saves: when (Kyiv time), who (email), and each field old → new, the IBAN grouped by four. A save with the same values adds nothing.
+- The [history](../../../libs/admin/company/ui/src/details/history/company-requisites-history.tsx) beside the form lists the 50 latest saves: when (Kyiv time), who (email), and each field old → new, the IBAN grouped by four. A save with the same values adds nothing.
 - A line «Змінено: дата · email» under the description repeats the newest history entry.
 - After a save the site shows the new values within ten minutes (its cache life).
 - Admins only, as the backend policy `RequireAdminRole`: the menu item is hidden from Managers and the route sits under `RequireRole allow={canManageRequisites}`.

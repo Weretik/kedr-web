@@ -1,6 +1,8 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
+import { matchesProjectPattern } from './test-scripts.mjs';
+
 // Pull-request CI runs package.json test scripts only for projects affected since the base commit.
 // NX_BASE/NX_HEAD come from nrwl/nx-set-shas. With CI_SCOPE=all (pushes to main) scripts run as is.
 //   node tools/ci/run-affected.mjs <npm-script>       run the script for affected projects only
@@ -42,7 +44,11 @@ function runScript(name) {
       run(part.replace(/^nx /, 'npx nx '));
       continue;
     }
-    const selected = projects[1].split(',').filter((project) => affectedProjects().has(project));
+    // Entries may be patterns such as `admin-*`; keep the affected projects they match.
+    const patterns = projects[1].split(',');
+    const selected = [...affectedProjects()].filter((project) =>
+      patterns.some((pattern) => matchesProjectPattern(project, pattern)),
+    );
     if (selected.length === 0) {
       console.log(`Skipped, no affected projects: ${part}`);
       continue;

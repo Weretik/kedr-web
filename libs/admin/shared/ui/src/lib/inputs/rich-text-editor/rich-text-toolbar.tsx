@@ -7,47 +7,12 @@ import LinkIcon from '@mui/icons-material/Link';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import RedoIcon from '@mui/icons-material/Redo';
 import UndoIcon from '@mui/icons-material/Undo';
-import { Divider, Stack, ToggleButton, Tooltip } from '@mui/material';
+import { Divider, Stack } from '@mui/material';
 import { useEditorState } from '@tiptap/react';
 
+import { ToolButton } from './rich-text-tool-button';
+
 import type { Editor } from '@tiptap/react';
-import type { ReactNode } from 'react';
-
-interface ToolButtonProps {
-  label: string;
-  active?: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}
-
-function ToolButton({
-  active = false,
-  children,
-  disabled = false,
-  label,
-  onClick,
-}: ToolButtonProps) {
-  return (
-    <Tooltip title={label}>
-      <span>
-        <ToggleButton
-          aria-label={label}
-          disabled={disabled}
-          onChange={onClick}
-          // Keeps the text selection in the editor while the button is pressed.
-          onMouseDown={(event) => event.preventDefault()}
-          selected={active}
-          size="small"
-          sx={{ border: 0, fontWeight: 700, minWidth: 36 }}
-          value={label}
-        >
-          {children}
-        </ToggleButton>
-      </span>
-    </Tooltip>
-  );
-}
 
 export function RichTextToolbar({
   allowQuotes = false,

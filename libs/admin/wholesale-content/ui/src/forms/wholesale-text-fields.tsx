@@ -2,7 +2,7 @@ import { CountedTextField, SectionCard } from '@admin/shared/ui';
 import { wholesaleLimits, wholesaleTextFields } from '@admin/wholesale-content/model';
 import { Stack, Typography } from '@mui/material';
 
-import { WholesaleFaqEditor } from '../faq/wholesale-faq-editor';
+import { WholesaleFaqEditor } from './wholesale-faq-editor';
 
 import type {
   WholesaleStep,

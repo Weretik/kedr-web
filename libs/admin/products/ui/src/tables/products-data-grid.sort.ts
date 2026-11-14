@@ -2,7 +2,10 @@ import type { ProductsListSort } from '@admin/products/model';
 import type { GridSortModel } from '@mui/x-data-grid';
 
 export function toGridSortModel(sort: ProductsListSort): GridSortModel {
-  const [field, direction] = sort.split('-') as ['id' | 'name' | 'price' | 'category', 'asc' | 'desc'];
+  const [field, direction] = sort.split('-') as [
+    'id' | 'name' | 'price' | 'category',
+    'asc' | 'desc',
+  ];
 
   return [{ field, sort: direction }];
 }

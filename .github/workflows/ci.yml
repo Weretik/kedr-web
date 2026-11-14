@@ -35,6 +35,8 @@ jobs:
       - run: npm run architecture:boundaries
       - run: npm run architecture:structure:fixtures
       - run: npm run architecture:structure
+      - run: npm run ci:test-scripts:fixtures
+      - run: npm run ci:test-scripts
       - run: npx nx $NX_MODE -t lint
 
   typecheck:
@@ -64,6 +66,7 @@ jobs:
       - run: node tools/ci/run-affected.mjs test:web
       - run: node tools/ci/run-affected.mjs test:mobile
       - run: node tools/ci/run-affected.mjs test:site
+      - run: node tools/ci/run-affected.mjs test:storefront
 
   e2e:
     name: admin e2e

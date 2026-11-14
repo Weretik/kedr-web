@@ -1,10 +1,10 @@
 import { Box, FormHelperText, Typography } from '@mui/material';
-import { EditorContent, useEditor } from '@tiptap/react';
-import { useEffect, useId, useState } from 'react';
+import { EditorContent } from '@tiptap/react';
+import { useId, useState } from 'react';
 
-import { createRichTextExtensions, richTextExtensions } from './rich-text-extensions';
 import { RichTextLinkDialog } from './rich-text-link-dialog';
 import { RichTextToolbar } from './rich-text-toolbar';
+import { useRichTextEditor } from './use-rich-text-editor';
 
 interface RichTextEditorProps {
   label: string;
@@ -30,26 +30,7 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
   const labelId = useId();
   const [linkOpen, setLinkOpen] = useState(false);
-  const editor = useEditor({
-    content: value,
-    editable: !readOnly,
-    editorProps: {
-      attributes: { 'aria-labelledby': labelId, 'aria-multiline': 'true', role: 'textbox' },
-    },
-    extensions: allowQuotes ? createRichTextExtensions({ allowQuotes }) : richTextExtensions,
-    immediatelyRender: true,
-    onUpdate: ({ editor: current }) => onChange?.(current.getHTML()),
-  });
-
-  useEffect(() => {
-    // Outside changes (reset, saved value) replace the content without reporting a change back.
-    if (editor && editor.getHTML() !== value)
-      editor.commands.setContent(value, { emitUpdate: false });
-  }, [editor, value]);
-
-  useEffect(() => {
-    editor?.setEditable(!readOnly);
-  }, [editor, readOnly]);
+  const editor = useRichTextEditor({ allowQuotes, labelId, onChange, readOnly, value });
 
   if (!editor) return null;
 

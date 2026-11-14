@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  modelAddCandidates,
+  siteQueueSelection,
   nextSiteQueueKey,
   similarSiteModels,
   siteQueueCounts,
@@ -83,5 +85,45 @@ describe('site queue', () => {
         (item) => item.model?.id,
       ),
     ).toEqual([2]);
+  });
+});
+
+describe('modelAddCandidates', () => {
+  const item = (productId: number) => ({ productId }) as SiteShowcaseRow['products'][number];
+  const lone = (productId: number) =>
+    ({
+      ...row(0, 'Ручка', 'proposed'),
+      key: `p${productId}`,
+      model: null,
+      products: [item(productId)],
+    }) satisfies SiteShowcaseRow;
+
+  it('offers lone and proposed-model products that are not in the model yet', () => {
+    const rows = [
+      lone(1),
+      { ...row(2, 'Ручка А', 'proposed'), products: [item(2), item(3)] },
+      { ...row(4, 'Ручка Б', 'accepted'), products: [item(4)] },
+    ];
+    expect(modelAddCandidates(rows, [3]).map((candidate) => candidate.productId)).toEqual([1, 2]);
+  });
+});
+
+describe('siteQueueSelection', () => {
+  const lone = { ...row(0, 'Ручка', 'proposed'), key: 'p5', model: null } satisfies SiteShowcaseRow;
+  const rows = [row(1, 'Завіса', 'proposed'), lone, row(2, 'Ручка А', 'accepted')];
+
+  it('opens the first row when nothing is chosen and offers the next one', () => {
+    expect(siteQueueSelection(rows, undefined)).toEqual({
+      selectedKey: 'm1',
+      nextKey: 'p5',
+      modelId: 1,
+      lone: undefined,
+    });
+  });
+
+  it('opens a lone product row and goes back one row after the last', () => {
+    expect(siteQueueSelection(rows, 'p5')).toMatchObject({ modelId: undefined, lone });
+    expect(siteQueueSelection(rows, 'm2').nextKey).toBe('p5');
+    expect(siteQueueSelection([rows[0]], 'm1').nextKey).toBeUndefined();
   });
 });

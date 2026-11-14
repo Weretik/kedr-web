@@ -1,46 +1,24 @@
 import { Alert, Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
-import { getLoginErrorMessage } from './login-error-message';
 import { LoginIntroPanel } from '../components/login/login-intro-panel';
 import { PasswordField } from '../components/login/password-field';
+import { useLoginForm } from '../hooks/use-login-form';
 import { readReturnPath } from '../routes/login-return-path';
-import { login } from '../session/auth-session';
 import { useAdminSession } from '../session/use-admin-session';
-
-import type { FormEvent } from 'react';
 
 const defaultReturnPath = '/dashboard';
 
 export function LoginPage() {
   const session = useAdminSession();
   const location = useLocation();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const returnPath = readReturnPath(location.search, defaultReturnPath);
+  const form = useLoginForm(returnPath);
+  const { email, error, password } = form;
 
-  if (session.status === 'authenticated' && !isSubmitting) {
+  if (session.status === 'authenticated' && !form.submitting) {
     return <Navigate replace to={returnPath} />;
   }
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
-
-    try {
-      await login({ email: email.trim(), password });
-      navigate(returnPath, { replace: true });
-    } catch (loginError) {
-      setError(getLoginErrorMessage(loginError));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <Box sx={{ bgcolor: 'background.default', display: 'flex', minHeight: '100vh' }}>
@@ -67,7 +45,7 @@ export function LoginPage() {
         <Paper
           component="form"
           noValidate
-          onSubmit={handleSubmit}
+          onSubmit={(event) => void form.submit(event)}
           sx={{ borderRadius: 4, maxWidth: 400, p: { xs: 3, sm: 5 }, width: '100%' }}
           variant="outlined"
         >
@@ -84,19 +62,19 @@ export function LoginPage() {
             <TextField
               autoComplete="username"
               label="Email"
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) => form.setEmail(event.target.value)}
               required
               type="email"
               value={email}
             />
-            <PasswordField onChange={setPassword} value={password} />
+            <PasswordField onChange={form.setPassword} value={password} />
             <Button
-              disabled={isSubmitting || !email.trim() || !password}
+              disabled={!form.canSubmit}
               size="large"
               type="submit"
               variant="contained"
             >
-              {isSubmitting ? 'Вхід…' : 'Увійти'}
+              {form.submitting ? 'Вхід…' : 'Увійти'}
             </Button>
             <Typography color="text.secondary" variant="body2">
               Забули пароль або немає доступу? Зверніться до адміністратора — він видає доступ і

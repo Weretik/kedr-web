@@ -58,11 +58,14 @@ export type { SiteQueueView } from './entities/site-queue';
 export {
   isSiteQueueView,
   nextSiteQueueKey,
+  modelAddCandidates,
   similarSiteModels,
   siteQueueCounts,
+  siteQueueSelection,
   siteQueueFilter,
   siteQueueViewLabels,
   siteQueueViews,
 } from './entities/site-queue';
 export type { SiteCategoryNode } from './entities/site-category-tree';
 export { siteCategoryAncestors, siteCategoryTree } from './entities/site-category-tree';
+export { axisValueOptions } from './mappers/axis-value-options';

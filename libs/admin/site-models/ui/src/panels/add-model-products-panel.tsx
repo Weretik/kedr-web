@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-import { ProductThumb } from '../common/product-thumb';
+import { ProductThumb } from '../components/product-thumb';
 
 import type { SiteShowcaseItem } from '@admin/site-models/model';
 

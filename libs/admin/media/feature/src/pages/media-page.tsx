@@ -1,22 +1,14 @@
 import { useGetMediaFilesQuery, useGetMediaFoldersQuery } from '@admin/media/data-access';
 import { mediaAcceptedTypes, uploadFolderId } from '@admin/media/model';
-import {
-  ConfirmMediaDeleteDialog,
-  MediaDropZone,
-  MediaFileGrid,
-  MediaFilePanel,
-  MediaFolderDialog,
-  MoveMediaFilesDialog,
-} from '@admin/media/ui';
 import { AdminPageHeader, NoticeSnackbar, PageIssues } from '@admin/shared/ui';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
-import { Box, Button, Card, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import { MediaFilesToolbar } from '../components/media-files-toolbar';
+import { MediaFilesCard } from '../components/media-files-card';
 import { MediaFoldersCard } from '../components/media-folders-card';
-import { MediaScopeBar } from '../components/media-scope-bar';
+import { MediaLibraryDialogs } from '../components/media-library-dialogs';
 import { useMediaFileActions } from '../hooks/use-media-file-actions';
 import { useMediaFilesQuery } from '../hooks/use-media-files-query';
 import { useMediaFolderActions } from '../hooks/use-media-folder-actions';
@@ -63,10 +55,6 @@ export function MediaPage({ canDelete }: MediaPageProps) {
     event.target.value = '';
     if (picked.length > 0) void startUpload(picked);
   };
-
-  const page = files.data;
-  const pageCount = page ? Math.ceil(page.totalCount / page.pageSize) : 0;
-  const folderDialog = folderActions.dialog;
 
   return (
     <Stack component="section" spacing={3}>
@@ -129,112 +117,27 @@ export function MediaPage({ canDelete }: MediaPageProps) {
           scope={filesQuery.scope}
           tree={folders.data}
         />
-        <Card sx={{ p: 2 }} variant="outlined">
-          <MediaDropZone
-            disabled={uploads.progress !== null}
-            onFiles={(dropped) => void startUpload(dropped)}
-            targetLabel={targetLabel}
-          >
-            <Stack spacing={2}>
-              <MediaScopeBar
-                folders={tree.folders}
-                includeSubfolders={filesQuery.includeSubfolders}
-                onIncludeSubfoldersChange={filesQuery.setIncludeSubfolders}
-                onSelect={filesQuery.setScope}
-                scope={filesQuery.scope}
-              />
-              <MediaFilesToolbar
-                onClearSelection={selection.clear}
-                onMove={fileActions.moving.show}
-                onSearch={filesQuery.setSearch}
-                progress={uploads.progress}
-                search={filesQuery.search}
-                selectedCount={selection.selectedIds.size}
-                totalCount={page?.totalCount}
-              />
-              <MediaFileGrid
-                emptyText={
-                  filesQuery.query.search
-                    ? 'Нічого не знайдено. Змініть пошук.'
-                    : 'Тут ще немає файлів. Завантажте або перетягніть фото.'
-                }
-                error={files.isError}
-                files={page?.items ?? []}
-                loading={files.isFetching}
-                onOpen={fileActions.panel.open}
-                onRetry={() => files.refetch()}
-                onToggle={(file) => selection.toggle(file.id)}
-                selectedIds={selection.selectedIds}
-              />
-              {pageCount > 1 ? (
-                <Pagination
-                  count={pageCount}
-                  onChange={(_event, next) => filesQuery.setPage(next)}
-                  page={filesQuery.query.page}
-                  sx={{ alignSelf: 'center' }}
-                />
-              ) : null}
-            </Stack>
-          </MediaDropZone>
-        </Card>
+        <MediaFilesCard
+          error={files.isError}
+          fileActions={fileActions}
+          filesQuery={filesQuery}
+          folders={tree.folders}
+          loading={files.isFetching}
+          onRetry={() => files.refetch()}
+          onUpload={(dropped) => void startUpload(dropped)}
+          page={files.data}
+          selection={selection}
+          targetLabel={targetLabel}
+          uploads={uploads}
+        />
       </Box>
-      <MediaFilePanel
-        busy={fileActions.panel.busy}
-        error={fileActions.panel.error}
-        file={fileActions.panel.file}
+      <MediaLibraryDialogs
+        canDelete={canDelete}
+        fileActions={fileActions}
+        folderActions={folderActions}
         folders={tree.folders}
-        onClose={fileActions.panel.close}
-        onCopyUrl={(file) =>
-          void navigator.clipboard
-            ?.writeText(file.url)
-            .then(() => setNotice('Посилання скопійовано.'))
-        }
-        onDelete={canDelete ? fileActions.deletion.ask : undefined}
-        onReplace={fileActions.panel.replace}
-        onSave={fileActions.panel.save}
-      />
-      <MediaFolderDialog
-        error={folderActions.error}
-        folder={folderDialog?.kind === 'edit' ? folderDialog.folder : undefined}
-        folders={tree.folders}
-        initialParentId={folderDialog?.kind === 'create' ? folderDialog.parentId : null}
-        onCancel={folderActions.close}
-        onSubmit={folderActions.save}
-        open={folderDialog?.kind === 'create' || folderDialog?.kind === 'edit'}
-        saving={folderActions.saving}
-      />
-      <ConfirmMediaDeleteDialog
-        deleting={folderActions.deleting}
-        error={folderActions.error}
-        onCancel={folderActions.close}
-        onConfirm={folderActions.remove}
-        open={folderDialog?.kind === 'delete'}
-        text={
-          folderDialog?.kind === 'delete'
-            ? `Папку «${folderDialog.folder.name}» буде видалено. Видалити можна лише порожню папку.`
-            : ''
-        }
-        title="Видалити папку?"
-      />
-      <ConfirmMediaDeleteDialog
-        deleting={fileActions.deletion.deleting}
-        error={fileActions.deletion.error}
-        onCancel={fileActions.deletion.cancel}
-        onConfirm={fileActions.deletion.confirm}
-        open={fileActions.deletion.file !== null}
-        text={`«${fileActions.deletion.file?.fileName ?? ''}» буде видалено з CDN назавжди. Сайт і товари, що його показують, залишаться без цього фото.`}
-        title="Видалити файл?"
-      />
-      <MoveMediaFilesDialog
-        count={selection.selectedIds.size}
-        error={fileActions.moving.error}
-        folders={tree.folders}
-        moving={fileActions.moving.busy}
-        onCancel={fileActions.moving.cancel}
-        onConfirm={(folderId) =>
-          fileActions.moving.move([...selection.selectedIds], folderId, selection.clear)
-        }
-        open={fileActions.moving.open}
+        onNotice={setNotice}
+        selection={selection}
       />
       <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
     </Stack>

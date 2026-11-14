@@ -97,3 +97,28 @@ export function similarSiteModels(
     )
     .slice(0, limit);
 }
+
+/** Products a person may add to a model: lone ones and those of proposed models, minus the model's own. */
+export function modelAddCandidates(
+  rows: readonly SiteShowcaseRow[],
+  modelProductIds: readonly number[],
+): SiteShowcaseRow['products'][number][] {
+  const inModel = new Set(modelProductIds);
+  return rows
+    .filter((row) => row.model === null || row.model.status === 'proposed')
+    .flatMap((row) => row.products)
+    .filter((item) => !inModel.has(item.productId));
+}
+
+/** The open row of the queue (the first one by default), what it opens, and the row «Далі» goes to. */
+export function siteQueueSelection(rows: readonly SiteShowcaseRow[], item: string | undefined) {
+  const keys = rows.map((row) => row.key);
+  const selectedKey = item ?? keys[0];
+  const next = nextSiteQueueKey(keys, selectedKey);
+  return {
+    selectedKey,
+    nextKey: next !== selectedKey ? next : undefined,
+    modelId: selectedKey?.startsWith('m') ? Number(selectedKey.slice(1)) : undefined,
+    lone: selectedKey?.startsWith('p') ? rows.find((row) => row.key === selectedKey) : undefined,
+  };
+}

@@ -25,7 +25,9 @@ vi.mock('@admin/gallery/data-access', () => ({
   useReorderGalleryMutation: () => [api.reorder, { isLoading: false }],
 }));
 
-vi.mock('../components/media-picker-dialog', () => ({ MediaPickerDialog: () => null }));
+vi.mock('../components/media-picker/media-picker-dialog', () => ({
+  MediaPickerDialog: () => null,
+}));
 
 const texts = { titleUk: 'Монтаж', titleRu: 'Монтаж', captionUk: '', captionRu: '' };
 const item = (id: number, kind: GalleryItem['kind']): GalleryItem => ({

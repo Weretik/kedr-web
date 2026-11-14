@@ -1,20 +1,8 @@
 import { RowEditAction } from '@admin/shared/ui';
-import {
-  formatWorkDayTime,
-  formatWorkShortDay,
-  formatWorkShortDayOf,
-  workTaskStepProgress,
-} from '@admin/work/model';
-import {
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  Chip,
-  FormControlLabel,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { formatWorkDayTime, formatWorkShortDay, formatWorkShortDayOf } from '@admin/work/model';
+import { Box, Button, Card, Chip, Stack, Typography } from '@mui/material';
+
+import { WorkTaskSteps } from './work-task-steps';
 
 import type { WorkTask, WorkTaskStatus } from '@admin/work/model';
 
@@ -42,7 +30,6 @@ const moves: Record<
 
 /** One task on the board: title, details, who gave it, the result when done, and moves to other columns. */
 export function WorkTaskCard({ busy, onEdit, onMove, onToggleStep, task }: WorkTaskCardProps) {
-  const progress = workTaskStepProgress(task);
   return (
     <Card
       sx={{
@@ -92,41 +79,11 @@ export function WorkTaskCard({ busy, onEdit, onMove, onToggleStep, task }: WorkT
           ) : null}
         </Stack>
       ) : null}
-      {progress.total > 0 ? (
-        <Box>
-          <Typography color="text.secondary" variant="caption">
-            Кроки {progress.done} / {progress.total}
-          </Typography>
-          <Stack>
-            {task.steps.map((step, index) => (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={step.isDone}
-                    disabled={busy || !onToggleStep}
-                    onChange={(event) => onToggleStep?.(task, index, event.target.checked)}
-                    size="small"
-                  />
-                }
-                key={index}
-                label={
-                  <Typography
-                    color={step.isDone ? 'text.secondary' : 'text.primary'}
-                    sx={{
-                      overflowWrap: 'anywhere',
-                      textDecoration: step.isDone ? 'line-through' : undefined,
-                    }}
-                    variant="body2"
-                  >
-                    {step.title}
-                  </Typography>
-                }
-                sx={{ alignItems: 'flex-start', mr: 0, '& .MuiCheckbox-root': { py: 0.25 } }}
-              />
-            ))}
-          </Stack>
-        </Box>
-      ) : null}
+      <WorkTaskSteps
+        busy={busy}
+        onToggle={onToggleStep ? (index, done) => onToggleStep(task, index, done) : undefined}
+        task={task}
+      />
       {task.status === 'Done' && task.result ? (
         <Box sx={{ bgcolor: 'action.hover', borderRadius: 1, px: 1.5, py: 1 }}>
           <Typography color="text.secondary" variant="caption">

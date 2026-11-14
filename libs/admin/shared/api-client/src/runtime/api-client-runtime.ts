@@ -2,7 +2,7 @@ import type {
   ApiClientOptions,
   ApiErrorNotifier,
   AuthSessionAdapter,
-} from '../contracts/api-client.types';
+} from '../contracts/api-client-contract';
 
 let authSession: AuthSessionAdapter | undefined;
 let apiErrorNotifier: ApiErrorNotifier | undefined;

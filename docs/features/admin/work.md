@@ -20,7 +20,8 @@ libs/admin/work/
 ├── ui/src/forms/                       # task panel, steps field, «Для кого», «Що зроблено» panel
 ├── ui/src/details/                     # activity by day, task summaries
 └── feature/src/                        # createMyTasksRoutes, createWorkReportRoutes, MyTasksOverview, pages
-apps/admin/src/app/router/app-router.tsx  # staff list for the report and «Для кого», card on «Огляд»
+apps/admin/src/app/slots/work/use-staff-members.ts  # staff list for the report and «Для кого»
+apps/admin/src/app/router/app-router.tsx            # card on «Огляд»
 ```
 
 ## Tests

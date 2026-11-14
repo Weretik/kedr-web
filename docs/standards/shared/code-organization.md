@@ -86,13 +86,15 @@ A page or screen composes: it reads route parameters, calls one controller hook,
 ## Tests
 
 - Write the test first. Add the smallest failing spec for the new or changed behavior, see it fail for the right reason, then write the production code (Red → Green → Refactor). A refactor that moves or splits code keeps the existing tests green and adds a spec for every new pure function or controller hook it creates.
-- Each test sits next to its production file and has the same name with `.spec.ts` or `.spec.tsx`.
+- Each test sits next to its production file and has the same name with the project's test suffix (for example `.spec.ts`/`.spec.tsx` or `.unit.test.ts`).
 - Minimum coverage by role: every `model` mapper, validator, and query helper, every `data-access` validator and mapper, every reducer or store, and every controller hook has a unit or focused test. Every page or screen has a component test for its main scenario and its error state. A `ui` component with its own interaction (input, toggle, selection) has a component test.
 - A library that has production logic and no test at all is an audit finding.
+- Every project with a test target is run by CI: test scripts select projects by pattern (`admin,admin-*`, `site-*`) or Nx tags, never by a hand-written list, and a CI step fails when a project with a test target is not selected.
+- On a pull request, CI runs test, lint, and typecheck only for the projects the change affects (`nx affected` against the default branch, base and head from `nrwl/nx-set-shas`); the push to the default branch, or a separate script, runs everything. Locally, run only the focused tests of the changed projects.
 
 ## Application folder
 
-`apps/<app>/src/app/` is the composition root and holds only: `providers/`, `router/` (the route table, guards, and lazy imports of each domain's `<domain>.routes.tsx`), `theme/`, `store.ts`, `services/` (app-wide services such as error reporting), `notifications/`, and `slots/` (components the app injects into a feature to connect two domains, for example a customer picker for orders). Domain screens, forms, and data hooks live in libraries, not in the app. When `router/` reaches eight files, split the route table by area (`router/catalog.tsx`, `router/content.tsx`). A Next.js app keeps only thin route files under `src/app/`; an Expo Router app keeps only thin route adapters under `src/app/`.
+`apps/<app>/src/app/` is the composition root and holds only: `providers/`, `router/` (the route table, guards, and lazy imports of each domain's `<domain>.routes.tsx`; `router/navigation/` for the menu configuration), `theme/`, `store.ts`, `services/` (app-wide services such as error reporting), `notifications/`, and `slots/` (components and hooks the app injects into a feature to connect two domains, for example a customer picker for orders or the staff list for work tasks). Domain screens, forms, and data hooks live in libraries, not in the app. When `router/` reaches eight files, split the route table by area (`router/catalog.tsx`, `router/content.tsx`). A Next.js app keeps only thin route files under `src/app/`; an Expo Router app keeps only thin route adapters under `src/app/`.
 
 ## Frozen applications
 

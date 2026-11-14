@@ -8,7 +8,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NewOrderPage } from './new-order-page';
-import { useOrderQuote } from '../hooks/use-order-quote';
+import { useOrderQuote } from '../hooks/editor/use-order-quote';
 import { clearCurrentOrder, useCurrentOrderSet } from '../state/current-order-set';
 
 vi.mock('@admin/orders/data-access', () => ({
@@ -19,8 +19,8 @@ vi.mock('@admin/orders/data-access', () => ({
       ? { type: 'quote-changed', quote: cause.conflict.quote }
       : null,
 }));
-vi.mock('../hooks/use-order-quote', () => ({ useOrderQuote: vi.fn() }));
-vi.mock('../hooks/use-customer-prices', () => ({ useCustomerPrices: () => undefined }));
+vi.mock('../hooks/editor/use-order-quote', () => ({ useOrderQuote: vi.fn() }));
+vi.mock('../hooks/editor/use-customer-prices', () => ({ useCustomerPrices: () => undefined }));
 vi.mock('@admin/products/data-access', () => ({ useGetAllAdminProductsQuery: vi.fn() }));
 vi.mock('../state/current-order-set', () => ({
   useCurrentOrderSet: vi.fn(),
