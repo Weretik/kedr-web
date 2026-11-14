@@ -46,12 +46,21 @@ export function useCustomerOptions(value: string) {
     setLoaded((current) => mergeCustomerPage(current, pageItems));
   }
 
-  const options = useMemo(() => withSelectedCustomer(loaded, selected.data), [loaded, selected.data]);
+  const options = useMemo(
+    () => withSelectedCustomer(loaded, selected.data),
+    [loaded, selected.data],
+  );
 
   const onListboxScroll = (event: UIEvent<HTMLUListElement>) => {
     const listbox = event.currentTarget;
     const nearEnd = listbox.scrollTop + listbox.clientHeight >= listbox.scrollHeight - 32;
-    if (nearEnd && !page.isFetching && !page.isError && pageData && pageNumber < pageData.totalPages)
+    if (
+      nearEnd &&
+      !page.isFetching &&
+      !page.isError &&
+      pageData &&
+      pageNumber < pageData.totalPages
+    )
       setPageNumber((current) => current + 1);
   };
 

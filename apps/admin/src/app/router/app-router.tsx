@@ -42,8 +42,8 @@ import { createMyTasksRoutes, createWorkReportRoutes, MyTasksOverview } from '@a
 import { useMemo } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
-import { CustomerPicker } from '../slots/customer-picker/customer-picker';
 import { toShellUser } from './shell-user';
+import { CustomerPicker } from '../slots/customer-picker/customer-picker';
 
 import type { SessionUser } from '@admin/core/auth';
 import type { WorkAssignees } from '@admin/work/feature';

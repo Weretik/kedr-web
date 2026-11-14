@@ -77,9 +77,7 @@ describe('useMyTasksBoard', () => {
 
     act(() => result.current.save(input));
 
-    await waitFor(() =>
-      expect(onNotice).toHaveBeenCalledWith('Задачу додано в «План»: Ольга.'),
-    );
+    await waitFor(() => expect(onNotice).toHaveBeenCalledWith('Задачу додано в «План»: Ольга.'));
     expect(api.give).toHaveBeenCalledWith({ ownerUserId: 'olha', input });
     expect(api.create).not.toHaveBeenCalled();
   });

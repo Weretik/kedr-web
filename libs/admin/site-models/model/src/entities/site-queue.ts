@@ -97,3 +97,15 @@ export function similarSiteModels(
     )
     .slice(0, limit);
 }
+
+/** Products a person may add to a model: lone ones and those of proposed models, minus the model's own. */
+export function modelAddCandidates(
+  rows: readonly SiteShowcaseRow[],
+  modelProductIds: readonly number[],
+): SiteShowcaseRow['products'][number][] {
+  const inModel = new Set(modelProductIds);
+  return rows
+    .filter((row) => row.model === null || row.model.status === 'proposed')
+    .flatMap((row) => row.products)
+    .filter((item) => !inModel.has(item.productId));
+}

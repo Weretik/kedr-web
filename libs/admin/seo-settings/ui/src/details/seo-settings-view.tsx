@@ -2,8 +2,8 @@ import { seoCodeFields } from '@admin/seo-settings/model';
 import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
 import { Alert, Stack, Typography } from '@mui/material';
 
-import { seoCodeLabels } from '../forms/seo-settings-fields';
 import { SharePicturePreview } from './share-picture-preview';
+import { seoCodeLabels } from '../forms/seo-settings-fields';
 
 import type { SeoSettings } from '@admin/seo-settings/model';
 

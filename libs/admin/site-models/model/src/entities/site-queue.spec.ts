@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  modelAddCandidates,
   nextSiteQueueKey,
   similarSiteModels,
   siteQueueCounts,
@@ -83,5 +84,25 @@ describe('site queue', () => {
         (item) => item.model?.id,
       ),
     ).toEqual([2]);
+  });
+});
+
+describe('modelAddCandidates', () => {
+  const item = (productId: number) => ({ productId }) as SiteShowcaseRow['products'][number];
+  const lone = (productId: number) =>
+    ({
+      ...row(0, 'Ручка', 'proposed'),
+      key: `p${productId}`,
+      model: null,
+      products: [item(productId)],
+    }) satisfies SiteShowcaseRow;
+
+  it('offers lone and proposed-model products that are not in the model yet', () => {
+    const rows = [
+      lone(1),
+      { ...row(2, 'Ручка А', 'proposed'), products: [item(2), item(3)] },
+      { ...row(4, 'Ручка Б', 'accepted'), products: [item(4)] },
+    ];
+    expect(modelAddCandidates(rows, [3]).map((candidate) => candidate.productId)).toEqual([1, 2]);
   });
 });

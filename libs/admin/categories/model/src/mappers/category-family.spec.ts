@@ -1,14 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildCategoryTree } from './category-tree-nodes';
 import { childCategoriesOf, descendantCount, expandableCategoryIds } from './category-family';
+import { buildCategoryTree } from './category-tree-nodes';
 
 import type { AdminCategory } from '../entities/admin-category';
 
 const category = (id: number, parentId: number | null, sortOrder = 0) =>
-  ({ id, parentId, sortOrder, nameUk: `К${id}`, nameRu: `К${id}`, slug: `k${id}` }) as AdminCategory;
+  ({
+    id,
+    parentId,
+    sortOrder,
+    nameUk: `К${id}`,
+    nameRu: `К${id}`,
+    slug: `k${id}`,
+  }) as AdminCategory;
 
-const rows = [category(1, null), category(2, 1, 2), category(3, 1, 1), category(4, 2), category(5, null)];
+const rows = [
+  category(1, null),
+  category(2, 1, 2),
+  category(3, 1, 1),
+  category(4, 2),
+  category(5, null),
+];
 const byId = new Map(rows.map((row) => [row.id, row]));
 
 describe('category family', () => {

@@ -56,7 +56,6 @@ export function MediaPage({ canDelete }: MediaPageProps) {
     if (picked.length > 0) void startUpload(picked);
   };
 
-
   return (
     <Stack component="section" spacing={3}>
       <AdminPageHeader

@@ -15,7 +15,11 @@ interface LegalDocumentVersionsProps {
 }
 
 /** Old editions of one document and the dialog that shows one of them. */
-export function LegalDocumentVersions({ kind, onCopy, showsEditionDate }: LegalDocumentVersionsProps) {
+export function LegalDocumentVersions({
+  kind,
+  onCopy,
+  showsEditionDate,
+}: LegalDocumentVersionsProps) {
   const history = useGetLegalDocumentVersionsQuery(kind);
   const [viewId, setViewId] = useState<number | undefined>();
   const viewed = useGetLegalDocumentVersionQuery(viewId ?? 0, { skip: viewId === undefined });

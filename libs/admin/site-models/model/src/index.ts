@@ -58,6 +58,7 @@ export type { SiteQueueView } from './entities/site-queue';
 export {
   isSiteQueueView,
   nextSiteQueueKey,
+  modelAddCandidates,
   similarSiteModels,
   siteQueueCounts,
   siteQueueFilter,

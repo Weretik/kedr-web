@@ -2,9 +2,9 @@ import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDou
 import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { useAdminShellUser } from '../providers/admin-shell-session-provider';
 import { AdminNavigation } from '../navigation/admin-navigation';
 import { sidebarColors } from '../navigation/sidebar-colors';
+import { useAdminShellUser } from '../providers/admin-shell-session-provider';
 
 interface AdminSidebarProps {
   currentOrderPositionCount: number;

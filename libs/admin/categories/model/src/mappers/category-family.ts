@@ -18,8 +18,9 @@ export function descendantCount(
   categoryId: number,
   categoriesById: ReadonlyMap<number, AdminCategory>,
 ): number {
-  return categories.filter((row) => categoryAncestorIds(row.id, categoriesById).includes(categoryId))
-    .length;
+  return categories.filter((row) =>
+    categoryAncestorIds(row.id, categoriesById).includes(categoryId),
+  ).length;
 }
 
 /** Direct children in display order. */

@@ -6,8 +6,8 @@ import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
 import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import { seoCodeLabels } from '../forms/seo-settings-fields';
 import { SharePicturePreview } from '../details/share-picture-preview';
+import { seoCodeLabels } from '../forms/seo-settings-fields';
 
 import type { SeoSettingsDraft, SharePicture } from '@admin/seo-settings/model';
 import type { ChangeEvent } from 'react';

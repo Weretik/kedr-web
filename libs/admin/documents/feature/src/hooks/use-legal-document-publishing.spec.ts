@@ -29,11 +29,15 @@ describe('useLegalDocumentPublishing', () => {
     await act(() => result.current.publish.confirm('2026-11-14'));
     expect(actions.publishDraft).toHaveBeenCalledWith('2026-11-14');
     expect(result.current.publish.open).toBe(false);
-    expect(result.current.notice).toBe('Опубліковано. На сайті зміни з’являться протягом 10 хвилин.');
+    expect(result.current.notice).toBe(
+      'Опубліковано. На сайті зміни з’являться протягом 10 хвилин.',
+    );
   });
 
   it('keeps the publish dialog open with the server message on failure', async () => {
-    const { result } = setup({ publishDraft: vi.fn(() => Promise.reject(new Error('Дата раніша'))) });
+    const { result } = setup({
+      publishDraft: vi.fn(() => Promise.reject(new Error('Дата раніша'))),
+    });
     act(() => result.current.publish.start());
     await act(() => result.current.publish.confirm('2026-01-01'));
     expect(result.current.publish.open).toBe(true);

@@ -8,7 +8,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useAttributeValueEditor } from './use-attribute-value-editor';
 
-import type { CatalogAttributeValue, CatalogAttributeValueChange } from '@admin/catalog-attributes/model';
+import type {
+  CatalogAttributeValue,
+  CatalogAttributeValueChange,
+} from '@admin/catalog-attributes/model';
 
 vi.mock('@admin/catalog-attributes/data-access', () => ({
   useCreateAttributeValueMutation: vi.fn(),
@@ -26,9 +29,18 @@ const change = { nameUk: 'Дуб' } as CatalogAttributeValueChange;
 describe('useAttributeValueEditor', () => {
   beforeEach(() => {
     for (const mock of [create, update, upload]) mock.mockReset().mockImplementation(resolve);
-    vi.mocked(useCreateAttributeValueMutation).mockReturnValue([create, { isLoading: false }] as never);
-    vi.mocked(useUpdateAttributeValueMutation).mockReturnValue([update, { isLoading: false }] as never);
-    vi.mocked(useUploadAttributeSwatchMutation).mockReturnValue([upload, { isLoading: false }] as never);
+    vi.mocked(useCreateAttributeValueMutation).mockReturnValue([
+      create,
+      { isLoading: false },
+    ] as never);
+    vi.mocked(useUpdateAttributeValueMutation).mockReturnValue([
+      update,
+      { isLoading: false },
+    ] as never);
+    vi.mocked(useUploadAttributeSwatchMutation).mockReturnValue([
+      upload,
+      { isLoading: false },
+    ] as never);
   });
 
   it('opens a value with its texture and saves the change', async () => {
