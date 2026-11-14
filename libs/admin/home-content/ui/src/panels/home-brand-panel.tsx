@@ -4,13 +4,12 @@ import {
   homeBrandNameMaxLength,
 } from '@admin/home-content/model';
 import { AdminEditPanel, CountedTextField } from '@admin/shared/ui';
-import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
-import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
-import { Alert, Box, Button, Stack, Typography } from '@mui/material';
+import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
+import { HomeBrandLogoField } from '../components/brands/home-brand-logo-field';
+
 import type { HomeBrandDraft, HomeBrandLogo } from '@admin/home-content/model';
-import type { ChangeEvent } from 'react';
 
 interface HomeBrandPanelProps {
   /** The brand being edited; none for a new one. */
@@ -48,12 +47,6 @@ export function HomeBrandPanel({
   const issues = touched ? homeBrandIssues(draft) : {};
   const busy = saving || uploading;
 
-  const pick = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = '';
-    if (file) onUpload(file);
-  };
-
   return (
     <AdminEditPanel
       actions={
@@ -88,65 +81,15 @@ export function HomeBrandPanel({
           onChange={setName}
           value={name}
         />
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: 'center' }}>
-          <Box
-            sx={{
-              alignItems: 'center',
-              bgcolor: 'common.white',
-              border: 1,
-              borderColor: issues.logo ? 'error.main' : 'divider',
-              borderRadius: 1,
-              display: 'flex',
-              flexShrink: 0,
-              height: 96,
-              justifyContent: 'center',
-              p: 1.5,
-              width: 200,
-            }}
-          >
-            {logo?.url ? (
-              <Box
-                alt=""
-                component="img"
-                src={logo.url}
-                sx={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-              />
-            ) : (
-              <Typography color="text.disabled" variant="body2">
-                Без логотипа
-              </Typography>
-            )}
-          </Box>
-          <Stack spacing={1} sx={{ minWidth: 0 }}>
-            <Button
-              disabled={busy}
-              onClick={onPickFromLibrary}
-              startIcon={<PhotoLibraryOutlinedIcon />}
-              variant="outlined"
-            >
-              Вибрати з медіатеки
-            </Button>
-            <Button
-              component="label"
-              disabled={busy}
-              startIcon={<UploadOutlinedIcon />}
-              variant="outlined"
-            >
-              {uploading ? 'Завантаження…' : 'Завантажити з комп’ютера'}
-              <input accept={accept} hidden onChange={pick} type="file" />
-            </Button>
-            {logo?.fileName ? (
-              <Typography color="text.secondary" noWrap variant="caption">
-                Файл: {logo.fileName}
-              </Typography>
-            ) : null}
-            {issues.logo ? (
-              <Typography color="error" variant="caption">
-                {issues.logo}
-              </Typography>
-            ) : null}
-          </Stack>
-        </Stack>
+        <HomeBrandLogoField
+          accept={accept}
+          busy={busy}
+          error={issues.logo}
+          logo={logo}
+          onPickFromLibrary={onPickFromLibrary}
+          onUpload={onUpload}
+          uploading={uploading}
+        />
         <Typography color="text.secondary" variant="caption">
           Краще логотип на прозорому або білому тлі, приблизно 320 × 128 пікселів. На сайті він
           показується сірим.
