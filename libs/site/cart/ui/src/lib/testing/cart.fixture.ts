@@ -1,4 +1,4 @@
-import type { BasketProps, CheckoutViewProps } from '../types/cart-ui-props';
+import type { BasketProps, CheckoutViewProps } from '../cart/cart-ui-props';
 
 export function basketFixture(overrides: Partial<BasketProps> = {}): BasketProps {
   const locale = overrides.locale ?? 'uk';

@@ -3,6 +3,7 @@
 import { getCartTotals } from '@site/cart/model';
 import { ShoppingBagIcon } from 'lucide-react';
 
+import { CartHelp, CartServiceNote } from './cart-support';
 import { CheckoutContacts } from './checkout-contacts';
 import { CheckoutLoading } from './checkout-loading';
 import { CheckoutSummary } from './checkout-summary';
@@ -12,10 +13,9 @@ import { CartEmpty } from '../cart/cart-empty';
 import { CartLine } from '../cart/cart-line';
 import { CartNotices } from '../cart/cart-notices';
 import { getCartCopy } from '../i18n/cart-copy';
-import { formatCartCount } from '../shared/cart-format';
-import { CartHelp, CartServiceNote } from '../shared/cart-support';
+import { formatCartCount } from '../i18n/cart-format';
 
-import type { CheckoutViewProps } from '../types/cart-ui-props';
+import type { CheckoutViewProps } from '../cart/cart-ui-props';
 
 const HONEYPOT_FIELD = 'company_website';
 

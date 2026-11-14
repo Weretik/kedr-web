@@ -6,7 +6,7 @@ import { AlertCircleIcon, InfoIcon } from 'lucide-react';
 import { getCartCopy } from '../i18n/cart-copy';
 import { cartMessage, storageMessage } from '../i18n/cart-messages';
 
-import type { BasketProps } from '../types/cart-ui-props';
+import type { BasketProps } from './cart-ui-props';
 
 type CartNoticesProps = Pick<
   BasketProps,

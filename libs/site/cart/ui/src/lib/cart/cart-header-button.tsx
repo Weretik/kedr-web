@@ -4,9 +4,9 @@ import { Button, cn } from '@site/shared/ui';
 import { ShoppingCartIcon } from 'lucide-react';
 
 import { getCartCopy } from '../i18n/cart-copy';
-import { formatCartCount, formatCartMoney } from '../shared/cart-format';
+import { formatCartCount, formatCartMoney } from '../i18n/cart-format';
 
-import type { CartHeaderButtonProps } from '../types/cart-ui-props';
+import type { CartHeaderButtonProps } from './cart-ui-props';
 
 export function CartHeaderButton({
   locale,

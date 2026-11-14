@@ -3,11 +3,11 @@ import { Button } from '@site/shared/ui';
 import { ArrowRightIcon, CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { CartHelp, CartServiceNote } from './cart-support';
 import { getCartCopy } from '../i18n/cart-copy';
-import { formatCartCount, formatCartMoney } from '../shared/cart-format';
-import { CartHelp, CartServiceNote } from '../shared/cart-support';
+import { formatCartCount, formatCartMoney } from '../i18n/cart-format';
 
-import type { CheckoutReceipt } from '../types/cart-ui-props';
+import type { CheckoutReceipt } from '../cart/cart-ui-props';
 import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 

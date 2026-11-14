@@ -9,9 +9,9 @@ import { useState } from 'react';
 import styles from './cart-line.module.css';
 import { CartQuantity } from './cart-quantity';
 import { getCartCopy } from '../i18n/cart-copy';
-import { formatCartMoney } from '../shared/cart-format';
+import { formatCartMoney } from '../i18n/cart-format';
 
-import type { CartLineView } from '../types/cart-ui-props';
+import type { CartLineView } from './cart-ui-props';
 import type { Locale } from '@site/core/i18n';
 
 type CartLineProps = {

@@ -11,9 +11,9 @@ import { CartLine } from './cart-line';
 import { CartNotices } from './cart-notices';
 import { CheckoutLoading } from '../checkout/checkout-loading';
 import { getCartCopy } from '../i18n/cart-copy';
-import { formatCartCount, formatCartMoney } from '../shared/cart-format';
+import { formatCartCount, formatCartMoney } from '../i18n/cart-format';
 
-import type { CartDrawerProps } from '../types/cart-ui-props';
+import type { CartDrawerProps } from './cart-ui-props';
 
 export function CartDrawer(props: CartDrawerProps) {
   const {

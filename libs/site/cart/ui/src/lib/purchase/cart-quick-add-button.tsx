@@ -5,7 +5,7 @@ import { ShoppingCartIcon } from 'lucide-react';
 
 import { getCartCopy } from '../i18n/cart-copy';
 
-import type { CartQuickAddButtonProps } from '../types/cart-ui-props';
+import type { CartQuickAddButtonProps } from '../cart/cart-ui-props';
 
 /** One-tap «У кошик» for listing cards and rows; the cart drawer opens with the result. */
 export function CartQuickAddButton({ locale, title, onAdd, disabled }: CartQuickAddButtonProps) {

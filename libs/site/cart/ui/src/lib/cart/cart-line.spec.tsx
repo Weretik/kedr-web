@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { CartLine } from './cart-line';
 
-import type { CartLineView } from '../types/cart-ui-props';
+import type { CartLineView } from './cart-ui-props';
 
 const line: CartLineView = {
   variantId: '7',

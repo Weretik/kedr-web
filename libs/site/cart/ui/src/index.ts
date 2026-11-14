@@ -17,4 +17,4 @@ export type {
   CartQuickAddButtonProps,
   CheckoutReceipt,
   CheckoutViewProps,
-} from './lib/types/cart-ui-props';
+} from './lib/cart/cart-ui-props';

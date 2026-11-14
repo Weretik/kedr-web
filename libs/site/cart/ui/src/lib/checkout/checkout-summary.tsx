@@ -4,10 +4,10 @@ import { AlertCircleIcon, ArrowRightIcon, LoaderCircleIcon } from 'lucide-react'
 import Link from 'next/link';
 
 import { getCartCopy } from '../i18n/cart-copy';
+import { formatCartCount, formatCartMoney } from '../i18n/cart-format';
 import { cartMessage } from '../i18n/cart-messages';
-import { formatCartCount, formatCartMoney } from '../shared/cart-format';
 
-import type { CheckoutViewProps } from '../types/cart-ui-props';
+import type { CheckoutViewProps } from '../cart/cart-ui-props';
 
 type CheckoutSummaryProps = Pick<
   CheckoutViewProps,
