@@ -27,7 +27,7 @@ Identify the application from the request and current code. If choosing between 
 - Admin, Storefront, and Site tests (Vitest): `npx nx run <project>:vite:test -- --run`; all site libraries: `npm run test:site`.
 - Mobile tests (Jest): `npx nx run <project>:test`.
 - Project lint or typecheck: `npx nx run <project>:lint`, `npx nx run <project>:typecheck`.
-- Documentation: `npm run docs:check`. Contract snapshot: `npm run contracts:check`.
+- Documentation: `npm run docs:check`. Contract snapshot: `npm run contracts:check`. Structure and boundaries: `npm run architecture:structure`, `npm run architecture:boundaries`.
 - Scaffold with console generators, not hand-written configs: `npx nx g @nx/react:library`, `npx nx g @nx/next:application`, `npx shadcn@latest add <component>` and similar. Then trim generator output to the repository's conventions (no deprecated executors, `resolve.tsconfigPaths` in Vite configs, project tags).
 - Feature cards list the exact projects. Do not run `test:web`, `test:mobile`, `run-many`, builds, or E2E unless asked; they are slow and CI runs them.
 
@@ -46,7 +46,7 @@ A small fix that restores documented behavior needs no SDD, file-role map, or au
 | Verify changes / hand off for review                          | `$frontend-change-verification` / `$frontend-pr-handoff` | [Testing rules](docs/standards/shared/testing-rules.md)            |
 | Differences between code and documentation                    | `$frontend-docs-sync`                                    | [Documentation index](docs/README.md)                              |
 
-For a new Admin feature, apply the [code organization rules](docs/standards/admin/admin-code-organization.md) and [SDD readiness and delivery rules](docs/standards/shared/delivery-rules.md): plan the file-role map first and compare it with actual code before handoff.
+For any new or changed Admin, Mobile, or Site code, apply the [code organization rules](docs/standards/shared/code-organization.md) (role folders, one responsibility per file, tests first; the structure check fails on new violations) and [SDD readiness and delivery rules](docs/standards/shared/delivery-rules.md): plan the file-role map first and compare it with actual code before handoff.
 
 For a new or substantially changed feature, update the [feature catalog](docs/features/README.md) under the [delivery rules](docs/standards/shared/delivery-rules.md); small internal changes do not require rewriting its card.
 
