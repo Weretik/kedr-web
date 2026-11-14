@@ -8,7 +8,11 @@ describe('product category path', () => {
   });
 
   it('shows an honest identifier when a category is missing from both sources', () => {
-    expect(productCategoryPath({ categoryId: 7, categoryName: '' }, new Map())).toBe('Категорія (ID 7)');
-    expect(productCategoryPath({ categoryId: null, categoryName: '' }, new Map())).toBe('Категорію не вказано');
+    expect(productCategoryPath({ categoryId: 7, categoryName: '' }, new Map())).toBe(
+      'Категорія (ID 7)',
+    );
+    expect(productCategoryPath({ categoryId: null, categoryName: '' }, new Map())).toBe(
+      'Категорію не вказано',
+    );
   });
 });
