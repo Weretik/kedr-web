@@ -20,7 +20,10 @@ interface ChangeEmailPanelProps {
 
 /** New sign-in email for the signed-in administrator; the current password proves it is them. */
 export function ChangeEmailPanel({ currentEmail, onClose, onSubmit, open }: ChangeEmailPanelProps) {
-  const [values, setValues] = useState<OwnEmailChange>({ email: currentEmail, currentPassword: '' });
+  const [values, setValues] = useState<OwnEmailChange>({
+    email: currentEmail,
+    currentPassword: '',
+  });
   const [errors, setErrors] = useState<Partial<OwnEmailChange>>({});
   const { currentPassword, email } = values;
   const setEmail = (next: string) => setValues((current) => ({ ...current, email: next }));

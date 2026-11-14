@@ -11,5 +11,5 @@ export { StaffAccountsTable } from './tables/staff-accounts-table';
 export type { OwnEmailChange } from './panels/profile/change-email-panel';
 export type { OwnPasswordChange } from './panels/profile/change-password-panel';
 export type { ProfileField } from './components/profile/profile-details-card';
-export type { CreateStaffMode } from './panels/create-staff-panel';
+export type { CreateStaffMode } from './hooks/use-create-staff-form';
 export type { StaffAccountAction } from './tables/staff-account-actions-menu';

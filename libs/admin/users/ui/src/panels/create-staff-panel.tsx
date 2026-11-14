@@ -1,34 +1,18 @@
 import { AdminEditPanel } from '@admin/shared/ui';
-import {
-  staffRoleLabels,
-  staffRoles,
-  validateGrantStaffAccessInput,
-  validateStaffAccountInput,
-} from '@admin/users/model';
-import { Alert, Button, MenuItem, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useState } from 'react';
+import { staffRoleLabels, staffRoles } from '@admin/users/model';
+import { Alert, Button, MenuItem, TextField } from '@mui/material';
 
 import { StaffCandidatePicker } from '../components/staff-candidate-picker';
+import { StaffSourceToggle } from '../components/staff-source-toggle';
+import { useCreateStaffForm } from '../hooks/use-create-staff-form';
 
+import type { CreateStaffMode } from '../hooks/use-create-staff-form';
 import type {
   CreateStaffAccountInput,
-  GrantStaffAccessFieldErrors,
   GrantStaffAccessInput,
-  StaffAccountFieldErrors,
   StaffCandidate,
   StaffRole,
 } from '@admin/users/model';
-import type { FormEvent } from 'react';
-
-/** «Новий» creates an account; «З бази» gives staff access to an existing one (usually a customer). */
-export type CreateStaffMode = 'new' | 'existing';
-
-const emptyInput: CreateStaffAccountInput = {
-  email: '',
-  fullName: '',
-  role: 'Manager',
-  password: '',
-};
 
 interface CreateStaffPanelProps {
   open: boolean;
@@ -60,56 +44,9 @@ export function CreateStaffPanel({
   open,
   submitting,
 }: CreateStaffPanelProps) {
-  const [mode, setMode] = useState<CreateStaffMode>('new');
-  const [input, setInput] = useState(emptyInput);
-  const [candidate, setCandidate] = useState<StaffCandidate | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<
-    StaffAccountFieldErrors & GrantStaffAccessFieldErrors
-  >({});
+  const { candidate, changeMode, close, fieldErrors, input, mode, pickCandidate, submit, update } =
+    useCreateStaffForm({ onClose, onGrant, onModeChange, onSubmit });
   const canPickExisting = Boolean(onGrant && onCandidateSearch);
-
-  const update = (change: Partial<CreateStaffAccountInput>) =>
-    setInput((current) => ({ ...current, ...change }));
-
-  const changeMode = (next: CreateStaffMode) => {
-    setMode(next);
-    setFieldErrors({});
-    onModeChange?.(next);
-  };
-
-  const pickCandidate = (next: StaffCandidate | null) => {
-    setCandidate(next);
-    if (next) update({ email: next.email, fullName: next.fullName });
-  };
-
-  const handleClose = () => {
-    setMode('new');
-    setInput(emptyInput);
-    setCandidate(null);
-    setFieldErrors({});
-    onClose();
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (mode === 'existing' && onGrant) {
-      const grant: GrantStaffAccessInput = {
-        userId: candidate?.id ?? '',
-        fullName: input.fullName,
-        role: input.role,
-        password: input.password,
-      };
-      const errors = validateGrantStaffAccessInput(grant);
-      setFieldErrors(errors);
-      if (Object.keys(errors).length === 0 && (await onGrant(grant))) handleClose();
-      return;
-    }
-
-    const errors = validateStaffAccountInput(input);
-    setFieldErrors(errors);
-    if (Object.keys(errors).length === 0 && (await onSubmit(input))) handleClose();
-  };
 
   const submitLabel = mode === 'existing' ? 'Надати доступ' : 'Створити';
 
@@ -117,7 +54,7 @@ export function CreateStaffPanel({
     <AdminEditPanel
       actions={
         <>
-          <Button disabled={submitting} onClick={handleClose}>
+          <Button disabled={submitting} onClick={close}>
             Скасувати
           </Button>
           <Button disabled={submitting} type="submit" variant="contained">
@@ -126,26 +63,15 @@ export function CreateStaffPanel({
         </>
       }
       busy={submitting}
-      onClose={handleClose}
-      onSubmit={(event) => void handleSubmit(event)}
+      onClose={close}
+      onSubmit={(event) => {
+        event.preventDefault();
+        void submit();
+      }}
       open={open}
       title="Новий користувач"
     >
-      {canPickExisting ? (
-        <ToggleButtonGroup
-          aria-label="Звідки користувач"
-          exclusive
-          fullWidth
-          onChange={(_, next: CreateStaffMode | null) => {
-            if (next) changeMode(next);
-          }}
-          size="small"
-          value={mode}
-        >
-          <ToggleButton value="new">Новий</ToggleButton>
-          <ToggleButton value="existing">З бази</ToggleButton>
-        </ToggleButtonGroup>
-      ) : null}
+      {canPickExisting ? <StaffSourceToggle onChange={changeMode} value={mode} /> : null}
       {error ? <Alert severity="error">{error}</Alert> : null}
       {mode === 'existing' && onCandidateSearch ? (
         <>
