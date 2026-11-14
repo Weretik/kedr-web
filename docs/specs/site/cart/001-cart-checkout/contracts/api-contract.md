@@ -4,7 +4,7 @@
 
 - Provider: KedrStore, канонический backend `docs/sdd/contracts/openapi.yaml`.
 - Зафиксированный frontend snapshot: [SOURCE.md](../../../../../contracts/openapi/SOURCE.md), commit `527d18934ee271c9ffa3d475f3a545026f4b3248`.
-- Машинная операция: [orders.openapi.yaml](../../../../../contracts/openapi/catalog/orders.openapi.yaml), `createQuickOrder`, **POST `/api/orders`**, `security: []`.
+- Машинная операция: [orders.openapi.yaml](../../../../../contracts/openapi/sales/quick-orders.openapi.yaml), `createQuickOrder`, **POST `/api/orders`**, `security: []`.
 - Generated types: `libs/shared/api-contracts/src/generated/kedr-api.ts`; aliases `operations['createQuickOrder']...` остаются в transport/data-access.
 - Текущее описание потребителя: [quick-order.md](../../../../../contracts/catalog/quick-order.md); consumers — Angular storefront и новый Site cart/checkout.
 - Статус: операция подтверждена snapshot и старым consumer; Site mutation transport реализован, mocked contract tests passed.

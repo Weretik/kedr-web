@@ -91,14 +91,12 @@ components:
         counterpartyName: { type: string, maxLength: 300, example: Клієнт }
         createdAtUtc: { type: string, format: date-time }
         lineCount: { type: integer, minimum: 1, example: 2 }
-        totalAmount:
-          { type: number, format: double, minimum: 0, multipleOf: 0.01, example: 25000.00 }
+        totalAmount: { type: number, format: double, minimum: 0, multipleOf: 0.01, example: 25000.00 }
         syncStatus: { $ref: '#/components/schemas/OrderSyncStatus' }
         oneCDocumentNumber: { type: [string, 'null'], maxLength: 128, example: '000000123' }
     ManagerOrderDetail:
       type: object
-      required:
-        [orderId, orderNumber, createdAtUtc, counterparty, comment, lines, totalAmount, sync]
+      required: [orderId, orderNumber, createdAtUtc, counterparty, comment, lines, totalAmount, sync]
       properties:
         orderId: { type: integer, format: int64, minimum: 1, example: 12345 }
         orderNumber: { type: string, maxLength: 32, example: SO-20260817-12345 }
@@ -136,12 +134,9 @@ components:
     OrderSyncStatus:
       type: string
       enum: [Pending, Sent, Accepted, BusinessError, TransportError, RetryScheduled, DeadLetter]
-    ValidationErrors:
-      type: object
-      additionalProperties: true
   responses:
     ValidationError:
       description: Input validation failed.
       content:
-        application/json:
-          schema: { $ref: '#/components/schemas/ValidationErrors' }
+        application/problem+json:
+          schema: { $ref: '../problem.openapi.yaml#/components/schemas/ValidationProblem' }
