@@ -1,3 +1,4 @@
+import { RouteErrorBoundary } from '@admin/core/shell';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -44,5 +45,9 @@ export function App({ authInitialization }: AppProps) {
     );
   }
 
-  return <AppRouter />;
+  return (
+    <RouteErrorBoundary fullScreen>
+      <AppRouter />
+    </RouteErrorBoundary>
+  );
 }
