@@ -3,6 +3,7 @@ import { AppText, Button, TextField } from '@mobile/shared/ui';
 import { useState } from 'react';
 
 import { FormFrame } from './form-frame';
+import { useConfirmStep } from '../hooks/use-confirm-step';
 
 export interface EmailFormProps {
   currentEmail: string;
@@ -22,21 +23,16 @@ export function EmailForm({
 }: Readonly<EmailFormProps>) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [problem, setProblem] = useState<string | null>(null);
-  const [confirming, setConfirming] = useState(false);
-
-  const review = () => {
-    const next = validateEmail(email) ?? (password ? null : 'Вкажіть поточний пароль.');
-    setProblem(next);
-    if (!next) setConfirming(true);
-  };
+  const { back, confirming, problem, review } = useConfirmStep(
+    () => validateEmail(email) ?? (password ? null : 'Вкажіть поточний пароль.'),
+  );
 
   return (
     <FormFrame
       actions={
         confirming ? (
           <>
-            <Button label="Назад" onPress={() => setConfirming(false)} variant="text" />
+            <Button label="Назад" onPress={back} variant="text" />
             <Button label="Так, змінити" onPress={() => onSave(email.trim(), password)} />
           </>
         ) : (
