@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-native';
 
 import { useConfirmStep } from './use-confirm-step';
 
-describe('useConfirmStep', async () => {
+describe('useConfirmStep', () => {
   it('shows the problem and stays on the form when the check fails', async () => {
     const { result } = await renderHook(() => useConfirmStep(() => 'Вкажіть поточний пароль.'));
     await act(() => result.current.review());
