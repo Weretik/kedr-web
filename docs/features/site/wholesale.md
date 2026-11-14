@@ -33,7 +33,7 @@ Only the documented content-feature → catalog data-access/model/ui cross-domai
 apps/site/src/app/[locale]/(content)/wholesale/page.tsx  # thin route + metadata
 libs/site/content/
 ├── model/src/lib/wholesale-types.ts, wholesale-dictionary.ts  # presentation/copy, code fallback
-├── model/src/lib/wholesale-texts.ts       # admin texts over the dictionary
+├── model/src/lib/copy/wholesale/          # dictionary, types, admin texts over the dictionary
 ├── data-access/src/lib/wholesale/         # cached API read, mapper, cache tags
 ├── ui/src/lib/wholesale/
 │   ├── wholesale-content.tsx        # page composition
@@ -43,8 +43,8 @@ libs/site/content/
 │   ├── wholesale-steps.tsx          # order sequence
 │   ├── wholesale-faq.tsx            # visible Q/A
 │   └── wholesale-contact.tsx        # final contact/useful links
-├── seo/src/lib/wholesale-metadata.ts, wholesale-json-ld.ts
-└── feature/src/lib/wholesale-page.tsx, content-sitemap.ts
+├── seo/src/lib/{metadata,json-ld}/wholesale/  # wholesale-metadata.ts, wholesale-json-ld.ts
+└── feature/src/lib/wholesale/wholesale-page.tsx, sitemap/content-sitemap.ts
 libs/site/catalog/ui/src/lib/category-cards/category-cards.tsx  # optional compact variant
 tools/architecture/project-boundary-rules.mjs                 # narrow allowed flow
 ```

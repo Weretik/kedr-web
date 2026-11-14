@@ -32,63 +32,72 @@ flowchart LR
 
 ```text
 apps/site/
-  article-redirects.ts                       # deployment redirect map
-  next.config.ts                            # includes the six 301 rules
+  article-redirects.ts               # deployment redirect map
+  next.config.ts                     # includes the six 301 rules
   src/app/[locale]/(content)/articles/
-    page.tsx                                # thin list + metadata
-    [slug]/page.tsx                          # thin detail + parent-locale SSG
+    page.tsx                           # thin list + metadata
+  src/app/[locale]/(content)/articles/[slug]/
+    page.tsx                           # thin detail + parent-locale SSG
 libs/site/content/
-  model/src/lib/articles/
-    article-types.ts                        # typed Article/query/result and defaults
-    articles-query.ts                       # query normalization and href
-    article-routes.ts                       # list path, detail href
-    article-text.ts                         # plain text of body HTML
-    article-page-window.ts                  # bounded pager window
-    articles-listing.ts                      # full-source filter, page/clamp/range
-    articles-dictionary.ts                  # UK/RU presentation strings
-    articles.spec.ts                        # query/listing characterization
-    article-routes.spec.ts                  # escaped detail path assertion
-    article-page-window.spec.ts             # bounded page-window assertions
   data-access/src/lib/articles/
-    article-cache.ts                        # cache tags and lifetimes
-    article.mapper.ts                       # API DTO → Article, CDN or absolute legacy cover URL
-    article-loaders.ts                      # getArticles/getArticle (ok | not-found | unavailable)
-    article-loaders.spec.ts                 # mapping, 404 and failure handling
+    article-cache.ts                   # cache tags and lifetimes
+    article.mapper.ts                  # API DTO → Article, CDN or absolute legacy cover URL
+    article-loaders.ts                 # getArticles/getArticle (ok | not-found | unavailable)
+    article-loaders.spec.ts            # mapping, 404 and failure handling
+  feature/src/lib/articles/
+    articles-page.tsx                  # request query under Suspense
+    article-page.tsx                   # detail / metadata / static params
+    articles-page.spec.tsx             # server composition with mocked loaders
+  feature/src/lib/sitemap/
+    article-sitemap.ts                 # published articles for the sitemap
+    content-sitemap.ts                 # static content pages
+    content-sitemap.spec.ts            # sitemap integration
+  model/src/lib/copy/articles/
+    articles-dictionary.ts             # UK/RU presentation strings
+  model/src/lib/entities/
+    article-types.ts                   # typed Article/query/result and defaults
+  model/src/lib/mappers/
+    article-text.ts                    # plain text of body HTML
+  model/src/lib/paths/
+    article-routes.ts                  # list path, detail href
+    article-routes.spec.ts             # escaped detail path assertion
+  model/src/lib/queries/
+    articles-query.ts                  # query normalization and href
+    article-page-window.ts             # bounded pager window
+    articles-listing.ts                # full-source filter, page/clamp/range
+    articles.spec.ts                   # query/listing characterization
+    article-page-window.spec.ts        # bounded page-window assertions
+  seo/src/lib/{json-ld,metadata}/articles/
+    *.spec.ts                          # metadata/schema tests
+  seo/src/lib/json-ld/articles/
+    articles-json-ld.ts                # breadcrumbs + Article graph
+  seo/src/lib/metadata/articles/
+    article-seo-types.ts               # plain SEO input, no model import
+    articles-seo-copy.ts               # localized SEO text
+    articles-metadata.ts               # list/detail metadata
   ui/src/lib/articles/
-    articles-header.tsx                     # static breadcrumbs/H1/intro
-    articles-content.tsx                    # server list body
-    articles-search-form.tsx                # GET search + sr-only label
-    articles-page-size-select.tsx           # only client leaf
-    articles-pagination.tsx                 # range + links/disabled boundaries
-    article-card.tsx                        # one card/one link
-    article-cover.tsx                       # 16:9 image/fallback
-    article-content.tsx                     # full article reading (sanitized server HTML)
-    articles-loading.tsx                    # Suspense status
-    articles-content.spec.tsx               # UI/interaction/locale tests
-  seo/src/lib/articles/
-    article-seo-types.ts                     # plain SEO input, no model import
-    articles-seo-copy.ts                     # localized SEO text
-    articles-metadata.ts                     # list/detail metadata
-    articles-json-ld.ts                      # breadcrumbs + Article graph
-    *.spec.ts                               # metadata/schema tests
-  feature/src/lib/
-    articles/articles-page.tsx              # request query under Suspense
-    articles/article-page.tsx               # detail / metadata / static params
-    articles/articles-page.spec.tsx         # server composition with mocked loaders
-    articles/article-sitemap.ts             # published articles for the sitemap
-    content-sitemap.ts                      # static content pages
-    content-sitemap.spec.ts                 # sitemap integration
+    articles-header.tsx                # static breadcrumbs/H1/intro
+    articles-content.tsx               # server list body
+    article-content.tsx                # full article reading (sanitized server HTML)
+    articles-content.spec.tsx          # UI/interaction/locale tests
+  ui/src/lib/articles/list/
+    articles-search-form.tsx           # GET search + sr-only label
+    articles-page-size-select.tsx      # only client leaf
+    articles-pagination.tsx            # range + links/disabled boundaries
+    article-card.tsx                   # one card/one link
+    article-cover.tsx                  # 16:9 image/fallback
+    articles-loading.tsx               # Suspense status
 ```
 
 ## Tests
 
 Focused commands (cwd repository root, NX_DAEMON=false):
 
-- `node node_modules/nx/dist/bin/nx.js run site-content-model:vite:test -- --run src/lib/articles/articles.spec.ts src/lib/articles/article-routes.spec.ts src/lib/articles/article-page-window.spec.ts` — 18 tests.
+- `node node_modules/nx/dist/bin/nx.js run site-content-model:vite:test -- --run src/lib/queries/articles.spec.ts src/lib/paths/article-routes.spec.ts src/lib/queries/article-page-window.spec.ts` — 18 tests.
 - `node node_modules/nx/dist/bin/nx.js run site-content-data-access:vite:test -- --run` — 7 tests.
 - `node node_modules/nx/dist/bin/nx.js run site-content-ui:vite:test -- --run src/lib/articles/articles-content.spec.tsx` — 13 tests.
-- `node node_modules/nx/dist/bin/nx.js run site-content-seo:vite:test -- --run src/lib/articles/articles-metadata.spec.ts src/lib/articles/articles-json-ld.spec.ts` — 17 new tests; touched SEO regression 37 tests.
-- `node node_modules/nx/dist/bin/nx.js run site-content-feature:vite:test -- --run src/lib/articles/articles-page.spec.tsx src/lib/content-sitemap.spec.ts` — 13 tests in the current shared sitemap state.
+- `node node_modules/nx/dist/bin/nx.js run site-content-seo:vite:test -- --run src/lib/metadata/articles/articles-metadata.spec.ts src/lib/json-ld/articles/articles-json-ld.spec.ts` — 17 new tests; touched SEO regression 37 tests.
+- `node node_modules/nx/dist/bin/nx.js run site-content-feature:vite:test -- --run src/lib/articles/articles-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts` — 13 tests in the current shared sitemap state.
 - `node node_modules/nx/dist/bin/nx.js run site:typecheck` — route/server-client source boundary.
 
 [Exact evidence and limits](../../specs/site/content/001-articles/verification/results.md). Browser, production build, E2E and HTTP runtime have not been run; source/tests do not establish deployment behavior.

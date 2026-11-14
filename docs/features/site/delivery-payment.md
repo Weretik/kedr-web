@@ -27,17 +27,23 @@ flowchart LR
 
 ```text
 libs/site/content/
-├── ui/src/lib/
-│   ├── i18n/delivery-payment-dictionary.ts  # page chrome UK/RU
-│   ├── documents/  # shared DocumentHtml and EditionDate
-│   └── delivery-payment/  # header/anchors, section cards, contact, UI tests
-├── seo/src/lib/delivery-payment-metadata.ts  # localized domain metadata and unit tests
-└── feature/src/lib/
-    ├── delivery-payment-page.tsx  # server composition and focused integration tests
-    └── content-sitemap.ts  # static public route descriptors
-apps/site/src/app/
-├── [locale]/delivery-and-payment/page.tsx  # params/locale and domain delegation
-└── sitemap.ts  # home, catalog and content descriptors
+  feature/src/lib/delivery-payment/
+    delivery-payment-page.tsx           # server composition and focused integration tests
+  feature/src/lib/sitemap/
+    content-sitemap.ts                  # static public route descriptors
+  seo/src/lib/metadata/delivery-payment/
+    delivery-payment-metadata.ts        # localized domain metadata and unit tests
+  ui/src/lib/delivery-payment/
+                                        # header/anchors, section cards, contact, UI tests
+  ui/src/lib/documents/
+                                        # shared DocumentHtml and EditionDate
+  ui/src/lib/i18n/
+    delivery-payment-dictionary.ts      # page chrome UK/RU
+apps/site/
+  src/app/
+    sitemap.ts                          # home, catalog and content descriptors
+  src/app/[locale]/delivery-and-payment/
+    page.tsx                            # params/locale and domain delegation
 ```
 
 ## Tests

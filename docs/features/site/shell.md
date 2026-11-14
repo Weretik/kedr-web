@@ -37,7 +37,7 @@ apps/site/src/app/
 └── global.css, fonts.ts  # design tokens, Onest and JetBrains Mono
 
 libs/site/core/shell/src/lib/
-├── site-shell.tsx  # frame
+├── layout/site-shell.tsx  # frame
 ├── header/  # site-header, collapsing sticky header, search form, call and cart actions, compact actions
 │   ├── bars/  # top, main, and category rows
 │   └── menus/  # details dropdown, catalog menu, mobile sheet
