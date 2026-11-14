@@ -1,9 +1,9 @@
-import { SiteFooter } from './footer/site-footer';
-import { SiteHeader } from './header/site-header';
-import { getShellDictionary } from './i18n/shell-dictionary';
-import { resolveCategoryLinks } from './navigation/catalog-navigation';
+import { SiteFooter } from '../footer/site-footer';
+import { SiteHeader } from '../header/site-header';
+import { getShellDictionary } from '../i18n/shell-dictionary';
+import { resolveCategoryLinks } from '../navigation/catalog-navigation';
 
-import type { CatalogNavigation } from './navigation/catalog-navigation';
+import type { CatalogNavigation } from '../navigation/catalog-navigation';
 import type { CompanyContacts } from '@site/core/config';
 import type { Locale } from '@site/core/i18n';
 import type { ReactNode } from 'react';

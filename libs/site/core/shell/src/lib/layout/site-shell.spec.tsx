@@ -4,7 +4,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SiteShell } from './site-shell';
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/ru/wholesale' }));
-vi.mock('./footer/copyright-year', () => ({ CopyrightYear: () => '2026' }));
+vi.mock('../footer/copyright-year', () => ({ CopyrightYear: () => '2026' }));
 
 describe('SiteShell', () => {
   it.each([
