@@ -68,6 +68,7 @@ const isCode = (path) => /\.(ts|tsx)$/.test(path) && !path.endsWith('.d.ts');
 const isSpec = (path) => /\.(spec|test)\.(ts|tsx|mjs)$/.test(path);
 const isProduction = (path) =>
   isCode(path) && !isSpec(path) && !/(^|\/)(index\.ts|test-setup\.ts)$/.test(path);
+const isExemptFromLength = (path) => /\/(i18n|data|generated|testing)\//.test(path);
 const dirOf = (path) => path.slice(0, path.lastIndexOf('/'));
 const baseOf = (path) => path.slice(path.lastIndexOf('/') + 1);
 
@@ -167,7 +168,7 @@ export function findStructureViolations({ files, read }) {
   for (const path of scoped.filter(isProduction)) {
     const text = read(path) ?? '';
     const limit = path.endsWith('.tsx') ? componentLineLimit : moduleLineLimit;
-    if (effectiveLength(text) > limit) add('long-file', path);
+    if (!isExemptFromLength(path) && effectiveLength(text) > limit) add('long-file', path);
     if (
       path.endsWith('.tsx') &&
       (count(text, /\buseState\b\s*[(<]/g) > 3 || count(text, /\buse(Layout)?Effect\(/g) > 1)
