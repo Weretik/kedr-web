@@ -129,6 +129,20 @@ test('flags long components and hooks, without counting a style sheet', () => {
   );
 });
 
+test('does not count static copy, generated code, or test helpers as long files', () => {
+  assert.deepEqual(
+    check({
+      [`${lib}/ui/project.json`]: '{}',
+      [`${lib}/ui/src/testing/fixtures.spec.ts`]: '',
+      'libs/site/cart/ui/project.json': '{}',
+      'libs/site/cart/ui/src/lib/i18n/cart-dictionary.ts': lines(400),
+      'libs/site/cart/ui/src/lib/i18n/cart-dictionary.spec.ts': '',
+      [`${lib}/ui/src/testing/fixtures.ts`]: lines(400),
+    }),
+    [],
+  );
+});
+
 test('flags a component with more than three useState or more than one useEffect', () => {
   const state = 'const [a, setA] = useState(0);\n'.repeat(4);
   const effects = 'useEffect(() => {}, []);\n'.repeat(2);
