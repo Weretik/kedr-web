@@ -54,12 +54,76 @@ test('rejects a shared folder inside a domain library but not the shared scope',
   );
 });
 
-test('flags a folder with eight or more production files', () => {
+test('flags a folder with more than six production files', () => {
   const tree = { [`${lib}/feature/project.json`]: '{}' };
-  for (let index = 0; index < 8; index += 1) tree[`${lib}/feature/src/hooks/use-${index}.ts`] = '';
+  for (let index = 0; index < 7; index += 1) tree[`${lib}/feature/src/hooks/use-${index}.ts`] = '';
+  for (let index = 0; index < 6; index += 1)
+    tree[`${lib}/feature/src/pages/page-${index}.tsx`] = '';
   tree[`${lib}/feature/src/hooks/use-0.spec.ts`] = '';
   tree[`${lib}/feature/src/hooks/index.ts`] = '';
   assert.deepEqual(check(tree), [`crowded-folder: ${lib}/feature/src/hooks`]);
+});
+
+test('does not count generated code in a crowded folder', () => {
+  const tree = { [`${lib}/data-access/project.json`]: '{}' };
+  for (let index = 0; index < 9; index += 1) {
+    tree[`${lib}/data-access/src/api/generated/operation-${index}.ts`] = '';
+  }
+  tree[`${lib}/data-access/src/api/orders.api.spec.ts`] = '';
+  tree[`${lib}/data-access/src/api/orders.api.ts`] = '';
+  assert.deepEqual(check(tree), []);
+});
+
+test('flags a wrapper folder that holds only one subfolder', () => {
+  assert.deepEqual(
+    check({
+      [`${lib}/ui/project.json`]: '{}',
+      [`${lib}/ui/src/components/order-tree/order-tree.tsx`]: '',
+      [`${lib}/ui/src/components/order-tree/order-tree.spec.tsx`]: '',
+      [`${lib}/ui/src/forms/order-form.tsx`]: '',
+    }),
+    [`wrapper-folder: ${lib}/ui/src/components`],
+  );
+});
+
+test('flags a folder that mixes files and subfolders', () => {
+  assert.deepEqual(
+    check({
+      [`${lib}/ui/project.json`]: '{}',
+      [`${lib}/ui/src/tables/orders-table.tsx`]: '',
+      [`${lib}/ui/src/tables/orders-table.spec.tsx`]: '',
+      [`${lib}/ui/src/tables/cells/status-cell.tsx`]: '',
+      [`${lib}/ui/src/tables/cells/total-cell.tsx`]: '',
+      [`${lib}/ui/src/forms/order-form.tsx`]: '',
+    }),
+    [`mixed-folder: ${lib}/ui/src/tables`],
+  );
+});
+
+test('allows entry files next to folders at a library root and in file-based routers', () => {
+  assert.deepEqual(
+    check({
+      [`${lib}/feature/project.json`]: '{}',
+      [`${lib}/feature/src/index.ts`]: '',
+      [`${lib}/feature/src/orders.routes.tsx`]: '',
+      [`${lib}/feature/src/testing.ts`]: '',
+      [`${lib}/feature/src/pages/orders-page.tsx`]: '',
+      [`${lib}/feature/src/pages/orders-page.spec.tsx`]: '',
+      [`${lib}/feature/src/hooks/use-orders.ts`]: '',
+      'libs/site/catalog/data-access/project.json': '{}',
+      'libs/site/catalog/data-access/src/lib/cache-tags.ts': '',
+      'libs/site/catalog/data-access/src/lib/loaders/catalog-loader.ts': '',
+      'libs/site/catalog/data-access/src/lib/loaders/catalog-loader.spec.ts': '',
+      'libs/site/catalog/data-access/src/lib/mappers/catalog.mapper.ts': '',
+      'apps/site/src/app/[locale]/page.tsx': '',
+      'apps/site/src/app/[locale]/catalog/page.tsx': '',
+      'apps/mobile/src/app/(work)/_layout.tsx': '',
+      'apps/mobile/src/app/(work)/orders/index.tsx': '',
+      'apps/admin/src/app/app.tsx': '',
+      'apps/admin/src/app/router/routes.tsx': '',
+    }),
+    [],
+  );
 });
 
 test('requires role folders in admin and mobile domain libraries only', () => {
@@ -89,18 +153,16 @@ test('allows mobile data-access local, store, and sync roles', () => {
   );
 });
 
-test('rejects loose files in src/lib of a site library with more than eight files', () => {
-  const tree = { 'libs/site/content/seo/project.json': '{}' };
-  for (let index = 0; index < 8; index += 1) {
-    tree[`libs/site/content/seo/src/lib/metadata/page-${index}.ts`] = '';
-  }
-  tree['libs/site/content/seo/src/lib/contacts-json-ld.ts'] = '';
-  tree['libs/site/content/seo/src/lib/cache-tags.ts'] = '';
-  tree['libs/site/content/seo/src/lib/contacts-json-ld.spec.ts'] = '';
-  assert.deepEqual(check(tree), [
-    'crowded-folder: libs/site/content/seo/src/lib/metadata',
-    'loose-file: libs/site/content/seo/src/lib/contacts-json-ld.ts',
-  ]);
+test('flags loose files next to folders in src/lib of a site library', () => {
+  assert.deepEqual(
+    check({
+      'libs/site/content/seo/project.json': '{}',
+      'libs/site/content/seo/src/lib/metadata/contacts-metadata.ts': '',
+      'libs/site/content/seo/src/lib/metadata/contacts-metadata.spec.ts': '',
+      'libs/site/content/seo/src/lib/contacts-json-ld.ts': '',
+    }),
+    ['mixed-folder: libs/site/content/seo/src/lib'],
+  );
 });
 
 test('keeps a small one-page site library flat', () => {
