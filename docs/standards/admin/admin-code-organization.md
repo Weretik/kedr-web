@@ -2,7 +2,7 @@
 
 **Applies to:** `apps/admin` and `libs/admin/**`.
 
-The rules are the shared [frontend code organization rules](../shared/code-organization.md): libraries and dependencies, [role folders](../shared/code-organization.md#role-folders), [nesting and size](../shared/code-organization.md#nesting-and-size), [one responsibility per file](../shared/code-organization.md#one-responsibility-per-file), [tests](../shared/code-organization.md#tests), the [application folder](../shared/code-organization.md#application-folder), forbidden names, state, and [pages, routes, and links](../shared/code-organization.md#pages-routes-and-links). This file adds only what is specific to Admin.
+The rules are the shared [frontend code organization rules](../shared/code-organization.md): libraries and dependencies, [role folders](../shared/code-organization.md#role-folders), [nesting and size](../shared/code-organization.md#nesting-and-size), [one responsibility per file](../shared/code-organization.md#one-responsibility-per-file), [tests](../shared/code-organization.md#tests), the [application folder](../shared/code-organization.md#application-folder), forbidden names, state, [validation and server errors](../shared/code-organization.md#validation-and-server-errors), and [pages, routes, and links](../shared/code-organization.md#pages-routes-and-links). This file adds only what is specific to Admin.
 
 ## Admin specifics
 
@@ -12,6 +12,7 @@ The rules are the shared [frontend code organization rules](../shared/code-organ
 
 - Feature `hooks/` hold controllers for RTK Query: one hook per page or block owns its queries, mutations, and panel state (for example `use-my-tasks-board.ts`), and the component only renders.
 - App-injected cross-domain components live in `apps/admin/src/app/slots/` (for example the customer picker that the orders feature receives from the app).
+- The one error parser is `libs/admin/shared/api-client/src/errors/api-error.ts`. KedrStore still returns validation errors as an Ardalis array of `{ identifier, errorMessage }`; the parser reads it and ProblemDetails `errors` into the same `fieldErrors`, so the planned switch to ProblemDetails changes no form.
 
 ## Known deviations
 

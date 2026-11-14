@@ -12,6 +12,7 @@ The shared [frontend code organization rules](../shared/code-organization.md) ap
 - `model` does not depend on React, HTTP, Expo Router, or platform APIs.
 - `data-access` owns private DTOs, mappers, local database queries (Drizzle) and server calls; DTOs and transport errors do not leave the library. Reads follow [ADR-0008](../../architecture/mobile/adr/0008-tanstack-query-reads.md): a whole list through `useLocalAsyncQuery` (off the JavaScript thread), a few rows by key through `useLocalQuery`, an online-only read through TanStack Query `useQuery`; never Redux or RTK Query, never a hand-written loading/caching hook.
 - `ui` receives domain data and callbacks through props; it does not import API hooks, router, or storage.
+- The one server error parser is `libs/mobile/shared/api-client/src/errors/api-error.ts`; it reads the current KedrStore Ardalis array and ProblemDetails `errors` into the same field errors ([validation and server errors](../shared/code-organization.md#validation-and-server-errors)).
 
 ## Structure and platform APIs
 
