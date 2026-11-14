@@ -93,7 +93,14 @@ export const toApiError = (error: unknown): ApiError => {
   if (status === 404) return { code: 'NotFound', status, message: 'Not found' };
 
   if (fieldErrors && status >= 400 && status < 500) {
-    return { code: 'Validation', status, message, fieldErrors, traceId: problemDetails?.traceId };
+    return {
+      code: 'Validation',
+      reason: businessCode,
+      status,
+      message,
+      fieldErrors,
+      traceId: problemDetails?.traceId,
+    };
   }
 
   if (businessCode && status === 400) {
