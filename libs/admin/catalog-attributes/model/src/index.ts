@@ -59,3 +59,4 @@ export {
   checkAttributeSettings,
   checkAttributeValue,
 } from './forms/attribute-forms';
+export { codeMeaningsText } from './mappers/code-meanings-text';

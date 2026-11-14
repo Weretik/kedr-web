@@ -1,13 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { CodeMeaningRow } from './components/codes/code-meaning-row';
 import { CodeWorkspace } from './components/codes/code-workspace';
+import { CodeMeaningRow } from './components/codes/meanings/code-meaning-row';
 import { AttributeValueForm } from './forms/attribute-value/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
 import { emptyNewAttribute, toNewAttribute } from './forms/new-attribute-fields';
 
-import type { MeaningRowSlotProps } from './components/codes/code-meanings-editor';
+import type { MeaningRowSlotProps } from './components/codes/meanings/code-meanings-editor';
 import type {
   CatalogAttribute,
   CatalogAttributeValue,
