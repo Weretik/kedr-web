@@ -197,7 +197,11 @@
       "@admin/seo-settings/model": ["./libs/admin/seo-settings/model/src/index.ts"],
       "@admin/seo-settings/data-access": ["./libs/admin/seo-settings/data-access/src/index.ts"],
       "@admin/seo-settings/ui": ["./libs/admin/seo-settings/ui/src/index.ts"],
-      "@admin/seo-settings/feature": ["./libs/admin/seo-settings/feature/src/index.ts"]
+      "@admin/seo-settings/feature": ["./libs/admin/seo-settings/feature/src/index.ts"],
+      "@admin/scheduling/model": ["./libs/admin/scheduling/model/src/index.ts"],
+      "@admin/scheduling/data-access": ["./libs/admin/scheduling/data-access/src/index.ts"],
+      "@admin/scheduling/ui": ["./libs/admin/scheduling/ui/src/index.ts"],
+      "@admin/scheduling/feature": ["./libs/admin/scheduling/feature/src/index.ts"]
     }
   }
 }

@@ -2935,6 +2935,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/scheduling/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every task in page order with its schedule, next run and last success and failure. */
+        get: operations["getAdminScheduledTasks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/scheduling/tasks/{key}/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The last 50 runs of a task, newest first. Runs are kept 90 days. */
+        get: operations["getAdminScheduledTaskRuns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/scheduling/tasks/{key}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** @description Changes the schedule and the on/off switch. nextRunAt moves the next run once; without it the next run follows the schedule. */
+        put: operations["updateAdminScheduledTaskSchedule"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/scheduling/tasks/{key}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description «Запустити зараз», also for a disabled task. The next tick, within a minute, starts it. */
+        post: operations["runAdminScheduledTaskNow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2980,9 +3048,25 @@ export interface components {
             /** @description Active exported products in this category and all its descendants. */
             productCount: number;
         };
-        ValidationErrors: {
+        Problem: {
+            type?: string;
+            /** @description Ukrainian title of the status. */
+            title: string;
+            status: number;
+            /** @description The first error message, Ukrainian. */
+            detail?: string | null;
+            /** @description The rule's own code (for example `invalid_lines`) or one of `validation`, `invalid_request`, `unauthorized`, `forbidden`, `not_found`, `conflict`, `unavailable`, `unexpected`. */
+            code: string;
+            traceId: string;
+        } & {
             [key: string]: unknown;
-        }[];
+        };
+        ValidationProblem: components["schemas"]["Problem"] & {
+            /** @description Messages by field (the validator's property path). */
+            errors?: {
+                [key: string]: string[];
+            };
+        };
         CategoryBreadcrumb: {
             id: number;
             slug: string;
@@ -3870,9 +3954,6 @@ export interface components {
             pagedInfo: components["schemas"]["schemas-PagedInfo"];
             value: components["schemas"]["ManagerOrderListItem"][];
         };
-        "schemas-ValidationErrors": {
-            [key: string]: unknown;
-        };
         CreateAdminOrderLine: {
             productId: string;
             quantity: number;
@@ -3896,11 +3977,6 @@ export interface components {
              * @enum {string}
              */
             syncStatus: "Pending";
-        };
-        Error: {
-            errors?: {
-                [key: string]: string[];
-            };
         };
         OrderCounterparty: {
             counterpartyId: string;
@@ -4055,7 +4131,7 @@ export interface components {
             totalAmount: components["schemas"]["Money"];
             quoteFingerprint: string;
         };
-        OrderConflict: {
+        OrderConflict: components["schemas"]["Problem"] & {
             /** @enum {string} */
             code: "quote_changed" | "idempotency_conflict";
             quote?: components["schemas"]["Quote"] | null;
@@ -5031,7 +5107,7 @@ export interface components {
             userEmail: string;
             /** @description Controller name without `Admin`, for example `Categories`, `PageSeo`, `MediaFiles`. */
             area: string;
-            /** @description Action method name, for example `UpdateContent`. */
+            /** @description Operation: the endpoint name, for example `updateAdminCategoryContent`; an endpoint without one is named by its endpoint class, for example `ChangeAdminCategorySlug`. */
             operation: string;
             /** @enum {string} */
             method: "POST" | "PUT" | "PATCH" | "DELETE";
@@ -5069,6 +5145,67 @@ export interface components {
             /** @description The whole list in order; it replaces the saved one. */
             steps?: components["schemas"]["WorkTaskStep"][] | null;
         };
+        ScheduleInput: {
+            /** @enum {string} */
+            kind: "interval" | "daily" | "manual";
+            /** @description interval only */
+            everyMinutes?: number | null;
+            /** @description interval only; with toHour, the Kyiv hours the task runs in */
+            fromHour?: number | null;
+            toHour?: number | null;
+            /** @description daily only; Kyiv HH:mm */
+            times?: string[] | null;
+            /** @description daily only; ISO weekdays, 1 = Monday */
+            days?: number[] | null;
+        };
+        ScheduledTaskResponse: {
+            key: string;
+            name: string;
+            description: string;
+            /** @description false for the outbox, which runs every minute */
+            editable: boolean;
+            enabled: boolean;
+            schedule: components["schemas"]["ScheduleInput"];
+            /** Format: date-time */
+            nextRunAt?: string | null;
+            isRunning: boolean;
+            /** Format: date-time */
+            runningSince?: string | null;
+            /** Format: date-time */
+            runRequestedAt?: string | null;
+            /** Format: date-time */
+            lastSuccessAt?: string | null;
+            lastSuccessSummary?: string | null;
+            /** Format: date-time */
+            lastFailureAt?: string | null;
+            lastFailureReason?: string | null;
+            /** @description the last result was a failure */
+            lastRunFailed: boolean;
+            /** @description an enabled task missed its time by more than 15 minutes */
+            overdue: boolean;
+        };
+        ScheduledTaskRunResponse: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            trigger: "schedule" | "manual";
+            requestedBy?: string | null;
+            /** Format: date-time */
+            claimedAt: string;
+            /** Format: date-time */
+            startedAt?: string | null;
+            /** Format: date-time */
+            finishedAt?: string | null;
+            /** @enum {string} */
+            outcome: "running" | "succeeded" | "failed";
+            message?: string | null;
+        };
+        ScheduledTaskScheduleInput: {
+            enabled: boolean;
+            schedule: components["schemas"]["ScheduleInput"];
+            /** Format: date-time */
+            nextRunAt?: string | null;
+        };
     };
     responses: {
         /** @description Input validation failed. */
@@ -5077,7 +5214,7 @@ export interface components {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["ValidationErrors"];
+                "application/problem+json": components["schemas"]["ValidationProblem"];
             };
         };
         /** @description Input validation failed */
@@ -5086,36 +5223,16 @@ export interface components {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["ValidationErrors"];
+                "application/problem+json": components["schemas"]["ValidationProblem"];
             };
         };
-        /** @description Input validation failed */
+        /** @description Invalid request */
         "components-responses-ValidationError": {
             headers: {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                }[];
-            };
-        };
-        /** @description Input validation failed. */
-        "manager-order-read.openapi_components-responses-ValidationError": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["schemas-ValidationErrors"];
-            };
-        };
-        /** @description Invalid request */
-        "admin-order-one-c-sync.openapi_components-responses-ValidationError": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["Error"];
+                "application/problem+json": components["schemas"]["ValidationProblem"];
             };
         };
         /** @description Counterparty not found */
@@ -5124,7 +5241,7 @@ export interface components {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["Error"];
+                "application/problem+json": components["schemas"]["Problem"];
             };
         };
         /** @description Idempotency key reused with different data */
@@ -5133,16 +5250,7 @@ export interface components {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["Error"];
-            };
-        };
-        /** @description Input validation failed. */
-        "customer-read.openapi_components-responses-ValidationError": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["schemas-ValidationErrors"];
+                "application/problem+json": components["schemas"]["Problem"];
             };
         };
         /** @description Invalid input; each error names the field (`slug`, `texts`, `coverMediaFileId`, `file`…). */
@@ -5151,9 +5259,7 @@ export interface components {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/problem+json": components["schemas"]["ValidationProblem"];
             };
         };
         /** @description The whole gallery in site order. */
@@ -5238,6 +5344,7 @@ export interface components {
         From: string;
         /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
         To: string;
+        TaskKey: string;
     };
     requestBodies: never;
     headers: never;
@@ -5451,7 +5558,7 @@ export interface operations {
                     "application/json": components["schemas"]["PublicSiteModelList"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
         };
     };
     getPublicCategorySiteModels: {
@@ -5490,7 +5597,7 @@ export interface operations {
                     "application/json": components["schemas"]["PublicSiteModelList"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Unknown category, or an unknown attribute or value slug in `filter`. */
             404: {
                 headers: {
@@ -5521,6 +5628,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PublicSiteModel"];
                 };
+            };
+            /** @description Language is not uk or ru, or the slug is empty or longer than 200 characters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not a model. For a former model slug, or the slug of a product inside an accepted model, the body is the address to redirect to permanently; otherwise there is no body. */
             404: {
@@ -5554,6 +5668,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PublicSiteModelAddress"];
                 };
+            };
+            /** @description The slug is empty or longer than 200 characters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description The product is unknown, or not on the site. For a product off the site or deleted whose category is public the body names that category; otherwise there is no body. */
             404: {
@@ -6130,7 +6251,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroupMembership"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6178,7 +6299,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroupMembership"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6223,7 +6344,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroupListItem"][];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6262,7 +6383,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroup"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6299,7 +6420,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroup"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6347,7 +6468,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroup"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6395,7 +6516,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductGroup"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6443,7 +6564,7 @@ export interface operations {
                     "application/json": components["schemas"]["ChangeSlugResponse"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6493,7 +6614,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModelList"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6532,7 +6653,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModel"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6574,7 +6695,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteShowcaseList"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6681,7 +6802,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModelHealth"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6765,7 +6886,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModel"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6813,7 +6934,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModel"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6861,7 +6982,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModel"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6906,7 +7027,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModel"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -6955,7 +7076,7 @@ export interface operations {
                     "application/json": components["schemas"]["SiteModel"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7042,7 +7163,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductAttributes"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7091,7 +7212,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductAttributes"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7136,7 +7257,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminProductAttributes"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7316,7 +7437,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCatalogAttribute"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7353,7 +7474,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCatalogAttribute"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7401,7 +7522,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCatalogAttribute"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7449,7 +7570,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCatalogAttribute"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7498,7 +7619,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCatalogAttribute"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7547,7 +7668,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminAttributeSwatchUpload"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7636,7 +7757,7 @@ export interface operations {
                     "application/json": components["schemas"]["DecideAttributeCodeResponse"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7679,6 +7800,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AdminCodeProducts"];
                 };
+            };
+            /** @description The code id is below 1. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not signed in. */
             401: {
@@ -7757,7 +7885,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCategoryAttributeFilter"][];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7805,7 +7933,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminCategoryAttributeFilter"][];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
+            400: components["responses"]["responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7899,7 +8027,7 @@ export interface operations {
                     "application/json": components["schemas"]["ManagerOrderPage"];
                 };
             };
-            400: components["responses"]["manager-order-read.openapi_components-responses-ValidationError"];
+            400: components["responses"]["ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -7963,7 +8091,7 @@ export interface operations {
                     "application/json": components["schemas"]["CreateOrderResponse"];
                 };
             };
-            400: components["responses"]["admin-order-one-c-sync.openapi_components-responses-ValidationError"];
+            400: components["responses"]["components-responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -8002,7 +8130,7 @@ export interface operations {
                     "application/json": components["schemas"]["ManagerOrderDetail"];
                 };
             };
-            400: components["responses"]["manager-order-read.openapi_components-responses-ValidationError"];
+            400: components["responses"]["ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -8093,7 +8221,7 @@ export interface operations {
                     "application/json": components["schemas"]["RetryOrderSyncResponse"];
                 };
             };
-            400: components["responses"]["admin-order-one-c-sync.openapi_components-responses-ValidationError"];
+            400: components["responses"]["components-responses-ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -8276,7 +8404,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrderConflict"];
+                    "application/problem+json": components["schemas"]["OrderConflict"];
                 };
             };
         };
@@ -8742,7 +8870,7 @@ export interface operations {
                     "application/json": components["schemas"]["CustomerPage"];
                 };
             };
-            400: components["responses"]["customer-read.openapi_components-responses-ValidationError"];
+            400: components["responses"]["ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -8779,7 +8907,7 @@ export interface operations {
                     "application/json": components["schemas"]["CustomerDetail"];
                 };
             };
-            400: components["responses"]["customer-read.openapi_components-responses-ValidationError"];
+            400: components["responses"]["ValidationError"];
             /** @description Not signed in. */
             401: {
                 headers: {
@@ -8826,6 +8954,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SessionMeResponse"];
                 };
+            };
+            /** @description Email or password is empty or too long; ValidationProblem with Ukrainian messages */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Invalid credentials, locked or blocked account */
             401: {
@@ -8900,6 +9035,13 @@ export interface operations {
                     "application/json": components["schemas"]["MobileTokenResponse"];
                 };
             };
+            /** @description Email or password is empty or too long; ValidationProblem with Ukrainian messages */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Invalid credentials, locked or blocked account */
             401: {
                 headers: {
@@ -8940,6 +9082,13 @@ export interface operations {
                     "application/json": components["schemas"]["MobileTokenResponse"];
                 };
             };
+            /** @description Refresh token is empty or too long */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Unknown, expired, revoked, or already rotated refresh token */
             401: {
                 headers: {
@@ -8973,6 +9122,13 @@ export interface operations {
         responses: {
             /** @description Signed out */
             204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Refresh token is too long */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -13165,6 +13321,194 @@ export interface operations {
             };
             /** @description Not an Admin. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminScheduledTasks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduledTaskResponse"][];
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminScheduledTaskRuns: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: components["parameters"]["TaskKey"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduledTaskRunResponse"][];
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown task */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAdminScheduledTaskSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: components["parameters"]["TaskKey"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduledTaskScheduleInput"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduledTaskResponse"];
+                };
+            };
+            /** @description Invalid schedule, or nextRunAt in the past */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown task */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The task runs every minute and its schedule does not change */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    runAdminScheduledTaskNow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: components["parameters"]["TaskKey"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Requested */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduledTaskResponse"];
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not an administrator */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unknown task */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description «Задача вже виконується», «Запуск уже заплановано» or the task runs every minute */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

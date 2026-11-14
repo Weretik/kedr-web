@@ -22,3 +22,6 @@ export const canEditCatalog = (user: SessionUser): boolean =>
 export const canDeleteMedia = (user: SessionUser): boolean => user.roles.includes('Admin');
 /** Payment requisites are money: administrators only, as the backend policy RequireAdminRole. */
 export const canManageRequisites = (user: SessionUser): boolean => user.roles.includes('Admin');
+/** «Фонові задачі» start 1С imports and site jobs: administrators only, as RequireAdminRole. */
+export const canManageBackgroundTasks = (user: SessionUser): boolean =>
+  user.roles.includes('Admin');

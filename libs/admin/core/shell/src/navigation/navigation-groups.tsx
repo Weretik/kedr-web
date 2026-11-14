@@ -17,6 +17,7 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
@@ -116,6 +117,12 @@ export const navigationGroups: NavigationGroup[] = [
         icon: <AssessmentOutlinedIcon />,
         label: 'Звіт роботи',
         to: '/work-report',
+      },
+      {
+        access: 'admin',
+        icon: <ScheduleOutlinedIcon />,
+        label: 'Фонові задачі',
+        to: '/background-tasks',
       },
     ],
   },

@@ -42,6 +42,9 @@ describe('AdminNavigation by role', () => {
     expect(screen.getByRole('link', { name: 'Звіт роботи' }).getAttribute('href')).toBe(
       '/work-report',
     );
+    expect(screen.getByRole('link', { name: 'Фонові задачі' }).getAttribute('href')).toBe(
+      '/background-tasks',
+    );
   });
 
   it('gives every staff member «Мої задачі» but the work report only to an admin', () => {
@@ -56,6 +59,7 @@ describe('AdminNavigation by role', () => {
 
     expect(screen.queryByRole('link', { name: 'Користувачі' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Реквізити' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Фонові задачі' })).toBeNull();
     expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
   });
 
