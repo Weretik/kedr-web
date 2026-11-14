@@ -30,7 +30,14 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
       responses:
-        '200': { description: A page of model cards, content: { application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelList' } } } }
+        '200':
+          {
+            description: A page of model cards,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelList' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
   /api/catalog/{lang}/{categorySlug}/models:
     get:
@@ -64,9 +71,17 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
       responses:
-        '200': { description: A page of model cards, content: { application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelList' } } } }
+        '200':
+          {
+            description: A page of model cards,
+            content:
+              {
+                application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelList' } },
+              },
+          }
         '400': { $ref: '#/components/responses/ValidationError' }
-        '404': { description: 'Unknown category, or an unknown attribute or value slug in `filter`.' }
+        '404':
+          { description: 'Unknown category, or an unknown attribute or value slug in `filter`.' }
   /api/catalog/{lang}/model/{modelSlug}:
     get:
       operationId: getPublicSiteModel
@@ -81,12 +96,20 @@ paths:
         - $ref: '#/components/parameters/Lang'
         - { name: modelSlug, in: path, required: true, schema: { type: string } }
       responses:
-        '200': { description: The model, content: { application/json: { schema: { $ref: '#/components/schemas/PublicSiteModel' } } } }
+        '200':
+          {
+            description: The model,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/PublicSiteModel' } } },
+          }
         '404':
           description: >-
             Not a model. For a former model slug, or the slug of a product inside an accepted model, the body is the
             address to redirect to permanently; otherwise there is no body.
-          content: { application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelAddress' } } }
+          content:
+            {
+              application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelAddress' } },
+            }
   /api/catalog/{lang}/product/{productSlug}/model:
     get:
       operationId: getPublicProductModelAddress
@@ -100,7 +123,15 @@ paths:
         - $ref: '#/components/parameters/Lang'
         - { name: productSlug, in: path, required: true, schema: { type: string } }
       responses:
-        '200': { description: Model address, content: { application/json: { schema: { $ref: '#/components/schemas/PublicSiteModelAddress' } } } }
+        '200':
+          {
+            description: Model address,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/PublicSiteModelAddress' } },
+              },
+          }
         '404':
           description: >-
             The product is unknown, or not on the site. For a product off the site or deleted whose category is public
@@ -110,9 +141,17 @@ paths:
               schema: { $ref: './category-read.openapi.yaml#/components/schemas/CatalogRedirect' }
 components:
   parameters:
-    Lang: { name: lang, in: path, required: true, description: '`uk` or `ru`; anything else reads as `uk`.', schema: { type: string } }
+    Lang:
+      {
+        name: lang,
+        in: path,
+        required: true,
+        description: '`uk` or `ru`; anything else reads as `uk`.',
+        schema: { type: string },
+      }
     Search: { name: search, in: query, schema: { type: string, maxLength: 200 } }
-    InStock: { name: inStock, in: query, description: Only products in stock., schema: { type: boolean } }
+    InStock:
+      { name: inStock, in: query, description: Only products in stock., schema: { type: boolean } }
     IsSale: { name: isSale, in: query, schema: { type: boolean } }
     IsNew: { name: isNew, in: query, schema: { type: boolean } }
     PriceFrom: { name: priceFrom, in: query, schema: { type: number, minimum: 0 } }
@@ -121,17 +160,46 @@ components:
       name: sort
       in: query
       description: '`default` - in stock first, then by name.'
-      schema: { type: string, enum: [default, price_asc, price_desc, name_asc, new], default: default }
+      schema:
+        { type: string, enum: [default, price_asc, price_desc, name_asc, new], default: default }
     Page: { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
-    PageSize: { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 24 } }
+    PageSize:
+      {
+        name: pageSize,
+        in: query,
+        schema: { type: integer, minimum: 1, maximum: 100, default: 24 },
+      }
   responses:
-    ValidationError: { description: Input validation failed, content: { application/json: { schema: { type: array, items: { type: object, additionalProperties: true } } } } }
+    ValidationError:
+      {
+        description: Input validation failed,
+        content:
+          {
+            application/json:
+              { schema: { type: array, items: { type: object, additionalProperties: true } } },
+          },
+      }
   schemas:
     PublicSiteModelList:
       type: object
-      required: [categorySlug, isFinalCategory, page, pageSize, totalPages, totalRecords, items, filters, exactMatch]
+      required:
+        [
+          categorySlug,
+          isFinalCategory,
+          page,
+          pageSize,
+          totalPages,
+          totalRecords,
+          items,
+          filters,
+          exactMatch,
+        ]
       properties:
-        categorySlug: { type: [string, 'null'], description: The current slug of the category; null for the search. }
+        categorySlug:
+          {
+            type: [string, 'null'],
+            description: The current slug of the category; null for the search.,
+          }
         isFinalCategory: { type: boolean }
         page: { type: integer }
         pageSize: { type: integer }
@@ -139,23 +207,55 @@ components:
         totalRecords: { type: integer }
         items: { type: array, items: { $ref: '#/components/schemas/PublicSiteModelCard' } }
         filters: { type: array, items: { $ref: '#/components/schemas/PublicSiteModelFilter' } }
-        exactMatch: { oneOf: [{ $ref: '#/components/schemas/PublicSiteModelAddress' }, { type: 'null' }] }
+        exactMatch:
+          { oneOf: [{ $ref: '#/components/schemas/PublicSiteModelAddress' }, { type: 'null' }] }
     PublicSiteModelCard:
       type: object
-      required: [slug, name, categorySlug, photo, priceFrom, inStock, isSale, isNew, productCount, isAccepted, colors, productId]
+      required:
+        [
+          slug,
+          name,
+          categorySlug,
+          photo,
+          priceFrom,
+          inStock,
+          isSale,
+          isNew,
+          productCount,
+          isAccepted,
+          colors,
+          productId,
+        ]
       properties:
         slug: { type: string }
         name: { type: string }
         categorySlug: { type: string }
-        photo: { type: string, description: The main product's photo or the first product photo; empty when none. }
+        photo:
+          {
+            type: string,
+            description: The main product's photo or the first product photo; empty when none.,
+          }
         priceFrom: { type: [number, 'null'] }
         inStock: { type: boolean }
         isSale: { type: boolean }
         isNew: { type: boolean }
         productCount: { type: integer, description: On-site products of the model. }
-        isAccepted: { type: boolean, description: 'False for an on-site product shown as a model of its own.' }
-        colors: { type: array, description: Colors of the model's products when color is one of its axes., items: { $ref: '#/components/schemas/PublicSiteModelSwatch' } }
-        productId: { type: [integer, 'null'], description: 'The 1C code of the only on-site product of a one-product model, for adding it to the cart from the list; null for a model of several products.' }
+        isAccepted:
+          {
+            type: boolean,
+            description: 'False for an on-site product shown as a model of its own.',
+          }
+        colors:
+          {
+            type: array,
+            description: Colors of the model's products when color is one of its axes.,
+            items: { $ref: '#/components/schemas/PublicSiteModelSwatch' },
+          }
+        productId:
+          {
+            type: [integer, 'null'],
+            description: 'The 1C code of the only on-site product of a one-product model, for adding it to the cart from the list; null for a model of several products.',
+          }
     PublicSiteModelSwatch:
       type: object
       required: [slug, name, hex, textureUrl]
@@ -181,7 +281,11 @@ components:
         name: { type: string }
         hex: { type: [string, 'null'] }
         textureUrl: { type: [string, 'null'] }
-        count: { type: integer, description: "Models with this value added to the other attributes' choices." }
+        count:
+          {
+            type: integer,
+            description: "Models with this value added to the other attributes' choices.",
+          }
         selected: { type: boolean }
     PublicSiteModelAddress:
       type: object
@@ -189,21 +293,49 @@ components:
       properties:
         modelSlug: { type: string }
         categorySlug: { type: string }
-        selection: { type: object, description: Axis slug to value key., additionalProperties: { type: string } }
+        selection:
+          {
+            type: object,
+            description: Axis slug to value key.,
+            additionalProperties: { type: string },
+          }
     PublicSiteModel:
       type: object
-      required: [slug, name, isAccepted, category, breadcrumbs, texts, mainProductSlug, axes, products, characteristics]
+      required:
+        [
+          slug,
+          name,
+          isAccepted,
+          category,
+          breadcrumbs,
+          texts,
+          mainProductSlug,
+          axes,
+          products,
+          characteristics,
+        ]
       properties:
         slug: { type: string }
         name: { type: string }
         isAccepted: { type: boolean }
         category: { $ref: '#/components/schemas/PublicSiteModelCategory' }
-        breadcrumbs: { type: array, description: From the root to the model's category., items: { $ref: '#/components/schemas/PublicSiteModelCategory' } }
+        breadcrumbs:
+          {
+            type: array,
+            description: From the root to the model's category.,
+            items: { $ref: '#/components/schemas/PublicSiteModelCategory' },
+          }
         texts: { $ref: '#/components/schemas/PublicSiteModelText' }
         mainProductSlug: { type: [string, 'null'] }
         axes: { type: array, items: { $ref: '#/components/schemas/PublicSiteModelAxis' } }
-        products: { type: array, description: 'In stock first, then by name.', items: { $ref: '#/components/schemas/PublicSiteModelProduct' } }
-        characteristics: { type: array, items: { $ref: '#/components/schemas/PublicSiteModelCharacteristic' } }
+        products:
+          {
+            type: array,
+            description: 'In stock first, then by name.',
+            items: { $ref: '#/components/schemas/PublicSiteModelProduct' },
+          }
+        characteristics:
+          { type: array, items: { $ref: '#/components/schemas/PublicSiteModelCharacteristic' } }
     PublicSiteModelCategory:
       type: object
       required: [id, slug, name]
@@ -232,7 +364,11 @@ components:
       type: object
       required: [key, name, hex, textureUrl]
       properties:
-        key: { type: string, description: 'The value slug; several values of one product join with `_`; a number is its text.' }
+        key:
+          {
+            type: string,
+            description: 'The value slug; several values of one product join with `_`; a number is its text.',
+          }
         name: { type: string }
         hex: { type: [string, 'null'] }
         textureUrl: { type: [string, 'null'] }
@@ -249,7 +385,12 @@ components:
         isSale: { type: boolean }
         isNew: { type: boolean }
         isMain: { type: boolean }
-        selection: { type: object, description: Axis slug to value key., additionalProperties: { type: string } }
+        selection:
+          {
+            type: object,
+            description: Axis slug to value key.,
+            additionalProperties: { type: string },
+          }
     PublicSiteModelCharacteristic:
       type: object
       required: [code, name, values]

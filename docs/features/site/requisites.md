@@ -30,30 +30,39 @@ Core config владеет типом и запасными строками, mo
 ## Code structure
 
 ```text
-apps/site/src/app/[locale]/(content)/requisites/page.tsx  # thin async locale route/metadata
-libs/site/core/config/src/lib/company-requisites.ts     # type and code fallback
-libs/site/shared/company/src/lib/requisites/            # cached API read, mapper, cache tags
+apps/site/
+  src/app/[locale]/(content)/requisites/
+    page.tsx                           # thin async locale route/metadata
+libs/site/core/
+  config/src/lib/
+    company-requisites.ts              # type and code fallback
+libs/site/shared/
+  company/src/lib/requisites/
+                                       # cached API read, mapper, cache tags
 libs/site/content/
-├── model/src/lib/
-│   ├── requisites-types.ts                            # readonly presentation contracts
-│   ├── requisites-dictionary.ts                       # UK/RU interface labels
-│   └── requisites-copy.ts                             # exact six-line payload
-├── ui/src/lib/requisites/
-│   ├── requisites-content.tsx                         # server composition/layout
-│   ├── requisites-header.tsx                          # breadcrumbs/H1/anchors
-│   ├── requisites-administration.tsx                  # official data panel
-│   ├── requisites-bank.tsx                            # bank/IBAN and copy actions
-│   ├── requisites-payment.tsx                         # agreement before payment
-│   ├── requisites-support.tsx                         # support layout/composition
-│   ├── requisites-legal-links.tsx                     # legal navigation
-│   ├── requisites-contact-card.tsx                    # manager phone/call
-│   └── requisites-copy-button.tsx                     # only client leaf
-├── seo/src/lib/
-│   ├── requisites-metadata.ts                         # core metadata wrapper
-│   └── requisites-json-ld.ts                          # absolute two-item breadcrumbs
-└── feature/src/lib/
-    ├── requisites-page.tsx                            # config/model/UI/JSON-LD integration
-    └── content-sitemap.ts                             # one /requisites descriptor
+  feature/src/lib/requisites/
+    requisites-page.tsx                # config/model/UI/JSON-LD integration
+  feature/src/lib/sitemap/
+    content-sitemap.ts                 # one /requisites descriptor
+  model/src/lib/copy/requisites/
+    requisites-types.ts                # readonly presentation contracts
+    requisites-dictionary.ts           # UK/RU interface labels
+    requisites-copy.ts                 # exact six-line payload
+  seo/src/lib/json-ld/requisites/
+    requisites-json-ld.ts              # absolute two-item breadcrumbs
+  seo/src/lib/metadata/requisites/
+    requisites-metadata.ts             # core metadata wrapper
+  ui/src/lib/requisites/
+    requisites-content.tsx             # server composition/layout
+    requisites-header.tsx              # breadcrumbs/H1/anchors
+    requisites-copy-button.tsx         # only client leaf
+  ui/src/lib/requisites/sections/
+    requisites-administration.tsx      # official data panel
+    requisites-bank.tsx                # bank/IBAN and copy actions
+    requisites-payment.tsx             # agreement before payment
+    requisites-support.tsx             # support layout/composition
+    requisites-legal-links.tsx         # legal navigation
+    requisites-contact-card.tsx        # manager phone/call
 ```
 
 Public exports дополняют existing core/config и content libraries. Новых Nx projects, dependencies, aliases, shell API и global CSS нет. Длинный IBAN/имя переносимы; copy использует raw значения независимо от визуальных переносов.
@@ -62,10 +71,10 @@ Public exports дополняют existing core/config и content libraries. Н�
 
 Команды focused; это не обязательный full-suite пакет:
 
-- `site-content-model`: `npx nx run site-content-model:vite:test -- --run src/lib/requisites-copy.spec.ts` — порядок/точность payload, labels и immutable values.
+- `site-content-model`: `npx nx run site-content-model:vite:test -- --run src/lib/copy/requisites/requisites-copy.spec.ts` — порядок/точность payload, labels и immutable values.
 - `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/requisites/requisites-content.spec.tsx src/lib/requisites/requisites-copy-button.spec.tsx` — локали/семантика/назначения и controlled clipboard states.
-- `site-content-seo`: `npx nx run site-content-seo:vite:test -- --run src/lib/requisites-metadata.spec.ts src/lib/requisites-json-ld.spec.ts` — self canonical, alternates/indexing и breadcrumbs.
-- `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run src/lib/requisites-page.spec.tsx src/lib/content-sitemap.spec.ts` — server facts, реальный UI payload и sitemap registry.
+- `site-content-seo`: `npx nx run site-content-seo:vite:test -- --run src/lib/metadata/requisites/requisites-metadata.spec.ts src/lib/json-ld/requisites/requisites-json-ld.spec.ts` — self canonical, alternates/indexing и breadcrumbs.
+- `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run src/lib/requisites/requisites-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts` — server facts, реальный UI payload и sitemap registry.
 - `npx nx run site:typecheck` — Next route/type integration; фактический результат этого этапа использовал Nx cache.
 
 Получены 43 passing tests в последних узких прогонах, scoped lint pass и source review. [Точные результаты и пределы](../../specs/site/content/001-requisites/verification/seo-verification.md) различают unit/component/server evidence, source/type guards и незапущенные HTTP/browser/build проверки.

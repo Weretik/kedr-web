@@ -3,7 +3,7 @@ import { isValidProductSlug } from '@site/product/model';
 import { checkIndexPaging } from './product-index.mapper';
 
 import type { ApiSiteModelList } from '../contracts/product.dto';
-import type { ProductIndexPageResult } from '../crawling/product-index.types';
+import type { ProductIndexPageResult } from '../crawling/product-index-page';
 import type { ProductIndexItem } from '@site/product/model';
 
 /**

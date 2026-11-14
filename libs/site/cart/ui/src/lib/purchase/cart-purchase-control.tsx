@@ -7,7 +7,7 @@ import { CartQuantity } from '../cart/cart-quantity';
 import { getCartCopy } from '../i18n/cart-copy';
 import { cartMessage } from '../i18n/cart-messages';
 
-import type { CartPurchaseControlProps } from '../types/cart-ui-props';
+import type { CartPurchaseControlProps } from '../cart/cart-ui-props';
 
 export function CartPurchaseControl({
   locale,

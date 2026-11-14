@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { GalleryBrowser } from './gallery-browser';
 import { GalleryCard } from './gallery-card';
 import { GalleryHeader } from './gallery-header';
-import { MediaImage } from './media-image';
+import { MediaImage } from './media/media-image';
 
 import type { GalleryMedia } from '@site/content/model';
 import type { Locale } from '@site/core/i18n';

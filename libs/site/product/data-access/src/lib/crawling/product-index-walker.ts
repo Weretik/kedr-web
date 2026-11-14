@@ -1,4 +1,4 @@
-import type { ProductIndexPage, ProductIndexPageReader } from './product-index.types';
+import type { ProductIndexPage, ProductIndexPageReader } from './product-index-page';
 import type { ProductIndexItem, ProductIndexResult } from '@site/product/model';
 
 /** Finite operational budget: at most 100,000 source rows per locale at 100 rows/page. */

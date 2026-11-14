@@ -24,7 +24,12 @@ components:
       type: object
       required: [productsWithoutPhoto, topCategoryWithoutPhoto, categoriesWithoutText]
       properties:
-        productsWithoutPhoto: { type: integer, minimum: 0, description: 'Active products without a linked photo, as the admin «Без фото» tab lists them.' }
+        productsWithoutPhoto:
+          {
+            type: integer,
+            minimum: 0,
+            description: 'Active products without a linked photo, as the admin «Без фото» tab lists them.',
+          }
         topCategoryWithoutPhoto:
           description: The category with most of them; null when there are none.
           oneOf:

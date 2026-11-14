@@ -7,7 +7,7 @@ export { ReturnsContent } from './lib/returns/returns-content';
 export { ContactsContent } from './lib/contacts/contacts-content';
 export { ArticlesHeader } from './lib/articles/articles-header';
 export { ArticlesContent } from './lib/articles/articles-content';
-export { ArticlesLoading } from './lib/articles/articles-loading';
+export { ArticlesLoading } from './lib/articles/list/articles-loading';
 export { ArticleContent } from './lib/articles/article-content';
 export type { ArticleNextStepLinks } from './lib/articles/article-content';
 export { WholesaleContent } from './lib/wholesale/wholesale-content';

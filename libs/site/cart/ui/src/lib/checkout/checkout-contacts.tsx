@@ -6,7 +6,7 @@ import { useId } from 'react';
 import { getCartCopy } from '../i18n/cart-copy';
 import { fieldMessage } from '../i18n/cart-messages';
 
-import type { CheckoutViewProps } from '../types/cart-ui-props';
+import type { CheckoutViewProps } from '../cart/cart-ui-props';
 import type { CheckoutField } from '@site/cart/model';
 
 type CheckoutContactsProps = Pick<

@@ -33,40 +33,44 @@ Email/tel and same-language public-offer remain real links. Domain metadata dele
 ## Code structure
 
 ```text
-apps/site/src/app/[locale]/(content)/privacy-policy/page.tsx # thin async locale route
+apps/site/
+  src/app/[locale]/(content)/privacy-policy/
+    page.tsx                        # thin async locale route
 libs/site/content/
-├── model/src/lib/
-│   ├── privacy-types.ts                 # page chrome contract
-│   └── privacy-dictionary.ts            # summary/labels and contact bindings
-├── ui/src/lib/privacy/
-│   ├── privacy-content.tsx              # responsive composition
-│   ├── privacy-header.tsx               # breadcrumb/H1/intro
-│   ├── privacy-summary.tsx              # three summary terms
-│   ├── privacy-navigation.tsx           # native desktop/mobile TOC
-│   ├── privacy-policy.tsx               # complete semantic document
-│   ├── privacy-contact.tsx              # email CTA and related offer
-│   ├── privacy-content.module.css       # scoped fragment selection
-│   └── privacy-content.spec.tsx         # locales/HTML/anchors/contact
-├── seo/src/lib/
-│   ├── privacy-metadata.ts              # core metadata contract
-│   ├── privacy-metadata.spec.ts         # canonical/alternates/gates
-│   ├── privacy-json-ld.ts               # visible breadcrumb graph
-│   └── privacy-json-ld.spec.ts          # locale/configured origin
-└── feature/src/lib/
-    ├── privacy-page.tsx                 # configured server composition
-    ├── privacy-page.spec.tsx            # actual SSR + breadcrumb parity
-    ├── content-sitemap.ts               # existing list + privacy descriptor
-    └── content-sitemap.spec.ts          # privacy discovery + existing pages
+  feature/src/lib/privacy/
+    privacy-page.tsx                # configured server composition
+    privacy-page.spec.tsx           # actual SSR + breadcrumb parity
+  feature/src/lib/sitemap/
+    content-sitemap.ts              # existing list + privacy descriptor
+    content-sitemap.spec.ts         # privacy discovery + existing pages
+  model/src/lib/copy/privacy/
+    privacy-types.ts                # page chrome contract
+    privacy-dictionary.ts           # summary/labels and contact bindings
+  seo/src/lib/json-ld/privacy/
+    privacy-json-ld.ts              # visible breadcrumb graph
+    privacy-json-ld.spec.ts         # locale/configured origin
+  seo/src/lib/metadata/privacy/
+    privacy-metadata.ts             # core metadata contract
+    privacy-metadata.spec.ts        # canonical/alternates/gates
+  ui/src/lib/privacy/
+    privacy-content.tsx             # responsive composition
+    privacy-header.tsx              # breadcrumb/H1/intro
+    privacy-summary.tsx             # three summary terms
+    privacy-navigation.tsx          # native desktop/mobile TOC
+    privacy-policy.tsx              # complete semantic document
+    privacy-contact.tsx             # email CTA and related offer
+    privacy-content.module.css      # scoped fragment selection
+    privacy-content.spec.tsx        # locales/HTML/anchors/contact
 ```
 
 The four existing public index.ts files expose the feature. No new Nx project or alias was needed.
 
 ## Tests
 
-- **site-content-model:** `src/lib/documents/legal-document-html.spec.ts` — placeholders, sections, heading levels, dates.
+- **site-content-model:** `src/lib/mappers/legal-document-html.spec.ts` — placeholders, sections, heading levels, dates.
 - **site-content-ui:** node node_modules/vitest/vitest.mjs run --config libs/site/content/ui/vite.config.mts src/lib/privacy/privacy-content.spec.tsx — 12 tests, both locales, initial server HTML, summary, targets, disclosure and contact.
-- **site-content-seo:** node node_modules/vitest/vitest.mjs run --config libs/site/content/seo/vite.config.mts src/lib/privacy-metadata.spec.ts src/lib/privacy-json-ld.spec.ts — 12 tests, metadata and BreadcrumbList.
-- **site-content-feature:** node node_modules/vitest/vitest.mjs run --config libs/site/content/feature/vite.config.mts src/lib/privacy-page.spec.tsx src/lib/content-sitemap.spec.ts — 9 tests, actual SSR and additive sitemap regression.
+- **site-content-seo:** node node_modules/vitest/vitest.mjs run --config libs/site/content/seo/vite.config.mts src/lib/metadata/privacy/privacy-metadata.spec.ts src/lib/json-ld/privacy/privacy-json-ld.spec.ts — 12 tests, metadata and BreadcrumbList.
+- **site-content-feature:** node node_modules/vitest/vitest.mjs run --config libs/site/content/feature/vite.config.mts src/lib/privacy/privacy-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts — 9 tests, actual SSR and additive sitemap regression.
 - **site app boundary:** direct next typegen + tsc --noEmit -p tsconfig.json from apps/site — exit 0, exact body of site:typecheck. Nx worker wrapper failed before compilation; no project config workaround was committed.
 
 39 focused tests passed. Browser/HTTP/build were not run. Responsive/theme/sticky/hash wiring was reviewed from source; actual keyboard/history/visual behavior is not claimed as browser-verified. [Evidence and limits](../../specs/site/content/001-privacy-policy/verification/seo-verification.md).

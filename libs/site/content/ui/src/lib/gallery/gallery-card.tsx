@@ -1,7 +1,7 @@
 import { cn } from '@site/shared/ui';
 import { PlayIcon } from 'lucide-react';
 
-import { MediaImage } from './media-image';
+import { MediaImage } from './media/media-image';
 
 import type { GalleryDictionary, GalleryMedia } from '@site/content/model';
 import type { MouseEvent } from 'react';

@@ -76,8 +76,19 @@ components:
     SitePage:
       type: string
       enum:
-        [Home, Catalog, Wholesale, DeliveryPayment, ReturnsExchanges, Contacts, Gallery, Articles, Requisites,
-         PublicOffer, PrivacyPolicy]
+        [
+          Home,
+          Catalog,
+          Wholesale,
+          DeliveryPayment,
+          ReturnsExchanges,
+          Contacts,
+          Gallery,
+          Articles,
+          Requisites,
+          PublicOffer,
+          PrivacyPolicy,
+        ]
     PublicPageSeo:
       type: object
       required: [page, title, description]
@@ -94,7 +105,8 @@ components:
         titleRu: { type: [string, 'null'], maxLength: 120 }
         descriptionUk: { type: [string, 'null'], maxLength: 300 }
         descriptionRu: { type: [string, 'null'], maxLength: 300 }
-        updatedAt: { type: [string, 'null'], format: date-time, description: Null until the first save. }
+        updatedAt:
+          { type: [string, 'null'], format: date-time, description: Null until the first save. }
         updatedBy: { type: [string, 'null'], description: Who saved the last change. }
     SavePageSeoRequest:
       type: object

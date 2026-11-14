@@ -68,7 +68,10 @@ paths:
                 type: array
                 items: { $ref: '#/components/schemas/AdminCategory' }
         '401': { description: Not signed in. }
-        '403': { description: 'Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role.' }
+        '403':
+          {
+            description: 'Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role.',
+          }
   /api/categories/{id}:
     get:
       operationId: getAdminCategoryById
@@ -316,7 +319,12 @@ components:
         seoTitle: { type: [string, 'null'], maxLength: 70 }
         metaDescription: { type: [string, 'null'], maxLength: 160 }
         h1: { type: [string, 'null'], maxLength: 120 }
-        bodyHtml: { type: [string, 'null'], maxLength: 20000, description: Sanitized HTML; safe to render as is. }
+        bodyHtml:
+          {
+            type: [string, 'null'],
+            maxLength: 20000,
+            description: Sanitized HTML; safe to render as is.,
+          }
         faq:
           type: array
           maxItems: 20
@@ -360,7 +368,12 @@ components:
       properties:
         id: { type: integer, minimum: 1 }
         isShownOnSite: { type: boolean }
-        changedCount: { type: integer, minimum: 0, description: The category and its relatives whose mark changed. }
+        changedCount:
+          {
+            type: integer,
+            minimum: 0,
+            description: The category and its relatives whose mark changed.,
+          }
     ChangeSlugRequest:
       type: object
       properties:
@@ -383,7 +396,21 @@ components:
         previousSlug: { type: string }
     AdminCategory:
       type: object
-      required: [id, name, shortNameUk, shortNameRu, slug, productTypeIdOneC, parentId, sortOrder, level, isDeleted, deletedAt, isShownOnSite]
+      required:
+        [
+          id,
+          name,
+          shortNameUk,
+          shortNameRu,
+          slug,
+          productTypeIdOneC,
+          parentId,
+          sortOrder,
+          level,
+          isDeleted,
+          deletedAt,
+          isShownOnSite,
+        ]
       properties:
         id: { type: integer, minimum: 1 }
         name:
@@ -411,7 +438,11 @@ components:
         level: { type: integer, minimum: 0 }
         isDeleted: { type: boolean }
         deletedAt: { type: [string, 'null'], format: date-time }
-        isShownOnSite: { type: boolean, description: 'Shown on the site, in «Вітрина сайту», and in «Моделі» (R-18).' }
+        isShownOnSite:
+          {
+            type: boolean,
+            description: 'Shown on the site, in «Вітрина сайту», and in «Моделі» (R-18).',
+          }
         productCount:
           type: [integer, 'null']
           minimum: 0

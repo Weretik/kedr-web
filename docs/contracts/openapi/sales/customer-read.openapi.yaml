@@ -43,7 +43,12 @@ paths:
         - name: sort
           in: query
           required: false
-          schema: { type: string, enum: [name, '-name', counterpartyId, '-counterpartyId', phone, '-phone'], default: name }
+          schema:
+            {
+              type: string,
+              enum: [name, '-name', counterpartyId, '-counterpartyId', phone, '-phone'],
+              default: name,
+            }
       responses:
         '200':
           description: A filtered, sorted page of active Sales customers; totals are computed before paging.
@@ -100,7 +105,16 @@ components:
         phone: { type: [string, 'null'], maxLength: 50, example: '+380000000000' }
     CustomerDetail:
       type: object
-      required: [counterpartyId, name, phone, email, defaultPriceTypeId, defaultPriceTypeName, categoryPriceTypes]
+      required:
+        [
+          counterpartyId,
+          name,
+          phone,
+          email,
+          defaultPriceTypeId,
+          defaultPriceTypeName,
+          categoryPriceTypes,
+        ]
       properties:
         counterpartyId: { type: string, maxLength: 64, example: '000000000' }
         name: { type: string, maxLength: 300, example: Customer }

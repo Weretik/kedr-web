@@ -71,13 +71,13 @@ libs/site/cart/
 │   ├── contracts/                    # private aliases and response parser
 │   └── orders/create-quick-order.ts
 ├── ui/src/lib/
-│   ├── cart/                         # drawer, lines, notices, header button
+│   ├── cart/                         # drawer, lines, notices, header button, view props
 │   ├── checkout/                     # form, totals, confirmation, container CSS
 │   ├── purchase/cart-purchase-control.tsx
 │   └── i18n/cart-copy.ts
 ├── seo/src/lib/checkout-metadata.ts
 └── feature/src/lib/
-    ├── state/cart-client-store.ts
+    ├── state/cart-client-store.ts    # cart store; snapshot types and result changes in cart-snapshot.ts
     ├── state/browser-cart-store.ts
     ├── platform/cart-drawer-focus.ts # DOM visibility/geometry/focus
     ├── storage/cart-storage.ts

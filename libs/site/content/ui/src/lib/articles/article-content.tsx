@@ -3,7 +3,7 @@ import { localizedPath } from '@site/core/i18n';
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import { ArticleCover } from './article-cover';
+import { ArticleCover } from './list/article-cover';
 
 import type { Article } from '@site/content/model';
 import type { Locale } from '@site/core/i18n';

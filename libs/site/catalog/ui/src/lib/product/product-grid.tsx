@@ -1,4 +1,4 @@
-import { ProductCard } from './product-card';
+import { ProductCard } from './card/product-card';
 
 import type { ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';

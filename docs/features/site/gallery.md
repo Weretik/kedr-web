@@ -31,16 +31,17 @@ libs/site/content/data-access/src/lib/gallery/
   gallery-cache.ts     cache tags and lifetimes
 libs/site/content/ui/src/lib/gallery/
   gallery-header.tsx   server-compatible breadcrumb/H1
-  gallery-browser.tsx  filter/portion/selection session
+  gallery-browser.tsx  fresh collection per locale and content
+  collection/          gallery-collection.tsx, use-gallery-collection.ts (filter/portion/selection), gallery-empty.tsx
   gallery-filters.tsx  format controls
   gallery-grid.tsx     featured/regular composition
   gallery-card.tsx     native href and enhanced activation
-  media-image.tsx      loading/error/retry
-  media-viewer.tsx     dialog/navigation/focus return
-  video-frame.tsx      provider/lifecycle/recovery
-libs/site/content/seo/src/lib/gallery-{metadata,json-ld}.ts
-libs/site/content/feature/src/lib/gallery-page.tsx     server composition/noscript/JSON-LD
-libs/site/content/feature/src/lib/content-sitemap.ts   existing descriptors + gallery
+  media/media-image.tsx      loading/error/retry
+  media/media-viewer.tsx     dialog/navigation/focus return
+  media/video-frame.tsx      provider/lifecycle/recovery
+libs/site/content/seo/src/lib/{metadata,json-ld}/gallery/gallery-{metadata,json-ld}.ts
+libs/site/content/feature/src/lib/gallery/gallery-page.tsx     server composition/noscript/JSON-LD
+libs/site/content/feature/src/lib/sitemap/content-sitemap.ts   existing descriptors + gallery
 libs/site/shared/ui/src/lib/dialog.tsx                 Radix primitive
 ```
 
@@ -51,11 +52,11 @@ UI never imports data-access, SEO remains core-only. Cross-library imports use p
 Select commands by affected risk, not as a mandatory bundle. The API loader and mapper: `npx nx run site-content-data-access:vite:test -- --run`.
 
 ```text
-node node_modules/vitest/vitest.mjs run --config libs/site/content/model/vite.config.mts src/lib/gallery/gallery.spec.ts
+node node_modules/vitest/vitest.mjs run --config libs/site/content/model/vite.config.mts src/lib/queries/gallery.spec.ts
 node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/data-access/vite.config.mts src/lib/gallery/gallery-loader.spec.ts
-node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/ui/vite.config.mts src/lib/gallery/gallery-browser.spec.tsx src/lib/gallery/media-viewer.spec.tsx
-node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --environment=node --maxWorkers=1 --no-file-parallelism --config libs/site/content/seo/vite.config.mts src/lib/gallery-metadata.spec.ts src/lib/gallery-json-ld.spec.ts
-node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/feature/vite.config.mts src/lib/gallery-page.spec.tsx src/lib/content-sitemap.spec.ts
+node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/ui/vite.config.mts src/lib/gallery/gallery-browser.spec.tsx src/lib/gallery/media/media-viewer.spec.tsx
+node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --environment=node --maxWorkers=1 --no-file-parallelism --config libs/site/content/seo/vite.config.mts src/lib/metadata/gallery/gallery-metadata.spec.ts src/lib/json-ld/gallery/gallery-json-ld.spec.ts
+node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/feature/vite.config.mts src/lib/gallery/gallery-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts
 node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/shared/ui/vite.config.mts src/lib/dialog.spec.tsx
 ```
 

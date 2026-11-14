@@ -1,6 +1,6 @@
 # Site shell
 
-**Entry point:** [locale layout](../../../apps/site/src/app/[locale]/layout.tsx) wraps every `/uk` and `/ru` page in [SiteShell](../../../libs/site/core/shell/src/lib/site-shell.tsx). The home page is described in [Site home page](home.md).
+**Entry point:** [locale layout](../../../apps/site/src/app/[locale]/layout.tsx) wraps every `/uk` and `/ru` page in [SiteShell](../../../libs/site/core/shell/src/lib/layout/site-shell.tsx). The home page is described in [Site home page](home.md).
 
 - **Header:** top bar (city on the left, information pages centered against the full header, UA/RU and an uncaptioned sun/moon theme switch on the right; centered second-row links below xl), main bar (logo, «Каталог» mega menu from the [catalog](catalog.md) or the fixed dropdown, search form to `/{locale}/search?q=`, phone copy with Telegram/Viber/map, a call button below xl, and the cart), category bar (sections, cooperation), mobile sheet menu. There is no regions menu and no cabinet or login link until those features exist (owner decision 2026-11-04); old `/{locale}/region/*` addresses redirect permanently to `/{locale}/wholesale`, and the old `/{locale}/login` and `/{locale}/cabinet/*` to the localized home. On desktop only the category bar stays on screen while scrolling ([collapsing-header.tsx](../../../libs/site/core/shell/src/lib/header/collapsing-header.tsx)); once the upper rows are gone, search and cart icons fade in, and the search icon opens the search form under the bar. Phones keep the whole header. The category row and phone menu list the live sections passed as `catalogNavigation`, else the fixed sections from [site-navigation.ts](../../../libs/site/core/shell/src/lib/navigation/site-navigation.ts); text from the [shell dictionary](../../../libs/site/core/shell/src/lib/i18n/shell-dictionary.ts).
 - **Footer:** catalog (the same live sections as the header, else the fixed fallback), company, and buyer links; phone, email, city, messengers. In the top bar, mobile menu and footer, the company link targets `/{locale}#about-company` on the home page. Former `/{locale}/about-company` URLs redirect permanently to the localized home.
@@ -37,7 +37,7 @@ apps/site/src/app/
 └── global.css, fonts.ts  # design tokens, Onest and JetBrains Mono
 
 libs/site/core/shell/src/lib/
-├── site-shell.tsx  # frame
+├── layout/site-shell.tsx  # frame
 ├── header/  # site-header, collapsing sticky header, search form, call and cart actions, compact actions
 │   ├── bars/  # top, main, and category rows
 │   └── menus/  # details dropdown, catalog menu, mobile sheet

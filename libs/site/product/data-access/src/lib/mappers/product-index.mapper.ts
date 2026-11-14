@@ -1,7 +1,7 @@
 import { mapProductIdentity } from './product-identity';
 
 import type { ApiProductPage } from '../contracts/product.dto';
-import type { ProductIndexPageResult } from '../crawling/product-index.types';
+import type { ProductIndexPageResult } from '../crawling/product-index-page';
 
 type IndexPaging = { page: number; pageSize: number; totalPages: number; totalRecords: number };
 

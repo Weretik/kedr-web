@@ -14,13 +14,42 @@ paths:
       parameters:
         - { name: searchTerm, in: query, schema: { type: string, maxLength: 100 } }
         - { name: counterpartyId, in: query, schema: { type: string, maxLength: 64 } }
-        - { name: createdFrom, in: query, description: Inclusive calendar date in Europe/Kyiv., schema: { type: string, format: date } }
-        - { name: createdTo, in: query, description: Inclusive calendar date in Europe/Kyiv., schema: { type: string, format: date } }
+        - {
+            name: createdFrom,
+            in: query,
+            description: Inclusive calendar date in Europe/Kyiv.,
+            schema: { type: string, format: date },
+          }
+        - {
+            name: createdTo,
+            in: query,
+            description: Inclusive calendar date in Europe/Kyiv.,
+            schema: { type: string, format: date },
+          }
         - name: sort
           in: query
-          schema: { type: string, enum: [createdAt, '-createdAt', orderNumber, '-orderNumber', customerName, '-customerName', totalAmount, '-totalAmount'], default: '-createdAt' }
+          schema:
+            {
+              type: string,
+              enum:
+                [
+                  createdAt,
+                  '-createdAt',
+                  orderNumber,
+                  '-orderNumber',
+                  customerName,
+                  '-customerName',
+                  totalAmount,
+                  '-totalAmount',
+                ],
+              default: '-createdAt',
+            }
         - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
-        - { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - {
+            name: pageSize,
+            in: query,
+            schema: { type: integer, minimum: 1, maximum: 100, default: 20 },
+          }
       responses:
         '200':
           description: Filtered page; totalRecords is computed before paging.
@@ -55,7 +84,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/CreateOrderResponse' }
-        '400': { description: "Invalid lines, customer, price or request." }
+        '400': { description: 'Invalid lines, customer, price or request.' }
         '404': { description: Selected customer or product does not exist. }
         '409':
           description: Quote changed or idempotency key reused with different request.
@@ -136,7 +165,10 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/CustomerPrices' }
-        '400': { description: Missing customer or 1-100 valid product IDs not supplied (code invalid_products). }
+        '400':
+          {
+            description: Missing customer or 1-100 valid product IDs not supplied (code invalid_products).,
+          }
         '404': { description: Selected customer does not exist. }
         '401': { description: Not signed in. }
         '403': { description: 'Signed in without the Manager, Seo, or Admin role.' }
@@ -165,7 +197,18 @@ components:
         value: { type: array, items: { $ref: '#/components/schemas/OrderListItem' } }
     OrderListItem:
       type: object
-      required: [orderId, orderNumber, counterpartyId, counterpartyName, createdAtUtc, lineCount, totalAmount, syncStatus, adjustmentAmount]
+      required:
+        [
+          orderId,
+          orderNumber,
+          counterpartyId,
+          counterpartyName,
+          createdAtUtc,
+          lineCount,
+          totalAmount,
+          syncStatus,
+          adjustmentAmount,
+        ]
       properties:
         orderId: { type: integer, format: int64, minimum: 1 }
         orderNumber: { type: string, maxLength: 64 }
@@ -181,7 +224,17 @@ components:
           description: Sum of discounts (negative) and markups (positive) over all units; 0 when none.
     OrderDetail:
       type: object
-      required: [orderId, orderNumber, counterpartyId, counterpartyName, createdAtUtc, lines, totalAmount, syncStatus]
+      required:
+        [
+          orderId,
+          orderNumber,
+          counterpartyId,
+          counterpartyName,
+          createdAtUtc,
+          lines,
+          totalAmount,
+          syncStatus,
+        ]
       properties:
         orderId: { type: integer, format: int64, minimum: 1 }
         orderNumber: { type: string, maxLength: 64 }
@@ -216,10 +269,17 @@ components:
       required: [counterpartyId, lines]
       properties:
         counterpartyId: { type: string, minLength: 1, maxLength: 64 }
-        lines: { type: array, minItems: 1, maxItems: 100, items: { $ref: '#/components/schemas/InputLine' } }
+        lines:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 100,
+            items: { $ref: '#/components/schemas/InputLine' },
+          }
     QuoteLine:
       type: object
-      required: [productId, productName, quantity, unitPrice, lineAmount, baseUnitPrice, priceAdjustment]
+      required:
+        [productId, productName, quantity, unitPrice, lineAmount, baseUnitPrice, priceAdjustment]
       properties:
         productId: { type: string, maxLength: 64 }
         productName: { type: string, maxLength: 512 }
@@ -266,7 +326,13 @@ components:
       required: [counterpartyId, productIds]
       properties:
         counterpartyId: { type: string, minLength: 1, maxLength: 64 }
-        productIds: { type: array, minItems: 1, maxItems: 100, items: { type: string, minLength: 1, maxLength: 10 } }
+        productIds:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 100,
+            items: { type: string, minLength: 1, maxLength: 10 },
+          }
     CustomerPrices:
       type: object
       required: [counterpartyId, prices]

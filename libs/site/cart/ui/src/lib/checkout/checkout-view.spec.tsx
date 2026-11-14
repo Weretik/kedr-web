@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { CheckoutHeading } from './checkout-heading';
 import { CheckoutLoading } from './checkout-loading';
 import { CheckoutView } from './checkout-view';
-import { checkoutFixture } from '../test/cart.fixture';
+import { checkoutFixture } from '../testing/cart.fixture';
 
 vi.mock('next/image', () => ({
   default: ({ src, alt, onError }: { src: string; alt: string; onError?: () => void }) => (

@@ -1,8 +1,8 @@
-import { ContactsChannels } from './contacts-channels';
 import { ContactsHeader } from './contacts-header';
-import { ContactsHelp } from './contacts-help';
-import { ContactsLocation } from './contacts-location';
-import { ContactsWholesale } from './contacts-wholesale';
+import { ContactsChannels } from './sections/contacts-channels';
+import { ContactsHelp } from './sections/contacts-help';
+import { ContactsLocation } from './sections/contacts-location';
+import { ContactsWholesale } from './sections/contacts-wholesale';
 
 import type { ContactsDetails, ContactsDictionary } from '@site/content/model';
 

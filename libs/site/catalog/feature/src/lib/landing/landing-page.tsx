@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 
 import { categoryChips } from '../category/category-chips';
 import { categoryCrumbs } from '../category/category-crumbs';
-import { loadBaseListing, loadCategoryOrRespond } from '../category/category-page';
+import { loadBaseListing, loadCategoryOrRespond } from '../category/category-loading';
 import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 

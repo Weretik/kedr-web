@@ -1,6 +1,6 @@
 # Site application and routing
 
-**Baseline checked:** 2026-10-30. **Sources:** `apps/site/src/app/**`, `apps/site/src/proxy.ts`, `apps/site/next.config.ts`, `libs/site/core/shell/src/lib/site-shell.tsx`.
+**Baseline checked:** 2026-10-30. **Sources:** `apps/site/src/app/**`, `apps/site/src/proxy.ts`, `apps/site/next.config.ts`, `libs/site/core/shell/src/lib/layout/site-shell.tsx`.
 **Cart update:** source and focused automated verification on 2026-11-04; build, HTTP, browser and live-order checks were not run for this change.
 
 ## Composition point

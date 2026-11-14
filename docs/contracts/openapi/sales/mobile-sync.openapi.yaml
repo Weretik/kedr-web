@@ -38,14 +38,16 @@ components:
       type: object
       required: [version, generatedAt, customers]
       properties:
-        version: { type: string, description: 'Hash of the content, equal to the ETag without quotes.' }
+        version:
+          { type: string, description: 'Hash of the content, equal to the ETag without quotes.' }
         generatedAt: { type: string, format: date-time }
         customers:
           type: array
           items: { $ref: '#/components/schemas/CustomerSnapshot' }
     CustomerSnapshot:
       type: object
-      required: [counterpartyId, name, phone, email, defaultPriceTypeId, categoryPriceTypes, debt, balance]
+      required:
+        [counterpartyId, name, phone, email, defaultPriceTypeId, categoryPriceTypes, debt, balance]
       properties:
         counterpartyId: { type: string }
         name: { type: string }

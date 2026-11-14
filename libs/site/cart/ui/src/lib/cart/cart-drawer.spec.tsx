@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { useRef, useState } from 'react';
 
 import { CartDrawer } from './cart-drawer';
-import { basketFixture } from '../test/cart.fixture';
+import { basketFixture } from '../testing/cart.fixture';
 
 vi.mock('next/image', () => ({
   default: ({ src, alt, onError }: { src: string; alt: string; onError?: () => void }) => (

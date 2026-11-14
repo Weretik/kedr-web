@@ -18,9 +18,15 @@ paths:
           schema: { type: string, maxLength: 100 }
       requestBody:
         required: false
-        content: { application/json: { schema: { $ref: '#/components/schemas/CatalogProductsRequest' } } }
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/CatalogProductsRequest' } } }
       responses:
-        '200': { description: Product page for current user, content: { application/json: { schema: { $ref: '#/components/schemas/SalesCatalogPage' } } } }
+        '200':
+          {
+            description: Product page for current user,
+            content:
+              { application/json: { schema: { $ref: '#/components/schemas/SalesCatalogPage' } } },
+          }
         '400': { description: Input validation failed }
         '401': { description: Missing or invalid access token }
         '403': { description: Authenticated user is forbidden }

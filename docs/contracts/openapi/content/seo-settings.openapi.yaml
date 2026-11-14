@@ -56,7 +56,10 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/AdminSiteSeoSettings' }
-        '400': { description: 'An id or code of another shape, or a picture not in the media library; `errors` names the field.' }
+        '400':
+          {
+            description: 'An id or code of another shape, or a picture not in the media library; `errors` names the field.',
+          }
         '401': { description: Not signed in. }
         '403': { description: 'Not a Manager, Seo, or Admin.' }
         '404': { description: The settings row is missing. }
@@ -71,10 +74,19 @@ components:
         height: { type: [integer, 'null'] }
     SiteSeoSettings:
       type: object
-      required: [googleAnalyticsId, googleTagManagerId, googleSiteVerification, bingSiteVerification, shareImage]
+      required:
+        [
+          googleAnalyticsId,
+          googleTagManagerId,
+          googleSiteVerification,
+          bingSiteVerification,
+          shareImage,
+        ]
       properties:
-        googleAnalyticsId: { type: [string, 'null'], pattern: '^G-[A-Z0-9]{4,15}$', example: G-AB12CD34EF }
-        googleTagManagerId: { type: [string, 'null'], pattern: '^GTM-[A-Z0-9]{4,12}$', example: GTM-AB12CD3 }
+        googleAnalyticsId:
+          { type: [string, 'null'], pattern: '^G-[A-Z0-9]{4,15}$', example: G-AB12CD34EF }
+        googleTagManagerId:
+          { type: [string, 'null'], pattern: '^GTM-[A-Z0-9]{4,12}$', example: GTM-AB12CD3 }
         googleSiteVerification: { type: [string, 'null'], pattern: '^[A-Za-z0-9_-]{8,100}$' }
         bingSiteVerification: { type: [string, 'null'], pattern: '^[A-Za-z0-9_-]{8,100}$' }
         shareImage:
@@ -95,8 +107,15 @@ components:
     AdminSiteSeoSettings:
       type: object
       required:
-        [googleAnalyticsId, googleTagManagerId, googleSiteVerification, bingSiteVerification, shareImage, updatedAt,
-         updatedBy]
+        [
+          googleAnalyticsId,
+          googleTagManagerId,
+          googleSiteVerification,
+          bingSiteVerification,
+          shareImage,
+          updatedAt,
+          updatedBy,
+        ]
       properties:
         googleAnalyticsId: { type: [string, 'null'] }
         googleTagManagerId: { type: [string, 'null'] }
@@ -107,12 +126,18 @@ components:
             - $ref: '#/components/schemas/AdminSiteShareImage'
             - type: 'null'
         updatedAt: { type: string, format: date-time }
-        updatedBy: { type: [string, 'null'], description: Who saved the last change; null for the migration row. }
+        updatedBy:
+          {
+            type: [string, 'null'],
+            description: Who saved the last change; null for the migration row.,
+          }
     SaveSiteSeoSettingsRequest:
       type: object
       properties:
         googleAnalyticsId: { type: [string, 'null'], maxLength: 20 }
         googleTagManagerId: { type: [string, 'null'], maxLength: 20 }
-        googleSiteVerification: { type: [string, 'null'], maxLength: 300, description: The code or the whole meta tag. }
-        bingSiteVerification: { type: [string, 'null'], maxLength: 300, description: The code or the whole meta tag. }
+        googleSiteVerification:
+          { type: [string, 'null'], maxLength: 300, description: The code or the whole meta tag. }
+        bingSiteVerification:
+          { type: [string, 'null'], maxLength: 300, description: The code or the whole meta tag. }
         shareImageMediaFileId: { type: [integer, 'null'], format: int64, minimum: 1 }
