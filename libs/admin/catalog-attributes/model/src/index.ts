@@ -60,3 +60,4 @@ export {
   checkAttributeValue,
 } from './forms/attribute-forms';
 export { codeMeaningsText } from './mappers/code-meanings-text';
+export { searchAttributeValues } from './mappers/attribute-value-search';
