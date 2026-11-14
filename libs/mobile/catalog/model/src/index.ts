@@ -28,3 +28,8 @@ export {
   type ProductFilter,
   type ProductSort,
 } from './queries/product-search';
+export {
+  nextProductSort,
+  productListSummary,
+  productSortLabels,
+} from './queries/product-sort-labels';
