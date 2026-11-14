@@ -1,7 +1,11 @@
-import type { AdminCategoryDto } from '../contracts/admin-categories.contract';
+import { z } from 'zod';
+
+import { adminCategorySchema } from '../validators/admin-category.schemas';
+
 import type { AdminCategory } from '@admin/categories/model';
 
-export function mapAdminCategory(dto: AdminCategoryDto): AdminCategory {
+export function mapAdminCategory(data: unknown): AdminCategory {
+  const dto = adminCategorySchema.parse(data);
   return {
     id: dto.id,
     nameUk: dto.shortNameUk.trim() || dto.name,
@@ -22,5 +26,5 @@ export function mapAdminCategory(dto: AdminCategoryDto): AdminCategory {
   };
 }
 
-export const mapAdminCategories = (response: AdminCategoryDto[]): AdminCategory[] =>
-  response.map(mapAdminCategory);
+export const mapAdminCategories = (data: unknown): AdminCategory[] =>
+  z.array(z.unknown()).parse(data).map(mapAdminCategory);
