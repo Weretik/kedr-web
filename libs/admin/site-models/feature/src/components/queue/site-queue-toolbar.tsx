@@ -3,7 +3,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Button, InputAdornment, Stack, TextField } from '@mui/material';
 
-import type { useSiteModelsQueue } from '../../hooks/queue/use-site-models-queue';
+import type { useSiteModelsQueue } from '../../hooks/use-site-models-queue';
 
 interface SiteQueueToolbarProps {
   queue: ReturnType<typeof useSiteModelsQueue>;
@@ -14,12 +14,7 @@ interface SiteQueueToolbarProps {
 export function SiteQueueToolbar({ onHelp, queue }: SiteQueueToolbarProps) {
   const { categories, counts, search, setSearch, state, update } = queue;
   return (
-    <Stack
-      direction="row"
-      spacing={1.5}
-      sx={{ alignItems: 'center', flexWrap: 'wrap' }}
-      useFlexGap
-    >
+    <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', flexWrap: 'wrap' }} useFlexGap>
       <SiteCategoryPicker
         categories={categories.data ?? []}
         loading={categories.isLoading}

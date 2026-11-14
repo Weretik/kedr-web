@@ -1,6 +1,6 @@
-import { catalogAttention } from './attention/catalog-attention';
-import { contentAttention } from './attention/content-attention';
-import { orderAttention } from './attention/order-attention';
+import { catalogAttention } from './catalog-attention';
+import { contentAttention } from './content-attention';
+import { orderAttention } from './order-attention';
 
 import type { AttentionItem, AttentionSources } from '../entities/attention-item';
 

@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 import { ChangeConfirmationDialog } from '../components/change-confirmation-dialog';
 import { SuccessSnackbar } from '../components/success-snackbar';
-import { useProfileActions } from '../hooks/use-profile-actions';
+import { useProfileActions } from '../hooks/profile/use-profile-actions';
 
 interface ProfilePageProps {
   /** Re-reads the session so the header shows the change. */

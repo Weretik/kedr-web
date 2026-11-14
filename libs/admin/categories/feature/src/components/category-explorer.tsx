@@ -10,8 +10,8 @@ import { Box, Typography } from '@mui/material';
 import { useRef, useState } from 'react';
 
 import { CategoryEditPanel } from './category-edit-panel';
-import { useCategorySiteVisibility } from '../hooks/explorer/use-category-site-visibility';
-import { useCategoryTreeView } from '../hooks/explorer/use-category-tree-view';
+import { useCategorySiteVisibility } from '../hooks/use-category-site-visibility';
+import { useCategoryTreeView } from '../hooks/use-category-tree-view';
 
 import type { AdminCategory } from '@admin/categories/model';
 

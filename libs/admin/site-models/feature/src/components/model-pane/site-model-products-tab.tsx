@@ -10,7 +10,7 @@ import { Box } from '@mui/material';
 import { useAxisValueOptions } from '../../hooks/use-axis-value-options';
 
 import type { useSiteModelEditor } from '../../hooks/use-site-model-editor';
-import type { EditedSiteProduct } from '../product-attributes-panel';
+import type { EditedSiteProduct } from '../product-pane/product-attributes-panel';
 import type { SiteModel, SiteShowcaseRow } from '@admin/site-models/model';
 
 interface SiteModelProductsTabProps {
