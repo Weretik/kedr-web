@@ -3,4 +3,4 @@ export {
   toOrderDetail,
   type OrderDetail,
   type OrderDetailLine,
-} from './detail/order-detail';
+} from './entities/order-detail';

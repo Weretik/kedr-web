@@ -1,7 +1,7 @@
-import { motion } from './motion';
-import { darkColors, lightColors, type ColorRoles } from './palette';
-import { radius, sizes, space } from './shape';
-import { typeScale } from './typography';
+import { motion } from './tokens/motion';
+import { darkColors, lightColors, type ColorRoles } from './tokens/palette';
+import { radius, sizes, space } from './tokens/shape';
+import { typeScale } from './tokens/typography';
 
 const createTheme = (colors: ColorRoles) => ({
   colors,

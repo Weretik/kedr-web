@@ -2,8 +2,8 @@ import { createContext, use, useMemo, type ReactNode } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { SafeAreaInsetsContext, type EdgeInsets } from 'react-native-safe-area-context';
 
-import { breakpointFor, type Breakpoint } from './breakpoints';
 import { darkTheme, lightTheme, type AppTheme, type ThemeName } from './themes';
+import { breakpointFor, type Breakpoint } from './tokens/breakpoints';
 
 /** What a style sheet can depend on besides the theme. */
 export interface AppRuntime {

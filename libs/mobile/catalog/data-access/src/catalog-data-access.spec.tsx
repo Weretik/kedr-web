@@ -14,16 +14,13 @@ import { createTestLocalDatabase } from '@mobile/core/local-db/testing';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { eq } from 'drizzle-orm';
 
-import { usePricedProducts } from './hooks/use-catalog';
-import { useAllPhotosDownload, useEssentialPhotoDownload } from './hooks/use-photo-downloads';
-import { downloadImages, type ImageCacheDriver } from './media/image-cache';
-import { usePhotoDownloadStore } from './media/photo-download-store';
-import {
-  readCustomerPricing,
-  readLineProducts,
-  readPricedProduct,
-  readPricedProducts,
-} from './queries/catalog-queries';
+import { downloadImages, type ImageCacheDriver } from './cache/image-cache';
+import { useAllPhotosDownload, useEssentialPhotoDownload } from './cache/use-photo-downloads';
+import { readPricedProduct, readPricedProducts } from './local/catalog-queries';
+import { readCustomerPricing } from './local/customer-pricing-queries';
+import { readLineProducts } from './local/line-product-queries';
+import { usePricedProducts } from './local/use-catalog';
+import { usePhotoDownloadStore } from './store/photo-download-store';
 
 import type { ReactNode } from 'react';
 

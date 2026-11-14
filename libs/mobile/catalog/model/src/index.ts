@@ -1,4 +1,4 @@
-export { categoryPath, childrenOf, parentsOf, withDescendants } from './categories/category-tree';
+export { categoryPath, childrenOf, parentsOf, withDescendants } from './mappers/category-tree';
 export {
   canAdd,
   formatStock,
@@ -12,13 +12,13 @@ export {
   essentialImageUrls,
   productImages,
   type ProductImage,
-} from './media/product-images';
+} from './mappers/product-images';
 export {
   resolvePriceKopecks,
   resolvePriceTypeId,
   type CategoryParents,
   type CustomerPricing,
-} from './pricing/customer-price';
+} from './mappers/customer-price';
 export {
   filterProducts,
   matchesProduct,
@@ -27,4 +27,9 @@ export {
   sortProducts,
   type ProductFilter,
   type ProductSort,
-} from './search/product-search';
+} from './queries/product-search';
+export {
+  nextProductSort,
+  productListSummary,
+  productSortLabels,
+} from './queries/product-sort-labels';

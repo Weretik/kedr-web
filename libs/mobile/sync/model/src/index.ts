@@ -1,6 +1,6 @@
-export { catalogSnapshotSchema, type CatalogSnapshot } from './snapshots/catalog-snapshot';
-export { customersSnapshotSchema, type CustomersSnapshot } from './snapshots/customers-snapshot';
-export { toKopecks, toNullableKopecks } from './snapshots/money';
+export { catalogSnapshotSchema, type CatalogSnapshot } from './entities/catalog-snapshot';
+export { customersSnapshotSchema, type CustomersSnapshot } from './entities/customers-snapshot';
+export { toKopecks, toNullableKopecks } from './mappers/money';
 export {
   isStale,
   isSyncDue,
@@ -12,4 +12,4 @@ export {
   type ResourceSyncOutcome,
   type SyncFailureReason,
   type SyncResource,
-} from './status/sync-status';
+} from './entities/sync-status';

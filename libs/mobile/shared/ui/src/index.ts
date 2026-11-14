@@ -1,15 +1,15 @@
-export { breakpointFor, breakpoints, type Breakpoint } from './theme/breakpoints';
-export { motion } from './theme/motion';
+export { breakpointFor, breakpoints, type Breakpoint } from './theme/tokens/breakpoints';
+export { motion } from './theme/tokens/motion';
 export {
   darkColors,
   kedrBrand,
   lightColors,
   type ColorRoles,
   type StatusKind,
-} from './theme/palette';
-export { radius, sizes, space } from './theme/shape';
+} from './theme/tokens/palette';
+export { radius, sizes, space } from './theme/tokens/shape';
 export { darkTheme, lightTheme, type AppTheme, type ThemeName } from './theme/themes';
-export { fontFaces, tabularNumbers, typeScale, type TypeVariant } from './theme/typography';
+export { fontFaces, tabularNumbers, typeScale, type TypeVariant } from './theme/tokens/typography';
 export {
   AppThemeProvider,
   useAppTheme,

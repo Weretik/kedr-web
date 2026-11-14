@@ -8,7 +8,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { CalculationFooter } from './components/calculation-footer';
 import { CalculationLineRow } from './components/calculation-line-row';
-import { LineEditor } from './components/line-editor';
+import { LineEditor } from './components/line-editor/line-editor';
 import { OutboxRow } from './components/outbox-row';
 import { ReviewBanner } from './components/review-banner';
 import { UndoBar } from './components/undo-bar';

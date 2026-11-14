@@ -123,6 +123,12 @@ Do not create catch-all folders or files named `utils`, `helpers`, `common`, `mi
 - Keep simple feature-local state in component state; create a reducer only for related transitions or shared feature state.
 - Do not perform HTTP requests or hide business rules in JSX.
 
+## Validation and server errors
+
+- The backend validates every request and is the source of truth. Frontend validation in `model/src/validators/` only helps the person fill a form faster; it never replaces server validation, and every form still shows the errors the server returns.
+- The backend returns errors as ProblemDetails (RFC 9457). Validation errors are in `errors`, keyed by field name, with messages written for the person that do not repeat the field name (for example «Заповніть це поле.»). One parser, in the shared API client's `errors/` (or `data-access/src/errors/` when a library calls the API on its own), turns the body into one error with a general message and messages by field; a form shows each field message under its field as it is, and the general message above its actions. Do not parse error bodies anywhere else.
+- If the backend still returns another error shape, name it in the application specifics; that parser reads both shapes, so moving the backend to ProblemDetails changes only that parser.
+
 ## Pages, routes, and links
 
 - A page is an orchestrator; separate toolbars, tables, complex cells, and feature-only dialogs when they have independent responsibilities.

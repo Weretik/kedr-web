@@ -1,4 +1,4 @@
-import type { ColorRoles, StatusKind } from '../theme/palette';
+import type { ColorRoles, StatusKind } from '../theme/tokens/palette';
 
 /**
  * Text and icon colors a component may ask for; status kinds use their text color. `inverse` sits on an ink

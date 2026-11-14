@@ -1,22 +1,9 @@
-import {
-  useCustomerActivity,
-  useCustomerDetails,
-  type CustomerActivityFetcher,
-} from '@mobile/customers/data-access';
-import { formatDate } from '@mobile/customers/model';
-import { CustomerMoney, DraftRow, OrderRow, PriceRules } from '@mobile/customers/ui';
-import {
-  AppText,
-  Avatar,
-  Card,
-  createStyles,
-  SegmentedControl,
-  StateView,
-  useAppTheme,
-  useStyles,
-} from '@mobile/shared/ui';
-import { useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { useCustomerDetails, type CustomerActivityFetcher } from '@mobile/customers/data-access';
+import { CustomerContacts, CustomerMoney, PriceRules } from '@mobile/customers/ui';
+import { AppText, Avatar, createStyles, StateView, useStyles } from '@mobile/shared/ui';
+import { ScrollView, View } from 'react-native';
+
+import { CustomerActivitySection } from './customer-activity-section';
 
 export interface CustomerCardProps {
   counterpartyId: string;
@@ -24,13 +11,6 @@ export interface CustomerCardProps {
   /** Replaces the order workspace in tests. */
   fetcher?: CustomerActivityFetcher;
 }
-
-type ActivityTab = 'drafts' | 'orders';
-
-const tabs = [
-  { label: 'Замовлення', value: 'orders' },
-  { label: 'Чернетки', value: 'drafts' },
-] as const;
 
 /**
  * Contacts, prices, debt and balance, then the customer's orders and drafts (R-004, R-013, SC-005). Key it by
@@ -58,11 +38,7 @@ export function CustomerCard({ counterpartyId, fetcher, isOnline }: Readonly<Cus
           {customer.name}
         </AppText>
       </View>
-      <Card style={styles.contacts}>
-        <Contact label="Телефон" value={customer.phone ?? '—'} />
-        <Contact label="E-mail" value={customer.email || '—'} />
-        <Contact label="Код 1С" value={customer.counterpartyId} />
-      </Card>
+      <CustomerContacts customer={customer} />
       <PriceRules
         defaultPriceTypeName={customer.defaultPriceTypeName}
         rules={customer.priceRules}
@@ -77,95 +53,8 @@ export function CustomerCard({ counterpartyId, fetcher, isOnline }: Readonly<Cus
   );
 }
 
-function Contact({ label, value }: Readonly<{ label: string; value: string }>) {
-  const styles = useStyles(stylesSheet);
-  return (
-    <View style={styles.contact}>
-      <AppText style={styles.contactLabel} tone="secondary" variant="secondary">
-        {label}
-      </AppText>
-      <AppText selectable style={styles.contactValue} variant="body">
-        {value}
-      </AppText>
-    </View>
-  );
-}
-
-function CustomerActivitySection({
-  counterpartyId,
-  fetcher,
-  isOnline,
-}: Readonly<CustomerCardProps>) {
-  const styles = useStyles(stylesSheet);
-  const { theme } = useAppTheme();
-  const { activity, failed, loading } = useCustomerActivity(counterpartyId, isOnline, fetcher);
-  const [tab, setTab] = useState<ActivityTab>('orders');
-
-  const note = activityNote(activity?.fetchedAt ?? null, isOnline, failed);
-  const orders = activity?.orders ?? [];
-  const drafts = activity?.drafts ?? [];
-
-  return (
-    <View style={styles.activity}>
-      <SegmentedControl
-        accessibilityLabel="Замовлення і чернетки клієнта"
-        onChange={setTab}
-        segments={tabs}
-        value={tab}
-      />
-      {note ? (
-        <AppText tone={failed ? 'warning' : 'secondary'} variant="secondary">
-          {note}
-        </AppText>
-      ) : null}
-      {loading && !activity ? <ActivityIndicator color={theme.colors.brand} /> : null}
-      {activity && tab === 'orders' ? (
-        orders.length > 0 ? (
-          orders.map((order) => <OrderRow key={order.orderId} order={order} />)
-        ) : (
-          <Empty text="Замовлень ще немає." />
-        )
-      ) : null}
-      {activity && tab === 'drafts' ? (
-        drafts.length > 0 ? (
-          drafts.map((draft) => <DraftRow draft={draft} key={draft.draftId} />)
-        ) : (
-          <Empty text="Чернеток немає." />
-        )
-      ) : null}
-    </View>
-  );
-}
-
-function Empty({ text }: Readonly<{ text: string }>) {
-  const styles = useStyles(stylesSheet);
-  return (
-    <AppText align="center" style={styles.empty} tone="secondary" variant="secondary">
-      {text}
-    </AppText>
-  );
-}
-
-/** Says why the lists may be old: offline, a failed refresh, or nothing loaded yet. */
-function activityNote(fetchedAt: number | null, isOnline: boolean | null, failed: boolean) {
-  const since =
-    fetchedAt === null ? null : `станом на ${formatDate(new Date(fetchedAt).toISOString())}`;
-  if (failed)
-    return since ? `Не вдалося оновити, показано ${since}.` : 'Не вдалося завантажити замовлення.';
-  if (isOnline === false) {
-    return since ? `Без мережі, показано ${since}.` : 'Без мережі замовлення ще не завантажені.';
-  }
-  return null;
-}
-
 const stylesSheet = createStyles((theme) => ({
-  activity: { gap: theme.space.sm },
-  contact: { flexDirection: 'row', gap: theme.space.md },
-  contactLabel: { width: 72 },
-  contactValue: { flex: 1 },
-  contacts: { gap: theme.space.sm },
   content: { gap: theme.space.md, paddingBottom: theme.space.xxl },
-  empty: { paddingVertical: theme.space.lg },
   name: { flex: 1 },
   title: { alignItems: 'center', flexDirection: 'row', gap: theme.space.md },
 }));

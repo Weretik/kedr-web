@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import type { ApiError } from '../contracts/api-client.types';
+import type { ApiError } from '../contracts/api-client-contract';
 
 interface ProblemDetails {
   detail?: string;
