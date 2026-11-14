@@ -6,12 +6,12 @@ import {
 } from '@mobile/calculation/model';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { CalculationFooter } from './components/calculation-footer';
-import { CalculationLineRow } from './components/calculation-line-row';
 import { LineEditor } from './components/line-editor/line-editor';
-import { OutboxRow } from './components/outbox-row';
-import { ReviewBanner } from './components/review-banner';
-import { UndoBar } from './components/undo-bar';
+import { CalculationLineRow } from './components/lines/calculation-line-row';
+import { UndoBar } from './components/lines/undo-bar';
+import { CalculationFooter } from './components/summary/calculation-footer';
+import { OutboxRow } from './components/summary/outbox-row';
+import { ReviewBanner } from './components/summary/review-banner';
 
 const product: LineProduct = {
   id: 7,

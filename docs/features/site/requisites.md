@@ -52,7 +52,7 @@ libs/site/content/
     requisites-json-ld.ts              # absolute two-item breadcrumbs
   seo/src/lib/metadata/requisites/
     requisites-metadata.ts             # core metadata wrapper
-  ui/src/lib/requisites/
+  ui/src/lib/requisites/page/
     requisites-content.tsx             # server composition/layout
     requisites-header.tsx              # breadcrumbs/H1/anchors
     requisites-copy-button.tsx         # only client leaf
@@ -72,9 +72,9 @@ Public exports дополняют existing core/config и content libraries. Н�
 Команды focused; это не обязательный full-suite пакет:
 
 - `site-content-model`: `npx nx run site-content-model:vite:test -- --run src/lib/copy/requisites/requisites-copy.spec.ts` — порядок/точность payload, labels и immutable values.
-- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/requisites/requisites-content.spec.tsx src/lib/requisites/requisites-copy-button.spec.tsx` — локали/семантика/назначения и controlled clipboard states.
+- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/requisites/page/requisites-content.spec.tsx src/lib/requisites/page/requisites-copy-button.spec.tsx` — локали/семантика/назначения и controlled clipboard states.
 - `site-content-seo`: `npx nx run site-content-seo:vite:test -- --run src/lib/metadata/requisites/requisites-metadata.spec.ts src/lib/json-ld/requisites/requisites-json-ld.spec.ts` — self canonical, alternates/indexing и breadcrumbs.
-- `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run src/lib/requisites/requisites-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts` — server facts, реальный UI payload и sitemap registry.
+- `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run src/lib/requisites/page/requisites-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts` — server facts, реальный UI payload и sitemap registry.
 - `npx nx run site:typecheck` — Next route/type integration; фактический результат этого этапа использовал Nx cache.
 
 Получены 43 passing tests в последних узких прогонах, scoped lint pass и source review. [Точные результаты и пределы](../../specs/site/content/001-requisites/verification/seo-verification.md) различают unit/component/server evidence, source/type guards и незапущенные HTTP/browser/build проверки.

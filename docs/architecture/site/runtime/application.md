@@ -36,7 +36,7 @@ Server Components by default. The main client entry points include:
 - `shared/ui/{sheet,dialog}.tsx` — domain-neutral Radix overlay primitives;
 - `catalog/ui` — `ListingToolbar`, `FilterForm`, `ResultsAnchor`, `MegaMenu`;
 - `cart/feature` — `CartProvider` plus header/drawer/checkout/purchase controllers, all subscribed to one browser/document store; `cart/ui` receives presentation props and callbacks, never transport;
-- `content/ui/src/lib/gallery/gallery-browser.tsx` — the local filter/portion/selection session;
+- `content/ui/src/lib/gallery/page/gallery-browser.tsx` — the local filter/portion/selection session;
 - `content/ui/src/lib/gallery/media-image.tsx` — isolated image loading/error/retry. `MediaViewer` and `VideoFrame` are imported by the gallery client entry point; the page, source, heading, and SEO stay server-owned. See the [gallery feature](../../../features/site/gallery.md).
 
 The regions list uses `<details>` and the mega menu keeps every section's links in the server HTML (hidden until opened), so crawlers see all navigation links. The layout passes the mega menu and section links to `SiteShell` from `@site/catalog/feature`; without the API the shell uses its fixed sections. The search box is a plain GET form to `/{locale}/search?q=`.

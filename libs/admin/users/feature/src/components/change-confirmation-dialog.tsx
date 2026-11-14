@@ -1,7 +1,7 @@
 import { ConfirmActionDialog } from '@admin/users/ui';
 import { Avatar, Box } from '@mui/material';
 
-import type { ConfirmedChange } from '../hooks/use-confirmed-change';
+import type { ConfirmedChange } from '../hooks/profile/use-confirmed-change';
 
 /** Confirmation of any pending change, with the photo preview when there is one. */
 export function ChangeConfirmationDialog({ change }: { change: ConfirmedChange }) {

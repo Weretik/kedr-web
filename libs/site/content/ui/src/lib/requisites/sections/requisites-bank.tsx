@@ -1,7 +1,7 @@
 import { cn } from '@site/shared/ui';
 import { LandmarkIcon } from 'lucide-react';
 
-import { RequisitesCopyButton } from '../requisites-copy-button';
+import { RequisitesCopyButton } from '../page/requisites-copy-button';
 
 import type { RequisitesDetails, RequisitesDictionary } from '@site/content/model';
 

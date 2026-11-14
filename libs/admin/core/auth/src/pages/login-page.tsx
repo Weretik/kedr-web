@@ -1,8 +1,8 @@
 import { Alert, Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { LoginIntroPanel } from '../components/login/login-intro-panel';
-import { PasswordField } from '../components/login/password-field';
+import { LoginIntroPanel } from '../components/login-intro-panel';
+import { PasswordField } from '../components/password-field';
 import { useLoginForm } from '../hooks/use-login-form';
 import { readReturnPath } from '../routes/login-return-path';
 import { useAdminSession } from '../session/use-admin-session';
@@ -68,12 +68,7 @@ export function LoginPage() {
               value={email}
             />
             <PasswordField onChange={form.setPassword} value={password} />
-            <Button
-              disabled={!form.canSubmit}
-              size="large"
-              type="submit"
-              variant="contained"
-            >
+            <Button disabled={!form.canSubmit} size="large" type="submit" variant="contained">
               {form.submitting ? 'Вхід…' : 'Увійти'}
             </Button>
             <Typography color="text.secondary" variant="body2">

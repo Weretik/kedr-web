@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 
-import { createStyles, useStyles } from '../../theme/create-styles';
+import { createStyles, useStyles } from '../../theme/styling/create-styles';
 import { AppText } from '../text/app-text';
 import { Icon } from '../text/icon';
 

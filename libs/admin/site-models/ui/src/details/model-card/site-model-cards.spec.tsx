@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { SiteModelAxesCard } from './site-model-axes-card';
-import { SiteModelProductsCard } from './site-model-products-card';
-import { SiteModelTextsCard } from './site-model-texts-card';
+import { SiteModelAxesCard } from './axes/site-model-axes-card';
+import { SiteModelTextsCard } from './content/site-model-texts-card';
+import { SiteModelProductsCard } from './products/site-model-products-card';
 
 import type { SiteModel } from '@admin/site-models/model';
 

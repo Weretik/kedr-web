@@ -1,8 +1,8 @@
 import { getGalleryDictionary } from '@site/content/model';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
-import { GalleryBrowser } from '../gallery-browser';
 import { VideoFrame } from './video-frame';
+import { GalleryBrowser } from '../page/gallery-browser';
 
 import type {
   GalleryDictionary,

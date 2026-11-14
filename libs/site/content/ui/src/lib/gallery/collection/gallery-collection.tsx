@@ -4,9 +4,9 @@ import { Button } from '@site/shared/ui';
 
 import { GalleryEmpty } from './gallery-empty';
 import { useGalleryCollection } from './use-gallery-collection';
-import { GalleryFilters } from '../gallery-filters';
-import { GalleryGrid } from '../gallery-grid';
+import { GalleryGrid } from '../grid/gallery-grid';
 import { MediaViewer } from '../media/media-viewer';
+import { GalleryFilters } from '../page/gallery-filters';
 
 import type { GalleryDictionary, GalleryMedia } from '@site/content/model';
 

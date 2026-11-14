@@ -67,19 +67,14 @@ libs/site/content/
     articles-listing.ts                # full-source filter, page/clamp/range
     articles.spec.ts                   # query/listing characterization
     article-page-window.spec.ts        # bounded page-window assertions
-  seo/src/lib/{json-ld,metadata}/articles/
-    *.spec.ts                          # metadata/schema tests
   seo/src/lib/json-ld/articles/
     articles-json-ld.ts                # breadcrumbs + Article graph
   seo/src/lib/metadata/articles/
     article-seo-types.ts               # plain SEO input, no model import
     articles-seo-copy.ts               # localized SEO text
     articles-metadata.ts               # list/detail metadata
-  ui/src/lib/articles/
-    articles-header.tsx                # static breadcrumbs/H1/intro
-    articles-content.tsx               # server list body
-    article-content.tsx                # full article reading (sanitized server HTML)
-    articles-content.spec.tsx          # UI/interaction/locale tests
+  seo/src/lib/{json-ld,metadata}/articles/
+    *.spec.ts                          # metadata/schema tests
   ui/src/lib/articles/list/
     articles-search-form.tsx           # GET search + sr-only label
     articles-page-size-select.tsx      # only client leaf
@@ -87,6 +82,11 @@ libs/site/content/
     article-card.tsx                   # one card/one link
     article-cover.tsx                  # 16:9 image/fallback
     articles-loading.tsx               # Suspense status
+  ui/src/lib/articles/page/
+    articles-header.tsx                # static breadcrumbs/H1/intro
+    articles-content.tsx               # server list body
+    article-content.tsx                # full article reading (sanitized server HTML)
+    articles-content.spec.tsx          # UI/interaction/locale tests
 ```
 
 ## Tests
@@ -95,7 +95,7 @@ Focused commands (cwd repository root, NX_DAEMON=false):
 
 - `node node_modules/nx/dist/bin/nx.js run site-content-model:vite:test -- --run src/lib/queries/articles.spec.ts src/lib/paths/article-routes.spec.ts src/lib/queries/article-page-window.spec.ts` — 18 tests.
 - `node node_modules/nx/dist/bin/nx.js run site-content-data-access:vite:test -- --run` — 7 tests.
-- `node node_modules/nx/dist/bin/nx.js run site-content-ui:vite:test -- --run src/lib/articles/articles-content.spec.tsx` — 13 tests.
+- `node node_modules/nx/dist/bin/nx.js run site-content-ui:vite:test -- --run src/lib/articles/page/articles-content.spec.tsx` — 13 tests.
 - `node node_modules/nx/dist/bin/nx.js run site-content-seo:vite:test -- --run src/lib/metadata/articles/articles-metadata.spec.ts src/lib/json-ld/articles/articles-json-ld.spec.ts` — 17 new tests; touched SEO regression 37 tests.
 - `node node_modules/nx/dist/bin/nx.js run site-content-feature:vite:test -- --run src/lib/articles/articles-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts` — 13 tests in the current shared sitemap state.
 - `node node_modules/nx/dist/bin/nx.js run site:typecheck` — route/server-client source boundary.

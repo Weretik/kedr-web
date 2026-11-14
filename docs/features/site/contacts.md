@@ -41,7 +41,7 @@ libs/site/content/
     contacts-json-ld.ts                 # absolute two-item BreadcrumbList
   seo/src/lib/metadata/contacts/
     contacts-metadata.ts                # localized core metadata wrapper
-  ui/src/lib/contacts/
+  ui/src/lib/contacts/page/
     contacts-content.tsx                # page composition only
     contacts-header.tsx                 # breadcrumb, heading, intro and section anchors
     contacts-copy-phone-button.tsx      # only new client island
@@ -58,7 +58,7 @@ Public exports live in each existing library's `src/index.ts`. No new Nx project
 
 ## Tests
 
-- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/contacts/contacts-content.spec.tsx src/lib/contacts/contacts-copy-phone-button.spec.tsx` — two locales, section targets, contact destinations, clipboard success/rejection/unavailable/pending/retry and keyboard activation.
+- `site-content-ui`: `npx nx run site-content-ui:vite:test -- --run src/lib/contacts/page/contacts-content.spec.tsx src/lib/contacts/page/contacts-copy-phone-button.spec.tsx` — two locales, section targets, contact destinations, clipboard success/rejection/unavailable/pending/retry and keyboard activation.
 - `site-content-seo`: `npx nx run site-content-seo:vite:test -- --run contacts` — metadata, self canonical, reciprocal alternates/x-default, OG, indexing gates and absolute BreadcrumbList URLs.
 - `site-content-feature`: `npx nx run site-content-feature:vite:test -- --run` — server company-fact integration, BreadcrumbList, no nested main, unique localized sitemap entries and preservation of delivery/returns.
 

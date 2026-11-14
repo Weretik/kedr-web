@@ -4,7 +4,7 @@ import { AppBar, Badge, Box, IconButton, Toolbar, Tooltip, Typography } from '@m
 import { Link as RouterLink } from 'react-router-dom';
 
 import { NotificationsMenu } from './notifications-menu';
-import { ProfileMenu } from './profile/profile-menu';
+import { ProfileMenu } from './profile-menu';
 import { useAdminShellUser } from '../providers/admin-shell-session-provider';
 import { ColorSchemeMenu } from '../theme/color-scheme-menu';
 

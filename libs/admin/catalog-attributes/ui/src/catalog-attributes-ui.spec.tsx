@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { CodeWorkspace } from './components/codes/code-workspace';
 import { CodeMeaningRow } from './components/codes/meanings/code-meaning-row';
-import { AttributeValueForm } from './forms/attribute-value/attribute-value-form';
+import { CodeWorkspace } from './components/codes/workspace/code-workspace';
+import { AttributeValueForm } from './forms/attribute-value-form';
 import { CategoryFiltersEditor } from './forms/category-filters-editor';
 import { emptyNewAttribute, toNewAttribute } from './forms/new-attribute-fields';
 

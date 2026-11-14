@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 import { CopyPhoneButton } from '../../controls/copy-phone-button';
 import { MessengerLinks } from '../../controls/messenger-links';
-import { HeaderActions } from '../header-actions';
-import { HeaderSearch } from '../header-search';
+import { HeaderActions } from '../actions/header-actions';
+import { HeaderSearch } from '../actions/header-search';
 import { CatalogMenu } from '../menus/catalog-menu';
 import { MobileMenu } from '../menus/mobile-menu';
 

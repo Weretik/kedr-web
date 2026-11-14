@@ -30,12 +30,12 @@ libs/site/content/data-access/src/lib/gallery/
   gallery.mapper.ts    API items to locale models, title fallbacks
   gallery-cache.ts     cache tags and lifetimes
 libs/site/content/ui/src/lib/gallery/
-  gallery-header.tsx   server-compatible breadcrumb/H1
-  gallery-browser.tsx  fresh collection per locale and content
-  collection/          gallery-collection.tsx, use-gallery-collection.ts (filter/portion/selection), gallery-empty.tsx
-  gallery-filters.tsx  format controls
-  gallery-grid.tsx     featured/regular composition
-  gallery-card.tsx     native href and enhanced activation
+  page/gallery-header.tsx    server-compatible breadcrumb/H1
+  page/gallery-browser.tsx   fresh collection per locale and content
+  page/gallery-filters.tsx   format controls
+  collection/                gallery-collection.tsx, use-gallery-collection.ts (filter/portion/selection), gallery-empty.tsx
+  grid/gallery-grid.tsx      featured/regular composition
+  grid/gallery-card.tsx      native href and enhanced activation
   media/media-image.tsx      loading/error/retry
   media/media-viewer.tsx     dialog/navigation/focus return
   media/video-frame.tsx      provider/lifecycle/recovery
@@ -54,7 +54,7 @@ Select commands by affected risk, not as a mandatory bundle. The API loader and 
 ```text
 node node_modules/vitest/vitest.mjs run --config libs/site/content/model/vite.config.mts src/lib/queries/gallery.spec.ts
 node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/data-access/vite.config.mts src/lib/gallery/gallery-loader.spec.ts
-node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/ui/vite.config.mts src/lib/gallery/gallery-browser.spec.tsx src/lib/gallery/media/media-viewer.spec.tsx
+node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/ui/vite.config.mts src/lib/gallery/page/gallery-browser.spec.tsx src/lib/gallery/media/media-viewer.spec.tsx
 node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --environment=node --maxWorkers=1 --no-file-parallelism --config libs/site/content/seo/vite.config.mts src/lib/metadata/gallery/gallery-metadata.spec.ts src/lib/json-ld/gallery/gallery-json-ld.spec.ts
 node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/content/feature/vite.config.mts src/lib/gallery/gallery-page.spec.tsx src/lib/sitemap/content-sitemap.spec.ts
 node --max-old-space-size=512 node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --config libs/site/shared/ui/vite.config.mts src/lib/dialog.spec.tsx

@@ -6,11 +6,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { Alert, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 
-import { WorkReportFilters } from '../components/report/work-report-filters';
-import { WorkReportResults } from '../components/report/work-report-results';
+import { WorkReportFilters } from '../components/work-report-filters';
+import { WorkReportResults } from '../components/work-report-results';
 import { useGiveWorkTask } from '../hooks/use-give-work-task';
 
-import type { WorkReportPreset } from '../components/report/work-report-filters';
+import type { WorkReportPreset } from '../components/work-report-filters';
 import type { WorkPeriod, WorkPerson } from '@admin/work/model';
 
 interface WorkReportPageProps {

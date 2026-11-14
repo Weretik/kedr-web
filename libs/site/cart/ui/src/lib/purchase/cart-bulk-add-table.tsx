@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { getCartCopy } from '../i18n/cart-copy';
 import { cartMessage } from '../i18n/cart-messages';
 
-import type { CartBulkAddTableProps } from '../cart/cart-ui-props';
+import type { CartBulkAddTableProps } from '../cart/drawer/cart-ui-props';
 
 /** All variants of a model with a quantity each and one «add selected» (spec site/product/002 D-05). */
 export function CartBulkAddTable({

@@ -7,7 +7,7 @@ import { AdminEditPanel, CountedTextField } from '@admin/shared/ui';
 import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import { HomeBrandLogoField } from '../components/brands/home-brand-logo-field';
+import { HomeBrandLogoField } from '../components/home-brand-logo-field';
 
 import type { HomeBrandDraft, HomeBrandLogo } from '@admin/home-content/model';
 

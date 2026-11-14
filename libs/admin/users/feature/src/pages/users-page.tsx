@@ -8,9 +8,12 @@ import { useState } from 'react';
 import { ChangeConfirmationDialog } from '../components/change-confirmation-dialog';
 import { StaffEditPanels } from '../components/staff-edit-panels';
 import { SuccessSnackbar } from '../components/success-snackbar';
-import { useStaffAccountActions } from '../hooks/use-staff-account-actions';
-import { useStaffCandidateSearch } from '../hooks/use-staff-candidate-search';
-import { isStaffProfileAction, useStaffProfileActions } from '../hooks/use-staff-profile-actions';
+import { useStaffAccountActions } from '../hooks/staff/use-staff-account-actions';
+import { useStaffCandidateSearch } from '../hooks/staff/use-staff-candidate-search';
+import {
+  isStaffProfileAction,
+  useStaffProfileActions,
+} from '../hooks/staff/use-staff-profile-actions';
 
 import type { StaffAccount } from '@admin/users/model';
 import type { StaffAccountAction } from '@admin/users/ui';

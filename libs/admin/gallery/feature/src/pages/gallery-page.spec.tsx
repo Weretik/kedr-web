@@ -25,7 +25,7 @@ vi.mock('@admin/gallery/data-access', () => ({
   useReorderGalleryMutation: () => [api.reorder, { isLoading: false }],
 }));
 
-vi.mock('../components/media-picker/media-picker-dialog', () => ({
+vi.mock('../components/media-picker-dialog', () => ({
   MediaPickerDialog: () => null,
 }));
 

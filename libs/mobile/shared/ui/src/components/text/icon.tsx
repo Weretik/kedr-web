@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { type ComponentProps } from 'react';
 
-import { useAppTheme } from '../../theme/app-theme';
-import { toneColor, type Tone } from '../tone';
+import { toneColor, type Tone } from './tone';
+import { useAppTheme } from '../../theme/styling/app-theme';
 
 export type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 

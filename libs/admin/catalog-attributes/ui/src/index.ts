@@ -1,16 +1,16 @@
 export { AttributeSwatch } from './components/swatch/attribute-swatch';
 export { AttributeList } from './components/attributes/attribute-list';
 export { AttributeOverview } from './components/attributes/attribute-overview';
-export { CodeQueueList } from './components/codes/code-queue-list';
+export { CodeQueueList } from './components/codes/workspace/code-queue-list';
 export { CodeMeaningRow } from './components/codes/meanings/code-meaning-row';
 export type { CodeMeaningRowProps } from './components/codes/meanings/code-meaning-row';
 export type { MeaningRowSlotProps } from './components/codes/meanings/code-meanings-editor';
-export { CodeWorkspace } from './components/codes/code-workspace';
+export { CodeWorkspace } from './components/codes/workspace/code-workspace';
 export { AttributeSettingsCard } from './details/attribute-settings-card';
 export { AttributeValuesCard } from './details/attribute-values-card';
 export { AttributeAliasesCard } from './details/attribute-aliases-card';
-export { AttributeValueForm } from './forms/attribute-value/attribute-value-form';
-export type { SwatchTexture } from './forms/attribute-value/attribute-value-form';
+export { AttributeValueForm } from './forms/attribute-value-form';
+export type { SwatchTexture } from './forms/attribute-value-form';
 export { CategoryFiltersEditor } from './forms/category-filters-editor';
 export {
   NewAttributeFields,
