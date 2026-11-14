@@ -1,7 +1,7 @@
 import { Button } from '@site/shared/ui';
 import { PhoneIcon } from 'lucide-react';
 
-import { ContactsCopyPhoneButton } from '../contacts-copy-phone-button';
+import { ContactsCopyPhoneButton } from '../page/contacts-copy-phone-button';
 
 import type { ContactsDetails, ContactsDictionary } from '@site/content/model';
 

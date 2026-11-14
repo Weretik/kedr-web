@@ -1,5 +1,5 @@
-import { ru } from './locales/ru';
-import { uk } from './locales/uk';
+import { ru } from './ru';
+import { uk } from './uk';
 
 import type { Locale } from '@site/core/i18n';
 

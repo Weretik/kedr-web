@@ -3,11 +3,11 @@
 import { Button } from '@site/shared/ui';
 import { CheckIcon, ShoppingCartIcon } from 'lucide-react';
 
-import { CartQuantity } from '../cart/cart-quantity';
+import { CartQuantity } from '../cart/drawer/cart-quantity';
 import { getCartCopy } from '../i18n/cart-copy';
 import { cartMessage } from '../i18n/cart-messages';
 
-import type { CartPurchaseControlProps } from '../cart/cart-ui-props';
+import type { CartPurchaseControlProps } from '../cart/drawer/cart-ui-props';
 
 export function CartPurchaseControl({
   locale,
