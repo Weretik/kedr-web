@@ -2,10 +2,10 @@ import { productPath } from '@site/catalog/model';
 import { localizedPath } from '@site/core/i18n';
 import Link from 'next/link';
 
-import { ProductPhoto } from './product-photo';
-import { ProductPrice } from './product-price';
-import { ProductVariants } from './product-variants';
-import { StockLabel } from './stock-label';
+import { ProductPhoto } from './card/product-photo';
+import { ProductPrice } from './card/product-price';
+import { ProductVariants } from './card/product-variants';
+import { StockLabel } from './card/stock-label';
 import { getCatalogDictionary } from '../i18n/catalog-dictionary';
 
 import type { ProductSummary } from '@site/catalog/model';

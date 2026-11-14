@@ -4,7 +4,7 @@ import { LISTING_SORTS, listingHref } from '@site/catalog/model';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
-import type { CatalogDictionary } from '../i18n/catalog-dictionary';
+import type { CatalogDictionary } from '../../i18n/catalog-dictionary';
 import type { ListingQuery, ListingSort } from '@site/catalog/model';
 
 type SortSelectProps = {

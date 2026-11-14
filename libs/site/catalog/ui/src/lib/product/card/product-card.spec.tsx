@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { ProductGrid } from './product-grid';
-import { ProductList } from './product-list';
+import { ProductGrid } from '../product-grid';
+import { ProductList } from '../product-list';
 
 import type { ProductSummary } from '@site/catalog/model';
 

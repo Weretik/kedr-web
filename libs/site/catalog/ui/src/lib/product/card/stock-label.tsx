@@ -1,6 +1,6 @@
 import { cn } from '@site/shared/ui';
 
-import type { CatalogDictionary } from '../i18n/catalog-dictionary';
+import type { CatalogDictionary } from '../../i18n/catalog-dictionary';
 
 /** Stock state as text with a colored dot; the color only repeats what the text says. */
 export function StockLabel({

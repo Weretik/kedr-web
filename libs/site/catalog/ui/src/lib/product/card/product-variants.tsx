@@ -1,6 +1,6 @@
 import { pluralize } from '@site/core/i18n';
 
-import type { CatalogDictionary } from '../i18n/catalog-dictionary';
+import type { CatalogDictionary } from '../../i18n/catalog-dictionary';
 import type { ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 

@@ -1,6 +1,6 @@
-import { formatPrice } from '../format/price';
+import { formatPrice } from '../../format/price';
 
-import type { CatalogDictionary } from '../i18n/catalog-dictionary';
+import type { CatalogDictionary } from '../../i18n/catalog-dictionary';
 import type { Locale } from '@site/core/i18n';
 
 /** Retail price, «від» the lowest price of a model of several products, or «price on request» when there is none. */

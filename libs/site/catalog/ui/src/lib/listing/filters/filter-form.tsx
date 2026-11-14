@@ -14,8 +14,8 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { AttributeFilters } from './attribute-filters';
-import { Flag, PriceInput } from './toolbar-controls';
-import { getCatalogDictionary } from '../i18n/catalog-dictionary';
+import { getCatalogDictionary } from '../../i18n/catalog-dictionary';
+import { Flag, PriceInput } from '../toolbar/toolbar-controls';
 
 import type { ListingFilter, ListingQuery, SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';

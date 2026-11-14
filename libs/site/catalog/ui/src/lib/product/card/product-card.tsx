@@ -6,7 +6,7 @@ import { ProductPhoto } from './product-photo';
 import { ProductPrice } from './product-price';
 import { ProductVariants } from './product-variants';
 import { StockLabel } from './stock-label';
-import { getCatalogDictionary } from '../i18n/catalog-dictionary';
+import { getCatalogDictionary } from '../../i18n/catalog-dictionary';
 
 import type { ProductSummary } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';

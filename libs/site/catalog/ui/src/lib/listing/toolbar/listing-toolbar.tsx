@@ -3,11 +3,11 @@
 import { hasListingFilters, listingHref } from '@site/catalog/model';
 import { LayoutGridIcon, ListIcon, SlidersHorizontalIcon } from 'lucide-react';
 
-import { FilterForm } from './filter-form';
 import { SortSelect } from './sort-select';
 import { ViewLink } from './toolbar-controls';
-import { getCatalogDictionary } from '../i18n/catalog-dictionary';
-import { ToolbarPopover } from '../popover/toolbar-popover';
+import { getCatalogDictionary } from '../../i18n/catalog-dictionary';
+import { ToolbarPopover } from '../../popover/toolbar-popover';
+import { FilterForm } from '../filters/filter-form';
 
 import type { ListingFilter, ListingQuery, ListingView } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';

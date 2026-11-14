@@ -2,7 +2,7 @@ import { LISTING_PAGE_SIZES, listingHref } from '@site/catalog/model';
 import { cn } from '@site/shared/ui';
 import Link from 'next/link';
 
-import { getCatalogDictionary } from '../i18n/catalog-dictionary';
+import { getCatalogDictionary } from '../../i18n/catalog-dictionary';
 
 import type { ListingQuery } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
