@@ -12,6 +12,7 @@ import {
   RequireAdminSession,
   RequireRole,
 } from '@admin/core/auth';
+import { NotFoundPage } from '@admin/core/shell';
 import { createDashboardRoutes } from '@admin/dashboard/feature';
 import { documentsRoutes } from '@admin/documents/feature';
 import { galleryRoutes } from '@admin/gallery/feature';
@@ -95,8 +96,8 @@ export function AppRouter() {
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: usersRoutes },
         { element: <RequireRole allow={canManageUsers} />, children: workReportRoutes },
+        { path: '*', element: <NotFoundPage /> },
       ],
     },
-    { path: '*', element: <Navigate replace to="/dashboard" /> },
   ]);
 }

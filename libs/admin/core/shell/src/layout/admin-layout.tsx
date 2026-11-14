@@ -4,6 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { AdminSidebar } from './admin-sidebar';
 import { RouteLoadingFallback } from './route-loading-fallback';
+import { RouteErrorBoundary } from '../error-pages/route-error-boundary';
 import { adminDrawerCollapsedWidth, adminDrawerWidth } from '../navigation/admin-navigation';
 import { sidebarColors } from '../navigation/sidebar-colors';
 import { useNavigationCollapsed } from '../navigation/use-navigation-collapsed';
@@ -111,9 +112,11 @@ export function AdminLayout({ currentOrderPositionCount = 0, topBarActions }: Ad
                 animation: `${pageEnter} ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeOut} both`,
               })}
             >
-              <Suspense fallback={<RouteLoadingFallback />}>
-                <Outlet />
-              </Suspense>
+              <RouteErrorBoundary>
+                <Suspense fallback={<RouteLoadingFallback />}>
+                  <Outlet />
+                </Suspense>
+              </RouteErrorBoundary>
             </Box>
           </Container>
         </Box>

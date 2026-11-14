@@ -17,6 +17,7 @@
 | path without a locale         | `src/proxy.ts` rewrite                 | app                                                   | 404 from `global-not-found`                        | exists                         |
 | unmatched URL                 | `app/global-not-found.tsx`             | app                                                   | 404, `noindex`, both languages                     | exists                         |
 | `notFound()` inside a page    | `app/[locale]/not-found.tsx`           | app                                                   | 404, `noindex`, inside the shell                   | exists                         |
+| root layout failure           | `app/global-error.tsx`                 | app                                                   | 500, both languages, retry button                  | exists                         |
 | `/{locale}/product/{slug}`    | `app/[locale]/product/[slug]/page.tsx` | `product/feature` + injected server purchase callback | existing production gate                           | exists; cart connected locally |
 | `/{locale}/checkout`          | `app/[locale]/checkout/page.tsx`       | `cart/feature`, `cart/seo`                            | private/noindex; neutral frame + request-time leaf | exists locally                 |
 | `/robots.txt`, `/sitemap.xml` | `app/robots.ts`, `app/sitemap.ts`      | `core/seo`                                            | static                                             | exists                         |
