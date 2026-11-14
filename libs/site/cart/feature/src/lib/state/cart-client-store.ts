@@ -7,48 +7,19 @@ import {
   removeCartLine,
 } from '@site/cart/model';
 
+import {
+  checkoutOutcome,
+  SERVER_CART_SNAPSHOT,
+  withoutEmptyCartMessage,
+  withoutFieldError,
+  type CartReceipt,
+  type CartSnapshot,
+  type SubmitOrderAction,
+} from './cart-snapshot';
 import { createCartDrawerFocus } from '../platform/cart-drawer-focus';
 
 import type { createCartStorage } from '../storage/cart-storage';
-import type {
-  CartLine,
-  CartPurchaseInput,
-  CheckoutDraft,
-  CheckoutField,
-  CheckoutResult,
-} from '@site/cart/model';
-
-export type SubmitOrderAction = (command: unknown) => Promise<CheckoutResult>;
-export type CartReceipt = { orderId: string; unitCount: number; goodsSubtotal: number };
-export type CartSnapshot = {
-  hydrated: boolean;
-  lines: CartLine[];
-  draft: CheckoutDraft;
-  touched: { firstName: boolean; phone: boolean };
-  recoveryRequired: boolean;
-  discardedCount: number | null;
-  storageIssue: string | null;
-  notice: string | null;
-  drawerOpen: boolean;
-  pending: boolean;
-  result: CheckoutResult | null;
-  receipt: CartReceipt | null;
-};
-
-export const SERVER_CART_SNAPSHOT: CartSnapshot = {
-  hydrated: false,
-  lines: [],
-  draft: { firstName: '', phone: '' },
-  touched: { firstName: false, phone: false },
-  recoveryRequired: false,
-  discardedCount: 0,
-  storageIssue: null,
-  notice: null,
-  drawerOpen: false,
-  pending: false,
-  result: null,
-  receipt: null,
-};
+import type { CartLine, CartPurchaseInput, CheckoutField, CheckoutResult } from '@site/cart/model';
 
 /** A browser/document owner; creating a store does not read or write storage. */
 export function createCartClientStore(storage: ReturnType<typeof createCartStorage>) {
@@ -76,48 +47,20 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
     return outcome.ok ? null : outcome.reason;
   };
   const commitLines = (lines: CartLine[]) => {
-    let result = snapshot.receipt ? null : snapshot.result;
-    if (
-      result?.kind === 'validation' &&
-      result.messages.some((message) => message === 'empty-cart')
-    ) {
-      result = {
-        ...result,
-        messages: result.messages.filter((message) => message !== 'empty-cart'),
-      };
-      if (!result.messages.length && !Object.keys(result.fieldErrors).length) result = null;
-    }
     update({
       lines,
       receipt: null,
-      result,
+      result: snapshot.receipt ? null : withoutEmptyCartMessage(snapshot.result),
       notice: null,
       storageIssue: snapshot.recoveryRequired ? snapshot.storageIssue : persist(lines),
     });
   };
-  const complete = (
-    result: CheckoutResult,
-    accepted: { unitCount: number; goodsSubtotal: number },
-  ) => {
-    if (result.kind !== 'created') {
-      update({ pending: false, result });
-      return;
-    }
-    const cleanup = readableStorage
-      ? storage.clear()
-      : { ok: false as const, reason: 'read-failed' };
-    update({
-      pending: false,
-      result,
-      receipt: { orderId: result.orderId, ...accepted },
-      lines: [],
-      draft: { firstName: '', phone: '' },
-      touched: { firstName: false, phone: false },
-      recoveryRequired: false,
-      discardedCount: 0,
-      notice: null,
-      storageIssue: cleanup.ok ? null : cleanup.reason,
-    });
+  const complete = (result: CheckoutResult, accepted: Omit<CartReceipt, 'orderId'>) => {
+    const cleanup =
+      result.kind === 'created' && readableStorage
+        ? storage.clear()
+        : { ok: false as const, reason: 'read-failed' };
+    update(checkoutOutcome(result, accepted, cleanup.ok ? null : cleanup.reason));
   };
 
   return {
@@ -178,15 +121,9 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
     },
     setDraft: (field: CheckoutField, value: string) => {
       if (snapshot.pending) return;
-      let result = snapshot.result;
-      if (result?.kind === 'validation' && result.fieldErrors[field]) {
-        const fieldErrors = { ...result.fieldErrors };
-        delete fieldErrors[field];
-        result = { ...result, fieldErrors };
-      }
       update({
         draft: { ...snapshot.draft, [field]: field === 'phone' ? formatPhoneInput(value) : value },
-        result,
+        result: withoutFieldError(snapshot.result, field),
       });
     },
     touch: (field: CheckoutField) => {
@@ -251,3 +188,5 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
 }
 
 export type CartClientStore = ReturnType<typeof createCartClientStore>;
+export { SERVER_CART_SNAPSHOT };
+export type { CartReceipt, CartSnapshot, SubmitOrderAction };
