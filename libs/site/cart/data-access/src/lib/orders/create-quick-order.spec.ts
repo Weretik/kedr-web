@@ -49,6 +49,30 @@ describe('createQuickOrder', () => {
     expect(transport).toHaveBeenCalledExactlyOnceWith(command);
   });
 
+  it('forwards the attempt key as the idempotency key, never in the order body', async () => {
+    transport.mockResolvedValue({ kind: 'response', status: 200, body: { orderId } });
+    const requestKey = '7d3f0c52-6a4e-4d8b-9e21-3c5a7b9d1f04';
+
+    expect(await createQuickOrder({ ...command, requestKey })).toEqual({
+      kind: 'created',
+      orderId,
+    });
+    expect(transport).toHaveBeenCalledExactlyOnceWith(command, { idempotencyKey: requestKey });
+  });
+
+  it('shows the detail of a repeated order with other data as a conflict', async () => {
+    expect(
+      await response(409, {
+        status: 409,
+        code: 'conflict',
+        detail: 'Це замовлення вже надіслано з іншими даними. Оновіть сторінку.',
+      }),
+    ).toEqual({
+      kind: 'conflict',
+      messages: ['Це замовлення вже надіслано з іншими даними. Оновіть сторінку.'],
+    });
+  });
+
   it.each([
     { ...command, firstName: '' },
     { ...command, phone: '+380501234567' },

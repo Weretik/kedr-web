@@ -16,5 +16,6 @@ This directory contains stable rules for frontend changes. Feature specification
 - [Testing rules](shared/testing-rules.md) — selecting checks and recording them against available targets.
 - [Security rules](shared/security-rules.md) — access, sessions, data safety, and security review for the application context.
 - [Delivery rules](shared/delivery-rules.md) — SDD flow, scope, and definition of done.
+- [Idempotency rules](shared/idempotency-rules.md) — one key per submit attempt, reused on retry and renewed after success or a change; pending lock on every mutation; no automatic retry of non-idempotent mutations.
 
 Actual versions, projects, and runnable targets are not duplicated in these rules; their current snapshot is in the [frontend inventory](../architecture/frontend-inventory.md). Systemic discrepancies are handled through a remediation SDD rather than left as optional residual risk.

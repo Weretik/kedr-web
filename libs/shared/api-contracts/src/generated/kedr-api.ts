@@ -2741,7 +2741,7 @@ export interface paths {
         put?: never;
         /**
          * Create a quick order
-         * @description Creates a quick order. This endpoint is currently anonymous and does not implement an Idempotency-Key contract; disable duplicate submission in the frontend.
+         * @description Anonymous. Creates a quick order. Send an Idempotency-Key made once per order attempt and reuse it on a retry: a repeat returns the same order id, and the same key with other data answers 409.
          */
         post: operations["createQuickOrder"];
         delete?: never;
@@ -12240,7 +12240,9 @@ export interface operations {
     createQuickOrder: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
             path?: never;
             cookie?: never;
         };

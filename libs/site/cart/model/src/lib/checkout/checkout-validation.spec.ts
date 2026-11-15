@@ -89,6 +89,17 @@ describe('checkout validation and projection', () => {
       parseCheckoutCommand({ ...command, lines: [{ ...command.lines[0], unitPrice }] }),
     ).toMatchObject({ ok: false, issues: ['invalid-line'] });
   });
+  it('keeps a UUID attempt key and drops any other key value', () => {
+    const requestKey = '7d3f0c52-6a4e-4d8b-9e21-3c5a7b9d1f04';
+    expect(parseCheckoutCommand({ ...command, requestKey })).toEqual({
+      ok: true,
+      command: { ...command, requestKey },
+    });
+    expect(parseCheckoutCommand({ ...command, requestKey: 'drop table' })).toEqual({
+      ok: true,
+      command,
+    });
+  });
   it('rejects duplicates and string-coerced quantities at the trusted boundary', () => {
     expect(
       parseCheckoutCommand({ ...command, lines: [command.lines[0], command.lines[0]] }),

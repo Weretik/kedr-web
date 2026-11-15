@@ -32,6 +32,14 @@ export const SERVER_CART_SNAPSHOT: CartSnapshot = {
   receipt: null,
 };
 
+/** A fresh client snapshot that shares no nested objects with the server one. */
+export const initialCartSnapshot = (): CartSnapshot => ({
+  ...SERVER_CART_SNAPSHOT,
+  lines: [],
+  draft: { ...SERVER_CART_SNAPSHOT.draft },
+  touched: { ...SERVER_CART_SNAPSHOT.touched },
+});
+
 /** A changed basket answers the «empty cart» complaint; the result goes away when nothing else is left in it. */
 export function withoutEmptyCartMessage(result: CheckoutResult | null): CheckoutResult | null {
   if (result?.kind !== 'validation' || !result.messages.includes('empty-cart')) return result;

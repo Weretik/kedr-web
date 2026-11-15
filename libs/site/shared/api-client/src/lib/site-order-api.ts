@@ -10,7 +10,8 @@ type CreateQuickOrderRequest =
 export type SiteOrderApiResult =
   { kind: 'response'; status: number; body: unknown } | { kind: 'unavailable' };
 
-export type SiteOrderApiOptions = { timeoutMs?: number };
+/** `idempotencyKey`: the attempt key; the backend answers a repeat with the first order. */
+export type SiteOrderApiOptions = { timeoutMs?: number; idempotencyKey?: string };
 
 const readJsonBody = async (response: Response): Promise<unknown> => {
   if (!response.headers.get('Content-Type')?.toLowerCase().includes('json')) return undefined;
@@ -31,7 +32,11 @@ export async function siteApiCreateQuickOrder(
   try {
     const response = await fetchImpl(new URL('/api/orders', `${apiUrl}/`), {
       method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...(options.idempotencyKey ? { 'Idempotency-Key': options.idempotencyKey } : {}),
+      },
       credentials: 'omit',
       redirect: 'error',
       cache: 'no-store',

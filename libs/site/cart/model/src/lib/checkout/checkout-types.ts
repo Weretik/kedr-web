@@ -16,6 +16,11 @@ export interface CheckoutCommandLine {
 
 export interface CheckoutCommand extends CheckoutDraft {
   lines: CheckoutCommandLine[];
+  /**
+   * One UUID per order attempt, sent as `Idempotency-Key`: a retry of the same order reuses it, so the backend
+   * answers with the first order instead of placing a second one.
+   */
+  requestKey?: string;
 }
 
 export type CheckoutResult =
