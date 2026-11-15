@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { createCartClientStore, SERVER_CART_SNAPSHOT } from './cart-client-store';
+import {
+  createCartClientStore,
+  SERVER_CART_SNAPSHOT,
+  type SubmitOrderAction,
+} from './cart-client-store';
 import { createCartStorage } from '../storage/cart-storage';
 
 import type { CartLine, CartPurchaseInput, CheckoutResult } from '@site/cart/model';
@@ -352,13 +356,15 @@ describe('document cart owner', () => {
     store.add(input);
     fill();
     const action = vi
-      .fn<(command: { requestKey?: string }) => Promise<CheckoutResult>>()
+      .fn<SubmitOrderAction>()
       .mockResolvedValueOnce({ kind: 'uncertain', messages: [] })
       .mockResolvedValueOnce({ kind: 'created', orderId });
     store.setSubmitOrderAction(action);
     await store.submit();
     await store.submit();
-    const [first, second] = action.mock.calls.map(([command]) => command.requestKey);
+    const [first, second] = action.mock.calls.map(
+      ([command]) => (command as { requestKey?: string }).requestKey,
+    );
     expect(first).toMatch(/^[0-9a-f-]{36}$/);
     expect(second).toBe(first);
   });
@@ -369,7 +375,7 @@ describe('document cart owner', () => {
     store.add(input);
     fill();
     const action = vi
-      .fn<(command: { requestKey?: string }) => Promise<CheckoutResult>>()
+      .fn<SubmitOrderAction>()
       .mockResolvedValue({ kind: 'uncertain', messages: [] });
     store.setSubmitOrderAction(action);
     await store.submit();
@@ -378,7 +384,9 @@ describe('document cart owner', () => {
     action.mockResolvedValueOnce({ kind: 'conflict', messages: ['Оновіть сторінку.'] });
     await store.submit();
     await store.submit();
-    const keys = action.mock.calls.map(([command]) => command.requestKey);
+    const keys = action.mock.calls.map(
+      ([command]) => (command as { requestKey?: string }).requestKey,
+    );
     expect(keys[1]).not.toBe(keys[0]);
     expect(keys[2]).toBe(keys[1]);
     expect(keys[3]).not.toBe(keys[2]);
