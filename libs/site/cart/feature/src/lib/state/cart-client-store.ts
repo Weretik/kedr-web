@@ -9,6 +9,7 @@ import {
 
 import {
   checkoutOutcome,
+  initialCartSnapshot,
   SERVER_CART_SNAPSHOT,
   withoutEmptyCartMessage,
   withoutFieldError,
@@ -16,24 +17,24 @@ import {
   type CartSnapshot,
   type SubmitOrderAction,
 } from './cart-snapshot';
+import { createOrderAttempt } from './order-attempt';
 import { createCartDrawerFocus } from '../platform/cart-drawer-focus';
 
 import type { createCartStorage } from '../storage/cart-storage';
 import type { CartLine, CartPurchaseInput, CheckoutField, CheckoutResult } from '@site/cart/model';
 
 /** A browser/document owner; creating a store does not read or write storage. */
-export function createCartClientStore(storage: ReturnType<typeof createCartStorage>) {
-  let snapshot: CartSnapshot = {
-    ...SERVER_CART_SNAPSHOT,
-    lines: [],
-    draft: { ...SERVER_CART_SNAPSHOT.draft },
-    touched: { ...SERVER_CART_SNAPSHOT.touched },
-  };
+export function createCartClientStore(
+  storage: ReturnType<typeof createCartStorage>,
+  newRequestKey?: () => string,
+) {
+  let snapshot: CartSnapshot = initialCartSnapshot();
   const listeners = new Set<() => void>();
   let initialized = false;
   let readableStorage = false;
   let action: SubmitOrderAction | undefined;
   let inFlight: Promise<void> | undefined;
+  const attempt = createOrderAttempt(newRequestKey);
   const drawerFocus = createCartDrawerFocus();
 
   const update = (patch: Partial<CartSnapshot>) => {
@@ -56,6 +57,7 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
     });
   };
   const complete = (result: CheckoutResult, accepted: Omit<CartReceipt, 'orderId'>) => {
+    attempt.finish(result);
     const cleanup =
       result.kind === 'created' && readableStorage
         ? storage.clear()
@@ -164,7 +166,7 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
         });
         return Promise.resolve();
       }
-      const command = parsed.command;
+      const command = { ...parsed.command, requestKey: attempt.keyFor(parsed.command) };
       const accepted = getCartTotals(snapshot.lines);
       const submitAction = action;
       // Assign the lock before notifying synchronous subscribers; they may call submit again.

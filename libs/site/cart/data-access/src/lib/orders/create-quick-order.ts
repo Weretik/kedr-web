@@ -25,8 +25,13 @@ export async function createQuickOrder(command: CheckoutCommand): Promise<Checko
     })),
   };
 
+  const { requestKey } = parsed.command;
   try {
-    return parseQuickOrderResult(await siteApiCreateQuickOrder(request));
+    return parseQuickOrderResult(
+      requestKey
+        ? await siteApiCreateQuickOrder(request, { idempotencyKey: requestKey })
+        : await siteApiCreateQuickOrder(request),
+    );
   } catch {
     return { kind: 'uncertain', messages: [] };
   }

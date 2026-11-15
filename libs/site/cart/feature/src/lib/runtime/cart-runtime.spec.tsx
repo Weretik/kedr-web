@@ -99,6 +99,7 @@ describe('app cart composition', () => {
       firstName: 'Олександр',
       phone: '+38 (068) 713-50-49',
       lines: [{ productId: '101', title: product.title, unitPrice: 425, quantity: 3 }],
+      requestKey: expect.stringMatching(/^[0-9a-f-]{36}$/),
     });
     expect((checkout.getByLabelText(/Телефон/) as HTMLInputElement).disabled).toBe(true);
     await act(async () => {
