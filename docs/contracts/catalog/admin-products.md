@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`products.openapi.yaml`](../openapi/catalog/products.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Operations: `getAdminProducts`, `getAdminProductBySlug`, `changeAdminProductSlug`
 - Generated response: `operations['getAdminProducts']['responses'][200]['content']['application/json']`
 - Generated query: `NonNullable<operations['getAdminProducts']['parameters']['query']>`

@@ -1,6 +1,6 @@
 # ADR-0003: API types are generated from a pinned snapshot of the backend OpenAPI
 
-**Status:** accepted
+**Status:** accepted, amended by [ADR-0004](0004-contract-follows-backend-and-typed-client.md) (where the snapshot comes from and how it is checked)
 **Decision date:** 2026-11-15 (recorded from the current workflow)
 **Owners:** frontend, backend
 **Applications:** all clients of KedrStore
@@ -19,8 +19,8 @@ The backend KedrStore owns the API and publishes OpenAPI. Hand-written request a
 
 ## Decision and reason
 
-- The repository keeps a snapshot of the backend OpenAPI (docs/contracts/openapi/openapi.yaml) with its source commit; it is never edited by hand. A contract change starts in the backend.
-- `openapi-typescript docs/contracts/openapi/openapi.yaml` writes `libs/shared/api-contracts/src/generated/kedr-api.ts` (`@shared/api-contracts`). Admin, Mobile and the Site use these types.
+- The repository keeps a snapshot of the backend OpenAPI (`docs/contracts/openapi/openapi.json`) with its source commit; it is never edited by hand. A contract change starts in the backend.
+- `openapi-typescript docs/contracts/openapi/openapi.json` writes `libs/shared/api-contracts/src/generated/kedr-api.ts` (`@shared/api-contracts`). Admin, Mobile and the Site use these types.
 - `npm run contracts:check` fails when the snapshot and the generated file differ.
 - Data-access libraries map generated types to the app's own models; components never use transport types directly.
 

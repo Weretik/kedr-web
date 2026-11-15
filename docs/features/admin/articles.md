@@ -1,6 +1,6 @@
 # Admin Articles
 
-**Status:** implemented. Routes: `/articles`, `/articles/new`, `/articles/:articleId`. Backend: KedrStore Content module, contract [admin articles](../../contracts/openapi/content/articles.openapi.yaml); the public site reads the same articles ([site articles](../site/articles.md)).
+**Status:** implemented. Routes: `/articles`, `/articles/new`, `/articles/:articleId`. Backend: KedrStore Content module, contract [admin articles](../../contracts/openapi/openapi.json); the public site reads the same articles ([site articles](../site/articles.md)).
 
 - The [list](../../../libs/admin/articles/feature/src/pages/articles-page.tsx) shows covers, Ukrainian titles, addresses, and dates, newest first, with search over title and address. A switch above the table shows «Усі», «Опубліковані», or «Чернетки»; the table has no status column.
 - The [editor](../../../libs/admin/articles/feature/src/pages/article-editor-page.tsx) is one form: address, publication date, and «Показувати на сайті», then «Українська» and «Русский» tabs with title, short description, and the shared [Tiptap editor](../../../libs/admin/shared/ui/src/lib/inputs/rich-text-editor/rich-text-editor.tsx). Both languages are required and saved together; a tab with errors is marked. A new article has no address field: the server builds the address from the Ukrainian title (KMU-2010). The address can be changed later in the editor; a taken one comes back as a field error.

@@ -7,7 +7,8 @@
 - Feature and UI do not import `@shared/api-contracts`.
 - Server state is implemented with RTK Query and belongs to `data-access`.
 - The root Redux store is in `apps/admin/src/app/store.ts`.
-- The shared API is in `@admin/shared/api-client`; transport details are defined in [ADR-0001](../adr/0001-admin-axios-transport.md).
+- The shared API is in `@admin/shared/api-client`; transport details are defined in [ADR-0002](../adr/0002-admin-openapi-fetch-transport.md).
+- Each endpoint calls the typed `apiClient` in its `queryFn`: `queryFn: (id, { signal }) => apiCall(apiClient.GET('/api/admin/articles/{id}', { params: { path: { id } }, signal }), mapArticle)`. The path, parameters, body and the mapper input are checked against the contract.
 - Backend error shapes and transport rules shared with Mobile are documented in the [Admin and Mobile API architecture](../../api/README.md).
 - `admin/core/auth` passes `AuthSessionAdapter` to the API client; the API client does not store tokens or know the session refresh endpoint.
 - Each domain declares endpoints in its own `data-access` library through `baseApi.injectEndpoints`.
@@ -21,20 +22,21 @@
 ```text
 libs/admin/shared/api-client/src/
 ├── index.ts
-├── client/        # Axios instance creation
-├── contracts/     # ApiRequest, ApiError, auth contracts
+├── testing.ts     # stubApiFetch for data-access tests (@admin/shared/api-client/testing)
+├── client/        # typed openapi-fetch client, apiCall/apiRequest, formDataBody
+├── contracts/     # ApiError and auth contracts
 ├── csrf/          # CSRF token read from the cookie for unsafe requests
-├── errors/        # transport/API error normalization and tests
-├── interceptors/  # auth header, refresh/retry, logging, and their installer
-├── rtk-query/     # baseApi and Axios base query
+├── errors/        # HttpError and ApiError normalization with tests
+├── middleware/    # CSRF header, development logging, 401 redirect
+├── rtk-query/     # baseApi (fakeBaseQuery: every endpoint has a queryFn)
 └── runtime/       # runtime configuration: session adapter, error notifier
 ```
 
-- A module does not combine the Axios client, interceptor, RTK Query base query, transport contract, and error mapper.
-- An interceptor does not own global application state; the session adapter and error notifier belong to `runtime` and are configured through the public API.
-- Domain `data-access` libraries declare endpoints only through `baseApi.injectEndpoints`; they do not create their own Axios instance or import internal `api-client` modules.
+- A module does not combine the client, middleware, RTK Query base API, transport contract, and error mapper.
+- Middleware does not own global application state; the session adapter and error notifier belong to `runtime` and are configured through the public API.
+- Domain `data-access` libraries declare endpoints only through `baseApi.injectEndpoints` with `queryFn` and `apiCall(apiClient...)`; they do not create their own client, call `fetch`, or import internal `api-client` modules.
 - Change public transport-layer exports only through a separate compatible decision.
-- A transport behavior change includes relevant error-mapping or interceptor-behavior tests and a check with `npx nx build admin`.
+- A transport behavior change includes relevant error-mapping or middleware tests and a check with `npx nx build admin`.
 
 ## `@admin/shared/config` structure
 

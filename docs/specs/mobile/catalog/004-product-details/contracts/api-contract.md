@@ -2,7 +2,7 @@
 
 ## Source
 
-- OpenAPI snapshot: [`products.openapi.yaml`](../../../../../contracts/openapi/catalog/products.openapi.yaml)
+- OpenAPI snapshot: [`products.openapi.yaml`](../../../../../contracts/openapi/openapi.json)
 - Stable `operationId`: `getPublicProductBySlug`
 - Generated operation: `operations['getPublicProductBySlug']`
 - Consumer projection: [`public-products.md`](../../../../../contracts/catalog/public-products.md)

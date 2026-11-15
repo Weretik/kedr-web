@@ -1,6 +1,6 @@
 # Admin «SEO сторінок»
 
-**Status:** implemented. Route: `/page-seo` (menu «Сайт» → «SEO сторінок», all staff). Backend: KedrStore Content module, contract [search texts of the site pages](../../contracts/openapi/content/page-seo.openapi.yaml).
+**Status:** implemented. Route: `/page-seo` (menu «Сайт» → «SEO сторінок», all staff). Backend: KedrStore Content module, contract [search texts of the site pages](../../contracts/openapi/openapi.json).
 
 - The list shows the eleven site pages that exist once, in menu order (home, catalog, «Співпраця», delivery, returns, contacts, gallery, articles, requisites, offer, privacy) with their address and the Ukrainian title and description an editor set; a page without them says «Тексти сайту».
 - The edit icon opens the right side panel: SEO title (up to 120 characters, Google usually shows about 60) and SEO description (up to 300, about 160 shown) in Ukrainian and Russian. Every field may stay empty: the site then keeps the text it has in code. «Змінено: хто, коли» under the fields.

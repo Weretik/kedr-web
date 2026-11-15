@@ -1,6 +1,6 @@
 # Admin «Фонові задачі»
 
-**Status:** implemented. Routes: `/background-tasks` and `/background-tasks/:key` (menu «Система» → «Фонові задачі», Admin only). Backend: KedrStore Scheduling module, spec `platform/007-background-tasks`, contract [scheduling](../../contracts/openapi/scheduling/scheduling.openapi.yaml).
+**Status:** implemented. Routes: `/background-tasks` and `/background-tasks/:key` (menu «Система» → «Фонові задачі», Admin only). Backend: KedrStore Scheduling module, spec `platform/007-background-tasks`, contract [scheduling](../../contracts/openapi/openapi.json).
 
 - One Cloud Scheduler entry calls the backend tick every minute. The task list is code (stocks, prices, catalogue, customers, orders, media, full sync, product list, outbox); the admin cannot add or rename a task.
 - The list shows each task with its description, schedule in words, next run, last success with its summary and last failure with its reason. Only problems are marked (last attempt failed, missed run, running, run requested, disabled); a healthy task has no mark. The list refreshes every 30 seconds. All times are Kyiv time.

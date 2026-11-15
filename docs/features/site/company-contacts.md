@@ -1,6 +1,6 @@
 # Site company contacts
 
-**Status:** implemented. Source: `GET /api/content/contacts` ([contract](../../contracts/openapi/content/contacts.openapi.yaml)), edited in the admin ([admin company contacts](../admin/company-contacts.md)).
+**Status:** implemented. Source: `GET /api/content/contacts` ([contract](../../contracts/openapi/openapi.json)), edited in the admin ([admin company contacts](../admin/company-contacts.md)).
 
 - [`getCompanyContacts()`](../../../libs/site/shared/company/src/lib/contacts/company-contacts-loader.ts) reads the record with `'use cache'`, tags `content` and `content:contacts`, and a ten-minute life. It derives the display phone `(0XX) YYY-ZZ-ZZ` and the Viber chat link.
 - When the API cannot be reached it returns `FALLBACK_COMPANY_CONTACTS` from [core/config](../../../libs/site/core/config/src/lib/company-contacts.ts) for a minute and retries, so the phone never disappears and builds do not fail. Keep the fallback equal to the saved record.

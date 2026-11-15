@@ -1,6 +1,6 @@
 # Admin site documents
 
-**Status:** implemented. Routes: `/documents`, `/documents/:kind` (menu «Сайт» → «Документи», all staff). Backend: KedrStore Content module, contract [site documents](../../contracts/openapi/content/documents.openapi.yaml); the site pages show the published edition ([public offer](../site/public-offer.md), [privacy policy](../site/privacy-policy.md), [returns](../site/returns-exchanges.md), [delivery and payment](../site/delivery-payment.md)).
+**Status:** implemented. Routes: `/documents`, `/documents/:kind` (menu «Сайт» → «Документи», all staff). Backend: KedrStore Content module, contract [site documents](../../contracts/openapi/openapi.json); the site pages show the published edition ([public offer](../site/public-offer.md), [privacy policy](../site/privacy-policy.md), [returns](../site/returns-exchanges.md), [delivery and payment](../site/delivery-payment.md)).
 
 - The [list](../../../libs/admin/documents/ui/src/tables/legal-documents-list.tsx) shows the four documents with the edition on the site («На сайті: редакція №2 від 10.11.2026») and marks a waiting draft.
 - The [editor](../../../libs/admin/documents/feature/src/pages/legal-document-editor-page.tsx) opens the draft, or the text on the site when there is none. Both languages sit in tabs: the full title and the body in the shared rich text editor with quotes turned on; H2 headings become the sections and the table of contents on the site. `{site}`, `{email}` and `{phone}` in the text are filled by the site with its host and the saved contacts.

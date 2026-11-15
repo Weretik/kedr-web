@@ -2,39 +2,40 @@
 
 `docs/contracts/` brings together the provider-owned OpenAPI snapshot, generated TypeScript transport types, and concise frontend consumer projections. These three layers have different responsibilities:
 
-1. [`openapi/openapi.yaml`](openapi/openapi.yaml) is the machine-readable snapshot of the canonical `KedrStore` contract; YAML in this directory is not edited manually.
+1. [`openapi/openapi.json`](openapi/openapi.json) is a copy of the contract that KedrStore generates from its code on every build (`docs/sdd/contracts/openapi.json` on its default branch `master`). It is never edited here.
 2. `@shared/api-contracts` contains machine-owned TypeScript types generated from the snapshot. They are imported only at transport/data-access boundaries.
 3. Module Markdown pages record consumer decisions: which client calls an operation, how the transport response maps to a domain model, and which cache/error/rollout rules the frontend applies.
 
-Backend OpenAPI remains the provider source of truth. The frontend snapshot records the exact provider contract version; generated types are not a separate source and are not edited manually. Snapshot provenance is recorded in [`openapi/SOURCE.md`](openapi/SOURCE.md).
+Backend code is the provider source of truth. Snapshot provenance (branch and commit) is recorded in [`openapi/SOURCE.md`](openapi/SOURCE.md). Why it works this way: [ADR-0003](../architecture/adr/0003-types-from-backend-openapi.md) and [ADR-0004](../architecture/adr/0004-contract-follows-backend-and-typed-client.md).
 
 ## Contract workflow
 
 ```text
-KedrStore OpenAPI
-        │ contracts:sync
+KedrStore code ──build──► docs/sdd/contracts/openapi.json (master)
+        │ npm run contracts:sync   (or the daily sync pull request)
         ▼
-docs/contracts/openapi
-        │ contracts:generate
+docs/contracts/openapi/openapi.json
+        │ contracts:generate (runs inside sync)
         ▼
-@shared/api-contracts
-        │ type-only import
+@shared/api-contracts (paths, components, operations)
+        │
         ▼
-transport/data-access → runtime validation/mapping → domain model → feature/UI
+Admin data-access: apiCall(apiClient.GET('/api/...', { params, signal }), mapper) → domain model → feature/UI
 ```
 
 Commands:
 
 ```text
-npm run contracts:sync -- <path-to-KedrStore>
-npm run contracts:lint
-npm run contracts:generate
-npm run contracts:check
+npm run contracts:sync                     # from the KedrStore default branch
+npm run contracts:sync -- --ref <branch>   # from a backend branch that is not merged yet
+npm run contracts:sync -- --file <path>    # from a local backend build
+npm run contracts:check                    # generated types match the snapshot
+npm run contracts:drift                    # the snapshot matches the backend default branch
 ```
 
-`contracts:sync` accepts only a clean backend checkout, copies all OpenAPI YAML files, and records the backend commit. `contracts:check` validates OpenAPI and confirms that checked-in generated types match the snapshot.
+CI runs `contracts:check` and `contracts:drift`, so a pull request fails while the snapshot lags the backend. Every weekday at 07:00 Kyiv time the workflow `contract-sync.yml` syncs the snapshot and, when it changed, opens or updates the pull request `chore/sync-backend-contract` with the typecheck result. CI does not start by itself on that pull request (a GitHub rule for workflow-created pull requests): close and reopen it, or push a commit.
 
-Do not edit the YAML snapshot or generated TypeScript manually. To update them: pin the backend contract in a clean checkout, run `contracts:sync`, run `contracts:generate` and review the semantic diff, update affected mappers, consumer pages, and tests, then run `contracts:check`.
+To consume a new or changed operation: merge the backend change, run `contracts:sync`, fix the type errors it shows, call the operation through `apiClient` in the domain `data-access` (path and body come from the contract), map the response to the domain model, and update the consumer page and tests.
 
 ## Consumer projections
 

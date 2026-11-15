@@ -1,6 +1,6 @@
 # Admin media library
 
-**Provider:** KedrStore module Media, contract [media.openapi.yaml](../openapi/media/media.openapi.yaml). **Consumer:** Admin «Медіа» (`/media`), [feature card](../../features/admin/media.md).
+**Provider:** KedrStore module Media, contract [OpenAPI snapshot](../openapi/openapi.json). **Consumer:** Admin «Медіа» (`/media`), [feature card](../../features/admin/media.md).
 
 | Operation                                          | Use in Admin                                                                                                                                             |
 | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |

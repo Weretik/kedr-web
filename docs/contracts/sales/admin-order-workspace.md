@@ -2,7 +2,7 @@
 
 ## Source and operations
 
-- Provider snapshots: [`admin-order-workspace.openapi.yaml`](../openapi/sales/admin-order-workspace.openapi.yaml) and [`admin-order-drafts.openapi.yaml`](../openapi/sales/admin-order-drafts.openapi.yaml).
+- Provider snapshots: [OpenAPI snapshot](../openapi/openapi.json) and [OpenAPI snapshot](../openapi/openapi.json).
 - Provenance: [`SOURCE.md`](../openapi/SOURCE.md), KedrStore commit `b3797c1`.
 - Operations: `getAdminWorkspaceOrders`, `getAdminWorkspaceOrderById`, `quoteAdminWorkspaceOrder`, `createAdminWorkspaceOrder`, `getAdminOrderDrafts`, `getAdminOrderDraftById`, `createAdminOrderDraft`, `updateAdminOrderDraft`, `deleteAdminOrderDraft`, `getAdminWorkspaceCustomerPrices`.
 - Consumer: `@admin/orders/data-access`; `operations[...]` transport types are used only at this boundary, and responses undergo runtime validation and mapping to domain models.
@@ -17,7 +17,7 @@ Order details contain its number, customer, products, total, and 1C synchronizat
 
 ## Writes and errors
 
-For a quote with a quantity above current stock, the backend returns HTTP 400 `code=unavailable_product` and a `message` containing the product name and available/requested quantities. `axiosBaseQuery` preserves this code in `ApiError.reason`; the checkout page displays the message so the user can adjust the quantity. The provider snapshot needs synchronization after the backend commit.
+For a quote with a quantity above current stock, the backend returns HTTP 400 `code=unavailable_product` and a `message` containing the product name and available/requested quantities. `apiCall` preserves this code in `ApiError.reason`; the checkout page displays the message so the user can adjust the quantity. The provider snapshot needs synchronization after the backend commit.
 
 Order creation sends the customer, productId/quantity, `quoteFingerprint`, an optional comment, and a UUID `Idempotency-Key`. The server validates products/customer and recalculates the price. On `409 quote_changed`, the frontend shows the new quote and requires confirmation again. A retry of the same pending payload keeps the same key; changing the payload creates a new key.
 

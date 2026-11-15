@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`profile.openapi.yaml`](../openapi/identity/profile.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Consumer: Admin [Мій кабінет](../../features/admin/profile.md) through [profile.api](../../../libs/admin/users/data-access/src/api/profile.api.ts)
 - Access: any staff session (`RequireManagerRole`); `email` and `password` need the Admin role. Cookie session and CSRF header.
 

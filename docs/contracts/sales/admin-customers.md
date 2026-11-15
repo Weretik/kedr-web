@@ -2,7 +2,7 @@
 
 ## Machine-readable contract
 
-- OpenAPI: [`customer-read.openapi.yaml`](../openapi/sales/customer-read.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Operations: `getAdminCustomers`, `getAdminCustomerById`
 - Generated transport types: `operations['getAdminCustomers']` and `operations['getAdminCustomerById']`
 - Consumer: Admin customer list and detail card

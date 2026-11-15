@@ -1,6 +1,6 @@
 # Admin «Налаштування SEO сайту»
 
-**Status:** implemented. Route: `/seo-settings` (menu «Сайт» → «Налаштування SEO сайту», all staff: Manager, Seo, Admin). Backend: KedrStore Content module, contract [site SEO settings](../../contracts/openapi/content/seo-settings.openapi.yaml).
+**Status:** implemented. Route: `/seo-settings` (menu «Сайт» → «Налаштування SEO сайту», all staff: Manager, Seo, Admin). Backend: KedrStore Content module, contract [site SEO settings](../../contracts/openapi/openapi.json).
 
 - The page is read-only: the Google Analytics 4 id, the Google Tag Manager id, the Google Search Console and Bing Webmaster verification codes («Не вказано» when empty) and the picture for link previews, with «Змінено: хто, коли». A picture deleted from the media library is the only mark: the site then shows its own picture.
 - «Редагувати» opens the right side panel with the four codes and the picture (from the media library, an upload, or «Прибрати фото»). Ids are upper-cased; for a verification code the whole meta tag may be pasted and only its `content` is kept. An id or code of another shape is refused before saving. An empty field adds nothing to the site.

@@ -1,6 +1,6 @@
 # Admin company contacts
 
-**Status:** implemented. Route: `/company-contacts` (menu «Контакти»). Backend: KedrStore Content module, contract [company contacts](../../contracts/openapi/content/contacts.openapi.yaml); the public site shows the same record ([site company contacts](../site/company-contacts.md)).
+**Status:** implemented. Route: `/company-contacts` (menu «Контакти»). Backend: KedrStore Content module, contract [company contacts](../../contracts/openapi/openapi.json); the public site shows the same record ([site company contacts](../site/company-contacts.md)).
 
 - One [form](../../../libs/admin/company/ui/src/forms/company-contacts-form.tsx) on the [page](../../../libs/admin/company/feature/src/pages/company-contacts-page.tsx): sales phone, Viber number, email, Telegram link, map link, and the city in Ukrainian and Russian. All fields are required and saved together.
 - Phones may be typed as `068 713 50 49`, `(068) 713-50-49` or `+380687135049`; the [save body](../../../libs/admin/company/data-access/src/mappers/company-contacts.mapper.ts) sends `+380…`. The [local rules](../../../libs/admin/company/model/src/validators/company-contacts-rules.ts) mirror the backend: Ukrainian numbers, an email, `https://` links, Telegram only on `t.me` or `telegram.me`. A server field error lands under its field.
