@@ -30,7 +30,10 @@ jobs:
           cache-name: checks
       - run: node tools/ci/check-dependency-tree.mjs
       - run: npm run security:audit
+      - run: npm run contracts:fixtures
       - run: npm run contracts:check
+      # The snapshot must equal the contract on the KedrStore default branch; `npm run contracts:sync` refreshes it.
+      - run: npm run contracts:drift
       - run: npm run docs:check
       - run: npm run architecture:boundaries
       - run: npm run architecture:structure:fixtures

@@ -4,15 +4,120 @@
  */
 
 export interface paths {
-    "/api/catalog/{lang}/categories": {
+    "/api/admin/catalog-attributes": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get the localized category navigation tree */
-        get: operations["getCategoryTree"];
+        /** List attributes of the «Властивості» page */
+        get: operations["getAdminCatalogAttributes"];
+        put?: never;
+        /**
+         * Add an attribute («Нова ознака», Admin)
+         * @description The attribute is manual from the start, so the dictionary import leaves it. Code and slug come from the request or from the name (a slug made from the name gets a number when taken); a taken code or explicit slug is rejected.
+         */
+        post: operations["createAdminCatalogAttribute"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an attribute with its values and codes */
+        get: operations["getAdminCatalogAttribute"];
+        /**
+         * Edit an attribute (Admin)
+         * @description Names, filter flag, and order. The dictionary import no longer changes the attribute.
+         */
+        put: operations["updateAdminCatalogAttribute"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/{id}/values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a value (Admin)
+         * @description Code and slug come from the request or from the name; a taken code or explicit slug is rejected.
+         */
+        post: operations["createAdminAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/{id}/values/{valueId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Edit a value (Admin)
+         * @description Names, order, and swatch (a color or a media-library texture). The dictionary import then leaves it.
+         */
+        put: operations["updateAdminAttributeValue"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/swatches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a color or decor picture for a value (Admin)
+         * @description JPEG, PNG, or WebP up to 5 MB, stored as it is on the CDN under `swatches/` and in the media library folder «Кольори» (created when missing). No value changes: send `mediaFileId` as `swatchMediaFileId` with the value create or update.
+         */
+        post: operations["uploadAdminAttributeSwatch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/unresolved-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * «Не розшифровані коди»
+         * @description Codes without a value or with an unconfirmed decoding that the owner has not decided yet.
+         */
+        get: operations["getAdminUnresolvedAttributeCodes"];
         put?: never;
         post?: never;
         delete?: never;
@@ -21,7 +126,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/catalog/{lang}/categories/by-slug/{categorySlug}": {
+    "/api/admin/catalog-attributes/codes/{aliasId}/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -29,10 +134,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get one localized category, its descendants, breadcrumbs, counts, price range, and content
-         * @description A former slug returns 200 with `slug` set to the current slug, so the client can redirect permanently.
+         * Where a code occurs (spec catalog/008)
+         * @description On-site, not deleted products whose original 1C names contain the code, grouped by category (most products first), with the code's own decoding in each category.
          */
-        get: operations["getCategoryBySlug"];
+        get: operations["getAdminAttributeCodeProducts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -41,18 +146,35 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/catalog/{lang}/products": {
+    "/api/admin/catalog-attributes/codes/{aliasId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        get?: never;
         /**
-         * List public products
-         * @description When `categoryId` is supplied, the page contains public products of that category and of every descendant category at any depth; sibling branches are excluded. The category subtree and all other filters are applied before `pagedInfo.totalRecords`, sorting, and paging. An unknown valid `categoryId` returns `200` with an empty page and `totalRecords = 0`.
+         * Decode a code (Admin)
+         * @description With applyToAll (default true): a value of the code's attribute for all products, or null when the code means nothing to filter by. Product values that waited only for this confirmation become confirmed at once. The dictionary import no longer changes the code. categories, when sent, replaces the code's own decodings per category (spec catalog/008): they win over the decoding for all; a category left out follows it. The products whose names contain the code are recognized again at once.
          */
-        get: operations["getPublicProducts"];
+        put: operations["decideAdminAttributeCode"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog-attributes/problem-reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Review reasons of on-site products, most frequent first */
+        get: operations["getAdminAttributeProblemReasons"];
         put?: never;
         post?: never;
         delete?: never;
@@ -61,7 +183,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/catalog/{lang}/{categorySlug}/products": {
+    "/api/admin/catalog-attributes/category-filters/{categoryId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -69,111 +191,15 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List public products in a category
-         * @description Returns public products of the category selected by `categorySlug` and of every descendant category at any depth; sibling branches are excluded. When `categoryId` is also supplied, it takes precedence over the slug. The category subtree and all other filters are applied before `pagedInfo.totalRecords`, sorting, and paging. A former category slug selects its category. An unknown or deleted category slug returns `404`; an unknown `categoryId` returns `200` with an empty page.
+         * «Фільтри категорій» of one category
+         * @description Filter rows in order, then attributes the category's products have that are not offered yet (off).
          */
-        get: operations["getPublicProductsByCategorySlug"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/{lang}/product/{productSlug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
+        get: operations["getAdminCategoryAttributeFilters"];
         /**
-         * Get a public product by slug
-         * @description A former slug returns 200 with `productSlug` set to the current slug, so the client can redirect permanently. A product of a deleted category is not public.
+         * Turn category filters on or off and order them (Admin)
+         * @description Attributes left out stay as they are. The attribute import no longer changes the listed filters.
          */
-        get: operations["getPublicProductBySlug"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/{lang}/models": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Search models
-         * @description Models over all categories, without attribute filters. `search` matches every word in the model name, or in one product's Ukrainian or Russian name or 1C code. When the whole search is the 1C code of an on-site product, `exactMatch` is its model address.
-         */
-        get: operations["getPublicSiteModels"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/{lang}/{categorySlug}/models": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Models of a category
-         * @description Models of the category and every category below it. A final category (without children) takes attribute filters and returns them with counts in `filters`; a parent category gives `filters` empty and refuses attribute filters with 400. A former category slug still selects its category. A model matches when one of its on-site products matches every filter; the card's price, stock, sale, and new count only those products.
-         */
-        get: operations["getPublicCategorySiteModels"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/{lang}/model/{modelSlug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * The model page
-         * @description A current model slug, or the slug of an on-site product shown as a model of its own, gives the page. The page lists the axis values its products have and each product's values, so the site can hide combinations no product has and offer in-stock neighbours. Texts of `ru` fall back to `uk` field by field.
-         */
-        get: operations["getPublicSiteModel"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/{lang}/product/{productSlug}/model": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * The model address of an old product address
-         * @description A current or former slug of an on-site product gives its model and the product's axis values, for the permanent redirect of the old product page.
-         */
-        get: operations["getPublicProductModelAddress"];
-        put?: never;
+        put: operations["setAdminCategoryAttributeFilters"];
         post?: never;
         delete?: never;
         options?: never;
@@ -292,6 +318,262 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/{lang}/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the localized category navigation tree */
+        get: operations["getCategoryTree"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{lang}/categories/by-slug/{categorySlug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get one localized category, its descendants, breadcrumbs, counts, price range, and content
+         * @description A former slug returns 200 with `slug` set to the current slug, so the client can redirect permanently.
+         */
+        get: operations["getCategoryBySlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Find groups by category and part of the name
+         * @description Up to 50 groups ordered by name, for the «Перенести в іншу групу» picker.
+         */
+        get: operations["getAdminProductGroups"];
+        put?: never;
+        /**
+         * Create a group («Нова група»)
+         * @description The listed products (up to 200, all in the category) move into the new group and are pinned: automation never moves them again. The slug is built from the name.
+         */
+        post: operations["createAdminProductGroup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a group with its variants */
+        get: operations["getAdminProductGroup"];
+        /**
+         * Rename a group
+         * @description The slug stays as it is.
+         */
+        put: operations["renameAdminProductGroup"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups/{id}/main": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Choose the main product («Зробити головним»)
+         * @description The product must be in the group and on the site. It stays main until it is deleted or taken off the site; then automation picks the main product again.
+         */
+        put: operations["setAdminProductGroupMain"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/product-groups/{id}/slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a group slug
+         * @description Admin or Seo only. The old slug goes to the slug history and is never given to another group.
+         */
+        put: operations["changeAdminProductGroupSlug"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mobile/sync/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Products, prices, categories and price types for offline work
+         * @description Requires `CanManageOrders` (Manager, Seo, or Admin); the app sends its bearer token. Deleted products and categories are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
+         */
+        get: operations["getMobileCatalogSnapshot"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Products without a photo and categories without site text
+         * @description Requires `CanManageProducts` (Manager, Seo, or Admin). Deleted products and categories are not counted.
+         */
+        get: operations["getAdminCatalogOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the «Властивості» panel of a product */
+        get: operations["getAdminProductAttributes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/attributes/{attributeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set the values of one attribute by hand
+         * @description The values (in position order) become manual and locked: the import, the parser, and the 1C sync no longer change them. List attributes take `valueId` from the attribute's list, number attributes take `number`. Positions beyond the list are dropped. A change of color, size, or side rebuilds the variant groups.
+         */
+        put: operations["setAdminProductAttribute"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/attributes/{attributeId}/manual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * «Повернути автоматичне»
+         * @description Drops the manual values of the attribute and brings back the automatic ones kept for them (`hasAutomatic`). Positions automation never had disappear; new automatic positions come with the next recognition run.
+         */
+        delete: operations["restoreAdminProductAttribute"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/review/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * «Прийняти як є»
+         * @description Permanent; automation keeps the product accepted until «Повернути на перевірку». Records who and when.
+         */
+        post: operations["acceptAdminProductReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{productId}/review/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** «Повернути на перевірку» */
+        post: operations["reopenAdminProductReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/products": {
         parameters: {
             query?: never;
@@ -376,9 +658,7 @@ export interface paths {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
         /**
@@ -402,9 +682,7 @@ export interface paths {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
         /** Get the group of a product */
@@ -421,7 +699,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/product-groups": {
+    "/api/catalog/{lang}/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -429,38 +707,11 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Find groups by category and part of the name
-         * @description Up to 50 groups ordered by name, for the «Перенести в іншу групу» picker.
+         * List public products
+         * @description When `categoryId` is supplied, the page contains public products of that category and of every descendant category at any depth; sibling branches are excluded. The category subtree and all other filters are applied before `pagedInfo.totalRecords`, sorting, and paging. An unknown valid `categoryId` returns `200` with an empty page and `totalRecords = 0`.
          */
-        get: operations["getAdminProductGroups"];
+        get: operations["getPublicProducts"];
         put?: never;
-        /**
-         * Create a group («Нова група»)
-         * @description The listed products (up to 200, all in the category) move into the new group and are pinned: automation never moves them again. The slug is built from the name.
-         */
-        post: operations["createAdminProductGroup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/product-groups/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        /** Get a group with its variants */
-        get: operations["getAdminProductGroup"];
-        /**
-         * Rename a group
-         * @description The slug stays as it is.
-         */
-        put: operations["renameAdminProductGroup"];
         post?: never;
         delete?: never;
         options?: never;
@@ -468,21 +719,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/product-groups/{id}/main": {
+    "/api/catalog/{lang}/{categorySlug}/products": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
-        get?: never;
         /**
-         * Choose the main product («Зробити головним»)
-         * @description The product must be in the group and on the site. It stays main until it is deleted or taken off the site; then automation picks the main product again.
+         * List public products in a category
+         * @description Returns public products of the category selected by `categorySlug` and of every descendant category at any depth; sibling branches are excluded. When `categoryId` is also supplied, it takes precedence over the slug. The category subtree and all other filters are applied before `pagedInfo.totalRecords`, sorting, and paging. A former category slug selects its category. An unknown or deleted category slug returns `404`; an unknown `categoryId` returns `200` with an empty page.
          */
-        put: operations["setAdminProductGroupMain"];
+        get: operations["getPublicProductsByCategorySlug"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -490,21 +739,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/product-groups/{id}/slug": {
+    "/api/catalog/{lang}/product/{productSlug}": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
-        get?: never;
         /**
-         * Change a group slug
-         * @description Admin or Seo only. The old slug goes to the slug history and is never given to another group.
+         * Get a public product by slug
+         * @description A former slug returns 200 with `productSlug` set to the current slug, so the client can redirect permanently. A product of a deleted category is not public.
          */
-        put: operations["changeAdminProductGroupSlug"];
+        get: operations["getPublicProductBySlug"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -530,6 +777,23 @@ export interface paths {
          * @description The model is accepted at once. The category must be final (no children); the products (up to 200) must be in it and not in another accepted model; a proposed model gives its products up. Axes are offered from the products and saved.
          */
         post: operations["createAdminSiteModel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/site-models/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Site model problem counts (also inside the «Огляд» catalog block) */
+        get: operations["getAdminSiteModelHealth"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -576,16 +840,20 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/site-models/health": {
+    "/api/admin/site-models/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Site model problem counts (also inside the «Огляд» catalog block) */
-        get: operations["getAdminSiteModelHealth"];
-        put?: never;
+        /** The model card */
+        get: operations["getAdminSiteModel"];
+        /**
+         * Rename a model
+         * @description The slug stays as it is.
+         */
+        put: operations["renameAdminSiteModel"];
         post?: never;
         delete?: never;
         options?: never;
@@ -613,36 +881,11 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/site-models/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        /** The model card */
-        get: operations["getAdminSiteModel"];
-        /**
-         * Rename a model
-         * @description The slug stays as it is.
-         */
-        put: operations["renameAdminSiteModel"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/admin/site-models/{id}/axes": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
         get?: never;
@@ -662,9 +905,7 @@ export interface paths {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
         get?: never;
@@ -684,10 +925,7 @@ export interface paths {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-                productId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         get?: never;
@@ -707,10 +945,7 @@ export interface paths {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-                language: "uk" | "ru";
-            };
+            path?: never;
             cookie?: never;
         };
         get?: never;
@@ -730,9 +965,7 @@ export interface paths {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
         get?: never;
@@ -748,149 +981,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/products/{productId}/attributes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        /** Get the «Властивості» panel of a product */
-        get: operations["getAdminProductAttributes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/products/{productId}/attributes/{attributeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-                attributeId: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Set the values of one attribute by hand
-         * @description The values (in position order) become manual and locked: the import, the parser, and the 1C sync no longer change them. List attributes take `valueId` from the attribute's list, number attributes take `number`. Positions beyond the list are dropped. A change of color, size, or side rebuilds the variant groups.
-         */
-        put: operations["setAdminProductAttribute"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/products/{productId}/attributes/{attributeId}/manual": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-                attributeId: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * «Повернути автоматичне»
-         * @description Drops the manual values of the attribute and brings back the automatic ones kept for them (`hasAutomatic`). Positions automation never had disappear; new automatic positions come with the next recognition run.
-         */
-        delete: operations["restoreAdminProductAttribute"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/products/{productId}/review/accept": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * «Прийняти як є»
-         * @description Permanent; automation keeps the product accepted until «Повернути на перевірку». Records who and when.
-         */
-        post: operations["acceptAdminProductReview"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/products/{productId}/review/reopen": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** «Повернути на перевірку» */
-        post: operations["reopenAdminProductReview"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes": {
+    "/api/catalog/{lang}/models": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List attributes of the «Властивості» page */
-        get: operations["getAdminCatalogAttributes"];
+        /**
+         * Search models
+         * @description Models over all categories, without attribute filters. `search` matches every word in the model name, or in one product's Ukrainian or Russian name or 1C code. When the whole search is the 1C code of an on-site product, `exactMatch` is its model address.
+         */
+        get: operations["getPublicSiteModels"];
         put?: never;
-        /**
-         * Add an attribute («Нова ознака», Admin)
-         * @description The attribute is manual from the start, so the dictionary import leaves it. Code and slug come from the request or from the name (a slug made from the name gets a number when taken); a taken code or explicit slug is rejected.
-         */
-        post: operations["createAdminCatalogAttribute"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        /** Get an attribute with its values and codes */
-        get: operations["getAdminCatalogAttribute"];
-        /**
-         * Edit an attribute (Admin)
-         * @description Names, filter flag, and order. The dictionary import no longer changes the attribute.
-         */
-        put: operations["updateAdminCatalogAttribute"];
         post?: never;
         delete?: never;
         options?: never;
@@ -898,44 +1001,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/catalog-attributes/{id}/values": {
+    "/api/catalog/{lang}/{categorySlug}/models": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
-            };
+            path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Models of a category
+         * @description Models of the category and every category below it. A final category (without children) takes attribute filters and returns them with counts in `filters`; a parent category gives `filters` empty and refuses attribute filters with 400. A former category slug still selects its category. A model matches when one of its on-site products matches every filter; the card's price, stock, sale, and new count only those products.
+         */
+        get: operations["getPublicCategorySiteModels"];
         put?: never;
-        /**
-         * Add a value (Admin)
-         * @description Code and slug come from the request or from the name; a taken code or explicit slug is rejected.
-         */
-        post: operations["createAdminAttributeValue"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes/{id}/values/{valueId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                valueId: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Edit a value (Admin)
-         * @description Names, order, and swatch (a color or a media-library texture). The dictionary import then leaves it.
-         */
-        put: operations["updateAdminAttributeValue"];
         post?: never;
         delete?: never;
         options?: never;
@@ -943,7 +1021,93 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/catalog-attributes/swatches": {
+    "/api/catalog/{lang}/model/{modelSlug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The model page
+         * @description A current model slug, or the slug of an on-site product shown as a model of its own, gives the page. The page lists the axis values its products have and each product's values, so the site can hide combinations no product has and offer in-stock neighbours. Texts of `ru` fall back to `uk` field by field.
+         */
+        get: operations["getPublicSiteModel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{lang}/product/{productSlug}/model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The model address of an old product address
+         * @description A current or former slug of an on-site product gives its model and the product's axis values, for the permanent redirect of the old product page.
+         */
+        get: operations["getPublicProductModelAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all articles, drafts included, newest first */
+        get: operations["getAdminArticles"];
+        put?: never;
+        /**
+         * Create an article
+         * @description An empty `slug` is generated from the Ukrainian title (KMU-2010 transliteration, `-2`, `-3`… on a clash). `bodyHtml` is sanitized to p, br, strong, em, ul, ol, li, h2, h3, blockquote, and a[href] (http, https, or a path starting with `/`). Not idempotent: repeating the request creates another article.
+         */
+        post: operations["createAdminArticle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an article with both languages */
+        get: operations["getAdminArticle"];
+        /**
+         * Replace an article's slug, date, publication flag, and both texts
+         * @description Full replacement; `slug` is required and must not belong to another article. Repeating it is safe.
+         */
+        put: operations["updateAdminArticle"];
+        post?: never;
+        /**
+         * Delete an article and its cover for good
+         * @description To hide an article from the site without losing it, save it with `isPublished = false`.
+         */
+        delete: operations["deleteAdminArticle"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/articles/covers": {
         parameters: {
             query?: never;
             header?: never;
@@ -953,124 +1117,17 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Upload a color or decor picture for a value (Admin)
-         * @description JPEG, PNG, or WebP up to 5 MB, stored as it is on the CDN under `swatches/` and in the media library folder «Кольори» (created when missing). No value changes: send `mediaFileId` as `swatchMediaFileId` with the value create or update.
+         * Upload a cover picture before saving the article
+         * @description JPEG, PNG, or WebP up to 10 MB, at least 600 px wide. Stored as WebP at most 1600 px wide with the EXIF orientation applied, on the CDN under `articles/` and in the media library folder «Статті» (created when missing). Nothing about an article changes: send `mediaFileId` as `coverMediaFileId` with the create or update.
          */
-        post: operations["uploadAdminAttributeSwatch"];
+        post: operations["uploadAdminArticleCover"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/admin/catalog-attributes/unresolved-codes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * «Не розшифровані коди»
-         * @description Codes without a value or with an unconfirmed decoding that the owner has not decided yet.
-         */
-        get: operations["getAdminUnresolvedAttributeCodes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes/codes/{aliasId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                aliasId: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Decode a code (Admin)
-         * @description With applyToAll (default true): a value of the code's attribute for all products, or null when the code means nothing to filter by. Product values that waited only for this confirmation become confirmed at once. The dictionary import no longer changes the code. categories, when sent, replaces the code's own decodings per category (spec catalog/008): they win over the decoding for all; a category left out follows it. The products whose names contain the code are recognized again at once.
-         */
-        put: operations["decideAdminAttributeCode"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes/codes/{aliasId}/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                aliasId: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * Where a code occurs (spec catalog/008)
-         * @description On-site, not deleted products whose original 1C names contain the code, grouped by category (most products first), with the code's own decoding in each category.
-         */
-        get: operations["getAdminAttributeCodeProducts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes/problem-reasons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Review reasons of on-site products, most frequent first */
-        get: operations["getAdminAttributeProblemReasons"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog-attributes/category-filters/{categoryId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                categoryId: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * «Фільтри категорій» of one category
-         * @description Filter rows in order, then attributes the category's products have that are not offered yet (off).
-         */
-        get: operations["getAdminCategoryAttributeFilters"];
-        /**
-         * Turn category filters on or off and order them (Admin)
-         * @description Attributes left out stay as they are. The attribute import no longer changes the listed filters.
-         */
-        put: operations["setAdminCategoryAttributeFilters"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/orders": {
+    "/api/admin/articles/covers/move-legacy": {
         parameters: {
             query?: never;
             header?: never;
@@ -1080,46 +1137,28 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Create a quick order
-         * @description Creates a quick order. This endpoint is currently anonymous and does not implement an Idempotency-Key contract; disable duplicate submission in the frontend.
+         * Move covers saved before Content 008 to the CDN
+         * @description Uploads each legacy cover to the CDN under `articles/` (library folder «Статті», named after the slug), sets it as the article cover, and deletes the stored bytes. Safe to repeat: a second call moves nothing. Stops at the first failed upload and keeps what was already moved.
          */
-        post: operations["createQuickOrder"];
+        post: operations["moveLegacyAdminArticleCovers"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/admin/orders": {
+    "/api/content/{lang}/articles": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Browse persisted manager orders */
-        get: operations["getAdminOrders"];
-        put?: never;
         /**
-         * Create an admin order for asynchronous 1C delivery
-         * @description Policy CanManageOrders (Manager, Seo, and Admin).
+         * List published articles in one language, newest first
+         * @description Public, because the site renders articles for anonymous visitors.
          */
-        post: operations["createAdminOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get one persisted manager order */
-        get: operations["getAdminOrderById"];
+        get: operations["getArticles"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1128,18 +1167,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/orders/{orderId}/sync-status": {
+    "/api/content/{lang}/articles/{slug}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get the current 1C delivery status for an admin order
-         * @description Policy CanManageOrders (Manager, Seo, and Admin).
-         */
-        get: operations["getAdminOrderSyncStatus"];
+        /** Get one published article by slug */
+        get: operations["getArticle"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1148,7 +1184,143 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/orders/{orderId}/sync/retry": {
+    "/api/content/articles/{id}/cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the cover picture of an article
+         * @description Public. Drafts are included so the admin preview works; the path is only known from an article response. With `v` equal to the current cover version the response is `Cache-Control: public, max-age=31536000, immutable`.
+         */
+        get: operations["getArticleCover"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company contacts for editing
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminCompanyContacts"];
+        /**
+         * Replace all company contacts
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). All fields are required and replaced at once.
+         */
+        put: operations["updateAdminCompanyContacts"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company contacts
+         * @description Public, because every site page renders them for anonymous visitors.
+         */
+        get: operations["getCompanyContacts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the documents with their published edition and waiting draft
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Always four items, in a fixed order.
+         */
+        get: operations["getAdminLegalDocuments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/{kind}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List all editions of a document
+         * @description Requires `CanManageContent`. The draft first, then editions by number, newest first.
+         */
+        get: operations["getAdminLegalDocumentVersions"];
+        put?: never;
+        /**
+         * Start a draft
+         * @description Requires `CanManageContent`. Without a body (or without `texts`) the draft copies the published texts; with `texts` it starts from them (sanitized).
+         */
+        post: operations["createAdminLegalDocumentDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/versions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get one edition with both texts
+         * @description Requires `CanManageContent`.
+         */
+        get: operations["getAdminLegalDocumentVersion"];
+        /**
+         * Replace both texts of a draft
+         * @description Requires `CanManageContent`. The HTML is sanitized on save.
+         */
+        put: operations["updateAdminLegalDocumentDraft"];
+        post?: never;
+        /**
+         * Delete a draft
+         * @description Requires `CanManageContent`. Published and archived editions cannot be deleted.
+         */
+        delete: operations["deleteAdminLegalDocumentDraft"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/documents/versions/{id}/publish": {
         parameters: {
             query?: never;
             header?: never;
@@ -1158,17 +1330,17 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Schedule a failed order for another 1C delivery cycle
-         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
+         * Publish a draft
+         * @description Requires `CanManageContent`. The draft gets the next number and the given «Редакція від» date and goes on the site; the edition it replaces becomes archived. Both changes are saved together.
          */
-        post: operations["retryAdminOrderSync"];
+        post: operations["publishAdminLegalDocumentDraft"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/admin/order-workspace/overview": {
+    "/api/content/{lang}/documents/{kind}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1176,10 +1348,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Orders today, drafts, 1C problems and the newest orders
-         * @description Requires `CanManageOrders` (Manager, Seo, or Admin). Lists hold at most 5 rows, newest first.
+         * Get the published edition of a document
+         * @description Public. `bodyHtml` is sanitized HTML (h2, h3, p, lists, strong, em, blockquote, links); the site builds its table of contents from the h2 headings and fills the `{site}`, `{email}` and `{phone}` placeholders.
          */
-        get: operations["getAdminWorkspaceOverview"];
+        get: operations["getPublishedLegalDocument"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1188,33 +1360,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/order-workspace/orders": {
+    "/api/admin/content/gallery": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Search persisted Admin orders */
-        get: operations["getAdminWorkspaceOrders"];
-        put?: never;
-        /** Create one priced order and pending 1C sync */
-        post: operations["createAdminWorkspaceOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/order-workspace/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Read a persisted Admin order */
-        get: operations["getAdminWorkspaceOrderById"];
+        /**
+         * List the gallery cards with previews
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminGallery"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1223,24 +1380,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/order-workspace/quote": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Price a selected customer's lines without persisting an order */
-        post: operations["quoteAdminWorkspaceOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/order-workspace/customer-prices": {
+    "/api/admin/content/gallery/photos": {
         parameters: {
             query?: never;
             header?: never;
@@ -1250,64 +1390,48 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Read a customer's unit prices for products, ignoring stock
-         * @description Uses the price type of the nearest customer rule on the product's category or any parent category, otherwise the customer's default price type. A product without such a UAH price, or an unknown product, returns a null unitPrice.
+         * Add media-library photos to the end of the gallery
+         * @description Requires `CanManageContent`. Up to 100 file IDs in the order to add; a photo already in the gallery is skipped. A file that is not in the library answers 400 and nothing is added.
          */
-        post: operations["getAdminWorkspaceCustomerPrices"];
+        post: operations["addAdminGalleryPhotos"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/admin/order-workspace/drafts": {
+    "/api/admin/content/gallery/videos": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Search saved drafts */
-        get: operations["getAdminOrderDrafts"];
+        get?: never;
         put?: never;
-        /** Save a reusable draft */
-        post: operations["createAdminOrderDraft"];
+        /**
+         * Add a YouTube video by its link to the end of the gallery
+         * @description Requires `CanManageContent`. `url` may be a watch, youtu.be, shorts, embed or live link, or the bare 11-character ID.
+         */
+        post: operations["addAdminGalleryVideo"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/admin/order-workspace/drafts/{draftId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                draftId: number;
-            };
-            cookie?: never;
-        };
-        /** Read one draft with current pricing availability */
-        get: operations["getAdminOrderDraftById"];
-        /** Replace editable draft fields */
-        put: operations["updateAdminOrderDraft"];
-        post?: never;
-        /** Delete one draft and its lines */
-        delete: operations["deleteAdminOrderDraft"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/customers": {
+    "/api/admin/content/gallery/youtube-preview": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Browse active Sales customers */
-        get: operations["getAdminCustomers"];
+        /**
+         * Resolve a pasted YouTube link before adding it
+         * @description Requires `CanManageContent`. `title` is what YouTube's public oEmbed gives, or `null` when it does not answer (private or deleted video, network error).
+         */
+        get: operations["previewAdminGalleryYoutubeVideo"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1316,15 +1440,502 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/customers/{counterpartyId}": {
+    "/api/admin/content/gallery/items/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get one active Sales customer */
-        get: operations["getAdminCustomerById"];
+        get?: never;
+        /**
+         * Replace the title and caption of a card
+         * @description Requires `CanManageContent`. Empty or missing values are stored as none.
+         */
+        put: operations["updateAdminGalleryItem"];
+        post?: never;
+        /**
+         * Remove a card from the gallery
+         * @description Requires `CanManageContent`. The picture stays in the media library.
+         */
+        delete: operations["deleteAdminGalleryItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/gallery/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all cards
+         * @description Requires `CanManageContent`. `ids` must hold every current card exactly once, first shown first; a list built from a stale page answers 409.
+         */
+        put: operations["reorderAdminGallery"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/{lang}/gallery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the site gallery in one language
+         * @description Public, in site order. A video's `imageUrl` is YouTube's poster (480×360); a photo's is its CDN URL, with `width`/`height` when the library knows them. A photo whose library file was deleted is left out.
+         */
+        get: operations["getPublicGallery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the home page FAQ and brands
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminHomeBlocks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/faq": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a question to the end of the FAQ
+         * @description Requires `CanManageContent`. All four texts are required.
+         */
+        post: operations["createAdminHomeFaqItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/faq/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the texts of a question
+         * @description Requires `CanManageContent`.
+         */
+        put: operations["updateAdminHomeFaqItem"];
+        post?: never;
+        /**
+         * Remove a question
+         * @description Requires `CanManageContent`.
+         */
+        delete: operations["deleteAdminHomeFaqItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/faq/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all questions
+         * @description Requires `CanManageContent`. `ids` must hold every current question exactly once, first shown first; a list built from a stale page answers 409.
+         */
+        put: operations["reorderAdminHomeFaq"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/brands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a brand to the end of the list
+         * @description Requires `CanManageContent`. The logo must be a media library file.
+         */
+        post: operations["createAdminHomeBrand"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/brands/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a brand's name or logo
+         * @description Requires `CanManageContent`.
+         */
+        put: operations["updateAdminHomeBrand"];
+        post?: never;
+        /**
+         * Remove a brand
+         * @description Requires `CanManageContent`. The logo stays in the media library.
+         */
+        delete: operations["deleteAdminHomeBrand"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/home/brands/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save the order of all brands
+         * @description Requires `CanManageContent`. `ids` must hold every current brand exactly once; a stale list answers 409.
+         */
+        put: operations["reorderAdminHomeBrands"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/{lang}/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the home page FAQ and brands in one language
+         * @description Public, in site order. A brand whose logo file was deleted from the library is left out. An empty `brands` list means the admin has not added any.
+         */
+        get: operations["getPublicHomeBlocks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Article drafts, legacy covers and document drafts
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminContentOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/requisites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company requisites for editing
+         * @description Requires the Admin role.
+         */
+        get: operations["getAdminCompanyRequisites"];
+        /**
+         * Replace all company requisites
+         * @description Requires the Admin role. All fields are required and replaced at once; values are trimmed and spaces are removed from the IBAN. When something changed, one history entry is written in the same transaction; saving the same values writes nothing.
+         */
+        put: operations["updateAdminCompanyRequisites"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/requisites/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the latest requisites changes
+         * @description Requires the Admin role. The 50 newest entries, newest first.
+         */
+        get: operations["getAdminCompanyRequisitesHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/requisites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the company requisites
+         * @description Public, because the requisites page is shown to anonymous visitors.
+         */
+        get: operations["getCompanyRequisites"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/seo-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read the settings for editing
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminSiteSeoSettings"];
+        /**
+         * Replace all settings
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Ids are trimmed and upper-cased; for a verification code the whole meta tag may be sent and its `content` is kept. A blank or missing value removes that code or picture. A new picture must be in the media library. Repeating it is safe.
+         */
+        put: operations["updateAdminSiteSeoSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/seo-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read the codes the site places on every page
+         * @description Public, because the site renders pages for anonymous visitors. Never returns who edited.
+         */
+        get: operations["getSiteSeoSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/site-refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ask the public site to drop its cached content and catalog
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). No request body.
+         */
+        post: operations["refreshSite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/page-seo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List every site page with its texts
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Pages never saved have empty values.
+         */
+        get: operations["listAdminPageSeo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/page-seo/{page}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the texts of one page
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Values are trimmed; an empty or missing value returns that text to the site default. The first save creates the page row. Repeating it is safe.
+         */
+        put: operations["updateAdminPageSeo"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/{lang}/page-seo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the set search texts in one language
+         * @description Public, because the site builds page metadata for anonymous visitors. Only pages with a title or a description in this language are listed.
+         */
+        get: operations["listPublicPageSeo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/wholesale": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get both languages for editing
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
+         */
+        get: operations["getAdminWholesalePage"];
+        /**
+         * Replace both languages at once
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Every text is required. Repeating it is safe.
+         */
+        put: operations["updateAdminWholesalePage"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/{lang}/wholesale": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the page texts in one language
+         * @description Public, because the site renders the page for anonymous visitors.
+         */
+        get: operations["getPublicWholesalePage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/session/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the current user
+         * @description Works with the browser session cookie and with a mobile bearer token. For a cookie session it reissues a missing CSRF cookie.
+         */
+        get: operations["getCurrentSession"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1430,7 +2041,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/session/me": {
+    "/api/profile": {
         parameters: {
             query?: never;
             header?: never;
@@ -1438,11 +2049,89 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get the current user
-         * @description Works with the browser session cookie and with a mobile bearer token. For a cookie session it reissues a missing CSRF cookie.
+         * The signed-in staff account's profile
+         * @description Policy `RequireManagerRole` (Manager, Seo, or Admin). Customers get 403.
          */
-        get: operations["getCurrentSession"];
+        get: operations["getMyProfile"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change the own name */
+        put: operations["changeMyName"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/avatar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload the own avatar
+         * @description JPEG, PNG or WebP, at most 2 MB, at least 128×128 px, at most 24 megapixels. The server stores the centre square as a 256×256 WebP under a new name and deletes the previous file.
+         */
+        put: operations["uploadMyAvatar"];
+        post?: never;
+        /** Remove the own avatar */
+        delete: operations["removeMyAvatar"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change the own sign-in email (administrators)
+         * @description Policy `RequireAdminRole`. Needs the current password; a wrong one counts towards lockout. The calling browser session stays signed in; every other session ends.
+         */
+        put: operations["changeMyEmail"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/profile/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change the own password (administrators)
+         * @description Policy `RequireAdminRole`. Needs the current password. The calling browser session stays signed in; every other session ends.
+         */
+        put: operations["changeMyPassword"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1632,1096 +2321,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * The signed-in staff account's profile
-         * @description Policy `RequireManagerRole` (Manager, Seo, or Admin). Customers get 403.
-         */
-        get: operations["getMyProfile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/profile/name": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Change the own name */
-        put: operations["changeMyName"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/profile/avatar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Upload the own avatar
-         * @description JPEG, PNG or WebP, at most 2 MB, at least 128×128 px, at most 24 megapixels. The server stores the centre square as a 256×256 WebP under a new name and deletes the previous file.
-         */
-        put: operations["uploadMyAvatar"];
-        post?: never;
-        /** Remove the own avatar */
-        delete: operations["removeMyAvatar"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/profile/email": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Change the own sign-in email (administrators)
-         * @description Policy `RequireAdminRole`. Needs the current password; a wrong one counts towards lockout. The calling browser session stays signed in; every other session ends.
-         */
-        put: operations["changeMyEmail"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/profile/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Change the own password (administrators)
-         * @description Policy `RequireAdminRole`. Needs the current password. The calling browser session stays signed in; every other session ends.
-         */
-        put: operations["changeMyPassword"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sales/{lang}/catalog/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * List products with prices for the current user
-         * @description Returns prices determined for the authenticated user. `search` is a query parameter; all filters and paging are in the optional JSON body.
-         */
-        post: operations["getSalesCatalogProducts"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/articles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List published articles in one language, newest first
-         * @description Public, because the site renders articles for anonymous visitors.
-         */
-        get: operations["getArticles"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/articles/{slug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get one published article by slug */
-        get: operations["getArticle"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/articles/{id}/cover": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the cover picture of an article
-         * @description Public. Drafts are included so the admin preview works; the path is only known from an article response. With `v` equal to the current cover version the response is `Cache-Control: public, max-age=31536000, immutable`.
-         */
-        get: operations["getArticleCover"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/articles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all articles, drafts included, newest first */
-        get: operations["getAdminArticles"];
-        put?: never;
-        /**
-         * Create an article
-         * @description An empty `slug` is generated from the Ukrainian title (KMU-2010 transliteration, `-2`, `-3`… on a clash). `bodyHtml` is sanitized to p, br, strong, em, ul, ol, li, h2, h3, blockquote, and a[href] (http, https, or a path starting with `/`). Not idempotent: repeating the request creates another article.
-         */
-        post: operations["createAdminArticle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/articles/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get an article with both languages */
-        get: operations["getAdminArticle"];
-        /**
-         * Replace an article's slug, date, publication flag, and both texts
-         * @description Full replacement; `slug` is required and must not belong to another article. Repeating it is safe.
-         */
-        put: operations["updateAdminArticle"];
-        post?: never;
-        /**
-         * Delete an article and its cover for good
-         * @description To hide an article from the site without losing it, save it with `isPublished = false`.
-         */
-        delete: operations["deleteAdminArticle"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/articles/covers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload a cover picture before saving the article
-         * @description JPEG, PNG, or WebP up to 10 MB, at least 600 px wide. Stored as WebP at most 1600 px wide with the EXIF orientation applied, on the CDN under `articles/` and in the media library folder «Статті» (created when missing). Nothing about an article changes: send `mediaFileId` as `coverMediaFileId` with the create or update.
-         */
-        post: operations["uploadAdminArticleCover"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/articles/covers/move-legacy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Move covers saved before Content 008 to the CDN
-         * @description Uploads each legacy cover to the CDN under `articles/` (library folder «Статті», named after the slug), sets it as the article cover, and deletes the stored bytes. Safe to repeat: a second call moves nothing. Stops at the first failed upload and keeps what was already moved.
-         */
-        post: operations["moveLegacyAdminArticleCovers"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/contacts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the company contacts
-         * @description Public, because every site page renders them for anonymous visitors.
-         */
-        get: operations["getCompanyContacts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/contacts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the company contacts for editing
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
-         */
-        get: operations["getAdminCompanyContacts"];
-        /**
-         * Replace all company contacts
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). All fields are required and replaced at once.
-         */
-        put: operations["updateAdminCompanyContacts"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/requisites": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the company requisites
-         * @description Public, because the requisites page is shown to anonymous visitors.
-         */
-        get: operations["getCompanyRequisites"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/requisites": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the company requisites for editing
-         * @description Requires the Admin role.
-         */
-        get: operations["getAdminCompanyRequisites"];
-        /**
-         * Replace all company requisites
-         * @description Requires the Admin role. All fields are required and replaced at once; values are trimmed and spaces are removed from the IBAN. When something changed, one history entry is written in the same transaction; saving the same values writes nothing.
-         */
-        put: operations["updateAdminCompanyRequisites"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/requisites/history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List the latest requisites changes
-         * @description Requires the Admin role. The 50 newest entries, newest first.
-         */
-        get: operations["getAdminCompanyRequisitesHistory"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/documents/{kind}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the published edition of a document
-         * @description Public. `bodyHtml` is sanitized HTML (h2, h3, p, lists, strong, em, blockquote, links); the site builds its table of contents from the h2 headings and fills the `{site}`, `{email}` and `{phone}` placeholders.
-         */
-        get: operations["getPublishedLegalDocument"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/documents": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List the documents with their published edition and waiting draft
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Always four items, in a fixed order.
-         */
-        get: operations["getAdminLegalDocuments"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/documents/{kind}/versions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List all editions of a document
-         * @description Requires `CanManageContent`. The draft first, then editions by number, newest first.
-         */
-        get: operations["getAdminLegalDocumentVersions"];
-        put?: never;
-        /**
-         * Start a draft
-         * @description Requires `CanManageContent`. Without a body (or without `texts`) the draft copies the published texts; with `texts` it starts from them (sanitized).
-         */
-        post: operations["createAdminLegalDocumentDraft"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/documents/versions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["VersionId"];
-            };
-            cookie?: never;
-        };
-        /**
-         * Get one edition with both texts
-         * @description Requires `CanManageContent`.
-         */
-        get: operations["getAdminLegalDocumentVersion"];
-        /**
-         * Replace both texts of a draft
-         * @description Requires `CanManageContent`. The HTML is sanitized on save.
-         */
-        put: operations["updateAdminLegalDocumentDraft"];
-        post?: never;
-        /**
-         * Delete a draft
-         * @description Requires `CanManageContent`. Published and archived editions cannot be deleted.
-         */
-        delete: operations["deleteAdminLegalDocumentDraft"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/documents/versions/{id}/publish": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["VersionId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Publish a draft
-         * @description Requires `CanManageContent`. The draft gets the next number and the given «Редакція від» date and goes on the site; the edition it replaces becomes archived. Both changes are saved together.
-         */
-        post: operations["publishAdminLegalDocumentDraft"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/gallery": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the site gallery in one language
-         * @description Public, in site order. A video's `imageUrl` is YouTube's poster (480×360); a photo's is its CDN URL, with `width`/`height` when the library knows them. A photo whose library file was deleted is left out.
-         */
-        get: operations["getPublicGallery"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/gallery": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List the gallery cards with previews
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
-         */
-        get: operations["getAdminGallery"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/gallery/photos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add media-library photos to the end of the gallery
-         * @description Requires `CanManageContent`. Up to 100 file IDs in the order to add; a photo already in the gallery is skipped. A file that is not in the library answers 400 and nothing is added.
-         */
-        post: operations["addAdminGalleryPhotos"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/gallery/videos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add a YouTube video by its link to the end of the gallery
-         * @description Requires `CanManageContent`. `url` may be a watch, youtu.be, shorts, embed or live link, or the bare 11-character ID.
-         */
-        post: operations["addAdminGalleryVideo"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/gallery/youtube-preview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Resolve a pasted YouTube link before adding it
-         * @description Requires `CanManageContent`. `title` is what YouTube's public oEmbed gives, or `null` when it does not answer (private or deleted video, network error).
-         */
-        get: operations["previewAdminGalleryYoutubeVideo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/gallery/items/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Replace the title and caption of a card
-         * @description Requires `CanManageContent`. Empty or missing values are stored as none.
-         */
-        put: operations["updateAdminGalleryItem"];
-        post?: never;
-        /**
-         * Remove a card from the gallery
-         * @description Requires `CanManageContent`. The picture stays in the media library.
-         */
-        delete: operations["deleteAdminGalleryItem"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/gallery/order": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Save the order of all cards
-         * @description Requires `CanManageContent`. `ids` must hold every current card exactly once, first shown first; a list built from a stale page answers 409.
-         */
-        put: operations["reorderAdminGallery"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/home": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the home page FAQ and brands in one language
-         * @description Public, in site order. A brand whose logo file was deleted from the library is left out. An empty `brands` list means the admin has not added any.
-         */
-        get: operations["getPublicHomeBlocks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List the home page FAQ and brands
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
-         */
-        get: operations["getAdminHomeBlocks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home/faq": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add a question to the end of the FAQ
-         * @description Requires `CanManageContent`. All four texts are required.
-         */
-        post: operations["createAdminHomeFaqItem"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home/faq/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Replace the texts of a question
-         * @description Requires `CanManageContent`.
-         */
-        put: operations["updateAdminHomeFaqItem"];
-        post?: never;
-        /**
-         * Remove a question
-         * @description Requires `CanManageContent`.
-         */
-        delete: operations["deleteAdminHomeFaqItem"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home/faq/order": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Save the order of all questions
-         * @description Requires `CanManageContent`. `ids` must hold every current question exactly once, first shown first; a list built from a stale page answers 409.
-         */
-        put: operations["reorderAdminHomeFaq"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home/brands": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add a brand to the end of the list
-         * @description Requires `CanManageContent`. The logo must be a media library file.
-         */
-        post: operations["createAdminHomeBrand"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home/brands/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Change a brand's name or logo
-         * @description Requires `CanManageContent`.
-         */
-        put: operations["updateAdminHomeBrand"];
-        post?: never;
-        /**
-         * Remove a brand
-         * @description Requires `CanManageContent`. The logo stays in the media library.
-         */
-        delete: operations["deleteAdminHomeBrand"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/home/brands/order": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Save the order of all brands
-         * @description Requires `CanManageContent`. `ids` must hold every current brand exactly once; a stale list answers 409.
-         */
-        put: operations["reorderAdminHomeBrands"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/wholesale": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the page texts in one language
-         * @description Public, because the site renders the page for anonymous visitors.
-         */
-        get: operations["getPublicWholesalePage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/wholesale": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get both languages for editing
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
-         */
-        get: operations["getAdminWholesalePage"];
-        /**
-         * Replace both languages at once
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Every text is required. Repeating it is safe.
-         */
-        put: operations["updateAdminWholesalePage"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/{lang}/page-seo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List the set search texts in one language
-         * @description Public, because the site builds page metadata for anonymous visitors. Only pages with a title or a description in this language are listed.
-         */
-        get: operations["listPublicPageSeo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/page-seo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List every site page with its texts
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Pages never saved have empty values.
-         */
-        get: operations["listAdminPageSeo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/page-seo/{page}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Replace the texts of one page
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Values are trimmed; an empty or missing value returns that text to the site default. The first save creates the page row. Repeating it is safe.
-         */
-        put: operations["updateAdminPageSeo"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/content/seo-settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Read the codes the site places on every page
-         * @description Public, because the site renders pages for anonymous visitors. Never returns who edited.
-         */
-        get: operations["getSiteSeoSettings"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/seo-settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Read the settings for editing
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
-         */
-        get: operations["getAdminSiteSeoSettings"];
-        /**
-         * Replace all settings
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Ids are trimmed and upper-cased; for a verification code the whole meta tag may be sent and its `content` is kept. A blank or missing value removes that code or picture. A new picture must be in the media library. Repeating it is safe.
-         */
-        put: operations["updateAdminSiteSeoSettings"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Article drafts, legacy covers and document drafts
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin).
-         */
-        get: operations["getAdminContentOverview"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/catalog/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Products without a photo and categories without site text
-         * @description Requires `CanManageProducts` (Manager, Seo, or Admin). Deleted products and categories are not counted.
-         */
-        get: operations["getAdminCatalogOverview"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/mobile/sync/catalog": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Products, prices, categories and price types for offline work
-         * @description Requires `CanManageOrders` (Manager, Seo, or Admin); the app sends its bearer token. Deleted products and categories are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
-         */
-        get: operations["getMobileCatalogSnapshot"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/mobile/sync/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Customers and their price rules for offline work
-         * @description Requires `CanManageOrders` (Manager, Seo, or Admin); the app sends its bearer token. Deleted customers are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
-         */
-        get: operations["getMobileCustomersSnapshot"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/content/site-refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Ask the public site to drop its cached content and catalog
-         * @description Requires `CanManageContent` (Manager, Seo, or Admin). No request body.
-         */
-        post: operations["refreshSite"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/media/folders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * All folders with file counts
-         * @description A flat list ordered by name; the client builds the tree from `parentId`.
-         */
-        get: operations["getAdminMediaFolders"];
-        put?: never;
-        /** Create a folder */
-        post: operations["createAdminMediaFolder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/media/folders/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Rename a folder and set its parent
-         * @description Moving a folder into itself or its subfolder is `400` on `parentId`.
-         */
-        put: operations["updateAdminMediaFolder"];
-        post?: never;
-        /**
-         * Delete an empty folder
-         * @description Admin only.
-         */
-        delete: operations["deleteAdminMediaFolder"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/admin/media/files": {
         parameters: {
             query?: never;
@@ -2808,6 +2407,349 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/media/folders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * All folders with file counts
+         * @description A flat list ordered by name; the client builds the tree from `parentId`.
+         */
+        get: operations["getAdminMediaFolders"];
+        put?: never;
+        /** Create a folder */
+        post: operations["createAdminMediaFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/media/folders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Rename a folder and set its parent
+         * @description Moving a folder into itself or its subfolder is `400` on `parentId`.
+         */
+        put: operations["updateAdminMediaFolder"];
+        post?: never;
+        /**
+         * Delete an empty folder
+         * @description Admin only.
+         */
+        delete: operations["deleteAdminMediaFolder"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sales/{lang}/catalog/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List products with prices for the current user
+         * @description Returns prices determined for the authenticated user. `search` is a query parameter; all filters and paging are in the optional JSON body.
+         */
+        post: operations["getSalesCatalogProducts"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mobile/sync/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Customers and their price rules for offline work
+         * @description Requires `CanManageOrders` (Manager, Seo, or Admin); the app sends its bearer token. Deleted customers are left out. Responses carry a strong `ETag` (the same value as `version`) and are gzip or Brotli compressed when the client accepts it.
+         */
+        get: operations["getMobileCustomersSnapshot"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Browse active Sales customers */
+        get: operations["getAdminCustomers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/customers/{counterpartyId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one active Sales customer */
+        get: operations["getAdminCustomerById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search orders */
+        get: operations["getAdminOrders"];
+        put?: never;
+        /** Create an order and queue its 1C sync */
+        post: operations["createAdminOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/orders/{orderId}/sync-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the current 1C delivery status for an admin order
+         * @description Policy CanManageOrders (Manager, Seo, and Admin).
+         */
+        get: operations["getAdminOrderSyncStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/orders/{orderId}/sync/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Schedule a failed order for another 1C delivery cycle
+         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
+         */
+        post: operations["retryAdminOrderSync"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one persisted manager order */
+        get: operations["getAdminOrderById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Orders today, drafts, 1C problems and the newest orders
+         * @description Requires `CanManageOrders` (Manager, Seo, or Admin). Lists hold at most 5 rows, newest first.
+         */
+        get: operations["getAdminWorkspaceOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search persisted Admin orders */
+        get: operations["getAdminWorkspaceOrders"];
+        put?: never;
+        /** Create one priced order and pending 1C sync */
+        post: operations["createAdminWorkspaceOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read a persisted Admin order */
+        get: operations["getAdminWorkspaceOrderById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Price a selected customer's lines without persisting an order */
+        post: operations["quoteAdminWorkspaceOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/customer-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read a customer's unit prices for products, ignoring stock
+         * @description Uses the price type of the nearest customer rule on the product's category or any parent category, otherwise the customer's default price type. A product without such a UAH price, or an unknown product, returns a null unitPrice.
+         */
+        post: operations["getAdminWorkspaceCustomerPrices"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search saved drafts */
+        get: operations["getAdminOrderDrafts"];
+        put?: never;
+        /** Save a reusable draft */
+        post: operations["createAdminOrderDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/order-workspace/drafts/{draftId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read one draft with current pricing availability */
+        get: operations["getAdminOrderDraftById"];
+        /** Replace editable draft fields */
+        put: operations["updateAdminOrderDraft"];
+        post?: never;
+        /** Delete one draft and its lines */
+        delete: operations["deleteAdminOrderDraft"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a quick order
+         * @description Creates a quick order. This endpoint is currently anonymous and does not implement an Idempotency-Key contract; disable duplicate submission in the frontend.
+         */
+        post: operations["createQuickOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/work/tasks": {
         parameters: {
             query?: never;
@@ -2884,23 +2826,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/work/report": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The caller's own report */
-        get: operations["getMyWorkReport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/admin/work/tasks": {
         parameters: {
             query?: never;
@@ -2912,6 +2837,23 @@ export interface paths {
         put?: never;
         /** Put a task on a staff member's board */
         post: operations["createAdminWorkTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/work/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The caller's own report */
+        get: operations["getMyWorkReport"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2942,7 +2884,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every task in page order with its schedule, next run and last success and failure. */
+        /**
+         * List background tasks with their schedules and last results
+         * @description Every task in page order with its schedule, next run and last success and failure.
+         */
         get: operations["getAdminScheduledTasks"];
         put?: never;
         post?: never;
@@ -2959,7 +2904,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The last 50 runs of a task, newest first. Runs are kept 90 days. */
+        /**
+         * List recent runs of a background task
+         * @description The last 50 runs of a task, newest first. Runs are kept 90 days.
+         */
         get: operations["getAdminScheduledTaskRuns"];
         put?: never;
         post?: never;
@@ -2977,7 +2925,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** @description Changes the schedule and the on/off switch. nextRunAt moves the next run once; without it the next run follows the schedule. */
+        /**
+         * Change the schedule of a background task
+         * @description Changes the schedule and the on/off switch. nextRunAt moves the next run once; without it the next run follows the schedule.
+         */
         put: operations["updateAdminScheduledTaskSchedule"];
         post?: never;
         delete?: never;
@@ -2995,7 +2946,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description «Запустити зараз», also for a disabled task. The next tick, within a minute, starts it. */
+        /**
+         * Run a background task now
+         * @description «Запустити зараз», also for a disabled task. The next tick, within a minute, starts it.
+         */
         post: operations["runAdminScheduledTaskNow"];
         delete?: never;
         options?: never;
@@ -3007,901 +2961,801 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * @example {
-         *       "id": 5513,
-         *       "slug": "furnitura",
-         *       "name": "Фурнітура",
-         *       "parentId": null,
-         *       "sortOrder": 0,
-         *       "level": 0,
-         *       "productCount": 418,
-         *       "children": [
-         *         {
-         *           "id": 900001,
-         *           "slug": "zavisy",
-         *           "name": "Завіси",
-         *           "parentId": 5513,
-         *           "sortOrder": 0,
-         *           "level": 1,
-         *           "productCount": 418,
-         *           "children": []
-         *         }
-         *       ]
-         *     }
-         */
-        CategoryTreeNode: {
-            /** @description Backend category identity; use as the stable client-side key. */
-            id: number;
-            /** @description Public route key for retrieving the category; do not generate it from name. */
-            slug: string;
-            /** @description Localized short display name selected by the lang path parameter. */
-            name: string;
-            /** @description Immediate parent identity, or null for a root category. */
-            parentId: number | null;
-            /** @description Backend-owned sibling order; siblings are returned ascending by this value, then id. */
-            sortOrder: number;
-            /** @description Number of edges from the root category. */
-            level: number;
-            /** @description Direct descendants, recursively using this same schema and already in display order. */
-            children: components["schemas"]["CategoryTreeNode"][];
-            /** @description Active exported products in this category and all its descendants. */
-            productCount: number;
-        };
-        Problem: {
-            type?: string;
-            /** @description Ukrainian title of the status. */
-            title: string;
-            status: number;
-            /** @description The first error message, Ukrainian. */
-            detail?: string | null;
-            /** @description The rule's own code (for example `invalid_lines`) or one of `validation`, `invalid_request`, `unauthorized`, `forbidden`, `not_found`, `conflict`, `unavailable`, `unexpected`. */
-            code: string;
-            traceId: string;
-        } & {
-            [key: string]: unknown;
-        };
-        ValidationProblem: components["schemas"]["Problem"] & {
-            /** @description Messages by field (the validator's property path). */
-            errors?: {
-                [key: string]: string[];
-            };
-        };
-        CategoryBreadcrumb: {
-            id: number;
-            slug: string;
-            name: string;
-        };
-        CategoryFaqItem: {
-            question: string;
-            /** @description Plain text. */
-            answer: string;
-        };
-        CategoryContent: {
-            seoTitle: string | null;
-            metaDescription: string | null;
-            h1: string | null;
-            /** @description Sanitized HTML; safe to render as is. */
-            bodyHtml: string | null;
-            faq: components["schemas"]["CategoryFaqItem"][];
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        CategoryDetails: components["schemas"]["CategoryTreeNode"] & {
-            /** @description Inclusive root-to-current-category path, ordered from root to the requested category. */
-            breadcrumbs: components["schemas"]["CategoryBreadcrumb"][];
-            /** @description Lowest retail price over active exported products of the category and its descendants. */
-            minPrice: number | null;
-            /** @description Highest retail price over the same products. */
-            maxPrice: number | null;
-            /** @description Admin-written content in the requested language, or null when there is none. */
-            content: components["schemas"]["CategoryContent"] | null;
-        };
-        CatalogRedirect: {
-            redirectSlug: string;
-            /** @enum {string} */
-            redirectType: "category";
-        };
-        PagedInfo: {
-            pageNumber: number;
-            pageSize: number;
-            /** Format: int64 */
-            totalPages: number;
-            /** Format: int64 */
-            totalRecords: number;
-        };
-        ProductListItem: {
-            id: number;
-            name: string;
-            productSlug: string;
-            /** @description First photo URL; an empty string when the product has no photo. */
-            photo: string;
-            categoryId?: number | null;
-            inStock: boolean;
-            isSale: boolean;
-            isNew: boolean;
-            price?: number | null;
-        };
-        ProductPage: {
-            pagedInfo: components["schemas"]["PagedInfo"];
-            value: components["schemas"]["ProductListItem"][];
-        };
-        Breadcrumb: {
-            id: number;
-            name: string;
-            slug: string;
-        };
-        ProductDetails: {
-            /** @description 1C product code shown to customers as the article. */
-            id: number;
-            name: string;
-            /** @description Current slug; differs from the request when a former slug was used. */
-            productSlug: string;
-            /** Format: date-time */
-            updatedAt: string;
-            /** @description First photo URL; an empty string when the product has no photo. */
-            photo: string;
-            /** @description Scheme URL; an empty string when the product has no scheme. */
-            scheme: string;
-            /** @description All photo URLs in gallery order; the first equals photo. */
-            photos: string[];
-            stock: number;
-            categoryName: string;
-            categorySlug: string;
-            quantityInPack: number;
-            price?: number | null;
-            breadcrumbs: components["schemas"]["Breadcrumb"][];
-        };
-        PublicSiteModelSwatch: {
-            slug: string;
-            name: string;
-            /** @description #RRGGBB */
-            hex: string | null;
-            textureUrl: string | null;
-        };
-        PublicSiteModelCard: {
-            slug: string;
-            name: string;
-            categorySlug: string;
-            /** @description The main product's photo or the first product photo; empty when none. */
-            photo: string;
-            priceFrom: number | null;
-            inStock: boolean;
-            isSale: boolean;
-            isNew: boolean;
-            /** @description On-site products of the model. */
-            productCount: number;
-            /** @description False for an on-site product shown as a model of its own. */
-            isAccepted: boolean;
-            /** @description Colors of the model's products when color is one of its axes. */
-            colors: components["schemas"]["PublicSiteModelSwatch"][];
-            /** @description The 1C code of the only on-site product of a one-product model, for adding it to the cart from the list; null for a model of several products. */
-            productId: number | null;
-        };
-        PublicSiteModelFilterValue: {
-            slug: string;
-            name: string;
-            hex: string | null;
-            textureUrl: string | null;
-            /** @description Models with this value added to the other attributes' choices. */
-            count: number;
-            selected: boolean;
-        };
-        PublicSiteModelFilter: {
-            code: string;
-            slug: string;
-            name: string;
-            /** @enum {string} */
-            display: "swatch" | "button" | "checkbox";
-            values: components["schemas"]["PublicSiteModelFilterValue"][];
-        };
-        PublicSiteModelAddress: {
-            modelSlug: string;
-            categorySlug: string;
-            /** @description Axis slug to value key. */
-            selection: {
-                [key: string]: string;
-            };
-        };
-        PublicSiteModelList: {
-            /** @description The current slug of the category; null for the search. */
-            categorySlug: string | null;
-            isFinalCategory: boolean;
-            page: number;
-            pageSize: number;
-            totalPages: number;
-            totalRecords: number;
-            items: components["schemas"]["PublicSiteModelCard"][];
-            filters: components["schemas"]["PublicSiteModelFilter"][];
-            exactMatch: components["schemas"]["PublicSiteModelAddress"] | null;
-        };
-        PublicSiteModelCategory: {
-            id: number;
-            slug: string;
-            name: string;
-        };
-        PublicSiteModelText: {
-            shortDescription: string;
-            description: string;
-            seoTitle: string;
-            seoDescription: string;
-        };
-        PublicSiteModelAxisValue: {
-            /** @description The value slug; several values of one product join with `_`; a number is its text. */
-            key: string;
-            name: string;
-            hex: string | null;
-            textureUrl: string | null;
-        };
-        PublicSiteModelAxis: {
-            code: string;
-            slug: string;
-            name: string;
-            /** @enum {string} */
-            display: "swatch" | "button";
-            values: components["schemas"]["PublicSiteModelAxisValue"][];
-        };
-        PublicSiteModelProduct: {
-            /** @description 1C code. */
-            id: number;
-            name: string;
-            slug: string;
-            photo: string;
-            price: number | null;
-            inStock: boolean;
-            isSale: boolean;
-            isNew: boolean;
-            isMain: boolean;
-            /** @description Axis slug to value key. */
-            selection: {
-                [key: string]: string;
-            };
-        };
-        PublicSiteModelCharacteristic: {
-            code: string;
-            name: string;
-            values: string[];
-        };
-        PublicSiteModel: {
-            slug: string;
-            name: string;
-            isAccepted: boolean;
-            category: components["schemas"]["PublicSiteModelCategory"];
-            /** @description From the root to the model's category. */
-            breadcrumbs: components["schemas"]["PublicSiteModelCategory"][];
-            texts: components["schemas"]["PublicSiteModelText"];
-            mainProductSlug: string | null;
-            axes: components["schemas"]["PublicSiteModelAxis"][];
-            /** @description In stock first, then by name. */
-            products: components["schemas"]["PublicSiteModelProduct"][];
-            characteristics: components["schemas"]["PublicSiteModelCharacteristic"][];
-        };
-        AdminCategory: {
-            id: number;
-            /** @description Original source category name. */
-            name: string;
-            shortNameUk: string;
-            shortNameRu: string;
-            slug: string;
-            /** @description Imported 1C root/source key. */
-            productTypeIdOneC: string;
-            parentId: number | null;
-            sortOrder: number;
-            level: number;
-            isDeleted: boolean;
-            /** Format: date-time */
-            deletedAt: string | null;
-            /** @description Shown on the site, in «Вітрина сайту», and in «Моделі» (R-18). */
-            isShownOnSite: boolean;
-            /** @description Active products of the category and all its descendants, on the site or not. Filled in the active list (`deleted=false`) only; `null` elsewhere. */
-            productCount?: number | null;
-            /** @description Languages that have at least one site text field or FAQ item, sorted. Filled in the active list only; `null` elsewhere. */
-            filledContentLanguages?: ("uk" | "ru")[] | null;
-        };
-        ChangeSlugRequest: {
-            /** @description Required unless `regenerate` is true. */
-            slug?: string | null;
-            /**
-             * @description Rebuild the slug from the current name (KMU 2010 transliteration, collision suffix -2, -3, ...).
-             * @default false
-             */
-            regenerate: boolean;
-        };
-        ChangeSlugResponse: {
-            id: number;
-            slug: string;
-            previousSlug: string;
-        };
-        SetCategorySiteVisibilityRequest: {
-            isShownOnSite: boolean;
-        };
-        CategorySiteVisibilityResponse: {
-            id: number;
-            isShownOnSite: boolean;
-            /** @description The category and its relatives whose mark changed. */
-            changedCount: number;
-        };
-        AdminCategoryContentItem: components["schemas"]["CategoryContent"] & {
-            /** @enum {string} */
-            language: "uk" | "ru";
-            /** @description Identity user ID of the last editor. */
-            updatedBy: string;
-        };
-        AdminCategoryContent: {
-            categoryId: number;
-            items: components["schemas"]["AdminCategoryContentItem"][];
-        };
-        SaveCategoryContentRequest: {
-            seoTitle?: string | null;
-            metaDescription?: string | null;
-            h1?: string | null;
-            bodyHtml?: string | null;
-            faq?: components["schemas"]["CategoryFaqItem"][] | null;
-        };
-        AdminAttributeProblem: {
-            /** @description Stable reason code, for example `unresolved_color`, `no_name`, `same_variants`. */
-            code: string;
-            /** @description Recognizer explanation. */
-            text?: string | null;
-        };
-        AdminProduct: {
-            id: number;
-            nameUk: string;
-            nameRu: string;
-            productSlug: string;
-            /** @description First photo URL; an empty string when the product has no photo. */
-            photo: string;
-            categoryId?: number | null;
-            /** @description Ukrainian short category name; empty when the reference is unavailable. */
-            categoryName: string;
-            inStock: boolean;
-            isSale: boolean;
-            isNew: boolean;
-            /** @description Whether the product is marked for export to the website by the 1C import. */
-            exportToSite: boolean;
-            price?: number | null;
-            stock: number;
-            quantityInPack: number;
-            isDeleted?: boolean;
-            /** Format: date-time */
-            deletedAt?: string | null;
-            /** @description Variant group of the product (spec catalog/006); filled by the paged list only. */
-            groupId?: number | null;
-            groupName?: string | null;
-            /** @description Why the product's attributes need review; empty when they do not or the product was accepted. Filled by the paged list only. */
-            problems?: components["schemas"]["AdminAttributeProblem"][];
-        };
-        AdminProductPage: {
-            pagedInfo: components["schemas"]["PagedInfo"];
-            value: components["schemas"]["AdminProduct"][];
-        };
-        AdminProductDetails: {
-            id: number;
-            nameUk: string;
-            nameRu: string;
-            productSlug: string;
-            /** @description First photo URL; an empty string when the product has no photo. */
-            photo: string;
-            /** @description Scheme URL; an empty string when the product has no scheme. */
-            scheme: string;
-            categoryId: number;
-            categoryName: string;
-            inStock: boolean;
-            isSale: boolean;
-            isNew: boolean;
-            exportToSite: boolean;
-            price: number | null;
-            stock: number;
-            quantityInPack: number;
-        };
-        ProductMediaItem: {
-            /**
-             * Format: int64
-             * @description Media library file ID.
-             */
-            id: number;
-            url: string;
-            /** @description Library display name; empty if the file was deleted and the link is not yet dropped. */
-            fileName: string;
-        };
-        ProductMedia: {
-            productId: number;
-            photos: components["schemas"]["ProductMediaItem"][];
-            scheme: components["schemas"]["ProductMediaItem"] | null;
-        };
-        SetProductMediaRequest: {
-            photoIds: number[];
-            /**
-             * Format: int64
-             * @description Must not be one of photoIds.
-             */
-            schemeId?: number | null;
-        };
-        AdminProductGroupMember: {
-            productId: number;
-            /** @description Original 1C name. */
-            name: string;
-            slug: string;
-            exportToSite: boolean;
-            isDeleted: boolean;
-            /** @description First photo URL; empty without photos. */
-            photo: string;
-            stock: number;
-            /** @description A person put the product here; automation leaves it. */
-            isPinned: boolean;
-            isMain: boolean;
-            /** @description Main color first, then the second color. */
-            colors: string[];
-            size?: string | null;
-            side?: string | null;
-            /** @description Color, size, and side do not tell it apart from another variant («Однакові варіанти»). */
-            hasSameVariants: boolean;
-        };
-        AdminProductGroup: {
-            id: number;
-            categoryId: number;
-            name: string;
-            slug: string;
-            mainProductId?: number | null;
-            isMainManual: boolean;
-            isCreatedManually: boolean;
-            /** @description Main product first, then by product ID. */
-            members: components["schemas"]["AdminProductGroupMember"][];
-        };
-        AdminProductGroupMembership: {
-            productId: number;
-            /** @description With `group` null it means the product was taken out of groups on purpose. */
-            isPinned: boolean;
-            group?: components["schemas"]["AdminProductGroup"] | null;
-        };
-        SetProductGroupRequest: {
-            groupId?: number | null;
-            /** @default false */
-            automatic: boolean;
-        };
-        AdminProductGroupListItem: {
-            id: number;
-            categoryId: number;
-            name: string;
-            slug: string;
-            productCount: number;
-            isCreatedManually: boolean;
-        };
-        CreateProductGroupRequest: {
-            categoryId: number;
-            name: string;
-            productIds?: number[];
-        };
-        RenameProductGroupRequest: {
-            name: string;
-        };
-        SetProductGroupMainRequest: {
-            productId: number;
-        };
-        SiteModelListItem: {
-            id: number;
-            categoryId: number;
-            categoryName: string;
-            name: string;
-            slug: string;
-            /** @enum {string} */
-            status: "proposed" | "accepted";
-            /** @description Not deleted products. */
-            productCount: number;
-            onSiteCount: number;
-            /** @description Lowest retail price of its on-site products. */
-            minPrice?: number | null;
-            /** @description Photo of the main product; empty without one. */
-            photo: string;
-            /** @description Axis names (saved, or offered for a proposal). */
-            axes: string[];
-            /** @description Model codes and the product codes its products have. */
-            problems: string[];
-        };
-        SiteModelList: {
-            items: components["schemas"]["SiteModelListItem"][];
-            totalCount: number;
-            page: number;
-            pageSize: number;
-        };
-        CreateSiteModelRequest: {
-            categoryId: number;
-            name: string;
-            productIds: number[];
-        };
-        SiteModelAxis: {
-            attributeId: number;
-            code: string;
-            name: string;
-            /** @enum {string} */
-            display: "swatch" | "button" | "checkbox";
-            /** @description False for axes only offered to a proposal. */
-            isSaved: boolean;
-        };
-        SiteModelProductValue: {
-            attributeId: number;
-            /** @description Null when the product has no confirmed value on this axis. */
-            valueId?: number | null;
-            name?: string | null;
-            isManual: boolean;
-        };
-        SiteModelProduct: {
-            productId: number;
-            /** @description Original 1C name. */
-            name: string;
-            slug: string;
-            photo: string;
-            retailPrice?: number | null;
-            inStock: boolean;
-            exportToSite: boolean;
-            isMain: boolean;
-            /** @description One per axis. */
-            values: components["schemas"]["SiteModelProductValue"][];
-            problems: string[];
-        };
-        SiteModelText: {
-            /** @enum {string} */
-            language: "uk" | "ru";
-            shortDescription: string;
-            description: string;
-            seoTitle: string;
-            seoDescription: string;
-        };
-        SiteModelCharacteristic: {
-            attributeId: number;
-            name: string;
-            /** @description Confirmed values shared by all on-site products. */
-            values: string[];
-        };
-        SiteModel: {
-            id: number;
-            categoryId: number;
-            categoryName: string;
-            name: string;
-            slug: string;
-            /** @enum {string} */
-            status: "proposed" | "accepted";
-            /** Format: date-time */
-            acceptedAt?: string | null;
-            acceptedBy?: string | null;
-            mainProductId?: number | null;
-            axes: components["schemas"]["SiteModelAxis"][];
-            products: components["schemas"]["SiteModelProduct"][];
-            /** @description Both languages, empty strings where nothing is saved. */
-            texts: components["schemas"]["SiteModelText"][];
-            characteristics: components["schemas"]["SiteModelCharacteristic"][];
-            /** @description Model problem codes. */
-            problems: string[];
-        };
-        SiteShowcaseModel: {
-            id: number;
-            name: string;
-            /** @enum {string} */
-            status: "proposed" | "accepted";
-        };
-        SiteShowcaseValue: {
-            attributeId: number;
-            attributeName: string;
-            value: string;
-        };
-        SiteShowcaseItem: {
-            /** @description The 1C code. */
-            productId: number;
-            /** @description Original 1C name. */
-            name: string;
-            slug: string;
-            photo: string;
-            categoryId: number;
-            categoryName: string;
-            retailPrice?: number | null;
-            inStock: boolean;
-            /** @description Its model; null when it is in none. */
-            model?: components["schemas"]["SiteShowcaseModel"] | null;
-            /** @description Confirmed values of the variant attributes (color, size, side). */
-            values: components["schemas"]["SiteShowcaseValue"][];
-            problems: ("no_model" | "no_attributes" | "missing_axis_value" | "same_combination")[];
-        };
-        SiteShowcaseRow: {
-            /** @description `m{modelId}` for a model, `p{productId}` for a product in no model. */
-            key: string;
-            /** @description The model; null for a product in no model. */
-            model?: components["schemas"]["SiteShowcaseModel"] | null;
-            /** @description The model name or the original 1C product name. */
-            name: string;
-            photo: string;
-            categoryId: number;
-            categoryName: string;
-            minPrice?: number | null;
-            /** @description Any of its products is in stock. */
-            inStock: boolean;
-            /** @description Its on-site products, the main one first. */
-            products: components["schemas"]["SiteShowcaseItem"][];
-            /** @description Problem codes of the model and of its products. */
-            problems: string[];
-        };
-        SiteShowcaseList: {
-            items: components["schemas"]["SiteShowcaseRow"][];
-            totalCount: number;
-            page: number;
-            pageSize: number;
-        };
-        SiteModelCategory: {
-            id: number;
-            name: string;
-            /** @description Null for a top category. */
-            parentId?: number | null;
-            /** @description With subcategories. */
-            onSiteProducts: number;
-            acceptedModels: number;
-            proposedModels: number;
-            /** @description Accepted models with a problem. */
-            problemCount: number;
-            /** @description On-site products in no model (the hard error). */
-            loneProducts: number;
-            /** @description Attributes this category itself offers as site filters, without subcategories. */
-            filterCount: number;
-        };
-        SiteModelHealth: {
-            /** @description On-site products in no model, proposed or accepted: the hard error of «Огляд». */
-            productsWithoutModel: number;
-            productsWithoutAttributes: number;
-            productsMissingAxisValue: number;
-            productsWithSameCombination: number;
-            modelsWithoutAxes: number;
-            modelsWithoutSeo: number;
-            modelsWithoutPhoto: number;
-            /** @description Proposed models with on-site products. */
-            proposedModels: number;
-        };
         AcceptSiteModelsRequest: {
-            ids: number[];
+            ids?: number[];
         };
-        RenameSiteModelRequest: {
-            name: string;
+        AddGalleryPhotosRequest: {
+            mediaFileIds: null | number[];
         };
-        SetSiteModelAxesRequest: {
-            attributeIds: number[];
+        AddGalleryVideoRequest: {
+            url: null | string;
+            titleUk: null | string;
+            titleRu: null | string;
+            captionUk: null | string;
+            captionRu: null | string;
         };
         AddSiteModelProductsRequest: {
-            productIds: number[];
+            productIds?: number[];
         };
-        SetSiteModelTextRequest: {
-            shortDescription?: string | null;
-            description?: string | null;
-            seoTitle?: string | null;
-            seoDescription?: string | null;
-        };
-        AdminProductReview: {
-            /** @enum {string} */
-            state: "clear" | "needs_review" | "accepted";
-            reasons: components["schemas"]["AdminAttributeProblem"][];
-            acceptedBy?: string | null;
+        AdminArticleResponse: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            /** Format: date */
+            publishedOn: string;
+            isPublished: boolean;
+            coverPath: null | string;
+            coverUrl: null | string;
+            /** Format: int64 */
+            coverMediaFileId: null | number;
             /** Format: date-time */
-            acceptedAt?: string | null;
+            updatedAt: string;
+            updatedBy: null | string;
+            texts: components["schemas"]["ArticleTextDto"][];
+            /** Format: uint32 */
+            version: number;
         };
-        AdminProductAttributeValue: {
-            position: number;
-            valueId?: number | null;
-            valueName?: string | null;
-            number?: number | null;
-            /** @enum {string} */
-            source: "import" | "parser" | "manual";
-            isLocked: boolean;
-            /** @description False while the decoding behind the value is not confirmed; such values stay off filters. */
-            isConfirmed: boolean;
-            /** @description Whether «Повернути автоматичне» brings an automatic value back. */
-            hasAutomatic: boolean;
-        };
-        AdminProductAttribute: {
-            attributeId: number;
-            code: string;
-            name: string;
-            /** @enum {string} */
-            kind: "enum" | "number" | "size";
-            unit?: string | null;
-            isVariantAxis: boolean;
-            values: components["schemas"]["AdminProductAttributeValue"][];
-        };
-        AdminProductAttributes: {
-            productId: number;
-            /** @description The 1C name; never changed. */
-            originalName: string;
-            /** @description Name without color, size, and side; used for grouping. */
-            baseName?: string | null;
-            review: components["schemas"]["AdminProductReview"];
-            attributes: components["schemas"]["AdminProductAttribute"][];
-        };
-        SetProductAttributeRequest: {
-            values: {
-                valueId?: number | null;
-                number?: number | null;
-            }[];
-        };
-        AdminCatalogAttributeListItem: {
+        AdminArticleSummaryResponse: {
+            /** Format: int64 */
             id: number;
-            code: string;
-            nameUk: string;
-            nameRu?: string | null;
-            /** @enum {string} */
-            kind: "enum" | "number" | "size";
-            unit?: string | null;
             slug: string;
-            isFilterable: boolean;
-            isVariantAxis: boolean;
-            sortOrder: number;
-            isEditedManually: boolean;
-            valueCount: number;
-            /** @description Products with a value of the attribute. */
-            productCount: number;
+            title: string;
+            /** Format: date */
+            publishedOn: string;
+            isPublished: boolean;
+            coverPath: null | string;
+            coverUrl: null | string;
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: null | string;
         };
-        CreateCatalogAttributeRequest: {
-            nameUk: string;
-            nameRu?: string | null;
-            /**
-             * @description `enum` - a list of values; `yesno` - a list with «Так» and «Ні» created at once; `number` - a number in `unit`.
-             * @enum {string}
-             */
-            kind: "enum" | "number" | "yesno";
-            unit?: string | null;
-            code?: string | null;
-            slug?: string | null;
-            isFilterable: boolean;
-            /** @description The products of a model may differ by it (offered as a model switcher). */
-            isVariantAxis: boolean;
-            sortOrder: number;
-        };
-        AdminAttributeValue: {
-            id: number;
-            code: string;
-            nameUk: string;
-            nameRu?: string | null;
-            slug: string;
-            sortOrder: number;
-            swatchHex?: string | null;
-            /** @description Media-library texture of a decor. */
-            swatchMediaFileId?: number | null;
-            swatchImageUrl?: string | null;
-            isEditedManually: boolean;
-            productCount: number;
-        };
-        AdminAttributeAlias: {
+        AdminAttributeAliasDto: {
+            /** Format: int32 */
             id: number;
             scope: string;
             rawValue: string;
-            valueId?: number | null;
+            /** Format: int32 */
+            valueId: null | number;
             isConfirmed: boolean;
-            note?: string | null;
+            note: null | string;
             isEditedManually: boolean;
         };
-        AdminCatalogAttribute: {
-            attribute: components["schemas"]["AdminCatalogAttributeListItem"];
-            values: components["schemas"]["AdminAttributeValue"][];
-            aliases: components["schemas"]["AdminAttributeAlias"][];
+        AdminAttributeProblemDto: {
+            code: string;
+            text: null | string;
         };
-        UpdateCatalogAttributeRequest: {
-            nameUk: string;
-            nameRu?: string | null;
-            isFilterable: boolean;
-            sortOrder: number;
-        };
-        CreateAttributeValueRequest: {
-            nameUk: string;
-            nameRu?: string | null;
-            code?: string | null;
-            slug?: string | null;
-            sortOrder: number;
-            swatchHex?: string | null;
-            swatchMediaFileId?: number | null;
-        };
-        UpdateAttributeValueRequest: {
-            nameUk: string;
-            nameRu?: string | null;
-            sortOrder: number;
-            swatchHex?: string | null;
-            swatchMediaFileId?: number | null;
-        };
-        AdminAttributeSwatchUpload: {
+        AdminAttributeSwatchUploadDto: {
             /** Format: int64 */
             mediaFileId: number;
             url: string;
         };
-        AdminCodeMeaning: {
-            attributeId: number;
-            attributeName: string;
-            valueId: number;
-            valueName: string;
-        };
-        AdminUnresolvedCode: {
-            aliasId: number;
-            attributeId: number;
-            attributeName: string;
-            scope: string;
-            rawValue: string;
-            /** @description Decoding picked by an assistant, not confirmed yet. */
-            valueId?: number | null;
-            valueName?: string | null;
-            isConfirmed: boolean;
-            note?: string | null;
-            /** @description On-site products whose review mentions the code (spec catalog/007 M-01). */
-            productCount: number;
-            /** @description What the code means for all products (spec catalog/009), the value of its own attribute first. */
-            meanings: components["schemas"]["AdminCodeMeaning"][];
-        };
-        CodeMeaning: {
-            attributeId: number;
-            /** @description A value of that attribute. */
-            valueId: number;
-        };
-        DecideAttributeCodeCategory: {
-            categoryId: number;
-            /** @description Null: the code means nothing in this category. */
-            valueId?: number | null;
-            /** @description The whole decoding in this category (spec catalog/009); replaces valueId when given. */
-            meanings?: components["schemas"]["CodeMeaning"][] | null;
-        };
-        DecideAttributeCodeRequest: {
-            valueId?: number | null;
-            /**
-             * @description False keeps the code undecided for all products.
-             * @default true
-             */
-            applyToAll: boolean;
-            /** @description The whole list of the code's own decodings per category; null leaves them as they are. */
-            categories?: components["schemas"]["DecideAttributeCodeCategory"][] | null;
-            /** @description The whole decoding for all products (spec catalog/009): values of any attributes, at most one per attribute; empty when the code means nothing to filter by. Replaces valueId when given. */
-            meanings?: components["schemas"]["CodeMeaning"][] | null;
-        };
-        DecideAttributeCodeResponse: {
-            code: components["schemas"]["AdminUnresolvedCode"];
-            valuesConfirmed: number;
-        };
-        AdminCodeProduct: {
-            productId: number;
-            /** @description Original 1C name. */
-            name: string;
-            photo: string;
-        };
-        AdminCodeCategory: {
-            categoryId: number;
-            /** @description Full path, for example «Фурнітура > Ручки > На планці». */
-            categoryPath: string;
-            /** @description The category has its own decoding; otherwise it follows the one for all. */
-            hasOwnValue: boolean;
-            valueId?: number | null;
-            valueName?: string | null;
-            products: components["schemas"]["AdminCodeProduct"][];
-            /** @description The category's own decoding (spec catalog/009); empty when it has none or the code means nothing there. */
-            meanings: components["schemas"]["AdminCodeMeaning"][];
-        };
-        AdminCodeProducts: {
-            aliasId: number;
-            rawValue: string;
-            categories: components["schemas"]["AdminCodeCategory"][];
-        };
-        AdminProblemReason: {
+        AdminAttributeValueDto: {
+            /** Format: int32 */
+            id: number;
             code: string;
+            nameUk: string;
+            nameRu: null | string;
+            slug: string;
+            /** Format: int32 */
+            sortOrder: number;
+            swatchHex: null | string;
+            /** Format: int64 */
+            swatchMediaFileId: null | number;
+            swatchImageUrl: null | string;
+            isEditedManually: boolean;
+            /** Format: int32 */
             productCount: number;
         };
-        AdminCategoryAttributeFilter: {
+        AdminCatalogAttributeDto: {
+            attribute: components["schemas"]["AdminCatalogAttributeListItemDto"];
+            values: components["schemas"]["AdminAttributeValueDto"][];
+            aliases: components["schemas"]["AdminAttributeAliasDto"][];
+            /** Format: uint32 */
+            version: number;
+        };
+        AdminCatalogAttributeListItemDto: {
+            /** Format: int32 */
+            id: number;
+            code: string;
+            nameUk: string;
+            nameRu: null | string;
+            kind: string;
+            unit: null | string;
+            slug: string;
+            isFilterable: boolean;
+            isVariantAxis: boolean;
+            /** Format: int32 */
+            sortOrder: number;
+            isEditedManually: boolean;
+            /** Format: int32 */
+            valueCount: number;
+            /** Format: int32 */
+            productCount: number;
+        };
+        AdminCatalogOverviewCategory: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            /** Format: int32 */
+            count: number;
+        };
+        AdminCatalogOverviewResponse: {
+            /** Format: int32 */
+            productsWithoutPhoto: number;
+            topCategoryWithoutPhoto: null | components["schemas"]["AdminCatalogOverviewCategory"];
+            /** Format: int32 */
+            categoriesWithoutText: number;
+            /**
+             * Format: int32
+             * @default 0
+             */
+            productsWithProblems: number;
+            /**
+             * Format: int32
+             * @default 0
+             */
+            noNameProducts: number;
+            siteModels: null | components["schemas"]["SiteModelHealthDto"];
+        };
+        AdminCategoryAttributeFilterDto: {
+            /** Format: int32 */
             attributeId: number;
             code: string;
             name: string;
             isFilterable: boolean;
+            /** Format: int32 */
             sortOrder: number;
             isEditedManually: boolean;
+            /** Format: int32 */
             productCount: number;
         };
-        SetCategoryAttributeFiltersRequest: {
-            filters: {
-                attributeId: number;
-                isFilterable: boolean;
-                sortOrder: number;
-            }[];
+        AdminCategoryContentItem: {
+            language: string;
+            seoTitle: null | string;
+            metaDescription: null | string;
+            h1: null | string;
+            bodyHtml: null | string;
+            faq: components["schemas"]["CategoryFaqItemDto"][];
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: string;
+            /** Format: uint32 */
+            version: number;
+        };
+        AdminCategoryContentResponse: {
+            /** Format: int32 */
+            categoryId: number;
+            items: components["schemas"]["AdminCategoryContentItem"][];
+        };
+        AdminCategoryResponse: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            shortNameUk: string;
+            shortNameRu: string;
+            slug: string;
+            productTypeIdOneC: string;
+            /** Format: int32 */
+            parentId: null | number;
+            /** Format: int32 */
+            sortOrder: number;
+            /** Format: int32 */
+            level: number;
+            isDeleted: boolean;
+            /** Format: date-time */
+            deletedAt: null | string;
+            isShownOnSite: boolean;
+            /** Format: int32 */
+            productCount: null | number;
+            filledContentLanguages: null | string[];
+        };
+        AdminCodeCategoryDto: {
+            /** Format: int32 */
+            categoryId: number;
+            categoryPath: string;
+            hasOwnValue: boolean;
+            /** Format: int32 */
+            valueId: null | number;
+            valueName: null | string;
+            products: components["schemas"]["AdminCodeProductDto"][];
+            meanings: components["schemas"]["AdminCodeMeaningDto"][];
+        };
+        AdminCodeMeaningDto: {
+            /** Format: int32 */
+            attributeId: number;
+            attributeName: string;
+            /** Format: int32 */
+            valueId: number;
+            valueName: string;
+        };
+        AdminCodeProductDto: {
+            /** Format: int32 */
+            productId: number;
+            name: string;
+            photo: string;
+        };
+        AdminCodeProductsDto: {
+            /** Format: int32 */
+            aliasId: number;
+            rawValue: string;
+            categories: components["schemas"]["AdminCodeCategoryDto"][];
+        };
+        AdminCompanyContactsResponse: {
+            salesPhone: string;
+            email: string;
+            telegramUrl: string;
+            viberPhone: string;
+            mapUrl: string;
+            cityUk: string;
+            cityRu: string;
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: null | string;
+        };
+        AdminContentOverview: {
+            /** Format: int32 */
+            articleDrafts: number;
+            oldestArticleDraft: null | components["schemas"]["AdminContentOverviewDraft"];
+            /** Format: int32 */
+            legacyArticleCovers: number;
+            /** Format: int32 */
+            documentDrafts: number;
+        };
+        AdminContentOverviewDraft: {
+            /** Format: int64 */
+            id: number;
+            title: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminGalleryItemResponse: {
+            /** Format: int64 */
+            id: number;
+            kind: string;
+            /** Format: int64 */
+            mediaFileId: null | number;
+            youtubeId: null | string;
+            /** Format: int32 */
+            position: number;
+            titleUk: null | string;
+            titleRu: null | string;
+            captionUk: null | string;
+            captionRu: null | string;
+            previewUrl: null | string;
+            fileName: null | string;
+            fileMissing: boolean;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminHomeBlocksResponse: {
+            faq: components["schemas"]["AdminHomeFaqItemResponse"][];
+            brands: components["schemas"]["AdminHomeBrandResponse"][];
+        };
+        AdminHomeBrandResponse: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            position: number;
+            name: string;
+            /** Format: int64 */
+            logoMediaFileId: number;
+            logoUrl: null | string;
+            logoFileName: null | string;
+            logoMissing: boolean;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminHomeFaqItemResponse: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            position: number;
+            questionUk: string;
+            questionRu: string;
+            answerUk: string;
+            answerRu: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminPageSeoResponse: {
+            page: string;
+            titleUk: null | string;
+            titleRu: null | string;
+            descriptionUk: null | string;
+            descriptionRu: null | string;
+            /** Format: date-time */
+            updatedAt: null | string;
+            updatedBy: null | string;
+            /** Format: uint32 */
+            version: number;
+        };
+        AdminProblemReasonDto: {
+            code: string;
+            /** Format: int32 */
+            productCount: number;
+        };
+        AdminProductAttributeDto: {
+            /** Format: int32 */
+            attributeId: number;
+            code: string;
+            name: string;
+            kind: string;
+            unit: null | string;
+            isVariantAxis: boolean;
+            values: components["schemas"]["AdminProductAttributeValueDto"][];
+        };
+        AdminProductAttributesDto: {
+            /** Format: int32 */
+            productId: number;
+            originalName: string;
+            baseName: null | string;
+            review: components["schemas"]["AdminProductReviewDto"];
+            attributes: components["schemas"]["AdminProductAttributeDto"][];
+        };
+        AdminProductAttributeValueDto: {
+            /** Format: int32 */
+            position: number;
+            /** Format: int32 */
+            valueId: null | number;
+            valueName: null | string;
+            /** Format: double */
+            number: null | number;
+            source: string;
+            isLocked: boolean;
+            isConfirmed: boolean;
+            hasAutomatic: boolean;
+        };
+        AdminProductDetailsDto: {
+            /** Format: int32 */
+            id: number;
+            nameUk: string;
+            nameRu: string;
+            productSlug: string;
+            photo: string;
+            scheme: string;
+            /** Format: int32 */
+            categoryId: number;
+            categoryName: string;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            exportToSite: boolean;
+            /** Format: double */
+            price: null | number;
+            /** Format: double */
+            stock: number;
+            /** Format: int32 */
+            quantityInPack: number;
+        };
+        AdminProductGroupDto: {
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            categoryId: number;
+            name: string;
+            slug: string;
+            /** Format: int32 */
+            mainProductId: null | number;
+            isMainManual: boolean;
+            isCreatedManually: boolean;
+            members: components["schemas"]["AdminProductGroupMemberDto"][];
+        };
+        AdminProductGroupListItemDto: {
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            categoryId: number;
+            name: string;
+            slug: string;
+            /** Format: int32 */
+            productCount: number;
+            isCreatedManually: boolean;
+        };
+        AdminProductGroupMemberDto: {
+            /** Format: int32 */
+            productId: number;
+            name: string;
+            slug: string;
+            exportToSite: boolean;
+            isDeleted: boolean;
+            photo: string;
+            /** Format: double */
+            stock: number;
+            isPinned: boolean;
+            isMain: boolean;
+            colors: string[];
+            size: null | string;
+            side: null | string;
+            hasSameVariants: boolean;
+        };
+        AdminProductGroupMembershipDto: {
+            /** Format: int32 */
+            productId: number;
+            isPinned: boolean;
+            group: null | components["schemas"]["AdminProductGroupDto"];
+        };
+        AdminProductListRowDto: {
+            /** Format: int32 */
+            id: number;
+            nameUk: string;
+            nameRu: string;
+            productSlug: string;
+            photo: string;
+            /** Format: int32 */
+            categoryId: null | number;
+            categoryName: string;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            exportToSite: boolean;
+            /** Format: double */
+            price: null | number;
+            /** Format: double */
+            stock: number;
+            /** Format: int32 */
+            quantityInPack: number;
+            isDeleted: boolean;
+            /** Format: date-time */
+            deletedAt: null | string;
+            /** Format: int32 */
+            groupId: null | number;
+            groupName: null | string;
+            problems: components["schemas"]["AdminAttributeProblemDto"][];
+        };
+        AdminProductReviewDto: {
+            state: string;
+            reasons: components["schemas"]["AdminAttributeProblemDto"][];
+            acceptedBy: null | string;
+            /** Format: date-time */
+            acceptedAt: null | string;
+        };
+        AdminSiteSeoSettingsResponse: {
+            googleAnalyticsId: null | string;
+            googleTagManagerId: null | string;
+            googleSiteVerification: null | string;
+            bingSiteVerification: null | string;
+            shareImage: null | components["schemas"]["AdminSiteShareImageResponse"];
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: null | string;
+            /** Format: uint32 */
+            version: number;
+        };
+        AdminSiteShareImageResponse: {
+            /** Format: int64 */
+            mediaFileId: number;
+            url: null | string;
+            fileName: null | string;
+            /** Format: int32 */
+            width: null | number;
+            /** Format: int32 */
+            height: null | number;
+            missing: boolean;
+        };
+        AdminUnresolvedCodeDto: {
+            /** Format: int32 */
+            aliasId: number;
+            /** Format: int32 */
+            attributeId: number;
+            attributeName: string;
+            scope: string;
+            rawValue: string;
+            /** Format: int32 */
+            valueId: null | number;
+            valueName: null | string;
+            isConfirmed: boolean;
+            note: null | string;
+            /** Format: int32 */
+            productCount: number;
+            meanings: components["schemas"]["AdminCodeMeaningDto"][];
+        };
+        AdminWholesalePageResponse: {
+            texts: components["schemas"]["WholesaleTextPayload"][];
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: null | string;
+        };
+        ArticleCoverUploadResponse: {
+            /** Format: int64 */
+            mediaFileId: number;
+            url: string;
+        };
+        ArticleResponse: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            title: string;
+            excerpt: string;
+            bodyHtml: string;
+            /** Format: date */
+            publishedOn: string;
+            coverPath: null | string;
+            coverUrl: null | string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ArticleSummaryResponse: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            title: string;
+            excerpt: string;
+            /** Format: date */
+            publishedOn: string;
+            coverPath: null | string;
+            coverUrl: null | string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ArticleTextDto: {
+            language: string;
+            title: string;
+            excerpt: string;
+            bodyHtml: string;
+        };
+        AvatarResponse: {
+            avatarUrl: string;
+        };
+        CatalogListItemDto: {
+            /** Format: int32 */
+            productId: number;
+            /** Format: int32 */
+            categoryId: number;
+            name: string;
+            productSlug: string;
+            photo: null | string;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            /** Format: double */
+            price: null | number;
+        };
+        CatalogProductsRequest: {
+            /** Format: int32 */
+            categoryId?: null | number;
+            inStock?: null | boolean;
+            isSale?: null | boolean;
+            isNew?: null | boolean;
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            pageSize?: number;
+        };
+        CatalogRedirect: {
+            redirectSlug: string;
+            /** @default category */
+            redirectType: string;
+        };
+        CatalogSnapshotCategory: {
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            parentId: null | number;
+            name: string;
+            /** Format: int32 */
+            sortOrder: number;
+        };
+        CatalogSnapshotPrice: {
+            /** Format: int32 */
+            priceTypeId: number;
+            /** Format: double */
+            amount: number;
+        };
+        CatalogSnapshotPriceType: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+        };
+        CatalogSnapshotProduct: {
+            /** Format: int32 */
+            id: number;
+            slug: string;
+            name: string;
+            /** Format: int32 */
+            categoryId: number;
+            /** Format: double */
+            stock: number;
+            inStock: boolean;
+            /** Format: int32 */
+            quantityInPack: number;
+            isSale: boolean;
+            isNew: boolean;
+            photos: string[];
+            scheme: null | string;
+            prices: components["schemas"]["CatalogSnapshotPrice"][];
+        };
+        CatalogSnapshotResponse: {
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            /** Format: int32 */
+            retailPriceTypeId: number;
+            priceTypes: components["schemas"]["CatalogSnapshotPriceType"][];
+            categories: components["schemas"]["CatalogSnapshotCategory"][];
+            products: components["schemas"]["CatalogSnapshotProduct"][];
+        };
+        CategoryBreadcrumbDto: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            slug: string;
+        };
+        CategoryBreadcrumbResponse: {
+            /** Format: int32 */
+            id: number;
+            slug: string;
+            name: string;
+        };
+        CategoryContentResponse: {
+            seoTitle: null | string;
+            metaDescription: null | string;
+            h1: null | string;
+            bodyHtml: null | string;
+            faq: components["schemas"]["CategoryFaqItemDto"][];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CategoryDetailsResponse: {
+            /** Format: int32 */
+            id: number;
+            slug: string;
+            name: string;
+            /** Format: int32 */
+            parentId: null | number;
+            /** Format: int32 */
+            sortOrder: number;
+            /** Format: int32 */
+            level: number;
+            children: components["schemas"]["CategoryResponse"][];
+            breadcrumbs: components["schemas"]["CategoryBreadcrumbResponse"][];
+            /** Format: int32 */
+            productCount: number;
+            /** Format: double */
+            minPrice: null | number;
+            /** Format: double */
+            maxPrice: null | number;
+            content: null | components["schemas"]["CategoryContentResponse"];
+        };
+        CategoryFaqItemDto: {
+            question: string;
+            answer: string;
+        };
+        CategoryResponse: {
+            /** Format: int32 */
+            id: number;
+            slug: string;
+            name: string;
+            /** Format: int32 */
+            parentId: null | number;
+            /** Format: int32 */
+            sortOrder: number;
+            /** Format: int32 */
+            level: number;
+            children: components["schemas"]["CategoryResponse"][];
+            /** Format: int32 */
+            productCount: number;
+        };
+        CategorySiteVisibilityResponse: {
+            /** Format: int32 */
+            id: number;
+            isShownOnSite: boolean;
+            /** Format: int32 */
+            changedCount: number;
+        };
+        ChangeNameRequest: {
+            fullName: string;
+        };
+        ChangeOwnEmailRequest: {
+            email: string;
+            currentPassword: string;
+        };
+        ChangeOwnPasswordRequest: {
+            currentPassword: string;
+            newPassword: string;
+        };
+        ChangeSlugRequest: {
+            slug: null | string;
+            /** @default false */
+            regenerate: boolean;
+        };
+        ChangeSlugResponse: {
+            /** Format: int32 */
+            id: number;
+            slug: string;
+            previousSlug: string;
+        };
+        ChangeStaffEmailRequest: {
+            email: string;
+        };
+        ChangeStaffRoleRequest: {
+            role: string;
+        };
+        ChangeWorkTaskStatusRequest: {
+            status: string;
+            result: null | string;
+        };
+        CodeMeaningRequest: {
+            /** Format: int32 */
+            attributeId: number;
+            /** Format: int32 */
+            valueId: number;
+        };
+        CompanyContactsResponse: {
+            salesPhone: string;
+            email: string;
+            telegramUrl: string;
+            viberPhone: string;
+            mapUrl: string;
+            cityUk: string;
+            cityRu: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CompanyRequisitesChangeResponse: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            changedAt: string;
+            changedBy: string;
+            changes: components["schemas"]["RequisitesFieldChangeResponse"][];
+        };
+        CompanyRequisitesResponse: {
+            legalName: string;
+            code: string;
+            registrationExtractNumber: string;
+            iban: string;
+            bankName: string;
+            bankCode: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CreateAdminOrderLineRequest: {
+            productId: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            amount: number;
+        };
+        CreateAdminOrderRequest: {
+            counterpartyId: string;
+            comment: null | string;
+            lines: components["schemas"]["CreateAdminOrderLineRequest"][];
+        };
+        CreateAdminOrderResponse: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            syncStatus: string;
+        };
+        CreateAttributeValueRequest: {
+            nameUk: string;
+            nameRu: null | string;
+            code: null | string;
+            slug: null | string;
+            /** Format: int32 */
+            sortOrder: number;
+            swatchHex: null | string;
+            /** Format: int64 */
+            swatchMediaFileId: null | number;
+        };
+        CreateCatalogAttributeRequest: {
+            nameUk: string;
+            nameRu: null | string;
+            kind: string;
+            unit: null | string;
+            code: null | string;
+            slug: null | string;
+            isFilterable: boolean;
+            isVariantAxis: boolean;
+            /** Format: int32 */
+            sortOrder: number;
         };
         CreateOrderLineRequest: {
             productId: string;
             title: string;
+            /** Format: double */
             unitPrice: number;
+            /** Format: int32 */
             quantity: number;
         };
         CreateOrderRequest: {
@@ -3909,11 +3763,302 @@ export interface components {
             phone: string;
             lines: components["schemas"]["CreateOrderLineRequest"][];
         };
-        QuickOrderResponse: {
-            /** Format: uuid */
-            orderId: string;
+        CreateProductGroupRequest: {
+            /** Format: int32 */
+            categoryId?: number;
+            name?: string;
+            productIds?: number[];
         };
-        "schemas-PagedInfo": {
+        CreateSiteModelRequest: {
+            /** Format: int32 */
+            categoryId?: number;
+            name?: string;
+            productIds?: number[];
+        };
+        CreateStaffAccountRequest: {
+            email: string;
+            fullName: string;
+            role: string;
+            password: string;
+        };
+        CreateWorkTaskForUserRequest: {
+            /** Format: uuid */
+            ownerUserId: string;
+            title: string;
+            details: null | string;
+            /** Format: date */
+            dueDate?: null | string;
+            steps?: null | components["schemas"]["WorkTaskStepInput"][];
+        };
+        CustomerSnapshotDto: {
+            counterpartyId: string;
+            name: string;
+            phone: null | string;
+            email: string;
+            /** Format: int32 */
+            defaultPriceTypeId: number;
+            categoryPriceTypes: components["schemas"]["CustomerSnapshotPriceRuleDto"][];
+            /** Format: double */
+            debt: null | number;
+            /** Format: double */
+            balance: null | number;
+        };
+        CustomerSnapshotPriceRuleDto: {
+            /** Format: int32 */
+            categoryId: number;
+            /** Format: int32 */
+            priceTypeId: number;
+        };
+        CustomersSnapshotDto: {
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            customers: components["schemas"]["CustomerSnapshotDto"][];
+        };
+        DecideAttributeCodeCategoryRequest: {
+            /** Format: int32 */
+            categoryId: number;
+            /** Format: int32 */
+            valueId: null | number;
+            meanings?: null | components["schemas"]["CodeMeaningRequest"][];
+        };
+        DecideAttributeCodeRequest: {
+            /** Format: int32 */
+            valueId: null | number;
+            /** @default true */
+            applyToAll: boolean;
+            categories?: null | components["schemas"]["DecideAttributeCodeCategoryRequest"][];
+            meanings?: null | components["schemas"]["CodeMeaningRequest"][];
+        };
+        DecideAttributeCodeResponse: {
+            code: components["schemas"]["AdminUnresolvedCodeDto"];
+            /** Format: int32 */
+            valuesConfirmed: number;
+        };
+        EntityTagHeaderValue: {
+            tag: components["schemas"]["StringSegment"];
+            isWeak: boolean;
+        };
+        FileContentResult: {
+            /** Format: byte */
+            fileContents: string;
+            contentType: null | string;
+            fileDownloadName: null | string;
+            /** Format: date-time */
+            lastModified: null | string;
+            entityTag: null | components["schemas"]["EntityTagHeaderValue"];
+            enableRangeProcessing: boolean;
+        };
+        GetAdminCustomerCategoryPriceTypeResponse: {
+            /** Format: int32 */
+            categoryId: number;
+            /** Format: int32 */
+            priceTypeId: number;
+            categoryName: null | string;
+            priceTypeName: null | string;
+        };
+        GetAdminCustomerDetailResponse: {
+            counterpartyId: string;
+            name: string;
+            phone: null | string;
+            email: string;
+            /** Format: int32 */
+            defaultPriceTypeId: number;
+            categoryPriceTypes: components["schemas"]["GetAdminCustomerCategoryPriceTypeResponse"][];
+            defaultPriceTypeName: null | string;
+        };
+        GetAdminCustomerListItemResponse: {
+            counterpartyId: string;
+            name: string;
+            phone: null | string;
+        };
+        GetAdminOrderCounterpartyResponse: {
+            counterpartyId: string;
+            name: string;
+            phone: null | string;
+        };
+        GetAdminOrderDetailResponse: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            /** Format: date-time */
+            createdAtUtc: string;
+            counterparty: components["schemas"]["GetAdminOrderCounterpartyResponse"];
+            comment: null | string;
+            lines: components["schemas"]["GetAdminOrderLineResponse"][];
+            /** Format: double */
+            totalAmount: number;
+            sync: components["schemas"]["GetAdminOrderSyncResponse"];
+        };
+        GetAdminOrderLineResponse: {
+            productId: string;
+            productName: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            amount: number;
+        };
+        GetAdminOrderListItemResponse: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            counterpartyId: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            createdAtUtc: string;
+            /** Format: int32 */
+            lineCount: number;
+            /** Format: double */
+            totalAmount: number;
+            syncStatus: string;
+            oneCDocumentNumber: null | string;
+        };
+        GetAdminOrderSyncResponse: {
+            status: string;
+            oneCDocumentNumber: null | string;
+            /** Format: date-time */
+            acceptedAtUtc: null | string;
+        };
+        GetAdminOrderSyncStatusResponse: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            syncStatus: string;
+            oneCDocumentNumber: null | string;
+            /** Format: date-time */
+            acceptedAtUtc: null | string;
+        };
+        GrantStaffAccessRequest: {
+            fullName: string;
+            role: string;
+            password: string;
+        };
+        HomeBrandRequest: {
+            name: null | string;
+            /** Format: int64 */
+            logoMediaFileId: number;
+        };
+        HomeFaqItemRequest: {
+            questionUk: null | string;
+            questionRu: null | string;
+            answerUk: null | string;
+            answerRu: null | string;
+        };
+        /** Format: binary */
+        IFormFile: string;
+        LegacyArticleCoversMovedResponse: {
+            /** Format: int32 */
+            moved: number;
+        };
+        LegalDocumentOverviewResponse: {
+            kind: string;
+            published: null | components["schemas"]["LegalDocumentVersionSummaryResponse"];
+            draft: null | components["schemas"]["LegalDocumentVersionSummaryResponse"];
+        };
+        LegalDocumentTextResponse: {
+            language: string;
+            title: string;
+            bodyHtml: string;
+        };
+        LegalDocumentVersionResponse: {
+            /** Format: int64 */
+            id: number;
+            kind: string;
+            status: string;
+            /** Format: int32 */
+            number: null | number;
+            /** Format: date */
+            effectiveFrom: null | string;
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: string;
+            /** Format: date-time */
+            publishedAt: null | string;
+            publishedBy: null | string;
+            texts: components["schemas"]["LegalDocumentTextResponse"][];
+        };
+        LegalDocumentVersionSummaryResponse: {
+            /** Format: int64 */
+            id: number;
+            status: string;
+            /** Format: int32 */
+            number: null | number;
+            /** Format: date */
+            effectiveFrom: null | string;
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: string;
+            /** Format: date-time */
+            publishedAt: null | string;
+            publishedBy: null | string;
+        };
+        MediaFileItem: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            folderId: null | number;
+            fileName: string;
+            url: string;
+            contentType: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            /** Format: int32 */
+            width: null | number;
+            /** Format: int32 */
+            height: null | number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        MediaFilePage: {
+            items: components["schemas"]["MediaFileItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+            /** Format: int32 */
+            totalCount: number;
+        };
+        MediaFolderItem: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            parentId: null | number;
+            name: string;
+            /** Format: int32 */
+            fileCount: number;
+        };
+        MediaFolderTree: {
+            folders: components["schemas"]["MediaFolderItem"][];
+            /** Format: int32 */
+            rootFileCount: number;
+            /** Format: int32 */
+            totalFileCount: number;
+        };
+        MobileLogoutRequest: {
+            refreshToken: null | string;
+        };
+        MobileRefreshRequest: {
+            refreshToken: string;
+        };
+        MobileTokenResponse: {
+            tokenType: string;
+            accessToken: string;
+            /** Format: int32 */
+            expiresIn: number;
+            refreshToken: string;
+        };
+        MoveMediaFilesRequest: {
+            fileIds: number[];
+            /** Format: int64 */
+            folderId: null | number;
+        };
+        MoveMediaFilesResponse: {
+            /** Format: int32 */
+            moved: number;
+        };
+        PagedInfo: {
             /** Format: int64 */
             pageNumber: number;
             /** Format: int64 */
@@ -3923,127 +4068,986 @@ export interface components {
             /** Format: int64 */
             totalRecords: number;
         };
+        PagedResultOfListOfAdminProductListRowDto: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: null | components["schemas"]["AdminProductListRowDto"][];
+            status: components["schemas"]["ResultStatus"];
+            isSuccess: boolean;
+            successMessage: null | string;
+            correlationId: null | string;
+            location: null | string;
+            errors: null | string[];
+            validationErrors: null | components["schemas"]["ValidationError"][];
+        };
+        PagedResultOfListOfCatalogListItemDto: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: null | components["schemas"]["CatalogListItemDto"][];
+            status: components["schemas"]["ResultStatus"];
+            isSuccess: boolean;
+            successMessage: null | string;
+            correlationId: null | string;
+            location: null | string;
+            errors: null | string[];
+            validationErrors: null | components["schemas"]["ValidationError"][];
+        };
+        PagedResultOfListOfGetAdminCustomerListItemResponse: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: null | components["schemas"]["GetAdminCustomerListItemResponse"][];
+            status: components["schemas"]["ResultStatus"];
+            isSuccess: boolean;
+            successMessage: null | string;
+            correlationId: null | string;
+            location: null | string;
+            errors: null | string[];
+            validationErrors: null | components["schemas"]["ValidationError"][];
+        };
+        PagedResultOfListOfGetAdminOrderListItemResponse: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: null | components["schemas"]["GetAdminOrderListItemResponse"][];
+            status: components["schemas"]["ResultStatus"];
+            isSuccess: boolean;
+            successMessage: null | string;
+            correlationId: null | string;
+            location: null | string;
+            errors: null | string[];
+            validationErrors: null | components["schemas"]["ValidationError"][];
+        };
+        PagedResultOfListOfProductListRowDto: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: null | components["schemas"]["ProductListRowDto"][];
+            status: components["schemas"]["ResultStatus"];
+            isSuccess: boolean;
+            successMessage: null | string;
+            correlationId: null | string;
+            location: null | string;
+            errors: null | string[];
+            validationErrors: null | components["schemas"]["ValidationError"][];
+        };
+        ProblemDetails: {
+            type: null | string;
+            title: null | string;
+            /** Format: int32 */
+            status: null | number;
+            detail: null | string;
+            instance: null | string;
+        };
         /** @enum {string} */
-        OrderSyncStatus: "Pending" | "Sent" | "Accepted" | "BusinessError" | "TransportError" | "RetryScheduled" | "DeadLetter";
-        ManagerOrderListItem: {
-            /**
-             * Format: int64
-             * @example 12345
-             */
+        ProductAvailability: "InStock" | "All";
+        ProductBySlugDto: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            productSlug: string;
+            photo: string;
+            scheme: string;
+            photos: string[];
+            /** Format: double */
+            stock: number;
+            categoryName: string;
+            categorySlug: string;
+            /** Format: int32 */
+            quantityInPack: number;
+            /** Format: double */
+            price: null | number;
+            /** Format: date-time */
+            updatedAt: string;
+            breadcrumbs: components["schemas"]["CategoryBreadcrumbDto"][];
+        };
+        ProductListRowDto: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            productSlug: string;
+            photo: string;
+            /** Format: int32 */
+            categoryId: null | number;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            /** Format: double */
+            price: null | number;
+        };
+        ProductMediaDto: {
+            /** Format: int32 */
+            productId: number;
+            photos: components["schemas"]["ProductMediaItemDto"][];
+            scheme: null | components["schemas"]["ProductMediaItemDto"];
+        };
+        ProductMediaItemDto: {
+            /** Format: int64 */
+            id: number;
+            url: string;
+            fileName: string;
+        };
+        /** @enum {string} */
+        ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc" | "AvailabilityThenName";
+        ProfileResponse: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            fullName: string;
+            role: string;
+            avatarUrl: null | string;
+        };
+        PublicGalleryItemResponse: {
+            /** Format: int64 */
+            id: number;
+            kind: string;
+            title: null | string;
+            caption: null | string;
+            imageUrl: string;
+            /** Format: int32 */
+            width: null | number;
+            /** Format: int32 */
+            height: null | number;
+            youtubeId: null | string;
+        };
+        PublicHomeBlocksResponse: {
+            faq: components["schemas"]["PublicHomeFaqItemResponse"][];
+            brands: components["schemas"]["PublicHomeBrandResponse"][];
+        };
+        PublicHomeBrandResponse: {
+            name: string;
+            logoUrl: string;
+            /** Format: int32 */
+            width: null | number;
+            /** Format: int32 */
+            height: null | number;
+        };
+        PublicHomeFaqItemResponse: {
+            question: string;
+            answer: string;
+        };
+        PublicPageSeoResponse: {
+            page: string;
+            title: null | string;
+            description: null | string;
+        };
+        PublicSiteModelAddressDto: {
+            modelSlug: string;
+            categorySlug: string;
+            selection: {
+                [key: string]: string;
+            };
+        };
+        PublicSiteModelAxisDto: {
+            code: string;
+            slug: string;
+            name: string;
+            display: string;
+            values: components["schemas"]["PublicSiteModelAxisValueDto"][];
+        };
+        PublicSiteModelAxisValueDto: {
+            key: string;
+            name: string;
+            hex: null | string;
+            textureUrl: null | string;
+        };
+        PublicSiteModelCardDto: {
+            slug: string;
+            name: string;
+            categorySlug: string;
+            photo: string;
+            /** Format: double */
+            priceFrom: null | number;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            /** Format: int32 */
+            productCount: number;
+            isAccepted: boolean;
+            colors: components["schemas"]["PublicSiteModelSwatchDto"][];
+            /** Format: int32 */
+            productId: null | number;
+        };
+        PublicSiteModelCategoryDto: {
+            /** Format: int32 */
+            id: number;
+            slug: string;
+            name: string;
+        };
+        PublicSiteModelCharacteristicDto: {
+            code: string;
+            name: string;
+            values: string[];
+        };
+        PublicSiteModelDto: {
+            slug: string;
+            name: string;
+            isAccepted: boolean;
+            category: components["schemas"]["PublicSiteModelCategoryDto"];
+            breadcrumbs: components["schemas"]["PublicSiteModelCategoryDto"][];
+            texts: components["schemas"]["PublicSiteModelTextDto"];
+            mainProductSlug: null | string;
+            axes: components["schemas"]["PublicSiteModelAxisDto"][];
+            products: components["schemas"]["PublicSiteModelProductDto"][];
+            characteristics: components["schemas"]["PublicSiteModelCharacteristicDto"][];
+        };
+        PublicSiteModelFilterDto: {
+            code: string;
+            slug: string;
+            name: string;
+            display: string;
+            values: components["schemas"]["PublicSiteModelFilterValueDto"][];
+        };
+        PublicSiteModelFilterValueDto: {
+            slug: string;
+            name: string;
+            hex: null | string;
+            textureUrl: null | string;
+            /** Format: int32 */
+            count: number;
+            selected: boolean;
+        };
+        PublicSiteModelListDto: {
+            categorySlug: null | string;
+            isFinalCategory: boolean;
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+            /** Format: int32 */
+            totalPages: number;
+            /** Format: int32 */
+            totalRecords: number;
+            items: components["schemas"]["PublicSiteModelCardDto"][];
+            filters: components["schemas"]["PublicSiteModelFilterDto"][];
+            exactMatch: null | components["schemas"]["PublicSiteModelAddressDto"];
+        };
+        PublicSiteModelProductDto: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            slug: string;
+            photo: string;
+            /** Format: double */
+            price: null | number;
+            inStock: boolean;
+            isSale: boolean;
+            isNew: boolean;
+            isMain: boolean;
+            selection: {
+                [key: string]: string;
+            };
+        };
+        PublicSiteModelSwatchDto: {
+            slug: string;
+            name: string;
+            hex: null | string;
+            textureUrl: null | string;
+        };
+        PublicSiteModelTextDto: {
+            shortDescription: string;
+            description: string;
+            seoTitle: string;
+            seoDescription: string;
+        };
+        PublicWholesalePageResponse: {
+            text: components["schemas"]["WholesaleTextPayload"];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        PublishedLegalDocumentResponse: {
+            kind: string;
+            /** Format: int32 */
+            number: number;
+            /** Format: date */
+            effectiveFrom: string;
+            title: string;
+            bodyHtml: string;
+            /** Format: date-time */
+            publishedAt: string;
+        };
+        PublishLegalDocumentRequest: {
+            /** Format: date */
+            effectiveFrom: string;
+        };
+        QuickOrderResponse: {
+            /** Format: uuid */
+            orderId: string;
+        };
+        RenameProductGroupRequest: {
+            name?: string;
+        };
+        RenameSiteModelRequest: {
+            name?: string;
+        };
+        ReorderGalleryRequest: {
+            ids: null | number[];
+        };
+        ReorderHomeRequest: {
+            ids: null | number[];
+        };
+        RequisitesFieldChangeResponse: {
+            field: string;
+            oldValue: string;
+            newValue: string;
+        };
+        /** @enum {integer} */
+        ResultStatus: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+        RetryAdminOrderSyncRequest: {
+            reason?: string;
+        };
+        RetryAdminOrderSyncResponse: {
+            /** Format: int64 */
             orderId: number;
-            /** @example SO-20260817-12345 */
             orderNumber: string;
-            /** @example 000000000 */
+            syncStatus: string;
+        };
+        SaveArticleRequest: {
+            slug: null | string;
+            /** Format: date */
+            publishedOn: string;
+            isPublished: boolean;
+            texts: components["schemas"]["ArticleTextDto"][];
+            /** Format: int64 */
+            coverMediaFileId?: null | number;
+            /** @default false */
+            removeCover: boolean;
+            /** Format: uint32 */
+            version?: null | number;
+        };
+        SaveCategoryContentRequest: {
+            seoTitle: null | string;
+            metaDescription: null | string;
+            h1: null | string;
+            bodyHtml: null | string;
+            faq: null | components["schemas"]["CategoryFaqItemDto"][];
+            /** Format: uint32 */
+            version?: null | number;
+        };
+        SaveCompanyContactsRequest: {
+            salesPhone: string;
+            email: string;
+            telegramUrl: string;
+            viberPhone: string;
+            mapUrl: string;
+            cityUk: string;
+            cityRu: string;
+        };
+        SaveCompanyRequisitesRequest: {
+            legalName: string;
+            code: string;
+            registrationExtractNumber: string;
+            iban: string;
+            bankName: string;
+            bankCode: string;
+        };
+        SaveLegalDocumentDraftRequest: {
+            texts: null | components["schemas"]["LegalDocumentTextResponse"][];
+        };
+        SaveMediaFolderRequest: {
+            name: string;
+            /** Format: int64 */
+            parentId: null | number;
+        };
+        SavePageSeoRequest: {
+            titleUk: null | string;
+            titleRu: null | string;
+            descriptionUk: null | string;
+            descriptionRu: null | string;
+            /** Format: uint32 */
+            version?: null | number;
+        };
+        SaveSiteSeoSettingsRequest: {
+            googleAnalyticsId: null | string;
+            googleTagManagerId: null | string;
+            googleSiteVerification: null | string;
+            bingSiteVerification: null | string;
+            /** Format: int64 */
+            shareImageMediaFileId: null | number;
+            /** Format: uint32 */
+            version?: null | number;
+        };
+        SaveWholesalePageRequest: {
+            texts: components["schemas"]["WholesaleTextPayload"][];
+        };
+        SaveWorkTaskRequest: {
+            title: string;
+            details: null | string;
+            /** Format: date */
+            dueDate?: null | string;
+            steps?: null | components["schemas"]["WorkTaskStepInput"][];
+        };
+        ScheduledTaskResponse: {
+            key: string;
+            name: string;
+            description: string;
+            editable: boolean;
+            enabled: boolean;
+            schedule: components["schemas"]["ScheduleInput"];
+            /** Format: date-time */
+            nextRunAt: null | string;
+            isRunning: boolean;
+            /** Format: date-time */
+            runningSince: null | string;
+            /** Format: date-time */
+            runRequestedAt: null | string;
+            /** Format: date-time */
+            lastSuccessAt: null | string;
+            lastSuccessSummary: null | string;
+            /** Format: date-time */
+            lastFailureAt: null | string;
+            lastFailureReason: null | string;
+            lastRunFailed: boolean;
+            overdue: boolean;
+        };
+        ScheduledTaskRunResponse: {
+            /** Format: uuid */
+            id: string;
+            trigger: string;
+            requestedBy: null | string;
+            /** Format: date-time */
+            claimedAt: string;
+            /** Format: date-time */
+            startedAt: null | string;
+            /** Format: date-time */
+            finishedAt: null | string;
+            outcome: string;
+            message: null | string;
+        };
+        ScheduledTaskScheduleInput: {
+            enabled: boolean;
+            schedule: components["schemas"]["ScheduleInput"];
+            /** Format: date-time */
+            nextRunAt?: null | string;
+        };
+        ScheduleInput: {
+            kind: string;
+            /** Format: int32 */
+            everyMinutes: null | number;
+            /** Format: int32 */
+            fromHour: null | number;
+            /** Format: int32 */
+            toHour: null | number;
+            times: null | string[];
+            days: null | number[];
+        };
+        SessionLoginRequest: {
+            email: string;
+            password: string;
+        };
+        SessionMeResponse: {
+            userId: string;
+            email: string;
+            fullName: string;
+            roles: string[];
+            avatarUrl: null | string;
+        };
+        SetCategoryAttributeFilterRequest: {
+            /** Format: int32 */
+            attributeId: number;
+            isFilterable: boolean;
+            /** Format: int32 */
+            sortOrder: number;
+        };
+        SetCategoryAttributeFiltersRequest: {
+            filters: components["schemas"]["SetCategoryAttributeFilterRequest"][];
+        };
+        SetCategorySiteVisibilityRequest: {
+            isShownOnSite?: boolean;
+        };
+        SetProductAttributeRequest: {
+            values: components["schemas"]["SetProductAttributeValueRequest"][];
+        };
+        SetProductAttributeValueRequest: {
+            /** Format: int32 */
+            valueId: null | number;
+            /** Format: double */
+            number: null | number;
+        };
+        SetProductGroupMainRequest: {
+            /** Format: int32 */
+            productId?: number;
+        };
+        SetProductGroupRequest: {
+            /** Format: int32 */
+            groupId?: null | number;
+            automatic?: boolean;
+        };
+        SetProductMediaRequest: {
+            photoIds?: number[];
+            /** Format: int64 */
+            schemeId?: null | number;
+        };
+        SetSiteModelAxesRequest: {
+            attributeIds?: number[];
+        };
+        SetSiteModelTextRequest: {
+            shortDescription?: null | string;
+            description?: null | string;
+            seoTitle?: null | string;
+            seoDescription?: null | string;
+            /** Format: uint32 */
+            version?: null | number;
+        };
+        SetStaffBlockedRequest: {
+            blocked: boolean;
+        };
+        SetStaffPasswordRequest: {
+            password: string;
+        };
+        SetWorkTaskStepRequest: {
+            isDone: boolean;
+        };
+        SiteModelAxisDto: {
+            /** Format: int32 */
+            attributeId: number;
+            code: string;
+            name: string;
+            display: string;
+            isSaved: boolean;
+        };
+        SiteModelCategoryDto: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            /** Format: int32 */
+            parentId: null | number;
+            /** Format: int32 */
+            onSiteProducts: number;
+            /** Format: int32 */
+            acceptedModels: number;
+            /** Format: int32 */
+            proposedModels: number;
+            /** Format: int32 */
+            problemCount: number;
+            /** Format: int32 */
+            loneProducts: number;
+            /** Format: int32 */
+            filterCount: number;
+        };
+        SiteModelCharacteristicDto: {
+            /** Format: int32 */
+            attributeId: number;
+            name: string;
+            values: string[];
+        };
+        SiteModelDto: {
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            categoryId: number;
+            categoryName: string;
+            name: string;
+            slug: string;
+            status: string;
+            /** Format: date-time */
+            acceptedAt: null | string;
+            acceptedBy: null | string;
+            /** Format: int32 */
+            mainProductId: null | number;
+            axes: components["schemas"]["SiteModelAxisDto"][];
+            products: components["schemas"]["SiteModelProductDto"][];
+            texts: components["schemas"]["SiteModelTextDto"][];
+            characteristics: components["schemas"]["SiteModelCharacteristicDto"][];
+            problems: string[];
+        };
+        SiteModelHealthDto: {
+            /** Format: int32 */
+            productsWithoutModel: number;
+            /** Format: int32 */
+            productsWithoutAttributes: number;
+            /** Format: int32 */
+            productsMissingAxisValue: number;
+            /** Format: int32 */
+            productsWithSameCombination: number;
+            /** Format: int32 */
+            modelsWithoutAxes: number;
+            /** Format: int32 */
+            modelsWithoutSeo: number;
+            /** Format: int32 */
+            modelsWithoutPhoto: number;
+            /** Format: int32 */
+            proposedModels: number;
+        };
+        SiteModelListDto: {
+            items: components["schemas"]["SiteModelListItemDto"][];
+            /** Format: int32 */
+            totalCount: number;
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+        };
+        SiteModelListItemDto: {
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            categoryId: number;
+            categoryName: string;
+            name: string;
+            slug: string;
+            status: string;
+            /** Format: int32 */
+            productCount: number;
+            /** Format: int32 */
+            onSiteCount: number;
+            /** Format: double */
+            minPrice: null | number;
+            photo: string;
+            axes: string[];
+            problems: string[];
+        };
+        SiteModelProductDto: {
+            /** Format: int32 */
+            productId: number;
+            name: string;
+            slug: string;
+            photo: string;
+            /** Format: double */
+            retailPrice: null | number;
+            inStock: boolean;
+            exportToSite: boolean;
+            isMain: boolean;
+            values: components["schemas"]["SiteModelProductValueDto"][];
+            problems: string[];
+        };
+        SiteModelProductValueDto: {
+            /** Format: int32 */
+            attributeId: number;
+            /** Format: int32 */
+            valueId: null | number;
+            name: null | string;
+            isManual: boolean;
+        };
+        SiteModelTextDto: {
+            language: string;
+            shortDescription: string;
+            description: string;
+            seoTitle: string;
+            seoDescription: string;
+            /** Format: uint32 */
+            version: number;
+        };
+        SiteRefreshResponse: {
+            status: string;
+        };
+        SiteSeoSettingsResponse: {
+            googleAnalyticsId: null | string;
+            googleTagManagerId: null | string;
+            googleSiteVerification: null | string;
+            bingSiteVerification: null | string;
+            shareImage: null | components["schemas"]["SiteShareImageResponse"];
+        };
+        SiteShareImageResponse: {
+            url: string;
+            /** Format: int32 */
+            width: null | number;
+            /** Format: int32 */
+            height: null | number;
+        };
+        SiteShowcaseItemDto: {
+            /** Format: int32 */
+            productId: number;
+            name: string;
+            slug: string;
+            photo: string;
+            /** Format: int32 */
+            categoryId: number;
+            categoryName: string;
+            /** Format: double */
+            retailPrice: null | number;
+            inStock: boolean;
+            model: null | components["schemas"]["SiteShowcaseModelDto"];
+            values: components["schemas"]["SiteShowcaseValueDto"][];
+            problems: string[];
+        };
+        SiteShowcaseListDto: {
+            items: components["schemas"]["SiteShowcaseRowDto"][];
+            /** Format: int32 */
+            totalCount: number;
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+        };
+        SiteShowcaseModelDto: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            status: string;
+        };
+        SiteShowcaseRowDto: {
+            key: string;
+            model: null | components["schemas"]["SiteShowcaseModelDto"];
+            name: string;
+            photo: string;
+            /** Format: int32 */
+            categoryId: number;
+            categoryName: string;
+            /** Format: double */
+            minPrice: null | number;
+            inStock: boolean;
+            products: components["schemas"]["SiteShowcaseItemDto"][];
+            problems: string[];
+        };
+        SiteShowcaseValueDto: {
+            /** Format: int32 */
+            attributeId: number;
+            attributeName: string;
+            value: string;
+        };
+        StaffAccountResponse: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            fullName: string;
+            role: string;
+            isBlocked: boolean;
+            avatarUrl: null | string;
+        };
+        StaffCandidateResponse: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            fullName: string;
+            isCustomer: boolean;
+        };
+        StringSegment: {
+            buffer: null | string;
+            /** Format: int32 */
+            offset: number;
+            /** Format: int32 */
+            length: number;
+            value: null | string;
+            hasValue: boolean;
+        };
+        UpdateAttributeValueRequest: {
+            nameUk: string;
+            nameRu: null | string;
+            /** Format: int32 */
+            sortOrder: number;
+            swatchHex: null | string;
+            /** Format: int64 */
+            swatchMediaFileId: null | number;
+        };
+        UpdateCatalogAttributeRequest: {
+            nameUk: string;
+            nameRu: null | string;
+            isFilterable: boolean;
+            /** Format: int32 */
+            sortOrder: number;
+            /** Format: uint32 */
+            version?: null | number;
+        };
+        UpdateGalleryItemRequest: {
+            titleUk: null | string;
+            titleRu: null | string;
+            captionUk: null | string;
+            captionRu: null | string;
+        };
+        UpdateMediaFileRequest: {
+            fileName: string;
+            /** Format: int64 */
+            folderId: null | number;
+        };
+        ValidationError: {
+            identifier: null | string;
+            errorMessage: null | string;
+            errorCode: null | string;
+            severity: components["schemas"]["ValidationSeverity"];
+        };
+        /** @enum {integer} */
+        ValidationSeverity: 0 | 1 | 2;
+        WholesaleFaqPayload: {
+            question: string;
+            answer: string;
+        };
+        WholesaleStepPayload: {
+            title: string;
+            text: string;
+        };
+        WholesaleTextPayload: {
+            language: string;
+            heroTitle: string;
+            heroLead: string;
+            contactCardTitle: string;
+            contactCardNote: string;
+            assortmentTitle: string;
+            assortmentIntro: string;
+            companyTitle: string;
+            companyText: string;
+            selectionTitle: string;
+            selectionText: string;
+            warehouseTitle: string;
+            warehouseText: string;
+            stepsTitle: string;
+            steps: components["schemas"]["WholesaleStepPayload"][];
+            faqTitle: string;
+            faq: components["schemas"]["WholesaleFaqPayload"][];
+            closingTitle: string;
+        };
+        WorkActivityDto: {
+            /** Format: int64 */
+            id: number;
+            /** Format: uuid */
+            userId: string;
+            userEmail: string;
+            area: string;
+            operation: string;
+            method: string;
+            target: string;
+            /** Format: int32 */
+            count: number;
+            /** Format: date-time */
+            firstAt: string;
+            /** Format: date-time */
+            occurredAt: string;
+        };
+        WorkReportDto: {
+            /** Format: uuid */
+            userId: string;
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            doneTasks: components["schemas"]["WorkTaskDto"][];
+            openTasks: components["schemas"]["WorkTaskDto"][];
+            activity: components["schemas"]["WorkActivityDto"][];
+            activityTruncated: boolean;
+        };
+        WorkspaceCreateOrderRequest: {
             counterpartyId: string;
-            /** @example Клієнт */
+            lines: components["schemas"]["WorkspaceInputLine"][];
+            quoteFingerprint: string;
+            comment: null | string;
+        };
+        WorkspaceCustomerPricesRequest: {
+            counterpartyId: string;
+            productIds: string[];
+        };
+        WorkspaceDraftDetail: {
+            /** Format: int64 */
+            draftId: number;
+            version: string;
+            title: string;
+            note: null | string;
+            counterpartyId: string;
             counterpartyName: string;
             /** Format: date-time */
             createdAtUtc: string;
-            /** @example 2 */
+            /** Format: date-time */
+            updatedAtUtc: string;
+            lines: components["schemas"]["WorkspaceDraftQuotedLine"][];
+            /** Format: double */
+            totalAmount: null | number;
+            pricingStatus: string;
+            pricingErrorCode: null | string;
+        };
+        WorkspaceDraftInput: {
+            title: string;
+            note: null | string;
+            counterpartyId: string;
+            lines: components["schemas"]["WorkspaceInputLine"][];
+        };
+        WorkspaceDraftListItem: {
+            /** Format: int64 */
+            draftId: number;
+            title: string;
+            counterpartyId: string;
+            counterpartyName: string;
+            /** Format: date-time */
+            updatedAtUtc: string;
+            /** Format: int32 */
             lineCount: number;
+        };
+        WorkspaceDraftQuotedLine: {
+            productId: string;
+            productName: null | string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            unitPrice: null | number;
+            /** Format: double */
+            lineAmount: null | number;
+            /** Format: double */
+            priceAdjustment: number;
+            /** Format: double */
+            baseUnitPrice: null | number;
+        };
+        WorkspaceInputLine: {
+            productId: string;
+            /** Format: int32 */
+            quantity: number;
             /**
              * Format: double
-             * @example 25000
+             * @default 0
              */
-            totalAmount: number;
-            syncStatus: components["schemas"]["OrderSyncStatus"];
-            /** @example 000000123 */
-            oneCDocumentNumber: string | null;
+            priceAdjustment: number;
         };
-        ManagerOrderPage: {
-            pagedInfo: components["schemas"]["schemas-PagedInfo"];
-            value: components["schemas"]["ManagerOrderListItem"][];
-        };
-        CreateAdminOrderLine: {
-            productId: string;
-            quantity: number;
-            amount: number;
-        };
-        CreateAdminOrderRequest: {
-            counterpartyId: string;
-            comment?: string | null;
-            lines: components["schemas"]["CreateAdminOrderLine"][];
-        };
-        CreateOrderResponse: {
-            /**
-             * Format: int64
-             * @example 12345
-             */
+        WorkspaceOrderDetail: {
+            /** Format: int64 */
             orderId: number;
-            /** @example SO-20260817-0001 */
             orderNumber: string;
-            /**
-             * @example Pending
-             * @enum {string}
-             */
-            syncStatus: "Pending";
-        };
-        OrderCounterparty: {
             counterpartyId: string;
-            name: string;
-            phone: string | null;
-        };
-        ManagerOrderLine: {
-            productId: string;
-            productName: string;
-            quantity: number;
-            /** Format: double */
-            amount: number;
-        };
-        ManagerOrderSync: {
-            status: components["schemas"]["OrderSyncStatus"];
-            oneCDocumentNumber: string | null;
-            /** Format: date-time */
-            acceptedAtUtc: string | null;
-        };
-        ManagerOrderDetail: {
-            /**
-             * Format: int64
-             * @example 12345
-             */
-            orderId: number;
-            /** @example SO-20260817-12345 */
-            orderNumber: string;
+            counterpartyName: string;
             /** Format: date-time */
             createdAtUtc: string;
-            counterparty: components["schemas"]["OrderCounterparty"];
-            comment: string | null;
-            lines: components["schemas"]["ManagerOrderLine"][];
+            comment: null | string;
+            lines: components["schemas"]["WorkspaceStoredLine"][];
             /** Format: double */
             totalAmount: number;
-            sync: components["schemas"]["ManagerOrderSync"];
+            syncStatus: string;
+            oneCDocumentNumber: null | string;
         };
-        OrderSyncStatusResponse: {
-            /**
-             * Format: int64
-             * @example 12345
-             */
+        WorkspaceOrderListItem: {
+            /** Format: int64 */
             orderId: number;
-            /** @example SO-20260817-0001 */
             orderNumber: string;
-            /** @enum {string} */
-            syncStatus: "Pending" | "Sent" | "Accepted" | "BusinessError" | "TransportError" | "RetryScheduled" | "DeadLetter";
-            /** @example 1C-123 */
-            oneCDocumentNumber: string | null;
+            counterpartyId: string;
+            counterpartyName: string;
             /** Format: date-time */
-            acceptedAtUtc: string | null;
+            createdAtUtc: string;
+            /** Format: int32 */
+            lineCount: number;
+            /** Format: double */
+            totalAmount: number;
+            syncStatus: string;
+            /** Format: double */
+            adjustmentAmount: number;
         };
-        RetryOrderSyncRequest: {
-            reason: string;
+        WorkspaceOverview: {
+            /** Format: int32 */
+            ordersToday: number;
+            /** Format: int32 */
+            draftCount: number;
+            /** Format: int32 */
+            syncProblemCount: number;
+            syncProblems: components["schemas"]["WorkspaceSyncProblem"][];
+            latestOrders: components["schemas"]["WorkspaceOrderListItem"][];
         };
-        RetryOrderSyncResponse: {
-            /**
-             * Format: int64
-             * @example 12345
-             */
-            orderId: number;
-            /** @example SO-20260817-0001 */
-            orderNumber: string;
-            /**
-             * @example RetryScheduled
-             * @enum {string}
-             */
-            syncStatus: "RetryScheduled";
+        WorkspacePagedInfo: {
+            /** Format: int32 */
+            pageNumber: number;
+            /** Format: int32 */
+            pageSize: number;
+            /** Format: int64 */
+            totalPages: number;
+            /** Format: int64 */
+            totalRecords: number;
+        };
+        WorkspacePageOfWorkspaceDraftListItem: {
+            pagedInfo: components["schemas"]["WorkspacePagedInfo"];
+            value: components["schemas"]["WorkspaceDraftListItem"][];
+        };
+        WorkspacePageOfWorkspaceOrderListItem: {
+            pagedInfo: components["schemas"]["WorkspacePagedInfo"];
+            value: components["schemas"]["WorkspaceOrderListItem"][];
+        };
+        WorkspaceQuoteRequest: {
+            counterpartyId: string;
+            lines: components["schemas"]["WorkspaceInputLine"][];
+        };
+        WorkspaceStoredLine: {
+            productId: string;
+            productName: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            amount: number;
+            /** Format: double */
+            priceAdjustment: number;
         };
         WorkspaceSyncProblem: {
             /** Format: int64 */
@@ -4052,3335 +5056,57 @@ export interface components {
             counterpartyName: string;
             /** Format: date-time */
             createdAtUtc: string;
-            /** @enum {string} */
-            syncStatus: "BusinessError" | "DeadLetter";
-            /** @description The last message 1C or the delivery gave, if any. */
-            errorMessage: string | null;
-        };
-        Money: number;
-        OrderListItem: {
-            /** Format: int64 */
-            orderId: number;
-            orderNumber: string;
-            counterpartyId: string;
-            counterpartyName: string;
-            /** Format: date-time */
-            createdAtUtc: string;
-            lineCount: number;
-            totalAmount: components["schemas"]["Money"];
             syncStatus: string;
-            /** @description Sum of discounts (negative) and markups (positive) over all units; 0 when none. */
-            adjustmentAmount: number;
+            errorMessage: null | string;
         };
-        WorkspaceOverview: {
-            /** @description Orders created since Kyiv midnight. */
-            ordersToday: number;
-            /** @description Saved drafts not turned into orders. */
-            draftCount: number;
-            /** @description Orders with sync status `BusinessError` or `DeadLetter`. */
-            syncProblemCount: number;
-            syncProblems: components["schemas"]["WorkspaceSyncProblem"][];
-            latestOrders: components["schemas"]["OrderListItem"][];
-        };
-        "components-schemas-PagedInfo": {
-            pageNumber: number;
-            pageSize: number;
-            totalPages: number;
-            totalRecords: number;
-        };
-        OrderPage: {
-            pagedInfo: components["schemas"]["components-schemas-PagedInfo"];
-            value: components["schemas"]["OrderListItem"][];
-        };
-        /** @description Per-unit discount (negative) or markup (positive) in UAH applied on top of the customer price. */
-        PriceAdjustment: number;
-        InputLine: {
-            productId: string;
-            quantity: number;
-            /** @default 0 */
-            priceAdjustment: components["schemas"]["PriceAdjustment"];
-        };
-        QuoteRequest: {
-            counterpartyId: string;
-            lines: components["schemas"]["InputLine"][];
-        };
-        "schemas-CreateOrderRequest": components["schemas"]["QuoteRequest"] & {
-            quoteFingerprint: string;
-            comment?: string | null;
-        };
-        "schemas-CreateOrderResponse": {
-            /** Format: int64 */
-            orderId: number;
-            orderNumber: string;
-            totalAmount: components["schemas"]["Money"];
-            /** @enum {string} */
-            syncStatus: "Pending";
-        };
-        QuoteLine: {
-            productId: string;
-            productName: string;
-            quantity: number;
-            unitPrice: components["schemas"]["Money"];
-            lineAmount: components["schemas"]["Money"];
-            baseUnitPrice: components["schemas"]["Money"];
-            priceAdjustment: components["schemas"]["PriceAdjustment"];
-        };
-        Quote: {
-            counterpartyId: string;
-            lines: components["schemas"]["QuoteLine"][];
-            totalAmount: components["schemas"]["Money"];
-            quoteFingerprint: string;
-        };
-        OrderConflict: components["schemas"]["Problem"] & {
-            /** @enum {string} */
-            code: "quote_changed" | "idempotency_conflict";
-            quote?: components["schemas"]["Quote"] | null;
-        };
-        StoredLine: {
-            productId: string;
-            productName: string;
-            quantity: number;
-            amount: components["schemas"]["Money"];
-            priceAdjustment: components["schemas"]["PriceAdjustment"];
-        };
-        OrderDetail: {
-            /** Format: int64 */
-            orderId: number;
-            orderNumber: string;
-            counterpartyId: string;
-            counterpartyName: string;
-            /** Format: date-time */
-            createdAtUtc: string;
-            comment?: string | null;
-            lines: components["schemas"]["StoredLine"][];
-            totalAmount: components["schemas"]["Money"];
-            syncStatus: string;
-            oneCDocumentNumber?: string | null;
-        };
-        CustomerPricesRequest: {
-            counterpartyId: string;
-            productIds: string[];
-        };
-        CustomerPrices: {
-            counterpartyId: string;
-            prices: {
-                productId: string;
-                unitPrice: number | null;
-            }[];
-        };
-        DraftListItem: {
-            /** Format: int64 */
-            draftId: number;
-            title: string;
-            counterpartyId: string;
-            counterpartyName: string;
-            /** Format: date-time */
-            updatedAtUtc: string;
-            lineCount: number;
-        };
-        DraftPage: {
-            pagedInfo: components["schemas"]["components-schemas-PagedInfo"];
-            value: components["schemas"]["DraftListItem"][];
-        };
-        DraftInputLine: {
-            productId: string;
-            quantity: number;
-            /**
-             * @description Per-unit discount (negative) or markup (positive) in UAH, kept with the draft.
-             * @default 0
-             */
-            priceAdjustment: number;
-        };
-        DraftInput: {
-            title: string;
-            note?: string | null;
-            counterpartyId: string;
-            lines: components["schemas"]["DraftInputLine"][];
-        };
-        DraftQuotedLine: {
-            productId: string;
-            productName: string | null;
-            quantity: number;
-            /** @description Final unit price after the adjustment. */
-            unitPrice: number | null;
-            lineAmount: number | null;
-            /** @description Stored per-unit discount (negative) or markup (positive) in UAH. */
-            priceAdjustment: number;
-            /** @description Current customer price before the adjustment. */
-            baseUnitPrice: number | null;
-        };
-        DraftDetail: {
-            /** Format: int64 */
-            draftId: number;
-            version: string;
-            title: string;
-            note?: string | null;
-            counterpartyId: string;
-            counterpartyName: string;
-            /** Format: date-time */
-            createdAtUtc: string;
-            /** Format: date-time */
-            updatedAtUtc: string;
-            lines: components["schemas"]["DraftQuotedLine"][];
-            totalAmount: number | null;
-            /** @enum {string} */
-            pricingStatus: "Available" | "Unavailable";
-            /** @description Safe reason when current pricing is unavailable. */
-            pricingErrorCode?: string | null;
-        };
-        CustomerListItem: {
-            /** @example 000000000 */
-            counterpartyId: string;
-            /** @example Customer */
-            name: string;
-            /** @example +380000000000 */
-            phone: string | null;
-        };
-        CustomerPage: {
-            pagedInfo: components["schemas"]["schemas-PagedInfo"];
-            value: components["schemas"]["CustomerListItem"][];
-        };
-        CustomerCategoryPriceType: {
-            categoryId: number;
-            /** @description Name from Catalog ProductCategory; null if unavailable. */
-            categoryName: string | null;
-            priceTypeId: number;
-            /** @description Name from Catalog PriceType; null if unavailable. */
-            priceTypeName: string | null;
-        };
-        CustomerDetail: {
-            /** @example 000000000 */
-            counterpartyId: string;
-            /** @example Customer */
-            name: string;
-            /** @example +380000000000 */
-            phone: string | null;
-            /** @example client@example.com */
-            email: string;
-            defaultPriceTypeId: number;
-            /** @description Name from Catalog PriceType; null if the referenced type is unavailable. */
-            defaultPriceTypeName: string | null;
-            categoryPriceTypes: components["schemas"]["CustomerCategoryPriceType"][];
-        };
-        SessionLoginRequest: {
-            /** Format: email */
-            email: string;
-            /** Format: password */
-            password: string;
-        };
-        SessionMeResponse: {
-            userId: string;
-            /** Format: email */
-            email: string;
-            fullName: string;
-            roles: ("Admin" | "Seo" | "Manager" | "User")[];
-            /**
-             * Format: uri
-             * @description Public 256×256 WebP avatar on the CDN; null when the user has none
-             */
-            avatarUrl?: string | null;
-        };
-        MobileTokenResponse: {
-            /** @example Bearer */
-            tokenType: string;
-            accessToken: string;
-            /** @description Access-token lifetime in seconds */
-            expiresIn: number;
-            /** @description Random opaque token; send it back to refresh and logout */
-            refreshToken: string;
-        };
-        /** @enum {string} */
-        StaffRole: "Admin" | "Seo" | "Manager";
-        StaffAccountResponse: {
-            /** Format: uuid */
-            id: string;
-            /** Format: email */
-            email: string;
-            fullName: string;
-            role: components["schemas"]["StaffRole"];
-            isBlocked: boolean;
-            /**
-             * Format: uri
-             * @description Public avatar URL; null when the account has none
-             */
-            avatarUrl?: string | null;
-        };
-        CreateStaffAccountRequest: {
-            /** Format: email */
-            email: string;
-            fullName: string;
-            role: components["schemas"]["StaffRole"];
-            /** Format: password */
-            password: string;
-        };
-        StaffCandidateResponse: {
-            /** Format: uuid */
-            id: string;
-            email: string;
-            fullName: string;
-            /** @description The account has the customer role */
-            isCustomer: boolean;
-        };
-        GrantStaffAccessRequest: {
-            fullName: string;
-            role: components["schemas"]["StaffRole"];
-            /** Format: password */
-            password: string;
-        };
-        ChangeNameRequest: {
-            fullName: string;
-        };
-        AvatarUploadForm: {
-            /**
-             * Format: binary
-             * @description image/jpeg, image/png or image/webp, at most 2 MB
-             */
-            file: string;
-        };
-        AvatarResponse: {
-            /** Format: uri */
-            avatarUrl: string;
-        };
-        ProfileResponse: {
-            /** Format: uuid */
-            id: string;
-            /** Format: email */
-            email: string;
-            fullName: string;
-            /** @enum {string} */
-            role: "Admin" | "Seo" | "Manager";
-            /**
-             * Format: uri
-             * @description Public 256×256 WebP; null when there is none
-             */
-            avatarUrl?: string | null;
-        };
-        ChangeOwnEmailRequest: {
-            /** Format: email */
-            email: string;
-            /** Format: password */
-            currentPassword: string;
-        };
-        ChangeOwnPasswordRequest: {
-            /** Format: password */
-            currentPassword: string;
-            /** Format: password */
-            newPassword: string;
-        };
-        CatalogProductsRequest: {
-            categoryId?: number | null;
-            /** @default true */
-            inStock: boolean | null;
-            isSale?: boolean | null;
-            isNew?: boolean | null;
-            /** @default 1 */
-            page: number;
-            /** @default 20 */
-            pageSize: number;
-        };
-        SalesCatalogItem: {
-            productId: number;
-            categoryId: number;
-            name: string;
-            productSlug: string;
-            photo?: string | null;
-            inStock: boolean;
-            isSale: boolean;
-            isNew: boolean;
-            price?: number | null;
-        };
-        SalesCatalogPage: {
-            pagedInfo: components["schemas"]["PagedInfo"];
-            value: components["schemas"]["SalesCatalogItem"][];
-        };
-        /**
-         * @description Path of a cover saved before Content 008, relative to the API base URL, with the version in `v`; null otherwise.
-         * @example /api/content/articles/4/cover?v=1
-         */
-        CoverPath: string | null;
-        /**
-         * Format: uri
-         * @description Absolute CDN address of the cover; null without one or when its library file was deleted.
-         * @example https://images-kedr.cdn.express/articles/5f1c2b7e9a.webp
-         */
-        CoverUrl: string | null;
-        ArticleSummary: {
-            /** Format: int64 */
-            id: number;
-            slug: string;
-            title: string;
-            /** @description Short plain-text description for cards and meta description. */
-            excerpt: string;
-            /** Format: date */
-            publishedOn: string;
-            coverPath: components["schemas"]["CoverPath"];
-            coverUrl: components["schemas"]["CoverUrl"];
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        Article: components["schemas"]["ArticleSummary"] & {
-            /** @description Sanitized HTML; safe to render as is. */
-            bodyHtml: string;
-        };
-        /** @description Email (else user name) of who saved the last change; null for articles saved before it was recorded. */
-        EditorName: string | null;
-        AdminArticleSummary: {
-            /** Format: int64 */
-            id: number;
-            slug: string;
-            /** @description Ukrainian title. */
-            title: string;
-            /** Format: date */
-            publishedOn: string;
-            isPublished: boolean;
-            coverPath: components["schemas"]["CoverPath"];
-            coverUrl: components["schemas"]["CoverUrl"];
-            /** Format: date-time */
-            updatedAt: string;
-            updatedBy: components["schemas"]["EditorName"];
-        };
-        ArticleText: {
-            /** @enum {string} */
-            language: "uk" | "ru";
-            title: string;
-            excerpt: string;
-            bodyHtml: string;
-        };
-        SaveArticleRequest: {
-            /** @description Required on update; empty on create means "generate from the Ukrainian title". */
-            slug?: string | null;
-            /** Format: date */
-            publishedOn: string;
-            isPublished: boolean;
-            /**
-             * Format: int64
-             * @description Sets the cover: a file from `uploadAdminArticleCover` or any media library picture. With neither this nor `removeCover` the cover stays as it is.
-             */
-            coverMediaFileId?: number | null;
-            /**
-             * @description Drops the cover; not together with `coverMediaFileId`.
-             * @default false
-             */
-            removeCover: boolean;
-            /** @description Exactly one `uk` and one `ru` text. */
-            texts: components["schemas"]["ArticleText"][];
-        };
-        AdminArticle: {
-            /** Format: int64 */
-            id: number;
-            slug: string;
-            /** Format: date */
-            publishedOn: string;
-            isPublished: boolean;
-            coverPath: components["schemas"]["CoverPath"];
-            coverUrl: components["schemas"]["CoverUrl"];
-            /**
-             * Format: int64
-             * @description Media library file of the cover; stays set when that file was deleted (then `coverUrl` is null).
-             */
-            coverMediaFileId: number | null;
-            /** Format: date-time */
-            updatedAt: string;
-            updatedBy: components["schemas"]["EditorName"];
-            texts: components["schemas"]["ArticleText"][];
-        };
-        ArticleCoverUpload: {
-            /** Format: int64 */
-            mediaFileId: number;
-            /** Format: uri */
-            url: string;
-        };
-        LegacyArticleCoversMoved: {
-            moved: number;
-        };
-        /** @example +380687135049 */
-        Phone: string;
-        SaveCompanyContactsRequest: {
-            salesPhone: components["schemas"]["Phone"];
-            /** Format: email */
-            email: string;
-            /**
-             * Format: uri
-             * @description https://t.me/… or https://telegram.me/…
-             */
-            telegramUrl: string;
-            viberPhone: components["schemas"]["Phone"];
-            /**
-             * Format: uri
-             * @description Any https link to the map.
-             */
-            mapUrl: string;
-            cityUk: string;
-            cityRu: string;
-        };
-        CompanyContacts: components["schemas"]["SaveCompanyContactsRequest"] & {
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        /** @description The contacts with who saved the last change; the public read never shows the editor. */
-        AdminCompanyContacts: components["schemas"]["CompanyContacts"] & {
-            /** @description Email (else user name) of who saved last; null for the row created by the migration. */
-            updatedBy: string | null;
-        };
-        SaveCompanyRequisitesRequest: {
-            /** @example ФОП Овчинников Максим Володимирович */
-            legalName: string;
-            /** @description ЄДРПОУ (8 digits) or РНОКПП (10 digits). */
-            code: string;
-            registrationExtractNumber: string;
-            /**
-             * @description Ukrainian IBAN (`UA` + 27 digits) with a valid checksum; spaces are allowed and removed.
-             * @example UA303052990000026007025905216
-             */
-            iban: string;
-            bankName: string;
-            /** @description МФО; must match digits 5–10 of the IBAN. */
-            bankCode: string;
-        };
-        CompanyRequisites: components["schemas"]["SaveCompanyRequisitesRequest"] & {
-            iban?: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        RequisitesFieldChange: {
-            /** @enum {string} */
-            field: "legalName" | "code" | "registrationExtractNumber" | "iban" | "bankName" | "bankCode";
-            oldValue: string;
-            newValue: string;
-        };
-        CompanyRequisitesChange: {
-            /** Format: int64 */
-            id: number;
-            /** Format: date-time */
-            changedAt: string;
-            /** @description The editor's email (or user name) at the time of the change. */
-            changedBy: string;
-            changes: components["schemas"]["RequisitesFieldChange"][];
-        };
-        /** @enum {string} */
-        LegalDocumentKind: "public-offer" | "privacy-policy" | "returns-policy" | "delivery-payment";
-        PublishedLegalDocument: {
-            kind: components["schemas"]["LegalDocumentKind"];
-            /** Format: int32 */
-            number: number;
-            /**
-             * Format: date
-             * @description «Редакція від».
-             */
-            effectiveFrom: string;
-            title: string;
-            bodyHtml: string;
-            /** Format: date-time */
-            publishedAt: string;
-        };
-        /** @enum {string} */
-        LegalDocumentStatus: "draft" | "published" | "archived";
-        LegalDocumentVersionSummary: {
-            /** Format: int64 */
-            id: number;
-            status: components["schemas"]["LegalDocumentStatus"];
-            /**
-             * Format: int32
-             * @description null while a draft.
-             */
-            number: number | null;
-            /**
-             * Format: date
-             * @description null while a draft.
-             */
-            effectiveFrom: string | null;
-            /** Format: date-time */
-            updatedAt: string;
-            /** @description Email (or user name) of the last editor. */
-            updatedBy: string;
-            /** Format: date-time */
-            publishedAt: string | null;
-            publishedBy: string | null;
-        };
-        LegalDocumentOverview: {
-            kind: components["schemas"]["LegalDocumentKind"];
-            published: components["schemas"]["LegalDocumentVersionSummary"] | null;
-            draft: components["schemas"]["LegalDocumentVersionSummary"] | null;
-        };
-        LegalDocumentText: {
-            /** @enum {string} */
-            language: "uk" | "ru";
-            title: string;
-            bodyHtml: string;
-        };
-        SaveLegalDocumentDraftRequest: {
-            /** @description Exactly one `uk` and one `ru` text. */
-            texts: components["schemas"]["LegalDocumentText"][];
-        };
-        LegalDocumentVersion: components["schemas"]["LegalDocumentVersionSummary"] & {
-            kind: components["schemas"]["LegalDocumentKind"];
-            texts: components["schemas"]["LegalDocumentText"][];
-        };
-        PublishLegalDocumentRequest: {
-            /** Format: date */
-            effectiveFrom: string;
-        };
-        /** @enum {string} */
-        GalleryItemKind: "photo" | "video";
-        PublicGalleryItem: {
-            /** Format: int64 */
-            id: number;
-            kind: components["schemas"]["GalleryItemKind"];
-            title: string | null;
-            caption: string | null;
-            /** Format: uri */
-            imageUrl: string;
-            /** Format: int32 */
-            width: number | null;
-            /** Format: int32 */
-            height: number | null;
-            /** @description Set only for a video. */
-            youtubeId: string | null;
-        };
-        AdminGalleryItem: {
-            /** Format: int64 */
-            id: number;
-            kind: components["schemas"]["GalleryItemKind"];
-            /**
-             * Format: int64
-             * @description Set only for a photo.
-             */
-            mediaFileId: number | null;
-            /** @description Set only for a video. */
-            youtubeId: string | null;
-            /** Format: int32 */
-            position: number;
-            titleUk: string | null;
-            titleRu: string | null;
-            captionUk: string | null;
-            captionRu: string | null;
-            /** @description Poster or CDN URL; null for a photo whose file is gone. */
-            previewUrl: string | null;
-            /** @description Library file name of a photo. */
-            fileName: string | null;
-            /** @description A photo whose library file was deleted; the site hides it. */
-            fileMissing: boolean;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        AddGalleryPhotosRequest: {
-            mediaFileIds: number[];
-        };
-        GalleryTexts: {
-            titleUk?: string | null;
-            titleRu?: string | null;
-            captionUk?: string | null;
-            captionRu?: string | null;
-        };
-        AddGalleryVideoRequest: components["schemas"]["GalleryTexts"] & {
-            /** @description A YouTube link or the bare 11-character video ID. */
-            url: string;
-        };
-        YoutubePreview: {
-            youtubeId: string;
-            title: string | null;
-            /** Format: uri */
-            thumbnailUrl: string;
-            alreadyInGallery: boolean;
-        };
-        ReorderGalleryRequest: {
-            ids: number[];
-        };
-        PublicHomeBlocks: {
-            faq: {
-                question: string;
-                answer: string;
-            }[];
-            brands: {
-                name: string;
-                /** Format: uri */
-                logoUrl: string;
-                /** Format: int32 */
-                width: number | null;
-                /** Format: int32 */
-                height: number | null;
-            }[];
-        };
-        AdminHomeFaqItem: {
-            /** Format: int64 */
-            id: number;
-            /** Format: int32 */
-            position: number;
-            questionUk: string;
-            questionRu: string;
-            answerUk: string;
-            answerRu: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        AdminHomeBrand: {
-            /** Format: int64 */
-            id: number;
-            /** Format: int32 */
-            position: number;
-            name: string;
-            /** Format: int64 */
-            logoMediaFileId: number;
-            /** @description CDN URL; null when the file is gone. */
-            logoUrl: string | null;
-            logoFileName: string | null;
-            /** @description The logo file was deleted; the site hides this brand. */
-            logoMissing: boolean;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        AdminHomeBlocks: {
-            faq: components["schemas"]["AdminHomeFaqItem"][];
-            brands: components["schemas"]["AdminHomeBrand"][];
-        };
-        HomeFaqItemRequest: {
-            questionUk: string;
-            questionRu: string;
-            answerUk: string;
-            answerRu: string;
-        };
-        ReorderHomeRequest: {
-            ids: number[];
-        };
-        HomeBrandRequest: {
-            name: string;
-            /** Format: int64 */
-            logoMediaFileId: number;
-        };
-        WholesaleStep: {
-            title: string;
-            text: string;
-        };
-        WholesaleFaqItem: {
-            question: string;
-            answer: string;
-        };
-        WholesaleText: {
-            /** @enum {string} */
-            language: "uk" | "ru";
-            heroTitle: string;
-            heroLead: string;
-            contactCardTitle: string;
-            contactCardNote: string;
-            assortmentTitle: string;
-            assortmentIntro: string;
-            /** @description Shown after the company name («Class Kedr — …»), so it may start in lower case. */
-            companyTitle: string;
-            companyText: string;
-            selectionTitle: string;
-            selectionText: string;
-            warehouseTitle: string;
-            warehouseText: string;
-            stepsTitle: string;
-            steps: components["schemas"]["WholesaleStep"][];
-            faqTitle: string;
-            faq: components["schemas"]["WholesaleFaqItem"][];
-            closingTitle: string;
-        };
-        PublicWholesalePage: {
-            text: components["schemas"]["WholesaleText"];
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        AdminWholesalePage: {
-            texts: components["schemas"]["WholesaleText"][];
-            /** Format: date-time */
-            updatedAt: string;
-            /** @description Email (else user name) of who saved last; null for the row created by the migration. */
-            updatedBy: string | null;
-        };
-        SaveWholesalePageRequest: {
-            /** @description Exactly one `uk` and one `ru` text. */
-            texts: components["schemas"]["WholesaleText"][];
-        };
-        /** @enum {string} */
-        SitePage: "Home" | "Catalog" | "Wholesale" | "DeliveryPayment" | "ReturnsExchanges" | "Contacts" | "Gallery" | "Articles" | "Requisites" | "PublicOffer" | "PrivacyPolicy";
-        PublicPageSeo: {
-            page: components["schemas"]["SitePage"];
-            title: string | null;
-            description: string | null;
-        };
-        AdminPageSeo: {
-            page: components["schemas"]["SitePage"];
-            titleUk: string | null;
-            titleRu: string | null;
-            descriptionUk: string | null;
-            descriptionRu: string | null;
-            /**
-             * Format: date-time
-             * @description Null until the first save.
-             */
-            updatedAt: string | null;
-            /** @description Who saved the last change. */
-            updatedBy: string | null;
-        };
-        SavePageSeoRequest: {
-            titleUk?: string | null;
-            titleRu?: string | null;
-            descriptionUk?: string | null;
-            descriptionRu?: string | null;
-        };
-        SiteShareImage: {
-            /** Format: uri */
-            url: string;
-            width: number | null;
-            height: number | null;
-        };
-        SiteSeoSettings: {
-            /** @example G-AB12CD34EF */
-            googleAnalyticsId: string | null;
-            /** @example GTM-AB12CD3 */
-            googleTagManagerId: string | null;
-            googleSiteVerification: string | null;
-            bingSiteVerification: string | null;
-            /** @description Null when none is chosen or its file was deleted; the site keeps its own picture then. */
-            shareImage: components["schemas"]["SiteShareImage"] | null;
-        };
-        AdminSiteShareImage: {
-            /** Format: int64 */
-            mediaFileId: number;
-            /** Format: uri */
-            url: string | null;
-            fileName: string | null;
-            width: number | null;
-            height: number | null;
-            /** @description The file was deleted from the media library. */
-            missing: boolean;
-        };
-        AdminSiteSeoSettings: {
-            googleAnalyticsId: string | null;
-            googleTagManagerId: string | null;
-            googleSiteVerification: string | null;
-            bingSiteVerification: string | null;
-            shareImage: components["schemas"]["AdminSiteShareImage"] | null;
-            /** Format: date-time */
-            updatedAt: string;
-            /** @description Who saved the last change; null for the migration row. */
-            updatedBy: string | null;
-        };
-        SaveSiteSeoSettingsRequest: {
-            googleAnalyticsId?: string | null;
-            googleTagManagerId?: string | null;
-            /** @description The code or the whole meta tag. */
-            googleSiteVerification?: string | null;
-            /** @description The code or the whole meta tag. */
-            bingSiteVerification?: string | null;
-            /** Format: int64 */
-            shareImageMediaFileId?: number | null;
-        };
-        AdminContentOverviewDraft: {
-            /** Format: int64 */
-            id: number;
-            /** @description Ukrainian title, or the slug without one. */
-            title: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        AdminContentOverview: {
-            /** @description Articles not published yet. */
-            articleDrafts: number;
-            /** @description The draft edited longest ago; null without drafts. */
-            oldestArticleDraft: components["schemas"]["AdminContentOverviewDraft"] | null;
-            /** @description Articles whose cover is still in the database, not in the media library («Перенести в CDN»). */
-            legacyArticleCovers: number;
-            /** @description Unpublished document versions. */
-            documentDrafts: number;
-        };
-        AdminCatalogOverviewCategory: {
-            id: number;
-            name: string;
-            count: number;
-        };
-        AdminCatalogOverview: {
-            /** @description Active products without a linked photo, as the admin «Без фото» tab lists them. */
-            productsWithoutPhoto: number;
-            /** @description The category with most of them; null when there are none. */
-            topCategoryWithoutPhoto: components["schemas"]["AdminCatalogOverviewCategory"] | null;
-            /** @description Active categories without any site text or FAQ in Ukrainian or in Russian. */
-            categoriesWithoutText: number;
-            /** @description On-site products whose attributes need review (spec catalog/006); the «Огляд» shows no line at 0. */
-            productsWithProblems?: number;
-            /** @description Those of them without brand marking (reason `no_name`). */
-            noNameProducts?: number;
-            /** @description Site model health (spec catalog/007); `productsWithoutModel` is the hard error. The «Огляд» shows no line at 0. */
-            siteModels?: components["schemas"]["SiteModelHealth"] | null;
-        };
-        CatalogSnapshotProduct: {
-            /** @description The 1C product code. */
-            id: number;
-            slug: string;
-            /** @description Ukrainian name, or the 1C name without a translation. */
-            name: string;
-            categoryId: number;
-            stock: number;
-            /** @description The sales catalog rule: hardware needs more than 2, other goods more than 0. */
-            inStock: boolean;
-            quantityInPack: number;
-            isSale: boolean;
-            isNew: boolean;
-            /** @description Photo URLs; the first is the main one. */
-            photos: string[];
-            /** Format: uri */
-            scheme: string | null;
-            /** @description UAH amounts by price type, as the order workspace quotes them. */
-            prices: {
-                priceTypeId: number;
-                amount: number;
-            }[];
-        };
-        CatalogSnapshot: {
-            /** @description Hash of the content, equal to the ETag without quotes. */
-            version: string;
-            /**
-             * Format: date-time
-             * @description When the answer was built; not part of the version.
-             */
-            generatedAt: string;
-            /** @description Price type used without a customer. */
-            retailPriceTypeId: number;
-            priceTypes: {
-                id: number;
-                name: string;
-            }[];
-            categories: {
-                id: number;
-                parentId: number | null;
-                name: string;
-                sortOrder: number;
-            }[];
-            products: components["schemas"]["CatalogSnapshotProduct"][];
-        };
-        CustomerSnapshot: {
-            counterpartyId: string;
-            name: string;
-            phone: string | null;
-            email: string;
-            defaultPriceTypeId: number;
-            /** @description One rule per category. A product takes the rule of its category or of the nearest ancestor that has one, otherwise `defaultPriceTypeId`, as the order workspace prices lines. */
-            categoryPriceTypes: {
-                categoryId: number;
-                priceTypeId: number;
-            }[];
-            /** @description Always null until 1C sends settlements. */
-            debt: number | null;
-            /** @description Always null until 1C sends settlements. */
-            balance: number | null;
-        };
-        CustomersSnapshot: {
-            /** @description Hash of the content, equal to the ETag without quotes. */
-            version: string;
-            /** Format: date-time */
-            generatedAt: string;
-            customers: components["schemas"]["CustomerSnapshot"][];
-        };
-        SiteRefreshResult: {
-            /** @enum {string} */
-            status: "refreshed" | "notConfigured" | "siteUnavailable";
-        };
-        MediaFolderItem: {
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            parentId?: number | null;
-            name: string;
-            /** @description Files directly in this folder. */
-            fileCount: number;
-        };
-        MediaFolderTree: {
-            folders: components["schemas"]["MediaFolderItem"][];
-            /** @description Files outside any folder. */
-            rootFileCount: number;
-            totalFileCount: number;
-        };
-        SaveMediaFolderRequest: {
-            name: string;
-            /**
-             * Format: int64
-             * @description `null` = library root.
-             */
-            parentId?: number | null;
-        };
-        MediaFileItem: {
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            folderId?: number | null;
-            /** @description Display name, not the CDN file name. */
-            fileName: string;
-            /**
-             * Format: uri
-             * @example https://images-kedr.cdn.express/products/731.jpg
-             */
-            url: string;
-            /** @example image/jpeg */
-            contentType: string;
-            /** Format: int64 */
-            sizeBytes: number;
-            /** @description Unknown for files registered by the CDN sync. */
-            width?: number | null;
-            height?: number | null;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        MediaFilePage: {
-            items: components["schemas"]["MediaFileItem"][];
-            page: number;
-            pageSize: number;
-            totalCount: number;
-        };
-        UpdateMediaFileRequest: {
-            fileName: string;
-            /**
-             * Format: int64
-             * @description `null` = library root.
-             */
-            folderId?: number | null;
-        };
-        MoveMediaFilesRequest: {
-            fileIds: number[];
-            /** Format: int64 */
-            folderId?: number | null;
-        };
-        /** @enum {string} */
-        WorkTaskStatus: "Planned" | "InProgress" | "Done";
-        WorkTaskStep: {
-            title: string;
-            isDone: boolean;
-        };
-        WorkTask: {
+        WorkTaskDto: {
             /** Format: int64 */
             id: number;
             /** Format: uuid */
             ownerUserId: string;
             /** Format: uuid */
             createdByUserId: string;
-            /** @description False when an administrator gave the task («Від адміністратора»). */
             createdByOwner: boolean;
             title: string;
-            details: string | null;
-            status: components["schemas"]["WorkTaskStatus"];
-            /** @description What was done; only for `Done`. */
-            result: string | null;
-            /**
-             * Format: date
-             * @description Day the task should be done by; null means no deadline.
-             */
-            dueDate: string | null;
-            /** @description Not `Done` and the due day has passed in Kyiv. */
+            details: null | string;
+            status: string;
+            result: null | string;
+            /** Format: date */
+            dueDate: null | string;
             isOverdue: boolean;
-            steps: components["schemas"]["WorkTaskStep"][];
-            /**
-             * Format: date-time
-             * @description When the task was set.
-             */
+            steps: components["schemas"]["WorkTaskStepDto"][];
+            /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
             /** Format: date-time */
-            startedAt: string | null;
+            startedAt: null | string;
             /** Format: date-time */
-            completedAt: string | null;
+            completedAt: null | string;
         };
-        SaveWorkTaskRequest: {
+        WorkTaskStepDto: {
             title: string;
-            details?: string | null;
-            /** Format: date */
-            dueDate?: string | null;
-            /** @description The whole list in order; it replaces the saved one. */
-            steps?: components["schemas"]["WorkTaskStep"][] | null;
-        };
-        ChangeWorkTaskStatusRequest: {
-            status: components["schemas"]["WorkTaskStatus"];
-            result?: string | null;
-        };
-        SetWorkTaskStepRequest: {
             isDone: boolean;
         };
-        WorkActivity: {
-            /** Format: int64 */
-            id: number;
-            /** Format: uuid */
-            userId: string;
-            /** @description Sign-in email at the time of the change. */
-            userEmail: string;
-            /** @description Controller name without `Admin`, for example `Categories`, `PageSeo`, `MediaFiles`. */
-            area: string;
-            /** @description Operation: the endpoint name, for example `updateAdminCategoryContent`; an endpoint without one is named by its endpoint class, for example `ChangeAdminCategorySlug`. */
-            operation: string;
-            /** @enum {string} */
-            method: "POST" | "PUT" | "PATCH" | "DELETE";
-            /** @description Route values in name order, for example `id=12, lang=uk`; may be empty. */
-            target: string;
-            /** @description How many times the same change was saved within 10 minutes. */
-            count: number;
-            /** Format: date-time */
-            firstAt: string;
-            /** Format: date-time */
-            occurredAt: string;
-        };
-        WorkReport: {
-            /** Format: uuid */
-            userId: string;
-            /** Format: date */
-            from: string;
-            /** Format: date */
-            to: string;
-            /** @description Finished in the period. */
-            doneTasks: components["schemas"]["WorkTask"][];
-            /** @description Not finished now. */
-            openTasks: components["schemas"]["WorkTask"][];
-            /** @description Newest first, at most 2000. */
-            activity: components["schemas"]["WorkActivity"][];
-            activityTruncated: boolean;
-        };
-        CreateWorkTaskForUserRequest: {
-            /** Format: uuid */
-            ownerUserId: string;
+        WorkTaskStepInput: {
             title: string;
-            details?: string | null;
-            /** Format: date */
-            dueDate?: string | null;
-            /** @description The whole list in order; it replaces the saved one. */
-            steps?: components["schemas"]["WorkTaskStep"][] | null;
+            isDone: boolean;
         };
-        ScheduleInput: {
-            /** @enum {string} */
-            kind: "interval" | "daily" | "manual";
-            /** @description interval only */
-            everyMinutes?: number | null;
-            /** @description interval only; with toHour, the Kyiv hours the task runs in */
-            fromHour?: number | null;
-            toHour?: number | null;
-            /** @description daily only; Kyiv HH:mm */
-            times?: string[] | null;
-            /** @description daily only; ISO weekdays, 1 = Monday */
-            days?: number[] | null;
-        };
-        ScheduledTaskResponse: {
-            key: string;
-            name: string;
-            description: string;
-            /** @description false for the outbox, which runs every minute */
-            editable: boolean;
-            enabled: boolean;
-            schedule: components["schemas"]["ScheduleInput"];
-            /** Format: date-time */
-            nextRunAt?: string | null;
-            isRunning: boolean;
-            /** Format: date-time */
-            runningSince?: string | null;
-            /** Format: date-time */
-            runRequestedAt?: string | null;
-            /** Format: date-time */
-            lastSuccessAt?: string | null;
-            lastSuccessSummary?: string | null;
-            /** Format: date-time */
-            lastFailureAt?: string | null;
-            lastFailureReason?: string | null;
-            /** @description the last result was a failure */
-            lastRunFailed: boolean;
-            /** @description an enabled task missed its time by more than 15 minutes */
-            overdue: boolean;
-        };
-        ScheduledTaskRunResponse: {
-            /** Format: uuid */
-            id: string;
-            /** @enum {string} */
-            trigger: "schedule" | "manual";
-            requestedBy?: string | null;
-            /** Format: date-time */
-            claimedAt: string;
-            /** Format: date-time */
-            startedAt?: string | null;
-            /** Format: date-time */
-            finishedAt?: string | null;
-            /** @enum {string} */
-            outcome: "running" | "succeeded" | "failed";
-            message?: string | null;
-        };
-        ScheduledTaskScheduleInput: {
-            enabled: boolean;
-            schedule: components["schemas"]["ScheduleInput"];
-            /** Format: date-time */
-            nextRunAt?: string | null;
+        YoutubePreviewResponse: {
+            youtubeId: string;
+            title: null | string;
+            thumbnailUrl: string;
+            alreadyInGallery: boolean;
         };
     };
-    responses: {
-        /** @description Input validation failed. */
-        ValidationError: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ValidationProblem"];
-            };
-        };
-        /** @description Input validation failed */
-        "responses-ValidationError": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ValidationProblem"];
-            };
-        };
-        /** @description Invalid request */
-        "components-responses-ValidationError": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ValidationProblem"];
-            };
-        };
-        /** @description Counterparty not found */
-        NotFoundError: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
-        };
-        /** @description Idempotency key reused with different data */
-        ConflictError: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
-        };
-        /** @description Invalid input; each error names the field (`slug`, `texts`, `coverMediaFileId`, `file`…). */
-        "articles.openapi_components-responses-ValidationError": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ValidationProblem"];
-            };
-        };
-        /** @description The whole gallery in site order. */
-        Gallery: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["AdminGalleryItem"][];
-            };
-        };
-        /** @description Both lists in site order. */
-        HomeBlocks: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["AdminHomeBlocks"];
-            };
-        };
-        /** @description Invalid input; each error names its field (`name`, `parentId`, `folderId`, `fileName`, `file`, …). */
-        Invalid: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
-            };
-        };
-        /** @description Invalid input; each error names its field (`title`, `status`, `to`, …). */
-        "responses-Invalid": {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
-            };
-        };
-    };
-    parameters: {
-        Lang: "uk" | "ru";
-        CategorySlug: string;
-        SearchTerm: string;
-        CategoryId: number;
-        InStock: boolean;
-        IsSale: boolean;
-        IsNew: boolean;
-        PriceTypeId: number;
-        PriceFrom: number;
-        PriceTo: number;
-        /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
-        Availability: "InStock" | "All";
-        ProductSort: "IdAsc" | "IdDesc" | "NameAsc" | "NameDesc" | "PriceAsc" | "PriceDesc" | "CategoryAsc" | "CategoryDesc" | "AvailabilityThenName";
-        Page: number;
-        PageSize: number;
-        /** @description `uk` or `ru`; anything else reads as `uk`. */
-        "parameters-Lang": string;
-        Search: string;
-        /** @description Only products in stock. */
-        "parameters-InStock": boolean;
-        /** @description `default` - in stock first, then by name. */
-        Sort: "default" | "price_asc" | "price_desc" | "name_asc" | "new";
-        "parameters-PageSize": number;
-        "parameters-CategoryId": number;
-        "parameters-CategorySlug": string;
-        AdminInStock: boolean;
-        ExportToSite: boolean;
-        /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-        CsrfHeader: string;
-        UserId: string;
-        ArticleId: number;
-        Kind: components["schemas"]["LegalDocumentKind"];
-        VersionId: number;
-        ItemId: number;
-        RowId: number;
-        Id: number;
-        /** @description First Kyiv calendar day of the period. */
-        From: string;
-        /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
-        To: string;
-        TaskKey: string;
-    };
+    responses: never;
+    parameters: never;
     requestBodies: never;
     headers: never;
     pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getCategoryTree: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Ordered forest of category roots and their recursive children with product counts. Deleted categories and categories without exported products are omitted with their subtrees. May be empty before category import. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoryTreeNode"][];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-        };
-    };
-    getCategoryBySlug: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-                categorySlug: components["parameters"]["CategorySlug"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Requested category with ordered recursive non-empty children and root-to-category breadcrumbs. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoryDetails"];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-            /** @description Category not found. For a deleted category with an active ancestor the body names the nearest one; otherwise there is no body. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogRedirect"];
-                };
-            };
-        };
-    };
-    getPublicProducts: {
-        parameters: {
-            query?: {
-                searchTerm?: components["parameters"]["SearchTerm"];
-                categoryId?: components["parameters"]["CategoryId"];
-                inStock?: components["parameters"]["InStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                priceTypeId?: components["parameters"]["PriceTypeId"];
-                priceFrom?: components["parameters"]["PriceFrom"];
-                priceTo?: components["parameters"]["PriceTo"];
-                /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
-                availability?: components["parameters"]["Availability"];
-                sort?: components["parameters"]["ProductSort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-            };
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Product page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductPage"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-        };
-    };
-    getPublicProductsByCategorySlug: {
-        parameters: {
-            query?: {
-                searchTerm?: components["parameters"]["SearchTerm"];
-                categoryId?: components["parameters"]["CategoryId"];
-                inStock?: components["parameters"]["InStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                priceTypeId?: components["parameters"]["PriceTypeId"];
-                priceFrom?: components["parameters"]["PriceFrom"];
-                priceTo?: components["parameters"]["PriceTo"];
-                /** @description `InStock` or `All`. When supplied it takes precedence over `inStock`; when absent `inStock` applies as before. */
-                availability?: components["parameters"]["Availability"];
-                sort?: components["parameters"]["ProductSort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-            };
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-                categorySlug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Product page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductPage"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Unknown or deleted category slug. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPublicProductBySlug: {
-        parameters: {
-            query?: {
-                priceTypeId?: components["parameters"]["PriceTypeId"];
-            };
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-                productSlug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Product */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductDetails"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Product not found. For a deleted product whose category is active the body names that category; otherwise there is no body. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogRedirect"];
-                };
-            };
-        };
-    };
-    getPublicSiteModels: {
-        parameters: {
-            query?: {
-                search?: components["parameters"]["Search"];
-                /** @description Only products in stock. */
-                inStock?: components["parameters"]["parameters-InStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                priceFrom?: components["parameters"]["PriceFrom"];
-                priceTo?: components["parameters"]["PriceTo"];
-                /** @description `default` - in stock first, then by name. */
-                sort?: components["parameters"]["Sort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["parameters-PageSize"];
-            };
-            header?: never;
-            path: {
-                /** @description `uk` or `ru`; anything else reads as `uk`. */
-                lang: components["parameters"]["parameters-Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A page of model cards */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicSiteModelList"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-        };
-    };
-    getPublicCategorySiteModels: {
-        parameters: {
-            query?: {
-                /** @description `attribute-slug:value-slug[,value-slug]`, repeatable; values of one attribute match any of them, different attributes all. At most 50 values. */
-                filter?: string[];
-                search?: components["parameters"]["Search"];
-                /** @description Only products in stock. */
-                inStock?: components["parameters"]["parameters-InStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                priceFrom?: components["parameters"]["PriceFrom"];
-                priceTo?: components["parameters"]["PriceTo"];
-                /** @description `default` - in stock first, then by name. */
-                sort?: components["parameters"]["Sort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["parameters-PageSize"];
-            };
-            header?: never;
-            path: {
-                /** @description `uk` or `ru`; anything else reads as `uk`. */
-                lang: components["parameters"]["parameters-Lang"];
-                categorySlug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A page of model cards */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicSiteModelList"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Unknown category, or an unknown attribute or value slug in `filter`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPublicSiteModel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description `uk` or `ru`; anything else reads as `uk`. */
-                lang: components["parameters"]["parameters-Lang"];
-                modelSlug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicSiteModel"];
-                };
-            };
-            /** @description Language is not uk or ru, or the slug is empty or longer than 200 characters */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a model. For a former model slug, or the slug of a product inside an accepted model, the body is the address to redirect to permanently; otherwise there is no body. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicSiteModelAddress"];
-                };
-            };
-        };
-    };
-    getPublicProductModelAddress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description `uk` or `ru`; anything else reads as `uk`. */
-                lang: components["parameters"]["parameters-Lang"];
-                productSlug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Model address */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicSiteModelAddress"];
-                };
-            };
-            /** @description The slug is empty or longer than 200 characters */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The product is unknown, or not on the site. For a product off the site or deleted whose category is public the body names that category; otherwise there is no body. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogRedirect"];
-                };
-            };
-        };
-    };
-    getAdminCategories: {
-        parameters: {
-            query?: {
-                /** @description `true` lists soft-deleted categories only (flat, newest first). Admin or Seo role only. */
-                deleted?: boolean;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Unpaged depth-first category rows; may be empty before category import. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCategory"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminCategoryById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["parameters-CategoryId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Category administration row. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCategory"];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Category not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    changeAdminCategorySlug: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["parameters-CategoryId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeSlugRequest"];
-            };
-        };
-        responses: {
-            /** @description Slug changed (or already equal). */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChangeSlugResponse"];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Category not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminCategorySiteVisibility: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["parameters-CategoryId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetCategorySiteVisibilityRequest"];
-            };
-        };
-        responses: {
-            /** @description Mark set (or already equal). */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategorySiteVisibilityResponse"];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Category not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminCategoryContent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["parameters-CategoryId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Stored languages, possibly none. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCategoryContent"];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Category not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    saveAdminCategoryContent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["parameters-CategoryId"];
-                lang: components["parameters"]["Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveCategoryContentRequest"];
-            };
-        };
-        responses: {
-            /** @description Saved content as stored, with the sanitized body. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCategoryContentItem"];
-                };
-            };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Category not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProducts: {
-        parameters: {
-            query?: {
-                searchTerm?: components["parameters"]["SearchTerm"];
-                categorySlug?: components["parameters"]["parameters-CategorySlug"];
-                categoryId?: components["parameters"]["CategoryId"];
-                inStock?: components["parameters"]["AdminInStock"];
-                isSale?: components["parameters"]["IsSale"];
-                isNew?: components["parameters"]["IsNew"];
-                exportToSite?: components["parameters"]["ExportToSite"];
-                priceFrom?: components["parameters"]["PriceFrom"];
-                priceTo?: components["parameters"]["PriceTo"];
-                /** @description `true` lists only products without a linked photo (`photo` is an empty string). */
-                withoutPhoto?: boolean;
-                /** @description `true` lists only products whose attributes need review («Тільки проблемні», spec catalog/006). */
-                problemsOnly?: boolean;
-                /** @description Lists only products that need review for this reason code, for example `no_name`. */
-                problemReason?: string;
-                /** @description `true` lists soft-deleted products only (newest deletion first; search by Ukrainian name or 1C code; other filters and sort are ignored). Admin or Seo role only. */
-                deleted?: boolean;
-                sort?: components["parameters"]["ProductSort"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Admin product page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductPage"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role, or `deleted=true` without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAllAdminProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description All admin products */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProduct"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductBySlug: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productSlug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Admin product details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductDetails"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    changeAdminProductSlug: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeSlugRequest"];
-            };
-        };
-        responses: {
-            /** @description Slug changed (or already equal). */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChangeSlugResponse"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductMedia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Product media set */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductMedia"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminProductMedia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetProductMediaRequest"];
-            };
-        };
-        responses: {
-            /** @description Saved set */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductMedia"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found or deleted. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductGroupOfProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Group of the product */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroupMembership"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminProductGroupOfProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetProductGroupRequest"];
-            };
-        };
-        responses: {
-            /** @description Group of the product */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroupMembership"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductGroups: {
-        parameters: {
-            query?: {
-                categoryId?: number;
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Groups */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroupListItem"][];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminProductGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateProductGroupRequest"];
-            };
-        };
-        responses: {
-            /** @description Created group */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroup"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Group */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroup"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Group not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    renameAdminProductGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RenameProductGroupRequest"];
-            };
-        };
-        responses: {
-            /** @description Group */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroup"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Group not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminProductGroupMain: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetProductGroupMainRequest"];
-            };
-        };
-        responses: {
-            /** @description Group */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductGroup"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Group not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    changeAdminProductGroupSlug: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeSlugRequest"];
-            };
-        };
-        responses: {
-            /** @description New slug */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChangeSlugResponse"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Group not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminSiteModels: {
-        parameters: {
-            query?: {
-                categoryId?: number;
-                status?: "proposed" | "accepted";
-                /** @description A problem code or `any` for every row with a problem. */
-                problem?: "any" | "no_model" | "no_attributes" | "missing_axis_value" | "same_combination" | "model_no_axes" | "model_no_seo" | "model_no_photo";
-                search?: string;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A page of models */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModelList"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminSiteModel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateSiteModelRequest"];
-            };
-        };
-        responses: {
-            /** @description Created model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminSiteShowcase: {
-        parameters: {
-            query?: {
-                categoryId?: number;
-                status?: "proposed" | "accepted" | "none";
-                problem?: "any" | "no_model" | "no_attributes" | "missing_axis_value" | "same_combination";
-                search?: string;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A page of rows */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteShowcaseList"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminSiteModelCategories: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Categories */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModelCategory"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminSiteModelHealth: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Counts */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModelHealth"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    acceptAdminSiteModels: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AcceptSiteModelsRequest"];
-            };
-        };
-        responses: {
-            /** @description Counts after accepting */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModelHealth"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminSiteModel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    renameAdminSiteModel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RenameSiteModelRequest"];
-            };
-        };
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminSiteModelAxes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetSiteModelAxesRequest"];
-            };
-        };
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    addAdminSiteModelProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddSiteModelProductsRequest"];
-            };
-        };
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    removeAdminSiteModelProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found or proposed model gone. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminSiteModelText: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                language: "uk" | "ru";
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetSiteModelTextRequest"];
-            };
-        };
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    fillAdminSiteModelFromNames: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Model */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteModel"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Model not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminProductAttributes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Panel */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductAttributes"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    setAdminProductAttribute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-                attributeId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetProductAttributeRequest"];
-            };
-        };
-        responses: {
-            /** @description Panel after the change */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductAttributes"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    restoreAdminProductAttribute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-                attributeId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Panel after the change */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductAttributes"];
-                };
-            };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    acceptAdminProductReview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Panel after the change */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductAttributes"];
-                };
-            };
-            /** @description The product has no recognized attributes yet, or invalid input. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    reopenAdminProductReview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Panel after the change */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminProductAttributes"];
-                };
-            };
-            /** @description The product has no recognized attributes yet, or invalid input. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Product not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     getAdminCatalogAttributes: {
         parameters: {
             query?: never;
@@ -7390,28 +5116,23 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Attributes in order */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCatalogAttributeListItem"][];
+                    "application/json": components["schemas"]["AdminCatalogAttributeListItemDto"][];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7428,29 +5149,32 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The new attribute */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                    "application/json": components["schemas"]["AdminCatalogAttributeDto"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Signed in without the Admin or Seo role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7465,36 +5189,32 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Attribute */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                    "application/json": components["schemas"]["AdminCatalogAttributeDto"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Attribute not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7513,36 +5233,50 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Attribute */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                    "application/json": components["schemas"]["AdminCatalogAttributeDto"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Signed in without the Admin or Seo role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Attribute not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7561,36 +5295,41 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Attribute with the new value */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                    "application/json": components["schemas"]["AdminCatalogAttributeDto"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Signed in without the Admin or Seo role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Attribute not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7610,36 +5349,41 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Attribute */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCatalogAttribute"];
+                    "application/json": components["schemas"]["AdminCatalogAttributeDto"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Signed in without the Admin or Seo role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Value not found in this attribute. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7653,44 +5397,48 @@ export interface operations {
         requestBody: {
             content: {
                 "multipart/form-data": {
-                    /** Format: binary */
-                    file: string;
+                    file?: components["schemas"]["IFormFile"];
                 };
             };
         };
         responses: {
-            /** @description The picture in the media library */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminAttributeSwatchUpload"];
+                    "application/json": components["schemas"]["AdminAttributeSwatchUploadDto"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Signed in without the Admin or Seo role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description The request is larger than the upload limit. */
+            /** @description Payload Too Large */
             413: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description The CDN is not configured. */
+            /** @description Service Unavailable */
             503: {
                 headers: {
                     [name: string]: unknown;
@@ -7708,28 +5456,72 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Codes */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminUnresolvedCode"][];
+                    "application/json": components["schemas"]["AdminUnresolvedCodeDto"][];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminAttributeCodeProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                aliasId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCodeProductsDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7748,7 +5540,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Decision */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -7757,77 +5549,32 @@ export interface operations {
                     "application/json": components["schemas"]["DecideAttributeCodeResponse"];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Code not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminAttributeCodeProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                aliasId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Products by category */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCodeProducts"];
-                };
-            };
-            /** @description The code id is below 1. */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Code not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7840,28 +5587,23 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Reasons */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminProblemReason"][];
+                    "application/json": components["schemas"]["AdminProblemReasonDto"][];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7876,36 +5618,32 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Filters */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCategoryAttributeFilter"][];
+                    "application/json": components["schemas"]["AdminCategoryAttributeFilterDto"][];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Category not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -7924,93 +5662,48 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Filters */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminCategoryAttributeFilter"][];
+                    "application/json": components["schemas"]["AdminCategoryAttributeFilterDto"][];
                 };
             };
-            400: components["responses"]["responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Admin or Seo role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Category not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createQuickOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOrderRequest"];
-            };
-        };
-        responses: {
-            /** @description Created order */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["QuickOrderResponse"];
-                };
-            };
-            /** @description Input validation failed */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Business conflict */
-            409: {
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string[];
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
-            /** @description Quick order flood limit exceeded (60 per 10 minutes per calling address; the public site calls from its server) */
-            429: {
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    getAdminOrders: {
+    getAdminCategories: {
         parameters: {
             query?: {
-                /** @description Exact Sales counterparty identifier. */
-                counterpartyId?: string;
-                page?: number;
-                pageSize?: number;
+                deleted?: boolean;
             };
             header?: never;
             path?: never;
@@ -8018,241 +5711,621 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description A newest-first page; unknown counterparties produce an empty page. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ManagerOrderPage"];
+                    "application/json": components["schemas"]["AdminCategoryResponse"][];
                 };
             };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    createAdminOrder: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Reuse only for a retry of the same create action. */
-                "Idempotency-Key": string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                /**
-                 * @example {
-                 *       "counterpartyId": "000000000",
-                 *       "comment": "Optional manager comment",
-                 *       "lines": [
-                 *         {
-                 *           "productId": "101",
-                 *           "quantity": 2,
-                 *           "amount": 12500
-                 *         }
-                 *       ]
-                 *     }
-                 */
-                "application/json": components["schemas"]["CreateAdminOrderRequest"];
-            };
-        };
-        responses: {
-            /** @description Idempotent replay of the original result. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateOrderResponse"];
-                };
-            };
-            /** @description Order persisted with Pending 1C delivery. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateOrderResponse"];
-                };
-            };
-            400: components["responses"]["components-responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            404: components["responses"]["NotFoundError"];
-            409: components["responses"]["ConflictError"];
-        };
-    };
-    getAdminOrderById: {
+    getAdminCategoryById: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                id: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Full approved manager-order detail. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ManagerOrderDetail"];
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
                 };
             };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No manager order exists for the supplied identifier. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminOrderSyncStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Current order delivery state. */
-            200: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrderSyncStatusResponse"];
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Order not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    retryAdminOrderSync: {
+    changeAdminCategorySlug: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                id: number;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RetryOrderSyncRequest"];
+                "application/json": components["schemas"]["ChangeSlugRequest"];
             };
         };
         responses: {
-            /** @description Retry was persisted for background delivery. */
-            202: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RetryOrderSyncResponse"];
+                    "application/json": components["schemas"]["ChangeSlugResponse"];
                 };
             };
-            400: components["responses"]["components-responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Order not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Current synchronization status cannot be retried. */
+        };
+    };
+    setAdminCategorySiteVisibility: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetCategorySiteVisibilityRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategorySiteVisibilityResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminCategoryContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryContentResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    saveAdminCategoryContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveCategoryContentRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryContentItem"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    getAdminWorkspaceOverview: {
+    getCategoryTree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getCategoryBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+                categorySlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryDetailsResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogRedirect"];
+                };
+            };
+        };
+    };
+    getAdminProductGroups: {
+        parameters: {
+            query?: {
+                categoryId?: number;
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupListItemDto"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    createAdminProductGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProductGroupRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminProductGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    renameAdminProductGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RenameProductGroupRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminProductGroupMain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductGroupMainRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    changeAdminProductGroupSlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSlugRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeSlugResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getMobileCatalogSnapshot: {
         parameters: {
             query?: never;
             header?: never;
@@ -8261,41 +6334,330 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The orders block. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkspaceOverview"];
+                    "application/json": components["schemas"]["CatalogSnapshotResponse"];
                 };
             };
-            /** @description Not signed in. */
+            /** @description Not Modified */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not a Manager, Seo, or Admin. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    getAdminWorkspaceOrders: {
+    getAdminCatalogOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCatalogOverviewResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminProductAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributesDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminProductAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+                attributeId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductAttributeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributesDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    restoreAdminProductAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+                attributeId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributesDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    acceptAdminProductReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributesDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    reopenAdminProductReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductAttributesDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminProducts: {
         parameters: {
             query?: {
                 searchTerm?: string;
-                counterpartyId?: string;
-                /** @description Inclusive calendar date in Europe/Kyiv. */
-                createdFrom?: string;
-                /** @description Inclusive calendar date in Europe/Kyiv. */
-                createdTo?: string;
-                sort?: "createdAt" | "-createdAt" | "orderNumber" | "-orderNumber" | "customerName" | "-customerName" | "totalAmount" | "-totalAmount";
+                categorySlug?: string;
+                categoryId?: number;
+                inStock?: boolean;
+                isSale?: boolean;
+                isNew?: boolean;
+                exportToSite?: boolean;
+                deleted?: boolean;
+                withoutPhoto?: boolean;
+                problemsOnly?: boolean;
+                problemReason?: string;
+                priceFrom?: number;
+                priceTo?: number;
+                sort?: components["schemas"]["ProductSort"];
                 page?: number;
                 pageSize?: number;
             };
@@ -8305,274 +6667,500 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Filtered page; totalRecords is computed before paging. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrderPage"];
+                    "application/json": components["schemas"]["PagedResultOfListOfAdminProductListRowDto"];
                 };
             };
-            /** @description Invalid query. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    createAdminWorkspaceOrder: {
+    getAllAdminProducts: {
         parameters: {
             query?: never;
-            header: {
-                "Idempotency-Key": string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["schemas-CreateOrderRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description Idempotent replay of the same request. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["schemas-CreateOrderResponse"];
-                };
-            };
-            /** @description Order created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["schemas-CreateOrderResponse"];
-                };
-            };
-            /** @description Invalid lines, customer, price or request. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Selected customer or product does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Quote changed or idempotency key reused with different request. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["OrderConflict"];
+                    "application/json": components["schemas"]["AdminProductListRowDto"][];
                 };
             };
         };
     };
-    getAdminWorkspaceOrderById: {
+    getAdminProductBySlug: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                productSlug: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Stored order snapshot. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrderDetail"];
+                    "application/json": components["schemas"]["AdminProductDetailsDto"];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Order not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    quoteAdminWorkspaceOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuoteRequest"];
-            };
-        };
-        responses: {
-            /** @description Current server-calculated quote. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Quote"];
-                };
-            };
-            /** @description Invalid lines (invalid_lines), invalid price adjustment (invalid_price_adjustment), insufficient stock (unavailable_product), unavailable UAH price (unavailable_price) or a discount that takes the unit price below 1 UAH (price_below_minimum; a product cheaper than 1 UAH cannot be discounted). The message of unavailable_product, price_below_minimum and invalid_price_adjustment is Ukrainian text for the manager and may be shown as is. */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example unavailable_product */
-                        code: string;
-                        /** @example Недостатньо товару на складі. */
-                        message: string;
-                    };
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Selected customer or product does not exist. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    getAdminWorkspaceCustomerPrices: {
+    changeAdminProductSlug: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CustomerPricesRequest"];
+                "application/json": components["schemas"]["ChangeSlugRequest"];
             };
         };
         responses: {
-            /** @description Customer prices in the requested product order, duplicates removed. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CustomerPrices"];
+                    "application/json": components["schemas"]["ChangeSlugResponse"];
                 };
             };
-            /** @description Missing customer or 1-100 valid product IDs not supplied (code invalid_products). */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Selected customer does not exist. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    getAdminOrderDrafts: {
+    getAdminProductMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductMediaDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminProductMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductMediaRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductMediaDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminProductGroupOfProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupMembershipDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminProductGroupOfProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetProductGroupRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductGroupMembershipDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicProducts: {
         parameters: {
             query?: {
                 searchTerm?: string;
-                counterpartyId?: string;
-                /** @description Inclusive creation calendar date in Europe/Kyiv. */
-                createdFrom?: string;
-                /** @description Inclusive creation calendar date in Europe/Kyiv. */
-                createdTo?: string;
-                sort?: "updatedAt" | "-updatedAt" | "title" | "-title" | "customerName" | "-customerName";
+                categoryId?: number;
+                inStock?: boolean;
+                availability?: components["schemas"]["ProductAvailability"];
+                isSale?: boolean;
+                isNew?: boolean;
+                priceTypeId?: number;
+                priceFrom?: number;
+                priceTo?: number;
+                sort?: components["schemas"]["ProductSort"];
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedResultOfListOfProductListRowDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicProductsByCategorySlug: {
+        parameters: {
+            query?: {
+                searchTerm?: string;
+                categoryId?: number;
+                inStock?: boolean;
+                availability?: components["schemas"]["ProductAvailability"];
+                isSale?: boolean;
+                isNew?: boolean;
+                priceTypeId?: number;
+                priceFrom?: number;
+                priceTo?: number;
+                sort?: components["schemas"]["ProductSort"];
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                lang: string;
+                categorySlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedResultOfListOfProductListRowDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicProductBySlug: {
+        parameters: {
+            query?: {
+                priceTypeId?: number;
+            };
+            header?: never;
+            path: {
+                lang: string;
+                productSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductBySlugDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogRedirect"];
+                };
+            };
+        };
+    };
+    getAdminSiteModels: {
+        parameters: {
+            query?: {
+                categoryId?: number;
+                status?: string;
+                problem?: string;
+                search?: string;
                 page?: number;
                 pageSize?: number;
             };
@@ -8582,257 +7170,960 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Filtered page; totalRecords is computed before paging. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DraftPage"];
+                    "application/json": components["schemas"]["SiteModelListDto"];
                 };
             };
-            /** @description Invalid query. */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    createAdminOrderDraft: {
+    createAdminSiteModel: {
         parameters: {
             query?: never;
-            header: {
-                "Idempotency-Key": string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["DraftInput"];
+                "application/json": components["schemas"]["CreateSiteModelRequest"];
             };
         };
         responses: {
-            /** @description Idempotent replay of the same create. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DraftDetail"];
+                    "application/json": components["schemas"]["SiteModelDto"];
                 };
             };
-            /** @description Draft created without order number or 1C sync. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DraftDetail"];
-                };
-            };
-            /** @description Invalid draft, customer, product or price. */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Selected customer or product does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
-            };
-            /** @description Idempotency key reused with different body. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
-    getAdminOrderDraftById: {
+    getAdminSiteModelHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelHealthDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminSiteShowcase: {
+        parameters: {
+            query?: {
+                categoryId?: number;
+                status?: string;
+                problem?: string;
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteShowcaseListDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminSiteModelCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelCategoryDto"][];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminSiteModel: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                draftId: number;
+                id: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Saved lines and version remain available even if current pricing is unavailable. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DraftDetail"];
+                    "application/json": components["schemas"]["SiteModelDto"];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Draft not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    updateAdminOrderDraft: {
+    renameAdminSiteModel: {
         parameters: {
             query?: never;
-            header: {
-                "If-Match": string;
-            };
+            header?: never;
             path: {
-                draftId: number;
+                id: number;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["DraftInput"];
+                "application/json": components["schemas"]["RenameSiteModelRequest"];
             };
         };
         responses: {
-            /** @description Updated draft with a new version. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DraftDetail"];
+                    "application/json": components["schemas"]["SiteModelDto"];
                 };
             };
-            /** @description Invalid draft, customer, product or price. */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Draft not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Draft changed since supplied version. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
         };
     };
-    deleteAdminOrderDraft: {
+    acceptAdminSiteModels: {
         parameters: {
             query?: never;
-            header: {
-                "If-Match": string;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptSiteModelsRequest"];
             };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelHealthDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminSiteModelAxes: {
+        parameters: {
+            query?: never;
+            header?: never;
             path: {
-                draftId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetSiteModelAxesRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    addAdminSiteModelProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddSiteModelProductsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    removeAdminSiteModelProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                productId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Draft deleted. */
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminSiteModelText: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                language: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetSiteModelTextRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    fillAdminSiteModelFromNames: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicSiteModels: {
+        parameters: {
+            query?: {
+                filter?: string[];
+                search?: string;
+                inStock?: boolean;
+                isSale?: boolean;
+                isNew?: boolean;
+                priceFrom?: number;
+                priceTo?: number;
+                sort?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelListDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicCategorySiteModels: {
+        parameters: {
+            query?: {
+                filter?: string[];
+                search?: string;
+                inStock?: boolean;
+                isSale?: boolean;
+                isNew?: boolean;
+                priceFrom?: number;
+                priceTo?: number;
+                sort?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                lang: string;
+                categorySlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelListDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicSiteModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+                modelSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelAddressDto"];
+                };
+            };
+        };
+    };
+    getPublicProductModelAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+                productSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteModelAddressDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogRedirect"];
+                };
+            };
+        };
+    };
+    getAdminArticles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticleSummaryResponse"][];
+                };
+            };
+        };
+    };
+    createAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveArticleRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticleResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticleResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveArticleRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminArticleResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Draft not found. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Draft changed since supplied version. */
-            409: {
+        };
+    };
+    uploadAdminArticleCover: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    file?: components["schemas"]["IFormFile"];
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArticleCoverUploadResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -8840,20 +8131,657 @@ export interface operations {
             };
         };
     };
-    getAdminCustomers: {
+    moveLegacyAdminArticleCovers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegacyArticleCoversMovedResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getArticles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArticleSummaryResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArticleResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getArticleCover: {
         parameters: {
             query?: {
-                page?: number;
-                pageSize?: number;
-                /** @description Case-insensitive substring in counterpartyId, name or phone. */
-                searchTerm?: string;
-                /** @description Case-insensitive ID substring filter. */
-                counterpartyId?: string;
-                /** @description Case-insensitive name substring filter. */
-                name?: string;
-                /** @description Case-insensitive phone substring filter. */
-                phone?: string;
-                sort?: "name" | "-name" | "counterpartyId" | "-counterpartyId" | "phone" | "-phone";
+                v?: number;
+            };
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["FileContentResult"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminCompanyContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCompanyContactsResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminCompanyContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveCompanyContactsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCompanyContactsResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getCompanyContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyContactsResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminLegalDocuments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentOverviewResponse"][];
+                };
+            };
+        };
+    };
+    getAdminLegalDocumentVersions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionSummaryResponse"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    createAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": null | components["schemas"]["SaveLegalDocumentDraftRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminLegalDocumentVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    publishAdminLegalDocumentDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishLegalDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalDocumentVersionResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublishedLegalDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+                kind: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishedLegalDocumentResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGalleryItemResponse"][];
+                };
+            };
+        };
+    };
+    addAdminGalleryPhotos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGalleryPhotosRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGalleryItemResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    addAdminGalleryVideo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddGalleryVideoRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGalleryItemResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    previewAdminGalleryYoutubeVideo: {
+        parameters: {
+            query?: {
+                url?: string;
             };
             header?: never;
             path?: never;
@@ -8861,73 +8789,1044 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description A filtered, sorted page of active Sales customers; totals are computed before paging. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CustomerPage"];
+                    "application/json": components["schemas"]["YoutubePreviewResponse"];
                 };
             };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
         };
     };
-    getAdminCustomerById: {
+    updateAdminGalleryItem: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                counterpartyId: string;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGalleryItemRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGalleryItemResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminGalleryItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description The approved current customer profile. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CustomerDetail"];
+                    "application/json": components["schemas"]["AdminGalleryItemResponse"][];
                 };
             };
-            400: components["responses"]["ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No active customer exists for the supplied identifier. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    reorderAdminGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderGalleryRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGalleryItemResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicGallery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicGalleryItemResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminHomeBlocks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+        };
+    };
+    createAdminHomeFaqItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeFaqItemRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminHomeFaqItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeFaqItemRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminHomeFaqItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    reorderAdminHomeFaq: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderHomeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    createAdminHomeBrand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeBrandRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminHomeBrand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeBrandRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminHomeBrand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    reorderAdminHomeBrands: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderHomeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicHomeBlocks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicHomeBlocksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminContentOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminContentOverview"];
+                };
+            };
+        };
+    };
+    getAdminCompanyRequisites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisitesResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminCompanyRequisites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveCompanyRequisitesRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisitesResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminCompanyRequisitesHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisitesChangeResponse"][];
+                };
+            };
+        };
+    };
+    getCompanyRequisites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyRequisitesResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminSiteSeoSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteSeoSettingsResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminSiteSeoSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveSiteSeoSettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteSeoSettingsResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getSiteSeoSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteSeoSettingsResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    refreshSite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteRefreshResponse"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteRefreshResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteRefreshResponse"];
+                };
+            };
+        };
+    };
+    listAdminPageSeo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPageSeoResponse"][];
+                };
+            };
+        };
+    };
+    updateAdminPageSeo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SavePageSeoRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPageSeoResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    listPublicPageSeo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicPageSeoResponse"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminWholesalePage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminWholesalePageResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminWholesalePage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveWholesalePageRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminWholesalePageResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getPublicWholesalePage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicWholesalePageResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getCurrentSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionMeResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -8944,72 +9843,77 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Signed in */
+            /** @description OK */
             200: {
                 headers: {
-                    /** @description Session and CSRF cookies */
-                    "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["SessionMeResponse"];
                 };
             };
-            /** @description Email or password is empty or too long; ValidationProblem with Ukrainian messages */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Invalid credentials, locked or blocked account */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Login rate limit exceeded */
+            /** @description Too Many Requests */
             429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     logoutCookieSession: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Signed out; session and CSRF cookies expired */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Missing or invalid CSRF token */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No valid session */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -9026,7 +9930,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Token pair */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -9035,26 +9939,32 @@ export interface operations {
                     "application/json": components["schemas"]["MobileTokenResponse"];
                 };
             };
-            /** @description Email or password is empty or too long; ValidationProblem with Ukrainian messages */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Invalid credentials, locked or blocked account */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Login rate limit exceeded */
+            /** @description Too Many Requests */
             429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -9067,13 +9977,11 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": {
-                    refreshToken: string;
-                };
+                "application/json": components["schemas"]["MobileRefreshRequest"];
             };
         };
         responses: {
-            /** @description New token pair */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -9082,26 +9990,32 @@ export interface operations {
                     "application/json": components["schemas"]["MobileTokenResponse"];
                 };
             };
-            /** @description Refresh token is empty or too long */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Unknown, expired, revoked, or already rotated refresh token */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Refresh rate limit exceeded */
+            /** @description Too Many Requests */
             429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -9114,36 +10028,38 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": {
-                    refreshToken?: string | null;
-                };
+                "application/json": components["schemas"]["MobileLogoutRequest"];
             };
         };
         responses: {
-            /** @description Signed out */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Refresh token is too long */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Missing or invalid access token */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
-    getCurrentSession: {
+    getMyProfile: {
         parameters: {
             query?: never;
             header?: never;
@@ -9152,21 +10068,293 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Current user */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SessionMeResponse"];
+                    "application/json": components["schemas"]["ProfileResponse"];
                 };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    changeMyName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeNameRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
                 content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    uploadMyAvatar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    file?: components["schemas"]["IFormFile"];
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AvatarResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    removeMyAvatar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    changeMyEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeOwnEmailRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    changeMyPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeOwnPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -9179,7 +10367,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Staff accounts ordered by email */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -9188,29 +10376,30 @@ export interface operations {
                     "application/json": components["schemas"]["StaffAccountResponse"][];
                 };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     createStaffAccount: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -9229,40 +10418,48 @@ export interface operations {
                     "application/json": components["schemas"]["StaffAccountResponse"];
                 };
             };
-            /** @description Invalid email, name, role or password */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Email already used; give the existing account access through grantStaffAccess instead */
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     searchStaffCandidates: {
         parameters: {
-            query: {
-                search: string;
+            query?: {
+                search?: string;
             };
             header?: never;
             path?: never;
@@ -9270,7 +10467,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Matching accounts */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -9279,38 +10476,41 @@ export interface operations {
                     "application/json": components["schemas"]["StaffCandidateResponse"][];
                 };
             };
-            /** @description Search shorter than 2 characters */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     grantStaffAccess: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
@@ -9320,7 +10520,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Staff access given */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -9329,224 +10529,239 @@ export interface operations {
                     "application/json": components["schemas"]["StaffAccountResponse"];
                 };
             };
-            /** @description Invalid name, role or password */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description The account already has staff access */
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     changeStaffRole: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": {
-                    role: components["schemas"]["StaffRole"];
-                };
+                "application/json": components["schemas"]["ChangeStaffRoleRequest"];
             };
         };
         responses: {
-            /** @description Role changed */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Invalid role or own account */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     setStaffBlocked: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": {
-                    blocked: boolean;
-                };
+                "application/json": components["schemas"]["SetStaffBlockedRequest"];
             };
         };
         responses: {
-            /** @description Updated */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Own account */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     setStaffPassword: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": {
-                    /** Format: password */
-                    password: string;
-                };
+                "application/json": components["schemas"]["SetStaffPasswordRequest"];
             };
         };
         responses: {
-            /** @description Password set */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Password too short or too weak */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator, or the target is an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     changeStaffName: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
@@ -9556,127 +10771,138 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Name changed */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Empty or longer than 100 characters */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator, or the target is an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     changeStaffEmail: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": {
-                    /** Format: email */
-                    email: string;
-                };
+                "application/json": components["schemas"]["ChangeStaffEmailRequest"];
             };
         };
         responses: {
-            /** @description Email changed */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Invalid email */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator, or the target is an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Email already used */
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
     uploadStaffAvatar: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["AvatarUploadForm"];
+                "multipart/form-data": {
+                    file?: components["schemas"]["IFormFile"];
+                };
             };
         };
         responses: {
-            /** @description Stored */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -9685,42 +10911,52 @@ export interface operations {
                     "application/json": components["schemas"]["AvatarResponse"];
                 };
             };
-            /** @description Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator, or the target is an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Request body over the upload limit */
+            /** @description Payload Too Large */
             413: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Avatar storage is not configured */
+            /** @description Service Unavailable */
             503: {
                 headers: {
                     [name: string]: unknown;
@@ -9732,2871 +10968,47 @@ export interface operations {
     removeStaffAvatar: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
+            header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                userId: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Removed (also when there was none) */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Not signed in */
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an administrator, or the target is an administrator */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description No staff account with this ID */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-        };
-    };
-    getMyProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Profile */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": components["schemas"]["ProfileResponse"];
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a staff account */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    changeMyName: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeNameRequest"];
-            };
-        };
-        responses: {
-            /** @description Name changed */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Empty or longer than 100 characters */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a staff account */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    uploadMyAvatar: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["AvatarUploadForm"];
-            };
-        };
-        responses: {
-            /** @description Stored */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AvatarResponse"];
-                };
-            };
-            /** @description Not JPEG/PNG/WebP, smaller than 128×128, over 24 megapixels, or over 2 MB */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a staff account */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Request body over the upload limit */
-            413: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Avatar storage is not configured */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    removeMyAvatar: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Removed (also when there was none) */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a staff account */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    changeMyEmail: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeOwnEmailRequest"];
-            };
-        };
-        responses: {
-            /** @description Email changed */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid email or wrong current password */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an administrator */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Email already used */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    changeMyPassword: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value of the `kedr.csrf` cookie. Required on every non-GET request made with the session cookie. */
-                "X-CSRF-Token": components["parameters"]["CsrfHeader"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeOwnPasswordRequest"];
-            };
-        };
-        responses: {
-            /** @description Password changed */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Wrong current password or new password too short */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an administrator */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getSalesCatalogProducts: {
-        parameters: {
-            query?: {
-                search?: string;
-            };
-            header?: never;
-            path: {
-                lang: "uk" | "ru";
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["CatalogProductsRequest"];
-            };
-        };
-        responses: {
-            /** @description Product page for current user */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SalesCatalogPage"];
-                };
-            };
-            /** @description Input validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Missing or invalid access token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authenticated user is forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getArticles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Published articles. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ArticleSummary"][];
-                };
-            };
-            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
-        };
-    };
-    getArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-                slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The article. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Article"];
-                };
-            };
-            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
-            /** @description No published article with this slug. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getArticleCover: {
-        parameters: {
-            query?: {
-                v?: number;
-            };
-            header?: never;
-            path: {
-                id: components["parameters"]["ArticleId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description WebP picture. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/webp": string;
-                };
-            };
-            /** @description The article or its cover does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminArticles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Articles with Ukrainian titles. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminArticleSummary"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveArticleRequest"];
-            };
-        };
-        responses: {
-            /** @description The created article as stored. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminArticle"];
-                };
-            };
-            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["ArticleId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The article. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminArticle"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Article not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["ArticleId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveArticleRequest"];
-            };
-        };
-        responses: {
-            /** @description The article as stored. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminArticle"];
-                };
-            };
-            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Article not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteAdminArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["ArticleId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Deleted. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Article not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    uploadAdminArticleCover: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /** Format: binary */
-                    file: string;
-                };
-            };
-        };
-        responses: {
-            /** @description The picture in the media library. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ArticleCoverUpload"];
-                };
-            };
-            400: components["responses"]["articles.openapi_components-responses-ValidationError"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The request is larger than the upload limit. */
-            413: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The CDN is not configured. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    moveLegacyAdminArticleCovers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description How many covers this call moved. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegacyArticleCoversMoved"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Signed in without the Manager, Seo, or Admin role. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The CDN is not configured. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getCompanyContacts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The contacts. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CompanyContacts"];
-                };
-            };
-            /** @description The contacts row is missing (it is created by a migration). */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminCompanyContacts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The contacts. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCompanyContacts"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The contacts row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminCompanyContacts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveCompanyContactsRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved contacts. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCompanyContacts"];
-                };
-            };
-            /** @description Invalid input; each error names the field (`salesPhone`, `email`, `telegramUrl`, `viberPhone`, `mapUrl`, `cityUk`, `cityRu`). */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The contacts row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getCompanyRequisites: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The requisites. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CompanyRequisites"];
-                };
-            };
-            /** @description The requisites row is missing (it is created by a migration). */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminCompanyRequisites: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The requisites. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CompanyRequisites"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The requisites row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminCompanyRequisites: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveCompanyRequisitesRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved requisites. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CompanyRequisites"];
-                };
-            };
-            /** @description Invalid input; each error names the field (`legalName`, `code`, `registrationExtractNumber`, `iban`, `bankName`, `bankCode`). A bank code that differs from the one inside the IBAN is reported on `bankCode`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The requisites row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminCompanyRequisitesHistory: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The change log. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CompanyRequisitesChange"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPublishedLegalDocument: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-                kind: components["parameters"]["Kind"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The published edition. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublishedLegalDocument"];
-                };
-            };
-            /** @description The language is not `uk` or `ru`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unknown kind, or nothing is published yet. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminLegalDocuments: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description One item per document kind. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalDocumentOverview"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminLegalDocumentVersions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                kind: components["parameters"]["Kind"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The editions. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalDocumentVersionSummary"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unknown kind. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminLegalDocumentDraft: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                kind: components["parameters"]["Kind"];
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
-            };
-        };
-        responses: {
-            /** @description The new draft. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalDocumentVersion"];
-                };
-            };
-            /** @description Invalid texts, or nothing is published and no texts were given (`texts`). */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unknown kind. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description This document already has a draft. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminLegalDocumentVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["VersionId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The edition. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalDocumentVersion"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such edition. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminLegalDocumentDraft: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["VersionId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveLegalDocumentDraftRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved draft. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalDocumentVersion"];
-                };
-            };
-            /** @description Invalid texts; errors name `texts`, `texts[0].title`, `texts[1].bodyHtml` and so on. Both `uk` and `ru` are required; title up to 200 characters, body up to 100 000. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such edition. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The edition is published or archived and can no longer change. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteAdminLegalDocumentDraft: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["VersionId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Deleted. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such edition. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The edition is not a draft. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    publishAdminLegalDocumentDraft: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["VersionId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublishLegalDocumentRequest"];
-            };
-        };
-        responses: {
-            /** @description The published edition. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalDocumentVersion"];
-                };
-            };
-            /** @description `effectiveFrom` is earlier than the date of the edition on the site. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such edition. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The edition is already published or archived. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPublicGallery: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The gallery cards. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicGalleryItem"][];
-                };
-            };
-            /** @description The language is not `uk` or `ru`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminGallery: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["Gallery"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    addAdminGalleryPhotos: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddGalleryPhotosRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["Gallery"];
-            /** @description No IDs, more than 100, or a file that is not in the media library. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    addAdminGalleryVideo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddGalleryVideoRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["Gallery"];
-            /** @description Not a YouTube video link, or a text over its limit. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The video is already in the gallery. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    previewAdminGalleryYoutubeVideo: {
-        parameters: {
-            query: {
-                url: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The video ID, poster and title. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YoutubePreview"];
-                };
-            };
-            /** @description Not a YouTube video link. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminGalleryItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["ItemId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GalleryTexts"];
-            };
-        };
-        responses: {
-            200: components["responses"]["Gallery"];
-            /** @description A text over its limit. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such card. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteAdminGalleryItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["ItemId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["Gallery"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such card. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    reorderAdminGallery: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReorderGalleryRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["Gallery"];
-            /** @description A repeated or invalid ID. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The list does not match the current gallery. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPublicHomeBlocks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: components["parameters"]["Lang"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Both lists. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicHomeBlocks"];
-                };
-            };
-            /** @description The language is not `uk` or `ru`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminHomeBlocks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminHomeFaqItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["HomeFaqItemRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description A text is missing or over its limit. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminHomeFaqItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["RowId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["HomeFaqItemRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description A text is missing or over its limit. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such question. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteAdminHomeFaqItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["RowId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such question. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    reorderAdminHomeFaq: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReorderHomeRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description A repeated or invalid ID. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The list does not match the current FAQ. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminHomeBrand: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["HomeBrandRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description No name, a name over 100 characters, or a logo that is not in the media library. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminHomeBrand: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["RowId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["HomeBrandRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description No name, a name over 100 characters, or a logo that is not in the media library. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such brand. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteAdminHomeBrand: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["RowId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such brand. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    reorderAdminHomeBrands: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReorderHomeRequest"];
-            };
-        };
-        responses: {
-            200: components["responses"]["HomeBlocks"];
-            /** @description A repeated or invalid ID. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The list does not match the current brands. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPublicWholesalePage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: "uk" | "ru";
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The texts. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicWholesalePage"];
-                };
-            };
-            /** @description `lang` is not `uk` or `ru`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The page row is missing (it is created by a migration). */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminWholesalePage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Both texts, `uk` first. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminWholesalePage"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The page row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminWholesalePage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveWholesalePageRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved page. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminWholesalePage"];
-                };
-            };
-            /** @description Invalid input; errors name the field (`texts`, `texts[0].HeroTitle`, `texts[1].Steps`…). */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The page row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    listPublicPageSeo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lang: "uk" | "ru";
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The pages in menu order. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublicPageSeo"][];
-                };
-            };
-            /** @description `lang` is not `uk` or `ru`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    listAdminPageSeo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description All pages in menu order. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminPageSeo"][];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminPageSeo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                page: components["schemas"]["SitePage"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SavePageSeoRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved page. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminPageSeo"];
-                };
-            };
-            /** @description Unknown page or a text over its limit; `errors` names the field. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getSiteSeoSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The settings; empty codes are null. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteSeoSettings"];
-                };
-            };
-            /** @description The settings row is missing (the migration was not applied). */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminSiteSeoSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The settings with the chosen picture and who saved them. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminSiteSeoSettings"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The settings row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminSiteSeoSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveSiteSeoSettingsRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved settings. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminSiteSeoSettings"];
-                };
-            };
-            /** @description An id or code of another shape, or a picture not in the media library; `errors` names the field. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The settings row is missing. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminContentOverview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The content block. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminContentOverview"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getAdminCatalogOverview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The catalog block. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminCatalogOverview"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getMobileCatalogSnapshot: {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description The `ETag` of the snapshot the app already holds. */
-                "If-None-Match"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The snapshot. */
-            200: {
-                headers: {
-                    /** @description Strong tag of the content. */
-                    ETag?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogSnapshot"];
-                };
-            };
-            /** @description The app already holds this version; no body. */
-            304: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getMobileCustomersSnapshot: {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description The `ETag` of the snapshot the app already holds. */
-                "If-None-Match"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The snapshot. */
-            200: {
-                headers: {
-                    /** @description Strong tag of the content. */
-                    ETag?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CustomersSnapshot"];
-                };
-            };
-            /** @description The app already holds this version; no body. */
-            304: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    refreshSite: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The site accepted the request. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteRefreshResult"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The site did not answer or refused the secret (`siteUnavailable`). */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteRefreshResult"];
-                };
-            };
-            /** @description The site address or secret is not set in this environment (`notConfigured`). */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SiteRefreshResult"];
-                };
-            };
-        };
-    };
-    getAdminMediaFolders: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The folders. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MediaFolderTree"];
-                };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createAdminMediaFolder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveMediaFolderRequest"];
-            };
-        };
-        responses: {
-            /** @description The new folder. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MediaFolderItem"];
-                };
-            };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description A folder with this name (case-insensitive) already exists in the parent. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateAdminMediaFolder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["Id"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SaveMediaFolderRequest"];
-            };
-        };
-        responses: {
-            /** @description The saved folder. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MediaFolderItem"];
-                };
-            };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such folder. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description A folder with this name already exists in the target parent. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteAdminMediaFolder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["Id"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Deleted. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such folder. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description The folder still has files or subfolders. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -12616,7 +11028,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The page. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -12625,20 +11037,14 @@ export interface operations {
                     "application/json": components["schemas"]["MediaFilePage"];
                 };
             };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
         };
     };
@@ -12652,18 +11058,15 @@ export interface operations {
         requestBody: {
             content: {
                 "multipart/form-data": {
-                    /** Format: binary */
-                    file: string;
-                    /**
-                     * Format: int64
-                     * @description Omit for the library root.
-                     */
+                    file?: components["schemas"]["IFormFile"];
+                } & {
+                    /** Format: int64 */
                     folderId?: number;
                 };
             };
         };
         responses: {
-            /** @description The new file. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -12672,29 +11075,25 @@ export interface operations {
                     "application/json": components["schemas"]["MediaFileItem"];
                 };
             };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description The request is larger than 15 MB. */
+            /** @description Payload Too Large */
             413: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description CDN credentials are not configured. */
+            /** @description Service Unavailable */
             503: {
                 headers: {
                     [name: string]: unknown;
@@ -12708,13 +11107,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description The file. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -12723,26 +11122,14 @@ export interface operations {
                     "application/json": components["schemas"]["MediaFileItem"];
                 };
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such file. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -12751,7 +11138,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
@@ -12761,7 +11148,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The saved file. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -12770,27 +11157,23 @@ export interface operations {
                     "application/json": components["schemas"]["MediaFileItem"];
                 };
             };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description No such file. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -12799,41 +11182,29 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Deleted. */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such file. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description CDN credentials are not configured. */
+            /** @description Service Unavailable */
             503: {
                 headers: {
                     [name: string]: unknown;
@@ -12847,20 +11218,19 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
                 "multipart/form-data": {
-                    /** Format: binary */
-                    file: string;
+                    file?: components["schemas"]["IFormFile"];
                 };
             };
         };
         responses: {
-            /** @description The file with its new URL. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -12869,36 +11239,34 @@ export interface operations {
                     "application/json": components["schemas"]["MediaFileItem"];
                 };
             };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description No such file. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description The request is larger than 15 MB. */
+            /** @description Payload Too Large */
             413: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description CDN credentials are not configured. */
+            /** @description Service Unavailable */
             503: {
                 headers: {
                     [name: string]: unknown;
@@ -12920,31 +11288,937 @@ export interface operations {
             };
         };
         responses: {
-            /** @description How many files moved. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        moved: number;
-                    };
+                    "application/json": components["schemas"]["MoveMediaFilesResponse"];
                 };
             };
-            400: components["responses"]["Invalid"];
-            /** @description Not signed in. */
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminMediaFolders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFolderTree"];
+                };
+            };
+        };
+    };
+    createAdminMediaFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveMediaFolderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFolderItem"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminMediaFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveMediaFolderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFolderItem"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminMediaFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getSalesCatalogProducts: {
+        parameters: {
+            query?: {
+                search?: string;
+            };
+            header?: never;
+            path: {
+                lang: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": null | components["schemas"]["CatalogProductsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedResultOfListOfCatalogListItemDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not a Manager, Seo, or Admin. */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getMobileCustomersSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomersSnapshotDto"];
+                };
+            };
+            /** @description Not Modified */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
                 content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminCustomers: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                searchTerm?: string;
+                counterpartyId?: string;
+                name?: string;
+                phone?: string;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedResultOfListOfGetAdminCustomerListItemResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminCustomerById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                counterpartyId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetAdminCustomerDetailResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminOrders: {
+        parameters: {
+            query?: {
+                counterpartyId?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedResultOfListOfGetAdminOrderListItemResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    createAdminOrder: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAdminOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateAdminOrderResponse"];
+                };
+            };
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateAdminOrderResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminOrderSyncStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetAdminOrderSyncStatusResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    retryAdminOrderSync: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RetryAdminOrderSyncRequest"];
+            };
+        };
+        responses: {
+            /** @description Accepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetryAdminOrderSyncResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminOrderById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetAdminOrderDetailResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminWorkspaceOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceOverview"];
+                };
+            };
+        };
+    };
+    getAdminWorkspaceOrders: {
+        parameters: {
+            query?: {
+                searchTerm?: string;
+                counterpartyId?: string;
+                createdFrom?: string;
+                createdTo?: string;
+                sort?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspacePageOfWorkspaceOrderListItem"];
+                };
+            };
+        };
+    };
+    createAdminWorkspaceOrder: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceCreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkspaceOrderById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceOrderDetail"];
+                };
+            };
+        };
+    };
+    quoteAdminWorkspaceOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceQuoteRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminWorkspaceCustomerPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceCustomerPricesRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminOrderDrafts: {
+        parameters: {
+            query?: {
+                searchTerm?: string;
+                counterpartyId?: string;
+                createdFrom?: string;
+                createdTo?: string;
+                sort?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspacePageOfWorkspaceDraftListItem"];
+                };
+            };
+        };
+    };
+    createAdminOrderDraft: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceDraftInput"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getAdminOrderDraftById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceDraftDetail"];
+                };
+            };
+        };
+    };
+    updateAdminOrderDraft: {
+        parameters: {
+            query?: never;
+            header?: {
+                "If-Match"?: string;
+            };
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceDraftInput"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteAdminOrderDraft: {
+        parameters: {
+            query?: never;
+            header?: {
+                "If-Match"?: string;
+            };
+            path: {
+                draftId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createQuickOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuickOrderResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -12957,28 +12231,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The caller's tasks. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkTask"][];
+                    "application/json": components["schemas"]["WorkTaskDto"][];
                 };
-            };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -12995,29 +12255,23 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The new task. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkTask"];
+                    "application/json": components["schemas"]["WorkTaskDto"];
                 };
             };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
         };
     };
@@ -13026,7 +12280,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
@@ -13036,36 +12290,32 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The saved task. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkTask"];
+                    "application/json": components["schemas"]["WorkTaskDto"];
                 };
             };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description No such task of the caller. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -13074,39 +12324,27 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Deleted. */
+            /** @description No Content */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description No such task of the caller. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -13115,7 +12353,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
+                id: number;
             };
             cookie?: never;
         };
@@ -13125,36 +12363,32 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The moved task. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkTask"];
+                    "application/json": components["schemas"]["WorkTaskDto"];
                 };
             };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description No such task of the caller. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -13163,8 +12397,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: components["parameters"]["Id"];
-                /** @description Position of the step, from 0. */
+                id: number;
                 index: number;
             };
             cookie?: never;
@@ -13175,76 +12408,32 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The task with the step changed. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkTask"];
+                    "application/json": components["schemas"]["WorkTaskDto"];
                 };
             };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description No such task of the caller or no step at that position. */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-        };
-    };
-    getMyWorkReport: {
-        parameters: {
-            query: {
-                /** @description First Kyiv calendar day of the period. */
-                from: components["parameters"]["From"];
-                /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
-                to: components["parameters"]["To"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The report. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": components["schemas"]["WorkReport"];
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-            };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not a Manager, Seo, or Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -13261,40 +12450,31 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The new task, with `createdByOwner` false. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkTask"];
+                    "application/json": components["schemas"]["WorkTaskDto"];
                 };
             };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not an Admin. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
         };
     };
-    getAdminWorkReport: {
+    getMyWorkReport: {
         parameters: {
-            query: {
-                userId: string;
-                /** @description First Kyiv calendar day of the period. */
-                from: components["parameters"]["From"];
-                /** @description Last Kyiv calendar day, inclusive; at most 92 days after `from`. */
-                to: components["parameters"]["To"];
+            query?: {
+                from?: string;
+                to?: string;
             };
             header?: never;
             path?: never;
@@ -13302,29 +12482,56 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The report. */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WorkReport"];
+                    "application/json": components["schemas"]["WorkReportDto"];
                 };
             };
-            400: components["responses"]["responses-Invalid"];
-            /** @description Not signed in. */
-            401: {
+            /** @description Bad Request */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description Not an Admin. */
-            403: {
+        };
+    };
+    getAdminWorkReport: {
+        parameters: {
+            query?: {
+                userId?: string;
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WorkReportDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -13346,20 +12553,6 @@ export interface operations {
                     "application/json": components["schemas"]["ScheduledTaskResponse"][];
                 };
             };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an administrator */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     getAdminScheduledTaskRuns: {
@@ -13367,7 +12560,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                key: components["parameters"]["TaskKey"];
+                key: string;
             };
             cookie?: never;
         };
@@ -13382,26 +12575,14 @@ export interface operations {
                     "application/json": components["schemas"]["ScheduledTaskRunResponse"][];
                 };
             };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an administrator */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unknown task */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -13410,7 +12591,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                key: components["parameters"]["TaskKey"];
+                key: string;
             };
             cookie?: never;
         };
@@ -13420,7 +12601,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Saved */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -13429,40 +12610,32 @@ export interface operations {
                     "application/json": components["schemas"]["ScheduledTaskResponse"];
                 };
             };
-            /** @description Invalid schedule, or nextRunAt in the past */
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-                content?: never;
             };
-            /** @description Not an administrator */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unknown task */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description The task runs every minute and its schedule does not change */
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
@@ -13471,13 +12644,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                key: components["parameters"]["TaskKey"];
+                key: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Requested */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -13486,33 +12659,23 @@ export interface operations {
                     "application/json": components["schemas"]["ScheduledTaskResponse"];
                 };
             };
-            /** @description Not signed in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not an administrator */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unknown task */
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
-            /** @description «Задача вже виконується», «Запуск уже заплановано» or the task runs every minute */
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
