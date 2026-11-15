@@ -28,6 +28,7 @@ Arrows point from consumer to dependency. Routes compose implemented domain feat
 - [Rendering and caching](platform/rendering-and-caching.md) — rendering per route type, data access, invalidation, budgets.
 - [SEO architecture](platform/seo-architecture.md) — URL and index policy, metadata ownership, structured data, locales, sitemaps.
 - [ADR](adr/0001-nextjs-public-site.md) — why Next.js App Router replaces the Angular storefront.
+- [ADR-0002](adr/0002-cloudflare-workers-hosting.md) — why the site runs on Cloudflare Workers through OpenNext.
 - Standards: [SEO rules](../../standards/site/seo-rules.md) and [design system](../../standards/site/design-system.md).
 - Feature cards: [Site shell](../../features/site/shell.md), [cart and checkout](../../features/site/cart.md).
 
