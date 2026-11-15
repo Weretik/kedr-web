@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapLegalDocumentOverviews,
@@ -15,7 +15,6 @@ import type {
   LegalDocumentVersionSummary,
 } from '@admin/documents/model';
 
-const root = '/api/admin/content/documents';
 const tag = 'LegalDocuments' as const;
 
 /** Every change of a version can change the list, the history and that version. */
@@ -30,58 +29,88 @@ export const adminLegalDocumentsApi = baseApi
   .injectEndpoints({
     endpoints: (build) => ({
       getLegalDocuments: build.query<LegalDocumentOverview[], void>({
-        query: () => ({ url: root, method: 'GET' }),
-        transformResponse: mapLegalDocumentOverviews,
+        queryFn: (_arg, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/content/documents', { signal }),
+            mapLegalDocumentOverviews,
+          ),
         providesTags: [{ type: tag, id: 'LIST' }],
       }),
       getLegalDocumentVersions: build.query<LegalDocumentVersionSummary[], LegalDocumentKind>({
-        query: (kind) => ({ url: `${root}/${kind}/versions`, method: 'GET' }),
-        transformResponse: mapLegalDocumentVersions,
+        queryFn: (kind, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/content/documents/{kind}/versions', {
+              params: { path: { kind } },
+              signal,
+            }),
+            mapLegalDocumentVersions,
+          ),
         providesTags: (_result, _error, kind) => [{ type: tag, id: `versions:${kind}` }],
       }),
       getLegalDocumentVersion: build.query<LegalDocumentVersion, number>({
-        query: (id) => ({ url: `${root}/versions/${id}`, method: 'GET' }),
-        transformResponse: mapLegalDocumentVersion,
+        queryFn: (id, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/content/documents/versions/{id}', {
+              params: { path: { id } },
+              signal,
+            }),
+            mapLegalDocumentVersion,
+          ),
         providesTags: (_result, _error, id) => [{ type: tag, id }],
       }),
       createLegalDocumentDraft: build.mutation<
         LegalDocumentVersion,
         { kind: LegalDocumentKind; draft: LegalDocumentDraft }
       >({
-        query: ({ kind, draft }) => ({
-          url: `${root}/${kind}/versions`,
-          method: 'POST',
-          data: toSaveDraftBody(draft),
-        }),
-        transformResponse: mapLegalDocumentVersion,
+        queryFn: ({ kind, draft }, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/content/documents/{kind}/versions', {
+              params: { path: { kind } },
+              body: toSaveDraftBody(draft),
+              signal,
+            }),
+            mapLegalDocumentVersion,
+          ),
         invalidatesTags: (_result, error, { kind }) => (error ? [] : changed(kind)),
       }),
       updateLegalDocumentDraft: build.mutation<
         LegalDocumentVersion,
         { kind: LegalDocumentKind; id: number; draft: LegalDocumentDraft }
       >({
-        query: ({ id, draft }) => ({
-          url: `${root}/versions/${id}`,
-          method: 'PUT',
-          data: toSaveDraftBody(draft),
-        }),
-        transformResponse: mapLegalDocumentVersion,
+        queryFn: ({ id, draft }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/content/documents/versions/{id}', {
+              params: { path: { id } },
+              body: toSaveDraftBody(draft),
+              signal,
+            }),
+            mapLegalDocumentVersion,
+          ),
         invalidatesTags: (_result, error, { kind, id }) => (error ? [] : changed(kind, id)),
       }),
       publishLegalDocumentDraft: build.mutation<
         LegalDocumentVersion,
         { kind: LegalDocumentKind; id: number; effectiveFrom: string }
       >({
-        query: ({ id, effectiveFrom }) => ({
-          url: `${root}/versions/${id}/publish`,
-          method: 'POST',
-          data: { effectiveFrom },
-        }),
-        transformResponse: mapLegalDocumentVersion,
+        queryFn: ({ id, effectiveFrom }, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/content/documents/versions/{id}/publish', {
+              params: { path: { id } },
+              body: { effectiveFrom },
+              signal,
+            }),
+            mapLegalDocumentVersion,
+          ),
         invalidatesTags: (_result, error, { kind, id }) => (error ? [] : changed(kind, id)),
       }),
       deleteLegalDocumentDraft: build.mutation<void, { kind: LegalDocumentKind; id: number }>({
-        query: ({ id }) => ({ url: `${root}/versions/${id}`, method: 'DELETE' }),
+        queryFn: ({ id }, { signal }) =>
+          apiCall(
+            apiClient.DELETE('/api/admin/content/documents/versions/{id}', {
+              params: { path: { id } },
+              signal,
+            }),
+          ),
         invalidatesTags: (_result, error, { kind, id }) => (error ? [] : changed(kind, id)),
       }),
     }),

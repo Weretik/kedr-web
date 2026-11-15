@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapCompanyRequisites,
@@ -12,25 +12,32 @@ import type {
   CompanyRequisitesDraft,
 } from '@admin/company/model';
 
-const url = '/api/admin/content/requisites';
-
 export const adminCompanyRequisitesApi = baseApi
   .enhanceEndpoints({ addTagTypes: ['CompanyRequisites', 'CompanyRequisitesHistory'] })
   .injectEndpoints({
     endpoints: (build) => ({
       getCompanyRequisites: build.query<CompanyRequisites, void>({
-        query: () => ({ url, method: 'GET' }),
-        transformResponse: mapCompanyRequisites,
+        queryFn: (_arg, { signal }) =>
+          apiCall(apiClient.GET('/api/admin/content/requisites', { signal }), mapCompanyRequisites),
         providesTags: ['CompanyRequisites'],
       }),
       getCompanyRequisitesHistory: build.query<CompanyRequisitesChange[], void>({
-        query: () => ({ url: `${url}/history`, method: 'GET' }),
-        transformResponse: mapCompanyRequisitesHistory,
+        queryFn: (_arg, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/content/requisites/history', { signal }),
+            mapCompanyRequisitesHistory,
+          ),
         providesTags: ['CompanyRequisitesHistory'],
       }),
       updateCompanyRequisites: build.mutation<CompanyRequisites, CompanyRequisitesDraft>({
-        query: (draft) => ({ url, method: 'PUT', data: toSaveCompanyRequisitesBody(draft) }),
-        transformResponse: mapCompanyRequisites,
+        queryFn: (draft, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/content/requisites', {
+              body: toSaveCompanyRequisitesBody(draft),
+              signal,
+            }),
+            mapCompanyRequisites,
+          ),
         invalidatesTags: (_result, error) =>
           error ? [] : ['CompanyRequisites', 'CompanyRequisitesHistory'],
       }),

@@ -1,6 +1,6 @@
 # Admin page «Співпраця»
 
-**Status:** implemented. Route: `/wholesale-content` (menu «Сайт» → «Співпраця», all staff). Backend: KedrStore Content module, contract [page «Співпраця»](../../contracts/openapi/content/wholesale.openapi.yaml); the [site wholesale page](../site/wholesale.md) shows the saved texts.
+**Status:** implemented. Route: `/wholesale-content` (menu «Сайт» → «Співпраця», all staff). Backend: KedrStore Content module, contract [page «Співпраця»](../../contracts/openapi/openapi.json); the [site wholesale page](../site/wholesale.md) shows the saved texts.
 
 - One form with tabs «Українська» and «Русский»; a tab with mistakes says «— є помилки». Both languages are saved together with «Зберегти».
 - Sections follow the site page: «Перший екран» (title, lead, contact card title and note), «Асортимент» (title and intro), «Про компанію» (title after the company name, text, selection and warehouse blocks), «Як замовити» (section title and exactly three steps), «Питання оптових покупців» (title and 1–12 questions, moved up or down, added or removed; the last one cannot be removed), «Заклик унизу» (closing title).

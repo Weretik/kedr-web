@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`session.openapi.yaml`](../openapi/identity/session.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Consumers: Admin and Storefront (cookie session), Mobile (bearer tokens)
 
 | Intent            | Operation             | Current consumers         |

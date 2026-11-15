@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`products.openapi.yaml`](../openapi/catalog/products.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Operations: `getPublicProducts`, `getPublicProductsByCategorySlug`,
   `getPublicProductBySlug`
 - Consumers: Storefront catalog; Site product details/discovery; Mobile product details (planned)

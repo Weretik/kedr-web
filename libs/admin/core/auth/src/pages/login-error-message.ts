@@ -1,18 +1,18 @@
-import { isAxiosError } from 'axios';
+import { toApiError } from '@admin/shared/api-client';
 
 export const getLoginErrorMessage = (error: unknown): string => {
-  if (isAxiosError(error)) {
-    if (error.response?.status === 401) {
-      return 'Невірний email або пароль. Після 5 невдалих спроб вхід блокується на 15 хвилин.';
-    }
+  const apiError = toApiError(error);
 
-    if (error.response?.status === 429) {
-      return 'Забагато спроб входу. Спробуйте ще раз за хвилину.';
-    }
+  if (apiError.status === 401) {
+    return 'Невірний email або пароль. Після 5 невдалих спроб вхід блокується на 15 хвилин.';
+  }
 
-    if (!error.response) {
-      return 'Сервер недоступний. Перевірте зʼєднання та спробуйте ще раз.';
-    }
+  if (apiError.status === 429) {
+    return 'Забагато спроб входу. Спробуйте ще раз за хвилину.';
+  }
+
+  if (apiError.code === 'Network') {
+    return 'Сервер недоступний. Перевірте зʼєднання та спробуйте ще раз.';
   }
 
   return 'Не вдалося увійти. Спробуйте ще раз.';

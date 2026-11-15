@@ -16,7 +16,7 @@
 
 ## Requests and state
 
-- Admin and Mobile use the existing RTK Query `baseApi`, injected endpoints, and typed hooks. Axios belongs to the relevant shared API client; raw Axios in `admin/core/auth` is allowed only for session bootstrap/refresh per `docs/architecture/admin/adr/0001-admin-axios-transport.md`.
+- Admin and Mobile use the existing RTK Query `baseApi`, injected endpoints, and typed hooks. An Admin endpoint is `queryFn: (arg, { signal }) => apiCall(apiClient.<METHOD>('/api/...', { params, body, signal }), mapper)`: the path comes from the contract, path and query parameters and the body are typed, and the mapper receives the typed response ([Admin ADR-0002](../../architecture/admin/adr/0002-admin-openapi-fetch-transport.md)). Never call `fetch` or another HTTP client from data-access. Mobile keeps its Axios client in `@mobile/shared/api-client`.
 - Storefront uses Angular `HttpClient` in `data-access`, a repository/facade, and signals/RxJS. RTK Query does not apply to Storefront.
 - Components and presentation `ui` in any client must not call HTTP/API directly.
 - Pass cancellation signals to the transport and preserve existing error normalization.

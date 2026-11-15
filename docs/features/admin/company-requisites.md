@@ -1,6 +1,6 @@
 # Admin company requisites
 
-**Status:** implemented. Route: `/company-requisites` (menu «Реквізити», Admins only). Backend: KedrStore Content module, contract [company requisites](../../contracts/openapi/content/requisites.openapi.yaml); the public requisites page shows the same record ([site requisites](../site/requisites.md)).
+**Status:** implemented. Route: `/company-requisites` (menu «Реквізити», Admins only). Backend: KedrStore Content module, contract [company requisites](../../contracts/openapi/openapi.json); the public requisites page shows the same record ([site requisites](../site/requisites.md)).
 
 - One [form](../../../libs/admin/company/ui/src/forms/company-requisites-form.tsx) on the [page](../../../libs/admin/company/feature/src/pages/company-requisites-page.tsx): ФОП name, ЄДРПОУ/РНОКПП, extract number, IBAN, bank and МФО. All fields are required and saved together.
 - The IBAN may be typed with spaces; the [save body](../../../libs/admin/company/data-access/src/mappers/company-requisites.mapper.ts) sends it without them. The [local rules](../../../libs/admin/company/model/src/validators/company-requisites-rules.ts) mirror the backend: code 8 or 10 digits, `UA` + 27 digits with a valid mod-97 checksum, a 6-digit МФО equal to digits 5–10 of the IBAN. A server field error lands under its field.

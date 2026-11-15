@@ -1,7 +1,7 @@
 import type { components } from '@shared/api-contracts';
 import type { CompanyRequisites } from '@site/core/config';
 
-type CompanyRequisitesDto = components['schemas']['CompanyRequisites'];
+type CompanyRequisitesDto = components['schemas']['CompanyRequisitesResponse'];
 
 /** API row to the site model; the IBAN comes without spaces and is shown as is. */
 export function mapCompanyRequisites(dto: CompanyRequisitesDto): CompanyRequisites {

@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`category-read.openapi.yaml`](../openapi/catalog/category-read.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Operations: `getAdminCategories`, `getAdminCategoryById`, `changeAdminCategorySlug`, `getAdminCategoryContent`, `saveAdminCategoryContent`
 - Consumers: Admin categories page, Admin products table, Mobile product catalog
 

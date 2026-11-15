@@ -3,7 +3,7 @@ import { formatUaPhone, viberChatLink } from '@site/core/config';
 import type { components } from '@shared/api-contracts';
 import type { CompanyContacts } from '@site/core/config';
 
-type CompanyContactsDto = components['schemas']['CompanyContacts'];
+type CompanyContactsDto = components['schemas']['CompanyContactsResponse'];
 
 /** API row to the site model: display phone and Viber link are derived here, not stored. */
 export function mapCompanyContacts(dto: CompanyContactsDto): CompanyContacts {

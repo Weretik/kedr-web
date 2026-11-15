@@ -28,7 +28,7 @@ Identify the application from the request and current code. If choosing between 
 - Admin, Storefront, and Site tests (Vitest): `npx nx run <project>:vite:test -- --run`; all site libraries: `npm run test:site`.
 - Mobile tests (Jest): `npx nx run <project>:test`.
 - Project lint or typecheck: `npx nx run <project>:lint`, `npx nx run <project>:typecheck`.
-- Documentation: `npm run docs:check`. Contract snapshot: `npm run contracts:check`. Structure and boundaries: `npm run architecture:structure`, `npm run architecture:boundaries`.
+- Documentation: `npm run docs:check`. Contract: `npm run contracts:sync` (from KedrStore `master`), `npm run contracts:check`, `npm run contracts:drift`. Structure and boundaries: `npm run architecture:structure`, `npm run architecture:boundaries`.
 - Scaffold with console generators, not hand-written configs: `npx nx g @nx/react:library`, `npx nx g @nx/next:application`, `npx shadcn@latest add <component>` and similar. Then trim generator output to the repository's conventions (no deprecated executors, `resolve.tsconfigPaths` in Vite configs, project tags).
 - Feature cards list the exact projects. Do not run `test:web`, `test:mobile`, `run-many`, builds, or E2E unless asked; they are slow and CI runs them.
 
@@ -46,6 +46,8 @@ A small fix that restores documented behavior needs no SDD, file-role map, or au
 | Admin list or detail page                                     | `$mui-admin-ui`                                          | [List and detail pages](docs/standards/admin/list-detail-pages.md) |
 | Verify changes / hand off for review                          | `$frontend-change-verification` / `$frontend-pr-handoff` | [Testing rules](docs/standards/shared/testing-rules.md)            |
 | Differences between code and documentation                    | `$frontend-docs-sync`                                    | [Documentation index](docs/README.md)                              |
+
+**API contract:** KedrStore generates its OpenAPI from code; `docs/contracts/openapi/openapi.json` is a copy of it from the backend `master`, never edited here. `npm run contracts:sync` refreshes it and the types in `@shared/api-contracts`; CI (`contracts:drift`) fails while it lags the backend, and a daily workflow opens the sync pull request. Admin calls the API only through the typed `openapi-fetch` client: `queryFn: (arg, { signal }) => apiCall(apiClient.GET('/api/...', { params, signal }), mapper)` in domain `data-access`, never raw `fetch` or Axios ([contracts](docs/contracts/README.md), [ADR-0004](docs/architecture/adr/0004-contract-follows-backend-and-typed-client.md)).
 
 **Repeated submits:** every mutation has a pending lock; a mutation whose backend takes an `Idempotency-Key` (orders, drafts, the site quick order, anything that sends a message) makes one key per attempt, reuses it on retry and renews it after success or a change; offline queues store it with the entry ([idempotency rules](docs/standards/shared/idempotency-rules.md)).
 

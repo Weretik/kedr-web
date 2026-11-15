@@ -1,4 +1,10 @@
-export type SessionRole = 'Admin' | 'Seo' | 'Manager' | 'User';
+const sessionRoles = ['Admin', 'Seo', 'Manager', 'User'] as const;
+
+export type SessionRole = (typeof sessionRoles)[number];
+
+/** The API sends role names as strings; a role this app does not know grants nothing. */
+export const toSessionRoles = (roles: readonly string[]): SessionRole[] =>
+  roles.filter((role): role is SessionRole => (sessionRoles as readonly string[]).includes(role));
 
 export interface SessionUser {
   id: string;

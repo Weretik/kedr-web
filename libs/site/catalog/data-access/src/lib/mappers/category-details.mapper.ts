@@ -5,8 +5,8 @@ import { mapCatalogTree } from './category-tree.mapper';
 import type { components } from '@shared/api-contracts';
 import type { CategoryContent, CategoryDetails } from '@site/catalog/model';
 
-type ApiCategoryDetails = components['schemas']['CategoryDetails'];
-type ApiCategoryContent = components['schemas']['CategoryContent'];
+type ApiCategoryDetails = components['schemas']['CategoryDetailsResponse'];
+type ApiCategoryContent = components['schemas']['CategoryContentResponse'];
 
 const text = (value: string | null | undefined): string | null => value?.trim() || null;
 

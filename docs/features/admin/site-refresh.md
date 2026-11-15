@@ -1,6 +1,6 @@
 # Admin «Оновити сайт зараз»
 
-**Status:** implemented. Entry: the round button with arrows in the top bar, on every page, all staff. Backend: KedrStore Content module, contract [site refresh](../../contracts/openapi/content/site-refresh.openapi.yaml); the site side is `POST /api/revalidate` ([rendering and caching](../../architecture/site/platform/rendering-and-caching.md#invalidation-from-the-backend)).
+**Status:** implemented. Entry: the round button with arrows in the top bar, on every page, all staff. Backend: KedrStore Content module, contract [site refresh](../../contracts/openapi/openapi.json); the site side is `POST /api/revalidate` ([rendering and caching](../../architecture/site/platform/rendering-and-caching.md#invalidation-from-the-backend)).
 
 - The site keeps content (articles, contacts, documents, gallery, home blocks) for ten minutes and the catalogue for hours. The button asks the backend to drop both caches now, so the next visitor gets fresh pages.
 - The answer is a message at the bottom: «Сайт оновлено» (200), «Сайт ще не підключено до оновлення» (503: the backend has no site address and secret yet), «Сайт не відповів» (502). In the last two cases changes still appear on their own within ten minutes.

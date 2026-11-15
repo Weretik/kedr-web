@@ -1,10 +1,9 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import { mapSeoSettings, toSaveSeoSettingsBody } from '../mappers/seo-settings.mapper';
 
 import type { SeoSettings, SeoSettingsDraft } from '@admin/seo-settings/model';
 
-const url = '/api/admin/content/seo-settings';
 const tag = 'SeoSettings' as const;
 
 export const adminSeoSettingsApi = baseApi
@@ -12,14 +11,20 @@ export const adminSeoSettingsApi = baseApi
   .injectEndpoints({
     endpoints: (build) => ({
       getSeoSettings: build.query<SeoSettings, void>({
-        query: () => ({ url, method: 'GET' }),
-        transformResponse: mapSeoSettings,
+        queryFn: (_arg, { signal }) =>
+          apiCall(apiClient.GET('/api/admin/content/seo-settings', { signal }), mapSeoSettings),
         providesTags: [tag],
       }),
       /** The saved settings replace the cached ones without a refetch. */
       updateSeoSettings: build.mutation<SeoSettings, SeoSettingsDraft>({
-        query: (draft) => ({ url, method: 'PUT', data: toSaveSeoSettingsBody(draft) }),
-        transformResponse: mapSeoSettings,
+        queryFn: (draft, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/content/seo-settings', {
+              body: toSaveSeoSettingsBody(draft),
+              signal,
+            }),
+            mapSeoSettings,
+          ),
         async onQueryStarted(_draft, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;

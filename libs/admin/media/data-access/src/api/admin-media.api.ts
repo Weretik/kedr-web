@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, formDataBody } from '@admin/shared/api-client';
 
 import {
   mapMediaFile,
@@ -19,16 +19,6 @@ import type {
   MediaFolderTree,
 } from '@admin/media/model';
 
-const folders = '/api/admin/media/folders';
-const files = '/api/admin/media/files';
-
-const fileForm = (file: Blob, folderId?: number | null) => {
-  const form = new FormData();
-  form.append('file', file);
-  if (folderId != null) form.append('folderId', String(folderId));
-  return form;
-};
-
 /** Any file change can change folder counts, so both lists refresh. */
 const libraryTags = [
   { type: 'MediaFolders' as const, id: 'TREE' },
@@ -40,77 +30,105 @@ export const adminMediaApi = baseApi
   .injectEndpoints({
     endpoints: (build) => ({
       getMediaFolders: build.query<MediaFolderTree, void>({
-        query: () => ({ url: folders, method: 'GET' }),
-        transformResponse: mapMediaFolderTree,
+        queryFn: (_arg, { signal }) =>
+          apiCall(apiClient.GET('/api/admin/media/folders', { signal }), mapMediaFolderTree),
         providesTags: [{ type: 'MediaFolders', id: 'TREE' }],
       }),
       createMediaFolder: build.mutation<MediaFolder, { name: string; parentId: number | null }>({
-        query: ({ name, parentId }) => ({
-          url: folders,
-          method: 'POST',
-          data: toSaveFolderBody(name, parentId),
-        }),
-        transformResponse: mapMediaFolder,
+        queryFn: ({ name, parentId }, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/media/folders', {
+              body: toSaveFolderBody(name, parentId),
+              signal,
+            }),
+            mapMediaFolder,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'MediaFolders', id: 'TREE' }]),
       }),
       updateMediaFolder: build.mutation<
         MediaFolder,
         { id: number; name: string; parentId: number | null }
       >({
-        query: ({ id, name, parentId }) => ({
-          url: `${folders}/${id}`,
-          method: 'PUT',
-          data: toSaveFolderBody(name, parentId),
-        }),
-        transformResponse: mapMediaFolder,
+        queryFn: ({ id, name, parentId }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/media/folders/{id}', {
+              params: { path: { id } },
+              body: toSaveFolderBody(name, parentId),
+              signal,
+            }),
+            mapMediaFolder,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'MediaFolders', id: 'TREE' }]),
       }),
       deleteMediaFolder: build.mutation<void, number>({
-        query: (id) => ({ url: `${folders}/${id}`, method: 'DELETE' }),
+        queryFn: (id, { signal }) =>
+          apiCall(
+            apiClient.DELETE('/api/admin/media/folders/{id}', { params: { path: { id } }, signal }),
+          ),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'MediaFolders', id: 'TREE' }]),
       }),
       getMediaFiles: build.query<MediaFilePage, MediaFilesQuery>({
-        query: (query) => ({ url: files, method: 'GET', params: toMediaFilesParams(query) }),
-        transformResponse: mapMediaFilePage,
+        queryFn: (query, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/media/files', {
+              params: { query: toMediaFilesParams(query) },
+              signal,
+            }),
+            mapMediaFilePage,
+          ),
         providesTags: [{ type: 'MediaFiles', id: 'LIST' }],
       }),
       uploadMediaFile: build.mutation<MediaFile, { file: Blob; folderId: number | null }>({
-        query: ({ file, folderId }) => ({
-          url: files,
-          method: 'POST',
-          data: fileForm(file, folderId),
-        }),
-        transformResponse: mapMediaFile,
+        queryFn: ({ file, folderId }, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/media/files', {
+              ...formDataBody({ file, folderId }),
+              signal,
+            }),
+            mapMediaFile,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : libraryTags),
       }),
       replaceMediaFile: build.mutation<MediaFile, { id: number; file: Blob }>({
-        query: ({ id, file }) => ({
-          url: `${files}/${id}/content`,
-          method: 'PUT',
-          data: fileForm(file),
-        }),
-        transformResponse: mapMediaFile,
+        queryFn: ({ id, file }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/media/files/{id}/content', {
+              params: { path: { id } },
+              ...formDataBody({ file }),
+              signal,
+            }),
+            mapMediaFile,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : libraryTags),
       }),
       updateMediaFile: build.mutation<
         MediaFile,
         { id: number; fileName: string; folderId: number | null }
       >({
-        query: ({ id, fileName, folderId }) => ({
-          url: `${files}/${id}`,
-          method: 'PUT',
-          data: toUpdateFileBody(fileName, folderId),
-        }),
-        transformResponse: mapMediaFile,
+        queryFn: ({ id, fileName, folderId }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/media/files/{id}', {
+              params: { path: { id } },
+              body: toUpdateFileBody(fileName, folderId),
+              signal,
+            }),
+            mapMediaFile,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : libraryTags),
       }),
       moveMediaFiles: build.mutation<number, { fileIds: number[]; folderId: number | null }>({
-        query: (body) => ({ url: `${files}/move`, method: 'POST', data: body }),
-        transformResponse: (response: unknown) => moveMediaFilesResultSchema.parse(response).moved,
+        queryFn: (body, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/media/files/move', { body: body, signal }),
+            (response: unknown) => moveMediaFilesResultSchema.parse(response).moved,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : libraryTags),
       }),
       deleteMediaFile: build.mutation<void, number>({
-        query: (id) => ({ url: `${files}/${id}`, method: 'DELETE' }),
+        queryFn: (id, { signal }) =>
+          apiCall(
+            apiClient.DELETE('/api/admin/media/files/{id}', { params: { path: { id } }, signal }),
+          ),
         invalidatesTags: (_result, error) => (error ? [] : libraryTags),
       }),
     }),

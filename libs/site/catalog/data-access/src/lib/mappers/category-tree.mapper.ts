@@ -3,7 +3,7 @@ import { CATALOG_ROOTS } from '@site/catalog/model';
 import type { components } from '@shared/api-contracts';
 import type { CatalogTreeNode } from '@site/catalog/model';
 
-type CategoryTreeNode = components['schemas']['CategoryTreeNode'];
+type CategoryTreeNode = components['schemas']['CategoryResponse'];
 
 export const bySortOrder = (a: CategoryTreeNode, b: CategoryTreeNode) =>
   a.sortOrder - b.sortOrder || a.id - b.id;

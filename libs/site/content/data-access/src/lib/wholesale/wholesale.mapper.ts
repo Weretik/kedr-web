@@ -1,8 +1,8 @@
 import type { components } from '@shared/api-contracts';
 import type { WholesaleTexts } from '@site/content/model';
 
-type WholesaleText = components['schemas']['WholesaleText'];
-type WholesaleStep = components['schemas']['WholesaleStep'];
+type WholesaleText = components['schemas']['WholesaleTextPayload'];
+type WholesaleStep = components['schemas']['WholesaleStepPayload'];
 
 /** API texts → the page copy; null when the shape does not fit the page (three steps, at least one question). */
 export function toWholesaleTexts(text: WholesaleText): WholesaleTexts | null {

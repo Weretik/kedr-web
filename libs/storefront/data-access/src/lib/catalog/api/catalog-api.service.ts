@@ -10,8 +10,6 @@ import { parseProductDetails, parseProductPage } from '../contracts/catalog-resp
 import type { operations } from '@shared/api-contracts';
 
 type PublicProductsQuery = NonNullable<operations['getPublicProducts']['parameters']['query']>;
-type PublicProductPage =
-  operations['getPublicProducts']['responses'][200]['content']['application/json'];
 
 @Injectable({ providedIn: 'root' })
 export class CatalogApiService {
@@ -55,7 +53,7 @@ export class CatalogApiService {
 }
 
 function mapPublicProductPage(response: unknown): PagedResult<ProductListItem> {
-  const productPage: PublicProductPage = parseProductPage(response);
+  const productPage = parseProductPage(response);
   return {
     isSuccess: true,
     pagedInfo: productPage.pagedInfo,

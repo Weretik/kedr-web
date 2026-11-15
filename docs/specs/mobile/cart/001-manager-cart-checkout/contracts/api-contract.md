@@ -7,8 +7,8 @@
 - Backend source commit containing stable order operation IDs:
   `1a9e2a6864f2c527fb333276bd0346f21be701f0`.
 - Frontend snapshots:
-  [`customer-read.openapi.yaml`](../../../../../contracts/openapi/sales/customer-read.openapi.yaml),
-  [`admin-order-one-c-sync.openapi.yaml`](../../../../../contracts/openapi/sales/admin-order-one-c-sync.openapi.yaml).
+  [`customer-read.openapi.yaml`](../../../../../contracts/openapi/openapi.json),
+  [`admin-order-one-c-sync.openapi.yaml`](../../../../../contracts/openapi/openapi.json).
 - Stable operations: `getAdminCustomers`, `createAdminOrder`.
 - Generated references after `EN-001`:
   `operations['getAdminCustomers']`, `operations['createAdminOrder']`.

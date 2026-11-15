@@ -2,7 +2,7 @@
 
 **Scope:** `apps/admin`, `apps/mobile`\
 **Status:** current\
-**Related documents:** [Admin Axios transport ADR](../admin/adr/0001-admin-axios-transport.md), [Admin state and API](../admin/runtime/state-and-api.md), [Mobile state and API](../mobile/runtime/state-and-api.md)
+**Related documents:** [Admin openapi-fetch transport ADR](../admin/adr/0002-admin-openapi-fetch-transport.md), [Admin state and API](../admin/runtime/state-and-api.md), [Mobile state and API](../mobile/runtime/state-and-api.md)
 
 ## Purpose
 
@@ -16,9 +16,10 @@ domain data-access ── baseApi.injectEndpoints
              │
              ▼
 shared/api-client
-  ApiRequest → axiosBaseQuery → Axios → shared backend
-                    │                │
-                    └─ ApiError ◄────┘
+  Admin:  queryFn → apiCall(apiClient.GET('/api/...')) → openapi-fetch → shared backend
+  Mobile: ApiRequest → axiosBaseQuery → Axios ─────────────────────────→ shared backend
+                    │                                                  │
+                    └──────────────────── ApiError ◄───────────────────┘
                          │
        ┌─────────────────┴─────────────────┐
        ▼                                   ▼
@@ -31,17 +32,21 @@ feature error state              runtime notifier (network/timeout/5xx)
 
 `@shared/api-contracts` contains only CLI-generated OpenAPI types and is the shared machine contract for Admin, Mobile, and Storefront. It does not contain an HTTP client, state, runtime validation, or domain models. Each client imports it only at the transport boundary and performs its own mapping in domain `data-access`.
 
-| Layer                  | Responsibility                                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------ |
-| `shared/api-contracts` | Generated OpenAPI request, response, and schema types                                            |
-| `shared/api-client`    | Axios instance, interceptors, `axiosBaseQuery`, `baseApi`, error normalization, runtime notifier |
-| Domain `data-access`   | DTOs, runtime validation, mapper, and endpoints through `baseApi.injectEndpoints`                |
-| `feature`              | Generated RTK Query hooks, loading/error states, and manual `refetch`                            |
-| `ui` / route           | Do not call HTTP or import transport                                                             |
+| Layer                  | Responsibility                                                                                                                                                  |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shared/api-contracts` | Generated OpenAPI request, response, and schema types                                                                                                           |
+| `shared/api-client`    | Admin: typed `apiClient`, middleware, `apiCall`, `baseApi`; Mobile: Axios instance, interceptors, `axiosBaseQuery`; both: error normalization, runtime notifier |
+| Domain `data-access`   | DTOs, runtime validation, mapper, and endpoints through `baseApi.injectEndpoints`                                                                               |
+| `feature`              | Generated RTK Query hooks, loading/error states, and manual `refetch`                                                                                           |
+| `ui` / route           | Do not call HTTP or import transport                                                                                                                            |
 
-Declare every domain endpoint exclusively through public `baseApi.injectEndpoints`. Do not create a separate Axios instance, deep-import `api-client`, or duplicate RTK Query response/error in a slice.
+Declare every domain endpoint exclusively through public `baseApi.injectEndpoints`. Do not create a separate client, deep-import `api-client`, or duplicate RTK Query response/error in a slice.
 
 ## Public transport contract
+
+Admin: an endpoint calls `apiClient` with a path from the contract; `apiCall` returns `{ data }` (mapped) or `{ error: ApiError }` and passes the RTK Query `signal`.
+
+Mobile:
 
 ```ts
 interface ApiRequest {

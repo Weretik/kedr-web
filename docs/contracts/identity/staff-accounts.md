@@ -2,7 +2,7 @@
 
 ## Machine contract
 
-- OpenAPI: [`users.openapi.yaml`](../openapi/identity/users.openapi.yaml)
+- OpenAPI: [OpenAPI snapshot](../openapi/openapi.json)
 - Consumer: Admin [Users](../../features/admin/users.md) through [admin-users.api](../../../libs/admin/users/data-access/src/api/admin-users.api.ts)
 - Access: policy `CanManageUsers` (Admin role); a manager gets `403`. All calls use the cookie session and the CSRF header.
 

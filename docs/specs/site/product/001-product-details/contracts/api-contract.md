@@ -2,7 +2,7 @@
 
 ## Публичное чтение: существующий контракт
 
-- Snapshot: [products.openapi.yaml](../../../../../contracts/openapi/catalog/products.openapi.yaml), OpenAPI 3.1.0, `info.version = 0.1.0`.
+- Snapshot: [products.openapi.yaml](../../../../../contracts/openapi/openapi.json), OpenAPI 3.1.0, `info.version = 0.1.0`.
 - SHA-256 на момент SDD: `AAD7112EA54739DF6D8AC524A8E38AC48174664E1792BD6D8F62AE1DCB177BC0`.
 - Generated types: [kedr-api.ts](../../../../../../libs/shared/api-contracts/src/generated/kedr-api.ts), публичный [index.ts](../../../../../../libs/shared/api-contracts/src/index.ts).
 - Операция `getPublicProductBySlug`: `GET /api/catalog/{lang}/product/{productSlug}`, public `security: []`; `lang = uk | ru`, `priceTypeId = 11` фиксирован для публичной страницы.
@@ -19,7 +19,7 @@
 | timeout, сбой транспорта, неожиданный 400/5xx, некорректная обязательная идентичность | unavailable → проектный 500/retry                                                 |
 | неожиданный 410                                                                       | ошибка несоответствия текущему контракту, без выдуманной специальной страницы 410 |
 
-Redirect body описан в [category-read.openapi.yaml](../../../../../contracts/openapi/catalog/category-read.openapi.yaml). Принимать только известный тип и безопасный непустой slug, а не внешний URL. Передавать сегмент через существующие URL helpers/безопасное кодирование; исключить цикл редиректа на тот же URL.
+Redirect body описан в [category-read.openapi.yaml](../../../../../contracts/openapi/openapi.json). Принимать только известный тип и безопасный непустой slug, а не внешний URL. Передавать сегмент через существующие URL helpers/безопасное кодирование; исключить цикл редиректа на тот же URL.
 
 ## Граница данных
 

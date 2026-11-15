@@ -4,7 +4,7 @@
 
 Gallery uses A composition, existing shell/light-dark/UK-RU. One collection filters all/photo/video, reveals7+4 and opens an accessible Dialog. Viewer traverses full filtered collection, returns focus and removes iframe on close/change; autoplay disabled. Native links work before hydration; image recovery and original/reload actions are present.
 
-The cards come from `GET /api/content/{lang}/gallery` ([contract](../../contracts/openapi/content/gallery.openapi.yaml)) in the order set in the admin: photos from the media library (CDN URL and size) and YouTube videos with their poster from `i.ytimg.com`. A card without a title gets «Фото» or «Відео» from the dictionary. The loader caches the list for five minutes (one minute after a failure) under the tags `content` and `content:gallery`. When the API is unavailable the page fails (500) instead of showing an empty gallery. The 7 public videos of [Kedr Class](https://www.youtube.com/@kedrclass2334/videos) that used to live in code are seeded by the backend migration.
+The cards come from `GET /api/content/{lang}/gallery` ([contract](../../contracts/openapi/openapi.json)) in the order set in the admin: photos from the media library (CDN URL and size) and YouTube videos with their poster from `i.ytimg.com`. A card without a title gets «Фото» or «Відео» from the dictionary. The loader caches the list for five minutes (one minute after a failure) under the tags `content` and `content:gallery`. When the API is unavailable the page fails (500) instead of showing an empty gallery. The 7 public videos of [Kedr Class](https://www.youtube.com/@kedrclass2334/videos) that used to live in code are seeded by the backend migration.
 
 ## Structure diagram
 

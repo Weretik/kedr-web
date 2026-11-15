@@ -1,5 +1,5 @@
 import { normalizeProductsListQuery } from '@admin/products/model';
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import { mapAdminProductCategories } from '../mappers/admin-product-categories.mapper';
 import {
@@ -33,8 +33,8 @@ export type ProductSlugChange = { slug: string } | { regenerate: true };
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getAllAdminProducts: build.query<AdminProductListItem[], void>({
-      query: () => ({ url: '/api/admin/products/all', method: 'GET' }),
-      transformResponse: mapAllAdminProductsResponse,
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/admin/products/all', { signal }), mapAllAdminProductsResponse),
       providesTags: ['Products'],
     }),
     getProductsList: build.query<ProductsListPage, ProductsListQuery>({
@@ -42,37 +42,50 @@ export const productsApi = baseApi.injectEndpoints({
         { type: 'Products', id: 'LIST' },
         ...(result?.items.map((product) => ({ type: 'Products' as const, id: product.id })) ?? []),
       ],
-      query: (query) => ({
-        url: '/api/admin/products',
-        method: 'GET',
-        params: mapProductsListQueryToApi(normalizeProductsListQuery(query)),
-      }),
-      transformResponse: mapAdminProductsListResponse,
+      queryFn: (query, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/products', {
+            params: { query: mapProductsListQueryToApi(normalizeProductsListQuery(query)) },
+            signal,
+          }),
+          mapAdminProductsListResponse,
+        ),
     }),
     getAdminProductCategories: build.query<ReturnType<typeof mapAdminProductCategories>, void>({
-      query: () => ({ url: '/api/categories', method: 'GET' }),
-      transformResponse: mapAdminProductCategories,
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/categories', { signal }), mapAdminProductCategories),
     }),
     getMissingPhotoProducts: build.query<ProductsListPage, MissingPhotoQuery>({
       providesTags: [{ type: 'Products', id: 'LIST' }],
-      query: (query) => ({
-        url: '/api/admin/products',
-        method: 'GET',
-        params: mapMissingPhotoQueryToApi(query),
-      }),
-      transformResponse: mapAdminProductsListResponse,
+      queryFn: (query, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/products', {
+            params: { query: mapMissingPhotoQueryToApi(query) },
+            signal,
+          }),
+          mapAdminProductsListResponse,
+        ),
     }),
     getAdminProductDetails: build.query<ProductDetails, string>({
-      query: (slug) => ({
-        url: `/api/admin/products/by-slug/${encodeURIComponent(slug)}`,
-        method: 'GET',
-      }),
-      transformResponse: mapAdminProductDetailsResponse,
+      queryFn: (slug, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/products/by-slug/{productSlug}', {
+            params: { path: { productSlug: slug } },
+            signal,
+          }),
+          mapAdminProductDetailsResponse,
+        ),
       providesTags: (result) => (result ? [{ type: 'Products' as const, id: result.id }] : []),
     }),
     getProductMedia: build.query<ProductMedia, number>({
-      query: (productId) => ({ url: `/api/admin/products/${productId}/media`, method: 'GET' }),
-      transformResponse: mapProductMedia,
+      queryFn: (productId, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/products/{id}/media', {
+            params: { path: { id: productId } },
+            signal,
+          }),
+          mapProductMedia,
+        ),
       providesTags: (_result, _error, productId) => [
         { type: 'Products', id: `media-${productId}` },
       ],
@@ -82,12 +95,15 @@ export const productsApi = baseApi.injectEndpoints({
       ProductMedia,
       { productId: number; change: ProductMediaChange }
     >({
-      query: ({ productId, change }) => ({
-        url: `/api/admin/products/${productId}/media`,
-        method: 'PUT',
-        data: toSetProductMediaBody(change),
-      }),
-      transformResponse: mapProductMedia,
+      queryFn: ({ productId, change }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/products/{id}/media', {
+            params: { path: { id: productId } },
+            body: toSetProductMediaBody(change),
+            signal,
+          }),
+          mapProductMedia,
+        ),
       async onQueryStarted({ productId }, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -105,13 +121,16 @@ export const productsApi = baseApi.injectEndpoints({
             ],
     }),
     changeProductSlug: build.mutation<ChangeSlugResult, { id: number; input: ProductSlugChange }>({
-      query: ({ id, input }) => ({
-        url: `/api/admin/products/${id}/slug`,
-        method: 'PUT',
-        data: ('regenerate' in input
-          ? { regenerate: true }
-          : { slug: input.slug, regenerate: false }) satisfies ChangeSlugBody,
-      }),
+      queryFn: ({ id, input }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/products/{id}/slug', {
+            params: { path: { id } },
+            body: ('regenerate' in input
+              ? { slug: null, regenerate: true }
+              : { slug: input.slug, regenerate: false }) satisfies ChangeSlugBody,
+            signal,
+          }),
+        ),
       invalidatesTags: (_result, error, { id }) =>
         error
           ? []

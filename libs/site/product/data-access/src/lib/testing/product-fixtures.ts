@@ -34,6 +34,7 @@ export const listItemFixture = (id: number): ApiProductListItem => ({
   name: `Товар ${id}`,
   productSlug: `product-${id}`,
   photo: '',
+  categoryId: null,
   inStock: false,
   isSale: false,
   isNew: false,

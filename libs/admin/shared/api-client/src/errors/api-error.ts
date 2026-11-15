@@ -1,6 +1,27 @@
-import axios from 'axios';
+import type { ApiError, ApiErrorCode } from '../contracts/api-client-contract';
 
-import type { ApiError } from '../contracts/api-client-contract';
+/** A response outside 2xx: its status, its parsed body, and the status text. */
+export class HttpError extends Error {
+  constructor(
+    readonly status: number,
+    readonly body: unknown,
+    statusText = '',
+  ) {
+    super(statusText || `Request failed with status ${status}`);
+    this.name = 'HttpError';
+  }
+}
+
+const apiErrorCodes: readonly ApiErrorCode[] = [
+  'Unknown',
+  'Network',
+  'Timeout',
+  'Unauthorized',
+  'Forbidden',
+  'NotFound',
+  'Validation',
+  'Server',
+];
 
 type ProblemDetails = {
   detail?: string;
@@ -11,6 +32,11 @@ type ProblemDetails = {
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
+
+const isApiError = (value: unknown): value is ApiError =>
+  isRecord(value) &&
+  apiErrorCodes.includes(value['code'] as ApiErrorCode) &&
+  typeof value['message'] === 'string';
 
 const toStringArray = (value: unknown) =>
   Array.isArray(value) && value.every((item) => typeof item === 'string') ? value : undefined;
@@ -58,23 +84,24 @@ const toArdalisFieldErrors = (value: unknown) => {
 };
 
 export const toApiError = (error: unknown): ApiError => {
-  if (!axios.isAxiosError(error)) {
-    return { code: 'Unknown', message: 'An unexpected client error occurred.' };
-  }
+  if (isApiError(error)) return error;
 
-  if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+  if (
+    error instanceof DOMException &&
+    (error.name === 'TimeoutError' || error.name === 'AbortError')
+  ) {
     return { code: 'Timeout', message: 'Request timeout. Try again.' };
   }
 
-  if (!error.response) {
-    return {
-      code: 'Network',
-      status: 0,
-      message: error.message || 'Network error. Check connection.',
-    };
+  if (error instanceof TypeError) {
+    return { code: 'Network', status: 0, message: 'Сервер недоступний. Перевірте зʼєднання.' };
   }
 
-  const { data, status } = error.response;
+  if (!(error instanceof HttpError)) {
+    return { code: 'Unknown', message: 'An unexpected client error occurred.' };
+  }
+
+  const { body: data, status } = error;
   const businessCode =
     isRecord(data) && typeof data['code'] === 'string' ? data['code'] : undefined;
   const businessMessage =

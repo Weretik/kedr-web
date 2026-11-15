@@ -2,11 +2,11 @@
 
 ## Machine contracts
 
-- Customers: [`customer-read.openapi.yaml`](../openapi/sales/customer-read.openapi.yaml)
+- Customers: [OpenAPI snapshot](../openapi/openapi.json)
 - Order reads:
-  [`manager-order-read.openapi.yaml`](../openapi/sales/manager-order-read.openapi.yaml)
+  [OpenAPI snapshot](../openapi/openapi.json)
 - Order creation:
-  [`admin-order-one-c-sync.openapi.yaml`](../openapi/sales/admin-order-one-c-sync.openapi.yaml)
+  [OpenAPI snapshot](../openapi/openapi.json)
 - Operations: `getAdminCustomers`, `getAdminOrders`, `getAdminOrderById`,
   `createAdminOrder`
 - Generated customer operation: `operations['getAdminCustomers']`

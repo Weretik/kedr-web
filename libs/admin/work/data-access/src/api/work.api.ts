@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapWorkReport,
@@ -28,70 +28,90 @@ export const workApi = baseApi
   .injectEndpoints({
     endpoints: (build) => ({
       getMyWorkTasks: build.query<WorkTask[], void>({
-        query: () => ({ url: '/api/work/tasks', method: 'GET' }),
-        transformResponse: mapWorkTasks,
+        queryFn: (_arg, { signal }) =>
+          apiCall(apiClient.GET('/api/work/tasks', { signal }), mapWorkTasks),
         providesTags: [tasksTag],
       }),
       createMyWorkTask: build.mutation<WorkTask, WorkTaskInput>({
-        query: (input) => ({
-          url: '/api/work/tasks',
-          method: 'POST',
-          data: toSaveWorkTaskBody(input),
-        }),
-        transformResponse: mapWorkTask,
+        queryFn: (input, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/work/tasks', { body: toSaveWorkTaskBody(input), signal }),
+            mapWorkTask,
+          ),
         invalidatesTags: [tasksTag, reportTag],
       }),
       updateMyWorkTask: build.mutation<WorkTask, { id: number; input: WorkTaskInput }>({
-        query: ({ id, input }) => ({
-          url: `/api/work/tasks/${id}`,
-          method: 'PUT',
-          data: toSaveWorkTaskBody(input),
-        }),
-        transformResponse: mapWorkTask,
+        queryFn: ({ id, input }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/work/tasks/{id}', {
+              params: { path: { id } },
+              body: toSaveWorkTaskBody(input),
+              signal,
+            }),
+            mapWorkTask,
+          ),
         invalidatesTags: [tasksTag, reportTag],
       }),
       changeMyWorkTaskStatus: build.mutation<
         WorkTask,
         { id: number; status: WorkTaskStatus; result?: string }
       >({
-        query: ({ id, result, status }) => ({
-          url: `/api/work/tasks/${id}/status`,
-          method: 'PUT',
-          data: { status, result: result?.trim() || null } satisfies ChangeWorkTaskStatusBody,
-        }),
-        transformResponse: mapWorkTask,
+        queryFn: ({ id, result, status }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/work/tasks/{id}/status', {
+              params: { path: { id } },
+              body: { status, result: result?.trim() || null } satisfies ChangeWorkTaskStatusBody,
+              signal,
+            }),
+            mapWorkTask,
+          ),
         invalidatesTags: [tasksTag, reportTag],
       }),
       setMyWorkTaskStep: build.mutation<WorkTask, { id: number; index: number; isDone: boolean }>({
-        query: ({ id, index, isDone }) => ({
-          url: `/api/work/tasks/${id}/steps/${index}`,
-          method: 'PUT',
-          data: { isDone } satisfies SetWorkTaskStepBody,
-        }),
-        transformResponse: mapWorkTask,
+        queryFn: ({ id, index, isDone }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/work/tasks/{id}/steps/{index}', {
+              params: { path: { id, index } },
+              body: { isDone } satisfies SetWorkTaskStepBody,
+              signal,
+            }),
+            mapWorkTask,
+          ),
         invalidatesTags: [tasksTag, reportTag],
       }),
       deleteMyWorkTask: build.mutation<void, number>({
-        query: (id) => ({ url: `/api/work/tasks/${id}`, method: 'DELETE' }),
+        queryFn: (id, { signal }) =>
+          apiCall(apiClient.DELETE('/api/work/tasks/{id}', { params: { path: { id } }, signal })),
         invalidatesTags: [tasksTag, reportTag],
       }),
       getMyWorkReport: build.query<WorkReport, WorkPeriod>({
-        query: (period) => ({ url: '/api/work/report', method: 'GET', params: period }),
-        transformResponse: mapWorkReport,
+        queryFn: (period, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/work/report', { params: { query: period }, signal }),
+            mapWorkReport,
+          ),
         providesTags: [reportTag],
       }),
       getAdminWorkReport: build.query<WorkReport, WorkPeriod & { userId: string }>({
-        query: (params) => ({ url: '/api/admin/work/report', method: 'GET', params }),
-        transformResponse: mapWorkReport,
+        queryFn: (params, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/work/report', { params: { query: params }, signal }),
+            mapWorkReport,
+          ),
         providesTags: [reportTag],
       }),
       createAdminWorkTask: build.mutation<WorkTask, { ownerUserId: string; input: WorkTaskInput }>({
-        query: ({ input, ownerUserId }) => ({
-          url: '/api/admin/work/tasks',
-          method: 'POST',
-          data: { ownerUserId, ...toSaveWorkTaskBody(input) } satisfies CreateWorkTaskForUserBody,
-        }),
-        transformResponse: mapWorkTask,
+        queryFn: ({ input, ownerUserId }, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/work/tasks', {
+              body: {
+                ownerUserId,
+                ...toSaveWorkTaskBody(input),
+              } satisfies CreateWorkTaskForUserBody,
+              signal,
+            }),
+            mapWorkTask,
+          ),
         invalidatesTags: [tasksTag, reportTag],
       }),
     }),

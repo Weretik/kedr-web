@@ -1,15 +1,16 @@
-import { AxiosError } from 'axios';
 import { describe, expect, it } from 'vitest';
 
-import { toApiError } from './api-error';
+import { HttpError, toApiError } from './api-error';
+
+const httpError = (statusText: string, response: { data: unknown; status: number }) =>
+  new HttpError(response.status, response.data, statusText);
 
 describe('toApiError', () => {
   it('keeps a known order-workspace error code and message', () => {
-    const error = new AxiosError('Bad request');
-    error.response = {
+    const error = httpError('Bad request', {
       data: { code: 'unavailable_product', message: 'Недостатньо товару на складі.' },
       status: 400,
-    } as typeof error.response;
+    });
 
     expect(toApiError(error)).toEqual({
       code: 'Validation',
@@ -21,22 +22,20 @@ describe('toApiError', () => {
 
   it('preserves a 409 quote conflict for the existing confirmation flow', () => {
     const conflict = { code: 'quote_changed', currentQuote: { totalAmount: 42 } };
-    const error = new AxiosError('Conflict');
-    error.response = { data: conflict, status: 409 } as typeof error.response;
+    const error = httpError('Conflict', { data: conflict, status: 409 });
 
     expect(toApiError(error)).toMatchObject({ status: 409, conflict });
   });
 
   it('normalizes ASP.NET Core validation problem details', () => {
-    const error = new AxiosError('Bad request');
-    error.response = {
+    const error = httpError('Bad request', {
       data: {
         detail: 'One or more validation errors occurred.',
         errors: { Email: ['Email is invalid.'] },
         traceId: '00-abc',
       },
       status: 400,
-    } as typeof error.response;
+    });
 
     expect(toApiError(error)).toEqual({
       code: 'Validation',
@@ -48,8 +47,7 @@ describe('toApiError', () => {
   });
 
   it('keeps the business code as the reason next to field errors', () => {
-    const error = new AxiosError('Bad request');
-    error.response = {
+    const error = httpError('Bad request', {
       data: {
         code: 'invalid_quantity',
         detail: 'Кількість має бути більшою за нуль.',
@@ -57,7 +55,7 @@ describe('toApiError', () => {
         traceId: '00-def',
       },
       status: 400,
-    } as typeof error.response;
+    });
 
     expect(toApiError(error)).toEqual({
       code: 'Validation',
@@ -70,11 +68,10 @@ describe('toApiError', () => {
   });
 
   it('normalizes Ardalis validation errors', () => {
-    const error = new AxiosError('Unprocessable entity');
-    error.response = {
+    const error = httpError('Unprocessable entity', {
       data: [{ Identifier: 'Name', ErrorMessage: 'Name is required.' }],
       status: 422,
-    } as typeof error.response;
+    });
 
     expect(toApiError(error)).toEqual({
       code: 'Validation',
@@ -86,10 +83,22 @@ describe('toApiError', () => {
   });
 
   it('normalizes a network error', () => {
-    expect(toApiError(new AxiosError('Network unavailable'))).toEqual({
+    expect(toApiError(new TypeError('Failed to fetch'))).toEqual({
       code: 'Network',
       status: 0,
-      message: 'Network unavailable',
+      message: 'Сервер недоступний. Перевірте зʼєднання.',
     });
+  });
+
+  it('normalizes a timeout', () => {
+    expect(toApiError(new DOMException('Timed out', 'TimeoutError'))).toMatchObject({
+      code: 'Timeout',
+    });
+  });
+
+  it('keeps an error that is already normalized', () => {
+    const error = { code: 'NotFound', status: 404, message: 'Not found' } as const;
+
+    expect(toApiError(error)).toBe(error);
   });
 });

@@ -1,30 +1,28 @@
+import { stubApiFetch } from '@admin/shared/api-client/testing';
 import { configureStore } from '@reduxjs/toolkit';
-import { createApi } from '@reduxjs/toolkit/query';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const requests = vi.hoisted(() => [] as unknown[]);
+import { adminSiteRefreshApi } from './admin-site-refresh.api';
 
-vi.mock('@admin/shared/api-client', () => ({
-  baseApi: createApi({
-    reducerPath: 'adminApi',
-    baseQuery: (request: unknown) => {
-      requests.push(request);
-      return { data: { refreshed: true } };
-    },
-    endpoints: () => ({}),
-  }),
+vi.mock('@admin/shared/config', async () => ({
+  appConfig: (await import('@admin/shared/api-client/testing')).testApiConfig,
 }));
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe('adminSiteRefreshApi', () => {
   it('asks the site to refresh with one POST', async () => {
-    const { adminSiteRefreshApi } = await import('./admin-site-refresh.api');
+    const requests = stubApiFetch({ status: 'refreshed' });
     const store = configureStore({
       reducer: { [adminSiteRefreshApi.reducerPath]: adminSiteRefreshApi.reducer },
       middleware: (getDefault) => getDefault().concat(adminSiteRefreshApi.middleware),
     });
 
-    await store.dispatch(adminSiteRefreshApi.endpoints.refreshSite.initiate());
+    const result = await store.dispatch(adminSiteRefreshApi.endpoints.refreshSite.initiate());
 
-    expect(requests).toEqual([{ url: '/api/admin/content/site-refresh', method: 'POST' }]);
+    expect(requests).toEqual([
+      { method: 'POST', path: '/api/admin/content/site-refresh', body: undefined },
+    ]);
+    expect(result.data).toEqual({ status: 'refreshed' });
   });
 });

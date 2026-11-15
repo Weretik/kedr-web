@@ -1,6 +1,6 @@
 # Frontend integration rules
 
-**Machine source:** [`openapi/openapi.yaml`](openapi/openapi.yaml), provenance in [`openapi/SOURCE.md`](openapi/SOURCE.md)
+**Machine source:** [`openapi/openapi.json`](openapi/openapi.json), provenance in [`openapi/SOURCE.md`](openapi/SOURCE.md)
 
 ## Contract pipeline
 

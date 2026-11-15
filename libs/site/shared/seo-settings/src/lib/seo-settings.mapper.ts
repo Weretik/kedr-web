@@ -1,7 +1,7 @@
 import type { SharePicture } from './share-picture';
 import type { components } from '@shared/api-contracts';
 
-type SiteSeoSettingsDto = components['schemas']['SiteSeoSettings'];
+type SiteSeoSettingsDto = components['schemas']['SiteSeoSettingsResponse'];
 
 /** The admin «Налаштування SEO сайту» as the site uses it; empty codes are null. */
 export type SiteSeoSettings = {
