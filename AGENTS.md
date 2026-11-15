@@ -9,6 +9,7 @@ Kedr sells door hardware wholesale (with optional retail orders), not services s
 ## Project context
 
 - [Frontend inventory](docs/architecture/frontend-inventory.md) — applications, tools, and available Nx targets.
+- [Architecture decisions (ADR)](docs/architecture/adr/README.md) — workspace decisions and the list of key decisions; a new app, framework, hosting, state or transport approach gets an ADR in the same change, and the full architecture audit reports missing ones.
 - Application architecture: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), [Storefront Angular](docs/architecture/storefront/README.md) (current public site), and [Site Next.js](docs/architecture/site/README.md) (new public site replacing it by the [migration plan](docs/specs/site/migration/README.md); new storefront work goes here).
 - [Standards index](docs/standards/README.md) — stable rules for code, UI, API, testing, security, and delivery.
 - [Feature catalog](docs/features/README.md) — one table of current Admin, Mobile, and Storefront features with routes and cards.

@@ -5,6 +5,7 @@ This directory contains versioned engineering documentation for Kedr Web fronten
 ## Frontend SDD
 
 - Architecture describes the actual topology of frontend applications, modules, and layer boundaries; choose the relevant client below.
+- [Workspace architecture decisions (ADR)](architecture/adr/README.md) — Nx workspace, admin SPA, OpenAPI types, and the list of key decisions the audit checks.
 - [Current frontend inventory](architecture/frontend-inventory.md) — apps, Nx projects/tags/targets, aliases, test gates, and known baseline gaps.
 - [Technology and direct npm packages](architecture/technology-and-packages.md) — stack composition and package decisions by client; versions are in the manifests.
 - [Engineering rules](standards/README.md) — rules index for Admin, Mobile, UI, API, testing, and delivery.
