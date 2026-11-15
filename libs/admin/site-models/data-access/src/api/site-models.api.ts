@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapSiteModel,
@@ -20,7 +20,6 @@ import type {
   SiteShowcaseRow,
 } from '@admin/site-models/model';
 
-const base = '/api/admin/site-models';
 const modelTag = (id: number) => ({ type: 'SiteModels' as const, id: `model-${id}` });
 
 /**
@@ -30,83 +29,125 @@ const modelTag = (id: number) => ({ type: 'SiteModels' as const, id: `model-${id
 export const siteModelsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getSiteShowcase: build.query<SiteModelsPage<SiteShowcaseRow>, SiteShowcaseQuery>({
-      query: (query) => ({
-        url: `${base}/showcase`,
-        method: 'GET',
-        params: toSiteShowcaseParams(query),
-      }),
-      transformResponse: mapSiteShowcase,
+      queryFn: (query, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/site-models/showcase', {
+            params: { query: toSiteShowcaseParams(query) },
+            signal,
+          }),
+          mapSiteShowcase,
+        ),
       providesTags: ['SiteModels'],
     }),
     getSiteModelCategories: build.query<SiteModelCategory[], void>({
-      query: () => ({ url: `${base}/categories`, method: 'GET' }),
-      transformResponse: mapSiteModelCategories,
+      queryFn: (_arg, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/site-models/categories', { signal }),
+          mapSiteModelCategories,
+        ),
       providesTags: ['SiteModels'],
     }),
     getSiteModel: build.query<SiteModel, number>({
-      query: (id) => ({ url: `${base}/${id}`, method: 'GET' }),
-      transformResponse: mapSiteModel,
+      queryFn: (id, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/site-models/{id}', { params: { path: { id } }, signal }),
+          mapSiteModel,
+        ),
       providesTags: (_result, _error, id) => ['SiteModels', modelTag(id)],
     }),
     createSiteModel: build.mutation<
       SiteModel,
       { categoryId: number; name: string; productIds: readonly number[] }
     >({
-      query: (body) => ({ url: base, method: 'POST', data: body }),
-      transformResponse: mapSiteModel,
+      queryFn: (body, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/site-models', {
+            body: { ...body, productIds: [...body.productIds] },
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     acceptSiteModels: build.mutation<SiteModelHealth, readonly number[]>({
-      query: (ids) => ({ url: `${base}/accept`, method: 'POST', data: { ids } }),
-      transformResponse: mapSiteModelHealth,
+      queryFn: (ids, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/site-models/accept', { body: { ids: [...ids] }, signal }),
+          mapSiteModelHealth,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     renameSiteModel: build.mutation<SiteModel, { id: number; name: string }>({
-      query: ({ id, name }) => ({ url: `${base}/${id}`, method: 'PUT', data: { name } }),
-      transformResponse: mapSiteModel,
+      queryFn: ({ id, name }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/site-models/{id}', {
+            params: { path: { id } },
+            body: { name },
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     setSiteModelAxes: build.mutation<SiteModel, { id: number; attributeIds: readonly number[] }>({
-      query: ({ id, attributeIds }) => ({
-        url: `${base}/${id}/axes`,
-        method: 'PUT',
-        data: { attributeIds },
-      }),
-      transformResponse: mapSiteModel,
+      queryFn: ({ id, attributeIds }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/site-models/{id}/axes', {
+            params: { path: { id } },
+            body: { attributeIds: [...attributeIds] },
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     addSiteModelProducts: build.mutation<SiteModel, { id: number; productIds: readonly number[] }>({
-      query: ({ id, productIds }) => ({
-        url: `${base}/${id}/products`,
-        method: 'POST',
-        data: { productIds },
-      }),
-      transformResponse: mapSiteModel,
+      queryFn: ({ id, productIds }, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/site-models/{id}/products', {
+            params: { path: { id } },
+            body: { productIds: [...productIds] },
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     removeSiteModelProduct: build.mutation<SiteModel, { id: number; productId: number }>({
-      query: ({ id, productId }) => ({
-        url: `${base}/${id}/products/${productId}`,
-        method: 'DELETE',
-      }),
-      transformResponse: mapSiteModel,
+      queryFn: ({ id, productId }, { signal }) =>
+        apiCall(
+          apiClient.DELETE('/api/admin/site-models/{id}/products/{productId}', {
+            params: { path: { id, productId } },
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     setSiteModelText: build.mutation<
       SiteModel,
       { id: number; language: SiteModelLanguage; text: SiteModelTextInput }
     >({
-      query: ({ id, language, text }) => ({
-        url: `${base}/${id}/texts/${language}`,
-        method: 'PUT',
-        data: toSetSiteModelTextBody(text),
-      }),
-      transformResponse: mapSiteModel,
+      queryFn: ({ id, language, text }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/site-models/{id}/texts/{language}', {
+            params: { path: { id, language } },
+            body: toSetSiteModelTextBody(text),
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     fillSiteModelFromNames: build.mutation<SiteModel, number>({
-      query: (id) => ({ url: `${base}/${id}/fill-from-names`, method: 'POST' }),
-      transformResponse: mapSiteModel,
+      queryFn: (id, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/site-models/{id}/fill-from-names', {
+            params: { path: { id } },
+            signal,
+          }),
+          mapSiteModel,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
   }),

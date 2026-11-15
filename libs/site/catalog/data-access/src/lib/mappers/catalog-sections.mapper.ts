@@ -3,7 +3,7 @@ import { bySortOrder, hasRoute, siteTopLevel } from './category-tree.mapper';
 import type { components } from '@shared/api-contracts';
 import type { CatalogCategory, CatalogSection } from '@site/catalog/model';
 
-type CategoryTreeNode = components['schemas']['CategoryTreeNode'];
+type CategoryTreeNode = components['schemas']['CategoryResponse'];
 
 const toCategory = (node: CategoryTreeNode): CatalogCategory => ({
   id: node.id,

@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import { mapHomeBlocks, toHomeBrandBody, toHomeFaqBody } from '../mappers/home-content.mapper';
 
@@ -9,7 +9,6 @@ import type {
   HomeFaqTexts,
 } from '@admin/home-content/model';
 
-const root = '/api/admin/content/home';
 const tag = 'HomeContent' as const;
 
 type BrandDraft = HomeBrandDraft & { logo: HomeBrandLogo };
@@ -41,12 +40,15 @@ export const adminHomeContentApi = baseApi
       /** Moves the rows on screen at once and rolls back if the server refuses the order. */
       const reorder = (list: List) =>
         build.mutation<HomeBlocks, readonly number[]>({
-          query: (ids) => ({
-            url: `${root}/${list}/order`,
-            method: 'PUT',
-            data: { ids: [...ids] },
-          }),
-          transformResponse: mapHomeBlocks,
+          queryFn: (ids, { signal }) => {
+            const init = { body: { ids: [...ids] }, signal };
+            return apiCall(
+              list === 'faq'
+                ? apiClient.PUT('/api/admin/content/home/faq/order', init)
+                : apiClient.PUT('/api/admin/content/home/brands/order', init),
+              mapHomeBlocks,
+            );
+          },
           async onQueryStarted(ids, { dispatch, queryFulfilled }) {
             const patch = dispatch(
               adminHomeContentApi.util.updateQueryData('getHomeBlocks', undefined, (draft) => {
@@ -67,51 +69,74 @@ export const adminHomeContentApi = baseApi
 
       return {
         getHomeBlocks: build.query<HomeBlocks, void>({
-          query: () => ({ url: root, method: 'GET' }),
-          transformResponse: mapHomeBlocks,
+          queryFn: (_arg, { signal }) =>
+            apiCall(apiClient.GET('/api/admin/content/home', { signal }), mapHomeBlocks),
           providesTags: [{ type: tag, id: 'BLOCKS' }],
         }),
         createHomeFaqItem: build.mutation<HomeBlocks, HomeFaqTexts>({
-          query: (texts) => ({ url: `${root}/faq`, method: 'POST', data: toHomeFaqBody(texts) }),
-          transformResponse: mapHomeBlocks,
+          queryFn: (texts, { signal }) =>
+            apiCall(
+              apiClient.POST('/api/admin/content/home/faq', { body: toHomeFaqBody(texts), signal }),
+              mapHomeBlocks,
+            ),
           onQueryStarted: replaceBlocks,
         }),
         updateHomeFaqItem: build.mutation<HomeBlocks, { id: number; texts: HomeFaqTexts }>({
-          query: ({ id, texts }) => ({
-            url: `${root}/faq/${id}`,
-            method: 'PUT',
-            data: toHomeFaqBody(texts),
-          }),
-          transformResponse: mapHomeBlocks,
+          queryFn: ({ id, texts }, { signal }) =>
+            apiCall(
+              apiClient.PUT('/api/admin/content/home/faq/{id}', {
+                params: { path: { id } },
+                body: toHomeFaqBody(texts),
+                signal,
+              }),
+              mapHomeBlocks,
+            ),
           onQueryStarted: replaceBlocks,
         }),
         deleteHomeFaqItem: build.mutation<HomeBlocks, number>({
-          query: (id) => ({ url: `${root}/faq/${id}`, method: 'DELETE' }),
-          transformResponse: mapHomeBlocks,
+          queryFn: (id, { signal }) =>
+            apiCall(
+              apiClient.DELETE('/api/admin/content/home/faq/{id}', {
+                params: { path: { id } },
+                signal,
+              }),
+              mapHomeBlocks,
+            ),
           onQueryStarted: replaceBlocks,
         }),
         reorderHomeFaq: reorder('faq'),
         createHomeBrand: build.mutation<HomeBlocks, BrandDraft>({
-          query: (draft) => ({
-            url: `${root}/brands`,
-            method: 'POST',
-            data: toHomeBrandBody(draft),
-          }),
-          transformResponse: mapHomeBlocks,
+          queryFn: (draft, { signal }) =>
+            apiCall(
+              apiClient.POST('/api/admin/content/home/brands', {
+                body: toHomeBrandBody(draft),
+                signal,
+              }),
+              mapHomeBlocks,
+            ),
           onQueryStarted: replaceBlocks,
         }),
         updateHomeBrand: build.mutation<HomeBlocks, { id: number; draft: BrandDraft }>({
-          query: ({ id, draft }) => ({
-            url: `${root}/brands/${id}`,
-            method: 'PUT',
-            data: toHomeBrandBody(draft),
-          }),
-          transformResponse: mapHomeBlocks,
+          queryFn: ({ id, draft }, { signal }) =>
+            apiCall(
+              apiClient.PUT('/api/admin/content/home/brands/{id}', {
+                params: { path: { id } },
+                body: toHomeBrandBody(draft),
+                signal,
+              }),
+              mapHomeBlocks,
+            ),
           onQueryStarted: replaceBlocks,
         }),
         deleteHomeBrand: build.mutation<HomeBlocks, number>({
-          query: (id) => ({ url: `${root}/brands/${id}`, method: 'DELETE' }),
-          transformResponse: mapHomeBlocks,
+          queryFn: (id, { signal }) =>
+            apiCall(
+              apiClient.DELETE('/api/admin/content/home/brands/{id}', {
+                params: { path: { id } },
+                signal,
+              }),
+              mapHomeBlocks,
+            ),
           onQueryStarted: replaceBlocks,
         }),
         reorderHomeBrands: reorder('brands'),

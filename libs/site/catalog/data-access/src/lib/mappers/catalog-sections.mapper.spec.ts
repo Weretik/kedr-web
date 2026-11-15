@@ -2,7 +2,7 @@ import { mapCatalogSections } from './catalog-sections.mapper';
 
 import type { components } from '@shared/api-contracts';
 
-type Node = components['schemas']['CategoryTreeNode'];
+type Node = components['schemas']['CategoryResponse'];
 
 const node = (id: number, sortOrder: number, overrides: Partial<Node> = {}): Node => ({
   id,

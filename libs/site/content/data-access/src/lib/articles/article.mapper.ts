@@ -1,8 +1,8 @@
 import type { components } from '@shared/api-contracts';
 import type { Article } from '@site/content/model';
 
-type ApiArticleSummary = components['schemas']['ArticleSummary'];
-type ApiArticle = components['schemas']['Article'];
+type ApiArticleSummary = components['schemas']['ArticleSummaryResponse'];
+type ApiArticle = components['schemas']['ArticleResponse'];
 
 /**
  * The CDN `coverUrl` when there is one; else a legacy `coverPath`, which is relative to the API, so next/image gets

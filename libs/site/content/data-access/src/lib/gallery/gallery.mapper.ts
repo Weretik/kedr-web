@@ -1,7 +1,7 @@
 import type { components } from '@shared/api-contracts';
 import type { GalleryDictionary, GalleryMedia } from '@site/content/model';
 
-type PublicGalleryItem = components['schemas']['PublicGalleryItem'];
+type PublicGalleryItem = components['schemas']['PublicGalleryItemResponse'];
 
 // The site lays pictures out by aspect box, so a size the library does not know only feeds next/image.
 const UNKNOWN_PHOTO_SIZE = { width: 1600, height: 1200 };

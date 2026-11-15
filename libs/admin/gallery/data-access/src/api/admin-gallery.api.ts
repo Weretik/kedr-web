@@ -1,10 +1,9 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import { mapGallery, mapYoutubePreview, toGalleryTextsBody } from '../mappers/gallery.mapper';
 
 import type { GalleryItem, GalleryTexts, YoutubePreview } from '@admin/gallery/model';
 
-const root = '/api/admin/content/gallery';
 const tag = 'Gallery' as const;
 
 export const adminGalleryApi = baseApi.enhanceEndpoints({ addTagTypes: [tag] }).injectEndpoints({
@@ -30,50 +29,72 @@ export const adminGalleryApi = baseApi.enhanceEndpoints({ addTagTypes: [tag] }).
 
     return {
       getGallery: build.query<GalleryItem[], void>({
-        query: () => ({ url: root, method: 'GET' }),
-        transformResponse: mapGallery,
+        queryFn: (_arg, { signal }) =>
+          apiCall(apiClient.GET('/api/admin/content/gallery', { signal }), mapGallery),
         providesTags: [{ type: tag, id: 'LIST' }],
       }),
       previewYoutubeVideo: build.query<YoutubePreview, string>({
-        query: (url) => ({ url: `${root}/youtube-preview`, method: 'GET', params: { url } }),
-        transformResponse: mapYoutubePreview,
+        queryFn: (url, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/content/gallery/youtube-preview', {
+              params: { query: { url } },
+              signal,
+            }),
+            mapYoutubePreview,
+          ),
       }),
       addGalleryPhotos: build.mutation<GalleryItem[], readonly number[]>({
-        query: (mediaFileIds) => ({
-          url: `${root}/photos`,
-          method: 'POST',
-          data: { mediaFileIds: [...mediaFileIds] },
-        }),
-        transformResponse: mapGallery,
+        queryFn: (mediaFileIds, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/content/gallery/photos', {
+              body: { mediaFileIds: [...mediaFileIds] },
+              signal,
+            }),
+            mapGallery,
+          ),
         onQueryStarted: replaceList,
       }),
       addGalleryVideo: build.mutation<GalleryItem[], { url: string; texts: GalleryTexts }>({
-        query: ({ url, texts }) => ({
-          url: `${root}/videos`,
-          method: 'POST',
-          data: { url, ...toGalleryTextsBody(texts) },
-        }),
-        transformResponse: mapGallery,
+        queryFn: ({ url, texts }, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/content/gallery/videos', {
+              body: { url, ...toGalleryTextsBody(texts) },
+              signal,
+            }),
+            mapGallery,
+          ),
         onQueryStarted: replaceList,
       }),
       updateGalleryItem: build.mutation<GalleryItem[], { id: number; texts: GalleryTexts }>({
-        query: ({ id, texts }) => ({
-          url: `${root}/items/${id}`,
-          method: 'PUT',
-          data: toGalleryTextsBody(texts),
-        }),
-        transformResponse: mapGallery,
+        queryFn: ({ id, texts }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/content/gallery/items/{id}', {
+              params: { path: { id } },
+              body: toGalleryTextsBody(texts),
+              signal,
+            }),
+            mapGallery,
+          ),
         onQueryStarted: replaceList,
       }),
       deleteGalleryItem: build.mutation<GalleryItem[], number>({
-        query: (id) => ({ url: `${root}/items/${id}`, method: 'DELETE' }),
-        transformResponse: mapGallery,
+        queryFn: (id, { signal }) =>
+          apiCall(
+            apiClient.DELETE('/api/admin/content/gallery/items/{id}', {
+              params: { path: { id } },
+              signal,
+            }),
+            mapGallery,
+          ),
         onQueryStarted: replaceList,
       }),
       /** Moves the cards on screen at once and rolls back if the server refuses the order. */
       reorderGallery: build.mutation<GalleryItem[], readonly number[]>({
-        query: (ids) => ({ url: `${root}/order`, method: 'PUT', data: { ids: [...ids] } }),
-        transformResponse: mapGallery,
+        queryFn: (ids, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/content/gallery/order', { body: { ids: [...ids] }, signal }),
+            mapGallery,
+          ),
         async onQueryStarted(ids, { dispatch, queryFulfilled }) {
           const patch = dispatch(
             adminGalleryApi.util.updateQueryData('getGallery', undefined, (draft) => {

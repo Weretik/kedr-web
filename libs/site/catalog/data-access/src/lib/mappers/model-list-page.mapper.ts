@@ -8,12 +8,17 @@ import type {
   ProductSwatch,
 } from '@site/catalog/model';
 
-type ModelList = components['schemas']['PublicSiteModelList'];
-type ModelCard = components['schemas']['PublicSiteModelCard'];
-type Swatch = components['schemas']['PublicSiteModelSwatch'];
-type Filter = components['schemas']['PublicSiteModelFilter'];
+type ModelList = components['schemas']['PublicSiteModelListDto'];
+type ModelCard = components['schemas']['PublicSiteModelCardDto'];
+type Swatch = components['schemas']['PublicSiteModelSwatchDto'];
+type Filter = components['schemas']['PublicSiteModelFilterDto'];
 
 const HEX = /^#[0-9a-f]{6}$/i;
+const FILTER_DISPLAYS: readonly ListingFilter['display'][] = ['swatch', 'button', 'checkbox'];
+
+/** The API sends the display as a string; an unknown one shows as plain buttons. */
+const toFilterDisplay = (display: string): ListingFilter['display'] =>
+  FILTER_DISPLAYS.find((known) => known === display) ?? 'button';
 
 /** Texture pictures come from the same image CDN as product photos; any other address is dropped. */
 const mapSwatch = (swatch: Swatch): ProductSwatch => ({
@@ -43,7 +48,7 @@ const mapFilter = (filter: Filter): ListingFilter => ({
   code: filter.code,
   slug: filter.slug,
   name: filter.name,
-  display: filter.display,
+  display: toFilterDisplay(filter.display),
   values: filter.values.map((value) => ({
     ...mapSwatch(value),
     count: value.count,

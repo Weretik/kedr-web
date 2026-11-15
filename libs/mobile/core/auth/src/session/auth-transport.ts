@@ -1,6 +1,8 @@
 import { appConfig } from '@mobile/shared/config';
 import axios from 'axios';
 
+import { toSessionRoles } from './session-user';
+
 import type { SessionUser } from './session-user';
 import type { StoredTokens } from '../storage/token-storage';
 import type { operations } from '@shared/api-contracts';
@@ -55,7 +57,13 @@ export async function requestCurrentUser(accessToken: string): Promise<SessionUs
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const { avatarUrl, email, fullName, roles, userId } = response.data;
-    return { avatarUrl: avatarUrl ?? null, email, fullName, id: userId, roles };
+    return {
+      avatarUrl: avatarUrl ?? null,
+      email,
+      fullName,
+      id: userId,
+      roles: toSessionRoles(roles),
+    };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       return null;

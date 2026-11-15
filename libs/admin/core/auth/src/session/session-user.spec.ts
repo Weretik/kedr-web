@@ -7,6 +7,7 @@ import {
   canManageRequisites,
   canManageUsers,
   isStaff,
+  toSessionRoles,
 } from './session-user';
 
 import type { SessionRole, SessionUser } from './session-user';
@@ -38,5 +39,11 @@ describe('session user rules', () => {
 
   it('keeps catalog structure closed to a manager', () => {
     expect(canEditCatalog(userWith(['Manager']))).toBe(false);
+  });
+});
+
+describe('toSessionRoles', () => {
+  it('keeps the roles this app knows and drops the rest', () => {
+    expect(toSessionRoles(['Admin', 'Accountant', 'Seo'])).toEqual(['Admin', 'Seo']);
   });
 });

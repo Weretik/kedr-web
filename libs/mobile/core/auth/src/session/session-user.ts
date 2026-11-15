@@ -1,5 +1,11 @@
 /** `Seo` signs in to the admin only; the mobile app stays for Admin and Manager. */
-export type SessionRole = 'Admin' | 'Seo' | 'Manager' | 'User';
+const sessionRoles = ['Admin', 'Seo', 'Manager', 'User'] as const;
+
+export type SessionRole = (typeof sessionRoles)[number];
+
+/** The API sends role names as strings; a role this app does not know grants nothing. */
+export const toSessionRoles = (roles: readonly string[]): SessionRole[] =>
+  roles.filter((role): role is SessionRole => (sessionRoles as readonly string[]).includes(role));
 
 export interface SessionUser {
   avatarUrl: string | null;

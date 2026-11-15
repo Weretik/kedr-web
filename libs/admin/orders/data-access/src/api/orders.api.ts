@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapCreatedOrder,
@@ -32,7 +32,6 @@ type CreateOrderBody =
 type DraftBody = operations['createAdminOrderDraft']['requestBody']['content']['application/json'];
 type CustomerPricesBody =
   operations['getAdminWorkspaceCustomerPrices']['requestBody']['content']['application/json'];
-const root = '/api/admin/order-workspace';
 
 interface CreateOrderArgs {
   counterpartyId: string;
@@ -58,83 +57,119 @@ interface DeleteDraftArgs {
 export const ordersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getWorkspaceOrders: build.query<Page<OrderSummary>, ListQuery>({
-      query: (params) => ({ url: `${root}/orders`, params }),
-      transformResponse: mapOrderPage,
+      queryFn: (params, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/order-workspace/orders', { params: { query: params }, signal }),
+          mapOrderPage,
+        ),
       providesTags: ['AdminOrders'],
     }),
     getWorkspaceOrder: build.query<OrderRecord, number>({
-      query: (orderId) => ({ url: `${root}/orders/${orderId}` }),
-      transformResponse: mapOrderRecord,
+      queryFn: (orderId, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/order-workspace/orders/{orderId}', {
+            params: { path: { orderId } },
+            signal,
+          }),
+          mapOrderRecord,
+        ),
       providesTags: ['AdminOrders'],
     }),
     quoteWorkspaceOrder: build.mutation<
       OrderQuote,
       { counterpartyId: string; lines: OrderInputLine[] }
     >({
-      query: ({ counterpartyId, lines }) => ({
-        url: `${root}/quote`,
-        method: 'POST',
-        data: { counterpartyId, lines: toInputLines(lines) } satisfies QuoteBody,
-      }),
-      transformResponse: mapQuote,
+      queryFn: ({ counterpartyId, lines }, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/order-workspace/quote', {
+            body: { counterpartyId, lines: toInputLines(lines) } satisfies QuoteBody,
+            signal,
+          }),
+          mapQuote,
+        ),
     }),
     getWorkspaceCustomerPrices: build.query<
       Record<string, number | null>,
       { counterpartyId: string; productIds: string[] }
     >({
-      query: (body) => ({
-        url: `${root}/customer-prices`,
-        method: 'POST',
-        data: body satisfies CustomerPricesBody,
-      }),
-      transformResponse: mapCustomerPrices,
+      queryFn: (body, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/order-workspace/customer-prices', {
+            body: body satisfies CustomerPricesBody,
+            signal,
+          }),
+          mapCustomerPrices,
+        ),
     }),
     createWorkspaceOrder: build.mutation<CreatedOrder, CreateOrderArgs>({
-      query: ({ idempotencyKey, lines, ...body }) => ({
-        url: `${root}/orders`,
-        method: 'POST',
-        headers: { 'Idempotency-Key': idempotencyKey },
-        data: { ...body, lines: toInputLines(lines) } satisfies CreateOrderBody,
-      }),
-      transformResponse: mapCreatedOrder,
+      queryFn: ({ idempotencyKey, lines, ...body }, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/order-workspace/orders', {
+            body: {
+              ...body,
+              comment: body.comment ?? null,
+              lines: toInputLines(lines),
+            } satisfies CreateOrderBody,
+            headers: { 'Idempotency-Key': idempotencyKey },
+            signal,
+          }),
+          mapCreatedOrder,
+        ),
       invalidatesTags: ['AdminOrders'],
     }),
     getWorkspaceDrafts: build.query<Page<DraftSummary>, ListQuery>({
-      query: (params) => ({ url: `${root}/drafts`, params }),
-      transformResponse: mapDraftPage,
+      queryFn: (params, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/order-workspace/drafts', { params: { query: params }, signal }),
+          mapDraftPage,
+        ),
       providesTags: ['AdminOrderDrafts'],
     }),
     getWorkspaceDraft: build.query<DraftRecord, number>({
-      query: (draftId) => ({ url: `${root}/drafts/${draftId}` }),
-      transformResponse: mapDraftRecord,
+      queryFn: (draftId, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/order-workspace/drafts/{draftId}', {
+            params: { path: { draftId } },
+            signal,
+          }),
+          mapDraftRecord,
+        ),
       providesTags: ['AdminOrderDrafts'],
     }),
     createWorkspaceDraft: build.mutation<DraftRecord, CreateDraftArgs>({
-      query: ({ input, idempotencyKey }) => ({
-        url: `${root}/drafts`,
-        method: 'POST',
-        headers: { 'Idempotency-Key': idempotencyKey },
-        data: { ...input, lines: toInputLines(input.lines) } satisfies DraftBody,
-      }),
-      transformResponse: mapDraftRecord,
+      queryFn: ({ input, idempotencyKey }, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/order-workspace/drafts', {
+            body: { ...input, lines: toInputLines(input.lines) } satisfies DraftBody,
+            headers: { 'Idempotency-Key': idempotencyKey },
+            signal,
+          }),
+          mapDraftRecord,
+        ),
       invalidatesTags: ['AdminOrderDrafts'],
     }),
     updateWorkspaceDraft: build.mutation<DraftRecord, UpdateDraftArgs>({
-      query: ({ draftId, version, input }) => ({
-        url: `${root}/drafts/${draftId}`,
-        method: 'PUT',
-        headers: { 'If-Match': version },
-        data: { ...input, lines: toInputLines(input.lines) } satisfies DraftBody,
-      }),
-      transformResponse: mapDraftRecord,
+      queryFn: ({ draftId, version, input }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/order-workspace/drafts/{draftId}', {
+            params: { path: { draftId } },
+            body: { ...input, lines: toInputLines(input.lines) } satisfies DraftBody,
+            headers: { 'If-Match': version },
+            signal,
+          }),
+          mapDraftRecord,
+        ),
       invalidatesTags: ['AdminOrderDrafts'],
     }),
     deleteWorkspaceDraft: build.mutation<void, DeleteDraftArgs>({
-      query: ({ draftId, version }) => ({
-        url: `${root}/drafts/${draftId}`,
-        method: 'DELETE',
-        headers: { 'If-Match': version },
-      }),
+      queryFn: ({ draftId, version }, { signal }) =>
+        apiCall(
+          apiClient.DELETE('/api/admin/order-workspace/drafts/{draftId}', {
+            params: { path: { draftId } },
+            headers: { 'If-Match': version },
+            signal,
+          }),
+        ),
       invalidatesTags: ['AdminOrderDrafts'],
     }),
   }),

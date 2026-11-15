@@ -14,10 +14,3 @@ export const mapStaffProfile = (data: unknown): StaffProfile => {
 };
 
 export const mapAvatarUrl = (data: unknown): string => avatarSchema.parse(data).avatarUrl;
-
-/** Multipart body for an avatar upload; the server reads the `file` field. */
-export const toAvatarForm = (file: Blob): FormData => {
-  const form = new FormData();
-  form.append('file', file);
-  return form;
-};

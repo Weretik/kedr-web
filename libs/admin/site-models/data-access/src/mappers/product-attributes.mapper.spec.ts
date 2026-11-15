@@ -56,8 +56,13 @@ describe('product attributes mapper', () => {
 
   it('builds request bodies', () => {
     expect(toSetProductAttributeBody({ valueIds: [2, 3] })).toEqual({
-      values: [{ valueId: 2 }, { valueId: 3 }],
+      values: [
+        { valueId: 2, number: null },
+        { valueId: 3, number: null },
+      ],
     });
-    expect(toSetProductAttributeBody({ numbers: [70] })).toEqual({ values: [{ number: 70 }] });
+    expect(toSetProductAttributeBody({ numbers: [70] })).toEqual({
+      values: [{ valueId: null, number: 70 }],
+    });
   });
 });

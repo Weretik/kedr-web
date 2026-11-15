@@ -1,8 +1,8 @@
+import { stubApiFetch } from '@admin/shared/api-client/testing';
 import { configureStore } from '@reduxjs/toolkit';
-import { createApi } from '@reduxjs/toolkit/query';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const requests = vi.hoisted(() => [] as unknown[]);
+import { adminSchedulingApi } from './admin-scheduling.api';
 
 const task = {
   key: 'prices',
@@ -17,20 +17,15 @@ const task = {
   overdue: false,
 };
 
-vi.mock('@admin/shared/api-client', () => ({
-  baseApi: createApi({
-    reducerPath: 'adminApi',
-    baseQuery: (request: unknown) => {
-      requests.push(request);
-      return { data: task };
-    },
-    endpoints: () => ({}),
-  }),
+vi.mock('@admin/shared/config', async () => ({
+  appConfig: (await import('@admin/shared/api-client/testing')).testApiConfig,
 }));
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe('adminSchedulingApi', () => {
   it('asks to run a task now with one POST to its address', async () => {
-    const { adminSchedulingApi } = await import('./admin-scheduling.api');
+    const requests = stubApiFetch(task);
     const store = configureStore({
       reducer: { [adminSchedulingApi.reducerPath]: adminSchedulingApi.reducer },
       middleware: (getDefault) => getDefault().concat(adminSchedulingApi.middleware),
@@ -40,7 +35,9 @@ describe('adminSchedulingApi', () => {
       adminSchedulingApi.endpoints.runScheduledTaskNow.initiate('prices'),
     );
 
-    expect(requests).toEqual([{ url: '/api/admin/scheduling/tasks/prices/run', method: 'POST' }]);
+    expect(requests).toEqual([
+      { method: 'POST', path: '/api/admin/scheduling/tasks/prices/run', body: undefined },
+    ]);
     expect(result.data?.runRequestedAt).toBe('2026-11-15T11:00:00Z');
   });
 });

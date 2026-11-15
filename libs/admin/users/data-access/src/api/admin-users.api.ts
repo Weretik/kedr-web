@@ -1,11 +1,11 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, formDataBody } from '@admin/shared/api-client';
 
 import {
   mapStaffAccount,
   mapStaffAccounts,
   mapStaffCandidates,
 } from '../mappers/staff-account.mapper';
-import { mapAvatarUrl, toAvatarForm } from '../mappers/staff-profile.mapper';
+import { mapAvatarUrl } from '../mappers/staff-profile.mapper';
 
 import type {
   ChangeStaffEmailBody,
@@ -21,99 +21,127 @@ import type {
   StaffRole,
 } from '@admin/users/model';
 
-const root = '/api/admin/users';
-const userUrl = (userId: string, action: string) =>
-  `${root}/${encodeURIComponent(userId)}/${action}`;
-
 export const adminUsersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getStaffAccounts: build.query<StaffAccount[], void>({
-      query: () => ({ url: root, method: 'GET' }),
-      transformResponse: mapStaffAccounts,
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/admin/users', { signal }), mapStaffAccounts),
       providesTags: ['StaffAccounts'],
     }),
     createStaffAccount: build.mutation<StaffAccount, CreateStaffAccountInput>({
-      query: (input) => ({
-        url: root,
-        method: 'POST',
-        data: {
-          email: input.email.trim(),
-          fullName: input.fullName.trim(),
-          role: input.role,
-          password: input.password,
-        } satisfies CreateStaffAccountBody,
-      }),
-      transformResponse: mapStaffAccount,
+      queryFn: (input, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/users', {
+            body: {
+              email: input.email.trim(),
+              fullName: input.fullName.trim(),
+              role: input.role,
+              password: input.password,
+            } satisfies CreateStaffAccountBody,
+            signal,
+          }),
+          mapStaffAccount,
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     searchStaffCandidates: build.query<StaffCandidate[], string>({
-      query: (search) => ({ url: `${root}/candidates`, method: 'GET', params: { search } }),
-      transformResponse: mapStaffCandidates,
+      queryFn: (search, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/users/candidates', { params: { query: { search } }, signal }),
+          mapStaffCandidates,
+        ),
       providesTags: ['StaffAccounts'],
     }),
     grantStaffAccess: build.mutation<StaffAccount, GrantStaffAccessInput>({
-      query: ({ userId, ...input }) => ({
-        url: userUrl(userId, 'staff-access'),
-        method: 'POST',
-        data: {
-          fullName: input.fullName.trim(),
-          role: input.role,
-          password: input.password,
-        } satisfies GrantStaffAccessBody,
-      }),
-      transformResponse: mapStaffAccount,
+      queryFn: ({ userId, ...input }, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/users/{userId}/staff-access', {
+            params: { path: { userId } },
+            body: {
+              fullName: input.fullName.trim(),
+              role: input.role,
+              password: input.password,
+            } satisfies GrantStaffAccessBody,
+            signal,
+          }),
+          mapStaffAccount,
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     changeStaffRole: build.mutation<void, { userId: string; role: StaffRole }>({
-      query: ({ userId, role }) => ({
-        url: userUrl(userId, 'role'),
-        method: 'PUT',
-        data: { role },
-      }),
+      queryFn: ({ userId, role }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/users/{userId}/role', {
+            params: { path: { userId } },
+            body: { role },
+            signal,
+          }),
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     setStaffBlocked: build.mutation<void, { userId: string; blocked: boolean }>({
-      query: ({ userId, blocked }) => ({
-        url: userUrl(userId, 'blocked'),
-        method: 'PUT',
-        data: { blocked },
-      }),
+      queryFn: ({ userId, blocked }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/users/{userId}/blocked', {
+            params: { path: { userId } },
+            body: { blocked },
+            signal,
+          }),
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     setStaffPassword: build.mutation<void, { userId: string; password: string }>({
-      query: ({ userId, password }) => ({
-        url: userUrl(userId, 'password'),
-        method: 'PUT',
-        data: { password },
-      }),
+      queryFn: ({ userId, password }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/users/{userId}/password', {
+            params: { path: { userId } },
+            body: { password },
+            signal,
+          }),
+        ),
     }),
     changeStaffName: build.mutation<void, { userId: string; fullName: string }>({
-      query: ({ userId, fullName }) => ({
-        url: userUrl(userId, 'name'),
-        method: 'PUT',
-        data: { fullName: fullName.trim() } satisfies ChangeNameBody,
-      }),
+      queryFn: ({ userId, fullName }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/users/{userId}/name', {
+            params: { path: { userId } },
+            body: { fullName: fullName.trim() } satisfies ChangeNameBody,
+            signal,
+          }),
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     changeStaffEmail: build.mutation<void, { userId: string; email: string }>({
-      query: ({ userId, email }) => ({
-        url: userUrl(userId, 'email'),
-        method: 'PUT',
-        data: { email: email.trim() } satisfies ChangeStaffEmailBody,
-      }),
+      queryFn: ({ userId, email }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/users/{userId}/email', {
+            params: { path: { userId } },
+            body: { email: email.trim() } satisfies ChangeStaffEmailBody,
+            signal,
+          }),
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     uploadStaffAvatar: build.mutation<string, { userId: string; file: Blob }>({
-      query: ({ userId, file }) => ({
-        url: userUrl(userId, 'avatar'),
-        method: 'PUT',
-        data: toAvatarForm(file),
-      }),
-      transformResponse: mapAvatarUrl,
+      queryFn: ({ userId, file }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/users/{userId}/avatar', {
+            params: { path: { userId } },
+            ...formDataBody({ file }),
+            signal,
+          }),
+          mapAvatarUrl,
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
     removeStaffAvatar: build.mutation<void, { userId: string }>({
-      query: ({ userId }) => ({ url: userUrl(userId, 'avatar'), method: 'DELETE' }),
+      queryFn: ({ userId }, { signal }) =>
+        apiCall(
+          apiClient.DELETE('/api/admin/users/{userId}/avatar', {
+            params: { path: { userId } },
+            signal,
+          }),
+        ),
       invalidatesTags: ['StaffAccounts'],
     }),
   }),

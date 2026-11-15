@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapAttributeOptions,
@@ -28,23 +28,32 @@ const attributesTag = (productId: number) => ({
 export const productAttributesApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProductAttributes: build.query<ProductAttributes, number>({
-      query: (productId) => ({ url: `/api/admin/products/${productId}/attributes`, method: 'GET' }),
-      transformResponse: mapProductAttributes,
+      queryFn: (productId, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/products/{productId}/attributes', {
+            params: { path: { productId } },
+            signal,
+          }),
+          mapProductAttributes,
+        ),
       providesTags: (_result, _error, productId) => [attributesTag(productId)],
     }),
     /** All attributes, for «Додати властивість». */
     getAttributeOptions: build.query<AttributeOption[], void>({
-      query: () => ({ url: '/api/admin/catalog-attributes', method: 'GET' }),
-      transformResponse: mapAttributeOptions,
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/admin/catalog-attributes', { signal }), mapAttributeOptions),
       providesTags: [{ type: 'CatalogAttributes', id: 'LIST' }],
     }),
     /** The list values of one attribute, for the value picker. */
     getAttributeValueOptions: build.query<AttributeValueOption[], number>({
-      query: (attributeId) => ({
-        url: `/api/admin/catalog-attributes/${attributeId}`,
-        method: 'GET',
-      }),
-      transformResponse: mapAttributeValueOptions,
+      queryFn: (attributeId, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/catalog-attributes/{id}', {
+            params: { path: { id: attributeId } },
+            signal,
+          }),
+          mapAttributeValueOptions,
+        ),
       providesTags: (_result, _error, attributeId) => [
         { type: 'CatalogAttributes', id: attributeId },
       ],
@@ -54,42 +63,46 @@ export const productAttributesApi = baseApi.injectEndpoints({
      * Returns its id.
      */
     createAttributeOption: build.mutation<number, string>({
-      query: (nameUk) => ({
-        url: '/api/admin/catalog-attributes',
-        method: 'POST',
-        data: {
-          nameUk,
-          nameRu: null,
-          kind: 'enum',
-          unit: null,
-          code: null,
-          slug: null,
-          isFilterable: true,
-          isVariantAxis: true,
-          sortOrder: 100,
-        },
-      }),
-      transformResponse: mapCreatedAttributeId,
+      queryFn: (nameUk, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/catalog-attributes', {
+            body: {
+              nameUk,
+              nameRu: null,
+              kind: 'enum',
+              unit: null,
+              code: null,
+              slug: null,
+              isFilterable: true,
+              isVariantAxis: true,
+              sortOrder: 100,
+            },
+            signal,
+          }),
+          mapCreatedAttributeId,
+        ),
       invalidatesTags: (_result, error) =>
         error ? [] : [{ type: 'CatalogAttributes', id: 'LIST' }],
     }),
     /** A new value of an attribute made from the model card. Returns its id. */
     createAttributeValueOption: build.mutation<number, { attributeId: number; nameUk: string }>({
-      query: ({ attributeId, nameUk }) => ({
-        url: `/api/admin/catalog-attributes/${attributeId}/values`,
-        method: 'POST',
-        data: {
-          nameUk,
-          nameRu: null,
-          code: null,
-          slug: null,
-          sortOrder: 100,
-          swatchHex: null,
-          swatchMediaFileId: null,
-        },
-      }),
-      transformResponse: (response: unknown, _meta, { nameUk }) =>
-        mapCreatedValueId(response, nameUk),
+      queryFn: ({ attributeId, nameUk }, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/catalog-attributes/{id}/values', {
+            params: { path: { id: attributeId } },
+            body: {
+              nameUk,
+              nameRu: null,
+              code: null,
+              slug: null,
+              sortOrder: 100,
+              swatchHex: null,
+              swatchMediaFileId: null,
+            },
+            signal,
+          }),
+          (response) => mapCreatedValueId(response, nameUk),
+        ),
       invalidatesTags: (_result, error, { attributeId }) =>
         error
           ? []
@@ -102,39 +115,51 @@ export const productAttributesApi = baseApi.injectEndpoints({
       ProductAttributes,
       { productId: number; attributeId: number; input: ProductAttributeInput }
     >({
-      query: ({ productId, attributeId, input }) => ({
-        url: `/api/admin/products/${productId}/attributes/${attributeId}`,
-        method: 'PUT',
-        data: toSetProductAttributeBody(input),
-      }),
-      transformResponse: mapProductAttributes,
+      queryFn: ({ productId, attributeId, input }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/products/{productId}/attributes/{attributeId}', {
+            params: { path: { productId, attributeId } },
+            body: toSetProductAttributeBody(input),
+            signal,
+          }),
+          mapProductAttributes,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     restoreProductAttribute: build.mutation<
       ProductAttributes,
       { productId: number; attributeId: number }
     >({
-      query: ({ productId, attributeId }) => ({
-        url: `/api/admin/products/${productId}/attributes/${attributeId}/manual`,
-        method: 'DELETE',
-      }),
-      transformResponse: mapProductAttributes,
+      queryFn: ({ productId, attributeId }, { signal }) =>
+        apiCall(
+          apiClient.DELETE('/api/admin/products/{productId}/attributes/{attributeId}/manual', {
+            params: { path: { productId, attributeId } },
+            signal,
+          }),
+          mapProductAttributes,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     acceptProductReview: build.mutation<ProductAttributes, number>({
-      query: (productId) => ({
-        url: `/api/admin/products/${productId}/review/accept`,
-        method: 'POST',
-      }),
-      transformResponse: mapProductAttributes,
+      queryFn: (productId, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/products/{productId}/review/accept', {
+            params: { path: { productId } },
+            signal,
+          }),
+          mapProductAttributes,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
     reopenProductReview: build.mutation<ProductAttributes, number>({
-      query: (productId) => ({
-        url: `/api/admin/products/${productId}/review/reopen`,
-        method: 'POST',
-      }),
-      transformResponse: mapProductAttributes,
+      queryFn: (productId, { signal }) =>
+        apiCall(
+          apiClient.POST('/api/admin/products/{productId}/review/reopen', {
+            params: { path: { productId } },
+            signal,
+          }),
+          mapProductAttributes,
+        ),
       invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
     }),
   }),

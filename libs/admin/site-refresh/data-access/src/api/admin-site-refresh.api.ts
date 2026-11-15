@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import type { SiteRefreshResultDto } from '../contracts/site-refresh.contract';
 
@@ -6,7 +6,8 @@ import type { SiteRefreshResultDto } from '../contracts/site-refresh.contract';
 export const adminSiteRefreshApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     refreshSite: build.mutation<SiteRefreshResultDto, void>({
-      query: () => ({ url: '/api/admin/content/site-refresh', method: 'POST' }),
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.POST('/api/admin/content/site-refresh', { signal })),
     }),
   }),
 });

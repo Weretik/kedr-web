@@ -84,7 +84,7 @@ export function toSetProductAttributeBody(input: ProductAttributeInput): SetProd
   return {
     values:
       'valueIds' in input
-        ? input.valueIds.map((valueId) => ({ valueId }))
-        : input.numbers.map((number) => ({ number })),
+        ? input.valueIds.map((valueId) => ({ valueId, number: null }))
+        : input.numbers.map((number) => ({ valueId: null, number })),
   };
 }

@@ -33,8 +33,11 @@ export async function getLegalDocument(
   });
   if (result.kind === 'ok') {
     cacheLife(LEGAL_DOCUMENT_LIFE);
-    const { kind, number, effectiveFrom, title, bodyHtml } = result.data;
-    return { kind: 'ok', document: { kind, number, effectiveFrom, title, bodyHtml } };
+    const { number, effectiveFrom, title, bodyHtml } = result.data;
+    return {
+      kind: 'ok',
+      document: { kind: documentKind, number, effectiveFrom, title, bodyHtml },
+    };
   }
   if (result.kind === 'not-found' || result.kind === 'gone') {
     cacheLife(LEGAL_DOCUMENT_LIFE);

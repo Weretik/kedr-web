@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import {
   mapDashboardCatalog,
@@ -12,16 +12,19 @@ import type { DashboardCatalog, DashboardContent, DashboardOrders } from '@admin
 export const adminOverviewApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getDashboardOrders: build.query<DashboardOrders, void>({
-      query: () => ({ url: '/api/admin/order-workspace/overview', method: 'GET' }),
-      transformResponse: mapDashboardOrders,
+      queryFn: (_arg, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/order-workspace/overview', { signal }),
+          mapDashboardOrders,
+        ),
     }),
     getDashboardCatalog: build.query<DashboardCatalog, void>({
-      query: () => ({ url: '/api/admin/catalog/overview', method: 'GET' }),
-      transformResponse: mapDashboardCatalog,
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/admin/catalog/overview', { signal }), mapDashboardCatalog),
     }),
     getDashboardContent: build.query<DashboardContent, void>({
-      query: () => ({ url: '/api/admin/content/overview', method: 'GET' }),
-      transformResponse: mapDashboardContent,
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/admin/content/overview', { signal }), mapDashboardContent),
     }),
   }),
 });

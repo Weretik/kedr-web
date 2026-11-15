@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import { mapAdminCategories, mapAdminCategory } from '../mappers/admin-category.mapper';
 import {
@@ -21,44 +21,53 @@ import type {
   ContentLanguage,
 } from '@admin/categories/model';
 
-const root = '/api/categories';
-
 /** A typed address or a request to rebuild it from the name. */
 export type SlugChange = { slug: string } | { regenerate: true };
 
 export const adminCategoriesApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getAdminCategories: build.query<AdminCategory[], { deleted: boolean }>({
-      query: ({ deleted }) => ({
-        url: root,
-        method: 'GET',
-        params: deleted ? { deleted: true } : undefined,
-      }),
-      transformResponse: mapAdminCategories,
+      queryFn: ({ deleted }, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/categories', {
+            params: { query: deleted ? { deleted: true } : undefined },
+            signal,
+          }),
+          mapAdminCategories,
+        ),
       providesTags: (_result, _error, { deleted }) => [
         { type: 'Categories', id: deleted ? 'DELETED' : 'LIST' },
       ],
     }),
     getAdminCategory: build.query<AdminCategory, number>({
-      query: (id) => ({ url: `${root}/${id}`, method: 'GET' }),
-      transformResponse: mapAdminCategory,
+      queryFn: (id, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/categories/{id}', { params: { path: { id } }, signal }),
+          mapAdminCategory,
+        ),
       providesTags: (_result, _error, id) => [{ type: 'Categories', id }],
     }),
     getCategoryContent: build.query<CategoryContentByLanguage, number>({
-      query: (id) => ({ url: `${root}/${id}/content`, method: 'GET' }),
-      transformResponse: mapCategoryContent,
+      queryFn: (id, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/categories/{id}/content', { params: { path: { id } }, signal }),
+          mapCategoryContent,
+        ),
       providesTags: (_result, _error, id) => [{ type: 'Categories', id: `content-${id}` }],
     }),
     saveCategoryContent: build.mutation<
       CategoryContent,
       { id: number; language: ContentLanguage; draft: CategoryContentDraft }
     >({
-      query: ({ draft, id, language }) => ({
-        url: `${root}/${id}/content/${language}`,
-        method: 'PUT',
-        data: toSaveCategoryContentBody(draft),
-      }),
-      transformResponse: mapCategoryContentItem,
+      queryFn: ({ draft, id, language }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/categories/{id}/content/{lang}', {
+            params: { path: { id, lang: language } },
+            body: toSaveCategoryContentBody(draft),
+            signal,
+          }),
+          mapCategoryContentItem,
+        ),
       // The response is the stored (sanitized) content; put it in the cache without a refetch.
       async onQueryStarted({ id, language }, { dispatch, queryFulfilled }) {
         const { data } = await queryFulfilled.catch(() => ({ data: undefined }));
@@ -71,13 +80,16 @@ export const adminCategoriesApi = baseApi.injectEndpoints({
       },
     }),
     changeCategorySlug: build.mutation<ChangeSlugResult, { id: number; input: SlugChange }>({
-      query: ({ id, input }) => ({
-        url: `${root}/${id}/slug`,
-        method: 'PUT',
-        data: ('regenerate' in input
-          ? { regenerate: true }
-          : { slug: input.slug, regenerate: false }) satisfies ChangeSlugBody,
-      }),
+      queryFn: ({ id, input }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/categories/{id}/slug', {
+            params: { path: { id } },
+            body: ('regenerate' in input
+              ? { slug: null, regenerate: true }
+              : { slug: input.slug, regenerate: false }) satisfies ChangeSlugBody,
+            signal,
+          }),
+        ),
       invalidatesTags: (_result, error, { id }) =>
         error
           ? []
@@ -90,11 +102,14 @@ export const adminCategoriesApi = baseApi.injectEndpoints({
       CategorySiteVisibilityResult,
       { id: number; isShownOnSite: boolean }
     >({
-      query: ({ id, isShownOnSite }) => ({
-        url: `${root}/${id}/site-visibility`,
-        method: 'PUT',
-        data: { isShownOnSite } satisfies SetCategorySiteVisibilityBody,
-      }),
+      queryFn: ({ id, isShownOnSite }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/categories/{id}/site-visibility', {
+            params: { path: { id } },
+            body: { isShownOnSite } satisfies SetCategorySiteVisibilityBody,
+            signal,
+          }),
+        ),
       // Subcategories and parents change too, and the site lists follow the mark.
       invalidatesTags: (_result, error) => (error ? [] : ['Categories', 'SiteModels']),
     }),

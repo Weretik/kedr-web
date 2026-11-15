@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { mapStaffProfile, toAvatarForm } from './staff-profile.mapper';
+import { mapStaffProfile } from './staff-profile.mapper';
 
 import type { ProfileResponse } from '../contracts/staff-profile.contract';
 
@@ -13,10 +13,5 @@ describe('staff profile mapper', () => {
       role: 'Admin',
     } as ProfileResponse;
     expect(mapStaffProfile(response)).toEqual({ ...response, avatarUrl: null });
-  });
-
-  it('sends the avatar in the file field', () => {
-    const file = new Blob(['x'], { type: 'image/png' });
-    expect(toAvatarForm(file).get('file')).toBeInstanceOf(Blob);
   });
 });

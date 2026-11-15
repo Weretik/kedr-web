@@ -1,4 +1,4 @@
-import { baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, formDataBody } from '@admin/shared/api-client';
 
 import {
   mapArticle,
@@ -10,40 +10,41 @@ import {
 
 import type { Article, ArticleCover, ArticleDraft, ArticleSummary } from '@admin/articles/model';
 
-const root = '/api/admin/articles';
-
-const coverForm = (file: Blob) => {
-  const form = new FormData();
-  form.append('file', file);
-  return form;
-};
-
 export const adminArticlesApi = baseApi
   .enhanceEndpoints({ addTagTypes: ['Articles'] })
   .injectEndpoints({
     endpoints: (build) => ({
       getAdminArticles: build.query<ArticleSummary[], void>({
-        query: () => ({ url: root, method: 'GET' }),
-        transformResponse: mapArticleSummaries,
+        queryFn: (_arg, { signal }) =>
+          apiCall(apiClient.GET('/api/admin/articles', { signal }), mapArticleSummaries),
         providesTags: [{ type: 'Articles', id: 'LIST' }],
       }),
       getAdminArticle: build.query<Article, number>({
-        query: (id) => ({ url: `${root}/${id}`, method: 'GET' }),
-        transformResponse: mapArticle,
+        queryFn: (id, { signal }) =>
+          apiCall(
+            apiClient.GET('/api/admin/articles/{id}', { params: { path: { id } }, signal }),
+            mapArticle,
+          ),
         providesTags: (_result, _error, id) => [{ type: 'Articles', id }],
       }),
       createArticle: build.mutation<Article, ArticleDraft>({
-        query: (draft) => ({ url: root, method: 'POST', data: toSaveArticleBody(draft) }),
-        transformResponse: mapArticle,
+        queryFn: (draft, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/articles', { body: toSaveArticleBody(draft), signal }),
+            mapArticle,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'Articles', id: 'LIST' }]),
       }),
       updateArticle: build.mutation<Article, { id: number; draft: ArticleDraft }>({
-        query: ({ id, draft }) => ({
-          url: `${root}/${id}`,
-          method: 'PUT',
-          data: toSaveArticleBody(draft),
-        }),
-        transformResponse: mapArticle,
+        queryFn: ({ id, draft }, { signal }) =>
+          apiCall(
+            apiClient.PUT('/api/admin/articles/{id}', {
+              params: { path: { id } },
+              body: toSaveArticleBody(draft),
+              signal,
+            }),
+            mapArticle,
+          ),
         invalidatesTags: (_result, error, { id }) =>
           error
             ? []
@@ -53,18 +54,27 @@ export const adminArticlesApi = baseApi
               ],
       }),
       deleteArticle: build.mutation<void, number>({
-        query: (id) => ({ url: `${root}/${id}`, method: 'DELETE' }),
+        queryFn: (id, { signal }) =>
+          apiCall(
+            apiClient.DELETE('/api/admin/articles/{id}', { params: { path: { id } }, signal }),
+          ),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'Articles', id: 'LIST' }]),
       }),
       /** Puts the picture into the media library (CDN `articles/`); the article takes it on save. */
       uploadArticleCover: build.mutation<ArticleCover, Blob>({
-        query: (file) => ({ url: `${root}/covers`, method: 'POST', data: coverForm(file) }),
-        transformResponse: mapArticleCoverUpload,
+        queryFn: (file, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/articles/covers', { ...formDataBody({ file }), signal }),
+            mapArticleCoverUpload,
+          ),
       }),
       /** Moves the pre-CDN covers to the CDN; answers how many moved. Safe to repeat. */
       moveLegacyArticleCovers: build.mutation<number, void>({
-        query: () => ({ url: `${root}/covers/move-legacy`, method: 'POST' }),
-        transformResponse: mapLegacyCoversMoved,
+        queryFn: (_arg, { signal }) =>
+          apiCall(
+            apiClient.POST('/api/admin/articles/covers/move-legacy', { signal }),
+            mapLegacyCoversMoved,
+          ),
         invalidatesTags: (_result, error) => (error ? [] : ['Articles']),
       }),
     }),
