@@ -4907,11 +4907,28 @@ export interface components {
             activity: components["schemas"]["WorkActivityDto"][];
             activityTruncated: boolean;
         };
+        WorkspaceCreatedOrder: {
+            /** Format: int64 */
+            orderId: number;
+            orderNumber: string;
+            /** Format: double */
+            totalAmount: number;
+            syncStatus: string;
+        };
         WorkspaceCreateOrderRequest: {
             counterpartyId: string;
             lines: components["schemas"]["WorkspaceInputLine"][];
             quoteFingerprint: string;
             comment: null | string;
+        };
+        WorkspaceCustomerPrice: {
+            productId: string;
+            /** Format: double */
+            unitPrice: null | number;
+        };
+        WorkspaceCustomerPrices: {
+            counterpartyId: string;
+            prices: components["schemas"]["WorkspaceCustomerPrice"][];
         };
         WorkspaceCustomerPricesRequest: {
             counterpartyId: string;
@@ -5034,6 +5051,27 @@ export interface components {
         WorkspacePageOfWorkspaceOrderListItem: {
             pagedInfo: components["schemas"]["WorkspacePagedInfo"];
             value: components["schemas"]["WorkspaceOrderListItem"][];
+        };
+        WorkspaceQuote: {
+            counterpartyId: string;
+            lines: components["schemas"]["WorkspaceQuoteLine"][];
+            /** Format: double */
+            totalAmount: number;
+            quoteFingerprint: string;
+        };
+        WorkspaceQuoteLine: {
+            productId: string;
+            productName: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            unitPrice: number;
+            /** Format: double */
+            lineAmount: number;
+            /** Format: double */
+            baseUnitPrice: number;
+            /** Format: double */
+            priceAdjustment: number;
         };
         WorkspaceQuoteRequest: {
             counterpartyId: string;
@@ -11979,7 +12017,18 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WorkspaceCreatedOrder"];
+                };
+            };
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceCreatedOrder"];
+                };
             };
         };
     };
@@ -12023,7 +12072,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WorkspaceQuote"];
+                };
             };
         };
     };
@@ -12045,7 +12096,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WorkspaceCustomerPrices"];
+                };
             };
         };
     };
@@ -12097,7 +12150,18 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WorkspaceDraftDetail"];
+                };
+            };
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceDraftDetail"];
+                };
             };
         };
     };
@@ -12145,7 +12209,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WorkspaceDraftDetail"];
+                };
             };
         };
     };
