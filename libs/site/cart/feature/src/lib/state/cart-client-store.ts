@@ -19,10 +19,23 @@ import {
 import { createCartDrawerFocus } from '../platform/cart-drawer-focus';
 
 import type { createCartStorage } from '../storage/cart-storage';
-import type { CartLine, CartPurchaseInput, CheckoutField, CheckoutResult } from '@site/cart/model';
+import type {
+  CartLine,
+  CartPurchaseInput,
+  CheckoutCommand,
+  CheckoutField,
+  CheckoutResult,
+} from '@site/cart/model';
 
-/** A browser/document owner; creating a store does not read or write storage. */
-export function createCartClientStore(storage: ReturnType<typeof createCartStorage>) {
+/**
+ * A browser/document owner; creating a store does not read or write storage. Each order attempt carries one
+ * `requestKey` (idempotency key): a retry of the same order reuses it, a changed order, a conflict or a success
+ * starts a new one.
+ */
+export function createCartClientStore(
+  storage: ReturnType<typeof createCartStorage>,
+  newRequestKey: () => string = () => crypto.randomUUID(),
+) {
   let snapshot: CartSnapshot = {
     ...SERVER_CART_SNAPSHOT,
     lines: [],
@@ -34,6 +47,12 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
   let readableStorage = false;
   let action: SubmitOrderAction | undefined;
   let inFlight: Promise<void> | undefined;
+  let attempt: { order: string; requestKey: string } | undefined;
+  const keyFor = (command: CheckoutCommand): string => {
+    const order = JSON.stringify(command);
+    if (attempt?.order !== order) attempt = { order, requestKey: newRequestKey() };
+    return attempt.requestKey;
+  };
   const drawerFocus = createCartDrawerFocus();
 
   const update = (patch: Partial<CartSnapshot>) => {
@@ -56,6 +75,8 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
     });
   };
   const complete = (result: CheckoutResult, accepted: Omit<CartReceipt, 'orderId'>) => {
+    // Only an unknown outcome is repeated with the same key; anything else ends the attempt.
+    if (result.kind !== 'uncertain') attempt = undefined;
     const cleanup =
       result.kind === 'created' && readableStorage
         ? storage.clear()
@@ -164,7 +185,7 @@ export function createCartClientStore(storage: ReturnType<typeof createCartStora
         });
         return Promise.resolve();
       }
-      const command = parsed.command;
+      const command = { ...parsed.command, requestKey: keyFor(parsed.command) };
       const accepted = getCartTotals(snapshot.lines);
       const submitAction = action;
       // Assign the lock before notifying synchronous subscribers; they may call submit again.

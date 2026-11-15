@@ -79,6 +79,11 @@ export function parseQuickOrderResult(result: SiteOrderApiResult): CheckoutResul
   if (result.status === 400) return validationResult(result.body);
 
   if (result.status === 409) {
+    // Problem Details: the same Idempotency-Key came with other data; the detail is a plain Ukrainian sentence.
+    if (isRecord(result.body) && typeof result.body.detail === 'string') {
+      const detail = plainMessage(result.body.detail);
+      return { kind: 'conflict', messages: detail === null ? [] : [detail] };
+    }
     if (!Array.isArray(result.body) || !result.body.every((item) => typeof item === 'string')) {
       return uncertain();
     }

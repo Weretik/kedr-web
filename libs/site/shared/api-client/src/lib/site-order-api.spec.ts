@@ -46,6 +46,24 @@ describe('siteApiCreateQuickOrder', () => {
     expect(options.signal).toBeDefined();
   });
 
+  it('sends the attempt key as Idempotency-Key only when the caller has one', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, { orderId: 'x' }));
+    const key = '7d3f0c52-6a4e-4d8b-9e21-3c5a7b9d1f04';
+
+    await siteApiCreateQuickOrder(
+      command,
+      { idempotencyKey: key },
+      fetchMock,
+      'https://api.example.com',
+    );
+    await siteApiCreateQuickOrder(command, {}, fetchMock, 'https://api.example.com');
+
+    const keyed = new Headers((fetchMock.mock.calls[0] as [URL, RequestInit])[1].headers);
+    const plain = new Headers((fetchMock.mock.calls[1] as [URL, RequestInit])[1].headers);
+    expect(keyed.get('Idempotency-Key')).toBe(key);
+    expect(plain.has('Idempotency-Key')).toBe(false);
+  });
+
   it.each([400, 409, 503])(
     'keeps HTTP %i and an unknown JSON body for the domain parser',
     async (status) => {

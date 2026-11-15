@@ -26,6 +26,8 @@ export function buildCheckoutCommand(
   });
 }
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export function parseCheckoutCommand(input: unknown): CheckoutCommandParseResult {
   if (!isRecord(input)) return { ok: false, fieldErrors: {}, issues: ['invalid-command'] };
   const draft = {
@@ -61,5 +63,7 @@ export function parseCheckoutCommand(input: unknown): CheckoutCommandParseResult
     }
   }
   if (!valid || issues.size) return { ok: false, fieldErrors, issues: [...issues] };
-  return { ok: true, command: { ...draft, lines } };
+  const requestKey =
+    typeof input.requestKey === 'string' && UUID.test(input.requestKey) ? input.requestKey : null;
+  return { ok: true, command: { ...draft, lines, ...(requestKey ? { requestKey } : {}) } };
 }
