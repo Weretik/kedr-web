@@ -73,7 +73,7 @@ export function useArticleEditor(
     setSaveError(undefined);
     try {
       const saved = stored
-        ? await update({ id: stored.id, draft: current }).unwrap()
+        ? await update({ id: stored.id, draft: current, version: stored.version }).unwrap()
         : await create(current).unwrap();
       setDraft(undefined);
       onSaved(saved, !stored);

@@ -54,6 +54,8 @@ A request can reach the server twice without anyone meaning to: a double press, 
 
 Every other Admin mutation (work tasks, content, catalog, media, users) relies on the pending lock: RTK Query does not retry mutations and the hooks disable their actions while a request runs. The backend's audit lists why each of them is safe without a key.
 
+**Versioned edit forms.** Six Admin forms send back the row `version` they read: article, page SEO, site SEO settings, category content, site model text, and catalog attribute. When someone saved the record in between, the backend answers 409 with a Ukrainian message (KedrStore database rules 4). The form shows that message and keeps the typed values. The mutation invalidates the record's tag on a 409 (`isConflict` in `@admin/shared/api-client`), so the form reloads the record and its current version, and the person decides whether to save again.
+
 ## Known deviations
 
 None open.

@@ -42,9 +42,11 @@ export interface SiteModelText {
   description: string;
   seoTitle: string;
   seoDescription: string;
+  /** Row version the next save sends back (0 until first saved); a newer save answers 409. */
+  version: number;
 }
 
-export type SiteModelTextInput = Omit<SiteModelText, 'language'>;
+export type SiteModelTextInput = Omit<SiteModelText, 'language' | 'version'>;
 
 /** Text limits of the backend contract. */
 export const siteModelTextLimits: Record<keyof SiteModelTextInput, number> = {

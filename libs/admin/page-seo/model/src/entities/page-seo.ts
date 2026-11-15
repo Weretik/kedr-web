@@ -31,6 +31,8 @@ export interface PageSeoEntry {
   texts: PageSeoTexts;
   updatedAt: string | null;
   updatedBy: string | null;
+  /** Row version the next save sends back (0 for a page never saved); a newer save answers 409. */
+  version: number;
 }
 
 /** Backend limits. */

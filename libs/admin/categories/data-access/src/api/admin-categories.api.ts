@@ -1,4 +1,4 @@
-import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-client';
 
 import { mapAdminCategories, mapAdminCategory } from '../mappers/admin-category.mapper';
 import {
@@ -57,17 +57,20 @@ export const adminCategoriesApi = baseApi.injectEndpoints({
     }),
     saveCategoryContent: build.mutation<
       CategoryContent,
-      { id: number; language: ContentLanguage; draft: CategoryContentDraft }
+      { id: number; language: ContentLanguage; draft: CategoryContentDraft; version: number }
     >({
-      queryFn: ({ draft, id, language }, { signal }) =>
+      queryFn: ({ draft, id, language, version }, { signal }) =>
         apiCall(
           apiClient.PUT('/api/categories/{id}/content/{lang}', {
             params: { path: { id, lang: language } },
-            body: toSaveCategoryContentBody(draft),
+            body: { ...toSaveCategoryContentBody(draft), version },
             signal,
           }),
           mapCategoryContentItem,
         ),
+      // A 409 (someone saved this language meanwhile) reloads the content and its version.
+      invalidatesTags: (_result, error, { id }) =>
+        isConflict(error) ? [{ type: 'Categories', id: `content-${id}` }] : [],
       // The response is the stored (sanitized) content; put it in the cache without a refetch.
       async onQueryStarted({ id, language }, { dispatch, queryFulfilled }) {
         const { data } = await queryFulfilled.catch(() => ({ data: undefined }));

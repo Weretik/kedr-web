@@ -15,7 +15,15 @@ vi.mock('@admin/page-seo/data-access', () => ({
 const empty = { titleUk: '', titleRu: '', descriptionUk: '', descriptionRu: '' };
 
 const entries: PageSeoEntry[] = [
-  { page: 'Home', label: 'Головна', path: '/', texts: empty, updatedAt: null, updatedBy: null },
+  {
+    page: 'Home',
+    label: 'Головна',
+    path: '/',
+    texts: empty,
+    updatedAt: null,
+    updatedBy: null,
+    version: 0,
+  },
   {
     page: 'Wholesale',
     label: 'Співпраця',
@@ -23,6 +31,7 @@ const entries: PageSeoEntry[] = [
     texts: { ...empty, titleUk: 'Фурнітура оптом' },
     updatedAt: '2026-11-05T10:00:00Z',
     updatedBy: 'Олена',
+    version: 31,
   },
 ];
 
@@ -55,6 +64,7 @@ describe('PageSeoPage', () => {
     expect(api.update.mock.calls[0][0]).toEqual({
       page: 'Home',
       texts: { ...empty, titleUk: 'Дверна фурнітура в Харкові' },
+      version: 0,
     });
     expect(await screen.findByText(/Сайт покаже зміни/)).toBeDefined();
   });

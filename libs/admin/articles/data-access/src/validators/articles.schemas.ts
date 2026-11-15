@@ -32,6 +32,7 @@ export const adminArticleSchema = z.object({
   texts: z
     .array(z.object({ language, title: z.string(), excerpt: z.string(), bodyHtml: z.string() }))
     .length(2),
+  version: z.number().int().nonnegative().default(0),
 });
 
 /** Answer of the cover upload: the picture is in the media library, not yet on any article. */

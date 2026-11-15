@@ -1,4 +1,4 @@
-import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-client';
 
 import { mapSeoSettings, toSaveSeoSettingsBody } from '../mappers/seo-settings.mapper';
 
@@ -15,16 +15,20 @@ export const adminSeoSettingsApi = baseApi
           apiCall(apiClient.GET('/api/admin/content/seo-settings', { signal }), mapSeoSettings),
         providesTags: [tag],
       }),
-      /** The saved settings replace the cached ones without a refetch. */
-      updateSeoSettings: build.mutation<SeoSettings, SeoSettingsDraft>({
-        queryFn: (draft, { signal }) =>
+      /**
+       * The saved settings replace the cached ones without a refetch. A 409 (someone saved meanwhile) reloads them,
+       * so the panel gets the current version.
+       */
+      updateSeoSettings: build.mutation<SeoSettings, { draft: SeoSettingsDraft; version: number }>({
+        queryFn: ({ draft, version }, { signal }) =>
           apiCall(
             apiClient.PUT('/api/admin/content/seo-settings', {
-              body: toSaveSeoSettingsBody(draft),
+              body: { ...toSaveSeoSettingsBody(draft), version },
               signal,
             }),
             mapSeoSettings,
           ),
+        invalidatesTags: (_result, error) => (isConflict(error) ? [tag] : []),
         async onQueryStarted(_draft, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;

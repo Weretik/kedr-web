@@ -26,6 +26,8 @@ describe('page SEO mapper', () => {
 
   it('maps a saved page and refuses one the admin does not know', () => {
     expect(mapPageSeoEntry(row('Wholesale', 'Опт')).texts.titleUk).toBe('Опт');
+    expect(mapPageSeoEntry({ ...row('Wholesale'), version: 77 }).version).toBe(77);
+    expect(mapPageSeoEntry(row('Wholesale')).version).toBe(0);
     expect(() => mapPageSeoEntry(row('Checkout'))).toThrow();
   });
 

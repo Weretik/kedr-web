@@ -15,6 +15,7 @@ export function mapSeoSettings(value: unknown): SeoSettings {
     sharePicture: row.shareImage,
     updatedAt: row.updatedAt,
     updatedBy: row.updatedBy,
+    version: row.version,
   };
 }
 

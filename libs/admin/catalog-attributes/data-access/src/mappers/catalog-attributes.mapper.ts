@@ -51,6 +51,7 @@ export function mapCatalogAttributeDetails(response: unknown): CatalogAttributeD
       isConfirmed: alias.isConfirmed,
       note: alias.note ?? null,
     })),
+    version: dto.version,
   };
 }
 

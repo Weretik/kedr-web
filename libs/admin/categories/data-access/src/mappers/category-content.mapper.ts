@@ -24,6 +24,7 @@ export function mapCategoryContentItem(data: unknown): CategoryContent {
     bodyHtml: dto.bodyHtml ?? '',
     faq: dto.faq.map(({ answer, question }) => ({ answer, question })),
     updatedAt: dto.updatedAt,
+    version: dto.version,
   };
 }
 

@@ -46,6 +46,7 @@ export const catalogAttributeDetailsSchema = z.object({
       note: z.string().nullish(),
     }),
   ),
+  version: z.number().int().nonnegative().default(0),
 });
 
 const codeMeaningSchema = z.object({
