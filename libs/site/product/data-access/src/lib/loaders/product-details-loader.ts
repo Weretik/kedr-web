@@ -22,7 +22,6 @@ export async function getProductDetails(locale: Locale, slug: string): Promise<P
 
   const result = await siteApiGet('/api/catalog/{lang}/product/{productSlug}', {
     path: { lang: locale, productSlug: slug },
-    query: { priceTypeId: 11 },
   });
   if (result.kind === 'ok') {
     const product = mapProductDetails(result.data);

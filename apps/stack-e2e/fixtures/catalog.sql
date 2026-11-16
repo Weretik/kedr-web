@@ -2,7 +2,8 @@
 -- Runs once on the empty database right after the KedrStore migrate job; ids 700001+ are outside the 1C range.
 BEGIN;
 
--- 11: the price on the product page; 12: Catalog:Pricing:RetailPriceTypeId, the price in lists.
+-- 12: Catalog:Pricing:RetailPriceTypeId, the retail price on the site; 11 stays so an older KedrStore
+-- master, whose product page still defaults to 11, shows the same price.
 INSERT INTO "PriceType" ("Id", "PriceTypeName") VALUES (11, 'Роздрібна (сторінка товару)'), (12, 'Роздрібна');
 
 INSERT INTO "ProductCategories"

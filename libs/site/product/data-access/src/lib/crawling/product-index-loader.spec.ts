@@ -26,7 +26,7 @@ describe('product index and prerender candidates', () => {
     expect(siteApiGet).toHaveBeenCalledTimes(1);
     expect(siteApiGet).toHaveBeenCalledWith('/api/catalog/{lang}/products', {
       path: { lang: 'ru' },
-      query: { availability: 'All', sort: 'IdAsc', page: 1, pageSize: 100, priceTypeId: 11 },
+      query: { availability: 'All', sort: 'IdAsc', page: 1, pageSize: 100 },
     });
   });
 
