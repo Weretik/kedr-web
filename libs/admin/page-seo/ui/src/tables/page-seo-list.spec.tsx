@@ -12,6 +12,7 @@ const entry: PageSeoEntry = {
   texts: { titleUk: '', titleRu: '', descriptionUk: 'Склад у Харкові', descriptionRu: '' },
   updatedAt: '2026-11-05T10:00:00Z',
   updatedBy: 'Олена',
+  version: 1,
 };
 
 describe('PageSeoList', () => {
