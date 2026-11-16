@@ -1,11 +1,9 @@
 import type { ProductsListSort } from './products-list-query';
 
+/** «Без фото» filters only by search, category and actual stock. */
 export interface MissingPhotoQuery {
   searchTerm?: string;
-  inStock?: boolean;
-  isSale?: boolean;
-  isNew?: boolean;
-  exportToSite?: boolean;
+  hasStock?: boolean;
   categoryId?: number;
   sort: ProductsListSort;
   page: number;

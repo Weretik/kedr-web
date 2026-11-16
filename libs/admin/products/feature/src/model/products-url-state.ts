@@ -2,7 +2,7 @@ import { DEFAULT_PRODUCTS_LIST_QUERY, normalizeProductsListQuery } from '@admin/
 
 import type { MissingPhotoQuery, ProductsListQuery } from '@admin/products/model';
 
-const booleanKeys = ['inStock', 'isSale', 'isNew'] as const;
+const booleanKeys = ['inStock', 'hasStock', 'isSale', 'isNew'] as const;
 
 export interface ProductsUrlState {
   mode: ProductsListMode;
@@ -22,6 +22,7 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     ...DEFAULT_PRODUCTS_LIST_QUERY,
     searchTerm: params.get('searchTerm') ?? undefined,
     inStock: readBoolean(params, 'inStock'),
+    hasStock: readBoolean(params, 'hasStock'),
     isSale: readBoolean(params, 'isSale'),
     isNew: readBoolean(params, 'isNew'),
     categoryId: readPositiveInteger(params.get('categoryId'), 0) || undefined,
@@ -34,9 +35,7 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
   const missingQuery = normalizeProductsListQuery({
     ...DEFAULT_PRODUCTS_LIST_QUERY,
     searchTerm: params.get('missingSearchTerm') ?? undefined,
-    inStock: readBoolean(params, 'missingInStock'),
-    isSale: readBoolean(params, 'missingIsSale'),
-    isNew: readBoolean(params, 'missingIsNew'),
+    hasStock: readBoolean(params, 'missingHasStock'),
     categoryId: readPositiveInteger(params.get('missingCategoryId'), 0) || undefined,
     sort: (params.get('missingSort') ??
       DEFAULT_PRODUCTS_LIST_QUERY.sort) as ProductsListQuery['sort'],
@@ -47,6 +46,7 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     ...DEFAULT_PRODUCTS_LIST_QUERY,
     searchTerm: params.get('siteSearchTerm') ?? undefined,
     inStock: readBoolean(params, 'siteInStock'),
+    hasStock: readBoolean(params, 'siteHasStock'),
     isSale: readBoolean(params, 'siteIsSale'),
     isNew: readBoolean(params, 'siteIsNew'),
     categoryId: readPositiveInteger(params.get('siteCategoryId'), 0) || undefined,
@@ -74,9 +74,7 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     siteQuery,
     missingQuery: {
       searchTerm: missingQuery.searchTerm,
-      inStock: missingQuery.inStock,
-      isSale: missingQuery.isSale,
-      isNew: missingQuery.isNew,
+      hasStock: missingQuery.hasStock,
       categoryId: missingQuery.categoryId,
       sort: missingQuery.sort,
       page: missingQuery.page,

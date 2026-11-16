@@ -2043,6 +2043,13 @@
             }
           },
           {
+            "name": "hasStock",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "name": "isSale",
             "in": "query",
             "schema": {
