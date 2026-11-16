@@ -64,20 +64,24 @@ jobs:
           repository: Weretik/KedrStore
           ref: ${{ inputs.backend-ref || 'master' }}
           path: backend
+      # Outside the workspace, so Nx does not read the backend's project files as part of this monorepo.
+      - name: Move KedrStore out of the workspace
+        run: |
+          mv backend "$RUNNER_TEMP/KedrStore"
+          echo "BACKEND_DIR=$RUNNER_TEMP/KedrStore" >> "$GITHUB_ENV"
+          echo "E2E_OUT=$RUNNER_TEMP/kedr-e2e" >> "$GITHUB_ENV"
 
       # Backend: build the API and the migrate job from source, the same projects the deploy images use.
       - uses: actions/setup-dotnet@v4
         with:
-          global-json-file: backend/global.json
-          cache: true
-          cache-dependency-path: backend/**/*.csproj
+          global-json-file: ${{ runner.temp }}/KedrStore/global.json
       - name: Build KedrStore
-        working-directory: backend
+        working-directory: ${{ env.BACKEND_DIR }}
         run: |
-          dotnet publish src/Bootstrapper/Host.Jobs/Host.Jobs.csproj -c Release -o ../.e2e/jobs
-          dotnet publish src/Bootstrapper/Host.Api/Host.Api.csproj -c Release -o ../.e2e/api
+          dotnet publish src/Bootstrapper/Host.Jobs/Host.Jobs.csproj -c Release -o "$E2E_OUT/jobs"
+          dotnet publish src/Bootstrapper/Host.Api/Host.Api.csproj -c Release -o "$E2E_OUT/api"
       - name: Migrate the test database and create the administrator
-        working-directory: .e2e/jobs
+        working-directory: ${{ env.E2E_OUT }}/jobs
         env:
           ConnectionStrings__Default: ${{ env.DB_CONNECTION }}
           ADMIN_DEFAULT_PASSWORD: ${{ env.E2E_ADMIN_PASSWORD }}
@@ -87,7 +91,7 @@ jobs:
           PGPASSWORD: postgres
         run: psql -h localhost -U postgres -d kedr_e2e -v ON_ERROR_STOP=1 -f apps/stack-e2e/fixtures/catalog.sql
       - name: Start the API
-        working-directory: .e2e/api
+        working-directory: ${{ env.E2E_OUT }}/api
         env:
           ConnectionStrings__Default: ${{ env.DB_CONNECTION }}
           ASPNETCORE_URLS: ${{ env.KEDR_API_URL }}
@@ -97,12 +101,12 @@ jobs:
           SiteRevalidation__Url: http://localhost:3000
           SiteRevalidation__Secret: ${{ env.KEDR_REVALIDATE_SECRET }}
         run: |
-          nohup dotnet Host.Api.dll > "$GITHUB_WORKSPACE/.e2e/api.log" 2>&1 &
+          nohup dotnet Host.Api.dll > "$E2E_OUT/api.log" 2>&1 &
           for attempt in $(seq 60); do
             curl -sf "$KEDR_API_URL/health" && exit 0
             sleep 1
           done
-          cat "$GITHUB_WORKSPACE/.e2e/api.log"
+          cat "$E2E_OUT/api.log"
           exit 1
 
       # Frontend: the Admin runs from the Vite dev server, the site from a production build.
@@ -134,6 +138,6 @@ jobs:
           name: e2e-report
           path: |
             dist/.playwright/apps/stack-e2e/
-            .e2e/api.log
+            ${{ env.E2E_OUT }}/api.log
           include-hidden-files: true
           retention-days: 14
