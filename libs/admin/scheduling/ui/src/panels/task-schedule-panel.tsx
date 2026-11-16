@@ -20,6 +20,8 @@ interface TaskSchedulePanelProps {
   values: ScheduleFormValues;
   errors: ScheduleFormErrors;
   serverError: string | null;
+  /** Why switching the task off holds work back; shown while the form would pause it. */
+  pauseWarning?: string | null;
   saving: boolean;
   onChange: (changes: Partial<ScheduleFormValues>) => void;
   onCancel: () => void;
@@ -38,6 +40,7 @@ export function TaskSchedulePanel({
   onCancel,
   onChange,
   onSave,
+  pauseWarning = null,
   saving,
   serverError,
   taskName,
@@ -67,6 +70,7 @@ export function TaskSchedulePanel({
     >
       <Stack spacing={3}>
         {serverError ? <Alert severity="error">{serverError}</Alert> : null}
+        {pauseWarning ? <Alert severity="warning">{pauseWarning}</Alert> : null}
         <FormControlLabel
           control={
             <Switch

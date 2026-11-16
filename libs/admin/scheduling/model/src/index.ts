@@ -14,4 +14,5 @@ export type { ScheduleFormValues } from './forms/schedule-form';
 export { scheduleLimits, validateScheduleForm } from './validators/schedule-form-rules';
 export type { ScheduleFormErrors, ScheduleFormField } from './validators/schedule-form-rules';
 export { canRunNow, taskMarks } from './mappers/task-marks';
+export { pauseWarning } from './mappers/task-pause-warning';
 export type { TaskMark, TaskMarkTone } from './mappers/task-marks';
