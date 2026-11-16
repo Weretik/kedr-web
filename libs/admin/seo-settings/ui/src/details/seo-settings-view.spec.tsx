@@ -15,6 +15,7 @@ describe('SeoSettingsView', () => {
           sharePicture: null,
           updatedAt: '2026-11-12T00:00:00Z',
           updatedBy: null,
+          version: 1,
         }}
       />,
     );

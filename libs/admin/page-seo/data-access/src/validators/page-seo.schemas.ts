@@ -11,6 +11,7 @@ export const adminPageSeoSchema = z.object({
   descriptionRu: text,
   updatedAt: z.string().nullable(),
   updatedBy: z.string().nullable(),
+  version: z.number().int().nonnegative().default(0),
 });
 
 export const adminPageSeoListSchema = z.array(adminPageSeoSchema);

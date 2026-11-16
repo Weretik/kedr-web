@@ -53,6 +53,8 @@ export interface CatalogAttributeDetails {
   attribute: CatalogAttribute;
   values: readonly CatalogAttributeValue[];
   aliases: readonly CatalogAttributeAlias[];
+  /** Row version the settings save sends back; a newer save on the server answers 409. */
+  version: number;
 }
 
 export interface CatalogAttributeChange {

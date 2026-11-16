@@ -19,6 +19,8 @@ export interface CategoryContentDraft {
 export interface CategoryContent extends CategoryContentDraft {
   language: ContentLanguage;
   updatedAt: string | null;
+  /** Row version the next save sends back (0 for a language never saved); a newer save answers 409. */
+  version: number;
 }
 
 export const emptyCategoryContent = (language: ContentLanguage): CategoryContent => ({
@@ -29,6 +31,7 @@ export const emptyCategoryContent = (language: ContentLanguage): CategoryContent
   bodyHtml: '',
   faq: [],
   updatedAt: null,
+  version: 0,
 });
 
 /** True when a language has no site text at all: the page then shows only the category name. */

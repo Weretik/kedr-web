@@ -32,6 +32,7 @@ const settings: SeoSettings = {
   },
   updatedAt: '2026-11-12T10:00:00Z',
   updatedBy: 'seo@classkedr.com.ua',
+  version: 17,
 };
 
 describe('SeoSettingsPage', () => {
@@ -64,9 +65,12 @@ describe('SeoSettingsPage', () => {
 
     await waitFor(() => expect(api.update).toHaveBeenCalledOnce());
     expect(api.update.mock.calls[0][0]).toMatchObject({
-      googleAnalyticsId: 'G-AB12CD34EF',
-      googleSiteVerification: '<meta name="google-site-verification" content="AbCdEf_123-xyz" />',
-      sharePicture: null,
+      draft: {
+        googleAnalyticsId: 'G-AB12CD34EF',
+        googleSiteVerification: '<meta name="google-site-verification" content="AbCdEf_123-xyz" />',
+        sharePicture: null,
+      },
+      version: 17,
     });
     expect(await screen.findByText(/Сайт покаже зміни/)).toBeDefined();
   });

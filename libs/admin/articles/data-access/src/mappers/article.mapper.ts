@@ -69,6 +69,7 @@ export function mapArticle(response: unknown): Article {
     updatedAt: dto.updatedAt,
     updatedBy: dto.updatedBy ?? null,
     texts,
+    version: dto.version,
   };
 }
 

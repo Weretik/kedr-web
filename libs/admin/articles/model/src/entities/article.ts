@@ -53,4 +53,6 @@ export interface Article {
   updatedAt: string;
   updatedBy: string | null;
   texts: Record<ArticleLanguage, ArticleText>;
+  /** Row version the next save sends back; a newer save on the server answers 409. */
+  version: number;
 }

@@ -22,6 +22,11 @@ const article = {
 };
 
 describe('article mapper', () => {
+  it('keeps the row version for the next save, 0 when an older answer has none', () => {
+    expect(mapArticle({ ...article, version: 3_401 }).version).toBe(3_401);
+    expect(mapArticle(article).version).toBe(0);
+  });
+
   it('maps an article by language with an absolute cover URL', () => {
     const mapped = mapArticle(article);
 

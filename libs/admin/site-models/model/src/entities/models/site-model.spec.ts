@@ -37,6 +37,7 @@ const model: SiteModel = {
       description: '',
       seoTitle: 'Ручка',
       seoDescription: '',
+      version: 0,
     },
   ],
   characteristics: [],

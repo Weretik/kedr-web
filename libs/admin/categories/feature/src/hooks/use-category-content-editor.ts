@@ -64,7 +64,12 @@ export function useCategoryContentEditor(
 
     setSaveErrors((current) => ({ ...current, [language]: undefined }));
     try {
-      await saveContent({ draft, id: categoryId, language }).unwrap();
+      await saveContent({
+        draft,
+        id: categoryId,
+        language,
+        version: stored?.[language].version ?? 0,
+      }).unwrap();
       // The refetched content (with the sanitized text) becomes the new baseline.
       setDrafts((current) => ({ ...current, [language]: undefined }));
       onSaved(language === 'uk' ? 'Український текст збережено.' : 'Російський текст збережено.');

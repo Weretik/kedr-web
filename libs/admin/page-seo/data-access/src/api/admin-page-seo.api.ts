@@ -1,4 +1,4 @@
-import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-client';
 
 import { mapPageSeoEntry, mapPageSeoList, toSavePageSeoBody } from '../mappers/page-seo.mapper';
 
@@ -13,17 +13,24 @@ export const adminPageSeoApi = baseApi.enhanceEndpoints({ addTagTypes: [tag] }).
         apiCall(apiClient.GET('/api/admin/content/page-seo', { signal }), mapPageSeoList),
       providesTags: [{ type: tag, id: 'LIST' }],
     }),
-    /** The saved page replaces its row in the cached list without a refetch. */
-    updatePageSeo: build.mutation<PageSeoEntry, { page: SitePage; texts: PageSeoTexts }>({
-      queryFn: ({ page, texts }, { signal }) =>
+    /**
+     * The saved page replaces its row in the cached list without a refetch. A 409 (someone saved the page meanwhile)
+     * reloads the list, so the panel gets the current version.
+     */
+    updatePageSeo: build.mutation<
+      PageSeoEntry,
+      { page: SitePage; texts: PageSeoTexts; version: number }
+    >({
+      queryFn: ({ page, texts, version }, { signal }) =>
         apiCall(
           apiClient.PUT('/api/admin/content/page-seo/{page}', {
             params: { path: { page } },
-            body: toSavePageSeoBody(texts),
+            body: { ...toSavePageSeoBody(texts), version },
             signal,
           }),
           mapPageSeoEntry,
         ),
+      invalidatesTags: (_result, error) => (isConflict(error) ? [{ type: tag, id: 'LIST' }] : []),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

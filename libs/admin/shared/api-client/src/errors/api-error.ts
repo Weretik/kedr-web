@@ -142,3 +142,10 @@ export const toApiError = (error: unknown): ApiError => {
 
   return { code: 'Unknown', status, message, traceId: problemDetails?.traceId };
 };
+
+/**
+ * A 409 answer: the record changed since the form read it (KedrStore database rules 4) or another conflict. The form
+ * shows the message and reloads the record so its version is current again.
+ */
+export const isConflict = (error: unknown): boolean =>
+  typeof error === 'object' && error !== null && (error as { status?: unknown }).status === 409;

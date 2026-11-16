@@ -17,9 +17,11 @@ describe('seo settings mapper', () => {
       },
       updatedAt: '2026-11-12T00:00:00Z',
       updatedBy: 'seo@classkedr.com.ua',
+      version: 958,
     });
 
     expect(settings.sharePicture?.mediaFileId).toBe(7);
+    expect(settings.version).toBe(958);
     expect(settings.googleTagManagerId).toBeNull();
   });
 

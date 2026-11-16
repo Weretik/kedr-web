@@ -58,6 +58,7 @@ export const siteModelSchema = z.object({
       description: z.string(),
       seoTitle: z.string(),
       seoDescription: z.string(),
+      version: z.number().int().nonnegative().default(0),
     }),
   ),
   characteristics: z.array(

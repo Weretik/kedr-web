@@ -36,7 +36,7 @@ export function AttributeEditPanel({
   open,
 }: AttributeEditPanelProps) {
   const query = useGetCatalogAttributeQuery(attributeId ?? skipToken);
-  const settings = useAttributeSettingsSave(attributeId, onNotice);
+  const settings = useAttributeSettingsSave(attributeId, query.data?.version, onNotice);
   const values = useAttributeValueEditor(attributeId, initialValueEdit, onNotice);
   const picker = useTexturePicker((file) => values.setTexture({ id: file.id, url: file.url }));
   const details = query.data;

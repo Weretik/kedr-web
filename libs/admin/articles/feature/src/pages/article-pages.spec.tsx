@@ -43,6 +43,7 @@ const article: Article = {
     uk: { title: 'Як обрати завіси', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
     ru: { title: 'Как выбрать петли', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
   },
+  version: 12,
 };
 
 const resolved = <T,>(value: T) => ({ unwrap: () => Promise.resolve(value) });
@@ -150,6 +151,7 @@ describe('article pages', () => {
     expect(api.update).toHaveBeenCalledWith({
       id: 7,
       draft: expect.objectContaining({ slug: 'zavisy' }),
+      version: 12,
     });
   });
 

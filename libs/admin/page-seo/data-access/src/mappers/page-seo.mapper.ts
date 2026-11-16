@@ -50,5 +50,6 @@ function toEntry(row: Row): PageSeoEntry | undefined {
     },
     updatedAt: row.updatedAt,
     updatedBy: row.updatedBy,
+    version: row.version,
   };
 }

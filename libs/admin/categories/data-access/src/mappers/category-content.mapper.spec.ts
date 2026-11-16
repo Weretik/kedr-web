@@ -17,6 +17,7 @@ describe('mapCategoryContent', () => {
           faq: [{ question: 'Q', answer: 'A' }],
           updatedAt: '2026-10-30T10:00:00Z',
           updatedBy: 'u1',
+          version: 805,
         },
       ],
     });
@@ -25,8 +26,10 @@ describe('mapCategoryContent', () => {
       seoTitle: 'Завіси',
       metaDescription: '',
       bodyHtml: '<p>Текст</p>',
+      version: 805,
     });
     expect(content.ru).toEqual(emptyCategoryContent('ru'));
+    expect(content.ru.version).toBe(0);
   });
 });
 
