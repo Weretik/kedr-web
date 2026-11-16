@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { OrderDocumentView } from './order-document-view';
 
 describe('OrderDocumentView', () => {
-  it('groups customer and document data in labelled sections with the 1C status and total', () => {
+  it('groups customer and document data in labelled sections and the total', () => {
     render(
       <OrderDocumentView
         counterpartyId="C-1"
@@ -15,14 +15,12 @@ describe('OrderDocumentView', () => {
         ]}
         note="Терміново"
         reference="KD-1"
-        status="Accepted"
         totalAmount={48}
       />,
     );
 
     expect(screen.getByRole('region', { name: 'ТОВ Кедр' }).textContent).toContain('C-1');
     const document = screen.getByRole('region', { name: 'KD-1' });
-    expect(document.textContent).toContain('Прийнято в 1С');
     expect(document.textContent).toContain('Терміново');
     expect(screen.getByRole('region', { name: 'Товари' }).textContent).toMatch(/Разом48,00/);
   });

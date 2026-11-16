@@ -51,6 +51,13 @@ export interface OrderSummary {
   lineCount: number;
   totalAmount: number;
   syncStatus: string;
+  /** Why 1C refused the order or why the last attempt failed; null while nothing went wrong. */
+  syncError: string | null;
+  /** Attempts to reach 1C so far. */
+  syncAttempts: number;
+  syncLastAttemptAtUtc: string | null;
+  /** When the next automatic attempt runs; null when none is planned. */
+  syncNextAttemptAtUtc: string | null;
   /** Sum of discounts (negative) and markups (positive) over all units. */
   adjustmentAmount: number;
 }

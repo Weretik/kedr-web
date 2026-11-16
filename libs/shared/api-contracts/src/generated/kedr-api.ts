@@ -2575,7 +2575,7 @@ export interface paths {
         put?: never;
         /**
          * Schedule a failed order for another 1C delivery cycle
-         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and changes the state to RetryScheduled; it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
+         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and puts the order back in the outbox queue (state Pending, attempts from zero); it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
          */
         post: operations["retryAdminOrderSync"];
         delete?: never;
@@ -5007,6 +5007,13 @@ export interface components {
             totalAmount: number;
             syncStatus: string;
             oneCDocumentNumber: null | string;
+            syncError: null | string;
+            /** Format: int32 */
+            syncAttempts: number;
+            /** Format: date-time */
+            syncLastAttemptAtUtc: null | string;
+            /** Format: date-time */
+            syncNextAttemptAtUtc: null | string;
         };
         WorkspaceOrderListItem: {
             /** Format: int64 */
@@ -5023,6 +5030,13 @@ export interface components {
             syncStatus: string;
             /** Format: double */
             adjustmentAmount: number;
+            syncError: null | string;
+            /** Format: int32 */
+            syncAttempts: number;
+            /** Format: date-time */
+            syncLastAttemptAtUtc: null | string;
+            /** Format: date-time */
+            syncNextAttemptAtUtc: null | string;
         };
         WorkspaceOverview: {
             /** Format: int32 */

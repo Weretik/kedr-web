@@ -63,6 +63,7 @@ export function OrderListGrid(props: OrderListGridProps) {
               autoHeight
               columns={columns}
               disableRowSelectionOnClick
+              getRowHeight={orders ? () => 'auto' : undefined}
               getRowId={(row) => (orders ? row.orderId : row.draftId)}
               loading={props.loading}
               onPaginationModelChange={(next) =>

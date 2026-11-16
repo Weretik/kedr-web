@@ -41,6 +41,10 @@ export const orderSummarySchema = z.object({
   lineCount: positive,
   totalAmount: nonNegative,
   syncStatus: z.string(),
+  syncError: z.string().nullable().default(null),
+  syncAttempts: z.number().int().nonnegative().default(0),
+  syncLastAttemptAtUtc: date.nullable().default(null),
+  syncNextAttemptAtUtc: date.nullable().default(null),
   adjustmentAmount: adjustment,
 });
 export const draftSummarySchema = z.object({
