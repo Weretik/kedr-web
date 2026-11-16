@@ -37,6 +37,23 @@ describe('siteApiGet', () => {
     expect(await call(503)).toEqual({ kind: 'unavailable', status: 503 });
   });
 
+  it('repeats a brief API failure before it reports unavailable', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(503))
+      .mockResolvedValueOnce(jsonResponse(200, [{ slug: 'zamky' }]));
+
+    const result = await siteApiGet(
+      '/api/catalog/{lang}/categories',
+      { path: { lang: 'uk' } },
+      fetchMock,
+      'https://api.example.com',
+    );
+
+    expect(result).toEqual({ kind: 'ok', data: [{ slug: 'zamky' }] });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it('keeps the JSON body of a 404 and ignores an empty one', async () => {
     const call = (response: Response) =>
       siteApiGet(
