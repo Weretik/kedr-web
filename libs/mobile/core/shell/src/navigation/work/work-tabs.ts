@@ -5,7 +5,7 @@ export type WorkTabName = 'cabinet' | 'calculation' | 'customer' | 'orders' | 'p
 export interface WorkTab {
   activeIcon: IconName;
   icon: IconName;
-  /** Shown in the tab bar and rail; the customer section opens from the customer line on each screen instead. */
+  /** Shown in the tab bar and rail. */
   inNavigation: boolean;
   label: string;
   /** Opens only after a customer is chosen. */
@@ -13,12 +13,12 @@ export interface WorkTab {
   name: WorkTabName;
 }
 
-/** The five sections of the app, in tab bar and rail order; four of them are tabs. */
+/** The five sections of the app, in tab bar and rail order; all are tabs, so a manager can always change the customer. */
 export const workTabs: readonly WorkTab[] = [
   {
     activeIcon: 'account',
     icon: 'account-outline',
-    inNavigation: false,
+    inNavigation: true,
     label: 'Клієнт',
     name: 'customer',
     needsCustomer: false,
