@@ -13,7 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import { OrderStatusChip } from '../components/order-status-chip';
 import { PriceAdjustmentText } from '../components/price-adjustment-text';
 
 import type { PricedLine } from '@admin/orders/model';
@@ -23,7 +22,6 @@ interface Props {
   counterpartyId: string;
   reference: string;
   date: string;
-  status?: string;
   note?: string | null;
   lines: PricedLine[];
   totalAmount: number | null;
@@ -38,7 +36,6 @@ export function OrderDocumentView({
   counterpartyId,
   reference,
   date,
-  status,
   note,
   lines,
   totalAmount,
@@ -68,7 +65,6 @@ export function OrderDocumentView({
         <SectionCard eyebrow="Документ" title={reference}>
           <DetailFieldList columns={2}>
             <DetailField label="Дата" value={dateFormat.format(new Date(date))} />
-            {status && <DetailField label="Стан 1С" value={<OrderStatusChip status={status} />} />}
             {note && (
               <Box sx={{ gridColumn: '1 / -1' }}>
                 <DetailField label="Примітка" value={note} />

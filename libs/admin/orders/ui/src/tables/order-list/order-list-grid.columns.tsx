@@ -1,5 +1,8 @@
+import { Stack } from '@mui/material';
+
 import { OrderListActionsCell } from './order-list-actions-cell';
 import { OrderStatusChip } from '../../components/order-status-chip';
+import { OrderSyncNote } from '../../components/order-sync-note';
 import { PriceAdjustmentText } from '../../components/price-adjustment-text';
 
 import type { OrderListActions } from './order-list-actions-cell';
@@ -54,10 +57,15 @@ export function orderListColumns(
         {
           field: 'syncStatus',
           headerName: '1C',
-          minWidth: 170,
-          flex: 0.8,
+          minWidth: 200,
+          flex: 1.2,
           sortable: false,
-          renderCell: ({ value }) => <OrderStatusChip status={String(value ?? '')} />,
+          renderCell: ({ row }) => (
+            <Stack spacing={0.25} sx={{ alignItems: 'flex-start', minWidth: 0, py: 1 }}>
+              <OrderStatusChip status={(row as OrderSummary).syncStatus} />
+              <OrderSyncNote sync={row as OrderSummary} />
+            </Stack>
+          ),
         },
       ]
     : [

@@ -2,6 +2,7 @@ export { OrderListGrid } from './tables/order-list/order-list-grid';
 export { ProductPickerGrid } from './tables/product-picker/product-picker-grid';
 export type { ProductPickerRow } from './tables/product-picker/product-picker-grid';
 export { OrderDocumentView } from './details/order-document-view';
+export { OrderSyncCard } from './details/order-sync-card';
 export { OrderLineEditor } from './forms/order-line-editor';
 export { SaveDraftForm } from './forms/save-draft-form';
 export { CheckoutForm } from './forms/checkout-form';

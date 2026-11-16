@@ -11,4 +11,5 @@ export {
   useUpdateWorkspaceDraftMutation,
   useDeleteWorkspaceDraftMutation,
 } from './api/orders.api';
+export { useRetryOrderSyncMutation } from './api/order-sync.api';
 export { getOrderSubmissionConflict } from './api/order-conflict';
