@@ -1,7 +1,12 @@
+import { join } from 'node:path';
+
 import { expect, type Page } from '@playwright/test';
 
 /** Saved Admin cookies; the setup project writes it, the Admin tests start signed in from it. */
-export const adminSessionFile = '../../dist/.playwright/apps/stack-e2e/admin-session.json';
+export const adminSessionFile = join(
+  import.meta.dirname,
+  '../../../../dist/.playwright/apps/stack-e2e/admin-session.json',
+);
 
 /** The administrator the backend migrate job creates in the empty test database. */
 export function adminCredentials(): { email: string; password: string } {
