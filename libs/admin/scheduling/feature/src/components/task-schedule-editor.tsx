@@ -1,3 +1,4 @@
+import { pauseWarning } from '@admin/scheduling/model';
 import { TaskSchedulePanel } from '@admin/scheduling/ui';
 
 import { useScheduleForm } from '../hooks/use-schedule-form';
@@ -19,6 +20,7 @@ export function TaskScheduleEditor({ onClose, onSaved, task }: TaskScheduleEdito
       onCancel={onClose}
       onChange={form.change}
       onSave={() => void form.save()}
+      pauseWarning={pauseWarning(task.key, form.values)}
       saving={form.saving}
       serverError={form.serverError}
       taskName={task.name}
