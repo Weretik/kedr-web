@@ -3,6 +3,7 @@
 ## Architecture remediation
 
 - [Workspace layers and boundaries](architecture/001-workspace-layers-and-boundaries/README.md)
+- [Full-stack E2E in CI](architecture/002-full-stack-e2e/README.md) — implemented 2026-11-16: six Playwright journeys (Admin and site) against a KedrStore API built from source with a seeded test database, in `.github/workflows/e2e.yml`.
 
 ## Admin React
 
