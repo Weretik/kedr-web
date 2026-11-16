@@ -1,15 +1,13 @@
 import { createStyles, useStyles } from '@mobile/shared/ui';
 import { type ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 
 /** Centered column for sign-in, unlock and «Немає доступу»; 420 dp wide on tablets. */
 export function AuthFrame({ children }: Readonly<{ children: ReactNode }>) {
   const styles = useStyles(stylesSheet);
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.screen}
-    >
+    // Padding on Android too: with edge-to-edge the system no longer resizes the window, so the keyboard would cover the fields.
+    <KeyboardAvoidingView behavior="padding" style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.column}>{children}</View>
       </ScrollView>
