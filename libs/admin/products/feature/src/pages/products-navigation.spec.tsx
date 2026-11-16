@@ -41,13 +41,13 @@ vi.mock('@admin/products/ui', async (importOriginal) => ({
     onViewProduct,
     rows,
   }: {
-    onBooleanFilterChange: (field: 'isSale', value: boolean) => void;
+    onBooleanFilterChange: (field: 'hasStock', value: boolean) => void;
     onViewProduct: (row: { productSlug: string }) => void;
     rows: { productSlug: string }[];
   }) => (
     <>
       <button onClick={() => onViewProduct(rows[0])}>Відкрити тестовий товар</button>
-      <button onClick={() => onBooleanFilterChange('isSale', false)}>Фільтр Акція Ні</button>
+      <button onClick={() => onBooleanFilterChange('hasStock', false)}>Фільтр Залишок Немає</button>
     </>
   ),
 }));
@@ -155,11 +155,11 @@ describe('products navigation context', () => {
     expect(api.missing).toHaveBeenLastCalledWith(expect.anything(), { skip: true });
   });
 
-  it('combines a boolean filter with existing missing-photo filters and resets its page', async () => {
+  it('combines the stock filter with the missing-photo search and category and resets its page', async () => {
     render(
       <MemoryRouter
         initialEntries={[
-          '/catalog?mode=missing&missingPage=3&missingInStock=true&missingIsSale=true',
+          '/catalog?mode=missing&missingPage=3&missingSearchTerm=wire&missingCategoryId=7&missingIsSale=true',
         ]}
       >
         <Location />
@@ -168,18 +168,24 @@ describe('products navigation context', () => {
         </Routes>
       </MemoryRouter>,
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Фільтр Акція Ні' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Фільтр Залишок Немає' }));
     await waitFor(() =>
       expect(api.missing).toHaveBeenLastCalledWith(
         expect.objectContaining({
           page: 1,
-          inStock: true,
-          isSale: false,
+          searchTerm: 'wire',
+          categoryId: 7,
+          hasStock: false,
         }),
         { skip: false },
       ),
     );
-    expect(screen.getByTestId('location').textContent).toContain('missingIsSale=false');
+    expect(api.missing).toHaveBeenLastCalledWith(
+      expect.not.objectContaining({ isSale: expect.anything() }),
+      { skip: false },
+    );
+    expect(screen.getByTestId('location').textContent).toContain('missingHasStock=false');
+    expect(screen.getByTestId('location').textContent).not.toContain('missingIsSale');
     expect(screen.getByTestId('location').textContent).not.toContain('missingPage=3');
   });
 

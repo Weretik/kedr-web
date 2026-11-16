@@ -44,7 +44,8 @@ interface ProductsDataGridProps {
   rowCount: number;
   rows: readonly AdminProductListItem[];
   sort: ProductsListSort;
-  priceFilterable: boolean;
+  /** «Без фото»: search, category and the stock filter only, without the filter panel. */
+  basicFilters?: boolean;
   sortable?: boolean;
 }
 
@@ -73,7 +74,7 @@ export function ProductsDataGrid({
   rowCount,
   rows,
   sort,
-  priceFilterable,
+  basicFilters = false,
   sortable = true,
 }: ProductsDataGridProps) {
   const [panelAnchor, setPanelAnchor] = useState<HTMLDivElement | null>(null);
@@ -85,7 +86,7 @@ export function ProductsDataGrid({
     onViewProduct,
     onEditProduct,
     onAddProduct,
-    priceFilterable,
+    basicFilters,
   });
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
@@ -102,6 +103,7 @@ export function ProductsDataGrid({
           categoriesError,
           onCategoryChange,
           setPanelAnchor,
+          showFilterPanel: !basicFilters,
         }}
       >
         <DataGrid

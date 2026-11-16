@@ -16,6 +16,7 @@ export function mapProductsListQueryToApi(query: ProductsListQuery) {
   return {
     searchTerm: query.searchTerm,
     inStock: query.inStock,
+    hasStock: query.hasStock,
     isSale: query.isSale,
     isNew: query.isNew,
     exportToSite: query.exportToSite,
@@ -34,11 +35,8 @@ export function mapMissingPhotoQueryToApi(query: MissingPhotoQuery) {
   return {
     withoutPhoto: true,
     searchTerm: query.searchTerm?.trim().slice(0, 100) || undefined,
-    inStock: query.inStock,
-    isSale: query.isSale,
-    isNew: query.isNew,
-    exportToSite: query.exportToSite,
     categoryId: query.categoryId,
+    hasStock: query.hasStock,
     sort: sortToApiValue[query.sort],
     page: query.page,
     pageSize: query.pageSize,

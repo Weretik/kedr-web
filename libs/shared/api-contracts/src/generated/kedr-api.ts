@@ -6700,6 +6700,7 @@ export interface operations {
                 categorySlug?: string;
                 categoryId?: number;
                 inStock?: boolean;
+                hasStock?: boolean;
                 isSale?: boolean;
                 isNew?: boolean;
                 exportToSite?: boolean;

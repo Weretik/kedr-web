@@ -16,7 +16,7 @@ describe('products URL state', () => {
   it('keeps each mode search and false filters in the URL', () => {
     const state = readProductsUrlState(
       new URLSearchParams(
-        'searchTerm=cable&isSale=false&page=3&sort=name-desc&missingSearchTerm=wire&missingInStock=false',
+        'searchTerm=cable&isSale=false&page=3&sort=name-desc&missingSearchTerm=wire&missingInStock=false&missingHasStock=false&hasStock=true',
       ),
     );
     const next = writeProductsUrlState({
@@ -30,14 +30,16 @@ describe('products URL state', () => {
     expect(next.get('page')).toBe('3');
     expect(next.get('sort')).toBe('name-desc');
     expect(next.get('missingSearchTerm')).toBe('wire');
-    expect(next.get('missingInStock')).toBe('false');
+    expect(next.get('missingHasStock')).toBe('false');
+    expect(next.get('hasStock')).toBe('true');
+    expect(next.get('missingInStock')).toBeNull();
     expect(next.get('missingPage')).toBeNull();
   });
 
   it('keeps the site tab query separate and fixes its server predicate', () => {
     const state = readProductsUrlState(
       new URLSearchParams(
-        'mode=site&page=3&sitePage=4&siteSearchTerm=hinge&siteIsNew=false&siteExportToSite=false',
+        'mode=site&page=3&sitePage=4&siteSearchTerm=hinge&siteIsNew=false&siteHasStock=true&siteExportToSite=false',
       ),
     );
     expect(state.mode).toBe('site');
@@ -46,6 +48,7 @@ describe('products URL state', () => {
       page: 4,
       searchTerm: 'hinge',
       isNew: false,
+      hasStock: true,
       exportToSite: true,
     });
     const next = writeProductsUrlState(state);

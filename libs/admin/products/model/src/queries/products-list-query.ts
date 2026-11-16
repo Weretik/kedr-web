@@ -11,6 +11,8 @@ export type ProductsListSort =
 export interface ProductsListQuery {
   searchTerm?: string;
   inStock?: boolean;
+  /** Actual 1C stock above zero (`true`) or zero (`false`); unlike `inStock`, not the site rule. */
+  hasStock?: boolean;
   isSale?: boolean;
   isNew?: boolean;
   exportToSite?: boolean;
@@ -47,6 +49,7 @@ export function normalizeProductsListQuery(query: ProductsListQuery): ProductsLi
   return {
     searchTerm: normalizeSearchTerm(query.searchTerm),
     inStock: typeof query.inStock === 'boolean' ? query.inStock : undefined,
+    hasStock: typeof query.hasStock === 'boolean' ? query.hasStock : undefined,
     isSale: typeof query.isSale === 'boolean' ? query.isSale : undefined,
     isNew: typeof query.isNew === 'boolean' ? query.isNew : undefined,
     exportToSite: typeof query.exportToSite === 'boolean' ? query.exportToSite : undefined,

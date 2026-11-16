@@ -75,7 +75,6 @@ describe('ProductsDataGrid responsive actions', () => {
         onViewProduct={onViewProduct}
         page={0}
         pageSize={20}
-        priceFilterable
         rowCount={1}
         rows={[row]}
         sort="id-asc"
@@ -135,7 +134,6 @@ describe('ProductsDataGrid responsive actions', () => {
         onViewProduct={() => undefined}
         page={0}
         pageSize={20}
-        priceFilterable
         rowCount={1}
         rows={[
           {
@@ -168,6 +166,8 @@ describe('ProductsDataGrid responsive actions', () => {
     const cellText = (field: string) =>
       document.querySelector(`[role="gridcell"][data-field="${field}"]`)?.textContent;
     expect(cellText('inStock')).toBe('Є');
+    expect(screen.getByRole('columnheader', { name: /Залишок/ })).toBeTruthy();
+    expect(cellText('stock')).toBe('2');
     expect(cellText('isNew')).toBe('Новинка');
     expect(screen.getByRole('img', { name: 'Ні' }).textContent).toBe('—');
   });
@@ -194,7 +194,6 @@ describe('ProductsDataGrid responsive actions', () => {
         onViewProduct={() => undefined}
         page={0}
         pageSize={20}
-        priceFilterable
         rowCount={0}
         rows={[]}
         sort="id-asc"
@@ -206,5 +205,75 @@ describe('ProductsDataGrid responsive actions', () => {
     fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Фільтр Новинка' }));
     fireEvent.click(screen.getByRole('option', { name: 'Ні' }));
     expect(onBooleanFilterChange).toHaveBeenCalledWith('isNew', false);
+  });
+
+  it('filters by actual stock in the «Залишок» header', () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
+    const onBooleanFilterChange = vi.fn();
+    render(
+      <ProductsDataGrid
+        booleanFilters={{ hasStock: false }}
+        filterModel={{ items: [] }}
+        loading={false}
+        onBooleanFilterChange={onBooleanFilterChange}
+        onFilterChange={() => undefined}
+        onPageChange={() => undefined}
+        onPageSizeChange={() => undefined}
+        onRetry={() => undefined}
+        onSortChange={() => undefined}
+        onViewProduct={() => undefined}
+        page={0}
+        pageSize={20}
+        rowCount={0}
+        rows={[]}
+        sort="id-asc"
+      />,
+    );
+    const stockFilter = screen.getByRole('combobox', { name: 'Фільтр Залишок' });
+    expect(stockFilter.textContent).toContain('Немає');
+    fireEvent.mouseDown(stockFilter);
+    fireEvent.click(screen.getByRole('option', { name: 'Є' }));
+    expect(onBooleanFilterChange).toHaveBeenCalledWith('hasStock', true);
+  });
+
+  it('keeps only search, category and the stock filter in basic mode', () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
+    render(
+      <ProductsDataGrid
+        basicFilters
+        booleanFilters={{}}
+        filterModel={{ items: [] }}
+        loading={false}
+        onBooleanFilterChange={() => undefined}
+        onFilterChange={() => undefined}
+        onPageChange={() => undefined}
+        onPageSizeChange={() => undefined}
+        onRetry={() => undefined}
+        onSortChange={() => undefined}
+        onViewProduct={() => undefined}
+        page={0}
+        pageSize={20}
+        rowCount={0}
+        rows={[]}
+        sort="id-asc"
+      />,
+    );
+    expect(screen.getByPlaceholderText('Пошук товарів')).toBeTruthy();
+    expect(screen.getByRole('combobox', { name: 'Категорія' })).toBeTruthy();
+    expect(screen.getByRole('combobox', { name: 'Фільтр Залишок' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Фільтри' })).toBeNull();
+    expect(screen.queryByRole('combobox', { name: 'Фільтр Наявність' })).toBeNull();
+    expect(screen.queryByRole('combobox', { name: 'Фільтр Акція' })).toBeNull();
+    expect(screen.queryByRole('combobox', { name: 'Фільтр Новинка' })).toBeNull();
   });
 });

@@ -13,9 +13,11 @@ describe('products server query mapping', () => {
         isSale: false,
         isNew: false,
         exportToSite: false,
+        hasStock: false,
       }),
     ).toMatchObject({
       page: 2,
+      hasStock: false,
       pageSize: 20,
       sort: 'NameAsc',
       inStock: false,
@@ -25,24 +27,23 @@ describe('products server query mapping', () => {
     });
   });
 
-  it('sends withoutPhoto, search, sort and false filters for the «Без фото» list', () => {
+  it('sends withoutPhoto, search, sort and the stock filter for the «Без фото» list', () => {
     expect(
       mapMissingPhotoQueryToApi({
         page: 1,
         pageSize: 10,
         sort: 'price-desc',
         searchTerm: 'кабель',
-        inStock: false,
-        exportToSite: false,
+        hasStock: false,
       }),
-    ).toMatchObject({
+    ).toEqual({
       withoutPhoto: true,
       page: 1,
       pageSize: 10,
       sort: 'PriceDesc',
       searchTerm: 'кабель',
-      inStock: false,
-      exportToSite: false,
+      categoryId: undefined,
+      hasStock: false,
     });
   });
 

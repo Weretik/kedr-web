@@ -1,6 +1,10 @@
 import { Box, MenuItem, Select, Typography } from '@mui/material';
 
-export type ProductBooleanField = 'inStock' | 'isSale' | 'isNew';
+export type ProductBooleanField = 'inStock' | 'hasStock' | 'isSale' | 'isNew';
+
+const optionLabels: Partial<Record<ProductBooleanField, { yes: string; no: string }>> = {
+  hasStock: { yes: 'Є', no: 'Немає' },
+};
 
 interface ProductsBooleanFilterHeaderProps {
   field: ProductBooleanField;
@@ -15,6 +19,7 @@ export function ProductsBooleanFilterHeader({
   value,
   onChange,
 }: ProductsBooleanFilterHeaderProps) {
+  const labels = optionLabels[field] ?? { yes: 'Так', no: 'Ні' };
   return (
     <Box
       sx={{
@@ -38,8 +43,8 @@ export function ProductsBooleanFilterHeader({
         value={value === undefined ? '' : String(value)}
       >
         <MenuItem value="">Усі</MenuItem>
-        <MenuItem value="true">Так</MenuItem>
-        <MenuItem value="false">Ні</MenuItem>
+        <MenuItem value="true">{labels.yes}</MenuItem>
+        <MenuItem value="false">{labels.no}</MenuItem>
       </Select>
     </Box>
   );

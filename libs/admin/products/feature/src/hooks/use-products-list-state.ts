@@ -9,7 +9,7 @@ import type { ProductsListQuery, ProductsListSort } from '@admin/products/model'
 import type { GridFilterModel } from '@mui/x-data-grid';
 
 type QueryKey = 'allQuery' | 'missingQuery' | 'siteQuery' | 'deletedQuery';
-type BooleanFilterField = 'inStock' | 'isSale' | 'isNew';
+type BooleanFilterField = 'inStock' | 'hasStock' | 'isSale' | 'isNew';
 
 const queryKeys: Record<ProductsListMode, QueryKey> = {
   all: 'allQuery',

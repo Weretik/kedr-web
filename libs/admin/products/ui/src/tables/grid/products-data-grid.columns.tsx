@@ -7,6 +7,8 @@ import { ProductsDataGridPhotoCell } from '../cells/products-data-grid-photo-cel
 import type { AdminProductListItem } from '@admin/products/model';
 import type { GridColDef } from '@mui/x-data-grid';
 
+const stockFormatter = new Intl.NumberFormat('uk-UA', { maximumFractionDigits: 3 });
+
 const priceFormatter = new Intl.NumberFormat('uk-UA', {
   currency: 'UAH',
   maximumFractionDigits: 2,
@@ -50,6 +52,17 @@ export const productsDataGridColumns: readonly GridColDef<AdminProductListItem>[
       (operator) => operator.value === '>=' || operator.value === '<=' || operator.value === '=',
     ),
     width: 116,
+  },
+  {
+    align: 'right',
+    field: 'stock',
+    type: 'number',
+    filterable: false,
+    headerAlign: 'center',
+    headerName: 'Залишок',
+    sortable: false,
+    valueFormatter: (value: number) => stockFormatter.format(value),
+    width: 110,
   },
   {
     align: 'center',
