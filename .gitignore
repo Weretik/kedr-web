@@ -65,7 +65,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-cache/
+/cache/
 
 # Next.js
 .next
