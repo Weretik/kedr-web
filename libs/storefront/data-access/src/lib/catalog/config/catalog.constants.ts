@@ -1,1 +1,1 @@
-﻿export const RETAIL_PRICE_TYPE_ID = 11;
+﻿export const RETAIL_PRICE_TYPE_ID = 12;

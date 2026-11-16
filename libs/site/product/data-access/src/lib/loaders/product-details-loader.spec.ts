@@ -21,7 +21,6 @@ describe('getProductDetails', () => {
     });
     expect(siteApiGet).toHaveBeenCalledWith('/api/catalog/{lang}/product/{productSlug}', {
       path: { lang: 'uk', productSlug: 'ruchka-731' },
-      query: { priceTypeId: 11 },
     });
     expect(cacheTag.mock.calls.flat()).toEqual(
       expect.arrayContaining([

@@ -1,0 +1,143 @@
+name: E2E
+
+# Full-stack browser checks: the Admin and the site against a real KedrStore API and an empty test database
+# with a small seeded catalog (apps/stack-e2e). Nothing here reaches production, 1C, Telegram, or the CDN.
+on:
+  pull_request:
+    paths:
+      - 'apps/admin/**'
+      - 'apps/site/**'
+      - 'apps/stack-e2e/**'
+      - 'libs/admin/**'
+      - 'libs/site/**'
+      - 'libs/shared/**'
+      - 'docs/contracts/openapi/**'
+      - 'package-lock.json'
+      - '.github/workflows/e2e.yml'
+  schedule:
+    # Every night at 01:30 UTC against the latest KedrStore master, so a backend change that breaks the frontends
+    # shows up the next morning even when no frontend pull request is open.
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+    inputs:
+      backend-ref:
+        description: KedrStore branch, tag, or commit to test against
+        default: master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # A throwaway database that lives only inside this job.
+  DB_CONNECTION: Host=localhost;Port=5432;Database=kedr_e2e;Username=postgres;Password=postgres
+  E2E_ADMIN_EMAIL: admin@classkedr.com.ua
+  E2E_ADMIN_PASSWORD: E2e-Admin-Pass1!
+  KEDR_API_URL: http://localhost:5081
+  KEDR_REVALIDATE_SECRET: e2e-revalidate-secret
+
+jobs:
+  stack:
+    name: admin and site against the API
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kedr_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: Weretik/KedrStore
+          ref: ${{ inputs.backend-ref || 'master' }}
+          path: backend
+      # Outside the workspace, so Nx does not read the backend's project files as part of this monorepo.
+      - name: Move KedrStore out of the workspace
+        run: |
+          mv backend "$RUNNER_TEMP/KedrStore"
+          echo "BACKEND_DIR=$RUNNER_TEMP/KedrStore" >> "$GITHUB_ENV"
+          echo "E2E_OUT=$RUNNER_TEMP/kedr-e2e" >> "$GITHUB_ENV"
+
+      # Backend: build the API and the migrate job from source, the same projects the deploy images use.
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: ${{ runner.temp }}/KedrStore/global.json
+      - name: Build KedrStore
+        working-directory: ${{ env.BACKEND_DIR }}
+        run: |
+          dotnet publish src/Bootstrapper/Host.Jobs/Host.Jobs.csproj -c Release -o "$E2E_OUT/jobs"
+          dotnet publish src/Bootstrapper/Host.Api/Host.Api.csproj -c Release -o "$E2E_OUT/api"
+      - name: Migrate the test database and create the administrator
+        working-directory: ${{ env.E2E_OUT }}/jobs
+        env:
+          ConnectionStrings__Default: ${{ env.DB_CONNECTION }}
+          ADMIN_DEFAULT_PASSWORD: ${{ env.E2E_ADMIN_PASSWORD }}
+        run: dotnet Host.Jobs.dll --job=migrate
+      - name: Seed the test catalog
+        env:
+          PGPASSWORD: postgres
+        run: psql -h localhost -U postgres -d kedr_e2e -v ON_ERROR_STOP=1 -f apps/stack-e2e/fixtures/catalog.sql
+      - name: Start the API
+        working-directory: ${{ env.E2E_OUT }}/api
+        env:
+          ConnectionStrings__Default: ${{ env.DB_CONNECTION }}
+          ASPNETCORE_URLS: ${{ env.KEDR_API_URL }}
+          # Local HTTP: the CSRF cookie belongs to localhost, not to classkedr.com.ua.
+          Identity__SessionCookies__CsrfCookieDomain: ''
+          # «Оновити сайт зараз» calls the site started below.
+          SiteRevalidation__Url: http://localhost:3000
+          SiteRevalidation__Secret: ${{ env.KEDR_REVALIDATE_SECRET }}
+        run: |
+          nohup dotnet Host.Api.dll > "$E2E_OUT/api.log" 2>&1 &
+          for attempt in $(seq 60); do
+            curl -sf "$KEDR_API_URL/health" && exit 0
+            sleep 1
+          done
+          cat "$E2E_OUT/api.log"
+          exit 1
+
+      # Frontend: the Admin runs from the Vite dev server, the site from a production build.
+      - uses: ./.github/actions/setup-ci
+        with:
+          cache-name: e2e-stack
+      - name: Build the site
+        env:
+          SITE_URL: http://localhost:3000
+        run: npx nx build site --skip-nx-cache
+      - name: Read Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - run: npm run test:stack:e2e
+
+      # On a failure: the HTML report with screenshots, videos and traces of the failed tests, and the API log.
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: |
+            dist/.playwright/apps/stack-e2e/
+            ${{ env.E2E_OUT }}/api.log
+          include-hidden-files: true
+          retention-days: 14
