@@ -17,6 +17,8 @@ export interface SeoSettings {
   sharePicture: SharePicture | null;
   updatedAt: string;
   updatedBy: string | null;
+  /** Row version the next save sends back; a newer save on the server answers 409. */
+  version: number;
 }
 
 export type SeoCodeField =

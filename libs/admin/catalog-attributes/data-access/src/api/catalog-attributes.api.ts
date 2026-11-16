@@ -1,4 +1,4 @@
-import { apiCall, apiClient, baseApi, formDataBody } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, formDataBody, isConflict } from '@admin/shared/api-client';
 
 import {
   mapCatalogAttributeDetails,
@@ -48,9 +48,9 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
     }),
     updateCatalogAttribute: build.mutation<
       CatalogAttributeDetails,
-      { id: number; change: CatalogAttributeChange }
+      { id: number; change: CatalogAttributeChange; version: number }
     >({
-      queryFn: ({ id, change }, { signal }) =>
+      queryFn: ({ id, change, version }, { signal }) =>
         apiCall(
           apiClient.PUT('/api/admin/catalog-attributes/{id}', {
             params: { path: { id } },
@@ -58,13 +58,18 @@ export const catalogAttributesApi = baseApi.injectEndpoints({
               ...change,
               nameUk: change.nameUk.trim(),
               nameRu: change.nameRu?.trim() || null,
+              version,
             },
             signal,
           }),
           mapCatalogAttributeDetails,
         ),
       invalidatesTags: (_result, error, { id }) =>
-        error ? [] : [listTag, { type: 'CatalogAttributes', id }, 'Products'],
+        isConflict(error)
+          ? [{ type: 'CatalogAttributes', id }]
+          : error
+            ? []
+            : [listTag, { type: 'CatalogAttributes', id }, 'Products'],
     }),
     createAttributeValue: build.mutation<
       CatalogAttributeDetails,

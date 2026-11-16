@@ -86,6 +86,7 @@ const details: CatalogAttributeDetails = {
   aliases: [
     { id: 4, scope: 'general', rawValue: 'CP', valueId: 8, isConfirmed: false, note: null },
   ],
+  version: 41,
 };
 
 /** The page of «Вітрина сайту» holds «Нова ознака» and the notice; this harness stands in for it. */
@@ -129,6 +130,7 @@ describe('CatalogDictionaryTab', () => {
     expect(api.update).toHaveBeenCalledWith({
       id: 3,
       change: { nameUk: 'Колір', nameRu: null, isFilterable: true, sortOrder: 10 },
+      version: 41,
     });
     expect(await screen.findByText('Властивість збережено.')).toBeTruthy();
     expect(screen.getAllByText('Не підтверджено').length).toBeGreaterThan(0);

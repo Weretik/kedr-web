@@ -1,4 +1,4 @@
-import { apiCall, apiClient, baseApi, formDataBody } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, formDataBody, isConflict } from '@admin/shared/api-client';
 
 import {
   mapArticle,
@@ -35,23 +35,25 @@ export const adminArticlesApi = baseApi
           ),
         invalidatesTags: (_result, error) => (error ? [] : [{ type: 'Articles', id: 'LIST' }]),
       }),
-      updateArticle: build.mutation<Article, { id: number; draft: ArticleDraft }>({
-        queryFn: ({ id, draft }, { signal }) =>
+      updateArticle: build.mutation<Article, { id: number; draft: ArticleDraft; version: number }>({
+        queryFn: ({ id, draft, version }, { signal }) =>
           apiCall(
             apiClient.PUT('/api/admin/articles/{id}', {
               params: { path: { id } },
-              body: toSaveArticleBody(draft),
+              body: { ...toSaveArticleBody(draft), version },
               signal,
             }),
             mapArticle,
           ),
         invalidatesTags: (_result, error, { id }) =>
-          error
-            ? []
-            : [
-                { type: 'Articles', id },
-                { type: 'Articles', id: 'LIST' },
-              ],
+          isConflict(error)
+            ? [{ type: 'Articles', id }]
+            : error
+              ? []
+              : [
+                  { type: 'Articles', id },
+                  { type: 'Articles', id: 'LIST' },
+                ],
       }),
       deleteArticle: build.mutation<void, number>({
         queryFn: (id, { signal }) =>

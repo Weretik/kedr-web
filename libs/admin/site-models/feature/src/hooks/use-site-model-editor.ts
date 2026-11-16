@@ -110,6 +110,16 @@ export function useSiteModelEditor(id: number | undefined, onNotice: (text: stri
         `Значення «${name}» створено`,
       ),
     saveText: (modelId: number, language: SiteModelLanguage, text: SiteModelTextInput) =>
-      run('texts', () => setText({ id: modelId, language, text }).unwrap(), 'Тексти збережено'),
+      run(
+        'texts',
+        () =>
+          setText({
+            id: modelId,
+            language,
+            text,
+            version: query.data?.texts.find((stored) => stored.language === language)?.version ?? 0,
+          }).unwrap(),
+        'Тексти збережено',
+      ),
   };
 }

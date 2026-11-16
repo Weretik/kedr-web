@@ -63,7 +63,7 @@ describe('categories pages', () => {
     });
     api.one.mockReturnValue({ data: category, isError: false, isLoading: false, refetch: vi.fn() });
     api.content.mockReturnValue({
-      data: { uk: emptyCategoryContent('uk'), ru: emptyCategoryContent('ru') },
+      data: { uk: { ...emptyCategoryContent('uk'), version: 23 }, ru: emptyCategoryContent('ru') },
       isError: false,
       isLoading: false,
       refetch: vi.fn(),
@@ -288,6 +288,7 @@ describe('categories pages', () => {
       draft: expect.objectContaining({ h1: 'Дверні завіси' }),
       id: 5,
       language: 'uk',
+      version: 23,
     });
   });
 

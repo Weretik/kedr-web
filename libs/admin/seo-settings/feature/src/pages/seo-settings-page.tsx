@@ -36,9 +36,10 @@ export function SeoSettingsPage() {
   };
 
   const save = async (draft: SeoSettingsDraft) => {
+    if (!settings) return;
     setError(undefined);
     try {
-      await update(draft).unwrap();
+      await update({ draft, version: settings.version }).unwrap();
       setEditing(false);
       setNotice('Збережено. Сайт покаже зміни протягом 10 хвилин.');
     } catch (cause) {

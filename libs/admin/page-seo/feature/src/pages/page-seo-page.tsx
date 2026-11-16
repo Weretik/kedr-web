@@ -24,8 +24,10 @@ export function PageSeoPage() {
   const save = async (texts: PageSeoTexts) => {
     if (!editing) return;
     setError(undefined);
+    // After a 409 the list reloads; the panel keeps the typed texts and sends the page's current version.
+    const current = query.data?.find((entry) => entry.page === editing.page) ?? editing;
     try {
-      await update({ page: editing.page, texts }).unwrap();
+      await update({ page: editing.page, texts, version: current.version }).unwrap();
       setEditing(null);
       setNotice('Збережено. Сайт покаже зміни протягом 10 хвилин.');
     } catch (cause) {

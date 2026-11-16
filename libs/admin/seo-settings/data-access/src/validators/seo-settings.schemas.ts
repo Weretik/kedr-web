@@ -20,4 +20,5 @@ export const adminSiteSeoSettingsSchema = z.object({
     .nullable(),
   updatedAt: z.string(),
   updatedBy: z.string().nullable(),
+  version: z.number().int().nonnegative().default(0),
 });

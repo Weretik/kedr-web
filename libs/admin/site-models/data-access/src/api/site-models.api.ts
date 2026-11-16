@@ -1,4 +1,4 @@
-import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
+import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-client';
 
 import {
   mapSiteModel,
@@ -126,18 +126,19 @@ export const siteModelsApi = baseApi.injectEndpoints({
     }),
     setSiteModelText: build.mutation<
       SiteModel,
-      { id: number; language: SiteModelLanguage; text: SiteModelTextInput }
+      { id: number; language: SiteModelLanguage; text: SiteModelTextInput; version: number }
     >({
-      queryFn: ({ id, language, text }, { signal }) =>
+      queryFn: ({ id, language, text, version }, { signal }) =>
         apiCall(
           apiClient.PUT('/api/admin/site-models/{id}/texts/{language}', {
             params: { path: { id, language } },
-            body: toSetSiteModelTextBody(text),
+            body: { ...toSetSiteModelTextBody(text), version },
             signal,
           }),
           mapSiteModel,
         ),
-      invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
+      // A 409 (someone saved the texts meanwhile) also reloads the model, so its text versions are current.
+      invalidatesTags: (_result, error) => (error && !isConflict(error) ? [] : ['SiteModels']),
     }),
     fillSiteModelFromNames: build.mutation<SiteModel, number>({
       queryFn: (id, { signal }) =>

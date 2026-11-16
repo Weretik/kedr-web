@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { HttpError, toApiError } from './api-error';
+import { HttpError, isConflict, toApiError } from './api-error';
 
 const httpError = (statusText: string, response: { data: unknown; status: number }) =>
   new HttpError(response.status, response.data, statusText);
@@ -100,5 +100,13 @@ describe('toApiError', () => {
     const error = { code: 'NotFound', status: 404, message: 'Not found' } as const;
 
     expect(toApiError(error)).toBe(error);
+  });
+
+  it('recognizes a 409 answer as a conflict', () => {
+    expect(isConflict(toApiError(new HttpError(409, { detail: 'Дані вже змінилися.' })))).toBe(
+      true,
+    );
+    expect(isConflict(toApiError(new HttpError(400, { detail: 'x' })))).toBe(false);
+    expect(isConflict(undefined)).toBe(false);
   });
 });
