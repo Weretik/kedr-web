@@ -23,7 +23,7 @@ const DICTIONARIES: Record<Locale, HomeDictionary> = {
     searchLabel: 'Пошук товару',
     searchPlaceholder: 'Артикул або назва товару',
     searchSubmit: 'Знайти',
-    searchHint: 'Шукайте за артикулом або назвою.',
+    searchHint: 'Шукайте за кодом або назвою.',
     wholesaleTitle: 'Оптовим партнерам',
     wholesaleBenefits: [
       'Гнучкі оптові ціни',
@@ -44,7 +44,7 @@ const DICTIONARIES: Record<Locale, HomeDictionary> = {
     searchLabel: 'Поиск товара',
     searchPlaceholder: 'Артикул или название товара',
     searchSubmit: 'Найти',
-    searchHint: 'Ищите по артикулу или названию.',
+    searchHint: 'Ищите по коду или названию.',
     wholesaleTitle: 'Оптовым партнерам',
     wholesaleBenefits: [
       'Гибкие оптовые цены',
