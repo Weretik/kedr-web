@@ -80,12 +80,16 @@ export function BackgroundTasksTable({
           ) : null}
           {tasks.map((task) => (
             <TableRow hover key={task.key}>
-              <TableCell sx={{ maxWidth: 360 }}>
+              <TableCell sx={{ maxWidth: 520 }}>
                 <Stack spacing={0.5}>
                   <Typography sx={{ fontWeight: 600 }} variant="body2">
                     {task.name}
                   </Typography>
-                  <Typography color="text.secondary" variant="caption">
+                  <Typography
+                    color="text.secondary"
+                    sx={{ whiteSpace: 'pre-line' }}
+                    variant="caption"
+                  >
                     {task.description}
                   </Typography>
                   <TaskProblemMarks task={task} />

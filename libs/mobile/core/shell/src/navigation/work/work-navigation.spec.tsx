@@ -47,15 +47,17 @@ describe('WorkNavigation', () => {
     expect(navigateToTab).toHaveBeenCalledWith('cabinet-key');
   });
 
-  it('opens the four tabs once a customer is chosen and counts calculation lines', async () => {
+  it('opens the tabs once a customer is chosen and counts calculation lines', async () => {
     const { navigateToTab } = await renderNavigation(true);
 
     await fireEvent.press(screen.getByRole('tab', { name: 'Товари' }));
     expect(navigateToTab).toHaveBeenCalledWith('products-key');
     expect(screen.getByRole('tab', { name: 'Розрахунок · 3' })).toBeTruthy();
     expect(screen.getByText('3')).toBeTruthy();
-    // Customer choice opens from the customer line on each screen, not from a tab.
-    expect(screen.queryByRole('tab', { name: /^Клієнт/ })).toBeNull();
+    // The customer tab stays in the bar, so the customer can be changed from every section.
+    const fromCabinet = await renderNavigation(true, 4);
+    await fireEvent.press(screen.getByRole('tab', { name: 'Клієнт' }));
+    expect(fromCabinet.navigateToTab).toHaveBeenCalledWith('customer-key');
   });
 
   it('draws a tab bar on phones and a rail on tablets (SC-024)', async () => {

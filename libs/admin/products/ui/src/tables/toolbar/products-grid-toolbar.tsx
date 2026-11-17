@@ -8,7 +8,9 @@ import { CategoryFilterAutocomplete } from './category-filter-autocomplete';
 import { ProductsGridToolbarContext } from './products-grid-toolbar-context';
 
 export function ProductsGridToolbar() {
-  const { setPanelAnchor, ...categoryFilter } = useContext(ProductsGridToolbarContext);
+  const { setPanelAnchor, showFilterPanel, ...categoryFilter } = useContext(
+    ProductsGridToolbarContext,
+  );
 
   return (
     <Toolbar
@@ -56,21 +58,23 @@ export function ProductsGridToolbar() {
           />
         </QuickFilter>
       </Box>
-      <FilterPanelTrigger
-        render={(props, { filterCount }) => (
-          <Button
-            {...props}
-            size="small"
-            startIcon={
-              <Badge badgeContent={filterCount} color="primary">
-                <FilterListIcon />
-              </Badge>
-            }
-          >
-            Фільтри
-          </Button>
-        )}
-      />
+      {showFilterPanel && (
+        <FilterPanelTrigger
+          render={(props, { filterCount }) => (
+            <Button
+              {...props}
+              size="small"
+              startIcon={
+                <Badge badgeContent={filterCount} color="primary">
+                  <FilterListIcon />
+                </Badge>
+              }
+            >
+              Фільтри
+            </Button>
+          )}
+        />
+      )}
       <Box sx={{ ml: { sm: 'auto' }, minWidth: { xs: '100%', sm: 240 }, width: { sm: 320 } }}>
         <CategoryFilterAutocomplete {...categoryFilter} />
       </Box>

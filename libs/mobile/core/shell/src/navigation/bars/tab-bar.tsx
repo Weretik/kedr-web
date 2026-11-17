@@ -6,7 +6,7 @@ import { navItemAccessibilityLabel, type WorkNavItem } from '../work/work-nav-it
 
 import type { ReactNode } from 'react';
 
-/** Phone: white bottom bar with four tabs; a locked tab shows a lock and opens customer choice. */
+/** Phone: white bottom bar with five tabs; a locked tab shows a lock and opens customer choice. */
 export function TabBar({
   items,
   statusStrip,

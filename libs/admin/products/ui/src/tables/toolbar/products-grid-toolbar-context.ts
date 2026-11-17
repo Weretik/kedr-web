@@ -9,6 +9,8 @@ export interface ProductsGridToolbarProps {
   categoriesError: boolean;
   onCategoryChange: (categoryId: number | undefined) => void;
   setPanelAnchor: (element: HTMLDivElement | null) => void;
+  /** The «Фільтри» panel button; hidden where no column has a panel filter. */
+  showFilterPanel: boolean;
 }
 
 export const ProductsGridToolbarContext = createContext<ProductsGridToolbarProps>({
@@ -17,4 +19,5 @@ export const ProductsGridToolbarContext = createContext<ProductsGridToolbarProps
   categoriesError: false,
   onCategoryChange: () => undefined,
   setPanelAnchor: () => undefined,
+  showFilterPanel: true,
 });

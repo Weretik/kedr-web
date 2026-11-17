@@ -47,7 +47,6 @@ describe('ProductsGridToolbar category tree', () => {
         onViewProduct={() => undefined}
         page={0}
         pageSize={20}
-        priceFilterable
         rowCount={0}
         rows={[]}
         sort="id-asc"
@@ -116,7 +115,6 @@ describe('ProductsGridToolbar category tree', () => {
         onViewProduct={() => undefined}
         page={0}
         pageSize={20}
-        priceFilterable
         rowCount={0}
         rows={[]}
         sort="id-asc"

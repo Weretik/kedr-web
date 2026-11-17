@@ -2,6 +2,8 @@ import 'server-only';
 
 import { siteConfig } from '@site/core/config';
 
+import { getWithRetry } from './get-with-retry';
+
 import type { ApiResult } from './api-result';
 import type { paths } from '@shared/api-contracts';
 
@@ -75,6 +77,7 @@ const buildUrl = (
 
 /**
  * Typed GET against the KedrStore OpenAPI contract, for Server Components, metadata, and sitemaps only.
+ * A brief failure (dropped connection, 429, 5xx) is repeated up to twice before it counts as `unavailable`.
  * Caching is the caller's job: domain `data-access` wraps calls in `'use cache'` with `cacheTag` and `cacheLife`.
  */
 export async function siteApiGet<P extends PublicGetPath>(
@@ -86,10 +89,12 @@ export async function siteApiGet<P extends PublicGetPath>(
   const url = buildUrl(template, options, apiUrl);
 
   try {
-    const response = await fetchImpl(url, {
-      headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS),
-    });
+    const response = await getWithRetry(
+      fetchImpl,
+      url,
+      { Accept: 'application/json' },
+      options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+    );
 
     if (response.status === 404) {
       const body = await readJsonBody(response);

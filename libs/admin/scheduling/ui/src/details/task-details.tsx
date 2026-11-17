@@ -27,7 +27,9 @@ export function TaskDetails({ task }: { task: ScheduledTask }) {
       <SectionCard title="Задача">
         <Stack spacing={2}>
           <TaskProblemMarks task={task} />
-          <Typography variant="body2">{task.description}</Typography>
+          <Typography sx={{ whiteSpace: 'pre-line' }} variant="body2">
+            {task.description}
+          </Typography>
           <DetailFieldList>
             <DetailField
               label="Розклад"

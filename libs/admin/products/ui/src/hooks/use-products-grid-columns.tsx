@@ -10,7 +10,15 @@ import type { ProductBooleanField } from '../tables/cells/products-boolean-filte
 import type { AdminProductListItem, ProductCategoryOption } from '@admin/products/model';
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
-const booleanFields: readonly string[] = ['inStock', 'isSale', 'isNew'];
+/** Columns whose header holds a yes/no filter, and the query field it sets. */
+const headerFilterFields: Readonly<Record<string, ProductBooleanField>> = {
+  stock: 'hasStock',
+  inStock: 'inStock',
+  isSale: 'isSale',
+  isNew: 'isNew',
+};
+/** The only header filter in basic mode («Без фото»), where the server list has no other flags. */
+const basicHeaderFilterFields: readonly ProductBooleanField[] = ['hasStock'];
 
 export interface ProductsGridColumnsOptions {
   categories: readonly ProductCategoryOption[];
@@ -19,7 +27,8 @@ export interface ProductsGridColumnsOptions {
   onViewProduct: (product: AdminProductListItem) => void;
   onEditProduct?: (product: AdminProductListItem) => void;
   onAddProduct?: (product: AdminProductListItem) => void;
-  priceFilterable: boolean;
+  /** «Без фото»: no price filter and only the stock header filter. */
+  basicFilters: boolean;
 }
 
 /** Static product columns plus the category path, boolean filter headers, and the actions column. */
@@ -30,7 +39,7 @@ export function useProductsGridColumns({
   onViewProduct,
   onEditProduct,
   onAddProduct,
-  priceFilterable,
+  basicFilters,
 }: ProductsGridColumnsOptions) {
   const theme = useTheme();
   const phone = useMediaQuery(theme.breakpoints.down('sm'));
@@ -54,9 +63,9 @@ export function useProductsGridColumns({
               </Box>
             ),
           };
-        if (column.field === 'price' && !priceFilterable) return { ...column, filterable: false };
-        if (booleanFields.includes(column.field)) {
-          const field = column.field as ProductBooleanField;
+        if (column.field === 'price' && basicFilters) return { ...column, filterable: false };
+        const field = headerFilterFields[column.field];
+        if (field && (!basicFilters || basicHeaderFilterFields.includes(field))) {
           return {
             ...column,
             renderHeader: () => (
@@ -97,7 +106,7 @@ export function useProductsGridColumns({
       onEditProduct,
       onViewProduct,
       phone,
-      priceFilterable,
+      basicFilters,
     ],
   );
 }

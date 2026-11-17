@@ -748,7 +748,7 @@ export interface paths {
         };
         /**
          * Get a public product by slug
-         * @description A former slug returns 200 with `productSlug` set to the current slug, so the client can redirect permanently. A product of a deleted category is not public.
+         * @description A former slug returns 200 with `productSlug` set to the current slug, so the client can redirect permanently. A product of a deleted category is not public. Without `priceTypeId` the price is the retail one, the same as in the catalog lists.
          */
         get: operations["getPublicProductBySlug"];
         put?: never;
@@ -6700,6 +6700,7 @@ export interface operations {
                 categorySlug?: string;
                 categoryId?: number;
                 inStock?: boolean;
+                hasStock?: boolean;
                 isSale?: boolean;
                 isNew?: boolean;
                 exportToSite?: boolean;

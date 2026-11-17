@@ -80,6 +80,7 @@ export function ProductsPage({
             categoryId={currentQuery.categoryId}
             categoriesLoading={categoriesQuery.isFetching}
             categoriesError={categoriesQuery.isError}
+            basicFilters={mode === 'missing'}
             booleanFilters={currentQuery}
             filterModel={toProductsGridFilterModel(currentQuery, mode === 'missing')}
             emptyMessage={emptyMessages[mode]}
@@ -101,7 +102,6 @@ export function ProductsPage({
             }
             page={currentQuery.page - 1}
             pageSize={currentQuery.pageSize}
-            priceFilterable={mode !== 'missing'}
             rowCount={rowCount}
             rows={activeQuery.data?.items ?? []}
             sort={currentQuery.sort}

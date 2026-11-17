@@ -34,7 +34,7 @@ CartRuntime passes Server Component children through its provider and supplies t
 
 ## Data access
 
-- `site-shared-api-client` exposes `siteApiGet(path, { path, query, timeoutMs })`, a plain typed fetch with no cache options, typed from `@shared/api-contracts` (the same OpenAPI snapshot as Admin and Mobile, synced with `npm run contracts:sync` from the KedrStore default branch). The path type allows only `/api/catalog/*`.
+- `site-shared-api-client` exposes `siteApiGet(path, { path, query, timeoutMs })`, a plain typed fetch with no cache options that repeats a brief failure (dropped connection, 429, 5xx) up to twice after 150 and 450 ms, but never a timeout (`get-with-retry.ts`), typed from `@shared/api-contracts` (the same OpenAPI snapshot as Admin and Mobile, synced with `npm run contracts:sync` from the KedrStore default branch). The path type allows only `/api/catalog/*`.
 - The base URL is `siteConfig.apiUrl` (`KEDR_API_URL`, default `https://api.classkedr.com.ua`). Queries are sorted so equal filters share a cache entry.
 - Results are typed outcomes: `ok`, `not-found`, `gone`, `unavailable`. Domain `data-access` maps them to models; features call `notFound()` for `not-found`.
 - Domain loaders wrap reads in `'use cache'` with `cacheTag` and `cacheLife('hours')`; a failed read returns `null` with `{ stale: 60, revalidate: 60, expire: 3600 }`, so the page stays 200, remains in the prerender, and retries within a minute (example: `getCatalogSections`). A page that cannot exist without its data (the category page) throws instead and `app/[locale]/error.tsx` answers 500 inside the site frame.

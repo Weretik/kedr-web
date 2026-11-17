@@ -15,7 +15,7 @@ export async function readProductIndexPage(
 ): Promise<ProductIndexPageResult> {
   const result = await siteApiGet('/api/catalog/{lang}/products', {
     path: { lang: locale },
-    query: { availability: 'All', sort: 'IdAsc', page, pageSize: 100, priceTypeId: 11 },
+    query: { availability: 'All', sort: 'IdAsc', page, pageSize: 100 },
   });
   return result.kind === 'ok'
     ? mapProductIndexPage(result.data, page)

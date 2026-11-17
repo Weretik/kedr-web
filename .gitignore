@@ -65,7 +65,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-cache/
+/cache/
 
 # Next.js
 .next
@@ -86,3 +86,7 @@ credentials.json
 google-services.json
 GoogleService-Info.plist
 *service-account*.json
+
+# Agent working files (never commit)
+tmp*.json
+output/
