@@ -34,7 +34,7 @@ const input: ProductGroupSeoInput = {
 };
 
 describe('model ProductGroup structured data', () => {
-  it('lists every variant with its color and a «від» offer only', () => {
+  it('lists every variant with its color and own offer, plus the group «від» offer', () => {
     const data = buildProductGroupJsonLd(input, config);
 
     expect(data).toMatchObject({
@@ -58,6 +58,14 @@ describe('model ProductGroup structured data', () => {
         sku: '1',
         url: 'https://shop.example/uk/product/zavisa-flush?kolir=khrom',
         color: 'Хром',
+        offers: expect.objectContaining({
+          '@type': 'Offer',
+          url: 'https://shop.example/uk/product/zavisa-flush?kolir=khrom',
+          price: 78.4,
+          priceCurrency: 'UAH',
+          availability: 'https://schema.org/OutOfStock',
+          itemCondition: 'https://schema.org/NewCondition',
+        }),
       },
       {
         '@type': 'Product',
@@ -66,6 +74,10 @@ describe('model ProductGroup structured data', () => {
         url: 'https://shop.example/uk/product/zavisa-flush?kolir=zoloto',
         image: 'https://images-kedr.cdn.express/2.jpg',
         color: 'Золото',
+        offers: expect.objectContaining({
+          price: 65.7,
+          availability: 'https://schema.org/InStock',
+        }),
       },
     ]);
   });
@@ -76,5 +88,7 @@ describe('model ProductGroup structured data', () => {
       config,
     );
     expect(data).not.toHaveProperty('offers');
+    for (const variant of data['hasVariant'] as Record<string, unknown>[])
+      expect(variant).not.toHaveProperty('offers');
   });
 });

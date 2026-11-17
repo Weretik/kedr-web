@@ -7,7 +7,7 @@ test('a visitor orders a product from its page without signing in', async ({ pag
 
   await page.getByRole('button', { name: 'У кошик' }).click();
   await page.goto('/uk/checkout');
-  await expect(page.getByText('Артикул 700001')).toBeVisible();
+  await expect(page.getByText('Код 700001')).toBeVisible();
 
   await page.getByLabel(/Ім’я/).fill('Тест E2E');
   await page.getByLabel(/Телефон/).fill('0671234567');

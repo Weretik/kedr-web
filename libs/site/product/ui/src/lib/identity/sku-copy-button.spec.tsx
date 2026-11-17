@@ -22,7 +22,7 @@ describe('SkuCopyButton', () => {
     expect(writeText).toHaveBeenCalledWith('00817');
     expect(screen.getByRole('status').textContent).toBe('');
     resolveCopy?.();
-    await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Артикул скопійовано'));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Код скопійовано'));
   });
 
   it('does not claim success when clipboard access fails', async () => {
@@ -37,7 +37,7 @@ describe('SkuCopyButton', () => {
         'Не удалось скопировать. Выделите код и скопируйте его.',
       ),
     );
-    expect(screen.queryByText('Артикул скопирован')).toBeNull();
+    expect(screen.queryByText('Код скопирован')).toBeNull();
   });
 
   it('provides a text recovery when the clipboard API is not available', async () => {

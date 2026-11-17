@@ -35,6 +35,30 @@ describe('product structured data', () => {
     }
   });
 
+  it('adds the new condition, the seller, and the 14-day return policy to the offer', () => {
+    expect(buildProductJsonLd(input, config)['offers']).toMatchObject({
+      itemCondition: 'https://schema.org/NewCondition',
+      seller: { '@type': 'Organization', '@id': 'https://shop.example/#organization' },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'UA',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 14,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        merchantReturnLink: 'https://shop.example/uk/returns-exchanges',
+      },
+    });
+    expect(buildProductJsonLd({ ...input, locale: 'ru' }, config)['offers']).toMatchObject({
+      hasMerchantReturnPolicy: { merchantReturnLink: 'https://shop.example/ru/returns-exchanges' },
+    });
+  });
+
+  it('uses the text written for the site as the description', () => {
+    expect(
+      buildProductJsonLd({ ...input, description: 'Ручка з цинкового сплаву.' }, config),
+    ).toMatchObject({ description: 'Ручка з цинкового сплаву.' });
+  });
+
   it('uses the exact visible breadcrumb trail with absolute URLs', () => {
     expect(buildProductBreadcrumbJsonLd(input, config).itemListElement).toEqual(
       input.breadcrumbs.map((crumb, index) => ({
