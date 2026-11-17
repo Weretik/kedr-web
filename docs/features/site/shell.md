@@ -7,7 +7,7 @@
 - **Themes and languages:** light and dark through `next-themes`; the accessible sun/moon switch reflects the resolved system theme, selects its opposite on activation, and waits for hydration before enabling. The knob moves over 180ms unless reduced motion is enabled; `LocaleSwitch` links to the same page in the other language.
 - **SEO baseline:** root and page metadata, self canonical, `hreflang` with `x-default`, Organization and WebSite JSON-LD, static `robots.txt` (it points to `sitemap.xml` and the product sitemap index, so it never depends on the API) and `sitemap.xml`, all from [core/seo](../../../libs/site/core/seo/src/index.ts). Indexing is off until `SITE_ENV=production` and `SITE_INDEXING=true`. The layout also adds the Google/Bing verification meta tags and GA4/GTM scripts from the admin [«Налаштування SEO сайту»](../admin/seo-settings.md); an empty code adds nothing.
 - **500:** when page data fails, [locale error](../../../apps/site/src/app/[locale]/error.tsx) renders `ErrorView` inside the frame.
-- **404:** unmatched URLs and paths without a locale (rewritten by [proxy](../../../apps/site/src/proxy.ts)) get [global-not-found](../../../apps/site/src/app/global-not-found.tsx); `notFound()` from a page renders [locale not-found](../../../apps/site/src/app/[locale]/not-found.tsx), which reads the locale with `next/root-params`.
+- **404:** unmatched URLs and paths without a locale (rewritten by [proxy](../../../apps/site/src/proxy.ts)) get [global-not-found](../../../apps/site/src/app/global-not-found.tsx), one language chosen from `Accept-Language` (Ukrainian by default); `notFound()` from a page renders [locale not-found](../../../apps/site/src/app/[locale]/not-found.tsx), which reads the locale with `next/root-params`.
 - **API client:** [siteApiGet](../../../libs/site/shared/api-client/src/lib/site-api.ts) is a plain typed fetch; domain `data-access` libraries cache it with `'use cache'`.
 - **Footer year:** a cached component, so the footer stays in the prerendered page.
 
@@ -41,7 +41,7 @@ libs/site/core/shell/src/lib/
 ├── header/  # site-header, collapsing sticky header, search form, call and cart actions, compact actions
 │   ├── bars/  # top, main, and category rows
 │   └── menus/  # details dropdown, catalog menu, mobile sheet
-├── not-found/not-found-view.tsx  # 404 message per language
+├── not-found/not-found-view.tsx  # 404 in one language: home, catalog, search, phone
 ├── error/error-view.tsx  # client: data failure message with retry
 ├── footer/  # site-footer.tsx, copyright-year.tsx (cached)
 ├── controls/  # client islands: theme, language, phone copy; messenger links
