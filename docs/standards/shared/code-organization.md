@@ -1,6 +1,6 @@
 # Frontend code organization rules
 
-**Applies to:** `apps/admin`, `apps/mobile`, `apps/site` and `libs/{admin,mobile,site}/**`. The Angular storefront (`apps/storefront`, `libs/storefront`, and the `libs/shared/*` libraries it alone uses) is frozen; see [Frozen applications](#frozen-applications).
+**Applies to:** `apps/admin`, `apps/mobile`, `apps/site` and `libs/{admin,mobile,site}/**`.
 **Checked by:** Nx tags and `depConstraints` in `@nx/enforce-module-boundaries` (`eslint.config.cjs`); `npm run architecture:boundaries` for documented cross-domain flows; the `no-restricted-imports` block in `eslint.config.cjs` that keeps the router out of Admin `ui` libraries; `npm run architecture:structure` (structure check, in CI); code audit.
 
 This standard fixes where code lives inside a domain library. The module maps list what exists; this file is the rule for new and changed code. Project specifics and known deviations per application are in [Admin](../admin/admin-code-organization.md), [Mobile](../mobile/mobile-code-organization.md), and [Site](../site/site-code-organization.md). Keep the role names exactly, so every domain reads the same way. Remove rows for layers or roles the application does not use. Kedr and Brevi use this text verbatim with `<scope>` = `admin`, `mobile`, or `site`; only the project specifics and known deviations differ.

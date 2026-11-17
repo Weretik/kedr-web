@@ -4,17 +4,17 @@ This is a short entry point for working in this frontend repository. The project
 
 ## Product
 
-Kedr sells door hardware wholesale (with optional retail orders), not services such as fitting or repair. The KedrStore backend owns business rules, the OpenAPI contract, and authorization: Admin and Storefront use an HttpOnly cookie session, Mobile uses bearer + refresh tokens, and admin APIs require the Manager or Admin role.
+Kedr sells door hardware wholesale (with optional retail orders), not services such as fitting or repair. The KedrStore backend owns business rules, the OpenAPI contract, and authorization: Admin and Site use an HttpOnly cookie session, Mobile uses bearer + refresh tokens, and admin APIs require the Manager or Admin role.
 
 ## Project context
 
 - [Frontend inventory](docs/architecture/frontend-inventory.md) — applications, tools, and available Nx targets.
 - [Architecture decisions (ADR)](docs/architecture/adr/README.md) — workspace decisions and the list of key decisions; a new app, framework, hosting, state or transport approach gets an ADR in the same change, and the full architecture audit reports missing ones.
-- Application architecture: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), [Storefront Angular](docs/architecture/storefront/README.md) (current public site), and [Site Next.js](docs/architecture/site/README.md) (new public site replacing it by the [migration plan](docs/specs/site/migration/README.md); new storefront work goes here).
+- Application architecture: [Admin React](docs/architecture/admin/README.md), [Mobile React Native](docs/architecture/mobile/README.md), and [Site Next.js](docs/architecture/site/README.md) (the public site; the old Angular storefront was removed, see its [ADR](docs/architecture/adr/0005-remove-angular-storefront.md)).
 - [Standards index](docs/standards/README.md) — stable rules for code, UI, API, testing, security, and delivery.
-- [Feature catalog](docs/features/README.md) — one table of current Admin, Mobile, and Storefront features with routes and cards.
+- [Feature catalog](docs/features/README.md) — one table of current Admin, Mobile, and Site features with routes and cards.
 
-Identify the application from the request and current code. If choosing between React, React Native, Next.js, and Angular affects the result and cannot be determined from context, clarify it before creating files. For task-specific context, navigate from the [feature catalog](docs/features/README.md) to the relevant feature card and code; read SDD, architecture, and standards only for the issues involved.
+Identify the application from the request and current code. If choosing between React, React Native, and Next.js affects the result and cannot be determined from context, clarify it before creating files. For task-specific context, navigate from the [feature catalog](docs/features/README.md) to the relevant feature card and code; read SDD, architecture, and standards only for the issues involved.
 
 ## Context search order
 
@@ -25,7 +25,7 @@ Identify the application from the request and current code. If choosing between 
 
 ## Commands
 
-- Admin, Storefront, and Site tests (Vitest): `npx nx run <project>:vite:test -- --run`; all site libraries: `npm run test:site`.
+- Admin and Site tests (Vitest): `npx nx run <project>:vite:test -- --run`; all site libraries: `npm run test:site`.
 - Mobile tests (Jest): `npx nx run <project>:test`.
 - Project lint or typecheck: `npx nx run <project>:lint`, `npx nx run <project>:typecheck`.
 - Documentation: `npm run docs:check`. Contract: `npm run contracts:sync` (from KedrStore `master`), `npm run contracts:check`, `npm run contracts:drift`. Structure and boundaries: `npm run architecture:structure`, `npm run architecture:boundaries`.

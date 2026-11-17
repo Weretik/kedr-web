@@ -29,7 +29,7 @@ Deliver the static page, localized metadata, sitemap inclusion, component and me
 
 - [Site architecture](../../../../architecture/site/README.md), [module boundaries](../../../../architecture/site/structure/modules.md).
 - [Design system](../../../../standards/site/design-system.md), [SEO rules](../../../../standards/site/seo-rules.md), [delivery rules](../../../../standards/shared/delivery-rules.md), [testing rules](../../../../standards/shared/testing-rules.md).
-- [Angular feature card](../../../../features/storefront/content/about-us.md), [delivery translations](../../../../../apps/storefront/src/app/localization/translations/delivery-payment.translation.ts), [delivery template](../../../../../libs/storefront/feature/about-us/src/lib/pages/delivery-and-payment/delivery-and-payment.html).
+- Angular feature card, delivery translations, delivery template.
 
 Original accepted raster: `C:\Users\Віталій\.codex\generated_images\01a19e81-203f-76a3-87cb-f6cd0caa04e5\exec-45796e02-92df-41d5-ac1e-63fd0823e97e.png`; copied unchanged to `design/concept.png`.
 

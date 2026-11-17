@@ -69,7 +69,6 @@ jobs:
       - run: node tools/ci/run-affected.mjs test:web
       - run: node tools/ci/run-affected.mjs test:mobile
       - run: node tools/ci/run-affected.mjs test:site
-      - run: node tools/ci/run-affected.mjs test:storefront
 
   build:
     name: production builds
@@ -85,14 +84,12 @@ jobs:
       - name: Choose affected apps
         id: scope
         run: |
-          for project in admin storefront site; do
+          for project in admin site; do
             echo "$project=$(node tools/ci/run-affected.mjs --check $project)" >> "$GITHUB_OUTPUT"
           done
           npx nx show projects --affected | sed 's/^/affected: /' || true
       - if: steps.scope.outputs.admin == 'true'
         run: npx nx build admin --configuration=production
-      - if: steps.scope.outputs.storefront == 'true'
-        run: npx nx build storefront --configuration=production
       - if: steps.scope.outputs.site == 'true'
         run: npx nx build site
 

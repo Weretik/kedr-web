@@ -3,7 +3,7 @@
 **Status:** accepted
 **Decision date:** 2026-11-15 (recorded from the current workspace; folder axiom codified on 2026-11-14)
 **Owners:** product owner, frontend
-**Applications:** all: Admin (React), Mobile «Кедр Менеджер» (Expo), the old Storefront (Angular) and the new public Site (Next.js)
+**Applications:** all: Admin (React), Mobile «Кедр Менеджер» (Expo), and the public Site (Next.js; the old Angular Storefront was removed in [ADR-0005](0005-remove-angular-storefront.md))
 
 ## Context
 

@@ -15,11 +15,6 @@
     "sharedGlobals": []
   },
   "targetDefaults": {
-    "@angular/build:application": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
-    },
     "@nx/esbuild:esbuild": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -120,19 +115,6 @@
     }
   ],
   "generators": {
-    "@nx/angular:application": {
-      "e2eTestRunner": "playwright",
-      "linter": "eslint",
-      "style": "css",
-      "unitTestRunner": "vitest-analog"
-    },
-    "@nx/angular:library": {
-      "linter": "eslint",
-      "unitTestRunner": "vitest-analog"
-    },
-    "@nx/angular:component": {
-      "style": "css"
-    },
     "@nx/react": {
       "library": {
         "unitTestRunner": "vitest"

@@ -2,7 +2,7 @@
 
 ## Базовая версия
 
-[Legacy UK/RU source](../../../../../../apps/storefront/src/app/localization/translations/privacy-policy.translation.ts) прочитан 2026-11-03.
+Legacy UK/RU source прочитан 2026-11-03.
 
 SHA-256: C7CF17DDFEE45D868DBA12F1C0407B1C3DCE16B8F7C540B6EDD09CE9E0FFFF3A.
 

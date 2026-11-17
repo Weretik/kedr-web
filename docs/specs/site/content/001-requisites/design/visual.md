@@ -37,10 +37,10 @@
 
 ## Фактические данные и ограничения
 
-Источник реквизитов: [старый requisites.translation.ts](../../../../../../apps/storefront/src/app/localization/translations/requisites.translation.ts).
+Источник реквизитов: старый requisites.translation.ts.
 Источник актуальных контактов: [COMPANY](../../../../../../libs/site/core/config/src/lib/company.ts).
 Условия согласования платежа: [действующий словарь доставки и оплаты](../../../../../../libs/site/content/ui/src/lib/i18n/delivery-payment-dictionary.ts).
-Различение администрации и продавца: [старая публичная оферта](../../../../../../apps/storefront/src/app/localization/translations/public-offer.translation.ts).
+Различение администрации и продавца: старая публичная оферта.
 
 | Поле          | Значение из репозитория для концепта |
 | ------------- | ------------------------------------ |

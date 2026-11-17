@@ -30,7 +30,7 @@ feature error state              runtime notifier (network/timeout/5xx)
 
 ## Responsibility boundaries
 
-`@shared/api-contracts` contains only CLI-generated OpenAPI types and is the shared machine contract for Admin, Mobile, and Storefront. It does not contain an HTTP client, state, runtime validation, or domain models. Each client imports it only at the transport boundary and performs its own mapping in domain `data-access`.
+`@shared/api-contracts` contains only CLI-generated OpenAPI types and is the shared machine contract for Admin, Mobile, and Site. It does not contain an HTTP client, state, runtime validation, or domain models. Each client imports it only at the transport boundary and performs its own mapping in domain `data-access`.
 
 | Layer                  | Responsibility                                                                                                                                                  |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
