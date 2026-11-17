@@ -4,8 +4,8 @@
 
 ## Подтверждённые источники
 
-- [Старые типы корзины](../../../../../libs/storefront/data-access/src/lib/cart/models/cart.types.ts), [store](../../../../../libs/storefront/data-access/src/lib/cart/state/cart.store.ts) и [сохранение](../../../../../libs/storefront/data-access/src/lib/cart/state/cart.facade.ts).
-- [Существующий mapper оформления](../../../../../libs/storefront/data-access/src/lib/checkout/mappers/checkout.mapper.ts) и [проверка ответа](../../../../../libs/storefront/data-access/src/lib/checkout/contracts/order-response.schema.ts).
+- Старые типы корзины, store и сохранение.
+- Существующий mapper оформления и проверка ответа.
 - [Контракт быстрого заказа](../../../../contracts/catalog/quick-order.md), [OpenAPI заказов](../../../../contracts/openapi/openapi.json) и [сгенерированные операции](../../../../../libs/shared/api-contracts/src/generated/kedr-api.ts).
 - [Владелец покупки товара Site](../../../../features/site/product.md), [архитектура Site](../../../../architecture/site/README.md), [SEO-правила](../../../../standards/site/seo-rules.md) и [действующая SEO-архитектура](../../../../architecture/site/platform/seo-architecture.md).
 - [Проекция и серверная граница этой SDD](contracts/api-contract.md).

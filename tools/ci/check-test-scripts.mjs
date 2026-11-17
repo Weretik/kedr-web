@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { projectPatterns, uncoveredProjects } from './test-scripts.mjs';
 
 // Fails when a project has a test target that the CI test scripts do not run.
-export const ciTestScripts = ['test:web', 'test:storefront', 'test:site', 'test:mobile'];
+export const ciTestScripts = ['test:web', 'test:site', 'test:mobile'];
 
 const scripts = JSON.parse(
   readFileSync(new URL('../../package.json', import.meta.url), 'utf8'),
