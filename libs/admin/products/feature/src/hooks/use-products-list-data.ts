@@ -17,13 +17,24 @@ export function useProductsListData(mode: ProductsListMode, urlState: ProductsUr
     { ...urlState.siteQuery, exportToSite: true },
     { skip: mode !== 'site' },
   );
-  const missingQuery = useGetMissingPhotoProductsQuery(urlState.missingQuery, {
-    skip: mode !== 'missing',
-  });
+  // «Без фото» and «На сайті без фото» share one endpoint and differ only by `exportToSite`.
+  const missingMode = mode === 'missing' || mode === 'siteMissing';
+  const missingQuery = useGetMissingPhotoProductsQuery(
+    mode === 'siteMissing'
+      ? { ...urlState.siteMissingQuery, exportToSite: true }
+      : urlState.missingQuery,
+    { skip: !missingMode },
+  );
   const categoriesQuery = useGetAdminProductCategoriesQuery();
   const totals = useRef<Partial<Record<ProductsListMode, number>>>({});
 
-  const activeQuery = mode === 'missing' ? missingQuery : mode === 'site' ? siteQuery : allQuery;
+  const activeQuery = {
+    all: allQuery,
+    missing: missingQuery,
+    site: siteQuery,
+    siteMissing: missingQuery,
+    deleted: allQuery,
+  }[mode];
   const total = activeQuery.data?.totalRecords;
   if (total !== undefined) totals.current[mode] = total;
 

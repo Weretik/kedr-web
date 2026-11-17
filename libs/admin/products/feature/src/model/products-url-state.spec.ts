@@ -69,6 +69,28 @@ describe('products URL state', () => {
     expect(writeProductsUrlState(state).get('siteCategoryId')).toBe('88');
   });
 
+  it('keeps «На сайті без фото» filters apart and always limited to the site', () => {
+    const state = readProductsUrlState(
+      new URLSearchParams(
+        'mode=siteMissing&siteMissingSearchTerm=kabel&siteMissingHasStock=true&siteMissingCategoryId=5&siteMissingPage=2&missingSearchTerm=other',
+      ),
+    );
+    expect(state.mode).toBe('siteMissing');
+    expect(state.siteMissingQuery).toMatchObject({
+      searchTerm: 'kabel',
+      hasStock: true,
+      categoryId: 5,
+      exportToSite: true,
+      page: 2,
+    });
+    expect(state.missingQuery.searchTerm).toBe('other');
+    const written = writeProductsUrlState(state);
+    expect(written.get('mode')).toBe('siteMissing');
+    expect(written.get('siteMissingHasStock')).toBe('true');
+    expect(written.get('siteMissingPage')).toBe('2');
+    expect(written.get('siteMissingExportToSite')).toBeNull();
+  });
+
   it('keeps the deleted tab search and page apart from the other tabs', () => {
     const state = readProductsUrlState(
       new URLSearchParams('mode=deleted&deletedSearchTerm=kabel&deletedPage=3&searchTerm=other'),

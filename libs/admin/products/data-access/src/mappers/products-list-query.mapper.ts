@@ -30,13 +30,14 @@ export function mapProductsListQueryToApi(query: ProductsListQuery) {
   } satisfies AdminProductsListParams;
 }
 
-/** «Без фото» is the ordinary list with `withoutPhoto=true`: products without a linked photo. */
+/** «Без фото» is the ordinary list with `withoutPhoto=true`; «На сайті без фото» adds `exportToSite=true`. */
 export function mapMissingPhotoQueryToApi(query: MissingPhotoQuery) {
   return {
     withoutPhoto: true,
     searchTerm: query.searchTerm?.trim().slice(0, 100) || undefined,
     categoryId: query.categoryId,
     hasStock: query.hasStock,
+    exportToSite: query.exportToSite,
     sort: sortToApiValue[query.sort],
     page: query.page,
     pageSize: query.pageSize,
