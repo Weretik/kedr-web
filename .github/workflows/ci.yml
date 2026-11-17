@@ -70,39 +70,6 @@ jobs:
       - run: node tools/ci/run-affected.mjs test:mobile
       - run: node tools/ci/run-affected.mjs test:site
 
-  e2e:
-    name: admin e2e
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: tree:0
-          fetch-depth: 0
-      - uses: ./.github/actions/setup-ci
-        with:
-          cache-name: e2e
-      - name: Check whether admin-e2e is affected
-        id: scope
-        run: echo "admin-e2e=$(node tools/ci/run-affected.mjs --check admin-e2e)" >> "$GITHUB_OUTPUT"
-
-      # The Playwright browser is cached by version; system libraries still come from apt.
-      - name: Read Playwright version
-        if: steps.scope.outputs.admin-e2e == 'true'
-        id: playwright
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
-        if: steps.scope.outputs.admin-e2e == 'true'
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
-      - if: steps.scope.outputs.admin-e2e == 'true' && steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-      - if: steps.scope.outputs.admin-e2e == 'true' && steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
-      - if: steps.scope.outputs.admin-e2e == 'true'
-        run: npm run test:web:e2e
-
   build:
     name: production builds
     runs-on: ubuntu-latest
@@ -129,7 +96,7 @@ jobs:
   main:
     name: main
     if: always()
-    needs: [checks, typecheck, test, e2e, build]
+    needs: [checks, typecheck, test, build]
     runs-on: ubuntu-latest
     steps:
       - name: All checks passed

@@ -4,7 +4,7 @@ This is a map of Nx projects currently in the repository, not a list of planned 
 
 | Area         | Existing Nx projects                                   | Responsibility                                                    |
 | ------------ | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| Application  | `apps/admin`, `apps/admin-e2e`                         | React Admin composition and browser checks                        |
+| Application  | `apps/admin`                                           | React Admin composition and browser checks                        |
 | Core         | `libs/admin/core/auth`, `libs/admin/core/shell`        | Session, sign-in, route guards, and application shell             |
 | Dashboard    | `libs/admin/dashboard/feature`                         | Dashboard route and screen                                        |
 | Products     | `libs/admin/products/{model,data-access,ui,feature}`   | Product list and details, slug, deleted products                  |
