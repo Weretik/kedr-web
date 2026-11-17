@@ -55,11 +55,11 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           filter: tree:0
           fetch-depth: 0
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: Weretik/KedrStore
           ref: ${{ inputs.backend-ref || 'master' }}
@@ -72,7 +72,7 @@ jobs:
           echo "E2E_OUT=$RUNNER_TEMP/kedr-e2e" >> "$GITHUB_ENV"
 
       # Backend: build the API and the migrate job from source, the same projects the deploy images use.
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           global-json-file: ${{ runner.temp }}/KedrStore/global.json
       - name: Build KedrStore
@@ -120,7 +120,7 @@ jobs:
       - name: Read Playwright version
         id: playwright
         run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
@@ -133,7 +133,7 @@ jobs:
 
       # On a failure: the HTML report with screenshots, videos and traces of the failed tests, and the API log.
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-report
           path: |
