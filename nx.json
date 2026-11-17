@@ -36,6 +36,7 @@
   "plugins": [
     {
       "plugin": "@nx/playwright/plugin",
+      "exclude": ["apps/stack-e2e/**"],
       "options": {
         "targetName": "e2e"
       }
