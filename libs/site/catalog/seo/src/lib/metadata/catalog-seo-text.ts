@@ -24,10 +24,10 @@ export const CATALOG_SEO_TEXT: Record<Locale, CatalogSeoText> = {
     models: { one: 'модель', few: 'моделі', many: 'моделей' },
     hubTitle: 'Каталог дверної фурнітури',
     hubDescription:
-      'Усі розділи каталогу Class Kedr: завіси, замки, ручки, циліндри, міжкімнатні механізми та двері. Ціни, наявність і артикули.',
+      'Усі розділи каталогу Class Kedr: завіси, замки, ручки, циліндри, міжкімнатні механізми та двері. Ціни, наявність і коди.',
     searchTitle: (term) => `Пошук: ${term}`,
     searchEmptyTitle: 'Пошук товарів',
-    searchDescription: 'Пошук дверної фурнітури за назвою або артикулом.',
+    searchDescription: 'Пошук дверної фурнітури за назвою або кодом.',
   },
   ru: {
     categoryTitle: (name) => `${name} — купить оптом и в розницу`,
@@ -38,9 +38,9 @@ export const CATALOG_SEO_TEXT: Record<Locale, CatalogSeoText> = {
     models: { one: 'модель', few: 'модели', many: 'моделей' },
     hubTitle: 'Каталог дверной фурнитуры',
     hubDescription:
-      'Все разделы каталога Class Kedr: петли, замки, ручки, цилиндры, межкомнатные механизмы и двери. Цены, наличие и артикулы.',
+      'Все разделы каталога Class Kedr: петли, замки, ручки, цилиндры, межкомнатные механизмы и двери. Цены, наличие и коды.',
     searchTitle: (term) => `Поиск: ${term}`,
     searchEmptyTitle: 'Поиск товаров',
-    searchDescription: 'Поиск дверной фурнитуры по названию или артикулу.',
+    searchDescription: 'Поиск дверной фурнитуры по названию или коду.',
   },
 };

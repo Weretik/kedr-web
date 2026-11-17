@@ -81,7 +81,7 @@ export const uk: CatalogDictionary = {
   searchTitle: (term) => `Пошук: ${term}`,
   searchResults: (term) => `Результати пошуку «${term}»`,
   searchHeading: 'Пошук товарів',
-  searchPrompt: 'Введіть назву або артикул товару.',
-  searchLabel: 'Назва або артикул',
+  searchPrompt: 'Введіть назву або код товару.',
+  searchLabel: 'Назва або код',
   searchSubmit: 'Знайти',
 };

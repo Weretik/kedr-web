@@ -81,7 +81,7 @@ export const ru: CatalogDictionary = {
   searchTitle: (term) => `Поиск: ${term}`,
   searchResults: (term) => `Результаты поиска «${term}»`,
   searchHeading: 'Поиск товаров',
-  searchPrompt: 'Введите название или артикул товара.',
-  searchLabel: 'Название или артикул',
+  searchPrompt: 'Введите название или код товара.',
+  searchLabel: 'Название или код',
   searchSubmit: 'Найти',
 };

@@ -18,7 +18,7 @@ describe('SkuCopyButton', () => {
     );
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
     render(<SkuCopyButton locale="uk" sku="00817" />);
-    fireEvent.click(screen.getByRole('button', { name: 'Скопіювати артикул' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Скопіювати код' }));
     expect(writeText).toHaveBeenCalledWith('00817');
     expect(screen.getByRole('status').textContent).toBe('');
     resolveCopy?.();
@@ -31,10 +31,10 @@ describe('SkuCopyButton', () => {
       value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) },
     });
     render(<SkuCopyButton locale="ru" sku="00817" />);
-    fireEvent.click(screen.getByRole('button', { name: 'Скопировать артикул' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Скопировать код' }));
     await waitFor(() =>
       expect(screen.getByRole('status').textContent).toBe(
-        'Не удалось скопировать. Выделите артикул и скопируйте его.',
+        'Не удалось скопировать. Выделите код и скопируйте его.',
       ),
     );
     expect(screen.queryByText('Артикул скопирован')).toBeNull();
@@ -43,9 +43,7 @@ describe('SkuCopyButton', () => {
   it('provides a text recovery when the clipboard API is not available', async () => {
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined });
     render(<SkuCopyButton locale="uk" sku="00817" />);
-    fireEvent.click(screen.getByRole('button', { name: 'Скопіювати артикул' }));
-    await waitFor(() =>
-      expect(screen.getByRole('status').textContent).toContain('Виділіть артикул'),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Скопіювати код' }));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Виділіть код'));
   });
 });
