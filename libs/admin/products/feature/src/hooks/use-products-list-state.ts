@@ -8,13 +8,14 @@ import type { ProductsListMode, ProductsUrlState } from '../model/products-url-s
 import type { ProductsListQuery, ProductsListSort } from '@admin/products/model';
 import type { GridFilterModel } from '@mui/x-data-grid';
 
-type QueryKey = 'allQuery' | 'missingQuery' | 'siteQuery' | 'deletedQuery';
+type QueryKey = 'allQuery' | 'missingQuery' | 'siteQuery' | 'siteMissingQuery' | 'deletedQuery';
 type BooleanFilterField = 'inStock' | 'hasStock' | 'isSale' | 'isNew';
 
 const queryKeys: Record<ProductsListMode, QueryKey> = {
   all: 'allQuery',
   missing: 'missingQuery',
   site: 'siteQuery',
+  siteMissing: 'siteMissingQuery',
   deleted: 'deletedQuery',
 };
 
@@ -52,7 +53,9 @@ export function useProductsListState(canSeeDeleted: boolean) {
     changePageSize: (pageSize: number) => updateCurrent({ pageSize }),
     changeSort: (sort: ProductsListSort) => updateCurrent({ sort }),
     changeFilters: (model: GridFilterModel) =>
-      updateCurrent(fromProductsGridFilterModel(model, mode === 'missing')),
+      updateCurrent(
+        fromProductsGridFilterModel(model, mode === 'missing' || mode === 'siteMissing'),
+      ),
     changeBooleanFilter: (field: BooleanFilterField, value: boolean | undefined) =>
       updateCurrent({ [field]: value }),
     changeCategory: (categoryId: number | undefined) => updateCurrent({ categoryId }),

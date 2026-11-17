@@ -21,6 +21,7 @@ import type { AdminProductListItem } from '@admin/products/model';
 const emptyMessages: Partial<Record<ProductsListMode, string>> = {
   missing: 'Товарів без фото немає.',
   site: 'Товарів на сайті немає.',
+  siteMissing: 'Товарів на сайті без фото немає.',
 };
 
 export function ProductsPage({
@@ -38,6 +39,7 @@ export function ProductsPage({
   const list = useProductsListState(canSeeDeleted);
   const { activeQuery, categoriesQuery, rowCount } = useProductsListData(list.mode, list.urlState);
   const { currentQuery, mode, search } = list;
+  const basicFilters = mode === 'missing' || mode === 'siteMissing';
 
   const viewProduct = useCallback(
     (product: AdminProductListItem) => {
@@ -67,6 +69,7 @@ export function ProductsPage({
           <Tab label="Усі товари" value="all" />
           <Tab label="Без фото" value="missing" />
           <Tab label="На сайті" value="site" />
+          <Tab label="На сайті без фото" value="siteMissing" />
           {canSeeDeleted ? <Tab label="Видалені" value="deleted" /> : null}
         </Tabs>
         {mode === 'deleted' ? (
@@ -80,9 +83,9 @@ export function ProductsPage({
             categoryId={currentQuery.categoryId}
             categoriesLoading={categoriesQuery.isFetching}
             categoriesError={categoriesQuery.isError}
-            basicFilters={mode === 'missing'}
+            basicFilters={basicFilters}
             booleanFilters={currentQuery}
-            filterModel={toProductsGridFilterModel(currentQuery, mode === 'missing')}
+            filterModel={toProductsGridFilterModel(currentQuery, basicFilters)}
             emptyMessage={emptyMessages[mode]}
             errorMessage={activeQuery.isError ? 'Не вдалося завантажити товари.' : undefined}
             loading={activeQuery.isLoading || activeQuery.isFetching}

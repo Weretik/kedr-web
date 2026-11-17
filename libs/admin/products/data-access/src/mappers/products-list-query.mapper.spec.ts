@@ -27,6 +27,12 @@ describe('products server query mapping', () => {
     });
   });
 
+  it('adds exportToSite for the «На сайті без фото» list', () => {
+    expect(
+      mapMissingPhotoQueryToApi({ page: 1, pageSize: 20, sort: 'id-asc', exportToSite: true }),
+    ).toMatchObject({ withoutPhoto: true, exportToSite: true });
+  });
+
   it('sends withoutPhoto, search, sort and the stock filter for the «Без фото» list', () => {
     expect(
       mapMissingPhotoQueryToApi({

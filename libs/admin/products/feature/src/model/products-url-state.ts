@@ -9,13 +9,14 @@ export interface ProductsUrlState {
   allQuery: ProductsListQuery;
   missingQuery: MissingPhotoQuery;
   siteQuery: ProductsListQuery;
+  siteMissingQuery: MissingPhotoQuery;
   /** Soft-deleted products (administrators only): search and paging. */
   deletedQuery: ProductsListQuery;
 }
 
-export type ProductsListMode = 'all' | 'missing' | 'site' | 'deleted';
+export type ProductsListMode = 'all' | 'missing' | 'site' | 'siteMissing' | 'deleted';
 
-const listModes: readonly ProductsListMode[] = ['all', 'missing', 'site', 'deleted'];
+const listModes: readonly ProductsListMode[] = ['all', 'missing', 'site', 'siteMissing', 'deleted'];
 
 export function readProductsUrlState(params: URLSearchParams): ProductsUrlState {
   const allQuery = normalizeProductsListQuery({
@@ -58,6 +59,17 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     pageSize: readPositiveInteger(params.get('sitePageSize'), 20),
   });
 
+  const siteMissing = normalizeProductsListQuery({
+    ...DEFAULT_PRODUCTS_LIST_QUERY,
+    searchTerm: params.get('siteMissingSearchTerm') ?? undefined,
+    hasStock: readBoolean(params, 'siteMissingHasStock'),
+    categoryId: readPositiveInteger(params.get('siteMissingCategoryId'), 0) || undefined,
+    exportToSite: true,
+    sort: (params.get('siteMissingSort') ??
+      DEFAULT_PRODUCTS_LIST_QUERY.sort) as ProductsListQuery['sort'],
+    page: readPositiveInteger(params.get('siteMissingPage'), 1),
+    pageSize: readPositiveInteger(params.get('siteMissingPageSize'), 20),
+  });
   const deletedQuery = normalizeProductsListQuery({
     ...DEFAULT_PRODUCTS_LIST_QUERY,
     searchTerm: params.get('deletedSearchTerm') ?? undefined,
@@ -72,6 +84,15 @@ export function readProductsUrlState(params: URLSearchParams): ProductsUrlState 
     deletedQuery,
     allQuery,
     siteQuery,
+    siteMissingQuery: {
+      searchTerm: siteMissing.searchTerm,
+      hasStock: siteMissing.hasStock,
+      categoryId: siteMissing.categoryId,
+      exportToSite: true,
+      sort: siteMissing.sort,
+      page: siteMissing.page,
+      pageSize: siteMissing.pageSize,
+    },
     missingQuery: {
       searchTerm: missingQuery.searchTerm,
       hasStock: missingQuery.hasStock,
@@ -94,6 +115,11 @@ export function writeProductsUrlState(state: ProductsUrlState): URLSearchParams 
   writeQuery(params, 'site', site);
   writeQuery(
     params,
+    'siteMissing',
+    normalizeProductsListQuery({ ...state.siteMissingQuery, exportToSite: true }),
+  );
+  writeQuery(
+    params,
     'deleted',
     normalizeProductsListQuery({ ...state.deletedQuery, deleted: true }),
   );
@@ -102,7 +128,7 @@ export function writeProductsUrlState(state: ProductsUrlState): URLSearchParams 
 
 function writeQuery(
   params: URLSearchParams,
-  prefix: '' | 'missing' | 'site' | 'deleted',
+  prefix: '' | 'missing' | 'site' | 'siteMissing' | 'deleted',
   query: ProductsListQuery,
 ) {
   const key = (name: string) =>
@@ -112,7 +138,7 @@ function writeQuery(
     if (typeof query[name] === 'boolean') params.set(key(name), String(query[name]));
   }
   if (query.categoryId !== undefined) params.set(key('categoryId'), String(query.categoryId));
-  if (prefix !== 'missing') {
+  if (prefix !== 'missing' && prefix !== 'siteMissing') {
     if (query.priceFrom !== undefined) params.set(key('priceFrom'), String(query.priceFrom));
     if (query.priceTo !== undefined) params.set(key('priceTo'), String(query.priceTo));
   }

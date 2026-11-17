@@ -155,6 +155,23 @@ describe('products navigation context', () => {
     expect(api.missing).toHaveBeenLastCalledWith(expect.anything(), { skip: true });
   });
 
+  it('uses the missing-photo endpoint with exportToSite=true in the «На сайті без фото» tab', async () => {
+    render(
+      <MemoryRouter initialEntries={['/catalog?page=3&searchTerm=cable']}>
+        <Routes>
+          <Route element={<ProductsPage />} path="/catalog" />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole('tab', { name: 'На сайті без фото' }));
+    await waitFor(() =>
+      expect(api.missing).toHaveBeenLastCalledWith(
+        expect.objectContaining({ page: 1, exportToSite: true }),
+        { skip: false },
+      ),
+    );
+  });
+
   it('combines the stock filter with the missing-photo search and category and resets its page', async () => {
     render(
       <MemoryRouter
