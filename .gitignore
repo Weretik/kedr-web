@@ -86,3 +86,7 @@ credentials.json
 google-services.json
 GoogleService-Info.plist
 *service-account*.json
+
+# Agent working files (never commit)
+tmp*.json
+output/
