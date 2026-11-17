@@ -9,7 +9,6 @@ import { dirname, join, relative } from 'node:path';
 const workspaceRoot = new URL('../../', import.meta.url).pathname.replace(/^\/(.:\/)/, '$1');
 const scopes = {
   web: ['apps/admin', 'libs/admin'],
-  storefront: ['apps/storefront', 'libs/storefront'],
   mobile: ['apps/mobile', 'libs/mobile'],
   site: ['apps/site', 'libs/site'],
   e2e: ['apps/admin-e2e', 'apps/stack-e2e'],

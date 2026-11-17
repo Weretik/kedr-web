@@ -81,7 +81,7 @@ const isExemptFromLength = (path) => /\/(i18n|data|generated|testing)\//.test(pa
 const dirOf = (path) => path.slice(0, path.lastIndexOf('/'));
 const baseOf = (path) => path.slice(path.lastIndexOf('/') + 1);
 
-/** Applications and libraries the rules cover; the frozen Angular storefront is left out. */
+/** Applications and libraries the rules cover. */
 const inScope = (path) =>
   /^(apps\/(admin|mobile|site)\/src\/|libs\/(admin|mobile|site)\/)/.test(path);
 

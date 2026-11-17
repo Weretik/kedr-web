@@ -54,6 +54,6 @@ apps/site/
 - Direct equivalent when Nx bootstrap stalls: `node node_modules/vitest/vitest.mjs run --config libs/site/content/<layer>/vite.config.mts` for the affected layer.
 - All three libraries are included in `npm run test:site`; full suite and browser/build checks follow repository authorization rules.
 
-Related: [site shell](shell.md), [SEO architecture](../../architecture/site/platform/seo-architecture.md), [original Angular information pages](../storefront/content/about-us.md).
+Related: [site shell](shell.md), [SEO architecture](../../architecture/site/platform/seo-architecture.md), original Angular information pages.
 
 Architecture and responsibility audit: [report and verified AF-001](../../specs/site/content/001-delivery-payment/code-audit/audit.md). The three content projects use inferred Nx ESLint inputs, including the current root/local CJS configs and upstream dependencies. Delivery tests are also typed through each library tsconfig.spec.json; see [TS-005](../../specs/site/content/001-delivery-payment/tasks/TS-005-architecture-audit.md) for exact checks.

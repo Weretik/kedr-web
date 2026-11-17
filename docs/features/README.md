@@ -49,7 +49,7 @@ Kedr Manager, rebuilt by the [SDD](../specs/mobile/manager/001-manager-app/READM
 
 ## Site Next.js
 
-The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site/src/app/[locale]/layout.tsx). Features move here from the Angular storefront by the [migration plan](../specs/site/migration/README.md). See [Site architecture](../architecture/site/README.md).
+The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site/src/app/[locale]/layout.tsx). The old Angular storefront was removed; remaining migration items are tracked in the [migration plan](../specs/site/migration/README.md). See [Site architecture](../architecture/site/README.md).
 
 | Feature                                            | Route or entry                                                      | Status                                                                                                                                                                       |
 | -------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -68,25 +68,5 @@ The new public site (`apps/site`); routes live in [app/[locale]](../../apps/site
 | [Product details](site/product.md)                 | `/{locale}/product/{slug}`, `/product/sitemap/{id}.xml`             | Model page (switchers, in-stock variants, variants table, texts, other models) over the product page; SSR/canonical/308/Product JSON-LD; shared cart                         |
 | [Gallery and video](site/gallery.md)               | /{locale}/galleria                                                  | Mixed gallery UI/viewer from the Content API (photos from the media library, YouTube videos), UK/RU, SEO/sitemap                                                             |
 | [Cart and quick checkout](site/cart.md)            | Header drawer, `/{locale}/checkout`, product purchase               | Shared document owner, cart_v1 recovery, two columns from 720px container, UK/RU contacts, anonymous order and confirmed receipt                                             |
-
-## Storefront Angular
-
-Routes come from [app.routes.ts](../../apps/storefront/src/app/app.routes.ts) and have the `/uk` or `/ru` prefix. See [Storefront architecture](../architecture/storefront/README.md).
-
-| Feature                                                   | Route or entry                                                                          |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| [Categories](storefront/catalog/categories.md)            | `/`, `/categories`                                                                      |
-| [Product list and details](storefront/catalog/catalog.md) | `/catalog/products`, `/catalog/:categorySlug/products`, `/catalog/product/:productSlug` |
-| [Cart](storefront/catalog/cart.md)                        | Component in the header                                                                 |
-| [Checkout](storefront/catalog/checkout.md)                | `/checkout`                                                                             |
-| [Sign in](storefront/account/auth.md)                     | `/login`                                                                                |
-| [Cabinet](storefront/account/cabinet.md)                  | `/cabinet/dashboard`                                                                    |
-| [Articles](storefront/content/articles.md)                | `/articles`, `/articles/:id`                                                            |
-| [About and legal pages](storefront/content/about-us.md)   | Seven `about-us` routes                                                                 |
-| [Contacts](storefront/content/contacts.md)                | `/contacts`                                                                             |
-| [Regions](storefront/content/regions.md)                  | `/region/:city`                                                                         |
-| [Wholesale](storefront/content/wholesale.md)              | `/wholesale`                                                                            |
-| [404 page](storefront/not-found.md)                       | Shell                                                                                   |
-| [Home](storefront/home.md)                                | Library exists, not routed: `categoriesRoutes` handles `/`                              |
 
 After behavior changes, compare the card and this catalog with the code.

@@ -7,14 +7,14 @@ The frontend ensures correct session use, safe data rendering, client-side data 
 ## Authentication, access, and session
 
 - Admin signs in with the HttpOnly session cookie through `admin/core/auth`; JavaScript never holds a token. The Axios client sends cookies with `withCredentials`, adds `X-CSRF-Token` to non-GET requests, and on `401` calls `onUnauthenticated`, which opens `/login?returnTo=…`. Routes are wrapped in `RequireAdminSession` (guest → login, non-staff → no access) and role-gated sections in `RequireRole`.
-- Storefront uses the same cookie session: Angular `SessionStore` holds the user from `/api/auth/session/me`, the credentials/CSRF/unauthorized interceptors handle transport, and `cabinetAuthGuard` protects the cabinet. New protected routes must have a guard, but the backend still checks access.
+- Site pages that need the session read it on the server through the same cookie session; new protected routes must have a guard, but the backend still checks access.
 - Mobile is a staff app: `@mobile/core/auth` keeps the access and refresh tokens only in `expo-secure-store` and memory, `@mobile/shared/api-client` adds the bearer header and refreshes once on `401`, and the root layout shows only the login screen without a session. Do not put tokens in AsyncStorage, Redux, or logs.
 - Role/permission availability is determined by the real API contract. Until it exists, do not create fictitious role checks; state `n/a` in the spec with a reason. If roles exist, restrict both routes and each privileged action, showing a neutral unavailable/forbidden state.
 - `401` means one controlled refresh where already implemented; on failure, clear the local session and navigate to login without a loop. Do not retry `403` or show it as session expiry: show a safe forbidden state.
 
 ## Data, XSS, errors, and logs
 
-- Render external data only with standard React/React Native/Angular binding. `dangerouslySetInnerHTML`, direct `innerHTML`, unsafe URL/style values, and Angular trust bypass are prohibited without a separate security review, an approved sanitizer, and an XSS-payload test.
+- Render external data only with standard React/React Native binding. `dangerouslySetInnerHTML`, direct `innerHTML`, unsafe URL/style values are prohibited without a separate security review, an approved sanitizer, and an XSS-payload test.
 - Validate API data at the `data-access` boundary, map DTOs to domain models, and do not pass raw API errors to the UI. Show a normalized `ApiError`, field errors, or a safe generic message in the UI; do not show stack traces, request headers, tokens, or backend internals.
 - PII, access/refresh tokens, cookies, passwords, authorization headers, CSRF tokens, and secrets must not appear in source, Expo `EXPO_PUBLIC_*`, Vite client env, analytics, telemetry, test fixtures, or console logs. Existing Admin/Mobile HTTP logs are allowed only in development and log method, path, status/duration; new logs must follow the same redaction principle.
 - Treat any `EXPO_PUBLIC_*` and Vite client env value as public. In Mobile, `EXPO_PUBLIC_API_BASE_URL` may contain only a public base URL.
@@ -22,7 +22,7 @@ The frontend ensures correct session use, safe data rendering, client-side data 
 ## Transport, cookies, and CSRF
 
 - Use HTTPS only in production; do not weaken certificate/transport checks.
-- Admin and Storefront use credentialed cookies. Every non-GET request sends the `kedr.csrf` cookie as `X-CSRF-Token`; the backend rejects a cookie request without it. The frontend cannot guarantee `Secure`, `HttpOnly`, `SameSite`, a CORS origin allowlist, or cookie domain by itself; these are backend/infra responsibilities to verify in the contract.
+- Admin and Site use credentialed cookies. Every non-GET request sends the `kedr.csrf` cookie as `X-CSRF-Token`; the backend rejects a cookie request without it. The frontend cannot guarantee `Secure`, `HttpOnly`, `SameSite`, a CORS origin allowlist, or cookie domain by itself; these are backend/infra responsibilities to verify in the contract.
 - Mobile does not use cookies or CSRF; it authenticates only with the bearer header.
 
 ## Files, export, and dangerous operations

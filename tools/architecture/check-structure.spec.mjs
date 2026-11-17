@@ -250,19 +250,6 @@ test('allows only composition folders in the Admin application folder', () => {
   );
 });
 
-test('ignores the frozen Angular storefront', () => {
-  assert.deepEqual(
-    check({
-      'libs/storefront/util/project.json': '{}',
-      'libs/storefront/util/src/lib/utils/format.ts': lines(500),
-      'libs/shared/util/project.json': '{}',
-      'libs/shared/util/src/lib/helpers.ts': '',
-      'apps/storefront/src/app/types.ts': '',
-    }),
-    [],
-  );
-});
-
 test('compares violations with the baseline both ways', () => {
   assert.deepEqual(compareWithBaseline(['a', 'b'], ['b', 'c']), { added: ['a'], fixed: ['c'] });
 });

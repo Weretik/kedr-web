@@ -1,6 +1,6 @@
 # Workspace architecture decisions
 
-Decisions that cover the whole frontend workspace. Decisions of one app live next to it: [Admin ADRs](../admin/adr/README.md), [Mobile ADRs](../mobile/adr/README.md), [Site ADRs](../site/adr/0001-nextjs-public-site.md), [Storefront decisions](../storefront/decisions.md). The backend and the whole system (C4 diagrams with these apps as containers) are in [KedrStore](https://github.com/Weretik/KedrStore/blob/master/docs/sdd/architecture/c4/README.md).
+Decisions that cover the whole frontend workspace. Decisions of one app live next to it: [Admin ADRs](../admin/adr/README.md), [Mobile ADRs](../mobile/adr/README.md), [Site ADRs](../site/adr/0001-nextjs-public-site.md). The backend and the whole system (C4 diagrams with these apps as containers) are in [KedrStore](https://github.com/Weretik/KedrStore/blob/master/docs/sdd/architecture/c4/README.md).
 
 | ADR                                                       | Decision                                                                                   | Status                    |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------- |
@@ -8,6 +8,7 @@ Decisions that cover the whole frontend workspace. Decisions of one app live nex
 | [0002](0002-admin-client-only-spa.md)                     | The admin is a client-only React SPA, hidden from search                                   | accepted                  |
 | [0003](0003-types-from-backend-openapi.md)                | API types are generated from a pinned snapshot of the backend OpenAPI                      | accepted, amended by 0004 |
 | [0004](0004-contract-follows-backend-and-typed-client.md) | The snapshot follows the backend default branch; Admin calls the API through openapi-fetch | accepted                  |
+| [0005](0005-remove-angular-storefront.md)                 | The old Angular storefront is removed; Site is the only public app                         | accepted                  |
 
 ## Key decisions that must have an ADR
 
