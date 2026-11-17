@@ -1,10 +1,24 @@
 import { DataGridMessageOverlay } from '@admin/shared/ui';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Box } from '@mui/material';
-import { DataGrid, GridToolbarContainer, QuickFilter, QuickFilterControl } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  QuickFilter,
+  QuickFilterControl,
+  useGridApiContext,
+} from '@mui/x-data-grid';
 
 import type { AdminProductListItem } from '@admin/products/model';
 import type { GridColDef, GridFilterModel } from '@mui/x-data-grid';
+import type { KeyboardEvent } from 'react';
+
+/** Time after the last keystroke before the search runs; enough to finish typing a word. */
+const SEARCH_DEBOUNCE_MS = 450;
+
+function parseSearch(value: string) {
+  return value.trim() ? [value.trim()] : [];
+}
 
 const dateFormatter = new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium', timeStyle: 'short' });
 
@@ -21,16 +35,28 @@ const columns: GridColDef<AdminProductListItem>[] = [
 ].map((column) => ({ ...column, filterable: false, sortable: false }));
 
 function DeletedProductsToolbar() {
+  const apiRef = useGridApiContext();
+
+  // Enter runs the search at once instead of waiting for the pause.
+  const runSearchOnEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      apiRef.current.setQuickFilterValues(parseSearch(event.currentTarget.value));
+    }
+  };
+
   return (
     <GridToolbarContainer sx={{ px: 2, py: 1 }}>
       <Box sx={{ maxWidth: '100%', width: { xs: '100%', sm: 320 } }}>
-        <QuickFilter expanded debounceMs={300}>
+        <QuickFilter expanded debounceMs={SEARCH_DEBOUNCE_MS} parser={parseSearch}>
           <QuickFilterControl
             fullWidth
             placeholder="Назва або ID"
             size="small"
             slotProps={{
-              htmlInput: { 'aria-label': 'Пошук видалених товарів' },
+              htmlInput: {
+                'aria-label': 'Пошук видалених товарів',
+                onKeyDown: runSearchOnEnter,
+              },
               input: { startAdornment: <SearchOutlinedIcon aria-hidden="true" fontSize="small" /> },
             }}
           />
