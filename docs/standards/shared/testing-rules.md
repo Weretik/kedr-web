@@ -81,3 +81,7 @@ The following are available commands, not a mandatory bundle for every feature. 
 Infrastructure smoke proves the runner/setup works but does not cover `R-*` or `SC-*`. Acceptance Given/When/Then is a requirement; executable tests and their results are recorded separately in traceability.
 
 Record a failed or unrun check with its exact command, failure point, impact of the current changes, and next step. Do not mark it as passed.
+
+## Agent hooks
+
+The guard hook `.claude/hooks/guard.mjs` (it blocks secret files, force pushes, pushes to the default branch, production migrations and recursive deletes outside build output) has its own tests in `.claude/hooks/guard.test.mjs`. CI runs them with `node --test .claude/hooks/guard.test.mjs`; a change to the hook changes its tests in the same pull request.
