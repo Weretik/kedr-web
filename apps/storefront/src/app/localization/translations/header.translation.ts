@@ -106,7 +106,8 @@ export const ruHeaderTranslation: Translation = {
   'header.menu.publicOffer': 'Публичная оферта',
   'header.menu.privacyPolicy': 'Политика конфиденциальности',
   'header.menu.wholesale': 'Сотрудничество',
-  'header.menu.wholesaleSubtext': 'Условия сотрудничества для оптовых партнеров',
+  'header.menu.wholesaleSubtext':
+    'Условия сотрудничества для оптовых партнеров',
   'header.menu.region.vinnytska': 'Винницкая область',
   'header.menu.region.volynska': 'Волынская область',
   'header.menu.region.dnipropetrovska': 'Днепропетровская область',
