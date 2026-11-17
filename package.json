@@ -26,7 +26,6 @@
     "ci:test-scripts:fixtures": "node --test tools/ci/test-scripts.spec.mjs",
     "test:web": "nx run-many -t vite:test --parallel=1 --projects=admin,admin-* -- --run",
     "test:web:coverage": "nx run-many -t vite:test --projects=admin,admin-shared-api-client -- --run --coverage",
-    "test:web:e2e": "nx e2e admin-e2e",
     "test:stack:e2e": "playwright test -c apps/stack-e2e/playwright.config.ts",
     "test:storefront": "nx run-many -t vite:test --projects=storefront-data-access -- --run",
     "test:site": "nx run-many -t vite:test --parallel=1 --projects=site-* -- --run",

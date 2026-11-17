@@ -12,7 +12,7 @@ const scopes = {
   storefront: ['apps/storefront', 'libs/storefront'],
   mobile: ['apps/mobile', 'libs/mobile'],
   site: ['apps/site', 'libs/site'],
-  e2e: ['apps/admin-e2e', 'apps/stack-e2e'],
+  e2e: ['apps/stack-e2e'],
 };
 const specConfigName = { e2e: 'tsconfig.json' };
 
