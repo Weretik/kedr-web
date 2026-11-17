@@ -35,7 +35,7 @@ describe('ProductGrid', () => {
     expect(screen.getByRole('img', { name: 'Завіса AGB' })).toBeTruthy();
     expect(screen.getByText('Новинка')).toBeTruthy();
     expect(screen.getByText(/245,50 грн/)).toBeTruthy();
-    expect(screen.getByText('Артикул 7')).toBeTruthy();
+    expect(screen.getByText('Код 7')).toBeTruthy();
     expect(screen.getByText('В наявності')).toBeTruthy();
   });
 
@@ -71,7 +71,7 @@ describe('ProductList', () => {
   it('shows a table with SKU and stock in the table view', () => {
     render(<ProductList locale="ru" products={[{ ...product, inStock: false }]} view="table" />);
 
-    expect(screen.getByRole('columnheader', { name: 'Артикул' })).toBeTruthy();
+    expect(screen.getByRole('columnheader', { name: 'Код' })).toBeTruthy();
     expect(screen.getByRole('cell', { name: '7' })).toBeTruthy();
     expect(screen.getByText('Нет в наличии')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Завіса AGB' }).getAttribute('href')).toBe(
