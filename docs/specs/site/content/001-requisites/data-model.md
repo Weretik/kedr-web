@@ -3,8 +3,8 @@
 ## Источники
 
 - Runtime-источник после подтверждения владельцем: [COMPANY_REQUISITES](../../../../../libs/site/core/config/src/lib/company-requisites.ts).
-- Snapshot старых реквизитов: [requisites.translation.ts](../../../../../apps/storefront/src/app/localization/translations/requisites.translation.ts).
-- Назначение данных и различие администрации/продавца: [public-offer.translation.ts](../../../../../apps/storefront/src/app/localization/translations/public-offer.translation.ts).
+- Snapshot старых реквизитов: requisites.translation.ts.
+- Назначение данных и различие администрации/продавца: public-offer.translation.ts.
 - Актуальные контакты: [company.ts](../../../../../libs/site/core/config/src/lib/company.ts).
 - Согласование платежа: [delivery-payment-dictionary.ts](../../../../../libs/site/content/ui/src/lib/i18n/delivery-payment-dictionary.ts).
 

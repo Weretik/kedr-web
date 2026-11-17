@@ -17,11 +17,10 @@
 ## Requests and state
 
 - Admin and Mobile use the existing RTK Query `baseApi`, injected endpoints, and typed hooks. An Admin endpoint is `queryFn: (arg, { signal }) => apiCall(apiClient.<METHOD>('/api/...', { params, body, signal }), mapper)`: the path comes from the contract, path and query parameters and the body are typed, and the mapper receives the typed response ([Admin ADR-0002](../../architecture/admin/adr/0002-admin-openapi-fetch-transport.md)). Never call `fetch` or another HTTP client from data-access. Mobile keeps its Axios client in `@mobile/shared/api-client`.
-- Storefront uses Angular `HttpClient` in `data-access`, a repository/facade, and signals/RxJS. RTK Query does not apply to Storefront.
 - Components and presentation `ui` in any client must not call HTTP/API directly.
 - Pass cancellation signals to the transport and preserve existing error normalization.
 - Define pagination, filtering, sorting, and cache/refetch semantics in the contract before coding.
-- Do not duplicate RTK Query cache, loading, or error state in a feature reducer or component state. For Storefront, do not duplicate resource/observable server state outside its data-access facade.
+- Do not duplicate RTK Query cache, loading, or error state in a feature reducer or component state.
 - `fetch` in `libs/shared/logging` is allowed only as a best-effort fallback after `sendBeacon`; it is not API/server-state transport and must not be used by domain queries/mutations.
 
 ## Public configuration

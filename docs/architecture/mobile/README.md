@@ -8,7 +8,7 @@
 
 This section defines the mobile application architecture contract. The [map of existing modules](structure/modules.md) shows the current code; other documents may also describe target boundaries and future capabilities. Check them against the actual repository state before implementation.
 
-The mobile application is a separate client. It does not reuse React Admin or Angular Storefront UI code, but it may use the same backend APIs and shared domain contracts.
+The mobile application is a separate client. It does not reuse React Admin or Site UI code, but it may use the same backend APIs and shared domain contracts.
 
 ## Selected architecture
 

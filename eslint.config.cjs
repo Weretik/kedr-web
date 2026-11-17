@@ -1,6 +1,5 @@
 const js = require('@eslint/js');
 const nx = require('@nx/eslint-plugin');
-const angular = require('angular-eslint');
 const prettierConfig = require('eslint-config-prettier');
 const importPlugin = require('eslint-plugin-import');
 const jsxA11y = require('eslint-plugin-jsx-a11y');
@@ -20,7 +19,6 @@ module.exports = [
     ignores: [
       '**/dist/**',
       '**/coverage/**',
-      '**/.angular/**',
       '**/node_modules/**',
       '**/.nx/**',
       '**/tmp/**',
@@ -41,8 +39,6 @@ module.exports = [
   },
 
   ...only(tseslint.configs.recommended, ['**/*.{ts,tsx,mts,cts}']),
-  ...only(angular.configs.tsRecommended, ['apps/**/*.ts', 'libs/**/*.ts']),
-  ...only(angular.configs.templateRecommended, ['apps/**/*.html', 'libs/**/*.html']),
 
   {
     files: [
@@ -102,12 +98,6 @@ module.exports = [
   },
 
   {
-    files: ['apps/**/*.html', 'libs/**/*.html'],
-    rules: {
-      '@angular-eslint/template/alt-text': 'off',
-    },
-  },
-  {
     files: ['**/*.spec.ts', '**/*.test.ts', '**/vitest.setup.ts', '**/test/**/*.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -124,15 +114,6 @@ module.exports = [
     },
   },
 
-  {
-    files: ['apps/**/*.ts', 'libs/**/*.ts'],
-    processor: angular.processInlineTemplates,
-    rules: {
-      '@angular-eslint/component-selector': 'off',
-      '@angular-eslint/directive-selector': 'off',
-      '@angular-eslint/use-lifecycle-interface': 'off',
-    },
-  },
   {
     files: ['**/*.{ts,tsx,mts,cts,js,mjs,cjs}'],
     plugins: {
@@ -176,11 +157,6 @@ module.exports = [
           banTransitiveDependencies: true,
 
           depConstraints: [
-            // storefront can only depend on shared and storefront
-            {
-              sourceTag: 'scope:storefront',
-              onlyDependOnLibsWithTags: ['scope:storefront', 'scope:shared'],
-            },
             // site (public Next.js storefront) can only depend on shared and site
             {
               sourceTag: 'scope:site',
@@ -276,11 +252,7 @@ module.exports = [
             // Admin data access may depend only on models and shared transport/utilities.
             {
               allSourceTags: ['scope:admin', 'type:data-access'],
-              onlyDependOnLibsWithTags: [
-                'type:model',
-                'type:contracts',
-                'scope:admin-shared',
-              ],
+              onlyDependOnLibsWithTags: ['type:model', 'type:contracts', 'scope:admin-shared'],
             },
 
             // Admin domain UI remains presentational and can use models plus shared UI/utilities.

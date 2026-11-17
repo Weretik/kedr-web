@@ -18,7 +18,6 @@ This document records the current workspace; it does not declare violations acce
 | --------------- | ----------------------------------------------------------------------------------- |
 | Package manager | npm 11.6.2, `package-lock.json`, Node >=24.18 <25 (24.22.1 recommended)             |
 | Workspace       | Nx 23.2, 67 projects including the root npm project (checked 2026-10-19)            |
-| Storefront      | Angular 21, standalone components, SSR, PrimeNG, signals/RxJS, Angular `HttpClient` |
 | Site            | Next.js 16 App Router, React 19, shadcn/ui (Radix), Tailwind CSS v4, server `fetch` |
 | Admin           | React 19, Vite 8, MUI 9, Redux Toolkit/RTK Query, Axios                             |
 | Mobile          | Expo 58, React Native 0.88, Expo Router, own theme context, Zustand, Axios          |
@@ -26,12 +25,11 @@ This document records the current workspace; it does not declare violations acce
 
 ## Applications and library groups
 
-| Application  | Composition root  | Main libraries                                                                                 |
-| ------------ | ----------------- | ---------------------------------------------------------------------------------------------- |
-| `storefront` | `apps/storefront` | `libs/storefront/{contracts,data-access,feature/*,shell,ui,util}` plus Angular `libs/shared/*` |
-| `site`       | `apps/site`       | `libs/site/{core/{config,i18n,seo,shell},shared/{ui,api-client}}`                              |
-| `admin`      | `apps/admin`      | `libs/admin/{core/*,dashboard/*,products/*,categories/*,orders/*,clients/*,users/*,shared/*}`  |
-| `mobile`     | `apps/mobile`     | `libs/mobile/{core/*,shared/*}` (domains added by the Kedr Manager rebuild)                    |
+| Application | Composition root | Main libraries                                                                                |
+| ----------- | ---------------- | --------------------------------------------------------------------------------------------- |
+| `site`      | `apps/site`      | `libs/site/{core/{config,i18n,seo,shell},shared/{ui,api-client}}`                             |
+| `admin`     | `apps/admin`     | `libs/admin/{core/*,dashboard/*,products/*,categories/*,orders/*,clients/*,users/*,shared/*}` |
+| `mobile`    | `apps/mobile`    | `libs/mobile/{core/*,shared/*}` (domains added by the Kedr Manager rebuild)                   |
 
 All libraries have a root `src/index.ts`; cross-library imports found during baseline search use aliases from `tsconfig.base.json`. No deep alias imports were found. Some barrels expose internal transport/mappers/storage; this is AF-008, not an approved public contract.
 
@@ -56,7 +54,6 @@ The old mobile cross-domain edges (`core -> orders/model`, `cart/model -> orders
 
 The workspace uses `scope:*`, `domain:*`, and `type:*`. Current `@nx/enforce-module-boundaries` checks scopes and some type directions, but:
 
-- the Storefront app has only `scope:storefront`, without `type:app`;
 - there is no general constraint for `type:model`;
 - `domain:*` tags do not participate in constraints;
 - `type:feature` may depend on another `type:feature`;
@@ -66,37 +63,31 @@ Therefore, a passing lint is necessary but insufficient evidence for boundaries.
 
 ## State and API baseline
 
-| Client     | Approved server path                                                                             | Local/client state                                              |
-| ---------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
-| Admin      | domain RTK Query endpoint → `@admin/shared/api-client` → Axios; auth raw Axios only per ADR-0001 | component state, React Hook Form; Redux for shared client state |
-| Mobile     | sync service and send queue → `@mobile/shared/api-client` → Axios (ADR-0005, from stage 2)       | component state, React Hook Form; Zustand stores                |
-| Storefront | data-access repository/facade → Angular `HttpClient`                                             | Angular signals/RxJS/domain stores                              |
+| Client | Approved server path                                                                             | Local/client state                                              |
+| ------ | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| Admin  | domain RTK Query endpoint → `@admin/shared/api-client` → Axios; auth raw Axios only per ADR-0001 | component state, React Hook Form; Redux for shared client state |
+| Mobile | sync service and send queue → `@mobile/shared/api-client` → Axios (ADR-0005, from stage 2)       | component state, React Hook Form; Zustand stores                |
 
 No direct API calls were found in presentation `ui`. Generated DTO imports remain in transport/data-access and the Admin auth adapter. Exceptions and violations:
 
-- Storefront public `@storefront/contracts` names domain-facing models `*Dto`, and feature imports them directly;
 - catalog and order-history controllers copy paged query results into local arrays;
 - RTK Query endpoints do not declare tag/invalidation semantics;
-- runtime validation exists for Admin products, Mobile orders/customers/cart, and one product-details flow, but is missing for Mobile catalog list/categories and Storefront responses.
+- runtime validation exists for Admin products, Mobile orders/customers/cart, and one product-details flow, but is missing for Mobile catalog list/categories.
 
 ## Test and typecheck baseline
 
-| Surface        | Runnable gates                                                                                                                         | Gap                                                                                         |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                                | every `admin-*` library with production code has specs; CI runs them all through `test:web` |
-| Mobile         | app `typecheck`, `npm run test:mobile` for 12 Nx projects (app, core, shared, and sync libraries), `typecheck:tests:mobile`, export    | no mobile E2E target                                                                        |
-| Storefront     | `storefront:lint`, production `storefront:build`, `npm run test:storefront` for `storefront-data-access`, `typecheck:tests:storefront` | focused specs cover only data-access, not the whole app                                     |
-| Site           | `site:typecheck`, `site:lint`, `site:build`, `npm run test:site` for every `site-*` library, `typecheck:tests:site`                    | the app itself has no unit tests; rendered HTML is checked with `curl` against `next start` |
-| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                       | contract generation changes generated source and runs only in API scope                     |
+| Surface        | Runnable gates                                                                                                                      | Gap                                                                                         |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Admin          | inferred `typecheck`/`vite:test`, `npm run test:web`, Playwright `admin-e2e:e2e`, `typecheck:tests:web`                             | every `admin-*` library with production code has specs; CI runs them all through `test:web` |
+| Mobile         | app `typecheck`, `npm run test:mobile` for 12 Nx projects (app, core, shared, and sync libraries), `typecheck:tests:mobile`, export | no mobile E2E target                                                                        |
+| Site           | `site:typecheck`, `site:lint`, `site:build`, `npm run test:site` for every `site-*` library, `typecheck:tests:site`                 | the app itself has no unit tests; rendered HTML is checked with `curl` against `next start` |
+| Contracts/docs | `contracts:*`, `docs:check`, `docs:format:check`                                                                                    | contract generation changes generated source and runs only in API scope                     |
 
 Baseline 2026-10-01: `npx nx run-many -t lint --all --parallel=4` passed for 62 projects; Nx marked `admin-products-data-access:lint` flaky. `npm run typecheck:tests` passed for Web, Mobile, and Admin E2E configs.
 
 ## Empty/dead candidates
 
 - `libs/admin/core/permissions` removed: the empty project had no consumers or production responsibility.
-- `apps/mobile/src/components`;
-- `libs/shared/auth/src/lib/guards`;
-- `libs/storefront/feature/{articles,cabinet}/src/lib/sections`;
-- `apps/storefront/public/assets/i18n`.
+- `apps/mobile/src/components`.
 
 Deletion happens only in RM-009 after checking generated/runtime consumers; the inventory itself does not delete anything.

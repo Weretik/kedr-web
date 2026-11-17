@@ -116,6 +116,6 @@ node node_modules/vitest/vitest.mjs run --config libs/site/cart/feature/vite.con
 
 [Purchase feedback regression](../../../libs/site/cart/feature/src/lib/purchase/cart-purchase-controller.spec.tsx) проверяет accepted → rejected add без stale success и с сохранением quantity/count.
 
-JSDOM/SSR-проверки не являются проверкой работающего сайта в браузере или реального создания заказа. Связанные требования, задачи и evidence: [SDD корзины и оформления](../../specs/site/cart/001-cart-checkout/README.md). [Старый Angular checkout](../storefront/catalog/checkout.md) описан отдельно как источник миграции.
+JSDOM/SSR-проверки не являются проверкой работающего сайта в браузере или реального создания заказа. Связанные требования, задачи и evidence: [SDD корзины и оформления](../../specs/site/cart/001-cart-checkout/README.md). Старый Angular checkout описан отдельно как источник миграции.
 
 [Архитектурный аудит и исправления](../../specs/site/cart/001-cart-checkout/code-audit/audit.md): AF-003–006 verified. Свежие проверки: owner/focus27, UI row/drawer/checkout27, mapper11, runtime2; boundary fixtures38, actual shell lint probes7, types/lint и113-project graph. [UI href contract](../../../libs/site/cart/ui/src/lib/cart/drawer/cart-line.spec.tsx), [view mapping](../../../libs/site/cart/feature/src/lib/cart/cart-view-props.spec.ts), [focus adapter](../../../libs/site/cart/feature/src/lib/platform/cart-drawer-focus.spec.ts). Исторический полный набор не повторялся.

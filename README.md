@@ -6,12 +6,11 @@ Frontend monorepo of the **Kedr** platform: a door hardware wholesaler's public 
 
 ## Applications
 
-| Application  | Stack                                                      | Purpose                                                                                     |
-| ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `site`       | Next.js 16 App Router, shadcn/ui, Tailwind CSS v4, OpenNext | Public catalog site [classkedr.com.ua](https://classkedr.com.ua) on Cloudflare Workers, UA/RU |
-| `admin`      | React 19, Vite, Material UI 9, RTK Query                   | Staff admin app on Cloudflare Pages                                                         |
-| `mobile`     | Expo, React Native, expo-sqlite + Drizzle                  | «Kedr Manager»: offline-first app for sales managers                                         |
-| `storefront` | Angular, PrimeNG                                           | Previous public storefront, replaced by `site`; kept until removal                          |
+| Application | Stack                                                       | Purpose                                                                                       |
+| ----------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `site`      | Next.js 16 App Router, shadcn/ui, Tailwind CSS v4, OpenNext | Public catalog site [classkedr.com.ua](https://classkedr.com.ua) on Cloudflare Workers, UA/RU |
+| `admin`     | React 19, Vite, Material UI 9, RTK Query                    | Staff admin app on Cloudflare Pages                                                           |
+| `mobile`    | Expo, React Native, expo-sqlite + Drizzle                   | «Kedr Manager»: offline-first app for sales managers                                          |
 
 All clients use TypeScript types generated from the backend OpenAPI snapshot (`libs/shared/api-contracts`).
 
@@ -64,36 +63,24 @@ Nx is installed locally, so a global Nx installation is not required.
 
 | Task                                 | Command                                                             |
 | ------------------------------------ | ------------------------------------------------------------------- |
-| Build the storefront                 | `npx nx build storefront`                                           |
+| Build the public site                | `npx nx build site`                                                 |
 | Build the admin panel                | `npx nx build admin`                                                |
-| Lint an app                          | `npx nx lint storefront` or `npx nx lint admin`                     |
+| Lint an app                          | `npx nx lint site` or `npx nx lint admin`                           |
 | Test the mobile app                  | `npx nx test mobile`                                                |
 | View available projects              | `npx nx show projects`                                              |
 | Inspect a project and its targets    | `npx nx show project <project>`                                     |
 | Visualize dependencies               | `npx nx graph`                                                      |
 | Run checks only for changed projects | `npx nx affected -t lint test build --base=origin/main --head=HEAD` |
-| Generate Tailwind palette tokens     | `npm run tokens:gen`                                                |
-
-### Production SSR for storefront
-
-Build the storefront and then start its generated Node.js server:
-
-```bash
-npx nx build storefront
-npm run storefront:start
-```
 
 ## Repository layout
 
 ```text
 apps/
   site/         # Next.js public site
-  storefront/   # previous Angular storefront
   admin/        # React administration panel
   mobile/       # Expo / React Native application
 libs/
   site/         # Site features, SEO, catalog, cart
-  storefront/   # Shared storefront features and infrastructure
   admin/        # Shared admin features and infrastructure
   mobile/       # Shared mobile features and infrastructure
 docs/           # Architecture, standards, API contracts, and specifications

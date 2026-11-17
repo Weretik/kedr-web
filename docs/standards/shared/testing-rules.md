@@ -8,7 +8,6 @@ This is the single source of stable rules for selecting frontend tests and apply
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Admin React         | Vitest 4, React Testing Library, `user-event`, jsdom, and `@testing-library/jest-dom`. `npm run test:web` runs the `vite:test` target of the Admin app and every `admin-*` library; `admin-e2e:e2e` runs a separate Playwright Chromium project.                                                                                                                                                                                                    |
 | Mobile React Native | Jest 30, `jest-expo` 58, and React Native Testing Library 14. `npm run test:mobile` runs the 21 Nx projects listed in root `package.json` in sequence: app, shell, api-client, and domain libraries. Existing tests include unit, focused integration, storage/native boundary, and component tests; the app suite is infrastructure smoke coverage for Expo Router/RN UI.                                                                          |
-| Storefront Angular  | `npm run test:storefront` runs Vitest for `storefront-data-access`: three spec files with focused contract and mapper tests. `npm run typecheck:tests:storefront` checks test TypeScript; `storefront:lint` and `storefront:build` check code and build. Full application coverage does not yet exist.                                                                                                                                              |
 | E2E                 | Web: Playwright 1.64, Chromium only: `admin-e2e` (Admin shell, no backend) and `stack-e2e` (Admin and site against a real KedrStore API and seeded test database, [workflow `e2e.yml`](../../../.github/workflows/e2e.yml), [SDD](../../specs/architecture/002-full-stack-e2e/README.md)). Mobile: Detox, Maestro, and Appium are absent; mobile E2E requires a separate `EN-*`, a device/build strategy, and an available Android/iOS environment. |
 
 The package manager is npm with a committed `package-lock.json`. The repository supports Node >=24.18 <25 through `engines`; `.nvmrc` and `.node-version` recommend 24.22.1. Always verify exact targets with `npx nx show project <project> --json`.
@@ -50,7 +49,7 @@ For each new or changed testable behavior:
 
 A compilation error, broken fixture, incorrect mock, missing dependency, test setup error, or unrelated failure is not a valid Red result. Restore a working test harness first, using a separate `EN-*` if needed, then obtain a behavioral failure.
 
-## Exceptions for EN-* and documentation work
+## Exceptions for EN-\* and documentation work
 
 Red-first may be unsuitable for documentation-only changes, generators, test harness setup, or a platform prerequisite before which behavior cannot be observed. Record the reason, enabled `SC-*`, replacement check, and result. The exception does not remove final verification.
 
@@ -75,9 +74,8 @@ The following are available commands, not a mandatory bundle for every feature. 
 - Full-stack E2E: `npm run test:stack:e2e` needs a running KedrStore API with the seeded test database ([how](../../specs/architecture/002-full-stack-e2e/README.md#run-locally)); CI runs it in `e2e.yml`;
 - Admin coverage: `npm run test:web:coverage`; production regression: `npx nx lint admin`, `npx nx typecheck admin`, `npx nx build admin --configuration=production`;
 - Mobile suites: `npm run test:mobile`; coverage: `npm run test:mobile:coverage`;
-- test TypeScript: `npm run typecheck:tests` or platform-specific `typecheck:tests:web` / `typecheck:tests:mobile`;
+- test TypeScript: `npm run typecheck:tests` or platform-specific `typecheck:tests:web` / `typecheck:tests:mobile` / `typecheck:tests:site`;
 - Mobile production regression: `npx nx lint mobile`, `npx nx typecheck mobile`, `npx nx export mobile`; native Android/iOS checks run only with an available SDK;
-- Storefront: `npm run test:storefront`, `npm run typecheck:tests:storefront`, `npx nx lint storefront`, `npx nx build storefront`; for behavior beyond `storefront-data-access`, add focused tests or a separate harness `EN-*`;
 - Mobile E2E: do not cite executable evidence until a separate target actually exists;
 - For changes to Nx project boundaries: `npm run architecture:boundaries`; for changes to the validator itself, also run `npm run architecture:boundaries:fixtures`. These commands are defined in root `package.json` and complement lint rather than replace it.
 
