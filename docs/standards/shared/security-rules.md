@@ -38,3 +38,8 @@ Each feature spec includes one status:
 - **n/a** — no auth, PII, external input, files, export, or privileged/destructive action; give a brief rationale.
 - **basic** — ordinary API/UI flow or a new route/action: check access, `401`/`403`, error/log redaction, XSS-safe output, and applicable transport rules.
 - **elevated** — auth/session/roles, PII, upload/download/export, bulk/destructive action, payment, or external/HTML content. Add a short threat model: assets/PII, actors and trust boundaries, abuse cases, controls, residual risks, and backend/infra dependencies. Check security scenarios with tests at a feasible level and manually/through E2E after readiness.
+
+## Package vulnerabilities
+
+- CI runs `npm run security:audit` (`tools/security/check-npm-audit.mjs`): a High or Critical advisory fails the build unless it is listed in `tools/security/npm-audit-allowlist.json` with a reason and a review condition.
+- Dependabot (`.github/dependabot.yml`) opens one grouped pull request a month for npm minor and patch updates and one for GitHub Actions; security updates arrive on their own. The mobile app (`apps/mobile`) is updated with the Expo upgrade procedure, not by Dependabot.
