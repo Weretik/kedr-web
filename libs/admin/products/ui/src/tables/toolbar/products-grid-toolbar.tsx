@@ -1,16 +1,39 @@
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Badge, Box, Button, InputAdornment } from '@mui/material';
-import { FilterPanelTrigger, QuickFilter, QuickFilterControl, Toolbar } from '@mui/x-data-grid';
+import {
+  FilterPanelTrigger,
+  QuickFilter,
+  QuickFilterControl,
+  Toolbar,
+  useGridApiContext,
+} from '@mui/x-data-grid';
 import { useContext } from 'react';
 
 import { CategoryFilterAutocomplete } from './category-filter-autocomplete';
 import { ProductsGridToolbarContext } from './products-grid-toolbar-context';
 
+import type { KeyboardEvent } from 'react';
+
+/** Time after the last keystroke before the search runs; enough to finish typing a word. */
+const SEARCH_DEBOUNCE_MS = 450;
+
+function parseSearch(value: string) {
+  return value.trim() ? [value.trim()] : [];
+}
+
 export function ProductsGridToolbar() {
   const { setPanelAnchor, showFilterPanel, ...categoryFilter } = useContext(
     ProductsGridToolbarContext,
   );
+  const apiRef = useGridApiContext();
+
+  // Enter runs the search at once instead of waiting for the pause.
+  const runSearchOnEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      apiRef.current.setQuickFilterValues(parseSearch(event.currentTarget.value));
+    }
+  };
 
   return (
     <Toolbar
@@ -36,17 +59,13 @@ export function ProductsGridToolbar() {
         }}
       />
       <Box sx={{ flex: '1 1 220px', maxWidth: 320, minWidth: 0 }}>
-        <QuickFilter
-          expanded
-          debounceMs={300}
-          parser={(value) => (value.trim() ? [value.trim()] : [])}
-        >
+        <QuickFilter expanded debounceMs={SEARCH_DEBOUNCE_MS} parser={parseSearch}>
           <QuickFilterControl
             fullWidth
             placeholder="Пошук товарів"
             size="small"
             slotProps={{
-              htmlInput: { 'aria-label': 'Пошук товарів' },
+              htmlInput: { 'aria-label': 'Пошук товарів', onKeyDown: runSearchOnEnter },
               input: {
                 startAdornment: (
                   <InputAdornment position="start">

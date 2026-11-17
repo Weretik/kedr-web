@@ -1,7 +1,9 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ProductsDataGrid } from '../grid/products-data-grid';
+
+import type { GridFilterModel } from '@mui/x-data-grid';
 
 describe('ProductsGridToolbar category tree', () => {
   it('expands and collapses branches without selecting them, then selects a parent by its text', async () => {
@@ -130,5 +132,55 @@ describe('ProductsGridToolbar category tree', () => {
     expect(option.textContent).toBe('Накладні (метелик)');
     fireEvent.click(option);
     expect(onCategoryChange).toHaveBeenCalledWith(1707);
+  });
+});
+
+describe('ProductsGridToolbar search', () => {
+  const renderGrid = (onFilterChange: (model: GridFilterModel) => void) =>
+    render(
+      <ProductsDataGrid
+        booleanFilters={{}}
+        categories={[]}
+        filterModel={{ items: [] }}
+        loading={false}
+        onBooleanFilterChange={() => undefined}
+        onFilterChange={onFilterChange}
+        onPageChange={() => undefined}
+        onPageSizeChange={() => undefined}
+        onRetry={() => undefined}
+        onSortChange={() => undefined}
+        onViewProduct={() => undefined}
+        page={0}
+        pageSize={20}
+        rowCount={0}
+        rows={[]}
+        sort="id-asc"
+      />,
+    );
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('waits for a pause in typing before searching, and Enter searches at once', () => {
+    vi.useFakeTimers();
+    const onFilterChange = vi.fn();
+    renderGrid(onFilterChange);
+    const input = screen.getByRole('textbox', { name: 'Пошук товарів' });
+
+    fireEvent.change(input, { target: { value: 'ф' } });
+    act(() => vi.advanceTimersByTime(200));
+    fireEvent.change(input, { target: { value: 'фу' } });
+    act(() => vi.advanceTimersByTime(300));
+    expect(onFilterChange).not.toHaveBeenCalled();
+
+    act(() => vi.advanceTimersByTime(200));
+    expect(onFilterChange).toHaveBeenCalledTimes(1);
+    expect(onFilterChange.mock.calls[0][0].quickFilterValues).toEqual(['фу']);
+
+    fireEvent.change(input, { target: { value: 'завіс' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onFilterChange).toHaveBeenCalledTimes(2);
+    expect(onFilterChange.mock.calls[1][0].quickFilterValues).toEqual(['завіс']);
   });
 });
