@@ -35,6 +35,7 @@ jobs:
       # The snapshot must equal the contract on the KedrStore default branch; `npm run contracts:sync` refreshes it.
       - run: npm run contracts:drift
       - run: npm run docs:check
+      - run: node --test .claude/hooks/guard.test.mjs
       - run: npm run architecture:boundaries
       - run: npm run architecture:structure:fixtures
       - run: npm run architecture:structure
