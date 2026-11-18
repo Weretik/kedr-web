@@ -16,6 +16,10 @@ Kedr sells door hardware wholesale (with optional retail orders), not services s
 
 Identify the application from the request and current code. If choosing between React, React Native, and Next.js affects the result and cannot be determined from context, clarify it before creating files. For task-specific context, navigate from the [feature catalog](docs/features/README.md) to the relevant feature card and code; read SDD, architecture, and standards only for the issues involved.
 
+## File size while writing
+
+Never let a giant file appear: plan the split before creating a file. A component stays under 150 lines and a hook, model, or other module under 200; when a file nears the limit, or a component renders several independent blocks, split it at once into one component per block, a controller hook for state and actions, and pure functions in `model/`, each with its own spec. Do not wait for CI. Before handoff run `npm run architecture:structure` and fix every new violation in the files you touched; never add a baseline entry or an exception ([code organization](docs/standards/shared/code-organization.md#one-responsibility-per-file)).
+
 ## Context search order
 
 1. Feature catalog → feature card → the code in its “Code structure” and the tests in its “Tests”.
