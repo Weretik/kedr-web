@@ -2,6 +2,9 @@
 -- Runs once on the empty database right after the KedrStore migrate job; ids 700001+ are outside the 1C range.
 BEGIN;
 
+-- KedrStore keeps the catalog tables in the `catalog` schema (before 2026-11-18 in `public`); both work.
+SET LOCAL search_path TO catalog, public;
+
 -- 12: Catalog:Pricing:RetailPriceTypeId, the retail price on the site; 11 stays so an older KedrStore
 -- master, whose product page still defaults to 11, shows the same price.
 INSERT INTO "PriceType" ("Id", "PriceTypeName") VALUES (11, 'Роздрібна (сторінка товару)'), (12, 'Роздрібна');
