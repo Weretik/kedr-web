@@ -9,45 +9,8 @@ import { useProductsGridColumns } from '../../hooks/use-products-grid-columns';
 import { ProductsGridToolbar } from '../toolbar/products-grid-toolbar';
 import { ProductsGridToolbarContext } from '../toolbar/products-grid-toolbar-context';
 
-import type { ProductBooleanField } from '../cells/products-boolean-filter-header';
-import type {
-  AdminProductListItem,
-  ProductCategoryOption,
-  ProductsListSort,
-} from '@admin/products/model';
-import type { GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
-
-type BooleanFilterField = ProductBooleanField;
-
-interface ProductsDataGridProps {
-  categories?: readonly ProductCategoryOption[];
-  categoryId?: number;
-  categoriesLoading?: boolean;
-  categoriesError?: boolean;
-  emptyMessage?: string;
-  errorMessage?: string;
-  booleanFilters: Partial<Record<BooleanFilterField, boolean>>;
-  filterModel: GridFilterModel;
-  loading: boolean;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
-  onFilterChange: (model: GridFilterModel) => void;
-  onBooleanFilterChange: (field: BooleanFilterField, value: boolean | undefined) => void;
-  onCategoryChange?: (categoryId: number | undefined) => void;
-  onRetry: () => void;
-  onSortChange: (sort: ProductsListSort) => void;
-  onViewProduct: (product: AdminProductListItem) => void;
-  onEditProduct?: (product: AdminProductListItem) => void;
-  onAddProduct?: (product: AdminProductListItem) => void;
-  page: number;
-  pageSize: number;
-  rowCount: number;
-  rows: readonly AdminProductListItem[];
-  sort: ProductsListSort;
-  /** «Без фото»: search, category and the stock filter only, without the filter panel. */
-  basicFilters?: boolean;
-  sortable?: boolean;
-}
+import type { ProductsDataGridProps } from './products-data-grid.props';
+import type { GridPaginationModel } from '@mui/x-data-grid';
 
 export function ProductsDataGrid({
   categories = [],

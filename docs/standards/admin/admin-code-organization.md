@@ -18,11 +18,8 @@ The rules are the shared [frontend code organization rules](../shared/code-organ
 
 Existing code that does not follow these rules yet; `npm run architecture:structure` lists every one in [the baseline](../../../tools/architecture/structure-baseline.json). Fix an entry when the code is next changed or in the [frontend restructure](#restructure-plan); do not copy these layouts into new code.
 
-| Path under `libs/admin/` or `apps/admin/`       | Deviation                 | Target                                                                                                         |
-| ----------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `apps/admin/src/app/theme/components.ts`        | Over the line limit       | keep: one MUI component override table, split only when it grows                                               |
-| `products/ui/src/tables/grid/products-data-grid.tsx` | Four lines over the limit | keep: only wires the MUI DataGrid props; columns, filters, and the panel width already live in their own hooks |
+None: the baseline is empty. A new violation fails `npm run architecture:structure`.
 
 ### Restructure plan
 
-The frontend restructure of 2026-11-14 fixes these entries stage by stage (Admin, then Mobile, then Site, then missing tests and validators) and removes each fixed line from the table and the baseline. All stages are done: the remaining rows are two `keep` decisions.
+The frontend restructure of 2026-11-14 fixes these entries stage by stage (Admin, then Mobile, then Site, then missing tests and validators) and removes each fixed line from the table and the baseline. All stages are done; the last two entries (the theme overrides and the products grid) were split on 2026-11-18.

@@ -37,7 +37,7 @@ apps/admin/
   src/app/router/
     app-router.tsx                        # login route, session guard, role-gated users route
     shell-user.ts                         # maps the session user to the shell's AdminShellUser
-  src/app/theme/                          # design system tokens: palette, typography, shadows, motion, components
+  src/app/theme/                          # design system: foundation/ (palette, typography, shadows, motion, theme), components/ (MUI overrides)
 libs/admin/core/
   auth/src/components/
     login-intro-panel.tsx                 # dark «Кедр Офіс» side: what the cabinet holds (desktop only)
