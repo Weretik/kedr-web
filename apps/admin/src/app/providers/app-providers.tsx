@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { ErrorNotificationsProvider } from '../notifications/error-notifications-provider';
 import { store } from '../store';
-import { adminTheme } from '../theme/admin-theme';
+import { adminTheme } from '../theme/foundation/admin-theme';
 
 import type { PropsWithChildren } from 'react';
 

@@ -8,14 +8,19 @@ The character is light, warm, and calm: warm neutral grounds, white surfaces wit
 
 All tokens are code in `apps/admin/src/app/theme/`; this page describes them, the code is the source of truth.
 
-| File             | Owns                                                                      |
-| ---------------- | ------------------------------------------------------------------------- |
-| `palette.ts`     | `kedrBrand`, light and dark palettes                                      |
-| `typography.ts`  | Manrope and the type scale                                                |
-| `shadows.ts`     | Two-layer soft shadows                                                    |
-| `motion.ts`      | Durations and easing; mapped onto `theme.transitions` in `admin-theme.ts` |
-| `components.ts`  | MUI component overrides (radii, borders, states, reduced motion)          |
-| `admin-theme.ts` | Assembles the theme, breakpoints, `shape.borderRadius: 12`, locales       |
+| File                                  | Owns                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------- |
+| `foundation/palette.ts`               | `kedrBrand`, light and dark palettes                                      |
+| `foundation/typography.ts`            | Manrope and the type scale                                                |
+| `foundation/shadows.ts`               | Two-layer soft shadows                                                    |
+| `foundation/motion.ts`                | Durations and easing; mapped onto `theme.transitions` in `admin-theme.ts` |
+| `foundation/admin-theme.ts`           | Assembles the theme, breakpoints, `shape.borderRadius: 12`, locales       |
+| `components/admin-components.ts`      | All MUI component overrides, merged from the files below                  |
+| `components/baseline-and-feedback.ts` | Reduced motion, alerts, avatars, badges, chips, tooltips, `Stack`         |
+| `components/buttons-and-inputs.ts`    | Buttons, icon buttons, links, outlined inputs, menus                      |
+| `components/surfaces.ts`              | Cards, paper, dialogs, drawers                                            |
+| `components/navigation.ts`            | Tabs and the category tree                                                |
+| `components/tables.ts`                | Data Grid and MUI tables                                                  |
 
 Feature code uses theme paths (`primary.main`, `text.secondary`, `divider`, `background.paper`, `theme.shadows[1]`, `theme.transitions.create(...)`) and never hard-coded hex values, font stacks, or durations. A new token is added to the theme first and to this page second.
 

@@ -2,11 +2,11 @@ import { ukUA as materialUkUA } from '@mui/material/locale';
 import { createTheme } from '@mui/material/styles';
 import { ukUA as dataGridUkUA } from '@mui/x-data-grid/locales';
 
-import { adminComponents } from './components';
 import { adminMotion } from './motion';
 import { darkPalette, lightPalette } from './palette';
 import { adminShadows } from './shadows';
 import { adminTypography } from './typography';
+import { adminComponents } from '../components/admin-components';
 
 export const adminTheme = createTheme(
   {
