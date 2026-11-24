@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { TaskDescriptionButton } from '../details/task-description-button';
 import { TaskProblemMarks } from '../feedback/task-problem-marks';
 
 import type { ScheduledTask } from '@admin/scheduling/model';
@@ -85,13 +86,7 @@ export function BackgroundTasksTable({
                   <Typography sx={{ fontWeight: 600 }} variant="body2">
                     {task.name}
                   </Typography>
-                  <Typography
-                    color="text.secondary"
-                    sx={{ whiteSpace: 'pre-line' }}
-                    variant="caption"
-                  >
-                    {task.description}
-                  </Typography>
+                  <TaskDescriptionButton task={task} />
                   <TaskProblemMarks task={task} />
                 </Stack>
               </TableCell>
@@ -103,7 +98,11 @@ export function BackgroundTasksTable({
                 <Result at={task.lastSuccessAt} text={task.lastSuccessSummary} />
               </TableCell>
               <TableCell>
-                <Result at={task.lastFailureAt} error text={task.lastFailureReason} />
+                {task.lastRunFailed ? (
+                  <Result at={task.lastFailureAt} error text={task.lastFailureReason} />
+                ) : (
+                  '—'
+                )}
               </TableCell>
               <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
                 <Tooltip title="Переглянути задачу">
