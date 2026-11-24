@@ -2759,7 +2759,7 @@ export interface paths {
         };
         /**
          * Browse orders sent from the site
-         * @description Newest first. Search by the words of a name or phone; delivery=problem keeps the orders Telegram has not got. Policy CanManageOrders.
+         * @description Newest first. Search by the words of a name or phone, or by an order number (the first 8 hex digits of the id, as on the site and in Telegram) or a whole id; delivery=problem keeps the orders Telegram has not got. Policy CanManageOrders.
          */
         get: operations["getAdminQuickOrders"];
         put?: never;
