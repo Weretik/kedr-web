@@ -42,7 +42,9 @@ describe('BackgroundTasksPage', () => {
     expect(within(row('Залишки')).queryByText('Вимкнено')).toBeNull();
     expect(within(row('Ціни')).getByText('Остання спроба з помилкою')).toBeDefined();
     expect(within(row('Ціни')).getByText('Вимкнено')).toBeDefined();
-    expect(within(row('Ціни')).getByText('Таблицю не прочитано.')).toBeDefined();
+    expect(within(row('Ціни')).queryByText('Таблицю не прочитано.')).toBeNull();
+    fireEvent.click(within(row('Ціни')).getByRole('button', { name: /Детальніше/ }));
+    expect(screen.getByText('Таблицю не прочитано.')).toBeDefined();
     expect(screen.getByText(/Потребують уваги: 1\./)).toBeDefined();
   });
 
