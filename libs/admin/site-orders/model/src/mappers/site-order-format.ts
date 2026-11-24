@@ -16,6 +16,14 @@ export function formatSiteOrderTime(value: string | null): string {
   return value ? dateTime.format(new Date(value)) : '—';
 }
 
+/**
+ * The order number people see: the first 8 hex digits of the id in upper case, as the site shows after sending and
+ * Telegram puts in bold (KedrStore spec sales/009, R-012). The list search finds an order by it.
+ */
+export function siteOrderNumber(orderId: string): string {
+  return `№ ${orderId.replace(/-/g, '').slice(0, 8).toUpperCase()}`;
+}
+
 /** Hryvnia amount with two decimals, without the currency sign (the column says «грн»). */
 export function formatSiteOrderMoney(value: number): string {
   return money.format(value);

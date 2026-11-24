@@ -31,6 +31,8 @@ describe('SiteOrderDetailsContent', () => {
       'tel:+380671234567',
     );
     expect(screen.getByText('Надіслано 24.11.2026, 09:45')).toBeTruthy();
+    expect(screen.getByText('№ 3F2B8C1E')).toBeTruthy();
+    expect(screen.queryByText('3f2b8c1e-7a4d-4e1b-9c2a-1d2e3f4a5b6c')).toBeNull();
     const table = screen.getByRole('table', { name: 'Товари замовлення' });
     expect(within(table).getByText('Ручка «Кедр»')).toBeTruthy();
     expect(within(table).getByText('136,50')).toBeTruthy();

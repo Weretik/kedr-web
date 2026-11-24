@@ -1,5 +1,9 @@
 import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
-import { formatSiteOrderMoney, formatSiteOrderTime } from '@admin/site-orders/model';
+import {
+  formatSiteOrderMoney,
+  formatSiteOrderTime,
+  siteOrderNumber,
+} from '@admin/site-orders/model';
 import { Link } from '@mui/material';
 
 import type { SiteOrderDetail } from '@admin/site-orders/model';
@@ -28,7 +32,7 @@ export function SiteOrderMainCard({ order }: { order: SiteOrderDetail }) {
               : 'Ще не надіслано'
           }
         />
-        <DetailField label="ID замовлення" value={order.orderId} />
+        <DetailField label="Номер замовлення" value={siteOrderNumber(order.orderId)} />
       </DetailFieldList>
     </SectionCard>
   );

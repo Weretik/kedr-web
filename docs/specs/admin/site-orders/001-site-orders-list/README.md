@@ -22,6 +22,7 @@ Managers and the owner open «Замовлення з сайту» in the «Пр
 - **R-006.** Loading, empty («Замовлень з сайту ще немає» / «Нічого не знайдено»), and error states with «Повторити» follow the [list and detail standard](../../../../standards/admin/list-detail-pages.md); light and dark themes and phone widths use the Admin theme only.
 - **R-008.** Site: the order request uses only fetch options the Cloudflare Workers runtime accepts (`redirect: 'manual'`, no `credentials`); a 3xx answer is «unavailable»; every failed request is logged with the error name and message and no order data. Root cause of 2026-11-24: `redirect: 'error'` threw in the Worker before the request left, so no site order ever reached the API.
 - **R-007.** Site: `siteApiCreateQuickOrder` waits 25 s instead of 10 s before reporting «unavailable»; the backend now keeps the order even when the site stops waiting (backend R-002), and the existing idempotency key makes a repeat safe.
+- **R-009.** (2026-11-24, owner request) The Admin shows the order number `№ 52992220` (the first 8 hex digits of the id in upper case, as on the site and in Telegram) in a first list column «Номер» and in the main card instead of the whole id; the search placeholder says «Пошук за номером, ім’ям або телефоном», and the backend finds the order by that number (KedrStore spec 009, R-012).
 
 ## Scenarios
 

@@ -44,6 +44,7 @@ describe('SiteOrdersDataGrid', () => {
   it('shows the order row with Kyiv time and the total, and no chip for a delivered order', () => {
     renderGrid();
     expect(screen.getByText('24.11.2026, 09:45')).toBeTruthy();
+    expect(screen.getByText('№ 3F2B8C1E')).toBeTruthy();
     expect(screen.getByText('Ірина')).toBeTruthy();
     expect(screen.getByText(/7\s209,00/)).toBeTruthy();
     expect(screen.queryByText('Не надіслано')).toBeNull();
@@ -82,7 +83,7 @@ describe('SiteOrdersDataGrid', () => {
 
   it('sends search and the problem switch to the page', async () => {
     const { props } = renderGrid();
-    fireEvent.change(screen.getByPlaceholderText('Пошук за ім’ям або телефоном'), {
+    fireEvent.change(screen.getByPlaceholderText('Пошук за номером, ім’ям або телефоном'), {
       target: { value: '067' },
     });
     await waitFor(() => expect(props.onSearchChange).toHaveBeenCalledWith('067'));
