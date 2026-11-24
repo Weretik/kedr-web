@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 
 import { TaskDescriptionButton } from '../details/task-description-button';
+import { LastRunCell } from '../feedback/last-run-cell';
 import { TaskProblemMarks } from '../feedback/task-problem-marks';
 
 import type { ScheduledTask } from '@admin/scheduling/model';
@@ -28,19 +29,6 @@ interface BackgroundTasksTableProps {
   onRetry: () => void;
   onView: (task: ScheduledTask) => void;
   onEdit: (task: ScheduledTask) => void;
-}
-
-function Result({ at, text, error }: { at: string | null; text: string | null; error?: boolean }) {
-  return (
-    <Stack spacing={0.25}>
-      <Typography variant="body2">{formatKyivDateTime(at)}</Typography>
-      {text ? (
-        <Typography color={error ? 'error.main' : 'text.secondary'} variant="caption">
-          {text}
-        </Typography>
-      ) : null}
-    </Stack>
-  );
 }
 
 /** Every task in the backend's order with its schedule and last results; only problems are marked. */
@@ -68,15 +56,14 @@ export function BackgroundTasksTable({
             <TableCell>Задача</TableCell>
             <TableCell>Розклад</TableCell>
             <TableCell>Наступний запуск</TableCell>
-            <TableCell>Остання успішна</TableCell>
-            <TableCell>Остання помилка</TableCell>
+            <TableCell>Останній запуск</TableCell>
             <TableCell align="right">Дії</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {!loading && tasks.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6}>Задач немає.</TableCell>
+              <TableCell colSpan={5}>Задач немає.</TableCell>
             </TableRow>
           ) : null}
           {tasks.map((task) => (
@@ -95,14 +82,7 @@ export function BackgroundTasksTable({
                 {task.enabled || task.runRequestedAt ? formatKyivDateTime(task.nextRunAt) : '—'}
               </TableCell>
               <TableCell>
-                <Result at={task.lastSuccessAt} text={task.lastSuccessSummary} />
-              </TableCell>
-              <TableCell>
-                {task.lastRunFailed ? (
-                  <Result at={task.lastFailureAt} error text={task.lastFailureReason} />
-                ) : (
-                  '—'
-                )}
+                <LastRunCell task={task} />
               </TableCell>
               <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
                 <Tooltip title="Переглянути задачу">

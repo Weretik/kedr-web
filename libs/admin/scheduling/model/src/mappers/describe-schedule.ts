@@ -9,7 +9,7 @@ export function describeDays(days: readonly number[]): string {
   const sorted = [...new Set(days)].sort((a, b) => a - b);
   if (sorted.length === 7) return 'Щодня';
   const parts: string[] = [];
-  for (let start = 0; start < sorted.length;) {
+  for (let start = 0; start < sorted.length; ) {
     let end = start;
     while (end + 1 < sorted.length && sorted[end + 1] === sorted[end] + 1) end++;
     const label = (day: number) => weekdayLabels[day - 1];
