@@ -33,10 +33,13 @@ describe('siteApiCreateQuickOrder', () => {
     expect(options).toMatchObject({
       method: 'POST',
       cache: 'no-store',
-      credentials: 'omit',
-      redirect: 'error',
+      redirect: 'manual',
       body: JSON.stringify(command),
     });
+    // Cloudflare Workers throw at once on redirect 'error' (and do not implement credentials): every order failed
+    // silently in production until 2026-11-24. Only values the Workers runtime accepts may be used.
+    expect(['follow', 'manual']).toContain(options.redirect);
+    expect(options).not.toHaveProperty('credentials');
     const headers = new Headers(options.headers);
     expect(headers.get('Content-Type')).toBe('application/json');
     expect(headers.get('Accept')).toBe('application/json');
@@ -113,6 +116,31 @@ describe('siteApiCreateQuickOrder', () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
     },
   );
+
+  it.each([301, 302, 307, 308])(
+    'treats redirect %i as an unknown outcome instead of following it',
+    async (status) => {
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValue(new Response(null, { status, headers: { Location: 'https://x.test' } }));
+
+      expect(
+        await siteApiCreateQuickOrder(command, {}, fetchMock, 'https://api.example.com'),
+      ).toEqual({ kind: 'unavailable' });
+    },
+  );
+
+  it('logs why the request failed, without the order data', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fetchMock = vi.fn().mockRejectedValue(new TypeError('Invalid redirect value'));
+
+    await siteApiCreateQuickOrder(command, {}, fetchMock, 'https://api.example.com');
+
+    expect(log).toHaveBeenCalledTimes(1);
+    const logged = JSON.stringify(log.mock.calls[0]);
+    expect(logged).toContain('Invalid redirect value');
+    expect(logged).not.toContain(command.phone);
+  });
 
   it('supports an explicit controlled timeout while keeping the fixed endpoint', async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, {}));
