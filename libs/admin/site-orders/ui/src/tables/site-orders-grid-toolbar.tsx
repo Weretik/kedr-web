@@ -11,7 +11,7 @@ export interface SiteOrdersToolbarState {
 /** The grid renders its own toolbar, so the switch state reaches it through context. */
 export const SiteOrdersToolbarContext = createContext<SiteOrdersToolbarState | null>(null);
 
-const searchLabel = 'Пошук за ім’ям або телефоном';
+const searchLabel = 'Пошук за номером, ім’ям або телефоном';
 
 export function SiteOrdersGridToolbar() {
   const state = useContext(SiteOrdersToolbarContext);

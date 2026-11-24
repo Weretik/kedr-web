@@ -10,7 +10,7 @@
 
 ## Request projection
 
-- List: `page >= 1`, `pageSize` 1–100, optional `search` (every word matches name or phone), optional `delivery=problem` (orders not delivered with an error, or given up). The server orders rows newest first; there is no sort parameter. The Admin sends `search` and `delivery` only when set and checks the parameters against `SiteOrderPageParams` with `satisfies`.
+- List: `page >= 1`, `pageSize` 1–100, optional `search` (every word matches name or phone; a word that is an order number such as `52992220`, with or without `№`, or a whole id also matches the id, KedrStore spec 009 R-012), optional `delivery=problem` (orders not delivered with an error, or given up). The server orders rows newest first; there is no sort parameter. The Admin sends `search` and `delivery` only when set and checks the parameters against `SiteOrderPageParams` with `satisfies`.
 - Detail and resend: `orderId` is a UUID in the path. The Admin rejects any other value before a request.
 - Resend has no body and no `Idempotency-Key`: it is a state transition the server checks (only a `failed` order), so a repeat answers 409 and sends nothing twice.
 

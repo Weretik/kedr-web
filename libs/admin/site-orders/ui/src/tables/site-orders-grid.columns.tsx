@@ -1,4 +1,8 @@
-import { formatSiteOrderMoney, formatSiteOrderTime } from '@admin/site-orders/model';
+import {
+  formatSiteOrderMoney,
+  formatSiteOrderTime,
+  siteOrderNumber,
+} from '@admin/site-orders/model';
 
 import { SiteOrderGridViewCell } from './site-order-grid-view-cell';
 import { SiteOrderTelegramCell } from './site-order-telegram-cell';
@@ -13,6 +17,13 @@ export function siteOrdersGridColumns(
   onView: (orderId: string) => void,
 ): GridColDef<SiteOrderListItem>[] {
   return [
+    {
+      ...fixed,
+      field: 'orderId',
+      headerName: 'Номер',
+      minWidth: 120,
+      valueFormatter: (value: string) => siteOrderNumber(value),
+    },
     {
       ...fixed,
       field: 'placedAtUtc',
