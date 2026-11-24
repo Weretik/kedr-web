@@ -28,7 +28,7 @@
 1. Feature Server Function валидирует unknown command, включая ограничения полей/строк.
 2. cart/data-access создаёт private DTO, вызывает `siteApiCreateQuickOrder` и нормализует body/result.
 3. Новый `shared/api-client/src/lib/site-order-api.ts` server-only transport разрешает только фиксированный endpoint `/api/orders` на `siteConfig.apiUrl`. Никаких произвольных URL из UI, admin операций или расширения typed catalog GET.
-4. JSON POST с `cache:'no-store'`, без session/auth forwarding и автоматических retry. Базовый timeout 10 s соответствует текущей transport convention; истечение — неопределённый результат, не доказанный отказ создания.
+4. JSON POST с `cache:'no-store'`, без session/auth forwarding и автоматических retry. Timeout заказа 25 s (ревизия 2026-11-24, [site orders 001](../../../../admin/site-orders/001-site-orders-list/README.md) R-007: холодный старт API + попытка Telegram не укладывались в 10 s); истечение — неопределённый результат, не доказанный отказ создания.
 5. UI получает только доменный result и никогда не импортирует transport/generated DTO.
 
 Это узкое реализованное расширение Site архитектуры: fixed anonymous order POST отделён от catalog GET. TS-006 синхронизировала архитектурное описание вместе с кодом; обход общего API client прямым fetch из UI/route/domain запрещён.

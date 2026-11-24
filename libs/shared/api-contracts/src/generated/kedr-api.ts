@@ -2750,6 +2750,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/quick-orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Browse orders sent from the site
+         * @description Newest first. Search by the words of a name or phone; delivery=problem keeps the orders Telegram has not got. Policy CanManageOrders.
+         */
+        get: operations["getAdminQuickOrders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/quick-orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get one order sent from the site
+         * @description The buyer, the cart lines and how the delivery to Telegram went. Policy CanManageOrders.
+         */
+        get: operations["getAdminQuickOrderById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/quick-orders/{orderId}/telegram-resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send a site order to Telegram again after its delivery failed
+         * @description Allowed only when the delivery failed (telegramStatus failed): the order goes back in the outbox queue with attempts from zero; Telegram is not called in the request. A sent order answers 409 already_sent, an order still being sent 409 delivery_in_progress, so a repeat sends nothing twice. Policy CanManageOrders.
+         */
+        post: operations["resendAdminQuickOrderToTelegram"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/work/tasks": {
         parameters: {
             query?: never;
@@ -3928,6 +3988,47 @@ export interface components {
             /** Format: date-time */
             acceptedAtUtc: null | string;
         };
+        GetAdminQuickOrderDetailResponse: {
+            /** Format: uuid */
+            orderId: string;
+            /** Format: date-time */
+            placedAtUtc: string;
+            firstName: string;
+            phone: string;
+            /** Format: double */
+            total: number;
+            telegramStatus: string;
+            /** Format: date-time */
+            telegramSentAtUtc: null | string;
+            /** Format: date-time */
+            telegramLastAttemptAtUtc: null | string;
+            telegramLastError: null | string;
+            items: components["schemas"]["GetAdminQuickOrderItemResponse"][];
+        };
+        GetAdminQuickOrderItemResponse: {
+            productId: string;
+            title: string;
+            /** Format: double */
+            unitPrice: number;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            amount: number;
+        };
+        GetAdminQuickOrderListItemResponse: {
+            /** Format: uuid */
+            orderId: string;
+            /** Format: date-time */
+            placedAtUtc: string;
+            firstName: string;
+            phone: string;
+            /** Format: int32 */
+            lineCount: number;
+            /** Format: double */
+            total: number;
+            telegramStatus: string;
+            telegramLastError: null | string;
+        };
         GrantStaffAccessRequest: {
             fullName: string;
             role: string;
@@ -4104,6 +4205,17 @@ export interface components {
         PagedResultOfListOfGetAdminOrderListItemResponse: {
             pagedInfo: components["schemas"]["PagedInfo"];
             value: null | components["schemas"]["GetAdminOrderListItemResponse"][];
+            status: components["schemas"]["ResultStatus"];
+            isSuccess: boolean;
+            successMessage: null | string;
+            correlationId: null | string;
+            location: null | string;
+            errors: null | string[];
+            validationErrors: null | components["schemas"]["ValidationError"][];
+        };
+        PagedResultOfListOfGetAdminQuickOrderListItemResponse: {
+            pagedInfo: components["schemas"]["PagedInfo"];
+            value: null | components["schemas"]["GetAdminQuickOrderListItemResponse"][];
             status: components["schemas"]["ResultStatus"];
             isSuccess: boolean;
             successMessage: null | string;
@@ -4382,6 +4494,11 @@ export interface components {
             field: string;
             oldValue: string;
             newValue: string;
+        };
+        ResendAdminQuickOrderToTelegramResponse: {
+            /** Format: uuid */
+            orderId: string;
+            telegramStatus: string;
         };
         /** @enum {integer} */
         ResultStatus: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
@@ -12296,6 +12413,129 @@ export interface operations {
             };
             /** @description Too Many Requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminQuickOrders: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                delivery?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedResultOfListOfGetAdminQuickOrderListItemResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminQuickOrderById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetAdminQuickOrderDetailResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    resendAdminQuickOrderToTelegram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Accepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResendAdminQuickOrderToTelegramResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
