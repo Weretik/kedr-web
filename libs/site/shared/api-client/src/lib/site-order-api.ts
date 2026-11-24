@@ -10,8 +10,14 @@ type CreateQuickOrderRequest =
 export type SiteOrderApiResult =
   { kind: 'response'; status: number; body: unknown } | { kind: 'unavailable' };
 
-/** `idempotencyKey`: the attempt key; the backend answers a repeat with the first order. */
+/**
+ * `idempotencyKey`: the attempt key; the backend answers a repeat with the first order.
+ * `timeoutMs`: 25 s by default, longer than an API cold start plus the Telegram attempt; the backend keeps a valid
+ * order even when this side stops waiting (KedrStore spec sales/009, R-002).
+ */
 export type SiteOrderApiOptions = { timeoutMs?: number; idempotencyKey?: string };
+
+const ORDER_TIMEOUT_MS = 25_000;
 
 const readJsonBody = async (response: Response): Promise<unknown> => {
   if (!response.headers.get('Content-Type')?.toLowerCase().includes('json')) return undefined;
@@ -41,7 +47,7 @@ export async function siteApiCreateQuickOrder(
       redirect: 'error',
       cache: 'no-store',
       body: JSON.stringify(request),
-      signal: AbortSignal.timeout(options.timeoutMs ?? 10_000),
+      signal: AbortSignal.timeout(options.timeoutMs ?? ORDER_TIMEOUT_MS),
     });
 
     return { kind: 'response', status: response.status, body: await readJsonBody(response) };

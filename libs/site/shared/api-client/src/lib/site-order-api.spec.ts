@@ -42,7 +42,7 @@ describe('siteApiCreateQuickOrder', () => {
     expect(headers.get('Accept')).toBe('application/json');
     expect(headers.has('Authorization')).toBe(false);
     expect(headers.has('Cookie')).toBe(false);
-    expect(timeout).toHaveBeenCalledWith(10_000);
+    expect(timeout).toHaveBeenCalledWith(25_000);
     expect(options.signal).toBeDefined();
   });
 
