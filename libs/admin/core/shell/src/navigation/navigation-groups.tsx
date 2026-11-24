@@ -1,5 +1,6 @@
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
@@ -60,6 +61,7 @@ export const navigationGroups: NavigationGroup[] = [
     label: 'Продаж',
     items: [
       { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
+      { icon: <AddShoppingCartOutlinedIcon />, label: 'Замовлення з сайту', to: '/site-orders' },
       { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
     ],
   },

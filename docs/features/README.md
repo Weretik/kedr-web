@@ -31,6 +31,7 @@ This catalog describes the current implementation, not plans from SDDs. Each car
 | [Оновити сайт зараз](admin/site-refresh.md)       | top bar, all routes                                  | Drops the site content and catalogue cache now; all staff                                           |
 | [Customers](admin/clients.md)                     | `/customers`, `/customers/:counterpartyId`           | List, details, and order tables                                                                     |
 | [Orders and drafts](admin/orders.md)              | `/orders`, `/orders/new`, details and drafts         | Lists, checkout, and draft editing                                                                  |
+| [Замовлення з сайту](admin/site-orders.md)        | `/site-orders`, `/site-orders/:orderId`              | Orders buyers sent from the site, Telegram delivery state, resend of a failed one; all staff        |
 
 ## Mobile React Native
 

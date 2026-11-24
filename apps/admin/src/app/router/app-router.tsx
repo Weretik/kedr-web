@@ -29,6 +29,7 @@ import { createProductsRoutes } from '@admin/products/feature';
 import { backgroundTasksRoutes } from '@admin/scheduling/feature';
 import { seoSettingsRoutes } from '@admin/seo-settings/feature';
 import { createSiteModelsRoutes } from '@admin/site-models/feature';
+import { siteOrdersRoutes } from '@admin/site-orders/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes } from '@admin/users/feature';
 import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
@@ -79,6 +80,7 @@ export function AppRouter() {
         ...categoriesRoutes,
         ...siteModelsRoutes,
         ...createOrdersRoutes({ CustomerPicker }),
+        ...siteOrdersRoutes,
         ...createClientsRoutes({
           renderOrdersPanel: (counterpartyId, returnTo) => (
             <CustomerOrdersPanel counterpartyId={counterpartyId} returnTo={returnTo} />

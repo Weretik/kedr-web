@@ -3,7 +3,7 @@
 - **Clients:** React Admin (`apps/admin`), public site (`apps/site`)
 - **Domain:** site orders (new Admin domain `site-orders`), site cart
 - **Backend:** KedrStore spec `sales/009-site-orders-in-admin` (contract source of truth)
-- **Status:** Draft 2026-11-24, waiting for the owner's acceptance
+- **Status:** Implemented 2026-11-24 (site fix in kedr-web #145, Admin page in the next PR); audit: [code-audit/audit.md](code-audit/audit.md)
 - **Source:** owner request in the project thread of 2026-11-24: a buyer saw «Підтвердження не отримано» and the order did not reach Telegram
 
 ## Goal and scope
@@ -67,3 +67,14 @@ Each folder stays at ≤ 6 production files, components < 150 lines, hooks/model
 ## Verification plan
 
 `npx nx run <each site-orders project>:vite:test -- --run`, lint and typecheck of the changed projects, site api-client tests, `npm run architecture:structure`, `npm run architecture:boundaries`, `npm run docs:check`, `npm run contracts:check`. No browser or E2E without the owner's separate permission.
+
+## Implementation evidence (2026-11-24)
+
+| Task   | Evidence                                                                                                                                                                                                           |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TS-001 | Merged in #145: `site-order-api.spec.ts` asserts the 25 s timeout, `redirect: 'manual'`, no `credentials`, the 3xx answer and the failure log.                                                                     |
+| TS-002 | `npm run contracts:sync` from KedrStore `master` e77a0f5 (in #145); `contracts:drift` and `contracts:check` pass.                                                                                                  |
+| TS-003 | `model`: URL state, delivery rules, formats (9 tests); `data-access`: mappers and validation (4 tests).                                                                                                            |
+| TS-004 | `ui`: grid, chips, toolbar switch, detail content (7 tests); `feature`: list page URL, detail states, resend (12 tests); menu item in `admin-navigation.spec.tsx`.                                                 |
+| TS-005 | [Feature card](../../../../features/admin/site-orders.md), feature catalog row, [consumer contract](../../../../contracts/sales/admin-site-orders.md), operation registry rows.                                    |
+| TS-006 | [Audit](code-audit/audit.md): `architecture:structure` (0 deviations), `architecture:boundaries` (158 projects), lint and typecheck of the changed projects pass; one finding fixed, three deferred outside scope. |
