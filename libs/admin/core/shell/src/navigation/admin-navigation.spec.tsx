@@ -61,6 +61,9 @@ describe('AdminNavigation by role', () => {
     expect(screen.queryByRole('link', { name: 'Реквізити' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Фонові задачі' })).toBeNull();
     expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Замовлення з сайту' }).getAttribute('href')).toBe(
+      '/site-orders',
+    );
   });
 
   it('hides the whole «Система» block from a manager', () => {

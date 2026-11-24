@@ -16,5 +16,6 @@ export const baseApi = createApi({
     'Categories',
     'CatalogAttributes',
     'SiteModels',
+    'AdminSiteOrders',
   ],
 });

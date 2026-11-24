@@ -175,7 +175,11 @@
       "@admin/scheduling/model": ["./libs/admin/scheduling/model/src/index.ts"],
       "@admin/scheduling/data-access": ["./libs/admin/scheduling/data-access/src/index.ts"],
       "@admin/scheduling/ui": ["./libs/admin/scheduling/ui/src/index.ts"],
-      "@admin/scheduling/feature": ["./libs/admin/scheduling/feature/src/index.ts"]
+      "@admin/scheduling/feature": ["./libs/admin/scheduling/feature/src/index.ts"],
+      "@admin/site-orders/model": ["./libs/admin/site-orders/model/src/index.ts"],
+      "@admin/site-orders/data-access": ["./libs/admin/site-orders/data-access/src/index.ts"],
+      "@admin/site-orders/ui": ["./libs/admin/site-orders/ui/src/index.ts"],
+      "@admin/site-orders/feature": ["./libs/admin/site-orders/feature/src/index.ts"]
     }
   }
 }

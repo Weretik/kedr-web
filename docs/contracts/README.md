@@ -55,6 +55,7 @@ To consume a new or changed operation: merge the backend change, run `contracts:
 - Sales:
   - [Mobile manager order](sales/manager-order.md)
   - [Admin customers](sales/admin-customers.md)
+  - [Admin site orders](sales/admin-site-orders.md)
   - [Admin order workspace](sales/admin-order-workspace.md)
 
 A detailed consumer projection is needed only for operations with status `used`, `planned`, or `blocked`. For `not consumed`, OpenAPI and the registry row are sufficient; do not create a manual copy of a request/response schema without a frontend decision.
@@ -76,6 +77,9 @@ A detailed consumer projection is needed only for operations with status `used`,
 | Catalog products   | `getAdminProductMedia`            | `GET /api/admin/products/{id}/media`                        | staff (Manager or Admin)     | Admin                      | used         |
 | Catalog products   | `setAdminProductMedia`            | `PUT /api/admin/products/{id}/media`                        | staff (Manager or Admin)     | Admin                      | used         |
 | Quick order        | `createQuickOrder`                | `POST /api/orders`                                          | anonymous                    | Storefront                 | used         |
+| Quick order        | `getAdminQuickOrders`             | `GET /api/admin/quick-orders`                               | staff (Manager or Admin)     | Admin                      | used         |
+| Quick order        | `getAdminQuickOrderById`          | `GET /api/admin/quick-orders/{orderId}`                     | staff (Manager or Admin)     | Admin                      | used         |
+| Quick order        | `resendAdminQuickOrderToTelegram` | `POST /api/admin/quick-orders/{orderId}/telegram-resend`    | staff (Manager or Admin)     | Admin                      | used         |
 | Identity           | `loginCookieSession`              | `POST /api/auth/cookie/login`                               | anonymous, rate-limited      | Admin, Storefront          | used         |
 | Identity           | `logoutCookieSession`             | `POST /api/auth/cookie/logout`                              | session cookie + CSRF header | Admin, Storefront          | used         |
 | Identity           | `loginMobile`                     | `POST /api/auth/mobile/login`                               | anonymous, rate-limited      | Mobile                     | used         |
