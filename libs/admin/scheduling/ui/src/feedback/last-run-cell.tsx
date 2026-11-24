@@ -28,7 +28,7 @@ export function LastRunCell({ task }: { task: LastRunTask }) {
 
   if (task.lastRunFailed) {
     return (
-      <Stack alignItems="flex-start" spacing={0.5}>
+      <Stack spacing={0.5} sx={{ alignItems: 'flex-start' }}>
         <Typography variant="body2">{formatKyivDateTime(task.lastFailureAt)}</Typography>
         <Typography color="error.main" sx={{ fontWeight: 600 }} variant="caption">
           Помилка

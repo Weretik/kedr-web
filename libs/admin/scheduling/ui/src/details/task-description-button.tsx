@@ -1,4 +1,4 @@
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import {
   Button,
   Dialog,
@@ -26,7 +26,7 @@ export function TaskDescriptionButton({
         aria-label={`Що робить задача ${task.name}?`}
         onClick={() => setOpen(true)}
         size="small"
-        startIcon={<HelpOutlineIcon fontSize="small" />}
+        startIcon={<HelpOutlineOutlinedIcon fontSize="small" />}
         sx={{ alignSelf: 'flex-start' }}
         variant="outlined"
       >
