@@ -1,6 +1,6 @@
 import { OrderLineEditor } from '@admin/orders/ui';
 import { useGetAllAdminProductsQuery } from '@admin/products/data-access';
-import { AdminDetailHeader, PageIssues, SectionCard } from '@admin/shared/ui';
+import { AdminPageHeader, PageIssues, SectionCard } from '@admin/shared/ui';
 import { Alert, Button, CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
@@ -35,11 +35,7 @@ export function NewOrderPage({ CustomerPicker }: { CustomerPicker: CustomerPicke
   const hasQuoteInput = Boolean(customerId) && current.lines.length > 0;
   return (
     <Stack component="section" spacing={3}>
-      <AdminDetailHeader
-        backLabel="Назад до замовлень"
-        backTo="/orders"
-        title="Оформлення замовлення"
-      />
+      <AdminPageHeader title="Оформлення замовлення" />
       <PageIssues
         messages={[
           order.error,
