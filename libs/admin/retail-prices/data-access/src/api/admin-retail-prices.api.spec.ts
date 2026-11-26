@@ -72,8 +72,8 @@ describe('adminRetailPricesApi', () => {
 
     expect(result.data).toEqual({ changed: 1, status });
     expect(requests).toEqual(['POST /api/admin/retail-prices/import']);
-    expect(forms.at(-1)?.get('file')).toBe(file);
-    expect(forms.at(-1)?.get('protectFromOneC')).toBe('false');
+    expect(forms[forms.length - 1]?.get('file')).toBe(file);
+    expect(forms[forms.length - 1]?.get('protectFromOneC')).toBe('false');
   });
 
   it('gives the prices back to 1C with one POST', async () => {
