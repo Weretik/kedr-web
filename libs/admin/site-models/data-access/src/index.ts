@@ -12,10 +12,12 @@ export {
 export {
   useAcceptSiteModelsMutation,
   useAddSiteModelProductsMutation,
+  useChangeSiteModelCategoryMutation,
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
   useGetSiteModelCategoriesQuery,
   useGetSiteModelQuery,
+  useGetSiteModelsQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,
   useRenameSiteModelMutation,

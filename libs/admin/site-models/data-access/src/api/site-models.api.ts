@@ -1,5 +1,6 @@
 import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-client';
 
+import { mapSiteModelList, toSiteModelListParams } from '../mappers/site-model-list.mapper';
 import {
   mapSiteModel,
   mapSiteModelCategories,
@@ -14,6 +15,8 @@ import type {
   SiteModelCategory,
   SiteModelHealth,
   SiteModelLanguage,
+  SiteModelListItem,
+  SiteModelListQuery,
   SiteModelsPage,
   SiteModelTextInput,
   SiteShowcaseQuery,
@@ -36,6 +39,17 @@ export const siteModelsApi = baseApi.injectEndpoints({
             signal,
           }),
           mapSiteShowcase,
+        ),
+      providesTags: ['SiteModels'],
+    }),
+    getSiteModels: build.query<SiteModelsPage<SiteModelListItem>, SiteModelListQuery>({
+      queryFn: (query, { signal }) =>
+        apiCall(
+          apiClient.GET('/api/admin/site-models', {
+            params: { query: toSiteModelListParams(query) },
+            signal,
+          }),
+          mapSiteModelList,
         ),
       providesTags: ['SiteModels'],
     }),
@@ -83,6 +97,18 @@ export const siteModelsApi = baseApi.injectEndpoints({
           apiClient.PUT('/api/admin/site-models/{id}', {
             params: { path: { id } },
             body: { name },
+            signal,
+          }),
+          mapSiteModel,
+        ),
+      invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
+    }),
+    changeSiteModelCategory: build.mutation<SiteModel, { id: number; categoryId: number }>({
+      queryFn: ({ id, categoryId }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/site-models/{id}/category', {
+            params: { path: { id } },
+            body: { categoryId },
             signal,
           }),
           mapSiteModel,
@@ -157,10 +183,12 @@ export const siteModelsApi = baseApi.injectEndpoints({
 export const {
   useAcceptSiteModelsMutation,
   useAddSiteModelProductsMutation,
+  useChangeSiteModelCategoryMutation,
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
   useGetSiteModelCategoriesQuery,
   useGetSiteModelQuery,
+  useGetSiteModelsQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,
   useRenameSiteModelMutation,

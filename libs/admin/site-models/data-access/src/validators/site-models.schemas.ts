@@ -3,6 +3,7 @@ import { z } from 'zod';
 /** Runtime shapes of the site models API (spec catalog/007). Unknown problem codes pass and show as they are. */
 const status = z.enum(['proposed', 'accepted']);
 const problems = z.array(z.string());
+const oneCCategories = z.array(z.string()).default([]);
 const page = <T extends z.ZodTypeAny>(item: T) =>
   z.object({
     items: z.array(item),
@@ -65,7 +66,26 @@ export const siteModelSchema = z.object({
     z.object({ attributeId: z.number().int(), name: z.string(), values: z.array(z.string()) }),
   ),
   problems,
+  oneCCategories,
 });
+
+export const siteModelListSchema = page(
+  z.object({
+    id: z.number().int().min(1),
+    categoryId: z.number().int(),
+    categoryName: z.string(),
+    name: z.string(),
+    slug: z.string(),
+    status,
+    productCount: z.number().int().nonnegative(),
+    onSiteCount: z.number().int().nonnegative(),
+    minPrice: z.number().nullish(),
+    photo: z.string(),
+    axes: z.array(z.string()),
+    problems,
+    oneCCategories,
+  }),
+);
 
 const showcaseModel = z.object({ id: z.number().int().min(1), name: z.string(), status });
 

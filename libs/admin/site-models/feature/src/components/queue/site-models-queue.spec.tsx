@@ -85,6 +85,7 @@ const model = (id: number, name: string): SiteModel => ({
   texts: [],
   characteristics: [],
   problems: [],
+  oneCCategories: [],
 });
 
 function Address() {

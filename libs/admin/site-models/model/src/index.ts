@@ -45,6 +45,8 @@ export {
   siteModelText,
   siteModelTextLimits,
 } from './entities/models/site-model';
+export type { SiteModelListItem, SiteModelListQuery } from './entities/models/site-model-list';
+export { oneCCategoriesNote } from './entities/models/site-model-list';
 export type {
   SiteModelCategory,
   SiteModelHealth,
