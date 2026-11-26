@@ -1,8 +1,10 @@
-import { Typography } from '@mui/material';
+import { Box, ButtonBase, Popover, Typography } from '@mui/material';
+import { useState } from 'react';
 
 import { isOneCSyncProblem } from './order-status-chip';
 
 import type { OrderSummary } from '@admin/orders/model';
+import type { MouseEvent } from 'react';
 
 export type OrderSyncState = Pick<
   OrderSummary,
@@ -22,22 +24,62 @@ export function syncAttemptsText(sync: OrderSyncState): string | null {
   return `Спроб: ${sync.syncAttempts}${next}`;
 }
 
-/** One short line under the 1C label in the orders table: the reason and the attempts of a problem. */
+/**
+ * One short line under the 1C label in the orders table: the reason and the attempts of a problem. A click opens the
+ * whole reason, which the line cuts.
+ */
 export function OrderSyncNote({ sync }: { sync: OrderSyncState }) {
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   if (!isOneCSyncProblem(sync.syncStatus)) return null;
-  const text = [sync.syncError, syncAttemptsText(sync)].filter(Boolean).join(' · ');
+  const attempts = syncAttemptsText(sync);
+  const text = [sync.syncError, attempts].filter(Boolean).join(' · ');
   if (!text) return null;
 
+  const open = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setAnchor(event.currentTarget);
+  };
+
   return (
-    <Typography
-      color="text.secondary"
-      component="p"
-      noWrap
-      sx={{ maxWidth: '100%' }}
-      title={text}
-      variant="caption"
-    >
-      {text}
-    </Typography>
+    <>
+      <ButtonBase
+        aria-label="Показати повний опис помилки 1С"
+        onClick={open}
+        sx={{ justifyContent: 'flex-start', maxWidth: '100%', textAlign: 'left' }}
+      >
+        <Typography
+          color="text.secondary"
+          component="span"
+          noWrap
+          sx={{ textDecoration: 'underline dotted' }}
+          variant="caption"
+        >
+          {text}
+        </Typography>
+      </ButtonBase>
+      <Popover
+        anchorEl={anchor}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        onClick={(event) => event.stopPropagation()}
+        onClose={() => setAnchor(null)}
+        open={anchor !== null}
+      >
+        <Box sx={{ maxWidth: 480, p: 2 }}>
+          <Typography gutterBottom variant="subtitle2">
+            Помилка 1С
+          </Typography>
+          {sync.syncError && (
+            <Typography sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }} variant="body2">
+              {sync.syncError}
+            </Typography>
+          )}
+          {attempts && (
+            <Typography color="text.secondary" sx={{ mt: 1 }} variant="caption" component="p">
+              {attempts}
+            </Typography>
+          )}
+        </Box>
+      </Popover>
+    </>
   );
 }
