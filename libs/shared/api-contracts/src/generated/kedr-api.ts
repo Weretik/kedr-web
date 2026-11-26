@@ -759,6 +759,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/retail-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the retail price type and how many of its prices the price file keeps from 1C
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). The retail price type is the one the site shows (`Catalog:Pricing:RetailPriceTypeId`); its name is the price column the file must have.
+         */
+        get: operations["getAdminRetailPriceStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/retail-prices/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set the site's retail prices from the 1C price list in Excel
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). Multipart `file` (.xlsx up to 10 MB) with a header row holding «Код» and the retail price type's name; only that price type changes, by product code. `protectFromOneC` (default true) keeps the prices from the file from the 1C sync; false gives them back to it. The product list is rebuilt before the answer. 409 when a 1C sync changed the same prices meanwhile.
+         */
+        post: operations["importAdminRetailPrices"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/retail-prices/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Give the retail prices from the price file back to the 1C sync
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). Removes the lock from every retail price; the amounts stay until the next 1C price sync. A repeat changes nothing. 409 when a 1C sync changed the same prices meanwhile.
+         */
+        post: operations["unlockAdminRetailPrices"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/site-models": {
         parameters: {
             query?: never;
@@ -4527,6 +4587,28 @@ export interface components {
         };
         /** @enum {integer} */
         ResultStatus: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+        RetailPriceImportResultDto: {
+            /** Format: int32 */
+            changed: number;
+            /** Format: int32 */
+            unchanged: number;
+            /** Format: int32 */
+            notFoundCount: number;
+            notFoundCodes: string[];
+            /** Format: int32 */
+            withoutPriceCount: number;
+            withoutPriceCodes: string[];
+            status: components["schemas"]["RetailPriceStatusDto"];
+        };
+        RetailPriceStatusDto: {
+            /** Format: int32 */
+            priceTypeId: number;
+            priceTypeName: string;
+            /** Format: int32 */
+            lockedCount: number;
+            /** Format: date-time */
+            lastLockedAt: null | string;
+        };
         RetryAdminOrderSyncRequest: {
             reason?: string;
         };
@@ -7347,6 +7429,137 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CatalogRedirect"];
+                };
+            };
+        };
+    };
+    getAdminRetailPriceStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPriceStatusDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    importAdminRetailPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    file?: components["schemas"]["IFormFile"];
+                } & {
+                    protectFromOneC?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPriceImportResultDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    unlockAdminRetailPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPriceStatusDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

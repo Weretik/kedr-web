@@ -23,6 +23,7 @@ const entry = (occurredAt: string, area = 'Categories'): WorkActivity => ({
 describe('work activity text', () => {
   it('names the area and the target in Ukrainian', () => {
     expect(workActivityArea(entry('2026-11-06T10:00:00Z'))).toBe('Категорії');
+    expect(workActivityArea(entry('2026-11-06T10:00:00Z', 'RetailPrices'))).toBe('Роздрібні ціни');
     expect(workActivityArea(entry('2026-11-06T10:00:00Z', 'NewThing'))).toBe('NewThing');
     expect(workActivityTarget({ target: 'id=12, lang=uk' })).toBe('№12 · uk');
     expect(workActivityTarget({ target: '' })).toBe('');
