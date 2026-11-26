@@ -25,13 +25,13 @@ export function DetailField({ label, value }: { label: string; value: ReactNode 
   );
 }
 
-/** Description list of `DetailField`s in one or two columns. */
+/** Description list of `DetailField`s in up to four columns: one on phones, at most two on tablets. */
 export function DetailFieldList({
   children,
   columns = 1,
 }: {
   children: ReactNode;
-  columns?: 1 | 2;
+  columns?: 1 | 2 | 3 | 4;
 }) {
   return (
     <Box
@@ -39,7 +39,11 @@ export function DetailFieldList({
       sx={{
         columnGap: 3,
         display: 'grid',
-        gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: `repeat(${columns}, minmax(0, 1fr))` },
+        gridTemplateColumns: {
+          xs: 'minmax(0, 1fr)',
+          sm: `repeat(${Math.min(columns, 2)}, minmax(0, 1fr))`,
+          md: `repeat(${columns}, minmax(0, 1fr))`,
+        },
         m: 0,
         rowGap: 2,
       }}

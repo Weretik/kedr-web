@@ -38,15 +38,7 @@ describe('SiteModelNewPanel', () => {
   it('creates a model with a name, a final category and two free products (SC-005)', async () => {
     api.create.mockReturnValue({ unwrap: () => Promise.resolve({ id: 42 }) });
     const onCreated = vi.fn();
-    render(
-      <SiteModelNewPanel
-        onClose={vi.fn()}
-        onCreated={onCreated}
-        onNotice={vi.fn()}
-        open
-        options={{}}
-      />,
-    );
+    render(<SiteModelNewPanel onClose={vi.fn()} onCreated={onCreated} open options={{}} />);
     const create = screen.getByRole('button', { name: 'Створити модель' }) as HTMLButtonElement;
     expect(create.disabled).toBe(true);
     fireEvent.change(screen.getByLabelText('Назва моделі'), { target: { value: 'Ручка Рим' } });
@@ -57,7 +49,7 @@ describe('SiteModelNewPanel', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: 'Ручка 11' }));
     fireEvent.click(screen.getByRole('checkbox', { name: 'Ручка 12' }));
     fireEvent.click(create);
-    await waitFor(() => expect(onCreated).toHaveBeenCalledWith(42));
+    await waitFor(() => expect(onCreated).toHaveBeenCalledWith(42, 'Модель створено'));
     expect(api.create).toHaveBeenCalledWith({
       categoryId: 3,
       name: 'Ручка Рим',
@@ -70,7 +62,6 @@ describe('SiteModelNewPanel', () => {
       <SiteModelNewPanel
         onClose={vi.fn()}
         onCreated={vi.fn()}
-        onNotice={vi.fn()}
         open
         options={{ productIds: [12], name: 'Ручка 12' }}
       />,

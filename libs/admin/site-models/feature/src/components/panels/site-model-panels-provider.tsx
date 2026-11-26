@@ -59,9 +59,12 @@ export function SiteModelPanelsProvider({ children }: { children: ReactNode }) {
       {shown?.kind === 'new' ? (
         <SiteModelNewPanel
           key={newModel.version}
-          onCreated={(modelId) => navigate(`/site-models/${modelId}`)}
+          onClose={close}
+          onCreated={(modelId, notice) =>
+            navigate(`/site-models/${modelId}`, { state: { notice } })
+          }
+          open={isOpen}
           options={newModel.options}
-          {...common}
         />
       ) : null}
       {shown?.kind === 'add' && 'modelId' in shown.target ? (

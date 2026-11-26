@@ -30,8 +30,8 @@ function LegacyRedirect({ to }: { to: (params: URLSearchParams) => string }) {
 }
 
 /**
- * Every site page opens the same model panels (R-011). The pages load lazily inside the provider, so moving from one
- * page to another (for example to a model just created) keeps the panels and their notice.
+ * Every site page opens the same model panels (R-011). The Admin shell remounts the page subtree on every address
+ * change, so a notice for the next page travels in the history state (see `site-model-page-state`).
  */
 function SitePagesLayout() {
   return (
