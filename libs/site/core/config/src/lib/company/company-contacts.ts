@@ -1,9 +1,15 @@
+import { FALLBACK_COMPANY_STORE } from './company-store';
+
+import type { CompanyStore } from './company-store';
+
 /** Sales contacts the site shows; the admin edits them, the site loads them from the API. */
 export type CompanyContacts = {
   phone: { display: string; e164: string };
   email: string;
   city: { uk: string; ru: string };
   links: { telegram: string; viber: string; map: string };
+  /** The shop address and hours; `null` while the street is not filled in. */
+  store: CompanyStore | null;
 };
 
 /** Ukrainian E.164 number `+380XXYYYZZZZ` as `(0XX) YYY-ZZ-ZZ`; any other value is returned as is. */
@@ -32,4 +38,5 @@ export const FALLBACK_COMPANY_CONTACTS: CompanyContacts = {
     viber: viberChatLink(FALLBACK_PHONE),
     map: 'https://maps.app.goo.gl/D2rH3HcaxLfxik5H6',
   },
+  store: FALLBACK_COMPANY_STORE,
 };

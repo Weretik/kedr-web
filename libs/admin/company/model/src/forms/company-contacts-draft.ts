@@ -1,9 +1,13 @@
+import { companyStoreFields } from '../entities/company-store';
+
 import type { CompanyContacts } from '../entities/company-contacts';
+import type { CompanyStore } from '../entities/company-store';
 
-/** Editable fields of the contacts, as typed by the user. */
-export type CompanyContactsDraft = Omit<CompanyContacts, 'updatedAt' | 'updatedBy'>;
+/** Editable fields of the contacts and of the shop, side by side, as typed by the user. */
+export type CompanyContactsDraft = Omit<CompanyContacts, 'updatedAt' | 'updatedBy' | 'store'> &
+  CompanyStore;
 
-export const companyContactsFields = [
+const contactFields = [
   'salesPhone',
   'viberPhone',
   'email',
@@ -13,11 +17,14 @@ export const companyContactsFields = [
   'cityRu',
 ] as const satisfies readonly (keyof CompanyContactsDraft)[];
 
+export const companyContactsFields = [...contactFields, ...companyStoreFields] as const;
+
 export type CompanyContactsField = (typeof companyContactsFields)[number];
 
 export function contactsToDraft(contacts: CompanyContacts): CompanyContactsDraft {
+  const values: CompanyContacts & CompanyStore = { ...contacts, ...contacts.store };
   return Object.fromEntries(
-    companyContactsFields.map((field) => [field, contacts[field]]),
+    companyContactsFields.map((field) => [field, values[field]]),
   ) as CompanyContactsDraft;
 }
 

@@ -10,3 +10,4 @@ export {
   useUpdateMediaFolderMutation,
   useUploadMediaFileMutation,
 } from './api/admin-media.api';
+export { useMediaPicker } from './api/use-media-picker';

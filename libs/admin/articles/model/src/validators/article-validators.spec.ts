@@ -5,7 +5,13 @@ import { newArticleDraft } from '../forms/article-draft';
 const filled = () => {
   const draft = newArticleDraft(new Date('2026-11-04T10:00:00Z'));
   for (const language of ['uk', 'ru'] as const)
-    draft.texts[language] = { title: 'Петлі', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' };
+    draft.texts[language] = {
+      title: 'Петлі',
+      excerpt: 'Коротко.',
+      bodyHtml: '<p>Текст</p>',
+      seoTitle: '',
+      metaDescription: '',
+    };
   return draft;
 };
 
@@ -18,7 +24,13 @@ describe('validateArticleDraft', () => {
 
   it('rejects a bad slug and empty texts per language', () => {
     const draft = { ...filled(), slug: 'Bad Slug' };
-    draft.texts.ru = { title: ' ', excerpt: '', bodyHtml: '<p></p>' };
+    draft.texts.ru = {
+      title: ' ',
+      excerpt: '',
+      bodyHtml: '<p></p>',
+      seoTitle: '',
+      metaDescription: '',
+    };
 
     const errors = validateArticleDraft(draft, { slugRequired: false });
 

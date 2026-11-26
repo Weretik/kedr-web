@@ -43,6 +43,8 @@ export { CATALOG_ROOTS, isHiddenCategoryId } from './lib/roots/catalog-roots';
 export { CATALOG_PATH, SEARCH_PATH, categoryPath, productPath } from './lib/paths/catalog-paths';
 export { ancestorIds, branchIds, searchCatalogTree } from './lib/tree/catalog-tree';
 export type { CategoryMatch } from './lib/tree/catalog-tree';
+export { closedCategorySlugs, openCrawlNodes } from './lib/tree/catalog-crawl';
+export type { CatalogCrawlNode } from './lib/tree/catalog-crawl';
 export {
   LANDING_FILTER_CODES,
   LANDING_MIN_MODELS,

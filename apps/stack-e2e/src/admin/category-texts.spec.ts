@@ -10,12 +10,13 @@ test('a category heading saved in the Admin reaches the site after «Онови�
   await page.goto('/categories/6488?category=6488');
   await page.getByRole('button', { name: 'Редагувати' }).first().click();
 
-  const panel = page.getByRole('dialog');
-  await panel.getByLabel('Заголовок H1').first().fill(heading);
+  // The open language tab of «Тексти для сайту»; the panel has other save buttons (site names, search).
+  const texts = page.getByRole('dialog').getByRole('tabpanel');
+  await texts.getByLabel('Заголовок H1').fill(heading);
   const saved = page.waitForResponse(
     (response) => response.url().includes('/api/categories/6488/content/uk') && response.ok(),
   );
-  await panel.getByRole('button', { name: 'Зберегти', exact: true }).click();
+  await texts.getByRole('button', { name: 'Зберегти', exact: true }).click();
   await saved;
 
   await page.goto('/dashboard');

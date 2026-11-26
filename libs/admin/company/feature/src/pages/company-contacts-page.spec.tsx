@@ -20,6 +20,20 @@ const contacts: CompanyContacts = {
   mapUrl: 'https://maps.app.goo.gl/D2rH3HcaxLfxik5H6',
   cityUk: 'Харків',
   cityRu: 'Харьков',
+  store: {
+    storeName: 'Крамниця Дверна фурнітура CLASS',
+    streetAddressUk: 'вул. Ахієзерів, 46',
+    streetAddressRu: 'ул. Ахиезеров, 46',
+    regionUk: 'Харківська обл.',
+    regionRu: 'Харьковская обл.',
+    postalCode: '61038',
+    weekdaysOpens: '09:00',
+    weekdaysCloses: '16:00',
+    saturdayOpens: '',
+    saturdayCloses: '',
+    sundayOpens: '',
+    sundayCloses: '',
+  },
   updatedAt: '2026-11-04T10:00:00Z',
   updatedBy: 'manager@classkedr.com.ua',
 };
@@ -48,6 +62,7 @@ describe('CompanyContactsPage', () => {
         mapUrl: contacts.mapUrl,
         cityUk: contacts.cityUk,
         cityRu: contacts.cityRu,
+        ...contacts.store,
       }),
     );
     expect(await screen.findByText(/Контакти збережено/)).toBeTruthy();
@@ -75,6 +90,20 @@ describe('CompanyContactsPage', () => {
 
     expect(await screen.findByText('Сервер не прийняв це значення. Перевірте його.')).toBeTruthy();
     expect(screen.getByRole('alert').textContent).toContain('Сервер не прийняв дані');
+  });
+
+  it('puts a server error of a shop field under that field', async () => {
+    api.update.mockReturnValue({
+      unwrap: () =>
+        Promise.reject({ code: 'Validation', fieldErrors: { PostalCode: ['Invalid value.'] } }),
+    });
+    render(<CompanyContactsPage />);
+
+    fireEvent.change(field('Поштовий індекс'), { target: { value: '61039' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Зберегти' }));
+
+    expect(await screen.findByText('Сервер не прийняв це значення. Перевірте його.')).toBeTruthy();
+    expect(field('Поштовий індекс').getAttribute('aria-invalid')).toBe('true');
   });
 
   it('shows who saved the contacts last', () => {

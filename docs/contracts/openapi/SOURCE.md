@@ -2,8 +2,8 @@
 
 - Repository: `Weretik/KedrStore`
 - Source: `docs/sdd/contracts/openapi.json` (generated from the backend code on every build)
-- Ref: `master`
-- Commit: `1a102385933a3f5bf09f704dacb767262140e00d`
+- Ref: `claude/project-thread-ibtqyy`
+- Commit: `7e2a2d1537522d23b1c01d77817dcd0a70c69f15`
 
 This directory is machine-managed; do not edit it by hand. Refresh it from the backend default branch with:
 

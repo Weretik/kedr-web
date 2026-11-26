@@ -35,6 +35,7 @@ const model: SiteModel = {
   categorySlug: 'zavisy',
   texts: { shortDescription: '', description: '', seoTitle: '', seoDescription: '' },
   mainProductSlug: 'zavisa-2',
+  isClosedFromSearch: false,
   axes: [
     {
       code: 'color',

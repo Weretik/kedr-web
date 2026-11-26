@@ -33,6 +33,8 @@ function exampleListing(total = 6, choices: Partial<ArticlesQuery> = {}): Articl
     image: `/images/articles/Article_${index + 1}.jpg`,
     publishedAt: '2026-03-24',
     updatedAt: '2026-03-25T08:00:00Z',
+    seoTitle: null,
+    metaDescription: null,
   }));
   const startIndex = (query.page - 1) * query.pageSize;
   const items = all.slice(startIndex, startIndex + query.pageSize);

@@ -55,6 +55,8 @@ export type SiteModel = {
   /** In stock first, then by name. */
   products: SiteModelProduct[];
   characteristics: SiteModelCharacteristic[];
+  /** The category is closed from search in the admin: the page is `noindex` and out of the sitemap. */
+  isClosedFromSearch: boolean;
 };
 
 export type SiteModelResult =

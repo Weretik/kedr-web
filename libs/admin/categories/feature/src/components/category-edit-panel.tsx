@@ -6,6 +6,7 @@ import { AdminEditPanel, PageLoader, SlugEditCard } from '@admin/shared/ui';
 import { Alert, Button } from '@mui/material';
 
 import { CategoryContentSection } from './category-content-section';
+import { CategorySearchSection } from './category-search-section';
 import { useCategoryContentEditor } from '../hooks/use-category-content-editor';
 import { useCategorySlugChange } from '../hooks/use-category-slug-change';
 
@@ -19,7 +20,7 @@ interface CategoryEditPanelProps {
   onNotice: (message: string) => void;
 }
 
-/** Everything an administrator edits in a category: its address and the site texts per language. */
+/** Everything an administrator edits in a category: its address, site names, search settings, and texts. */
 export function CategoryEditPanel({ categoryId, onClose, onNotice, open }: CategoryEditPanelProps) {
   const id = categoryId ?? 0;
   const skip = categoryId === undefined;
@@ -62,6 +63,7 @@ export function CategoryEditPanel({ categoryId, onClose, onNotice, open }: Categ
             loading={contentQuery.isLoading}
             onRetry={() => contentQuery.refetch()}
           />
+          <CategorySearchSection category={category} onNotice={onNotice} />
         </>
       )}
     </AdminEditPanel>

@@ -29,6 +29,25 @@ describe('admin category mapper', () => {
     });
   });
 
+  it('reads the search settings and treats a blank site name as none', () => {
+    expect(
+      mapAdminCategory({
+        ...dto,
+        siteNameUk: ' Дверні ручки ',
+        siteNameRu: '  ',
+        isClosedFromSearch: true,
+        shareImageMediaFileId: 70,
+        shareImageUrl: 'https://cdn.example/seo.webp',
+      }),
+    ).toMatchObject({
+      siteNameUk: 'Дверні ручки',
+      siteNameRu: null,
+      isClosedFromSearch: true,
+      sharePicture: { mediaFileId: 70, url: 'https://cdn.example/seo.webp' },
+    });
+    expect(mapAdminCategory(dto)).toMatchObject({ isClosedFromSearch: false, sharePicture: null });
+  });
+
   it('rejects a list with a category that has no slug', () => {
     expect(() => mapAdminCategories([{ ...dto, slug: undefined }])).toThrow();
   });

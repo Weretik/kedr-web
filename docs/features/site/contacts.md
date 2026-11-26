@@ -2,7 +2,7 @@
 
 **Routes:** `/uk/contacts`, `/ru/contacts`. [SDD and accepted design](../../specs/site/content/001-contacts/README.md).
 
-The page offers the sales phone, an independent copy action, Telegram, Viber, email and the configured map link. It shows the localized city, advice to arrange a visit, a wholesale contact strip and same-language delivery/returns links. Contacts come from `getCompanyContacts()` ([company contacts](company-contacts.md)), edited in the admin; copy comes from the content model. No contact form, backend operation or personal-data storage is introduced.
+The page offers the sales phone, an independent copy action, Telegram, Viber, email and the configured map link. It shows the localized city, advice to arrange a visit, a wholesale contact strip and same-language delivery/returns links. Contacts come from `getCompanyContacts()` ([company contacts](company-contacts.md)), edited in the admin; copy comes from the content model. No contact form, backend operation or personal-data storage is introduced. Once the shop street is filled in «Контакти», the page adds a `HardwareStore` (`LocalBusiness`) JSON-LD with the address, region, postal code, phone, email, map and opening hours from [local-business-json-ld.ts](../../../libs/site/core/seo/src/lib/json-ld/local-business-json-ld.ts) ([SEO stage 2](../../specs/site/migration/seo-stage-2-2026-11-26/README.md)).
 
 ## Architecture
 

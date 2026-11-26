@@ -20,6 +20,18 @@ export interface AdminCategory {
   productCount: number | null;
   /** Languages with any site text; `null` when unknown (deleted rows, single reads). */
   filledLanguages: readonly ContentLanguage[] | null;
+  /** Names an editor wrote for the site; they win over 1C. `null` when not written. */
+  siteNameUk: string | null;
+  siteNameRu: string | null;
+  /** «Закрити від пошуку»: the site keeps the page but search engines do not index it or its products. */
+  isClosedFromSearch: boolean;
+  /** Link-preview picture of the category page; `url` is `null` in lists or when the file left the library. */
+  sharePicture: CategorySharePicture | null;
+}
+
+export interface CategorySharePicture {
+  mediaFileId: number;
+  url: string | null;
 }
 
 /** Languages without any site text, or `null` when the list did not say. */

@@ -30,7 +30,16 @@ export const adminArticleSchema = z.object({
   updatedAt: z.string(),
   updatedBy: z.string().nullish(),
   texts: z
-    .array(z.object({ language, title: z.string(), excerpt: z.string(), bodyHtml: z.string() }))
+    .array(
+      z.object({
+        language,
+        title: z.string(),
+        excerpt: z.string(),
+        bodyHtml: z.string(),
+        seoTitle: z.string().nullish(),
+        metaDescription: z.string().nullish(),
+      }),
+    )
     .length(2),
   version: z.number().int().nonnegative().default(0),
 });

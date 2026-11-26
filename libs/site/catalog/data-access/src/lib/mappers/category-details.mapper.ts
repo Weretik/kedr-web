@@ -46,6 +46,8 @@ export function mapCategoryDetails(category: ApiCategoryDetails): CategoryDetail
     minPrice: price(category.minPrice),
     maxPrice: price(category.maxPrice),
     content: mapContent(category.content),
+    isClosedFromSearch: category.isClosedFromSearch,
+    shareImageUrl: text(category.shareImageUrl),
   };
 }
 

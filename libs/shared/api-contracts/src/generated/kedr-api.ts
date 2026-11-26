@@ -281,6 +281,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/categories/{id}/site-names": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set the Ukrainian and Russian site names of a category
+         * @description Spec catalog/010 R-02. The names win over the 1C name and the configured short name on the site, in breadcrumbs, and in titles; the 1C sync never changes them. A blank name goes back to the name from 1C at once. Repeating the same request is safe.
+         */
+        put: operations["setAdminCategorySiteNames"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/search-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Close a category from search engines and set its link-preview picture
+         * @description Spec catalog/010 R-01, R-03. Closing or opening applies to every subcategory too; the site keeps showing a closed category and its products, with noindex and outside the sitemap. A new 1C category takes its parent's mark. The picture is a media-library file; null removes it and the site keeps its own. Repeating the same request is safe.
+         */
+        put: operations["setAdminCategorySearchSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/categories/{id}/content": {
         parameters: {
             query?: never;
@@ -3228,6 +3268,12 @@ export interface components {
             /** Format: int32 */
             productCount: null | number;
             filledContentLanguages: null | string[];
+            siteNameUk: null | string;
+            siteNameRu: null | string;
+            isClosedFromSearch: boolean;
+            /** Format: int64 */
+            shareImageMediaFileId: null | number;
+            shareImageUrl: null | string;
         };
         AdminCodeCategoryDto: {
             /** Format: int32 */
@@ -3268,6 +3314,7 @@ export interface components {
             mapUrl: string;
             cityUk: string;
             cityRu: string;
+            store: components["schemas"]["CompanyStoreDto"];
             /** Format: date-time */
             updatedAt: string;
             updatedBy: null | string;
@@ -3553,6 +3600,8 @@ export interface components {
             coverUrl: null | string;
             /** Format: date-time */
             updatedAt: string;
+            seoTitle: null | string;
+            metaDescription: null | string;
         };
         ArticleSummaryResponse: {
             /** Format: int64 */
@@ -3572,6 +3621,8 @@ export interface components {
             title: string;
             excerpt: string;
             bodyHtml: string;
+            seoTitle: null | string;
+            metaDescription: null | string;
         };
         AvatarResponse: {
             avatarUrl: string;
@@ -3695,6 +3746,10 @@ export interface components {
             /** Format: double */
             maxPrice: null | number;
             content: null | components["schemas"]["CategoryContentResponse"];
+            isClosedFromSearch: boolean;
+            shareImageUrl: null | string;
+            /** Format: date-time */
+            updatedAt: null | string;
         };
         CategoryFaqItemDto: {
             question: string;
@@ -3714,6 +3769,9 @@ export interface components {
             children: components["schemas"]["CategoryResponse"][];
             /** Format: int32 */
             productCount: number;
+            isClosedFromSearch: boolean;
+            /** Format: date-time */
+            updatedAt: null | string;
         };
         CategorySiteVisibilityResponse: {
             /** Format: int32 */
@@ -3772,6 +3830,7 @@ export interface components {
             mapUrl: string;
             cityUk: string;
             cityRu: string;
+            store: components["schemas"]["CompanyStoreDto"];
             /** Format: date-time */
             updatedAt: string;
         };
@@ -3792,6 +3851,20 @@ export interface components {
             bankCode: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        CompanyStoreDto: {
+            storeName: null | string;
+            streetAddressUk: null | string;
+            streetAddressRu: null | string;
+            regionUk: null | string;
+            regionRu: null | string;
+            postalCode: null | string;
+            weekdaysOpens: null | string;
+            weekdaysCloses: null | string;
+            saturdayOpens: null | string;
+            saturdayCloses: null | string;
+            sundayOpens: null | string;
+            sundayCloses: null | string;
         };
         CreateAdminOrderLineRequest: {
             productId: string;
@@ -4396,6 +4469,8 @@ export interface components {
             colors: components["schemas"]["PublicSiteModelSwatchDto"][];
             /** Format: int32 */
             productId: null | number;
+            /** Format: date-time */
+            updatedAt: null | string;
         };
         PublicSiteModelCategoryDto: {
             /** Format: int32 */
@@ -4419,6 +4494,7 @@ export interface components {
             axes: components["schemas"]["PublicSiteModelAxisDto"][];
             products: components["schemas"]["PublicSiteModelProductDto"][];
             characteristics: components["schemas"]["PublicSiteModelCharacteristicDto"][];
+            isClosedFromSearch: boolean;
         };
         PublicSiteModelFilterDto: {
             code: string;
@@ -4566,6 +4642,7 @@ export interface components {
             mapUrl: string;
             cityUk: string;
             cityRu: string;
+            store?: null | components["schemas"]["CompanyStoreDto"];
         };
         SaveCompanyRequisitesRequest: {
             legalName: string;
@@ -4685,6 +4762,15 @@ export interface components {
         };
         SetCategoryAttributeFiltersRequest: {
             filters: components["schemas"]["SetCategoryAttributeFilterRequest"][];
+        };
+        SetCategorySearchSettingsRequest: {
+            isClosedFromSearch?: boolean;
+            /** Format: int64 */
+            shareImageMediaFileId?: null | number;
+        };
+        SetCategorySiteNamesRequest: {
+            nameUk: null | string;
+            nameRu: null | string;
         };
         SetCategorySiteVisibilityRequest: {
             isShownOnSite?: boolean;
@@ -6042,6 +6128,112 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategorySiteVisibilityResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminCategorySiteNames: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetCategorySiteNamesRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    setAdminCategorySearchSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetCategorySearchSettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
                 };
             };
             /** @description Bad Request */

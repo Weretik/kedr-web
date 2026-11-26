@@ -1,4 +1,4 @@
-export type { AdminCategory } from './entities/admin-category';
+export type { AdminCategory, CategorySharePicture } from './entities/admin-category';
 export { missingContentLanguages } from './entities/admin-category';
 export {
   contentLanguages,

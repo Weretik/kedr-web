@@ -10,7 +10,7 @@ interface ArticleTextFieldsProps {
   onChange: (text: ArticleText) => void;
 }
 
-/** Title, short description, and body of one language. */
+/** Title, short description, body, and the optional search title and description of one language. */
 export function ArticleTextFields({ errors, onChange, text }: ArticleTextFieldsProps) {
   const set = (patch: Partial<ArticleText>) => onChange({ ...text, ...patch });
 
@@ -38,6 +38,23 @@ export function ArticleTextFields({ errors, onChange, text }: ArticleTextFieldsP
         label="Текст статті"
         onChange={(bodyHtml) => set({ bodyHtml })}
         value={text.bodyHtml}
+      />
+      <CountedTextField
+        error={errors?.seoTitle}
+        hint="Заголовок вкладки й пошуку. Порожньо — заголовок статті."
+        label="SEO-заголовок (title)"
+        maxLength={articleLimits.seoTitle}
+        onChange={(seoTitle) => set({ seoTitle })}
+        value={text.seoTitle}
+      />
+      <CountedTextField
+        error={errors?.metaDescription}
+        hint="Опис у результатах пошуку. Порожньо — короткий опис."
+        label="Мета-опис (description)"
+        maxLength={articleLimits.metaDescription}
+        multiline
+        onChange={(metaDescription) => set({ metaDescription })}
+        value={text.metaDescription}
       />
     </Stack>
   );
