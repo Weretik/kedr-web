@@ -1,9 +1,7 @@
 import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-client';
 
-import { mapSiteModelList, toSiteModelListParams } from '../mappers/site-model-list.mapper';
 import {
   mapSiteModel,
-  mapSiteModelCategories,
   mapSiteModelHealth,
   mapSiteShowcase,
   toSetSiteModelTextBody,
@@ -12,11 +10,8 @@ import {
 
 import type {
   SiteModel,
-  SiteModelCategory,
   SiteModelHealth,
   SiteModelLanguage,
-  SiteModelListItem,
-  SiteModelListQuery,
   SiteModelsPage,
   SiteModelTextInput,
   SiteShowcaseQuery,
@@ -39,25 +34,6 @@ export const siteModelsApi = baseApi.injectEndpoints({
             signal,
           }),
           mapSiteShowcase,
-        ),
-      providesTags: ['SiteModels'],
-    }),
-    getSiteModels: build.query<SiteModelsPage<SiteModelListItem>, SiteModelListQuery>({
-      queryFn: (query, { signal }) =>
-        apiCall(
-          apiClient.GET('/api/admin/site-models', {
-            params: { query: toSiteModelListParams(query) },
-            signal,
-          }),
-          mapSiteModelList,
-        ),
-      providesTags: ['SiteModels'],
-    }),
-    getSiteModelCategories: build.query<SiteModelCategory[], void>({
-      queryFn: (_arg, { signal }) =>
-        apiCall(
-          apiClient.GET('/api/admin/site-models/categories', { signal }),
-          mapSiteModelCategories,
         ),
       providesTags: ['SiteModels'],
     }),
@@ -186,9 +162,7 @@ export const {
   useChangeSiteModelCategoryMutation,
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
-  useGetSiteModelCategoriesQuery,
   useGetSiteModelQuery,
-  useGetSiteModelsQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,
   useRenameSiteModelMutation,

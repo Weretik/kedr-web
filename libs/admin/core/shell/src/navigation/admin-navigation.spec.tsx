@@ -71,7 +71,9 @@ describe('AdminNavigation by role', () => {
     expect(
       screen.getByRole('link', { name: 'Історія замовлень' }).getAttribute('aria-current'),
     ).toBe('page');
-    expect(screen.getByRole('link', { name: 'Замовлення' }).getAttribute('aria-current')).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Замовлення' }).getAttribute('aria-current'),
+    ).toBeNull();
   });
 
   it('hides the users section from a manager', () => {
@@ -105,6 +107,30 @@ describe('AdminNavigation by role', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Продаж' }));
     expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
+  });
+
+  it('lists the site pages of «Каталог» in order, without «Вітрина сайту»', () => {
+    renderNavigation(false, '/site-review');
+
+    const catalog = screen.getByRole('button', { name: 'Каталог' });
+    const panel = document.getElementById(catalog.getAttribute('aria-controls') ?? '');
+    const list = panel?.querySelectorAll('a') ?? [];
+    expect([...list].map((link) => link.textContent)).toEqual([
+      'Товари',
+      'Моделі',
+      'Перевірка',
+      'Ознаки та фільтри',
+      'Категорії',
+      'Медіа',
+    ]);
+    expect(screen.getByRole('link', { name: 'Моделі' }).getAttribute('href')).toBe('/site-models');
+    expect(screen.getByRole('link', { name: 'Перевірка' }).getAttribute('aria-current')).toBe(
+      'page',
+    );
+    expect(screen.getByRole('link', { name: 'Ознаки та фільтри' }).getAttribute('href')).toBe(
+      '/site-attributes',
+    );
+    expect(screen.queryByRole('link', { name: 'Вітрина сайту' })).toBeNull();
   });
 
   it('marks a closed block that holds the current page and shows a counter only above zero', () => {

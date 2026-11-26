@@ -11,6 +11,7 @@ const api = vi.hoisted(() => ({
   model: vi.fn(),
   accept: vi.fn(),
   add: vi.fn(),
+  openAddToModel: vi.fn(),
   idle: () => [vi.fn(), { isLoading: false }],
 }));
 
@@ -31,6 +32,14 @@ vi.mock('@admin/site-models/data-access', () => ({
   useSetProductAttributeMutation: api.idle,
   useCreateAttributeOptionMutation: api.idle,
   useCreateAttributeValueOptionMutation: api.idle,
+}));
+
+vi.mock('../panels/site-model-panels-context', () => ({
+  useSiteModelPanels: () => ({
+    openAddToModel: api.openAddToModel,
+    openEditModel: vi.fn(),
+    openNewModel: vi.fn(),
+  }),
 }));
 
 const category: SiteModelCategory = {
@@ -93,7 +102,7 @@ function Address() {
   return <output aria-label="Адреса">{location.search}</output>;
 }
 
-const renderQueue = (entry = '/site-showcase?view=review') =>
+const renderQueue = (entry = '/site-review?tab=new') =>
   render(
     <MemoryRouter initialEntries={[entry]}>
       <SiteModelsQueue onNotice={vi.fn()} />
@@ -123,19 +132,11 @@ describe('SiteModelsQueue', () => {
     api.add.mockReturnValue({ unwrap: () => Promise.resolve(model(1, 'Завіса 100×75')) });
   });
 
-  it('opens «Усі» first by default', () => {
-    renderQueue('/site-showcase');
-    const views = screen.getAllByRole('button', { name: /·/ });
-    expect(views[0]?.textContent).toMatch(/^Усі/);
-    expect(views[0]?.getAttribute('aria-pressed')).toBe('true');
-    expect(api.showcase).toHaveBeenCalledWith(expect.not.objectContaining({ status: 'proposed' }));
-  });
-
-  it('opens the first proposal with the counts of the views', () => {
+  it('lists only proposals and opens the first one', () => {
     renderQueue();
-    expect(screen.getByRole('button', { name: 'На перевірку · 2' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'З проблемами · 1' })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: /Без моделі/ })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: /^(Усі|На перевірку|З проблемами) · / }),
+    ).toBeNull();
     expect(screen.getByRole('heading', { name: 'Завіса 100×75' })).toBeTruthy();
     expect(screen.getByText('Не перевірена')).toBeTruthy();
     expect(api.showcase).toHaveBeenCalledWith(
@@ -148,7 +149,7 @@ describe('SiteModelsQueue', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Погодити і далі' }));
     expect(api.accept).toHaveBeenCalledWith([1]);
     await waitFor(() =>
-      expect(screen.getByLabelText('Адреса').textContent).toBe('?view=review&item=m2'),
+      expect(screen.getByLabelText('Адреса').textContent).toBe('?tab=new&item=m2'),
     );
   });
 
@@ -158,8 +159,14 @@ describe('SiteModelsQueue', () => {
     expect(api.add).toHaveBeenCalledWith({ id: 1, productIds: [13] });
   });
 
+  it('adds products through the shared «Додати в модель» panel (spec 001 R-011)', () => {
+    renderQueue();
+    fireEvent.click(screen.getByRole('button', { name: 'Додати товар' }));
+    expect(api.openAddToModel).toHaveBeenCalledWith({ modelId: 1 });
+  });
+
   it('shows the SEO texts in their own tab', () => {
-    renderQueue('/site-showcase?item=m2');
+    renderQueue('/site-review?tab=new&item=m2');
     expect(screen.getByRole('heading', { name: 'Завіса 100×75 BK' })).toBeTruthy();
     fireEvent.click(screen.getByRole('tab', { name: 'SEO та опис' }));
     expect(screen.getByLabelText('Як виглядатиме в Google')).toBeTruthy();

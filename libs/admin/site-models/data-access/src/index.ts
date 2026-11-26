@@ -15,12 +15,11 @@ export {
   useChangeSiteModelCategoryMutation,
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
-  useGetSiteModelCategoriesQuery,
   useGetSiteModelQuery,
-  useGetSiteModelsQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,
   useRenameSiteModelMutation,
   useSetSiteModelAxesMutation,
   useSetSiteModelTextMutation,
 } from './api/site-models.api';
+export { useGetSiteModelCategoriesQuery, useGetSiteModelsQuery } from './api/site-model-lists.api';

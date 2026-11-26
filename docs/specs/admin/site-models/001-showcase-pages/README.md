@@ -3,7 +3,7 @@
 - **Client:** React Admin (`apps/admin`)
 - **Domain:** site models (`libs/admin/site-models`), attributes dictionary (`libs/admin/catalog-attributes`), shell menu, «Огляд» links
 - **Backend:** KedrStore spec `catalog/007-site-models` stage 9 (R-22–R-25; contract source of truth), PR Weretik/KedrStore#273
-- **Status:** in progress 2026-11-26
+- **Status:** implemented 2026-11-26; audit: [code-audit/audit.md](code-audit/audit.md)
 - **Source:** owner requests of 2026-11-26 in the thread «Улучшить UX страницы «Вітрина сайту»» and the concept canvas «Вітрина сайту — концепт» (https://claude.ai/artifact/72FnMkg3CRhiD87vYuBvnt); UX analysis https://claude.ai/artifact/UYweaxAdAAkCPC22eEv5FL
 
 ## Goal and scope
