@@ -57,7 +57,7 @@ describe('browser document cart factory', () => {
     const next = getBrowserCartStore();
     expect(next).not.toBeNull();
     expect(next).not.toBe(first);
-    expect(next?.getSnapshot().draft).toEqual({ firstName: '', phone: '' });
+    expect(next?.getSnapshot().draft).toEqual({ firstName: '', phone: '', comment: '' });
   });
 
   it('does not access localStorage while creating the owner', async () => {

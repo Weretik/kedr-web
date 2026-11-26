@@ -35,6 +35,18 @@ describe('checkout validation and projection', () => {
     expect(validateCheckoutDraft(draft)).toEqual({ valid: true, fieldErrors: {} });
     expect(buildCheckoutCommand(draft, [row])).toEqual({ ok: true, command });
   });
+  it('keeps the comment optional, trimmed and within 800 characters', () => {
+    expect(validateCheckoutDraft({ ...draft, comment: 'a'.repeat(800) }).valid).toBe(true);
+    expect(
+      validateCheckoutDraft({ ...draft, comment: 'a'.repeat(801) }).fieldErrors.comment,
+    ).toEqual(['too-long']);
+    const built = buildCheckoutCommand({ ...draft, comment: '  Дзвоніть  ' }, [row]);
+    expect(built).toEqual({ ok: true, command: { ...command, comment: 'Дзвоніть' } });
+    expect(buildCheckoutCommand({ ...draft, comment: '   ' }, [row])).toEqual({
+      ok: true,
+      command,
+    });
+  });
   it.each(['', '  ', 'Ів', 'a'.repeat(31)])('rejects an invalid name %s', (firstName) => {
     const result = validateCheckoutDraft({ ...draft, firstName });
     expect(result.valid).toBe(false);

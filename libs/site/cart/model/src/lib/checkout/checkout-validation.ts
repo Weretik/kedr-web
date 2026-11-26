@@ -1,5 +1,7 @@
 import type { CheckoutDraft, CheckoutFieldErrors } from './checkout-types';
 
+export const CHECKOUT_COMMENT_MAX_LENGTH = 800;
+
 export function validateCheckoutDraft(draft: CheckoutDraft): {
   valid: boolean;
   fieldErrors: CheckoutFieldErrors;
@@ -14,6 +16,9 @@ export function validateCheckoutDraft(draft: CheckoutDraft): {
   else if (draft.phone.length > 20) fieldErrors.phone = ['too-long'];
   else if (!/^\+38 \(0\d{2}\) \d{3}-\d{2}-\d{2}$/.test(draft.phone)) {
     fieldErrors.phone = ['invalid-phone'];
+  }
+  if ((draft.comment ?? '').trim().length > CHECKOUT_COMMENT_MAX_LENGTH) {
+    fieldErrors.comment = ['too-long'];
   }
   return { valid: Object.keys(fieldErrors).length === 0, fieldErrors };
 }

@@ -168,7 +168,7 @@ describe('document cart owner', () => {
     const restored = setup(saved);
     restored.store.initialize();
     expect(restored.store.getSnapshot().lines).toHaveLength(1);
-    expect(restored.store.getSnapshot().draft).toEqual({ firstName: '', phone: '' });
+    expect(restored.store.getSnapshot().draft).toEqual({ firstName: '', phone: '', comment: '' });
   });
 
   it('preserves cart and contacts while the drawer opens and closes, restoring its opener', () => {
@@ -326,7 +326,7 @@ describe('document cart owner', () => {
     await store.submit();
     expect(store.getSnapshot().receipt).toEqual({ orderId, unitCount: 2, goodsSubtotal: 850 });
     expect(store.getSnapshot().lines).toEqual([]);
-    expect(store.getSnapshot().draft).toEqual({ firstName: '', phone: '' });
+    expect(store.getSnapshot().draft).toEqual({ firstName: '', phone: '', comment: '' });
     expect(browserStorage.removeItem).toHaveBeenCalledTimes(1);
     store.add(input);
     expect(store.getSnapshot().receipt).toBeNull();

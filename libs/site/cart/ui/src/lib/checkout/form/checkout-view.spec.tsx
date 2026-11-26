@@ -22,7 +22,7 @@ describe('checkout presentation', () => {
       render(<CheckoutView {...checkoutFixture({ locale })} />);
       expect(screen.getByRole('textbox', { name }).getAttribute('autocomplete')).toBe('given-name');
       expect(screen.getByRole('textbox', { name: phone }).getAttribute('autocomplete')).toBe('tel');
-      expect(screen.getAllByRole('textbox')).toHaveLength(2);
+      expect(screen.getAllByRole('textbox')).toHaveLength(3);
       expect(screen.getByRole('button', { name: submit })).toBeTruthy();
       expect(screen.getByRole('link', { name: /оферт/ }).getAttribute('href')).toBe(
         `/${locale}/public-offer`,
@@ -36,6 +36,24 @@ describe('checkout presentation', () => {
 
     for (const link of screen.getAllByRole('link', { name: '(067) 111-22-33' }))
       expect(link.getAttribute('href')).toBe('tel:+380671112233');
+  });
+
+  it('lets the buyer type an optional comment under the phone', () => {
+    const props = checkoutFixture({ onDraftChange: vi.fn(), onFieldBlur: vi.fn() });
+    render(<CheckoutView {...props} />);
+    const comment = screen.getByRole('textbox', { name: 'Коментар' });
+    fireEvent.change(comment, { target: { value: 'Дзвоніть після 14:00' } });
+    fireEvent.blur(comment);
+    expect(props.onDraftChange).toHaveBeenCalledWith('comment', 'Дзвоніть після 14:00');
+    expect(props.onFieldBlur).toHaveBeenCalledWith('comment');
+    expect(comment.hasAttribute('required')).toBe(false);
+  });
+
+  it('shows the too-long comment error next to the comment', () => {
+    render(<CheckoutView {...checkoutFixture({ fieldErrors: { comment: ['too-long'] } })} />);
+    expect(screen.getByRole('alert').textContent).toBe(
+      'Коментар не може містити більше 800 символів.',
+    );
   });
 
   it('forwards contact changes, blur and one explicit form submit', () => {
