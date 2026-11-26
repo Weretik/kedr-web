@@ -861,6 +861,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/site-models/{id}/category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Move a model to another category
+         * @description A final category only. All the model's products follow it on the site; each keeps its 1C category. A proposed model is accepted in the same step.
+         */
+        put: operations["changeAdminSiteModelCategory"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/site-models/accept": {
         parameters: {
             query?: never;
@@ -3713,6 +3733,10 @@ export interface components {
             currentPassword: string;
             newPassword: string;
         };
+        ChangeSiteModelCategoryRequest: {
+            /** Format: int32 */
+            categoryId?: number;
+        };
         ChangeSlugRequest: {
             slug: null | string;
             /** @default false */
@@ -4255,6 +4279,7 @@ export interface components {
             photos: string[];
             /** Format: double */
             stock: number;
+            inStock: boolean;
             categoryName: string;
             categorySlug: string;
             /** Format: int32 */
@@ -4759,6 +4784,7 @@ export interface components {
             texts: components["schemas"]["SiteModelTextDto"][];
             characteristics: components["schemas"]["SiteModelCharacteristicDto"][];
             problems: string[];
+            oneCCategories: string[];
         };
         SiteModelHealthDto: {
             /** Format: int32 */
@@ -4805,6 +4831,7 @@ export interface components {
             photo: string;
             axes: string[];
             problems: string[];
+            oneCCategories: string[];
         };
         SiteModelProductDto: {
             /** Format: int32 */
@@ -7566,6 +7593,59 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["RenameSiteModelRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteModelDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    changeAdminSiteModelCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSiteModelCategoryRequest"];
             };
         };
         responses: {
