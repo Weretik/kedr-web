@@ -35,4 +35,6 @@ export interface ProductsDataGridProps {
   /** «Без фото»: search, category and the stock filter only, without the filter panel. */
   basicFilters?: boolean;
   sortable?: boolean;
+  /** «На сайті»: the «Модель» column (model ID as a link) replaces «Категорія». */
+  onOpenModel?: (modelId: number) => void;
 }

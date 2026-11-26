@@ -39,6 +39,7 @@ export function ProductsDataGrid({
   sort,
   basicFilters = false,
   sortable = true,
+  onOpenModel,
 }: ProductsDataGridProps) {
   const [panelAnchor, setPanelAnchor] = useState<HTMLDivElement | null>(null);
   const panelWidth = usePanelWidth(panelAnchor);
@@ -50,6 +51,7 @@ export function ProductsDataGrid({
     onEditProduct,
     onAddProduct,
     basicFilters,
+    onOpenModel,
   });
   const paginationModel: GridPaginationModel = { page, pageSize };
   const noRowsOverlay = errorMessage
