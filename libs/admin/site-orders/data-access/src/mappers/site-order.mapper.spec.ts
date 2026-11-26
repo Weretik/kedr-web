@@ -63,12 +63,14 @@ describe('site order mappers', () => {
       telegramSentAtUtc: '2026-11-24T07:45:02Z',
       telegramLastAttemptAtUtc: null,
       telegramLastError: null,
+      comment: '  Дзвоніть після 14:00 ',
       items: [{ productId: '27254', title: 'Ручка', unitPrice: 136.5, quantity: 3, amount: 409.5 }],
     });
     expect(detail.items).toEqual([
       { productId: '27254', title: 'Ручка', unitPrice: 136.5, quantity: 3, amount: 409.5 },
     ]);
     expect(detail.telegramStatus).toBe('sent');
+    expect(detail.comment).toBe('  Дзвоніть після 14:00 ');
   });
 
   it('rejects an unknown delivery state', () => {

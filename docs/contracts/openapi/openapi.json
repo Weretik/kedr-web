@@ -13148,7 +13148,7 @@
         }
       },
       "CreateOrderRequest": {
-        "required": ["firstName", "phone", "lines"],
+        "required": ["firstName", "phone", "lines", "comment"],
         "type": "object",
         "properties": {
           "firstName": {
@@ -13690,7 +13690,8 @@
           "telegramSentAtUtc",
           "telegramLastAttemptAtUtc",
           "telegramLastError",
-          "items"
+          "items",
+          "comment"
         ],
         "type": "object",
         "properties": {

@@ -46,10 +46,10 @@ describe('createQuickOrder', () => {
     };
 
     expect(await createQuickOrder(input)).toEqual({ kind: 'created', orderId });
-    expect(transport).toHaveBeenCalledExactlyOnceWith(command);
+    expect(transport).toHaveBeenCalledExactlyOnceWith({ ...command, comment: null });
   });
 
-  it('sends the buyer comment and omits it when there is none', async () => {
+  it('sends the buyer comment, or null when there is none', async () => {
     transport.mockResolvedValue({ kind: 'response', status: 200, body: { orderId } });
 
     await createQuickOrder({ ...command, comment: 'Дзвоніть після 14:00' });
@@ -77,7 +77,10 @@ describe('createQuickOrder', () => {
       kind: 'created',
       orderId,
     });
-    expect(transport).toHaveBeenCalledExactlyOnceWith(command, { idempotencyKey: requestKey });
+    expect(transport).toHaveBeenCalledExactlyOnceWith(
+      { ...command, comment: null },
+      { idempotencyKey: requestKey },
+    );
   });
 
   it('shows the detail of a repeated order with other data as a conflict', async () => {

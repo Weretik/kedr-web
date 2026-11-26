@@ -17,7 +17,7 @@ export async function createQuickOrder(command: CheckoutCommand): Promise<Checko
   const request: CreateQuickOrderDto = {
     firstName: parsed.command.firstName,
     phone: parsed.command.phone,
-    ...(parsed.command.comment ? { comment: parsed.command.comment } : {}),
+    comment: parsed.command.comment ?? null,
     lines: parsed.command.lines.map(({ productId, title, unitPrice, quantity }) => ({
       productId,
       title,
