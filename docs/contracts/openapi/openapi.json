@@ -13148,7 +13148,7 @@
         }
       },
       "CreateOrderRequest": {
-        "required": ["firstName", "phone", "lines", "comment"],
+        "required": ["firstName", "phone", "lines"],
         "type": "object",
         "properties": {
           "firstName": {
