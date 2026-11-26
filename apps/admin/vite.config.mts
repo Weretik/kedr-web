@@ -20,6 +20,15 @@ export default defineConfig(({ mode }) => {
       }),
       nxReadySignal(),
     ],
+    // Scan every admin library up front: a dependency first met in a lazily loaded page (for example a new icon)
+    // otherwise makes the dev server re-optimize and reload the page in the middle of a session.
+    optimizeDeps: {
+      entries: [
+        'index.html',
+        '../../libs/admin/**/src/**/*.tsx',
+        '!../../libs/admin/**/*.spec.tsx',
+      ],
+    },
     server: {
       host: 'localhost',
       port: 4200,
