@@ -3329,6 +3329,78 @@
         }
       }
     },
+    "/api/admin/site-models/{id}/category": {
+      "put": {
+        "tags": ["AdminSiteModels"],
+        "summary": "Move a model to another category",
+        "description": "A final category only. All the model's products follow it on the site; each keeps its 1C category. A proposed model is accepted in the same step.",
+        "operationId": "changeAdminSiteModelCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSiteModelCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteModelDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/site-models/accept": {
       "post": {
         "tags": ["AdminSiteModels"],
@@ -12584,6 +12656,15 @@
           }
         }
       },
+      "ChangeSiteModelCategoryRequest": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "ChangeSlugRequest": {
         "required": ["slug"],
         "type": "object",
@@ -15879,7 +15960,8 @@
           "products",
           "texts",
           "characteristics",
-          "problems"
+          "problems",
+          "oneCCategories"
         ],
         "type": "object",
         "properties": {
@@ -15939,6 +16021,12 @@
             }
           },
           "problems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "oneCCategories": {
             "type": "array",
             "items": {
               "type": "string"
@@ -16030,7 +16118,8 @@
           "minPrice",
           "photo",
           "axes",
-          "problems"
+          "problems",
+          "oneCCategories"
         ],
         "type": "object",
         "properties": {
@@ -16076,6 +16165,12 @@
             }
           },
           "problems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "oneCCategories": {
             "type": "array",
             "items": {
               "type": "string"

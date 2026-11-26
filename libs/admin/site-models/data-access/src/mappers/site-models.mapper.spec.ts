@@ -71,12 +71,32 @@ describe('site models mapper', () => {
     });
 
     expect(model.mainProductId).toBeNull();
+    expect(model.oneCCategories).toEqual([]);
     expect(model.products[0].values[0]).toEqual({
       attributeId: 1,
       valueId: null,
       name: null,
       isManual: false,
     });
+  });
+
+  it('keeps the 1C categories of a model card', () => {
+    const model = mapSiteModel({
+      id: 3,
+      categoryId: 12,
+      categoryName: 'Засувки',
+      name: 'Завіса',
+      slug: 'zavisa',
+      status: 'accepted',
+      axes: [],
+      products: [],
+      texts: [],
+      characteristics: [],
+      problems: [],
+      oneCCategories: ['Завіси'],
+    });
+
+    expect(model.oneCCategories).toEqual(['Завіси']);
   });
 
   it('rejects an unknown status', () => {

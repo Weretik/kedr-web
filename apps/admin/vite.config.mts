@@ -20,6 +20,11 @@ export default defineConfig(({ mode }) => {
       }),
       nxReadySignal(),
     ],
+    // The React Compiler adds `react/compiler-runtime` to every component after the scan, so the dev server met it
+    // late, re-optimized and reloaded the page mid-session (the e2e check lost its notice to that reload).
+    optimizeDeps: {
+      include: ['react/compiler-runtime'],
+    },
     server: {
       host: 'localhost',
       port: 4200,

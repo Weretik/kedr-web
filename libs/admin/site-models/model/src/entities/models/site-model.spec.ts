@@ -42,6 +42,7 @@ const model: SiteModel = {
   ],
   characteristics: [],
   problems: ['model_no_seo', 'missing_axis_value'],
+  oneCCategories: [],
 };
 
 describe('site model', () => {

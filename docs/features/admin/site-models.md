@@ -1,31 +1,38 @@
-# Admin «Вітрина сайту»
+# Admin site models: «Моделі», «Перевірка», «Ознаки та фільтри»
 
-**Status:** implemented (stages 4–4c of the backend site models specification, KedrStore `docs/sdd/specs/catalog/007-*`). Route: `/site-showcase` with tabs «Моделі», «Ознаки» (`?tab=attributes`), «Не розшифровані коди» (`codes`), «Фільтри категорій» (`filters`); menu «Каталог → Вітрина сайту». The old `/site-models`, `/site-models/:id` and `/catalog-attributes` addresses redirect here. Managers and administrators; the dictionary tabs are on [«Ознаки»](catalog-attributes.md). Composition rules: [Admin standard](../../standards/admin/list-detail-pages.md).
+**Status:** implemented 2026-11-26 ([SDD 001](../../specs/admin/site-models/001-showcase-pages/README.md); backend KedrStore `docs/sdd/specs/catalog/007-*`, stage 9). Routes: `/site-models` (list), `/site-models/:id` (model page), `/site-review` («Перевірка», `?tab=new|lone|codes`), `/site-attributes` («Ознаки та фільтри», [dictionary tabs](catalog-attributes.md)); menu «Каталог → Моделі / Перевірка / Ознаки та фільтри». Managers and administrators. Composition rules: [Admin standard](../../standards/admin/list-detail-pages.md).
 
-A model is one site page in one final category that brings together products of that category; its axes (color, size, side) are the switchers that tell the products apart. Automation proposes models after each 1C sync; a person reviews every proposal one by one (no bulk accept, owner 2026-11-05) or creates a model. «Товари» stays the 1C list and shows nothing about models.
+A model is one site page that brings together products that differ by color, size or side; its axes are the switchers. A model has its own site category (a final one): every product of the model is shown there, while 1C and «Товари» keep each product's 1C category, named on the model as «У 1С: …». Automation proposes models after each 1C sync; a person reviews each proposal one by one (no bulk accept) or creates a model by hand from products of any 1C category.
 
-- On site means exported from 1C, not deleted, and in a category shown on the site (the Admin mark on [«Категорії»](categories.md)). A product of a proposed model waits for review; only a product in no model at all is the hard error «Немає моделі».
-- **Моделі** ([queue](../../../libs/admin/site-models/feature/src/components/queue/site-models-queue.tsx), canvas variant B): a toolbar with the [category picker](../../../libs/admin/site-models/ui/src/components/pickers/site-category-picker.tsx) (the tree of shown categories in a popover), the views «Усі · N / На перевірку · N / З проблемами · N / Без моделі · N» (counts from the category tree; «Без моделі» only while there are such; «Усі» opens by default) and a search. On the left the [queue list](../../../libs/admin/site-models/ui/src/components/navigation/site-queue-list.tsx): names only, no photos, a blue dot for a proposal, amber for problems, red for a product in no model; ↑ and ↓ move through it. The view, category, search and open row live in the address (`view`, `categoryId`, `search`, `item=m{id}|p{id}`), so «Огляд» links straight to a view.
-- **Model pane** ([SiteModelPane](../../../libs/admin/site-models/feature/src/components/model-pane/site-model-pane.tsx)) beside the queue: name with «Не перевірена» for a proposal, rename in place (the slug stays), problems; tabs «Товари й ознаки» (products as rows: a large photo, the full name, a value picker per axis, «Чого бракує»; no price; «Усі ознаки» opens the [attributes panel](../../../libs/admin/site-models/feature/src/components/product-pane/product-attributes-panel.tsx), «Прибрати», «Заповнити з назв», «Додати товар» in the [right panel](../../../libs/admin/site-models/ui/src/panels/add-model-products-panel.tsx); similar proposals of the category with «Об’єднати сюди»; axes and characteristics). Pickers search by name ([CreatablePicker](../../../libs/admin/site-models/ui/src/components/pickers/creatable-picker.tsx)): a name nothing matches offers «Створити ознаку» in «Чим відрізняються товари» (a list attribute that is a site filter and a switcher, added to the model at once) and «Створити значення» in a product row (the value is added to the axis and set on the product), so everything is set up on one page and «SEO та опис» (texts in Ukrainian and Russian with counters and a Google preview). The footer has «Пропустити» and «Погодити і далі» for a proposal, «Далі» for an accepted model.
-- **Product in no model** ([pane](../../../libs/admin/site-models/feature/src/components/product-pane/site-lone-product-pane.tsx)): photo, values, problems, «Усі ознаки товару», and «Створити модель» with its name; to add it to an existing model, open that model and use «Додати товар».
-- Problem codes and their Ukrainian names are in [site-model-problem](../../../libs/admin/site-models/model/src/entities/models/site-model-problem.ts); the queue views, counts and similar models are in [site-queue](../../../libs/admin/site-models/model/src/entities/showcase/site-queue.ts). Only problems are marked.
-- Requests are in [site models data access](../../../libs/admin/site-models/data-access/src/api/site-models.api.ts) and [product attributes data access](../../../libs/admin/site-models/data-access/src/api/product-attributes.api.ts) under the tag `SiteModels`; every change refreshes all site models data. Operations are in the [site models contract](../../contracts/openapi/openapi.json). The «Огляд» lines are in [dashboard](dashboard.md).
+- **Моделі** ([page](../../../libs/admin/site-models/feature/src/pages/site-models-page.tsx)): a server-paged [Data Grid](../../../libs/admin/site-models/ui/src/tables/models-grid/site-models-data-grid.tsx) of all models — photo, name with «Не перевірена» for a proposal, site category with «У 1С: …», products on the site, switchers, «Чого бракує» (empty when nothing is missing), eye and pencil. The [toolbar](../../../libs/admin/site-models/ui/src/tables/models-toolbar/site-models-grid-toolbar.tsx) has the search, the category tree, status and «Чого бракує» filters; all of it and the open panel live in the address ([list URL state](../../../libs/admin/site-models/model/src/queries/site-model-list-url.ts)). «+ Нова модель» in the header.
+- **Model page** ([page](../../../libs/admin/site-models/feature/src/pages/site-model-page.tsx)): read-only main card (category, «У 1С», switchers, problems), «Товари й ознаки» (products with inline axis value pickers — the owner-accepted exception — «Додати товар», «Прибрати», «Заповнити з назв»), characteristics, SEO summary; «Редагувати» and, for a proposal, «Погодити».
+- **Shared panels** ([provider](../../../libs/admin/site-models/feature/src/components/panels/site-model-panels-provider.tsx), `useSiteModelPanels`): «Редагування моделі» (name, site category of final categories with the note that all products move and a proposal is accepted, switchers, SEO UK/RU, each block saving on its own), «Нова модель» (name, category, products of the whole catalog with «Вільні (без моделі) / Усі товари», a product of another accepted model locked with «Уже в моделі «…»»), «Додати в модель» (products for a model, or a model for a product). Every page opens the same panels: «Моделі», the model page, «Перевірка» (including «Додати товар» in «Нові моделі»), and the product page in «Товари» through [ProductSiteModelSection](../../../libs/admin/site-models/feature/src/components/product-model/product-site-model-section.tsx) («Модель на сайті»). The open panel is in `?panel=`.
+- **Перевірка** ([page](../../../libs/admin/site-models/feature/src/pages/site-review-page.tsx)): «Нові моделі · N» is the one-by-one [review queue](../../../libs/admin/site-models/feature/src/components/queue/site-models-queue.tsx) of proposals («Погодити і далі», «Пропустити», «Об’єднати сюди», SEO tab); «Товари без моделі · N» is a [table](../../../libs/admin/site-models/ui/src/tables/lone-products/lone-products-grid.tsx) where each row has a model picker prefilled with a similar model of its category ([similarModelForProduct](../../../libs/admin/site-models/model/src/entities/showcase/lone-product-model.ts)) and «Додати», and «Нова модель»; «Коди з 1С · N» is the dictionary's codes tab.
+- **Ознаки та фільтри** ([page](../../../libs/admin/site-models/feature/src/pages/site-attributes-page.tsx)): «Ознаки» and «Фільтри категорій» from [catalog attributes](catalog-attributes.md), «Нова ознака» for administrators.
+- Old addresses ([site-legacy-paths](../../../libs/admin/site-models/feature/src/model/site-legacy-paths.ts)): `/site-showcase` with its views, tabs and open row, and `/catalog-attributes`, redirect to the matching new page; «Огляд» links point to the new pages.
+- Problem codes and Ukrainian names are in [site-model-problem](../../../libs/admin/site-models/model/src/entities/models/site-model-problem.ts). Requests are in [site models data access](../../../libs/admin/site-models/data-access/src/api/site-models.api.ts) and [product attributes data access](../../../libs/admin/site-models/data-access/src/api/product-attributes.api.ts) under the tag `SiteModels`; every change refreshes all site models data. Operations: [contract](../../contracts/openapi/openapi.json) (`getAdminSiteModels`, `changeAdminSiteModelCategory`, …).
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    App[AppRouter] -->|useCanEditCatalog, renderDictionaryTab| Routes[createSiteModelsRoutes]
-    Routes --> Page[SiteShowcasePage]
-    Page --> Queue[SiteModelsQueue]
-    Page -->|tab| Dictionary[CatalogDictionaryTab from catalog-attributes]
-    Queue --> Pane[SiteModelPane]
-    Queue --> Lone[SiteLoneProductPane]
-    Pane --> Editor[useSiteModelEditor]
-    Pane --> Panel[ProductAttributesPanel]
-    Queue --> Api[site-models data access]
-    Editor --> Api
-    Panel --> Api
+    App[AppRouter] -->|useCanEditCatalog, renderDictionaryTab, useUnresolvedCodesCount| Routes[createSiteModelsRoutes]
+    App -->|renderSiteModel| Products[«Товари» product page]
+    Routes --> Provider[SiteModelPanelsProvider]
+    Provider --> List[SiteModelsPage]
+    Provider --> ModelPage[SiteModelPage]
+    Provider --> Review[SiteReviewPage]
+    Provider --> Attributes[SiteAttributesPage]
+    Products --> Section[ProductSiteModelSection]
+    Section --> Provider
+    Review --> Queue[SiteModelsQueue]
+    Review --> Lone[LoneProductsTab]
+    List --> Panels[edit / new / add panels]
+    ModelPage --> Panels
+    Queue --> Panels
+    Lone --> Panels
+    Panels --> Api[site-models data access]
+    List --> Api
     Api --> Model[site-models model]
 ```
 
@@ -33,21 +40,22 @@ flowchart LR
 
 ```text
 libs/admin/site-models/
-├── feature/src/site-models.routes.tsx       # the page and the redirects of the old addresses
-├── feature/src/pages/site-showcase-page.tsx # tabs; «Нова ознака» beside them
-├── feature/src/components/                  # queue, model pane, product in no model, attributes panel
-├── feature/src/hooks/                       # model editor, axis value options, attributes editor
-├── feature/src/model/site-showcase-url-state.ts # tab and queue in the address, old addresses
-├── feature/src/errors/                      # Ukrainian error messages
-├── data-access/src/api/                     # site models and product attributes requests
-├── data-access/src/{mappers,validators}/    # zod schemas, DTO → model, request bodies
-├── model/src/entities/                      # model, showcase, category tree, queue, problems, product attributes
-└── ui/src/                                  # queue, category picker and tree, model card blocks, panels
+├── feature/src/site-models.routes.tsx   # pages in the panels provider; old addresses
+├── feature/src/pages/                   # «Моделі», model page, «Перевірка», «Ознаки та фільтри»
+├── feature/src/components/panels/       # shared panels and their provider
+├── feature/src/components/{model-page,model-pane,queue,review,product-model,product-pane}/
+├── feature/src/hooks/{lists,panels,model-editor}/  # list and queue controllers, panel and editor hooks
+├── feature/src/model/                   # old addresses, review tab, dictionary tabs
+├── data-access/src/{api,mappers,validators}/
+├── model/src/{entities,mappers,queries}/  # model, list row, queue, candidates, final categories, URL states
+└── ui/src/{tables,panels,details,components,dialogs,forms}/
 ```
 
 ## Tests
 
-- `npx nx run admin-site-models-model:vite:test -- --run` — texts by language, problems, queue views and counts, similar models.
-- `npx nx run admin-site-models-data-access:vite:test -- --run` — showcase and card mapping, query and text bodies, attributes mapper.
-- `npx nx run admin-site-models-ui:vite:test -- --run` — axis value picker, texts save and preview, attributes and review cards.
-- `npx nx run admin-site-models-feature:vite:test -- --run` — address and old addresses, the queue (open, «Погодити і далі», «Об’єднати сюди», SEO tab), error messages.
+- `npx nx run admin-site-models-model:vite:test -- --run` — list and panel URL state, candidates, final categories, queue, similar model, problems.
+- `npx nx run admin-site-models-data-access:vite:test -- --run` — list and card mapping with `oneCCategories`, query and text bodies.
+- `npx nx run admin-site-models-ui:vite:test -- --run` — models grid and toolbar, lone products grid and picker, panels' forms, model card blocks.
+- `npx nx run admin-site-models-feature:vite:test -- --run` — pages, panels and provider, routes and old addresses, queue, lone products tab, product block.
+- `npx nx run admin-products-feature:vite:test -- --run` — the «Модель на сайті» slot on the product page; `npx nx run admin-core-shell:vite:test -- --run` — menu; `npx nx run admin-dashboard-model:vite:test -- --run` — «Огляд» links.
+- E2E: `apps/stack-e2e/src/admin/site-model.spec.ts` (a model created from «Товари без моделі»).

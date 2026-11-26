@@ -1,6 +1,6 @@
 import { useGetSiteShowcaseQuery } from '@admin/site-models/data-access';
-import { modelAddCandidates, similarSiteModels } from '@admin/site-models/model';
-import { AddModelProductsPanel, SiteModelTextsCard } from '@admin/site-models/ui';
+import { similarSiteModels } from '@admin/site-models/model';
+import { SiteModelTextsCard } from '@admin/site-models/ui';
 import { Alert, Button, Card, Skeleton, Stack } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useState } from 'react';
@@ -8,7 +8,8 @@ import { useState } from 'react';
 import { SiteModelHeader } from './site-model-header';
 import { SiteModelProductsTab } from './site-model-products-tab';
 import { SiteModelReviewBar } from './site-model-review-bar';
-import { useSiteModelEditor } from '../../hooks/use-site-model-editor';
+import { useSiteModelEditor } from '../../hooks/model-editor/use-site-model-editor';
+import { useSiteModelPanels } from '../panels/site-model-panels-context';
 import { ProductAttributesPanel } from '../product-pane/product-attributes-panel';
 
 import type { PaneTab } from './site-model-header';
@@ -24,13 +25,13 @@ interface SiteModelPaneProps {
 
 /**
  * The model card beside the queue: products with their photos and axis values, the switchers, similar proposals to
- * merge, and the SEO texts. A proposal is reviewed with «Погодити і далі»; there is no bulk accept.
+ * merge, and the SEO texts. «Додати товар» opens the shared «Додати в модель» panel (spec 001 R-011). A proposal is reviewed with «Погодити і далі»; there is no bulk accept.
  */
 export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelPaneProps) {
   const editor = useSiteModelEditor(modelId, onNotice);
   const { model } = editor;
   const [tab, setTab] = useState<PaneTab>('products');
-  const [adding, setAdding] = useState(false);
+  const panels = useSiteModelPanels();
   const [edited, setEdited] = useState<EditedSiteProduct>();
   const neighbours = useGetSiteShowcaseQuery(
     model ? { categoryId: model.categoryId, page: 1, pageSize: 200 } : skipToken,
@@ -48,10 +49,6 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
   if (!model) return <Skeleton aria-label="Завантаження моделі" height={420} variant="rounded" />;
 
   const rows = neighbours.data?.items ?? [];
-  const candidates = modelAddCandidates(
-    rows,
-    model.products.map((product) => product.productId),
-  );
 
   return (
     <Card
@@ -65,13 +62,10 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
       <Stack spacing={3} sx={{ p: { xs: 2, md: 3 } }}>
         {tab === 'products' ? (
           <SiteModelProductsTab
-            adding={adding}
+            adding={false}
             editor={editor}
             model={model}
-            onAdd={() => {
-              editor.clearError('add');
-              setAdding(true);
-            }}
+            onAdd={() => panels.openAddToModel({ modelId: model.id })}
             onEditAttributes={setEdited}
             similar={similarSiteModels(rows, model)}
           />
@@ -94,19 +88,6 @@ export function SiteModelPane({ hasNext, modelId, onNext, onNotice }: SiteModelP
         proposed={model.status === 'proposed'}
       />
 
-      <AddModelProductsPanel
-        candidates={candidates}
-        categoryName={model.categoryName}
-        error={adding ? (editor.errors.add ?? null) : null}
-        key={model.id}
-        loading={neighbours.isFetching}
-        onAdd={(productIds) =>
-          void editor.addProducts(model.id, productIds).then((ok) => ok && setAdding(false))
-        }
-        onClose={() => setAdding(false)}
-        open={adding}
-        saving={editor.adding}
-      />
       <ProductAttributesPanel onClose={() => setEdited(undefined)} product={edited} />
     </Card>
   );

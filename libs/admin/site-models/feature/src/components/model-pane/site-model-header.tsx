@@ -5,7 +5,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Alert, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import type { useSiteModelEditor } from '../../hooks/use-site-model-editor';
+import type { useSiteModelEditor } from '../../hooks/model-editor/use-site-model-editor';
 import type { SiteModel } from '@admin/site-models/model';
 
 export type PaneTab = 'products' | 'texts';

@@ -8,6 +8,7 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -25,6 +26,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
+import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 
 import type { ReactNode } from 'react';
 
@@ -53,10 +55,7 @@ export const overviewItem: NavigationItem = {
   to: '/dashboard',
 };
 
-/**
- * Menu blocks, see «Navigation blocks» in docs/standards/admin/design-system.md.
- * A new page goes into the block by its subject; a block with no visible items is hidden.
- */
+/** Menu blocks («Navigation blocks» in docs/standards/admin/design-system.md); an empty block is hidden. */
 export const navigationGroups: NavigationGroup[] = [
   {
     icon: <ShoppingBagOutlinedIcon />,
@@ -80,7 +79,9 @@ export const navigationGroups: NavigationGroup[] = [
     label: 'Каталог',
     items: [
       { icon: <CategoryOutlinedIcon />, label: 'Товари', to: '/catalog' },
-      { icon: <StorefrontOutlinedIcon />, label: 'Вітрина сайту', to: '/site-showcase' },
+      { icon: <StorefrontOutlinedIcon />, label: 'Моделі', to: '/site-models' },
+      { icon: <FactCheckOutlinedIcon />, label: 'Перевірка', to: '/site-review' },
+      { icon: <TuneOutlinedIcon />, label: 'Ознаки та фільтри', to: '/site-attributes' },
       { icon: <AccountTreeOutlinedIcon />, label: 'Категорії', to: '/categories' },
       { icon: <PhotoLibraryOutlinedIcon />, label: 'Медіа', to: '/media' },
     ],
