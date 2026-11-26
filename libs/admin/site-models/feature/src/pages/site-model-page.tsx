@@ -24,7 +24,8 @@ const backState = (state: unknown) =>
 
 /** A model of the site, read-only; every change opens the shared panel (spec 001 R-003). */
 export function SiteModelPage() {
-  const id = Number(useParams().id);
+  const { id: idParam } = useParams<{ id: string }>();
+  const id = Number(idParam);
   const location = useLocation();
   const panels = useSiteModelPanels();
   const [notice, setNotice] = useState<string | null>(null);
