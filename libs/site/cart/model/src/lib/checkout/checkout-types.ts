@@ -1,10 +1,12 @@
-export type CheckoutField = 'firstName' | 'phone';
+export type CheckoutField = 'firstName' | 'phone' | 'comment';
 export type CheckoutFieldErrors = Partial<Record<CheckoutField, string[]>>;
 export type CheckoutFieldCode = 'required' | 'too-short' | 'too-long' | 'invalid-phone';
 
 export interface CheckoutDraft {
   firstName: string;
   phone: string;
+  /** Optional note from the buyer; at most `CHECKOUT_COMMENT_MAX_LENGTH` characters. */
+  comment?: string;
 }
 
 export interface CheckoutCommandLine {

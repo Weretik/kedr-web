@@ -29,13 +29,15 @@ const plainMessage = (value: unknown): string | null => {
   return text;
 };
 
-const fieldKey = (value: unknown): 'firstName' | 'phone' | null => {
+const fieldKey = (value: unknown): 'firstName' | 'phone' | 'comment' | null => {
   if (typeof value !== 'string') return null;
   switch (value.toLowerCase()) {
     case 'firstname':
       return 'firstName';
     case 'phone':
       return 'phone';
+    case 'comment':
+      return 'comment';
     default:
       return null;
   }

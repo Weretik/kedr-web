@@ -17,6 +17,7 @@ export function buildCheckoutCommand(
   return parseCheckoutCommand({
     firstName: draft.firstName,
     phone: draft.phone,
+    comment: draft.comment,
     lines: lines.map((line) => ({
       productId: line.variantId,
       title: line.snapshot.title,
@@ -30,9 +31,11 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function parseCheckoutCommand(input: unknown): CheckoutCommandParseResult {
   if (!isRecord(input)) return { ok: false, fieldErrors: {}, issues: ['invalid-command'] };
+  const comment = typeof input.comment === 'string' ? input.comment.trim() : '';
   const draft = {
     firstName: typeof input.firstName === 'string' ? input.firstName.trim() : '',
     phone: typeof input.phone === 'string' ? input.phone : '',
+    ...(comment ? { comment } : {}),
   };
   const { valid, fieldErrors } = validateCheckoutDraft(draft);
   const issues = new Set<CheckoutCommandIssue>();

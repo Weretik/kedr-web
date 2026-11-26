@@ -3,6 +3,7 @@
 import { UserRoundIcon } from 'lucide-react';
 import { useId } from 'react';
 
+import { CheckoutComment } from './checkout-comment';
 import { getCartCopy } from '../../i18n/cart-copy';
 import { fieldMessage } from '../../i18n/cart-messages';
 
@@ -24,7 +25,7 @@ export function CheckoutContacts({
 }: CheckoutContactsProps) {
   const copy = getCartCopy(locale);
   const prefix = useId();
-  const fields: CheckoutField[] = ['firstName', 'phone'];
+  const fields: Extract<CheckoutField, 'firstName' | 'phone'>[] = ['firstName', 'phone'];
   return (
     <div>
       <h2 className="flex items-center gap-2.5 text-xl font-bold tracking-tight">
@@ -82,6 +83,14 @@ export function CheckoutContacts({
             </div>
           );
         })}
+        <CheckoutComment
+          locale={locale}
+          draft={draft}
+          fieldErrors={fieldErrors}
+          disabled={disabled}
+          onDraftChange={onDraftChange}
+          onFieldBlur={onFieldBlur}
+        />
       </div>
     </div>
   );

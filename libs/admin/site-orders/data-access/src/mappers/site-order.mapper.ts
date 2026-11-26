@@ -38,6 +38,7 @@ export function mapSiteOrderDetail(response: unknown): SiteOrderDetail {
     telegramSentAtUtc: parsed.telegramSentAtUtc,
     telegramLastAttemptAtUtc: parsed.telegramLastAttemptAtUtc,
     telegramLastError: parsed.telegramLastError,
+    comment: parsed.comment,
     items: parsed.items.map(({ productId, title, unitPrice, quantity, amount }) => ({
       productId,
       title,

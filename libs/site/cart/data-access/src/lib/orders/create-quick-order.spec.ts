@@ -46,7 +46,27 @@ describe('createQuickOrder', () => {
     };
 
     expect(await createQuickOrder(input)).toEqual({ kind: 'created', orderId });
-    expect(transport).toHaveBeenCalledExactlyOnceWith(command);
+    expect(transport).toHaveBeenCalledExactlyOnceWith({ ...command, comment: null });
+  });
+
+  it('sends the buyer comment, or null when there is none', async () => {
+    transport.mockResolvedValue({ kind: 'response', status: 200, body: { orderId } });
+
+    await createQuickOrder({ ...command, comment: 'Дзвоніть після 14:00' });
+    expect(transport).toHaveBeenCalledExactlyOnceWith({
+      ...command,
+      comment: 'Дзвоніть після 14:00',
+    });
+  });
+
+  it('maps a server comment error to the comment field', async () => {
+    expect(
+      await response(400, [{ identifier: 'Comment', errorMessage: 'Коментар надто довгий' }]),
+    ).toEqual({
+      kind: 'validation',
+      fieldErrors: { comment: ['Коментар надто довгий'] },
+      messages: [],
+    });
   });
 
   it('forwards the attempt key as the idempotency key, never in the order body', async () => {
@@ -57,7 +77,10 @@ describe('createQuickOrder', () => {
       kind: 'created',
       orderId,
     });
-    expect(transport).toHaveBeenCalledExactlyOnceWith(command, { idempotencyKey: requestKey });
+    expect(transport).toHaveBeenCalledExactlyOnceWith(
+      { ...command, comment: null },
+      { idempotencyKey: requestKey },
+    );
   });
 
   it('shows the detail of a repeated order with other data as a conflict', async () => {
