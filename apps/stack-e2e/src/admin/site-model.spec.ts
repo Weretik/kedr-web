@@ -26,6 +26,18 @@ test('a site model is created from a product without one', async ({ page }) => {
 
   await page.getByLabel('Назва моделі').fill('Кноб E2E');
   await page.getByRole('button', { name: 'Створити модель' }).click();
+  const started = Date.now();
+  for (let i = 0; i < 40; i += 1) {
+    const state = await page.evaluate(() => ({
+      url: location.pathname + location.search,
+      notice: document.body.innerText.includes('Модель створено'),
+      snackbars: document.querySelectorAll('.MuiSnackbar-root').length,
+      loaders: document.querySelectorAll('[role="status"]').length,
+      heading: document.querySelector('h1')?.textContent,
+    }));
+    console.log('[diag] t', Date.now() - started, JSON.stringify(state));
+    await page.waitForTimeout(150);
+  }
 
   try {
     await expect(page.getByText('Модель створено')).toBeVisible();
