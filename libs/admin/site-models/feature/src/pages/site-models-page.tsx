@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@admin/shared/ui';
+import { AdminPageHeader, NoticeSnackbar } from '@admin/shared/ui';
 import { SiteModelsDataGrid } from '@admin/site-models/ui';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { Button, Card, Stack } from '@mui/material';
@@ -7,13 +7,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { SiteModelProductsRow } from '../components/model-pane/site-model-products-row';
 import { useSiteModelPanels } from '../components/panels/site-model-panels-context';
+import { ProductAttributesPanel } from '../components/product-pane/product-attributes-panel';
 import { useSiteModelsList } from '../hooks/lists/use-site-models-list';
 
+import type { EditedSiteProduct } from '../components/product-pane/product-attributes-panel';
 import type { SiteModelListItem } from '@admin/site-models/model';
 
 /**
  * «Моделі»: every site model in a server-paged grid, with search and filters in the address (spec 001 R-002); an arrow
- * opens a model's products under its row (R-002a). Managers
+ * opens a model's products under its row, where their switcher values are fixed (R-002a, R-002b). Managers
  * and Admins edit models alike, so the pencil is always there.
  */
 export function SiteModelsPage() {
@@ -38,8 +40,12 @@ export function SiteModelsPage() {
       }),
     [],
   );
+  const [edited, setEdited] = useState<EditedSiteProduct>();
+  const [notice, setNotice] = useState<string | null>(null);
   const renderProducts = useCallback(
-    (modelId: number) => <SiteModelProductsRow modelId={modelId} />,
+    (modelId: number) => (
+      <SiteModelProductsRow modelId={modelId} onEditAttributes={setEdited} onNotice={setNotice} />
+    ),
     [],
   );
 
@@ -88,6 +94,8 @@ export function SiteModelsPage() {
           search={list.state.search}
         />
       </Card>
+      <ProductAttributesPanel onClose={() => setEdited(undefined)} product={edited} />
+      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
     </Stack>
   );
 }
