@@ -67,7 +67,7 @@
     },
     {
       "claim": "Kharkiv location and confirmed contact details.",
-      "sources": ["libs/site/core/config/src/lib/company.ts"]
+      "sources": ["libs/site/core/config/src/lib/company/company.ts"]
     },
     {
       "claim": "Help selecting hardware by door type and technical parameters.",

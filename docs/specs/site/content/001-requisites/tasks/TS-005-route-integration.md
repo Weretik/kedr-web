@@ -3,7 +3,7 @@
 - **Status:** verified 2026-11-03; server integration + source/type wiring.
 - **Covers:** SC-001…SC-003, SC-011, SC-013, SC-014, SC-016.
 - **Depends on:** EN-001, TS-001, TS-002, TS-003, TS-004.
-- **Точные пути:** `libs/site/core/config/src/lib/company-requisites.ts`; `libs/site/core/config/src/index.ts`; `libs/site/content/feature/src/lib/requisites-page.tsx` и `requisites-page.spec.tsx` в том же lib; `libs/site/content/feature/src/index.ts`; `apps/site/src/app/[locale]/(content)/requisites/page.tsx`.
+- **Точные пути:** `libs/site/core/config/src/lib/company/company-requisites.ts`; `libs/site/core/config/src/index.ts`; `libs/site/content/feature/src/lib/requisites-page.tsx` и `requisites-page.spec.tsx` в том же lib; `libs/site/content/feature/src/index.ts`; `apps/site/src/app/[locale]/(content)/requisites/page.tsx`.
 - **Test level:** server integration; source/type integration route.
 - **Baseline:** [Next.js contract](../design/nextjs.md), COMPANY и существующий contacts route.
 

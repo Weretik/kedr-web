@@ -1,6 +1,6 @@
 import { getCatalogTree } from '@site/catalog/data-access';
 import { categoryPath } from '@site/catalog/model';
-import { buildBreadcrumbListJsonLd } from '@site/catalog/seo';
+import { buildBreadcrumbListJsonLd, buildFaqPageJsonLd } from '@site/catalog/seo';
 import { Breadcrumbs, CategoryContent, CategoryHeader } from '@site/catalog/ui';
 import { localizedPath } from '@site/core/i18n';
 import { JsonLd } from '@site/core/seo';
@@ -8,7 +8,12 @@ import { Suspense } from 'react';
 
 import { categoryChips } from './category-chips';
 import { categoryCrumbs } from './category-crumbs';
-import { loadBaseListing, loadCategoryOrRespond, redirectToLanding } from './category-loading';
+import {
+  loadBaseListing,
+  loadCategoryOrRespond,
+  redirectToLanding,
+  respondPastLastPage,
+} from './category-loading';
 import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 
@@ -39,8 +44,10 @@ export async function CategoryPage({
   ]);
   const base = await loadBaseListing(locale, category);
   await redirectToLanding(locale, category, base, searchParams);
+  await respondPastLastPage(locale, category, searchParams);
   const crumbs = categoryCrumbs(locale, category.breadcrumbs);
   const path = localizedPath(locale, categoryPath(category.slug));
+  const faq = category.content ? buildFaqPageJsonLd(category.content.faq) : null;
 
   return (
     <div className="grid gap-6">
@@ -65,7 +72,9 @@ export async function CategoryPage({
         />
       </Suspense>
       {category.content && <CategoryContent locale={locale} content={category.content} />}
-      <JsonLd data={buildBreadcrumbListJsonLd(crumbs)} />
+      <JsonLd
+        data={faq ? [buildBreadcrumbListJsonLd(crumbs), faq] : buildBreadcrumbListJsonLd(crumbs)}
+      />
     </div>
   );
 }

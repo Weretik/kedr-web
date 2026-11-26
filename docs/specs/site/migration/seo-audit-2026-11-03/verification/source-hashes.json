@@ -23,7 +23,7 @@
       "sha256": "2c6ca3eae1ef98fa1288752396f7ca101ab04533be082ccf4f005dc481e462a0"
     },
     {
-      "path": "libs/site/core/config/src/lib/site-config.ts",
+      "path": "libs/site/core/config/src/lib/site/site-config.ts",
       "sha256": "4bad448d4c4099e2705c8db1d6853ec5b66d4866b23a48d7328ae438dfd66120"
     },
     {

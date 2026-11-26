@@ -1,4 +1,4 @@
-import { siteConfig } from '@site/core/config';
+import { COMPANY, siteConfig } from '@site/core/config';
 
 import { buildOffer } from './offer-terms';
 import { canonicalProductUrl } from '../urls/product-seo-urls';
@@ -19,6 +19,7 @@ export function buildProductJsonLd(
     name: input.name,
     sku: input.sku,
     url,
+    brand: { '@type': 'Brand', name: COMPANY.name },
     // Only a text written for the site (model «Вітрина сайту»); the generated meta text is not a description.
     ...(input.description ? { description: input.description } : {}),
     ...(input.images.length ? { image: [...input.images] } : {}),

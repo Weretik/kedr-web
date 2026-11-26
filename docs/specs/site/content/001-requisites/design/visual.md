@@ -38,7 +38,7 @@
 ## Фактические данные и ограничения
 
 Источник реквизитов: старый requisites.translation.ts.
-Источник актуальных контактов: [COMPANY](../../../../../../libs/site/core/config/src/lib/company.ts).
+Источник актуальных контактов: [COMPANY](../../../../../../libs/site/core/config/src/lib/company/company.ts).
 Условия согласования платежа: [действующий словарь доставки и оплаты](../../../../../../libs/site/content/ui/src/lib/i18n/delivery-payment-dictionary.ts).
 Различение администрации и продавца: старая публичная оферта.
 

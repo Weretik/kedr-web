@@ -35,6 +35,40 @@ describe('buildCategoryMetadata', () => {
     expect(metadata.robots).toEqual({ index: true, follow: true });
   });
 
+  it('drops the selling tail and the brand of a long name, so the title stays within 60', () => {
+    const long = { ...category, name: 'Механізми для розсувних дверей прихованого монтажу' };
+    const metadata = buildCategoryMetadata(
+      { locale: 'uk', category: long, query: DEFAULT_LISTING_QUERY },
+      production,
+    );
+
+    expect(metadata.title).toEqual({
+      absolute: 'Механізми для розсувних дверей прихованого монтажу',
+    });
+  });
+
+  it('adds the brand once to an admin title that already carries it', () => {
+    const metadata = buildCategoryMetadata(
+      {
+        locale: 'uk',
+        category: {
+          ...category,
+          content: {
+            seoTitle: 'Ручки для дверей | ClassKedr',
+            metaDescription: null,
+            h1: null,
+            bodyHtml: null,
+            faq: [],
+          },
+        },
+        query: DEFAULT_LISTING_QUERY,
+      },
+      production,
+    );
+
+    expect(metadata.title).toBe('Ручки для дверей');
+  });
+
   it('keeps page N indexable with its own canonical and title', () => {
     const metadata = buildCategoryMetadata(
       { locale: 'ru', category, query: { ...DEFAULT_LISTING_QUERY, page: 3 } },

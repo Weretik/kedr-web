@@ -29,7 +29,7 @@
   ],
   "contentSources": [
     "E:/RiderProjects/kedr-web/apps/storefront/src/app/localization/translations/privacy-policy.translation.ts",
-    "E:/RiderProjects/kedr-web/libs/site/core/config/src/lib/company.ts"
+    "E:/RiderProjects/kedr-web/libs/site/core/config/src/lib/company/company.ts"
   ],
   "designSources": [
     "E:/RiderProjects/kedr-web/docs/standards/site/design-system.md",

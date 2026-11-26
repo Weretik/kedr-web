@@ -2,10 +2,10 @@
 
 ## Источники
 
-- Runtime-источник после подтверждения владельцем: [COMPANY_REQUISITES](../../../../../libs/site/core/config/src/lib/company-requisites.ts).
+- Runtime-источник после подтверждения владельцем: [COMPANY_REQUISITES](../../../../../libs/site/core/config/src/lib/company/company-requisites.ts).
 - Snapshot старых реквизитов: requisites.translation.ts.
 - Назначение данных и различие администрации/продавца: public-offer.translation.ts.
-- Актуальные контакты: [company.ts](../../../../../libs/site/core/config/src/lib/company.ts).
+- Актуальные контакты: [company.ts](../../../../../libs/site/core/config/src/lib/company/company.ts).
 - Согласование платежа: [delivery-payment-dictionary.ts](../../../../../libs/site/content/ui/src/lib/i18n/delivery-payment-dictionary.ts).
 
 Legacy-файл служит evidence происхождения для EN-001. Production Next.js не импортирует Angular-код и его translation package.

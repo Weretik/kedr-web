@@ -1,5 +1,9 @@
 import { JsonLd } from '@site/core/seo';
-import { buildProductBreadcrumbJsonLd, buildProductJsonLd } from '@site/product/seo';
+import {
+  ProductOpenGraphType,
+  buildProductBreadcrumbJsonLd,
+  buildProductJsonLd,
+} from '@site/product/seo';
 import { ProductDetailView } from '@site/product/ui';
 import { getCompanyContacts } from '@site/shared/company';
 
@@ -51,6 +55,7 @@ export async function ProductPage({
         purchaseAction={purchaseAction}
         stickyPurchaseAction={stickyPurchaseAction}
       />
+      <ProductOpenGraphType />
       <JsonLd data={[buildProductJsonLd(seo), buildProductBreadcrumbJsonLd(seo)]} />
     </>
   );
