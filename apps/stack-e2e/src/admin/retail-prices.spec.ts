@@ -1,9 +1,10 @@
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 import { expect, test } from '@playwright/test';
 
 // The same price as the fixture, so the site checks still see 350 грн whatever runs first.
-const priceFile = fileURLToPath(new URL('../../fixtures/retail-prices.xlsx', import.meta.url));
+// Playwright loads specs as CommonJS, so `import.meta` is not available here.
+const priceFile = join(__dirname, '../../fixtures/retail-prices.xlsx');
 
 test('retail prices are loaded from a file and given back to 1C', async ({ page }) => {
   await page.goto('/catalog');
