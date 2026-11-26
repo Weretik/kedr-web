@@ -21,6 +21,7 @@ import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
@@ -30,6 +31,8 @@ import type { ReactNode } from 'react';
 export interface NavigationItem {
   /** `admin`: only the Admin role; `userManagement`: whoever may manage users. Omitted: everyone. */
   access?: 'admin' | 'userManagement';
+  /** Paths inside `to` that belong to another item, so this one is not highlighted there. */
+  activeExcept?: string[];
   icon: ReactNode;
   label: string;
   to: string;
@@ -60,7 +63,13 @@ export const navigationGroups: NavigationGroup[] = [
     id: 'sales',
     label: 'Продаж',
     items: [
-      { icon: <ReceiptLongOutlinedIcon />, label: 'Замовлення', to: '/orders' },
+      { icon: <ShoppingCartOutlinedIcon />, label: 'Замовлення', to: '/orders/new' },
+      {
+        activeExcept: ['/orders/new'],
+        icon: <ReceiptLongOutlinedIcon />,
+        label: 'Історія замовлень',
+        to: '/orders',
+      },
       { icon: <AddShoppingCartOutlinedIcon />, label: 'Замовлення з сайту', to: '/site-orders' },
       { icon: <PeopleOutlinedIcon />, label: 'Клієнти', to: '/customers' },
     ],
@@ -130,5 +139,9 @@ export const navigationGroups: NavigationGroup[] = [
   },
 ];
 
-export const isItemActive = (pathname: string, to: string) =>
+const matchesPath = (pathname: string, to: string) =>
   pathname === to || pathname.startsWith(`${to}/`);
+
+export const isItemActive = (pathname: string, item: Pick<NavigationItem, 'activeExcept' | 'to'>) =>
+  matchesPath(pathname, item.to) &&
+  !(item.activeExcept ?? []).some((except) => matchesPath(pathname, except));

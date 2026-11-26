@@ -54,6 +54,26 @@ describe('AdminNavigation by role', () => {
     expect(screen.queryByRole('link', { name: 'Звіт роботи' })).toBeNull();
   });
 
+  it('opens the current order from «Замовлення» and the list from «Історія замовлень»', () => {
+    renderNavigation(false, '/orders/new');
+
+    const current = screen.getByRole('link', { name: 'Замовлення' });
+    const history = screen.getByRole('link', { name: 'Історія замовлень' });
+    expect(current.getAttribute('href')).toBe('/orders/new');
+    expect(history.getAttribute('href')).toBe('/orders');
+    expect(current.getAttribute('aria-current')).toBe('page');
+    expect(history.getAttribute('aria-current')).toBeNull();
+  });
+
+  it('highlights «Історія замовлень» on the list and on an order', () => {
+    renderNavigation(false, '/orders/42');
+
+    expect(
+      screen.getByRole('link', { name: 'Історія замовлень' }).getAttribute('aria-current'),
+    ).toBe('page');
+    expect(screen.getByRole('link', { name: 'Замовлення' }).getAttribute('aria-current')).toBeNull();
+  });
+
   it('hides the users section from a manager', () => {
     renderNavigation(false, '/orders');
 

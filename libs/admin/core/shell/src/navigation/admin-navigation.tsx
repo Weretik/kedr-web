@@ -53,7 +53,7 @@ export function AdminNavigation({
     .filter((group) => group.items.length > 0);
 
   const activeGroupId = groups.find((group) =>
-    group.items.some((item) => isItemActive(pathname, item.to)),
+    group.items.some((item) => isItemActive(pathname, item)),
   )?.id;
   const [openGroupIds, setOpenGroupIds] = useState<string[]>(activeGroupId ? [activeGroupId] : []);
 
