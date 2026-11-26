@@ -1,7 +1,7 @@
 # Hosting — site
 
 **Checked:** 2026-11-05
-**Sources:** `apps/site/open-next.config.ts`, `apps/site/wrangler.jsonc`, `apps/site/project.json`, `libs/site/core/config/src/lib/site-config.ts`
+**Sources:** `apps/site/open-next.config.ts`, `apps/site/wrangler.jsonc`, `apps/site/project.json`, `libs/site/core/config/src/lib/site/site-config.ts`
 
 The public site runs on Cloudflare Workers (Workers Paid plan: the free plan's 10 ms CPU per request is below one page render) through the OpenNext adapter (`@opennextjs/cloudflare`, owner decision 2026-10-30). It is a separate Worker, `kedr-site`. The Angular storefront keeps its Cloudflare Pages project `kedr-web` until the domain cutover, and the API proxy Worker on `api.classkedr.com.ua` is not touched.
 

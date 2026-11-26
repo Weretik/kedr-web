@@ -11,6 +11,8 @@ export type Article = {
   /** Absolute cover URL, or `null` when the article has no cover. */
   image: string | null;
   publishedAt: string;
+  /** Last edit, for `lastmod` in the sitemap. */
+  updatedAt: string;
 };
 
 export const ARTICLE_PAGE_SIZES = [10, 20, 50] as const;

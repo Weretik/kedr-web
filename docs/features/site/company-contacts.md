@@ -3,7 +3,7 @@
 **Status:** implemented. Source: `GET /api/content/contacts` ([contract](../../contracts/openapi/openapi.json)), edited in the admin ([admin company contacts](../admin/company-contacts.md)).
 
 - [`getCompanyContacts()`](../../../libs/site/shared/company/src/lib/contacts/company-contacts-loader.ts) reads the record with `'use cache'`, tags `content` and `content:contacts`, and a ten-minute life. It derives the display phone `(0XX) YYY-ZZ-ZZ` and the Viber chat link.
-- When the API cannot be reached it returns `FALLBACK_COMPANY_CONTACTS` from [core/config](../../../libs/site/core/config/src/lib/company-contacts.ts) for a minute and retries, so the phone never disappears and builds do not fail. Keep the fallback equal to the saved record.
+- When the API cannot be reached it returns `FALLBACK_COMPANY_CONTACTS` from [core/config](../../../libs/site/core/config/src/lib/company/company-contacts.ts) for a minute and retries, so the phone never disappears and builds do not fail. Keep the fallback equal to the saved record.
 - The [layout](../../../apps/site/src/app/[locale]/layout.tsx) passes the contacts to `SiteShell` (header, mobile menu, footer, city line) and to Organization JSON-LD. Feature pages (home, product, checkout, contacts, wholesale, delivery, returns, offer, requisites, privacy) load them and pass a `phone` or `contacts` prop to their UI; UI components never import the loader.
 - The privacy policy §8.1 has `{email}` and `{phone}` placeholders that the model fills with links.
 - `COMPANY` keeps only the brand name and country.
@@ -24,7 +24,7 @@ flowchart LR
 ## Code structure
 
 ```text
-libs/site/core/config/src/lib/company-contacts.ts        # type, fallback, formatUaPhone, viberChatLink
+libs/site/core/config/src/lib/company/company-contacts.ts        # type, fallback, formatUaPhone, viberChatLink
 libs/site/shared/company/src/lib/contacts/
 ├── company-contacts-loader.ts                           # cached read with fallback
 ├── company-contacts.mapper.ts                           # API row → site model

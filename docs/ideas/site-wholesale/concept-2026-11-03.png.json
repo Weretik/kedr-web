@@ -51,7 +51,7 @@
     "docs/architecture/site/README.md",
     "docs/standards/site/design-system.md",
     "apps/site/src/app/global.css",
-    "libs/site/core/config/src/lib/company.ts",
+    "libs/site/core/config/src/lib/company/company.ts",
     "libs/site/core/shell/src/lib/navigation/site-navigation.ts",
     "libs/site/core/shell/src/lib/i18n/shell-dictionary.ts",
     "libs/site/content/ui/src/lib/contacts/contacts-wholesale.tsx"

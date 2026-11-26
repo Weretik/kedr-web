@@ -33,4 +33,14 @@ describe('applyPageSeo', () => {
     expect(result.description).toBe('Code description');
     expect(result.openGraph).toMatchObject({ description: 'Code description' });
   });
+
+  it('removes a brand the editor wrote, so the template adds it once', () => {
+    const result = applyPageSeo(metadata, {
+      title: 'Фурнітура оптом | ClassKedr',
+      description: null,
+    });
+
+    expect(result.title).toBe('Фурнітура оптом');
+    expect(result.openGraph).toMatchObject({ title: 'Фурнітура оптом' });
+  });
 });

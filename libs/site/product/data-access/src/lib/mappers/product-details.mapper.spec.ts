@@ -43,15 +43,13 @@ describe('mapProductDetails', () => {
     },
   );
 
-  it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])(
-    'does not advertise invalid stock %s',
-    (stock) => {
-      expect(mapProductDetails(detailsFixture({ stock }))).toMatchObject({
-        inStock: false,
-        price: 245.5,
-      });
-    },
-  );
+  it('takes availability from the catalog rule, not from any stock above zero', () => {
+    // Hardware with 2 in stock is not available in the catalog list, so the page does not say it is.
+    expect(mapProductDetails(detailsFixture({ stock: 2, inStock: false }))).toMatchObject({
+      inStock: false,
+      price: 245.5,
+    });
+  });
 
   it.each([0, -1, 1.5, Number.POSITIVE_INFINITY])(
     'omits an invalid informational pack %s',

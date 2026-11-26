@@ -5,6 +5,7 @@ import {
   landingHeading,
   landingPath,
 } from '@site/catalog/model';
+import { TITLE_MAX_LENGTH } from '@site/core/config';
 import { pluralize } from '@site/core/i18n';
 import { buildPageMetadata } from '@site/core/seo';
 
@@ -24,6 +25,10 @@ export type CategoryMetadataInput = {
   pastEnd?: boolean;
 };
 
+/** The selling tail («— купити оптом і в роздріб») only while the title stays within the length Google shows. */
+const defaultTitle = (full: string, short: string) =>
+  full.length <= TITLE_MAX_LENGTH ? full : short;
+
 const formatMinPrice = (price: number | null, locale: Locale) =>
   price === null ? null : Math.floor(price).toLocaleString(locale === 'uk' ? 'uk-UA' : 'ru-UA');
 
@@ -39,7 +44,10 @@ export function buildCategoryMetadata(input: CategoryMetadataInput, config?: Sit
   const suffix = page > 1 ? text.pageSuffix(page) : '';
 
   const subject = categorySubject(category);
-  const title = (category.content?.seoTitle ?? text.categoryTitle(subject)) + suffix;
+  const title =
+    category.content?.seoTitle != null
+      ? category.content.seoTitle + suffix
+      : defaultTitle(text.categoryTitle(subject) + suffix, subject + suffix);
   const description =
     category.content?.metaDescription ??
     text.categoryDescription(
@@ -82,7 +90,7 @@ export function buildLandingMetadata(input: LandingMetadataInput, config?: SiteC
       locale,
       path: landingPath(category.slug, landing.value),
       search: page > 1 ? `?page=${page}` : '',
-      title: text.categoryTitle(heading) + suffix,
+      title: defaultTitle(text.categoryTitle(heading) + suffix, heading + suffix),
       description: text.categoryDescription(
         heading,
         pluralize(locale, landing.count, text.models),

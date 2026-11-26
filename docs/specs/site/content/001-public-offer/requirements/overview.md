@@ -24,7 +24,7 @@ Contract editing, legal review, seller/date/bank details, privacy/requisites pag
 2. [Project design system](../../../../../standards/site/design-system.md) and current shell: tokens, type, breakpoints and shared frame.
 3. `apps/storefront/src/app/localization/translations/public-offer.translation.ts` and `libs/storefront/feature/about-us/src/lib/pages/public-offer/public-offer.html`: original body, ordering and the final note.
 4. [Frozen source baseline](../design/source-baseline.json): both original localized documents and source fingerprint for completeness checks.
-5. `libs/site/core/config/src/lib/company.ts`: actual phone/email; never infer them from the reference image.
+5. `libs/site/core/config/src/lib/company/company.ts`: actual phone/email; never infer them from the reference image.
 
 The concept contains source excerpts. Do not OCR or transcribe the image into production copy. Preserve source text even where it mentions Angular components; this is a literal clause, not permission to import Angular code. Header/footer are inherited from Site, including existing changes made outside this task.
 
