@@ -1,6 +1,6 @@
 import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
 import { siteModelText } from '@admin/site-models/model';
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import type { SiteModel, SiteModelLanguage } from '@admin/site-models/model';
 
@@ -11,11 +11,17 @@ const languages: { language: SiteModelLanguage; name: string }[] = [
 
 const orEmpty = (value: string) => value.trim() || 'Не заповнено';
 
-/** «SEO та опис» on the model page: what each language has, read-only; edited in the panel. */
+/** «SEO та опис» on the model page: the two languages side by side, read-only; edited in the panel. */
 export function SiteModelSeoSummaryCard({ model }: { model: SiteModel }) {
   return (
     <SectionCard title="SEO та опис">
-      <Stack spacing={2}>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 3,
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
+        }}
+      >
         {languages.map(({ language, name }) => {
           const text = siteModelText(model, language);
           return (
@@ -35,7 +41,7 @@ export function SiteModelSeoSummaryCard({ model }: { model: SiteModel }) {
             </Stack>
           );
         })}
-      </Stack>
+      </Box>
     </SectionCard>
   );
 }

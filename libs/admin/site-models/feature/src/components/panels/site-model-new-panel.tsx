@@ -8,18 +8,11 @@ interface SiteModelNewPanelProps {
   options: NewSiteModelOptions;
   open: boolean;
   onClose: () => void;
-  onCreated: (modelId: number) => void;
-  onNotice: (text: string) => void;
+  onCreated: (modelId: number, notice: string) => void;
 }
 
 /** «Нова модель» connected to the catalog and the create call (spec 001 R-005). */
-export function SiteModelNewPanel({
-  onClose,
-  onCreated,
-  onNotice,
-  open,
-  options,
-}: SiteModelNewPanelProps) {
-  const form = useNewSiteModel(options, onCreated, onNotice);
+export function SiteModelNewPanel({ onClose, onCreated, open, options }: SiteModelNewPanelProps) {
+  const form = useNewSiteModel(options, onCreated);
   return <NewSiteModelPanel {...form} onClose={onClose} open={open} />;
 }

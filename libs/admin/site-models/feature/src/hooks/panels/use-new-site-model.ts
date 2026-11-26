@@ -20,8 +20,8 @@ const noExclusions: readonly number[] = [];
 /** «Нова модель»: name, final site category, picked products and the create call (spec 001 R-005). */
 export function useNewSiteModel(
   options: NewSiteModelOptions,
-  onCreated: (modelId: number) => void,
-  onNotice: (text: string) => void,
+  /** Opens the new model with the notice to show there. */
+  onCreated: (modelId: number, notice: string) => void,
 ) {
   const categoriesQuery = useGetSiteModelCategoriesQuery();
   const categories = useMemo(
@@ -63,8 +63,7 @@ export function useNewSiteModel(
         name: name.trim(),
         productIds: picked.map((item) => item.productId),
       }).unwrap();
-      onNotice('Модель створено');
-      onCreated(model.id);
+      onCreated(model.id, 'Модель створено');
     } catch (cause) {
       setError(siteModelsErrorMessage(cause));
     }

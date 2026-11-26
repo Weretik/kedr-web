@@ -118,9 +118,23 @@ describe('SiteModelPage', () => {
     expect(screen.getByText('Не перевірена')).toBeTruthy();
     expect(screen.getByText('У 1С: Накладки')).toBeTruthy();
     expect(screen.getByText('Ручка Рим хром')).toBeTruthy();
-    expect(screen.getByText('Латунь')).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'SEO та опис' })).toBeTruthy();
     expect(screen.queryByRole('textbox')).toBeNull();
+  });
+
+  it('shows one section at a time: products first, then the chosen tab', () => {
+    renderPage();
+    expect(screen.getByRole('tab', { name: 'Товари (1)', selected: true })).toBeTruthy();
+    expect(screen.queryByText('Латунь')).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: 'Характеристики' }));
+    expect(screen.getByText('Латунь')).toBeTruthy();
+    expect(screen.queryByText('Ручка Рим хром')).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: 'SEO та опис' }));
+    expect(screen.getByRole('heading', { name: 'SEO та опис' })).toBeTruthy();
+  });
+
+  it('shows the notice it was opened with, as after «Створити модель»', () => {
+    renderPage({ notice: 'Модель створено' });
+    expect(screen.getByText('Модель створено')).toBeTruthy();
   });
 
   it('accepts a proposal with «Погодити»', async () => {
