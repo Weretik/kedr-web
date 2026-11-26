@@ -7,8 +7,9 @@ import { Alert, Button } from '@mui/material';
 
 import { CategoryContentSection } from './category-content-section';
 import { CategorySearchSection } from './category-search-section';
-import { useCategoryContentEditor } from '../hooks/use-category-content-editor';
-import { useCategorySlugChange } from '../hooks/use-category-slug-change';
+import { useCategoryContentEditor } from '../../hooks/editing/use-category-content-editor';
+import { useCategorySlugChange } from '../../hooks/editing/use-category-slug-change';
+import { CategoryPlacementSection } from '../placement/category-placement-section';
 
 const publicPathPrefix = '/uk/catalog/';
 
@@ -18,10 +19,18 @@ interface CategoryEditPanelProps {
   open: boolean;
   onClose: () => void;
   onNotice: (message: string) => void;
+  /** After a manual category is deleted (spec 002 R-004). */
+  onDeleted: (parentId: number | null) => void;
 }
 
-/** Everything an administrator edits in a category: its address, site names, search settings, and texts. */
-export function CategoryEditPanel({ categoryId, onClose, onNotice, open }: CategoryEditPanelProps) {
+/** Everything an administrator edits in a category: address, texts, site names, search, place, and deleting. */
+export function CategoryEditPanel({
+  categoryId,
+  onClose,
+  onDeleted,
+  onNotice,
+  open,
+}: CategoryEditPanelProps) {
   const id = categoryId ?? 0;
   const skip = categoryId === undefined;
   const categoryQuery = useGetAdminCategoryQuery(id, { skip });
@@ -64,6 +73,7 @@ export function CategoryEditPanel({ categoryId, onClose, onNotice, open }: Categ
             onRetry={() => contentQuery.refetch()}
           />
           <CategorySearchSection category={category} onNotice={onNotice} />
+          <CategoryPlacementSection category={category} onDeleted={onDeleted} onNotice={onNotice} />
         </>
       )}
     </AdminEditPanel>

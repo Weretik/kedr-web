@@ -4,7 +4,7 @@ import { PageLoader, SectionCard } from '@admin/shared/ui';
 import { Alert, Box, Button, Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
 
-import type { useCategoryContentEditor } from '../hooks/use-category-content-editor';
+import type { useCategoryContentEditor } from '../../hooks/editing/use-category-content-editor';
 import type { CategoryContentByLanguage } from '@admin/categories/data-access';
 import type { ContentLanguage } from '@admin/categories/model';
 

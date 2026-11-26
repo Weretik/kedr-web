@@ -6,12 +6,13 @@ import {
   CategoryTreeNav,
 } from '@admin/categories/ui';
 import { NoticeSnackbar } from '@admin/shared/ui';
-import { Box, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useRef, useState } from 'react';
 
-import { CategoryEditPanel } from './category-edit-panel';
-import { useCategorySiteVisibility } from '../hooks/use-category-site-visibility';
-import { useCategoryTreeView } from '../hooks/use-category-tree-view';
+import { CategorySiteModelsSection } from './category-site-models-section';
+import { useCategorySiteVisibility } from '../../hooks/tree/use-category-site-visibility';
+import { useCategoryTreeView } from '../../hooks/tree/use-category-tree-view';
+import { CategoryEditPanel } from '../panels/category-edit-panel';
 
 import type { AdminCategory } from '@admin/categories/model';
 
@@ -73,7 +74,7 @@ export function CategoryExplorer({
         selectedId={selected?.id}
         tree={view.tree}
       />
-      <Box ref={overviewRef} sx={{ minWidth: 0, scrollMarginTop: 88 }}>
+      <Stack ref={overviewRef} spacing={3} sx={{ minWidth: 0, scrollMarginTop: 88 }}>
         {selected ? (
           <CategoryOverviewCard
             ancestors={view.ancestors}
@@ -94,11 +95,18 @@ export function CategoryExplorer({
             Категорій ще немає: вони з’являться після обміну з 1С.
           </Typography>
         )}
-      </Box>
+        {selected && childCategoriesOf(categories, selected.id).length === 0 ? (
+          <CategorySiteModelsSection canEdit={canEdit} category={selected} onNotice={setNotice} />
+        ) : null}
+      </Stack>
       {canEdit ? (
         <CategoryEditPanel
           categoryId={selected?.id}
           onClose={() => setEditOpen(false)}
+          onDeleted={(parentId) => {
+            setEditOpen(false);
+            if (parentId !== null) view.select(parentId);
+          }}
           onNotice={setNotice}
           open={editOpen}
         />

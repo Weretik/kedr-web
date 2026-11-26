@@ -9,10 +9,10 @@ import { AdminDetailHeader, NoticeSnackbar, PageLoader, PublicAddressCard } from
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Alert, Box, Button, Stack } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { CategoryContentSection } from '../components/category-content-section';
-import { CategoryEditPanel } from '../components/category-edit-panel';
+import { CategoryContentSection } from '../components/panels/category-content-section';
+import { CategoryEditPanel } from '../components/panels/category-edit-panel';
 
 const publicPathPrefix = '/uk/catalog/';
 
@@ -20,6 +20,7 @@ const publicPathPrefix = '/uk/catalog/';
 export function CategoryDetailsPage({ canEdit }: { canEdit: boolean }) {
   const params = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
@@ -97,6 +98,9 @@ export function CategoryDetailsPage({ canEdit }: { canEdit: boolean }) {
             <CategoryEditPanel
               categoryId={category.id}
               onClose={() => setEditing(false)}
+              onDeleted={(parentId) =>
+                navigate(parentId === null ? '/categories' : `/categories?category=${parentId}`)
+              }
               onNotice={setNotice}
               open={editing}
             />

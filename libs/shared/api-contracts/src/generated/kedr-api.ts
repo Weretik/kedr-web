@@ -217,7 +217,11 @@ export interface paths {
         /** List categories for catalog administration */
         get: operations["getAdminCategories"];
         put?: never;
-        post?: never;
+        /**
+         * Create a category by hand
+         * @description Spec catalog/011 MC-01, MC-02. Under any active category without site models, or at the top without parentId. It takes the parent's «show on site» (unless isShownOnSite is sent) and «closed from search»; the 1C sync never deletes or moves it. The same Ukrainian name under the same parent answers 409.
+         */
+        post: operations["createAdminCategory"];
         delete?: never;
         options?: never;
         head?: never;
@@ -235,7 +239,11 @@ export interface paths {
         get: operations["getAdminCategoryById"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete an empty category made by hand
+         * @description Spec catalog/011 MC-04. Only a category made by hand (400 for a 1C one) and only without subcategories, site models, or products (409). It moves to «Видалені».
+         */
+        delete: operations["deleteAdminCategory"];
         options?: never;
         head?: never;
         patch?: never;
@@ -352,6 +360,66 @@ export interface paths {
          */
         put: operations["saveAdminCategoryContent"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/parent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put a category under another one
+         * @description Spec catalog/011 MC-03, MC-09. Any category, from 1C or made by hand, goes under an active category without site models, or to the top without parentId; its subcategories go with it. The 1C sync keeps the place. A move under itself or its subcategory answers 400. Repeating the same request is safe.
+         */
+        put: operations["moveAdminCategory"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Move a category up or down among its neighbours
+         * @description Spec catalog/011 MC-10: direction «up» or «down». The neighbours get the order by hand, and the 1C sync keeps it. At the edge nothing changes.
+         */
+        put: operations["reorderAdminCategory"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/site-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Put site models into a category
+         * @description Spec catalog/011 MC-07, spec 007 R-22. 1–200 models into a final category in one transaction; a proposed model is accepted first. A parent category answers 400, an unknown model 404. Repeating the same request is safe.
+         */
+        post: operations["addAdminCategorySiteModels"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3084,6 +3152,9 @@ export interface components {
         AcceptSiteModelsRequest: {
             ids?: number[];
         };
+        AddCategorySiteModelsRequest: {
+            modelIds: number[];
+        };
         AddGalleryPhotosRequest: {
             mediaFileIds: null | number[];
         };
@@ -3274,6 +3345,7 @@ export interface components {
             /** Format: int64 */
             shareImageMediaFileId: null | number;
             shareImageUrl: null | string;
+            isManual: boolean;
         };
         AdminCodeCategoryDto: {
             /** Format: int32 */
@@ -3907,6 +3979,13 @@ export interface components {
             /** Format: int32 */
             sortOrder: number;
         };
+        CreateCategoryRequest: {
+            nameUk: string;
+            nameRu: string;
+            /** Format: int32 */
+            parentId: null | number;
+            isShownOnSite: null | boolean;
+        };
         CreateOrderLineRequest: {
             productId: string;
             title: string;
@@ -4247,6 +4326,10 @@ export interface components {
             expiresIn: number;
             refreshToken: string;
         };
+        MoveCategoryRequest: {
+            /** Format: int32 */
+            parentId: null | number;
+        };
         MoveMediaFilesRequest: {
             fileIds: number[];
             /** Format: int64 */
@@ -4584,6 +4667,9 @@ export interface components {
         };
         RenameSiteModelRequest: {
             name?: string;
+        };
+        ReorderCategoryRequest: {
+            direction: string;
         };
         ReorderGalleryRequest: {
             ids: null | number[];
@@ -6013,6 +6099,66 @@ export interface operations {
             };
         };
     };
+    createAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     getAdminCategoryById: {
         parameters: {
             query?: never;
@@ -6044,6 +6190,62 @@ export interface operations {
             };
             /** @description Not Found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6350,6 +6552,163 @@ export interface operations {
             };
             /** @description Conflict */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    moveAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    reorderAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    addAdminCategorySiteModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddCategorySiteModelsRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

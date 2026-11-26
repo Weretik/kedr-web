@@ -1,15 +1,17 @@
 import { useGetAdminCategoriesQuery } from '@admin/categories/data-access';
 import { CategoriesDataGrid } from '@admin/categories/ui';
-import { AdminPageHeader } from '@admin/shared/ui';
+import { AdminPageHeader, NoticeSnackbar } from '@admin/shared/ui';
 import { Card, Stack, Tab, Tabs } from '@mui/material';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { CategoryExplorer } from '../components/category-explorer';
+import { CategoryExplorer } from '../components/explorer/category-explorer';
+import { NewCategoryFlow } from '../components/placement/new-category-flow';
 
 type CategoriesTab = 'active' | 'deleted';
 
 /**
- * Categories from 1C as a tree with the selected category beside it; the «Видалені» tab and editing
+ * Categories as a tree with the selected category beside it, and «Нова категорія» for editors; the «Видалені» tab and editing
  * exist for administrators only (R-002).
  */
 export function CategoriesPage({
@@ -23,10 +25,26 @@ export function CategoriesPage({
   const tab: CategoriesTab =
     canSeeDeleted && searchParams.get('tab') === 'deleted' ? 'deleted' : 'active';
   const query = useGetAdminCategoriesQuery({ deleted: tab === 'deleted' });
+  const [notice, setNotice] = useState<string | null>(null);
+  const selectedId = Number(searchParams.get('category')) || null;
 
   return (
     <Stack component="section" spacing={3}>
-      <AdminPageHeader title="Категорії" />
+      <AdminPageHeader
+        actions={
+          canEdit && tab === 'active' ? (
+            <NewCategoryFlow
+              categories={query.data ?? []}
+              onCreated={(categoryId) => {
+                setSearchParams({ category: String(categoryId) });
+                setNotice('Категорію створено.');
+              }}
+              selectedId={selectedId}
+            />
+          ) : undefined
+        }
+        title="Категорії"
+      />
       {canSeeDeleted ? (
         <Tabs
           aria-label="Режим списку категорій"
@@ -58,6 +76,7 @@ export function CategoriesPage({
           onRetry={() => query.refetch()}
         />
       )}
+      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
     </Stack>
   );
 }

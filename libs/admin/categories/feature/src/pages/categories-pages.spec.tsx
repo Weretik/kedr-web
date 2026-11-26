@@ -26,6 +26,20 @@ vi.mock('@admin/categories/data-access', () => ({
   useSetCategorySiteVisibilityMutation: () => [api.siteVisibility, { isLoading: false }],
   useSetCategorySiteNamesMutation: () => [vi.fn(), { isLoading: false }],
   useSetCategorySearchSettingsMutation: () => [vi.fn(), { isLoading: false }],
+  useCreateCategoryMutation: () => [vi.fn(), { isLoading: false }],
+  useMoveCategoryMutation: () => [vi.fn(), { isLoading: false }],
+  useReorderCategoryMutation: () => [vi.fn(), { isLoading: false }],
+  useDeleteCategoryMutation: () => [vi.fn(), { isLoading: false }],
+  useAddCategorySiteModelsMutation: () => [vi.fn(), { isLoading: false }],
+}));
+
+vi.mock('@admin/site-models/data-access', () => ({
+  useGetSiteModelsQuery: () => ({
+    data: { items: [] },
+    isLoading: false,
+    isError: false,
+    isFetching: false,
+  }),
 }));
 
 vi.mock('@admin/media/data-access', () => ({
@@ -51,6 +65,7 @@ const category: AdminCategory = {
   siteNameRu: null,
   isClosedFromSearch: false,
   sharePicture: null,
+  isManual: false,
 };
 
 const renderDetails = (canEdit: boolean) =>
@@ -241,6 +256,45 @@ describe('categories pages', () => {
 
     expect(screen.getByRole('dialog', { name: 'Редагування категорії' })).toBeTruthy();
     expect(api.one).toHaveBeenLastCalledWith(5, { skip: false });
+  });
+
+  it('gives editors «Нова категорія», «Розташування», «Видалити» of a manual one, and the models card', () => {
+    api.one.mockReturnValue({
+      data: { ...category, isManual: true },
+      isLoading: false,
+      isError: false,
+    });
+    render(
+      <MemoryRouter initialEntries={['/categories?category=5']}>
+        <CategoriesPage canEdit canSeeDeleted />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Моделі на сайті · 0')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Редагувати' }));
+    const panel = screen.getByRole('dialog', { name: 'Редагування категорії' });
+    expect(within(panel).getByText('Розташування')).toBeTruthy();
+    expect(within(panel).getByRole('button', { name: 'Видалити' })).toBeTruthy();
+  });
+
+  it('opens «Нова категорія» for editors', () => {
+    render(
+      <MemoryRouter initialEntries={['/categories?category=5']}>
+        <CategoriesPage canEdit canSeeDeleted />
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Нова категорія' }));
+    expect(screen.getByRole('dialog', { name: 'Нова категорія' })).toBeTruthy();
+  });
+
+  it('gives managers no «Нова категорія»', () => {
+    render(
+      <MemoryRouter initialEntries={['/categories?category=5']}>
+        <CategoriesPage canSeeDeleted={false} />
+      </MemoryRouter>,
+    );
+    expect(screen.queryByRole('button', { name: 'Нова категорія' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Додати моделі' })).toBeNull();
   });
 
   it('lets an administrator hide a category from the site after confirming', async () => {

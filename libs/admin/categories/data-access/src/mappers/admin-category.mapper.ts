@@ -26,6 +26,7 @@ export function mapAdminCategory(data: unknown): AdminCategory {
     siteNameUk: dto.siteNameUk?.trim() || null,
     siteNameRu: dto.siteNameRu?.trim() || null,
     isClosedFromSearch: dto.isClosedFromSearch ?? false,
+    isManual: dto.isManual ?? false,
     sharePicture:
       typeof dto.shareImageMediaFileId === 'number'
         ? { mediaFileId: dto.shareImageMediaFileId, url: dto.shareImageUrl ?? null }

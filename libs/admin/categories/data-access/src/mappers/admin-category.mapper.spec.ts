@@ -46,6 +46,8 @@ describe('admin category mapper', () => {
       sharePicture: { mediaFileId: 70, url: 'https://cdn.example/seo.webp' },
     });
     expect(mapAdminCategory(dto)).toMatchObject({ isClosedFromSearch: false, sharePicture: null });
+    expect(mapAdminCategory({ ...dto, isManual: true })).toMatchObject({ isManual: true });
+    expect(mapAdminCategory(dto)).toMatchObject({ isManual: false });
   });
 
   it('rejects a list with a category that has no slug', () => {
