@@ -3979,6 +3979,7 @@ export interface components {
             firstName: string;
             phone: string;
             lines: components["schemas"]["CreateOrderLineRequest"][];
+            comment?: null | string;
         };
         CreateProductGroupRequest: {
             /** Format: int32 */
@@ -4161,6 +4162,7 @@ export interface components {
             telegramLastAttemptAtUtc: null | string;
             telegramLastError: null | string;
             items: components["schemas"]["GetAdminQuickOrderItemResponse"][];
+            comment: null | string;
         };
         GetAdminQuickOrderItemResponse: {
             productId: string;

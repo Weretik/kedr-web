@@ -13426,6 +13426,9 @@
             "items": {
               "$ref": "#/components/schemas/CreateOrderLineRequest"
             }
+          },
+          "comment": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -13951,7 +13954,8 @@
           "telegramSentAtUtc",
           "telegramLastAttemptAtUtc",
           "telegramLastError",
-          "items"
+          "items",
+          "comment"
         ],
         "type": "object",
         "properties": {
@@ -13992,6 +13996,9 @@
             "items": {
               "$ref": "#/components/schemas/GetAdminQuickOrderItemResponse"
             }
+          },
+          "comment": {
+            "type": ["null", "string"]
           }
         }
       },
