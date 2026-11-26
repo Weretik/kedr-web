@@ -17,7 +17,7 @@ export interface SiteModelListItem {
   /** Names of the switchers (saved, or offered to a proposal). */
   axes: readonly string[];
   problems: readonly SiteModelProblem[];
-  /** 1C categories of its products that differ from the site category; shown as «У 1С: …». */
+  /** 1C categories of its products that differ from the site category; not shown in the admin. */
   oneCCategories: readonly string[];
 }
 
@@ -28,9 +28,4 @@ export interface SiteModelListQuery {
   search?: string;
   page: number;
   pageSize: number;
-}
-
-/** «У 1С: Ручки дверні, Накладки» under the site category; empty when 1C agrees. */
-export function oneCCategoriesNote(categories: readonly string[]): string {
-  return categories.length > 0 ? `У 1С: ${categories.join(', ')}` : '';
 }

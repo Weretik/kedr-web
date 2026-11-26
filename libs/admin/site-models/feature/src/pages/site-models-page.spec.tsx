@@ -120,7 +120,7 @@ describe('SiteModelsPage', () => {
   it('maps the models (SC-002)', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: 'Моделі' })).toBeTruthy();
-    expect(screen.getByText('У 1С: Накладки')).toBeTruthy();
+    expect(screen.queryByText(/У 1С/)).toBeNull();
     expect(screen.getByText('Не перевірена')).toBeTruthy();
     expect(screen.getByText('Немає фото')).toBeTruthy();
   });
