@@ -35,6 +35,7 @@ export const siteOrderDetailSchema = z.object({
   telegramSentAtUtc: instant.nullable(),
   telegramLastAttemptAtUtc: instant.nullable(),
   telegramLastError: z.string().nullable(),
+  comment: z.string().nullable().default(null),
   items: z.array(
     z.object({
       productId: z.string().max(64),
