@@ -9,7 +9,11 @@ import { Suspense } from 'react';
 
 import { categoryChips } from '../category/category-chips';
 import { categoryCrumbs } from '../category/category-crumbs';
-import { loadBaseListing, loadCategoryOrRespond } from '../category/category-loading';
+import {
+  loadBaseListing,
+  loadCategoryOrRespond,
+  respondPastLastPage,
+} from '../category/category-loading';
 import { ListingSkeleton } from '../listing/listing-skeleton';
 import { ProductListing } from '../listing/product-listing';
 
@@ -62,6 +66,7 @@ export async function CategoryValuePage({
     loadLandingOrRespond(locale, slug, value, searchParams),
     getCatalogTree(locale),
   ]);
+  await respondPastLastPage(locale, category, searchParams, landing);
   const dictionary = getCatalogDictionary(locale);
   const heading = landingHeading(categorySubject(category), landing);
   const path = localizedPath(locale, landingPath(category.slug, landing.value));

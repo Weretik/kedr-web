@@ -181,4 +181,33 @@ describe('CategoryPage', () => {
 
     expect(permanentRedirect).not.toHaveBeenCalled();
   });
+
+  it('answers 404 for a page past the last one instead of an empty 200 page', async () => {
+    getProductListPage.mockResolvedValueOnce(basePage).mockResolvedValueOnce({
+      ...basePage,
+      page: 99,
+      items: [],
+    });
+
+    await expect(
+      CategoryPage({ locale: 'uk', slug: 'ruchky', searchParams: Promise.resolve({ page: '99' }) }),
+    ).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
+  it('marks up the shown questions as FAQPage', async () => {
+    getCategory.mockResolvedValue({
+      kind: 'ok',
+      category: {
+        ...category,
+        content: { ...category.content, faq: [{ question: 'Як обрати?', answer: 'За дверима.' }] },
+      },
+    });
+    getProductListPage
+      .mockResolvedValueOnce(basePage)
+      .mockReturnValue(new Promise(() => undefined));
+
+    render(await CategoryPage({ locale: 'uk', slug: 'ruchky', searchParams: Promise.resolve({}) }));
+
+    expect(document.body.innerHTML).toContain('FAQPage');
+  });
 });

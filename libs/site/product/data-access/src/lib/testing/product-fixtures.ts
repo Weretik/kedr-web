@@ -17,7 +17,7 @@ export const detailsFixture = (overrides: Partial<ApiProductDetails> = {}): ApiP
   price: 245.5,
   photo: photoUrl,
   scheme: schemeUrl,
-  stock: 2,
+  stock: 3,
   inStock: true,
   categoryName: ' Ручки ',
   categorySlug: 'ruchky',

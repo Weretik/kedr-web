@@ -150,7 +150,7 @@
 
 ## Что уже сделано правильно
 
-1. **Индексация защищена окружением.** Локальные публичные страницы дают `noindex, nofollow`, `/robots.txt` — `User-Agent: * / Disallow: /`. Это ожидаемое состояние до переключения, а не SEO-дефект. Для production нужны одновременно `SITE_ENV=production` и `SITE_INDEXING=true` ([site-config.ts](E:/RiderProjects/kedr-web/libs/site/core/config/src/lib/site-config.ts), [robots-policy.ts](E:/RiderProjects/kedr-web/libs/site/core/seo/src/lib/metadata/robots-policy.ts)).
+1. **Индексация защищена окружением.** Локальные публичные страницы дают `noindex, nofollow`, `/robots.txt` — `User-Agent: * / Disallow: /`. Это ожидаемое состояние до переключения, а не SEO-дефект. Для production нужны одновременно `SITE_ENV=production` и `SITE_INDEXING=true` ([site-config.ts](E:/RiderProjects/kedr-web/libs/site/core/config/src/lib/site/site-config.ts), [robots-policy.ts](E:/RiderProjects/kedr-web/libs/site/core/seo/src/lib/metadata/robots-policy.ts)).
 2. **Canonical и языковые версии централизованы.** UA и RU ссылаются на себя, нет canonical RU→UA. В контрольных парах есть `uk-UA`, `ru-UA` и HTML `x-default` на UA; язык документа соответствует маршруту. Это согласуется с [Google localized versions](https://developers.google.com/search/docs/specialty/international/localized-versions).
 3. **Контент приходит с сервера.** H1, договор, статьи и товарные href находятся в HTTP-ответе. Browser DOM подтверждает раскрытие потокового содержимого. Поисковую информацию не надо получать только клиентским fetch после открытия страницы.
 4. **Пагинация имеет свой canonical.** Существующая вторая страница сохраняет `?page=2`; navigation — обычные href. Не требуются `rel=next/prev` ради Google.

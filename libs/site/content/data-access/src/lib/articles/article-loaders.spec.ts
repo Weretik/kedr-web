@@ -54,6 +54,7 @@ describe('article loaders', () => {
         bodyHtml: '',
         image: 'https://api.example.test/api/content/articles/4/cover?v=2',
         publishedAt: '2026-03-24',
+        updatedAt: '2026-11-04T00:00:00Z',
       },
       expect.objectContaining({ id: 5, image: null }),
       expect.objectContaining({ id: 6, image: 'https://images-kedr.cdn.express/articles/a.webp' }),

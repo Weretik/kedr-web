@@ -74,7 +74,7 @@
 - [Текущая shell](../../features/site/shell.md), [экран возвратов](../../features/site/returns-exchanges.md).
 - Существующая функция «Регионы», [план миграции](../../specs/site/migration/README.md).
 - [Список и адреса регионов](../../../libs/site/core/shell/src/lib/navigation/site-navigation.ts), [локализованные названия](../../../libs/site/core/shell/src/lib/i18n/shell-dictionary.ts).
-- [Контакты компании](../../../libs/site/core/config/src/lib/company.ts), [SiteFooter](../../../libs/site/core/shell/src/lib/footer/site-footer.tsx).
+- [Контакты компании](../../../libs/site/core/config/src/lib/company/company.ts), [SiteFooter](../../../libs/site/core/shell/src/lib/footer/site-footer.tsx).
 - Скриншот страницы возвратов из запроса пользователя — визуальный референс.
 
 ## Проверка и следующий шаг

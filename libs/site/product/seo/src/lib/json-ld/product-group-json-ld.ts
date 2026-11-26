@@ -1,4 +1,4 @@
-import { siteConfig } from '@site/core/config';
+import { COMPANY, siteConfig } from '@site/core/config';
 
 import { buildOffer } from './offer-terms';
 import { absoluteProductUrl, canonicalProductUrl } from '../urls/product-seo-urls';
@@ -30,6 +30,7 @@ export function buildProductGroupJsonLd(
     name: input.page.name,
     url,
     productGroupID: input.groupId,
+    brand: { '@type': 'Brand', name: COMPANY.name },
     ...(input.page.description ? { description: input.page.description } : {}),
     ...(input.page.images.length ? { image: [...input.page.images] } : {}),
     ...(input.variesBy.length ? { variesBy: input.variesBy.map((code) => VARIES_BY[code]) } : {}),

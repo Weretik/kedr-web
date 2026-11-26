@@ -10,7 +10,7 @@
 | Core/shared             | core/config и i18n: type:util; core/seo: type:core; shell: type:shell; shared/ui: type:ui | Все shared-scoped проекты и public aliases существуют                                                               |
 | Aliases / публичный API | tsconfig.base.json; src/index.ts каждой библиотеки                                        | Импорт через @site/content/* и @site/core/*; exports дополняются без потери соседних                                |
 | Constraints             | eslint.config.cjs; tools/architecture/project-boundary-rules.mjs:16–26                    | content/seo может импортировать только core/config, core/i18n, core/seo; dictionary из model туда не переносится    |
-| Данные компании         | core/config/src/lib/company.ts                                                            | Контакты уже есть; официальных реквизитов нет. Отдельный источник создаётся после EN-001                            |
+| Данные компании         | core/config/src/lib/company/company.ts                                                    | Контакты уже есть; официальных реквизитов нет. Отдельный источник создаётся после EN-001                            |
 | Server composition      | content/feature/src/lib/contacts-page.tsx и contacts route                                | Reuse архитектурного подхода; contacts-код не рефакторится                                                          |
 | Clipboard               | content/ui/src/lib/contacts/contacts-copy-phone-button.tsx                                | Сохраняем поведение; новый узкий leaf для произвольного payload без зависимости ui → shell                          |
 | Main и shell            | core/shell/src/lib/site-shell.tsx; locale layout                                          | Единственный main#content, skip-link, тема и locale у shell/layout; Organization у locale layout, WebSite у главной |
@@ -48,7 +48,7 @@ flowchart LR
 
 | Файл                                       | Фактическая роль                           | Решение                                                         |
 | ------------------------------------------ | ------------------------------------------ | --------------------------------------------------------------- |
-| core/config/src/lib/company.ts             | Общие публичные контакты                   | Оставить; банковские факты в отдельный company-requisites.ts    |
+| core/config/src/lib/company/company.ts     | Общие публичные контакты                   | Оставить; банковские факты в отдельный company-requisites.ts    |
 | core/config/src/index.ts                   | Public config API                          | Добавить export после EN-001; не смешивать с formatter          |
 | content/*/src/index.ts                     | Публичные точки входа существующих страниц | Дополнить, сохранить returns/contacts/articles и внешние правки |
 | content/feature/src/lib/content-sitemap.ts | Реестр locale-free descriptors             | Только добавить /requisites; не пересобирать от старой копии    |
@@ -62,7 +62,7 @@ flowchart LR
 
 | Точный путь                                                             | Статус                                 | Ответственность                                | Задача         |
 | ----------------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------- | -------------- |
-| libs/site/core/config/src/lib/company-requisites.ts                     | planned после EN-001                   | Подтверждённые официальные факты               | TS-005         |
+| libs/site/core/config/src/lib/company/company-requisites.ts             | planned после EN-001                   | Подтверждённые официальные факты               | TS-005         |
 | libs/site/core/config/src/index.ts                                      | existing, append                       | Экспорт COMPANY_REQUISITES                     | TS-005         |
 | libs/site/content/model/src/lib/requisites-types.ts                     | planned                                | Presentation contracts                         | TS-001         |
 | libs/site/content/model/src/lib/requisites-dictionary.ts                | planned                                | UK/RU интерфейсный copy                        | TS-001         |

@@ -38,6 +38,7 @@ const article = (id: number, slug: string, title: string): Article => ({
   bodyHtml: '<p>' + title + ' — повний текст.</p><h2>Підзаголовок</h2>',
   image: 'https://api.example.test/api/content/articles/' + id + '/cover?v=1',
   publishedAt: '2026-03-24',
+  updatedAt: '2026-03-25T08:00:00Z',
 });
 
 const ARTICLES = [
@@ -144,10 +145,11 @@ it('prerenders every published slug, or a placeholder that answers 404 when the 
   expect(getArticle).not.toHaveBeenCalled();
 });
 
-it('lists article pages for the sitemap by slug and fails when the API is down', async () => {
+it('lists article pages for the sitemap with their last edit and fails when the API is down', async () => {
+  const lastModified = new Date('2026-03-25T08:00:00Z');
   expect(await getArticleSitemapPages()).toEqual([
-    { path: '/articles/zamak-chy-aliuminii' },
-    { path: '/articles/postachannia-dlia-vyrobnykiv-dverei' },
+    { path: '/articles/zamak-chy-aliuminii', lastModified },
+    { path: '/articles/postachannia-dlia-vyrobnykiv-dverei', lastModified },
   ]);
   getArticles.mockResolvedValue(null);
   await expect(getArticleSitemapPages()).rejects.toThrow('unavailable');
