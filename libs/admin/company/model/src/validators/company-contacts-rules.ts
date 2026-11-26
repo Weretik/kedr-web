@@ -1,3 +1,4 @@
+import { validateCompanyStore } from './company-store-rules';
 import { companyContactsLimits } from '../entities/company-contacts';
 import { normalizeUaPhone } from '../forms/company-contacts-draft';
 
@@ -51,6 +52,7 @@ export function validateCompanyContactsDraft(
     mapUrl: link(draft.mapUrl, 'Вкажіть посилання на карту.'),
     cityUk: text(draft.cityUk, companyContactsLimits.city, 'Вкажіть місто.'),
     cityRu: text(draft.cityRu, companyContactsLimits.city, 'Вкажіть місто.'),
+    ...validateCompanyStore(draft),
   };
   return Object.values(errors).some(Boolean) ? errors : undefined;
 }

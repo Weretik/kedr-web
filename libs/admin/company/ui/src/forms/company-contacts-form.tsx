@@ -1,6 +1,7 @@
 import { SectionCard } from '@admin/shared/ui';
 import { Box, Stack } from '@mui/material';
 
+import { CompanyStoreFields } from './company-store-fields';
 import { DraftTextField } from './draft-text-field';
 import { FormSaveBar } from './form-save-bar';
 import { twoColumns } from './two-columns';
@@ -20,7 +21,7 @@ interface CompanyContactsFormProps {
   onSave: () => void;
 }
 
-/** Phones, email, messenger and map links, and the city in both languages, saved together. */
+/** Phones, email, messenger and map links, the city, and the shop address and hours, saved together. */
 export function CompanyContactsForm({
   dirty,
   draft,
@@ -106,6 +107,7 @@ export function CompanyContactsForm({
           />
         </Box>
       </SectionCard>
+      <CompanyStoreFields draft={draft} errors={errors} onChange={set} />
       <FormSaveBar dirty={dirty} onReset={onReset} saveError={saveError} saving={saving} />
     </Stack>
   );

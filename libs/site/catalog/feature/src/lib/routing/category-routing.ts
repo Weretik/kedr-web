@@ -1,4 +1,9 @@
-import { getCatalogTree, getCategory, getProductListPage } from '@site/catalog/data-access';
+import {
+  getCatalogCrawlTree,
+  getCatalogTree,
+  getCategory,
+  getProductListPage,
+} from '@site/catalog/data-access';
 import {
   CATALOG_PATH,
   DEFAULT_LISTING_QUERY,
@@ -6,6 +11,7 @@ import {
   findLanding,
   landingGroups,
   landingPath,
+  openCrawlNodes,
   parseListingQuery,
   withAttributeValue,
   withoutAttribute,
@@ -13,7 +19,7 @@ import {
 import { buildCategoryMetadata, buildLandingMetadata } from '@site/catalog/seo';
 import { DEFAULT_LOCALE } from '@site/core/i18n';
 
-import type { CatalogTreeNode, SearchParamsRecord } from '@site/catalog/model';
+import type { SearchParamsRecord } from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 import type { SitemapPage } from '@site/core/seo';
 import type { Metadata } from 'next';
@@ -79,9 +85,6 @@ export async function generateLandingMetadata(
   return buildLandingMetadata({ locale, category: result.category, query, landing, pastEnd });
 }
 
-const flatten = (nodes: readonly CatalogTreeNode[]): CatalogTreeNode[] =>
-  nodes.flatMap((node) => [node, ...flatten(node.children)]);
-
 /** Lists loaded at once for the sitemap, so a build or a crawl does not flood the API. */
 const SITEMAP_LIST_CONCURRENCY = 4;
 
@@ -112,20 +115,24 @@ async function landingSitemapPaths(slug: string): Promise<string[]> {
 }
 
 /**
- * Hub, every category, and the value pages of final categories for the sitemap; slugs are the same in both
- * languages. An unavailable tree or list fails the sitemap (5xx, crawlers retry) instead of publishing a short one.
+ * Hub, every category open to search with its change date, and the value pages of open final categories for the
+ * sitemap; slugs are the same in both languages. A category closed from search stays out with its subtree. An
+ * unavailable tree or list fails the sitemap (5xx, crawlers retry) instead of publishing a short one.
  */
 export async function getCatalogSitemapPages(): Promise<SitemapPage[]> {
-  const tree = await getCatalogTree(DEFAULT_LOCALE);
+  const tree = await getCatalogCrawlTree(DEFAULT_LOCALE);
   if (!tree) throw new Error('Catalog tree is unavailable for the sitemap');
-  const nodes = flatten(tree);
+  const nodes = openCrawlNodes(tree);
   const leaves = nodes.filter((node) => node.children.length === 0);
   const landings = await mapLimited(leaves, SITEMAP_LIST_CONCURRENCY, (node) =>
     landingSitemapPaths(node.slug),
   );
   return [
     { path: CATALOG_PATH },
-    ...nodes.map((node) => ({ path: categoryPath(node.slug) })),
+    ...nodes.map((node) => ({
+      path: categoryPath(node.slug),
+      ...(node.updatedAt ? { lastModified: new Date(node.updatedAt) } : {}),
+    })),
     ...landings.flat().map((path) => ({ path })),
   ];
 }

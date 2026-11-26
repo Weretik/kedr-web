@@ -116,6 +116,38 @@ export const adminCategoriesApi = baseApi.injectEndpoints({
       // Subcategories and parents change too, and the site lists follow the mark.
       invalidatesTags: (_result, error) => (error ? [] : ['Categories', 'SiteModels']),
     }),
+    setCategorySiteNames: build.mutation<
+      AdminCategory,
+      { id: number; nameUk: string | null; nameRu: string | null }
+    >({
+      queryFn: ({ id, nameRu, nameUk }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/categories/{id}/site-names', {
+            params: { path: { id } },
+            body: { nameUk, nameRu },
+            signal,
+          }),
+          mapAdminCategory,
+        ),
+      // Names show in the tree, the details, and «Моделі».
+      invalidatesTags: (_result, error) => (error ? [] : ['Categories', 'SiteModels']),
+    }),
+    setCategorySearchSettings: build.mutation<
+      AdminCategory,
+      { id: number; isClosedFromSearch: boolean; shareImageMediaFileId: number | null }
+    >({
+      queryFn: ({ id, isClosedFromSearch, shareImageMediaFileId }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/categories/{id}/search-settings', {
+            params: { path: { id } },
+            body: { isClosedFromSearch, shareImageMediaFileId },
+            signal,
+          }),
+          mapAdminCategory,
+        ),
+      // Closing reaches every subcategory.
+      invalidatesTags: (_result, error) => (error ? [] : ['Categories']),
+    }),
   }),
 });
 
@@ -125,5 +157,7 @@ export const {
   useGetAdminCategoryQuery,
   useGetCategoryContentQuery,
   useSaveCategoryContentMutation,
+  useSetCategorySearchSettingsMutation,
+  useSetCategorySiteNamesMutation,
   useSetCategorySiteVisibilityMutation,
 } = adminCategoriesApi;

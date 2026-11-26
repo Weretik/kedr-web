@@ -40,8 +40,20 @@ const article: Article = {
   updatedAt: '2026-11-04T10:00:00Z',
   updatedBy: 'manager@classkedr.com.ua',
   texts: {
-    uk: { title: 'Як обрати завіси', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
-    ru: { title: 'Как выбрать петли', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
+    uk: {
+      title: 'Як обрати завіси',
+      excerpt: 'Коротко.',
+      bodyHtml: '<p>Текст</p>',
+      seoTitle: '',
+      metaDescription: '',
+    },
+    ru: {
+      title: 'Как выбрать петли',
+      excerpt: 'Коротко.',
+      bodyHtml: '<p>Текст</p>',
+      seoTitle: '',
+      metaDescription: '',
+    },
   },
   version: 12,
 };

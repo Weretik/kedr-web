@@ -57,7 +57,10 @@ export function mapArticleSummaries(response: unknown): ArticleSummary[] {
 export function mapArticle(response: unknown): Article {
   const dto = adminArticleSchema.parse(response);
   const texts = Object.fromEntries(
-    dto.texts.map(({ language, ...text }) => [language, text]),
+    dto.texts.map(({ language, metaDescription, seoTitle, ...text }) => [
+      language,
+      { ...text, seoTitle: seoTitle ?? '', metaDescription: metaDescription ?? '' },
+    ]),
   ) as Record<ArticleLanguage, ArticleText>;
   return {
     id: dto.id,
@@ -89,6 +92,8 @@ export function toSaveArticleBody(draft: ArticleDraft): SaveArticleBody {
       title: draft.texts[language].title.trim(),
       excerpt: draft.texts[language].excerpt.trim(),
       bodyHtml: draft.texts[language].bodyHtml.trim(),
+      seoTitle: draft.texts[language].seoTitle.trim() || null,
+      metaDescription: draft.texts[language].metaDescription.trim() || null,
     })),
   };
 }

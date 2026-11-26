@@ -28,7 +28,11 @@ describe('product sitemap shard budgets', () => {
   it('accounts for UTF-8 XML bytes and alternate-link overhead, independently of URL count', () => {
     const entries: MetadataRoute.Sitemap = Array.from({ length: 12 }, (_, id) => {
       const url = 'https://example.test/uk/product/' + 'я'.repeat(150) + id;
-      return { url, alternates: { languages: { 'uk-UA': url, 'ru-UA': url + '-ru' } } };
+      return {
+        url,
+        ...(id % 2 ? { lastModified: '2026-11-26T10:00:00.000Z' } : {}),
+        alternates: { languages: { 'uk-UA': url, 'ru-UA': url + '-ru' } },
+      };
     });
     const budget = 4000;
     const shards = shardProductSitemapEntries(entries, { maxXmlBytes: budget });

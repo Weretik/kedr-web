@@ -5,12 +5,18 @@ import {
   getCategoryStaticParams,
 } from './category-routing';
 
-const { getCatalogTree, getCategory, getProductListPage } = vi.hoisted(() => ({
+const { getCatalogCrawlTree, getCatalogTree, getCategory, getProductListPage } = vi.hoisted(() => ({
+  getCatalogCrawlTree: vi.fn(),
   getCatalogTree: vi.fn(),
   getCategory: vi.fn(),
   getProductListPage: vi.fn(),
 }));
-vi.mock('@site/catalog/data-access', () => ({ getCatalogTree, getCategory, getProductListPage }));
+vi.mock('@site/catalog/data-access', () => ({
+  getCatalogCrawlTree,
+  getCatalogTree,
+  getCategory,
+  getProductListPage,
+}));
 
 const value = (slug: string, name: string, count: number) => ({
   slug,
@@ -49,6 +55,21 @@ const tree = [
   },
 ];
 
+const crawlNode = (slug: string, children: unknown[] = [], isClosedFromSearch = false) => ({
+  slug,
+  isClosedFromSearch,
+  updatedAt: null as string | null,
+  children,
+});
+
+const crawlTree = [
+  {
+    ...crawlNode('ruchky', [crawlNode('na-rozetsi')]),
+    updatedAt: '2026-11-26T10:00:00Z',
+  },
+  crawlNode('zavisy', [crawlNode('prykhovani')], true),
+];
+
 describe('category routing', () => {
   beforeEach(() => vi.clearAllMocks());
 
@@ -60,13 +81,13 @@ describe('category routing', () => {
     expect(await getCategoryStaticParams('uk')).toEqual([{ slug: '__placeholder__' }]);
   });
 
-  it('lists the hub, every category, and value pages of final categories in the sitemap', async () => {
-    getCatalogTree.mockResolvedValue(tree);
+  it('lists the hub, open categories with their dates, and value pages of open final categories', async () => {
+    getCatalogCrawlTree.mockResolvedValue(crawlTree);
     getProductListPage.mockResolvedValue(listPage([colorFilter]));
 
     expect(await getCatalogSitemapPages()).toEqual([
       { path: '/catalog' },
-      { path: '/catalog/ruchky' },
+      { path: '/catalog/ruchky', lastModified: new Date('2026-11-26T10:00:00Z') },
       { path: '/catalog/na-rozetsi' },
       { path: '/catalog/na-rozetsi/khrom' },
     ]);
@@ -75,13 +96,13 @@ describe('category routing', () => {
   });
 
   it('fails the sitemap when a list of a final category is unavailable', async () => {
-    getCatalogTree.mockResolvedValue(tree);
+    getCatalogCrawlTree.mockResolvedValue(crawlTree);
     getProductListPage.mockResolvedValue(null);
     await expect(getCatalogSitemapPages()).rejects.toThrow('unavailable for the sitemap');
   });
 
   it('fails the sitemap instead of dropping every category when the tree is unavailable', async () => {
-    getCatalogTree.mockResolvedValue(null);
+    getCatalogCrawlTree.mockResolvedValue(null);
     await expect(getCatalogSitemapPages()).rejects.toThrow('Catalog tree is unavailable');
   });
 

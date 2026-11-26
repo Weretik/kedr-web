@@ -47,7 +47,21 @@ vi.mock('@admin/site-models/data-access', () => ({
 }));
 
 vi.mock('@admin/media/data-access', () => ({
-  useGetMediaFilesQuery: () => ({ data: undefined, isError: false, isFetching: false }),
+  useMediaPicker: () => ({
+    open: false,
+    onOpen: vi.fn(),
+    onCancel: vi.fn(),
+    onConfirm: vi.fn(),
+    search: '',
+    onSearchChange: vi.fn(),
+    page: 1,
+    onPageChange: vi.fn(),
+    pageCount: 1,
+    files: [],
+    loading: false,
+    error: false,
+    onRetry: vi.fn(),
+  }),
 }));
 
 const attribute: CatalogAttribute = {

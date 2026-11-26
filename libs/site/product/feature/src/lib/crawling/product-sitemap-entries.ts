@@ -32,7 +32,21 @@ function normalizeIndex(items: readonly ProductIndexItem[], locale: Locale) {
   return bySku;
 }
 
-/** A language URL exists only when that locale's list confirms the same SKU and its current slug. */
+/**
+ * Models of categories closed from search stay out of the sitemap; `closed` holds the closed categories with
+ * everything under them.
+ */
+export function withoutClosedCategories(
+  items: readonly ProductIndexItem[],
+  closed: ReadonlySet<string>,
+): ProductIndexItem[] {
+  return items.filter((item) => !item.categorySlug || !closed.has(item.categorySlug));
+}
+
+/**
+ * A language URL exists only when that locale's list confirms the same SKU and its current slug; `lastmod` is the
+ * model's change date in that language when the API gives one.
+ */
 export function buildProductSitemapEntries(
   indexes: ProductLocaleIndexes,
   config: Pick<SiteConfig, 'siteUrl'> = siteConfig,
@@ -56,7 +70,13 @@ export function buildProductSitemapEntries(
     if (urls.uk) languages['x-default'] = urls.uk;
     for (const locale of LOCALES) {
       const url = urls[locale];
-      if (url) entries.push({ url, alternates: { languages: { ...languages } } });
+      const updatedAt = normalized[locale].get(sku)?.updatedAt;
+      if (url)
+        entries.push({
+          url,
+          ...(updatedAt ? { lastModified: updatedAt } : {}),
+          alternates: { languages: { ...languages } },
+        });
     }
   }
   return entries;

@@ -21,3 +21,9 @@ export async function loadAcceptedModel(locale: Locale, slug: string): Promise<S
   }
   return result.kind === 'ok' && result.model.isAccepted ? result.model : null;
 }
+
+/** A product page shown as a model of its own in a category closed from search: the page is `noindex`. */
+export async function isOwnModelClosedFromSearch(locale: Locale, slug: string): Promise<boolean> {
+  const result = await getSiteModel(locale, slug);
+  return result.kind === 'ok' && result.model.isClosedFromSearch;
+}

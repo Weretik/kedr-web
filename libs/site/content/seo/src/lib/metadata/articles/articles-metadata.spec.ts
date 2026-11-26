@@ -118,6 +118,18 @@ describe('article list metadata', () => {
 });
 
 describe('article detail metadata', () => {
+  it('prefers the admin SEO title and description', () => {
+    const metadata = buildArticleMetadata(
+      'uk',
+      { ...article, seoTitle: 'Цинк чи алюміній для ручки', metaDescription: 'Порівняння.' },
+      production,
+    );
+
+    expect(metadata.title).toBe('Цинк чи алюміній для ручки');
+    expect(metadata.description).toBe('Порівняння.');
+    expect(metadata.openGraph).toMatchObject({ title: 'Цинк чи алюміній для ручки' });
+  });
+
   it.each(['uk', 'ru'] as const)(
     'describes the %s article with its source fields and absolute Open Graph cover',
     (locale) => {

@@ -13,6 +13,8 @@ const node = (id: number, sortOrder: number, overrides: Partial<Node> = {}): Nod
   level: 0,
   children: [],
   productCount: 0,
+  isClosedFromSearch: false,
+  updatedAt: null,
   ...overrides,
 });
 

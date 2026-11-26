@@ -19,4 +19,8 @@ export type CategoryDetails = CatalogCategory & {
   minPrice: number | null;
   maxPrice: number | null;
   content: CategoryContent | null;
+  /** Closed from search in the admin, itself or through a parent: the pages are `noindex`. */
+  isClosedFromSearch: boolean;
+  /** The admin picture for link previews, or `null` for the site default. */
+  shareImageUrl: string | null;
 };

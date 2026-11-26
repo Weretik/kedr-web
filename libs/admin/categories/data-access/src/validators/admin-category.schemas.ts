@@ -18,6 +18,11 @@ export const adminCategorySchema = z.object({
   isShownOnSite: z.boolean().nullish(),
   productCount: z.number().nullish(),
   filledContentLanguages: z.array(z.string()).nullish(),
+  siteNameUk: z.string().nullish(),
+  siteNameRu: z.string().nullish(),
+  isClosedFromSearch: z.boolean().nullish(),
+  shareImageMediaFileId: z.number().nullish(),
+  shareImageUrl: z.string().nullish(),
 });
 
 /** Runtime shape of the site texts of a category in one language. */

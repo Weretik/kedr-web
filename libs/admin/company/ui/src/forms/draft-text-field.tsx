@@ -7,6 +7,8 @@ interface DraftTextFieldProps<Draft extends Record<string, string>> {
   draft: Draft;
   error?: string;
   inputMode?: 'tel' | 'email' | 'url' | 'text' | 'numeric';
+  /** A time of day in `HH:mm`; the browser shows its own time picker. */
+  time?: boolean;
   onChange: (patch: Partial<Draft>) => void;
 }
 
@@ -19,7 +21,15 @@ export function DraftTextField<Draft extends Record<string, string>>({
   inputMode = 'text',
   label,
   onChange,
+  time = false,
 }: DraftTextFieldProps<Draft>) {
+  const type = time
+    ? 'time'
+    : inputMode === 'email'
+      ? 'email'
+      : inputMode === 'url'
+        ? 'url'
+        : 'text';
   return (
     <TextField
       error={Boolean(error)}
@@ -28,8 +38,8 @@ export function DraftTextField<Draft extends Record<string, string>>({
       label={label}
       name={field}
       onChange={(event) => onChange({ [field]: event.target.value } as Partial<Draft>)}
-      slotProps={{ htmlInput: { inputMode } }}
-      type={inputMode === 'email' ? 'email' : inputMode === 'url' ? 'url' : 'text'}
+      slotProps={{ htmlInput: { inputMode }, inputLabel: time ? { shrink: true } : undefined }}
+      type={type}
       value={draft[field]}
     />
   );

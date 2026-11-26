@@ -24,6 +24,12 @@ vi.mock('@admin/categories/data-access', () => ({
   useSaveCategoryContentMutation: () => [api.save, { isLoading: false }],
   useChangeCategorySlugMutation: () => [api.changeSlug, { isLoading: false }],
   useSetCategorySiteVisibilityMutation: () => [api.siteVisibility, { isLoading: false }],
+  useSetCategorySiteNamesMutation: () => [vi.fn(), { isLoading: false }],
+  useSetCategorySearchSettingsMutation: () => [vi.fn(), { isLoading: false }],
+}));
+
+vi.mock('@admin/media/data-access', () => ({
+  useMediaPicker: () => ({ open: false, files: [], page: 1, pageCount: 1, search: '' }),
 }));
 
 const category: AdminCategory = {
@@ -41,6 +47,10 @@ const category: AdminCategory = {
   sourceName: 'Завіси (1С)',
   productCount: 12,
   filledLanguages: [],
+  siteNameUk: null,
+  siteNameRu: null,
+  isClosedFromSearch: false,
+  sharePicture: null,
 };
 
 const renderDetails = (canEdit: boolean) =>

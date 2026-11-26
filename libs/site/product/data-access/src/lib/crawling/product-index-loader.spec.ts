@@ -37,9 +37,9 @@ describe('product index and prerender candidates', () => {
     expect(await getProductIndex('uk')).toEqual({
       kind: 'ok',
       items: [
-        { sku: 'model-1', slug: 'model-1', name: 'Модель 1' },
-        { sku: 'model-2', slug: 'model-2', name: 'Модель 2' },
-        { sku: 'model-3', slug: 'model-3', name: 'Модель 3' },
+        { sku: 'model-1', slug: 'model-1', name: 'Модель 1', categorySlug: 'zavisy' },
+        { sku: 'model-2', slug: 'model-2', name: 'Модель 2', categorySlug: 'zavisy' },
+        { sku: 'model-3', slug: 'model-3', name: 'Модель 3', categorySlug: 'zavisy' },
       ],
     });
     expect(siteApiGet.mock.calls.map((call) => call[1].query)).toEqual([
@@ -52,13 +52,31 @@ describe('product index and prerender candidates', () => {
     expect(cacheLife).toHaveBeenCalledWith('hours');
   });
 
+  it('carries the model change date for lastmod when the API gives one', async () => {
+    const data = modelPageFixture([1]);
+    data.items[0]!.updatedAt = '2026-11-26T10:00:00Z';
+    siteApiGet.mockResolvedValue(ok(data));
+    expect(await getProductIndex('uk')).toEqual({
+      kind: 'ok',
+      items: [
+        {
+          sku: 'model-1',
+          slug: 'model-1',
+          name: 'Модель 1',
+          categorySlug: 'zavisy',
+          updatedAt: '2026-11-26T10:00:00Z',
+        },
+      ],
+    });
+  });
+
   it('filters empty identity and same-page duplicates without replacement products', async () => {
     const data = modelPageFixture([1, 1, 2]);
     data.items[2]!.slug = '../bad';
     siteApiGet.mockResolvedValue(ok(data));
     expect(await getProductIndex('uk')).toEqual({
       kind: 'ok',
-      items: [{ sku: 'model-1', slug: 'model-1', name: 'Модель 1' }],
+      items: [{ sku: 'model-1', slug: 'model-1', name: 'Модель 1', categorySlug: 'zavisy' }],
     });
   });
 
@@ -70,8 +88,8 @@ describe('product index and prerender candidates', () => {
     expect(await getProductIndex('uk')).toEqual({
       kind: 'ok',
       items: [
-        { sku: 'model-5', slug: 'model-5', name: 'Модель 5' },
-        { sku: 'model-6', slug: 'model-6', name: 'Модель 6' },
+        { sku: 'model-5', slug: 'model-5', name: 'Модель 5', categorySlug: 'zavisy' },
+        { sku: 'model-6', slug: 'model-6', name: 'Модель 6', categorySlug: 'zavisy' },
       ],
     });
     expect(siteApiGet.mock.calls.map((call) => call[1].query.page)).toEqual([1, 2, 1]);
@@ -84,7 +102,7 @@ describe('product index and prerender candidates', () => {
       .mockResolvedValueOnce(ok(modelPageFixture([7], { total: 1 })));
     expect(await getProductIndex('uk')).toEqual({
       kind: 'ok',
-      items: [{ sku: 'model-7', slug: 'model-7', name: 'Модель 7' }],
+      items: [{ sku: 'model-7', slug: 'model-7', name: 'Модель 7', categorySlug: 'zavisy' }],
     });
     expect(siteApiGet).toHaveBeenCalledTimes(3);
   });

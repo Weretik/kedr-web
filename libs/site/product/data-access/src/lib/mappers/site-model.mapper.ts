@@ -67,6 +67,7 @@ export function mapSiteModel(dto: ApiSiteModel): SiteModel | null {
     characteristics: dto.characteristics
       .map((item) => ({ name: item.name, values: item.values.filter((value) => value.trim()) }))
       .filter((item) => item.values.length > 0),
+    isClosedFromSearch: dto.isClosedFromSearch,
   };
 }
 

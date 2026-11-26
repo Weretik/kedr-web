@@ -32,15 +32,26 @@ const defaultTitle = (full: string, short: string) =>
 const formatMinPrice = (price: number | null, locale: Locale) =>
   price === null ? null : Math.floor(price).toLocaleString(locale === 'uk' ? 'uk-UA' : 'ru-UA');
 
+/** The admin share picture in place of the site default, with the page title as its text. */
+function withSharePicture(metadata: Metadata, category: CategoryDetails, title: string): Metadata {
+  if (!category.shareImageUrl || !metadata.openGraph) return metadata;
+  return {
+    ...metadata,
+    openGraph: { ...metadata.openGraph, images: [{ url: category.shareImageUrl, alt: title }] },
+  };
+}
+
 /**
  * Category metadata. Page 1 and `?page=N` are indexable with a self canonical; filters, sort, and view are
- * `noindex, follow` with the canonical of page 1. Admin SEO title and description replace the defaults.
+ * `noindex, follow` with the canonical of page 1. A category closed from search is `noindex, follow` on every
+ * page. Admin SEO title, description, and share picture replace the defaults.
  */
 export function buildCategoryMetadata(input: CategoryMetadataInput, config?: SiteConfig): Metadata {
   const { locale, category, query, pastEnd = false } = input;
   const text = CATALOG_SEO_TEXT[locale];
-  const indexable = isIndexableListing(query) && !pastEnd;
-  const page = indexable ? query.page : 1;
+  const listable = isIndexableListing(query) && !pastEnd;
+  const indexable = listable && !category.isClosedFromSearch;
+  const page = listable ? query.page : 1;
   const suffix = page > 1 ? text.pageSuffix(page) : '';
 
   const subject = categorySubject(category);
@@ -56,7 +67,7 @@ export function buildCategoryMetadata(input: CategoryMetadataInput, config?: Sit
       formatMinPrice(category.minPrice, locale),
     );
 
-  return buildPageMetadata(
+  const metadata = buildPageMetadata(
     {
       locale,
       path: categoryPath(category.slug),
@@ -67,6 +78,7 @@ export function buildCategoryMetadata(input: CategoryMetadataInput, config?: Sit
     },
     config,
   );
+  return withSharePicture(metadata, category, title);
 }
 
 export type LandingMetadataInput = CategoryMetadataInput & {
@@ -76,13 +88,15 @@ export type LandingMetadataInput = CategoryMetadataInput & {
 /**
  * A value page of a final category («Завіси хром», stage 7). Indexable with a self canonical when it has at least
  * two models and no other choice; any other filter, sort, or view is `noindex, follow` with the value page's
- * canonical. `query` holds only the choices beyond the value in the path.
+ * canonical, and so is every value page of a category closed from search. `query` holds only the choices beyond
+ * the value in the path.
  */
 export function buildLandingMetadata(input: LandingMetadataInput, config?: SiteConfig): Metadata {
   const { locale, category, query, landing, pastEnd = false } = input;
   const text = CATALOG_SEO_TEXT[locale];
-  const indexable = isIndexableListing(query) && !pastEnd && landing.count >= LANDING_MIN_MODELS;
-  const page = indexable ? query.page : 1;
+  const listable = isIndexableListing(query) && !pastEnd && landing.count >= LANDING_MIN_MODELS;
+  const indexable = listable && !category.isClosedFromSearch;
+  const page = listable ? query.page : 1;
   const suffix = page > 1 ? text.pageSuffix(page) : '';
   const heading = landingHeading(categorySubject(category), landing);
   return buildPageMetadata(

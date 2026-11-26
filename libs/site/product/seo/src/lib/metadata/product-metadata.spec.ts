@@ -56,6 +56,14 @@ describe('product metadata', () => {
     expect(metadata.twitter).toMatchObject({ card: 'summary' });
   });
 
+  it('marks a page of a category closed from search noindex, follow', () => {
+    expect(buildProductMetadata({ ...input, indexable: false }, production).robots).toEqual({
+      index: false,
+      follow: true,
+    });
+    expect(buildProductMetadata(input, production).robots).toEqual({ index: true, follow: true });
+  });
+
   it('keeps preview noindex even when a product is otherwise indexable', () => {
     expect(
       buildProductMetadata(input, createSiteConfig({ SITE_ENV: 'preview', SITE_INDEXING: 'true' }))
