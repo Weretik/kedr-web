@@ -73,4 +73,17 @@ describe('product metadata', () => {
       'Опис для пошуку',
     ]);
   });
+
+  it('leaves og:type to the page, which marks it as a product, not a website', () => {
+    expect(buildProductMetadata(input, production).openGraph).not.toHaveProperty('type');
+  });
+
+  it('writes no brand twice when the model SEO title already carries it', () => {
+    const metadata = buildProductMetadata(
+      { ...input, title: 'Завіси FLUSH | ClassKedr' },
+      production,
+    );
+    expect(metadata.title).toBe('Завіси FLUSH');
+    expect(metadata.openGraph).toMatchObject({ title: 'Завіси FLUSH' });
+  });
 });

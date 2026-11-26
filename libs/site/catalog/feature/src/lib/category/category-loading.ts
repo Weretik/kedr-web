@@ -10,6 +10,7 @@ import {
   listingHref,
   parseListingQuery,
   singleAttributeChoice,
+  withAttributeValue,
   withoutAttribute,
 } from '@site/catalog/model';
 import { localizedPath } from '@site/core/i18n';
@@ -17,7 +18,12 @@ import { notFound, permanentRedirect } from 'next/navigation';
 
 import { CATEGORY_PLACEHOLDER_SLUG } from '../routing/category-routing';
 
-import type { CategoryDetails, ProductListPage, SearchParamsRecord } from '@site/catalog/model';
+import type {
+  CategoryDetails,
+  ListingLanding,
+  ProductListPage,
+  SearchParamsRecord,
+} from '@site/catalog/model';
 import type { Locale } from '@site/core/i18n';
 
 function toQueryString(params: SearchParamsRecord): string {
@@ -88,4 +94,27 @@ export async function redirectToLanding(
     return;
   const path = localizedPath(locale, landingPath(category.slug, landing.value));
   permanentRedirect(listingHref(path, withoutAttribute(query, landing.attribute)));
+}
+
+/**
+ * `?page=N` past the last page answers 404 before anything streams, instead of an empty 200 page. On a value page
+ * the value is part of the list, as in its listing.
+ */
+export async function respondPastLastPage(
+  locale: Locale,
+  category: CategoryDetails,
+  searchParams: Promise<SearchParamsRecord>,
+  landing?: ListingLanding,
+) {
+  const parsed = parseListingQuery(await searchParams);
+  if (parsed.page <= 1) return;
+  const query = landing
+    ? withAttributeValue(
+        withoutAttribute(parsed, landing.attribute),
+        landing.attribute,
+        landing.value,
+      )
+    : parsed;
+  const page = await getProductListPage(locale, { categorySlug: category.slug }, query);
+  if (page && !page.items.length) notFound();
 }

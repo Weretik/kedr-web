@@ -31,4 +31,19 @@ describe('categorySubject', () => {
     const self = { id: 100, name: 'Врізні', breadcrumbs: [{ id: 100, slug: 'v', name: 'Врізні' }] };
     expect(categorySubject(self)).toBe('Врізні');
   });
+
+  it('skips a catch-all parent such as «Інше» and takes the next real one', () => {
+    expect(categorySubject(category('На розетці (R-08/R-10)', ['Ручки', 'Інше']))).toBe(
+      'Ручки на розетці (R-08/R-10)',
+    );
+    expect(categorySubject(category('Товари, виведені з асортименту', ['Інше']))).toBe(
+      'Товари, виведені з асортименту',
+    );
+    expect(categorySubject(category('Скрытые', ['Петли', 'Прочее']))).toBe('Петли скрытые');
+  });
+
+  it('names a catch-all category after its parent', () => {
+    expect(categorySubject(category('Інше', ['Ручки']))).toBe('Ручки — інше');
+    expect(categorySubject(category('Інше', []))).toBe('Інше');
+  });
 });

@@ -3,6 +3,11 @@ import type { CategoryDetails } from '@site/catalog/model';
 // A name that already starts with a word of the parent («Ручки на розетці» under «Ручки») keeps its subject.
 const STEM_LENGTH = 4;
 
+// A catch-all section names no kind of goods, so it never becomes part of another category's title.
+const CATCH_ALL_NAMES = new Set(['інше', 'інші', 'різне', 'прочее', 'прочие', 'другое', 'разное']);
+
+const isCatchAll = (name: string) => CATCH_ALL_NAMES.has(name.trim().toLocaleLowerCase('uk'));
+
 const stem = (word: string) => word.toLocaleLowerCase('uk').slice(0, STEM_LENGTH);
 
 // «Врізні» reads as «Завіси врізні»; a Latin brand («Apecs») or an abbreviation keeps its capital letter.
@@ -14,13 +19,16 @@ const continueAfterParent = (name: string) =>
 
 /**
  * The category name a search result can stand on: a subcategory that names only its kind («Врізні»,
- * «З нержавійки») gets its parent's name first («Завіси врізні», «Ручки з нержавійки»). Top sections and
- * names that already carry the parent's word stay as they are.
+ * «З нержавійки») gets its nearest real parent's name first («Завіси врізні», «Ручки з нержавійки»); a catch-all
+ * parent («Інше») is skipped. Top sections and names that already carry the parent's word stay as they are.
  */
 export function categorySubject(category: Pick<CategoryDetails, 'id' | 'name' | 'breadcrumbs'>) {
-  const ancestors = category.breadcrumbs.filter((crumb) => crumb.id !== category.id);
+  const ancestors = category.breadcrumbs.filter(
+    (crumb) => crumb.id !== category.id && !isCatchAll(crumb.name),
+  );
   const parent = ancestors[ancestors.length - 1];
   if (!parent) return category.name;
+  if (isCatchAll(category.name)) return `${parent.name} — ${continueAfterParent(category.name)}`;
 
   const parentWord = parent.name.split(/\s+/)[0] ?? '';
   const nameWords = category.name.split(/[\s-]+/).map(stem);

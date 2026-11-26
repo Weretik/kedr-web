@@ -21,6 +21,12 @@ describe('product structured data', () => {
     });
   });
 
+  it('names the store brand Class Kedr', () => {
+    expect(buildProductJsonLd(input, config)).toMatchObject({
+      brand: { '@type': 'Brand', name: 'Class Kedr' },
+    });
+  });
+
   it('keeps a known price while marking an unavailable product OutOfStock', () => {
     expect(buildProductJsonLd({ ...input, inStock: false }, config)).toMatchObject({
       offers: { price: 245.5, availability: 'https://schema.org/OutOfStock' },
@@ -30,7 +36,7 @@ describe('product structured data', () => {
   it('does not invent an Offer or product characteristics', () => {
     for (const price of [null, 0, -1, Number.NaN]) {
       const data = buildProductJsonLd({ ...input, price, images: [] }, config);
-      for (const field of ['offers', 'image', 'brand', 'description', 'aggregateRating', 'review'])
+      for (const field of ['offers', 'image', 'description', 'aggregateRating', 'review'])
         expect(data).not.toHaveProperty(field);
     }
   });

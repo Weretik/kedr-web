@@ -1,4 +1,4 @@
-import { COMPANY, DEFAULT_OG_IMAGE, siteConfig } from '@site/core/config';
+import { COMPANY, DEFAULT_OG_IMAGE, pageTitle, siteConfig, withoutBrand } from '@site/core/config';
 import { LOCALES, OPEN_GRAPH_LOCALES } from '@site/core/i18n';
 
 import { buildCanonicalPath, buildLanguageAlternates } from './alternates';
@@ -48,7 +48,7 @@ export function buildPageMetadata(
   const canonical = buildCanonicalPath(locale, path, search);
 
   return {
-    title,
+    title: pageTitle(title),
     description,
     alternates: { canonical, languages: buildLanguageAlternates(path, search) },
     robots: buildRobotsMeta(config, indexable),
@@ -56,7 +56,7 @@ export function buildPageMetadata(
       type: 'website',
       siteName: COMPANY.name,
       url: canonical,
-      title,
+      title: withoutBrand(title),
       description,
       locale: OPEN_GRAPH_LOCALES[locale],
       alternateLocale: LOCALES.filter((other) => other !== locale).map(

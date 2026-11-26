@@ -1,5 +1,6 @@
 import { LOCALES, localizedPath } from '@site/core/i18n';
 import { productPath } from '@site/product/model';
+import { descriptionFromText } from '@site/product/seo';
 
 import { variantHref } from './model-view';
 import { productCrumbs } from '../detail/product-crumbs';
@@ -11,7 +12,7 @@ import type { ProductGroupSeoInput, ProductSeoInput } from '@site/product/seo';
 
 /**
  * The model's canonical address has no query and one slug in both languages; the title and description come from
- * «Вітрина сайту», else the model name and its short text.
+ * «Вітрина сайту», else the model name and its short text or the first paragraph of its full text.
  */
 export function modelSeoInput(
   locale: Locale,
@@ -24,14 +25,16 @@ export function modelSeoInput(
   const languagePaths = Object.fromEntries(
     LOCALES.map((item) => [item, localizedPath(item, path)]),
   ) as Partial<Record<Locale, string>>;
+  const description =
+    model.texts.seoDescription ||
+    model.texts.shortDescription ||
+    descriptionFromText(model.texts.description);
   return {
     ...productSeoInput(locale, product, crumbs, languagePaths),
     path,
     name: model.name,
     title: model.texts.seoTitle || model.name,
-    ...(model.texts.seoDescription || model.texts.shortDescription
-      ? { description: model.texts.seoDescription || model.texts.shortDescription }
-      : {}),
+    ...(description ? { description } : {}),
   };
 }
 

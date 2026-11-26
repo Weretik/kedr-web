@@ -41,6 +41,7 @@ describe('model ProductGroup structured data', () => {
       '@type': 'ProductGroup',
       url: 'https://shop.example/uk/product/zavisa-flush',
       productGroupID: 'zavisa-flush',
+      brand: { '@type': 'Brand', name: 'Class Kedr' },
       variesBy: ['https://schema.org/color'],
       offers: {
         '@type': 'AggregateOffer',

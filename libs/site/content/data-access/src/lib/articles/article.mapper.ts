@@ -26,6 +26,7 @@ export function mapArticleSummary(item: ApiArticleSummary, apiUrl: string): Arti
     bodyHtml: '',
     image: coverUrl(item.coverPath, apiUrl, item.coverUrl),
     publishedAt: item.publishedOn,
+    updatedAt: item.updatedAt,
   };
 }
 

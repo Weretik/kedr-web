@@ -127,7 +127,7 @@
 | Class Kedr, опт/розница, фурнитура | `apps/storefront/src/app/localization/translations/wholesale.translation.ts`; `libs/site/home/ui/src/lib/i18n/home-dictionary.ts` | Не добавлять новые коммерческие условия.                      |
 | Подбор по параметрам               | `apps/storefront/src/app/localization/translations/about.translation.ts`; `libs/site/home/ui/src/lib/i18n/company-dictionary.ts`  | Помощь с товаром, без услуги монтажа/ремонта.                 |
 | Складская программа                | те же company/wholesale источники                                                                                                 | Наличие уточняет менеджер; без «всегда», резерва и срока.     |
-| Контакты и город                   | `libs/site/core/config/src/lib/company.ts`                                                                                        | Только COMPANY в feature; не дублировать значения в UI copy.  |
+| Контакты и город                   | `libs/site/core/config/src/lib/company/company.ts`                                                                                | Только COMPANY в feature; не дублировать значения в UI copy.  |
 | Категории/slug                     | `getCatalogTree` и `CatalogTreeNode`                                                                                              | Никаких вымышленных URL или жёстких шести заглушек.           |
 | Фото категорий                     | `libs/site/catalog/ui/src/lib/category-cards/category-images.ts` и `apps/site/public/assets/categories/`                          | Таблица внутренняя для catalog/ui, content её не импортирует. |
 

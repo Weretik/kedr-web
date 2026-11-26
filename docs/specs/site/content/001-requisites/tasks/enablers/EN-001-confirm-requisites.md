@@ -3,7 +3,7 @@
 - **Status:** verified 2026-11-03; владелец — владелец Kedr, подтверждение в текущем чате.
 - **Enables:** SC-001…SC-003, SC-006…SC-007, SC-011; создание источника в TS-005.
 - **Depends on:** нет.
-- **Точные пути:** текущие `data-model.md`, `design/data-confirmation.md`, `design/visual.md`; источник `apps/storefront/src/app/localization/translations/requisites.translation.ts`; будущий `libs/site/core/config/src/lib/company-requisites.ts`.
+- **Точные пути:** текущие `data-model.md`, `design/data-confirmation.md`, `design/visual.md`; источник `apps/storefront/src/app/localization/translations/requisites.translation.ts`; будущий `libs/site/core/config/src/lib/company/company-requisites.ts`.
 - **Test level:** документационное подтверждение источника; поведенческий Red n/a.
 - **Baseline:** факты отсутствуют в COMPANY; snapshot не равен текущему банковскому подтверждению.
 

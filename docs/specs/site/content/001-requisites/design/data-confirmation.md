@@ -18,6 +18,6 @@
 
 Пользователь подтвердил краткое отображаемое название «ПриватБанк». Полная юридическая форма банка не выводится и не подставляется из противоречивых UK/RU legacy-строк. Официальное украинское имя сохраняется в обеих локалях.
 
-Единый runtime-источник — `libs/site/core/config/src/lib/company-requisites.ts`, публичный export `COMPANY_REQUISITES`. Контактный телефон остаётся в существующем `COMPANY`. Модель/словарь не дублируют значения.
+Единый runtime-источник — `libs/site/core/config/src/lib/company/company-requisites.ts`, публичный export `COMPANY_REQUISITES`. Контактный телефон остаётся в существующем `COMPANY`. Модель/словарь не дублируют значения.
 
 Legacy-происхождение и структура — в [data-model.md](../data-model.md). Закрытие [EN-001](../tasks/enablers/EN-001-confirm-requisites.md) разрешает подключение подтверждённых данных в TS-005. Связанные юридические destinations остаются отдельным EN-002.

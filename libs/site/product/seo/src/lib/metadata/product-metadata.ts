@@ -1,4 +1,4 @@
-import { COMPANY, siteConfig } from '@site/core/config';
+import { COMPANY, siteConfig, withoutBrand } from '@site/core/config';
 import { LOCALES, LOCALE_LANGUAGE_TAGS, OPEN_GRAPH_LOCALES } from '@site/core/i18n';
 import { DEFAULT_OG_IMAGE, buildPageMetadata } from '@site/core/seo';
 
@@ -13,7 +13,7 @@ export function buildProductMetadata(
   input: ProductSeoInput,
   config: SiteConfig = siteConfig,
 ): Metadata {
-  const title = input.title || `${input.name} — код ${input.sku}`;
+  const title = withoutBrand(input.title || `${input.name} — код ${input.sku}`);
   const description =
     input.description ||
     (input.locale === 'uk'
@@ -35,8 +35,8 @@ export function buildProductMetadata(
   return {
     ...base,
     alternates: { canonical, languages },
+    // No `type`: Next.js knows no `product`, so the page renders `og:type` itself (ProductOpenGraphType).
     openGraph: {
-      type: 'website',
       siteName: COMPANY.name,
       title,
       description,

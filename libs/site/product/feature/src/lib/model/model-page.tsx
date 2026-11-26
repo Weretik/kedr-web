@@ -7,6 +7,7 @@ import {
   buildProductBreadcrumbJsonLd,
   buildProductGroupJsonLd,
   buildProductJsonLd,
+  ProductOpenGraphType,
 } from '@site/product/seo';
 import {
   ModelAlternatives,
@@ -118,6 +119,7 @@ export async function ModelPage({
           </>
         }
       />
+      <ProductOpenGraphType />
       <JsonLd
         data={[
           // A model of several products is one ProductGroup with a «від» price; a single product keeps its offer.

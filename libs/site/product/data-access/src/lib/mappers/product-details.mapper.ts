@@ -54,8 +54,8 @@ export function mapProductDetails(product: ApiProductDetails): ProductDetails | 
       typeof product.price === 'number' && Number.isFinite(product.price) && product.price > 0
         ? product.price
         : null,
-    inStock:
-      typeof product.stock === 'number' && Number.isFinite(product.stock) && product.stock > 0,
+    // The catalog rule from the API (hardware needs more than 2), so the page, its markup and the list agree.
+    inStock: product.inStock === true,
     quantityInPack:
       Number.isSafeInteger(product.quantityInPack) && product.quantityInPack > 0
         ? product.quantityInPack
