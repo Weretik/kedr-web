@@ -76,7 +76,7 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
               Створити замовлення
             </Button>
           }
-          title="Замовлення"
+          title="Історія замовлень"
         />
       )}
       <Card sx={{ overflow: 'hidden' }} variant="outlined">

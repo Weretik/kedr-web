@@ -21,7 +21,7 @@ export function NavigationLink({
   pathname,
 }: NavigationLinkProps) {
   const { icon, label, to } = item;
-  const isActive = isItemActive(pathname, to);
+  const isActive = isItemActive(pathname, item);
 
   return (
     <Box component="li">
