@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { AdminNavigation } from './admin-navigation';
-import { AdminShellSessionProvider } from '../providers/admin-shell-session-provider';
+import { AdminShellSessionProvider } from '../../providers/admin-shell-session-provider';
 
 const renderNavigation = (
   canManageUsers: boolean,

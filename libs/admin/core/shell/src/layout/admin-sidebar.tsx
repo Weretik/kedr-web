@@ -3,8 +3,8 @@ import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { AdminLogo } from './admin-logo';
-import { AdminNavigation } from '../navigation/admin-navigation';
-import { sidebarColors } from '../navigation/sidebar-colors';
+import { AdminNavigation } from '../navigation/drawer/admin-navigation';
+import { sidebarColors } from '../navigation/drawer/sidebar-colors';
 import { useAdminShellUser } from '../providers/admin-shell-session-provider';
 
 interface AdminSidebarProps {

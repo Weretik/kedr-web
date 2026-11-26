@@ -28,9 +28,11 @@ import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
 import { RetailPricesButton } from '@admin/retail-prices/feature';
 import { backgroundTasksRoutes } from '@admin/scheduling/feature';
+import { createSeoReviewRoutes } from '@admin/seo-review/feature';
 import { seoSettingsRoutes } from '@admin/seo-settings/feature';
 import { createSiteModelsRoutes, ProductSiteModelSection } from '@admin/site-models/feature';
 import { siteOrdersRoutes } from '@admin/site-orders/feature';
+import { siteRedirectsRoutes } from '@admin/site-redirects/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes } from '@admin/users/feature';
 import { wholesaleContentRoutes } from '@admin/wholesale-content/feature';
@@ -55,6 +57,7 @@ const siteModelsRoutes = createSiteModelsRoutes({
   renderDictionaryTab: (props) => <CatalogDictionaryTab {...props} />,
   useUnresolvedCodesCount,
 });
+const seoReviewRoutes = createSeoReviewRoutes({ useCanEditCatalog });
 const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
 const dashboardRoutes = createDashboardRoutes({
   siteRefreshAction: <SiteRefreshButton variant="text" />,
@@ -99,6 +102,8 @@ export function AppRouter() {
         ...wholesaleContentRoutes,
         ...pageSeoRoutes,
         ...seoSettingsRoutes,
+        ...siteRedirectsRoutes,
+        ...seoReviewRoutes,
         ...profileRoutes,
         ...myTasksRoutes,
         { element: <RequireRole allow={canManageRequisites} />, children: companyAdminRoutes },

@@ -1,6 +1,7 @@
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
+import AltRouteOutlinedIcon from '@mui/icons-material/AltRouteOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
@@ -16,6 +17,7 @@ import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
@@ -28,25 +30,7 @@ import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 
-import type { ReactNode } from 'react';
-
-export interface NavigationItem {
-  /** `admin`: only the Admin role; `userManagement`: whoever may manage users. Omitted: everyone. */
-  access?: 'admin' | 'userManagement';
-  /** Paths inside `to` that belong to another item, so this one is not highlighted there. */
-  activeExcept?: string[];
-  icon: ReactNode;
-  label: string;
-  to: string;
-}
-
-export interface NavigationGroup {
-  /** Shown on the block heading and for every item of the block when the drawer is collapsed. */
-  icon: ReactNode;
-  id: string;
-  items: NavigationItem[];
-  label: string;
-}
+import type { NavigationGroup, NavigationItem } from './navigation-item';
 
 /** Standalone first item, outside every group. */
 export const overviewItem: NavigationItem = {
@@ -99,6 +83,8 @@ export const navigationGroups: NavigationGroup[] = [
       { icon: <CollectionsOutlinedIcon />, label: 'Галерея', to: '/gallery' },
       { icon: <TravelExploreOutlinedIcon />, label: 'SEO сторінок', to: '/page-seo' },
       { icon: <InsightsOutlinedIcon />, label: 'Налаштування SEO сайту', to: '/seo-settings' },
+      { icon: <ManageSearchOutlinedIcon />, label: 'SEO-огляд', to: '/seo-review' },
+      { icon: <AltRouteOutlinedIcon />, label: 'Переадресації', to: '/site-redirects' },
     ],
   },
   {
@@ -139,10 +125,3 @@ export const navigationGroups: NavigationGroup[] = [
     ],
   },
 ];
-
-const matchesPath = (pathname: string, to: string) =>
-  pathname === to || pathname.startsWith(`${to}/`);
-
-export const isItemActive = (pathname: string, item: Pick<NavigationItem, 'activeExcept' | 'to'>) =>
-  matchesPath(pathname, item.to) &&
-  !(item.activeExcept ?? []).some((except) => matchesPath(pathname, except));

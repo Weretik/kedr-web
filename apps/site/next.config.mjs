@@ -48,12 +48,9 @@ const nextConfig = {
       { source: '/:locale(uk|ru)/categories', destination: '/:locale', permanent: true },
       // Company content lives on the localized home page; keep the old public addresses working.
       { source: '/:locale(uk|ru)/about-company', destination: '/:locale', permanent: true },
-      // The Angular storefront had 23 regional landing pages; delivery terms for every region live on «Співпраця».
-      {
-        source: '/:locale(uk|ru)/region/:city',
-        destination: '/:locale/wholesale',
-        permanent: true,
-      },
+      // The Angular storefront had 23 regional landing pages; they go to the home page (owner, SEO stage 3).
+      { source: '/:locale(uk|ru)/region/:path*', destination: '/:locale', statusCode: 301 },
+      { source: '/region/:path*', destination: '/uk', statusCode: 301 },
       // The Angular storefront had a demo sign-in and cabinet; the site has no accounts (owner decision 2026-11-04).
       { source: '/:locale(uk|ru)/login', destination: '/:locale', permanent: true },
       { source: '/:locale(uk|ru)/cabinet/:path*', destination: '/:locale', permanent: true },
