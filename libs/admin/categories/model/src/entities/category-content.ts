@@ -33,9 +33,3 @@ export const emptyCategoryContent = (language: ContentLanguage): CategoryContent
   updatedAt: null,
   version: 0,
 });
-
-/** True when a language has no site text at all: the page then shows only the category name. */
-export const isCategoryContentEmpty = (content: CategoryContentDraft): boolean =>
-  [content.seoTitle, content.metaDescription, content.h1].every((value) => !value.trim()) &&
-  (!content.bodyHtml.trim() || content.bodyHtml.trim() === '<p></p>') &&
-  content.faq.length === 0;

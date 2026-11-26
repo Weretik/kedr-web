@@ -24,6 +24,8 @@ export const adminCategorySchema = z.object({
   shareImageMediaFileId: z.number().nullish(),
   shareImageUrl: z.string().nullish(),
   isManual: z.boolean().nullish(),
+  modelCount: z.number().nullish(),
+  proposedModelCount: z.number().nullish(),
 });
 
 /** Runtime shape of the site texts of a category in one language. */

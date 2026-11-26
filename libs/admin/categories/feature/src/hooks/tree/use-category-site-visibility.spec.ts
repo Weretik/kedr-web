@@ -22,28 +22,28 @@ describe('useCategorySiteVisibility', () => {
     ] as never);
   });
 
-  it('hides a shown category, closes the dialog, and reports it', async () => {
+  it('hides the asked category, closes the dialog, and reports it (SC-002)', async () => {
     trigger.mockReturnValue({ unwrap: () => Promise.resolve() });
     const onNotice = vi.fn();
-    const { result } = renderHook(() => useCategorySiteVisibility(shown, onNotice));
-    act(() => result.current.ask());
-    expect(result.current.open).toBe(true);
+    const { result } = renderHook(() => useCategorySiteVisibility(onNotice));
+    act(() => result.current.ask(shown));
+    expect(result.current.target).toBe(shown);
 
     await act(() => result.current.confirm());
 
     expect(trigger).toHaveBeenCalledWith({ id: 4, isShownOnSite: false });
-    expect(result.current.open).toBe(false);
+    expect(result.current.target).toBeNull();
     expect(onNotice).toHaveBeenCalledWith('Категорію сховано з сайту.');
   });
 
   it('keeps the dialog open with an error when the change fails', async () => {
     trigger.mockReturnValue({ unwrap: () => Promise.reject(new Error()) });
-    const { result } = renderHook(() => useCategorySiteVisibility(shown, vi.fn()));
-    act(() => result.current.ask());
+    const { result } = renderHook(() => useCategorySiteVisibility(vi.fn()));
+    act(() => result.current.ask(shown));
 
     await act(() => result.current.confirm());
 
-    expect(result.current.open).toBe(true);
+    expect(result.current.target).toBe(shown);
     expect(result.current.error).toBe('Не вдалося змінити показ на сайті. Спробуйте ще раз.');
   });
 });

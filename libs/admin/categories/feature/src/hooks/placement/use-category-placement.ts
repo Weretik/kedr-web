@@ -11,7 +11,7 @@ const messages = {
   fallback: 'Не вдалося перемістити категорію.',
 };
 
-/** «Розташування» of any category: the new parent and «Вище» / «Нижче» (spec 002 R-003). */
+/** «Розташування» of any category: the move dialog and «Вище» / «Нижче» (spec 002 R-003, spec 003 R-011). */
 export function useCategoryPlacement(
   category: AdminCategory,
   categories: readonly AdminCategory[],
@@ -20,6 +20,7 @@ export function useCategoryPlacement(
   const [draft, setDraft] = useState(category.parentId);
   const [base, setBase] = useState(category);
   const [error, setError] = useState<string | undefined>();
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [move, moving] = useMoveCategoryMutation();
   const [reorder, reordering] = useReorderCategoryMutation();
   const options = useMemo(
@@ -36,13 +37,15 @@ export function useCategoryPlacement(
   }
 
   const run = async (action: () => Promise<unknown>, done: string) => {
-    if (busy) return;
+    if (busy) return false;
     setError(undefined);
     try {
       await action();
       onNotice(done);
+      return true;
     } catch (cause) {
       setError(categoryPlacementErrorMessage(cause, messages));
+      return false;
     }
   };
 
@@ -54,8 +57,23 @@ export function useCategoryPlacement(
     dirty: draft !== category.parentId,
     ...categoryNeighbourPosition(categories, category),
     setDraft,
-    save: () =>
-      run(() => move({ id: category.id, parentId: draft }).unwrap(), 'Категорію переміщено.'),
+    dialogOpen,
+    /** «Перемістити» opens the dialog with the current parent (spec 003 R-011). */
+    startMove: () => {
+      setDraft(category.parentId);
+      setError(undefined);
+      setDialogOpen(true);
+    },
+    closeMove: () => setDialogOpen(false),
+    save: async () => {
+      if (
+        await run(
+          () => move({ id: category.id, parentId: draft }).unwrap(),
+          'Категорію переміщено.',
+        )
+      )
+        setDialogOpen(false);
+    },
     move: (direction: 'up' | 'down') =>
       run(() => reorder({ id: category.id, direction }).unwrap(), 'Порядок змінено.'),
   };

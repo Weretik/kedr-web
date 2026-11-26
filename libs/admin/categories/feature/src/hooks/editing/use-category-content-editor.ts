@@ -54,13 +54,14 @@ export function useCategoryContentEditor(
     setSaveErrors((current) => ({ ...current, [language]: undefined }));
   };
 
-  const save = async (language: ContentLanguage) => {
+  /** Resolves to whether the text was saved, so the page can leave the edit mode. */
+  const save = async (language: ContentLanguage): Promise<boolean> => {
     const draft = draftOf(language);
-    if (!draft) return;
+    if (!draft) return false;
 
     const validationErrors = validateCategoryContent(draft);
     setErrors((current) => ({ ...current, [language]: validationErrors }));
-    if (validationErrors) return;
+    if (validationErrors) return false;
 
     setSaveErrors((current) => ({ ...current, [language]: undefined }));
     try {
@@ -73,8 +74,10 @@ export function useCategoryContentEditor(
       // The refetched content (with the sanitized text) becomes the new baseline.
       setDrafts((current) => ({ ...current, [language]: undefined }));
       onSaved(language === 'uk' ? 'Український текст збережено.' : 'Російський текст збережено.');
+      return true;
     } catch (error) {
       setSaveErrors((current) => ({ ...current, [language]: categoryContentErrorMessage(error) }));
+      return false;
     }
   };
 

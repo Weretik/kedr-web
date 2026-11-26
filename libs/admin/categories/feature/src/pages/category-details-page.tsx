@@ -1,114 +1,71 @@
-import {
-  useGetAdminCategoriesQuery,
-  useGetAdminCategoryQuery,
-  useGetCategoryContentQuery,
-} from '@admin/categories/data-access';
-import { categoryPath } from '@admin/categories/model';
-import { CategoryInformationCard } from '@admin/categories/ui';
-import { AdminDetailHeader, NoticeSnackbar, PageLoader, PublicAddressCard } from '@admin/shared/ui';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { Alert, Box, Button, Stack } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { AdminDetailHeader, PageLoader } from '@admin/shared/ui';
+import { Alert, Button, Stack } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
-import { CategoryContentSection } from '../components/panels/category-content-section';
-import { CategoryEditPanel } from '../components/panels/category-edit-panel';
+import { CategoryPageBody } from '../components/page/category-page-body';
+import { useCategoryPageData } from '../hooks/page/use-category-page-data';
 
-const publicPathPrefix = '/uk/catalog/';
+import type { CategoryPageTab } from '../components/page/category-page-tabs';
 
-/** Read-only category page; «Редагувати» opens the edit panel for administrators. */
+const tabs: readonly CategoryPageTab[] = ['models', 'seo', 'search', 'place'];
+const arrivalNotice = (state: unknown) => (state as { notice?: string } | null)?.notice ?? null;
+
+/** One category in blocks, edited right on the page, no side panel (spec 003 R-005…R-012). */
 export function CategoryDetailsPage({ canEdit }: { canEdit: boolean }) {
   const params = useParams();
+  const categoryId = params['categoryId'];
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-  const [editing, setEditing] = useState(false);
-  const categoryId = Number(params['categoryId']);
-  const validId = Number.isInteger(categoryId) && categoryId > 0;
-  const categoryQuery = useGetAdminCategoryQuery(categoryId, { skip: !validId });
-  const contentQuery = useGetCategoryContentQuery(categoryId, { skip: !validId });
-  // The list is usually cached from the previous page; it only feeds the path line.
-  const listQuery = useGetAdminCategoriesQuery({ deleted: false }, { skip: !validId });
-  const notFound = (categoryQuery.error as { code?: string } | undefined)?.code === 'NotFound';
-  const category = categoryQuery.data;
+  const [notice, setNotice] = useState<string | null>(() => arrivalNotice(location.state));
+  const data = useCategoryPageData(Number(categoryId));
+  const tabParam = searchParams.get('tab') as CategoryPageTab | null;
+  const tab = tabParam && tabs.includes(tabParam) ? tabParam : 'models';
 
-  const path = useMemo(() => {
-    if (!category) return [];
-    const byId = new Map((listQuery.data ?? []).map((row) => [row.id, row]));
-    return categoryPath(category, byId.set(category.id, category));
-  }, [category, listQuery.data]);
-
+  const pageReady = data.page !== null;
   useEffect(() => {
     headingRef.current?.focus();
-  }, [categoryId]);
+  }, [categoryId, pageReady]);
 
-  return (
-    <Stack component="section" spacing={3}>
-      <AdminDetailHeader
-        backLabel="Назад до категорій"
-        backTo={`/categories${location.search}`}
-        actions={
-          canEdit && category ? (
-            <Button
-              onClick={() => setEditing(true)}
-              startIcon={<EditOutlinedIcon />}
-              variant="contained"
-            >
-              Редагувати
-            </Button>
-          ) : undefined
-        }
-        headingRef={headingRef}
-        title="Деталі категорії"
-      />
-      {!validId || notFound ? (
-        <Alert severity="info">
-          Категорію не знайдено: можливо, її видалено під час обміну з 1С.
-        </Alert>
-      ) : categoryQuery.isLoading ? (
-        <PageLoader label="Завантаження категорії" />
-      ) : categoryQuery.isError || !category ? (
-        <Alert
-          action={<Button onClick={() => categoryQuery.refetch()}>Повторити</Button>}
-          severity="error"
-        >
+  if (!data.valid || data.notFound)
+    return (
+      <Stack spacing={3}>
+        <AdminDetailHeader backLabel="До категорій" backTo="/categories" title="Категорія" />
+        <Alert severity="info">Категорію не знайдено: можливо, її видалено.</Alert>
+      </Stack>
+    );
+  if (data.loading) return <PageLoader label="Завантаження категорії" />;
+  if (data.error || !data.page)
+    return (
+      <Stack spacing={3}>
+        <AdminDetailHeader backLabel="До категорій" backTo="/categories" title="Категорія" />
+        <Alert action={<Button onClick={data.retry}>Повторити</Button>} severity="error">
           Не вдалося завантажити категорію. Спробуйте ще раз.
         </Alert>
-      ) : (
-        <>
-          <Box
-            sx={{
-              alignItems: 'start',
-              display: 'grid',
-              gap: 3,
-              gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 2fr) minmax(0, 1fr)' },
-            }}
-          >
-            <CategoryInformationCard category={category} path={path} />
-            <PublicAddressCard pathPrefix={publicPathPrefix} slug={category.slug} />
-          </Box>
-          <CategoryContentSection
-            content={contentQuery.data}
-            error={contentQuery.isError}
-            loading={contentQuery.isLoading}
-            onRetry={() => contentQuery.refetch()}
-          />
-          {canEdit ? (
-            <CategoryEditPanel
-              categoryId={category.id}
-              onClose={() => setEditing(false)}
-              onDeleted={(parentId) =>
-                navigate(parentId === null ? '/categories' : `/categories?category=${parentId}`)
-              }
-              onNotice={setNotice}
-              open={editing}
-            />
-          ) : null}
-        </>
-      )}
-      <NoticeSnackbar message={notice} onClose={() => setNotice(null)} />
-    </Stack>
+      </Stack>
+    );
+
+  return (
+    <CategoryPageBody
+      canEdit={canEdit}
+      categories={data.categories}
+      content={data.content}
+      headingRef={headingRef}
+      notice={notice}
+      onDeleted={(parentId) =>
+        navigate(parentId === null ? '/categories' : `/categories/${parentId}`, {
+          state: { notice: 'Категорію видалено.' },
+        })
+      }
+      onNotice={setNotice}
+      onTabChange={(next) =>
+        setSearchParams(next === 'models' ? {} : { tab: next }, { replace: true })
+      }
+      page={data.page}
+      tab={tab}
+    />
   );
 }
 

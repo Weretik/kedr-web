@@ -26,6 +26,15 @@ describe('admin category mapper', () => {
       sourceKey: '00-001',
       productCount: null,
       filledLanguages: ['uk'],
+      modelCount: null,
+      proposedModelCount: null,
+    });
+  });
+
+  it('reads the model counts of the active list', () => {
+    expect(mapAdminCategory({ ...dto, modelCount: 9, proposedModelCount: 2 })).toMatchObject({
+      modelCount: 9,
+      proposedModelCount: 2,
     });
   });
 
