@@ -23,6 +23,10 @@ const documentedCrossDomainFlows = new Set([
   'admin-catalog-attributes-feature->admin-media-data-access',
   'admin-catalog-attributes-feature->admin-media-model',
   'admin-catalog-attributes-feature->admin-media-ui',
+  // Category share picture for link previews: picked from the media library (SEO stage 2, catalog/010).
+  'admin-categories-feature->admin-media-data-access',
+  'admin-categories-feature->admin-media-model',
+  'admin-categories-feature->admin-media-ui',
   // «Фільтри категорій» lists the categories shown on the site, as «Моделі» does (Catalog 007 stage 4c).
   'admin-catalog-attributes-feature->admin-site-models-data-access',
   // Products are priced for the selected customer (Kedr Manager stage 4).

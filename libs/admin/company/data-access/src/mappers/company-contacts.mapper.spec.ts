@@ -8,12 +8,29 @@ const dto = {
   mapUrl: 'https://maps.app.goo.gl/D2rH3HcaxLfxik5H6',
   cityUk: 'Харків',
   cityRu: 'Харьков',
+  store: {
+    storeName: 'Крамниця Дверна фурнітура CLASS',
+    streetAddressUk: 'вул. Ахієзерів, 46',
+    streetAddressRu: null,
+    regionUk: 'Харківська обл.',
+    regionRu: null,
+    postalCode: '61038',
+    weekdaysOpens: '09:00',
+    weekdaysCloses: '16:00',
+    saturdayOpens: null,
+    saturdayCloses: null,
+    sundayOpens: null,
+    sundayCloses: null,
+  },
   updatedAt: '2026-11-04T00:00:00Z',
 };
 
 describe('company contacts mapper', () => {
   it('reads the response and rejects a broken one', () => {
-    expect(mapCompanyContacts(dto)).toEqual({ ...dto, updatedBy: null });
+    const contacts = mapCompanyContacts(dto);
+    expect(contacts.updatedBy).toBeNull();
+    expect(contacts.store.streetAddressUk).toBe('вул. Ахієзерів, 46');
+    expect(contacts.store.saturdayOpens).toBe('');
     expect(mapCompanyContacts({ ...dto, updatedBy: 'a@b.c' }).updatedBy).toBe('a@b.c');
     expect(() => mapCompanyContacts({ ...dto, email: null })).toThrow();
   });
@@ -28,6 +45,18 @@ describe('company contacts mapper', () => {
         mapUrl: ' https://maps.app.goo.gl/abc ',
         cityUk: ' Київ ',
         cityRu: ' Киев ',
+        storeName: ' Крамниця ',
+        streetAddressUk: '',
+        streetAddressRu: '',
+        regionUk: '',
+        regionRu: '',
+        postalCode: '61038',
+        weekdaysOpens: '9:00',
+        weekdaysCloses: '16:00',
+        saturdayOpens: ' ',
+        saturdayCloses: '',
+        sundayOpens: '',
+        sundayCloses: '',
       }),
     ).toEqual({
       salesPhone: '+380681112233',
@@ -37,6 +66,20 @@ describe('company contacts mapper', () => {
       mapUrl: 'https://maps.app.goo.gl/abc',
       cityUk: 'Київ',
       cityRu: 'Киев',
+      store: {
+        storeName: 'Крамниця',
+        streetAddressUk: null,
+        streetAddressRu: null,
+        regionUk: null,
+        regionRu: null,
+        postalCode: '61038',
+        weekdaysOpens: '9:00',
+        weekdaysCloses: '16:00',
+        saturdayOpens: null,
+        saturdayCloses: null,
+        sundayOpens: null,
+        sundayCloses: null,
+      },
     });
   });
 });

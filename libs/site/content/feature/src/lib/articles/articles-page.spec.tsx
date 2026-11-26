@@ -39,6 +39,8 @@ const article = (id: number, slug: string, title: string): Article => ({
   image: 'https://api.example.test/api/content/articles/' + id + '/cover?v=1',
   publishedAt: '2026-03-24',
   updatedAt: '2026-03-25T08:00:00Z',
+  seoTitle: null,
+  metaDescription: null,
 });
 
 const ARTICLES = [

@@ -1,21 +1,33 @@
 import 'server-only';
 
+import { getCatalogCrawlTree } from '@site/catalog/data-access';
+import { closedCategorySlugs } from '@site/catalog/model';
 import { siteConfig } from '@site/core/config';
 import { getProductIndex } from '@site/product/data-access';
 import { notFound } from 'next/navigation';
 
-import { buildProductSitemapEntries } from './product-sitemap-entries';
+import { buildProductSitemapEntries, withoutClosedCategories } from './product-sitemap-entries';
 import { shardProductSitemapEntries } from './product-sitemap-shards';
 
 import type { MetadataRoute } from 'next';
 
 async function getProductSitemapShards(): Promise<MetadataRoute.Sitemap[]> {
-  // Two locale reads only; each data-access walker is itself sequential and bounded.
-  const [uk, ru] = await Promise.all([getProductIndex('uk'), getProductIndex('ru')]);
-  if (uk.kind !== 'ok' || ru.kind !== 'ok') {
+  // Two locale reads and the cached category tree; each data-access walker is itself sequential and bounded.
+  const [uk, ru, tree] = await Promise.all([
+    getProductIndex('uk'),
+    getProductIndex('ru'),
+    getCatalogCrawlTree('uk'),
+  ]);
+  if (uk.kind !== 'ok' || ru.kind !== 'ok' || !tree) {
     throw new Error('The complete public product index is unavailable');
   }
-  return shardProductSitemapEntries(buildProductSitemapEntries({ uk: uk.items, ru: ru.items }));
+  const closed = closedCategorySlugs(tree);
+  return shardProductSitemapEntries(
+    buildProductSitemapEntries({
+      uk: withoutClosedCategories(uk.items, closed),
+      ru: withoutClosedCategories(ru.items, closed),
+    }),
+  );
 }
 
 export async function getProductSitemapIds(): Promise<Array<{ id: string }>> {

@@ -6,11 +6,12 @@ import {
   getProductSitemapIndexResponse,
   getProductSitemapUrls,
 } from './product-sitemap';
-import { buildProductSitemapEntries } from './product-sitemap-entries';
+import { buildProductSitemapEntries, withoutClosedCategories } from './product-sitemap-entries';
 
 import type { ProductIndexItem } from '@site/product/model';
 
-const { getProductIndex, notFound } = vi.hoisted(() => ({
+const { getCatalogCrawlTree, getProductIndex, notFound } = vi.hoisted(() => ({
+  getCatalogCrawlTree: vi.fn(),
   getProductIndex: vi.fn(),
   notFound: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND');
@@ -18,6 +19,7 @@ const { getProductIndex, notFound } = vi.hoisted(() => ({
 }));
 vi.mock('server-only', () => ({}));
 vi.mock('@site/product/data-access', () => ({ getProductIndex }));
+vi.mock('@site/catalog/data-access', () => ({ getCatalogCrawlTree }));
 vi.mock('next/navigation', () => ({ notFound }));
 
 const item = (sku: string, slug = 'handle-' + sku): ProductIndexItem => ({
@@ -37,6 +39,30 @@ describe('product sitemap entries', () => {
     expect(entries[0]?.url).toBe('https://classkedr.com.ua/uk/product/handle-7');
     expect(entries[0]?.alternates?.languages).not.toHaveProperty('ru-UA');
     expect(entries[0]).not.toHaveProperty('lastModified');
+  });
+
+  it('gives each language URL the model change date of that language', () => {
+    const entries = buildProductSitemapEntries(
+      {
+        uk: [{ ...item('7', 'm'), updatedAt: '2026-11-26T10:00:00Z' }],
+        ru: [item('7', 'm')],
+      },
+      config,
+    );
+    expect(entries[0]).toMatchObject({ lastModified: '2026-11-26T10:00:00Z' });
+    expect(entries[1]).not.toHaveProperty('lastModified');
+  });
+
+  it('drops models of closed categories and keeps items without a category', () => {
+    const items = [
+      { ...item('1'), categorySlug: 'zavisy' },
+      { ...item('2'), categorySlug: 'ruchky' },
+      item('3'),
+    ];
+    expect(withoutClosedCategories(items, new Set(['zavisy'])).map((row) => row.sku)).toEqual([
+      '2',
+      '3',
+    ]);
   });
 
   it('pairs reciprocal language URLs by SKU using their actual current slugs', () => {
@@ -136,6 +162,8 @@ describe('product sitemap entries', () => {
 describe('product sitemap source and routes', () => {
   beforeEach(() => {
     getProductIndex.mockReset();
+    getCatalogCrawlTree.mockReset();
+    getCatalogCrawlTree.mockResolvedValue([]);
     notFound.mockClear();
   });
 
@@ -151,6 +179,34 @@ describe('product sitemap source and routes', () => {
     expect(await getProductSitemap('0')).toHaveLength(2);
     expect(getProductIndex).toHaveBeenCalledWith('uk');
     expect(getProductIndex).toHaveBeenCalledWith('ru');
+  });
+
+  it('leaves out models of a category closed from search and of the categories under it', async () => {
+    getProductIndex.mockResolvedValue({
+      kind: 'ok',
+      items: [{ ...item('7'), categorySlug: 'prykhovani' }, item('8')],
+    });
+    getCatalogCrawlTree.mockResolvedValue([
+      {
+        slug: 'zavisy',
+        isClosedFromSearch: true,
+        updatedAt: null,
+        children: [
+          { slug: 'prykhovani', isClosedFromSearch: false, updatedAt: null, children: [] },
+        ],
+      },
+    ]);
+    const urls = (await getProductSitemap('0')).map((entry) => entry.url);
+    expect(urls).toEqual([
+      'https://classkedr.com.ua/uk/product/handle-8',
+      'https://classkedr.com.ua/ru/product/handle-8',
+    ]);
+  });
+
+  it('fails without the category tree instead of publishing closed models', async () => {
+    confirmedBoth();
+    getCatalogCrawlTree.mockResolvedValue(null);
+    await expect(getProductSitemapIds()).rejects.toThrow('complete public product index');
   });
 
   it('distinguishes a confirmed empty public source from transport failure', async () => {

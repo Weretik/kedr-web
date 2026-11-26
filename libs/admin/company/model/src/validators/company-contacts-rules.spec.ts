@@ -1,6 +1,8 @@
 import { validateCompanyContactsDraft } from './company-contacts-rules';
+import { companyStoreFields } from '../entities/company-store';
 import { normalizeUaPhone } from '../forms/company-contacts-draft';
 
+import type { CompanyStore } from '../entities/company-store';
 import type { CompanyContactsDraft } from '../forms/company-contacts-draft';
 
 const valid: CompanyContactsDraft = {
@@ -11,6 +13,7 @@ const valid: CompanyContactsDraft = {
   mapUrl: 'https://maps.app.goo.gl/D2rH3HcaxLfxik5H6',
   cityUk: 'Харків',
   cityRu: 'Харьков',
+  ...(Object.fromEntries(companyStoreFields.map((field) => [field, ''])) as CompanyStore),
 };
 
 describe('company contacts rules', () => {
@@ -41,6 +44,12 @@ describe('company contacts rules', () => {
       mapUrl: 'Вкажіть посилання на карту.',
       cityUk: 'Вкажіть місто.',
       cityRu: 'Вкажіть місто.',
+    });
+  });
+
+  it('adds the shop errors to the contact errors', () => {
+    expect(validateCompanyContactsDraft({ ...valid, postalCode: 'abc' })).toEqual({
+      postalCode: 'П’ять цифр, наприклад 61038.',
     });
   });
 

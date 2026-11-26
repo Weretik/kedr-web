@@ -36,6 +36,8 @@
 
 ## Site Next.js
 
+- [SEO stage 2: search closing, site names, article SEO, share pictures, local business, lastmod](site/migration/seo-stage-2-2026-11-26/README.md) — implemented 2026-11-26 (backend KedrStore #276); admin categories, articles and contacts plus site catalog, product, articles and contacts.
+
 - [Cart and quick checkout / Корзина и заказ](site/cart/001-cart-checkout/README.md) — implemented 2026-11-04 по принятому двухколоночному концепту; 16 R, 30 SC, общий owner/cart_v1/drawer/anonymous createQuickOrder; architecture audit AF-003–006 verified, fresh focused/type/lint/boundary evidence; build/HTTP/browser unrun.
 
 - [Product details / Карточка товара](site/product/001-product-details/README.md) — stage4A implemented 2026-11-03; product158 tests, core5, boundaries27 fixtures and scoped type/lint checks pass; stage4B cart connection completed 2026-11-04 via cart TS-009; build/HTTP/browser unrun.

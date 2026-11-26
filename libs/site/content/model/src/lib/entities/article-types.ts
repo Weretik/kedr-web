@@ -13,6 +13,9 @@ export type Article = {
   publishedAt: string;
   /** Last edit, for `lastmod` in the sitemap. */
   updatedAt: string;
+  /** Admin title and description for search engines; `null` uses the title and the excerpt. Detail page only. */
+  seoTitle: string | null;
+  metaDescription: string | null;
 };
 
 export const ARTICLE_PAGE_SIZES = [10, 20, 50] as const;

@@ -18,6 +18,8 @@ const category: CategoryDetails = {
   minPrice: 85.5,
   maxPrice: 4200,
   content: null,
+  isClosedFromSearch: false,
+  shareImageUrl: null,
 };
 
 describe('buildCategoryMetadata', () => {
@@ -120,6 +122,34 @@ describe('buildCategoryMetadata', () => {
   });
 });
 
+describe('search closing and share picture', () => {
+  it('keeps a closed category out of the index on every page, with its own canonical', () => {
+    const closed = { ...category, isClosedFromSearch: true };
+    const metadata = buildCategoryMetadata(
+      { locale: 'uk', category: closed, query: { ...DEFAULT_LISTING_QUERY, page: 2 } },
+      production,
+    );
+
+    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.alternates?.canonical).toBe('/uk/catalog/ruchky?page=2');
+  });
+
+  it('uses the admin share picture for link previews', () => {
+    const metadata = buildCategoryMetadata(
+      {
+        locale: 'uk',
+        category: { ...category, shareImageUrl: 'https://images-kedr.cdn.express/c/9.webp' },
+        query: DEFAULT_LISTING_QUERY,
+      },
+      production,
+    );
+
+    expect(metadata.openGraph?.images).toEqual([
+      { url: 'https://images-kedr.cdn.express/c/9.webp', alt: 'Ручки — купити оптом і в роздріб' },
+    ]);
+  });
+});
+
 describe('hub and search metadata', () => {
   it('indexes the hub and never the search', () => {
     expect(buildCatalogHubMetadata('uk', production)).toMatchObject({
@@ -150,6 +180,20 @@ describe('buildLandingMetadata', () => {
     );
     expect(metadata.alternates?.canonical).toBe('/uk/catalog/zavisy/khrom');
     expect(metadata.robots).toEqual({ index: true, follow: true });
+  });
+
+  it('keeps every value page of a closed category out of the index', () => {
+    const metadata = buildLandingMetadata(
+      {
+        locale: 'uk',
+        category: { ...zavisy, isClosedFromSearch: true },
+        query: DEFAULT_LISTING_QUERY,
+        landing,
+      },
+      production,
+    );
+
+    expect(metadata.robots).toEqual({ index: false, follow: true });
   });
 
   it('keeps other choices and single-model values out of the index', () => {

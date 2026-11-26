@@ -27,9 +27,18 @@ export function mapArticleSummary(item: ApiArticleSummary, apiUrl: string): Arti
     image: coverUrl(item.coverPath, apiUrl, item.coverUrl),
     publishedAt: item.publishedOn,
     updatedAt: item.updatedAt,
+    seoTitle: null,
+    metaDescription: null,
   };
 }
 
+const text = (value: string | null | undefined) => value?.trim() || null;
+
 export function mapArticle(item: ApiArticle, apiUrl: string): Article {
-  return { ...mapArticleSummary(item, apiUrl), bodyHtml: item.bodyHtml };
+  return {
+    ...mapArticleSummary(item, apiUrl),
+    bodyHtml: item.bodyHtml,
+    seoTitle: text(item.seoTitle),
+    metaDescription: text(item.metaDescription),
+  };
 }

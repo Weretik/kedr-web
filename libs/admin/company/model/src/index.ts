@@ -1,5 +1,7 @@
 export { companyContactsLimits } from './entities/company-contacts';
 export type { CompanyContacts } from './entities/company-contacts';
+export { companyStoreDays, companyStoreFields, companyStoreLimits } from './entities/company-store';
+export type { CompanyStore } from './entities/company-store';
 export {
   companyContactsFields,
   contactsToDraft,
@@ -9,6 +11,7 @@ export {
 export type { CompanyContactsDraft, CompanyContactsField } from './forms/company-contacts-draft';
 export { validateCompanyContactsDraft } from './validators/company-contacts-rules';
 export type { CompanyContactsErrors } from './validators/company-contacts-rules';
+export type { CompanyStoreErrors } from './validators/company-store-rules';
 export { companyRequisitesLimits } from './entities/company-requisites';
 export type {
   CompanyRequisites,

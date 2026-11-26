@@ -1,3 +1,5 @@
+import type { CompanyStore } from './company-store';
+
 /** Sales contacts the public site shows; one record for the whole site. */
 export interface CompanyContacts {
   salesPhone: string;
@@ -7,6 +9,8 @@ export interface CompanyContacts {
   mapUrl: string;
   cityUk: string;
   cityRu: string;
+  /** The shop address and hours. */
+  store: CompanyStore;
   updatedAt: string;
   /** Who saved the contacts last; null for the row the migration created. */
   updatedBy: string | null;

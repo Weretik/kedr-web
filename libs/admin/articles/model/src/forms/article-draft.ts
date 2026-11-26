@@ -12,7 +12,13 @@ export interface ArticleDraft {
   texts: Record<ArticleLanguage, ArticleText>;
 }
 
-const emptyText = (): ArticleText => ({ title: '', excerpt: '', bodyHtml: '' });
+const emptyText = (): ArticleText => ({
+  title: '',
+  excerpt: '',
+  bodyHtml: '',
+  seoTitle: '',
+  metaDescription: '',
+});
 
 /** A new article: today's date, not published until the admin turns it on. */
 export function newArticleDraft(today: Date = new Date()): ArticleDraft {
@@ -52,7 +58,9 @@ export function isSameArticleDraft(a: ArticleDraft, b: ArticleDraft): boolean {
       return (
         left.title === right.title &&
         left.excerpt === right.excerpt &&
-        left.bodyHtml === right.bodyHtml
+        left.bodyHtml === right.bodyHtml &&
+        left.seoTitle === right.seoTitle &&
+        left.metaDescription === right.metaDescription
       );
     })
   );

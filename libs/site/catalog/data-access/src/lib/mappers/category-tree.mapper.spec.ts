@@ -1,4 +1,6 @@
-import { mapCatalogTree, mapSiteCatalogTree } from './category-tree.mapper';
+import { CATALOG_ROOTS } from '@site/catalog/model';
+
+import { mapCatalogTree, mapSiteCatalogTree, mapSiteCrawlTree } from './category-tree.mapper';
 
 const node = (id: number, sortOrder: number, overrides: Record<string, unknown> = {}) => ({
   id,
@@ -8,6 +10,8 @@ const node = (id: number, sortOrder: number, overrides: Record<string, unknown> 
   sortOrder,
   level: 0,
   productCount: id * 10,
+  isClosedFromSearch: false,
+  updatedAt: null as string | null,
   children: [],
   ...overrides,
 });
@@ -47,5 +51,29 @@ describe('mapSiteCatalogTree', () => {
 
     expect(tree.map((item) => item.id)).toEqual([900001, 900002, 7226]);
     expect(tree[2].children.map((item) => item.id)).toEqual([910001]);
+  });
+});
+
+describe('mapSiteCrawlTree', () => {
+  it('keeps the closing and change date of each site category in display order', () => {
+    const tree = mapSiteCrawlTree([
+      node(CATALOG_ROOTS.cosmosId, 0),
+      node(7, 2, {
+        isClosedFromSearch: true,
+        updatedAt: '2026-11-26T10:00:00Z',
+        children: [node(9, 2), node(8, 1, { slug: '' })],
+      }),
+      node(6, 1),
+    ]);
+
+    expect(tree).toEqual([
+      { slug: 'c-6', isClosedFromSearch: false, updatedAt: null, children: [] },
+      {
+        slug: 'c-7',
+        isClosedFromSearch: true,
+        updatedAt: '2026-11-26T10:00:00Z',
+        children: [{ slug: 'c-9', isClosedFromSearch: false, updatedAt: null, children: [] }],
+      },
+    ]);
   });
 });

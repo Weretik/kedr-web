@@ -5,3 +5,5 @@ export { CategoriesDataGrid } from './tables/categories-data-grid';
 export { CategoryOverviewCard } from './details/category-overview-card';
 export { CategoryTreeNav } from './components/category-tree-nav';
 export { CategorySiteVisibilityDialog } from './dialogs/category-site-visibility-dialog';
+export { CategorySiteNamesForm } from './forms/category-site-names-form';
+export { CategorySearchForm } from './forms/category-search-form';

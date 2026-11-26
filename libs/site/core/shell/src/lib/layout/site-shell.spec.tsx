@@ -68,6 +68,7 @@ describe('SiteShell', () => {
             viber: 'viber://chat?number=%2B380671112233',
             map: 'https://maps.app.goo.gl/abc',
           },
+          store: null,
         }}
       >
         content
