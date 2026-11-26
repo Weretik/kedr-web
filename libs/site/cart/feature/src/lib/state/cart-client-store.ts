@@ -161,7 +161,7 @@ export function createCartClientStore(
       const parsed = buildCheckoutCommand(snapshot.draft, snapshot.lines);
       if (!parsed.ok) {
         update({
-          touched: { firstName: true, phone: true },
+          touched: { firstName: true, phone: true, comment: true },
           result: { kind: 'validation', fieldErrors: parsed.fieldErrors, messages: parsed.issues },
         });
         return Promise.resolve();
@@ -183,7 +183,11 @@ export function createCartClientStore(
         .finally(() => {
           inFlight = undefined;
         });
-      update({ pending: true, result: null, touched: { firstName: true, phone: true } });
+      update({
+        pending: true,
+        result: null,
+        touched: { firstName: true, phone: true, comment: true },
+      });
       return inFlight;
     },
   };

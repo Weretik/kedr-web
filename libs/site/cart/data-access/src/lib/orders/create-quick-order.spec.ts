@@ -49,6 +49,26 @@ describe('createQuickOrder', () => {
     expect(transport).toHaveBeenCalledExactlyOnceWith(command);
   });
 
+  it('sends the buyer comment and omits it when there is none', async () => {
+    transport.mockResolvedValue({ kind: 'response', status: 200, body: { orderId } });
+
+    await createQuickOrder({ ...command, comment: 'Дзвоніть після 14:00' });
+    expect(transport).toHaveBeenCalledExactlyOnceWith({
+      ...command,
+      comment: 'Дзвоніть після 14:00',
+    });
+  });
+
+  it('maps a server comment error to the comment field', async () => {
+    expect(
+      await response(400, [{ identifier: 'Comment', errorMessage: 'Коментар надто довгий' }]),
+    ).toEqual({
+      kind: 'validation',
+      fieldErrors: { comment: ['Коментар надто довгий'] },
+      messages: [],
+    });
+  });
+
   it('forwards the attempt key as the idempotency key, never in the order body', async () => {
     transport.mockResolvedValue({ kind: 'response', status: 200, body: { orderId } });
     const requestKey = '7d3f0c52-6a4e-4d8b-9e21-3c5a7b9d1f04';

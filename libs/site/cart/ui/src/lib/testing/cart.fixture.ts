@@ -38,7 +38,7 @@ export function basketFixture(overrides: Partial<BasketProps> = {}): BasketProps
 export function checkoutFixture(overrides: Partial<CheckoutViewProps> = {}): CheckoutViewProps {
   return {
     ...basketFixture(),
-    draft: { firstName: 'Олена', phone: '+38 (068) 713-50-49' },
+    draft: { firstName: 'Олена', phone: '+38 (068) 713-50-49', comment: '' },
     fieldErrors: {},
     formMessages: [],
     resultKind: null,

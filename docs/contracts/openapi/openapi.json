@@ -13162,6 +13162,9 @@
             "items": {
               "$ref": "#/components/schemas/CreateOrderLineRequest"
             }
+          },
+          "comment": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -13728,6 +13731,9 @@
             "items": {
               "$ref": "#/components/schemas/GetAdminQuickOrderItemResponse"
             }
+          },
+          "comment": {
+            "type": ["null", "string"]
           }
         }
       },

@@ -6,7 +6,7 @@ export type CartSnapshot = {
   hydrated: boolean;
   lines: CartLine[];
   draft: CheckoutDraft;
-  touched: { firstName: boolean; phone: boolean };
+  touched: Record<CheckoutField, boolean>;
   recoveryRequired: boolean;
   discardedCount: number | null;
   storageIssue: string | null;
@@ -20,8 +20,8 @@ export type CartSnapshot = {
 export const SERVER_CART_SNAPSHOT: CartSnapshot = {
   hydrated: false,
   lines: [],
-  draft: { firstName: '', phone: '' },
-  touched: { firstName: false, phone: false },
+  draft: { firstName: '', phone: '', comment: '' },
+  touched: { firstName: false, phone: false, comment: false },
   recoveryRequired: false,
   discardedCount: 0,
   storageIssue: null,
@@ -73,8 +73,8 @@ export function checkoutOutcome(
     result,
     receipt: { orderId: result.orderId, ...accepted },
     lines: [],
-    draft: { firstName: '', phone: '' },
-    touched: { firstName: false, phone: false },
+    draft: { firstName: '', phone: '', comment: '' },
+    touched: { firstName: false, phone: false, comment: false },
     recoveryRequired: false,
     discardedCount: 0,
     notice: null,

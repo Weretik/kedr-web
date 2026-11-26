@@ -6,7 +6,7 @@ import type { CheckoutField, CheckoutFieldErrors } from '@site/cart/model';
 export function checkoutFieldErrors(snapshot: CartSnapshot): CheckoutFieldErrors {
   const local = validateCheckoutDraft(snapshot.draft).fieldErrors;
   const errors: CheckoutFieldErrors = {};
-  for (const field of ['firstName', 'phone'] as CheckoutField[]) {
+  for (const field of ['firstName', 'phone', 'comment'] as CheckoutField[]) {
     if (snapshot.touched[field] && local[field]) errors[field] = local[field];
   }
   if (snapshot.result?.kind === 'validation') Object.assign(errors, snapshot.result.fieldErrors);
