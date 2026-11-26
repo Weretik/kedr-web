@@ -13,6 +13,7 @@ const api = vi.hoisted(() => ({
   change: vi.fn(),
   create: vi.fn(),
   refetch: vi.fn(),
+  setValue: vi.fn(),
   idle: () => [vi.fn(), { isLoading: false }],
 }));
 
@@ -38,6 +39,19 @@ vi.mock('@admin/site-models/data-access', () => ({
     isFetching: false,
   }),
   useGetAttributeOptionsQuery: () => ({ data: [] }),
+  useGetAttributeValueOptionsQuery: (id: unknown) => ({
+    data:
+      id === 1
+        ? [
+            { id: 4, name: 'Нікель матовий' },
+            { id: 5, name: 'Матовий нікель' },
+          ]
+        : undefined,
+  }),
+  useGetProductAttributesQuery: () => ({ data: undefined, isLoading: true, isError: false }),
+  useAcceptProductReviewMutation: api.idle,
+  useReopenProductReviewMutation: api.idle,
+  useRestoreProductAttributeMutation: api.idle,
   useChangeSiteModelCategoryMutation: () => [api.change, { isLoading: false }],
   useCreateSiteModelMutation: () => [api.create, { isLoading: false }],
   useAcceptSiteModelsMutation: api.idle,
@@ -47,7 +61,7 @@ vi.mock('@admin/site-models/data-access', () => ({
   useRemoveSiteModelProductMutation: api.idle,
   useFillSiteModelFromNamesMutation: api.idle,
   useSetSiteModelTextMutation: api.idle,
-  useSetProductAttributeMutation: api.idle,
+  useSetProductAttributeMutation: () => [api.setValue, { isLoading: false }],
   useCreateAttributeOptionMutation: api.idle,
   useCreateAttributeValueOptionMutation: api.idle,
 }));
@@ -107,7 +121,9 @@ const listResult = (items: SiteModelListItem[], overrides = {}) => ({
 
 describe('SiteModelsPage', () => {
   beforeEach(() => {
-    [api.list, api.change, api.create, api.refetch].forEach((mock) => mock.mockReset());
+    [api.list, api.change, api.create, api.refetch, api.setValue].forEach((mock) =>
+      mock.mockReset(),
+    );
     api.list.mockReturnValue(
       listResult([
         row({ oneCCategories: ['Накладки'] }),
@@ -163,6 +179,44 @@ describe('SiteModelsPage', () => {
     expect(screen.getByText('Не на сайті')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Сховати товари: Ручка Рим' }));
     expect(screen.queryByText('Ручка Рим AB')).toBeNull();
+  });
+
+  it('fixes a product colour under an opened model and opens all its attributes (SC-002b)', async () => {
+    api.setValue.mockReturnValue({ unwrap: () => Promise.resolve({}) });
+    api.model.mockReturnValue({
+      data: {
+        ...model,
+        axes: [{ attributeId: 1, code: 'color', name: 'Колір', display: 'swatch', isSaved: true }],
+        products: [
+          {
+            productId: 101,
+            name: 'Ручка Рим NM',
+            photo: '',
+            retailPrice: 250,
+            exportToSite: true,
+            values: [{ attributeId: 1, valueId: 5, name: 'Матовий нікель', isManual: false }],
+            problems: [],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    });
+    renderPage();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Показати товари: Ручка Рим' }));
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Колір: Ручка Рим NM' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Нікель матовий' }));
+    await waitFor(() =>
+      expect(api.setValue).toHaveBeenCalledWith({
+        productId: 101,
+        attributeId: 1,
+        input: { valueIds: [4] },
+      }),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Усі ознаки товару Ручка Рим NM' }));
+    expect(await screen.findByText('Ознаки товару')).toBeTruthy();
   });
 
   it('keeps a picked filter in the address and resets the page (SC-003)', () => {

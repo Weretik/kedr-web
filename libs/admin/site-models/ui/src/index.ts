@@ -27,3 +27,4 @@ export { AddProductToModelPanel } from './panels/model-form/add-product-to-model
 export { SiteModelMainCard } from './details/model-summary/site-model-main-card';
 export { SiteModelSeoSummaryCard } from './details/model-summary/site-model-seo-summary-card';
 export { SiteModelProductsPreview } from './tables/models-expand/site-model-products-preview';
+export type { SiteModelPreviewEditing } from './tables/models-expand/site-model-preview-item';

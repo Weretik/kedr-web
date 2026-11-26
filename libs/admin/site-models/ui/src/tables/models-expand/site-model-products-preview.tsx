@@ -1,8 +1,8 @@
-import { StatusPill } from '@admin/shared/ui';
-import { Alert, Box, Button, Skeleton, Stack, Typography } from '@mui/material';
+import { Alert, Button, Skeleton, Stack, Typography } from '@mui/material';
 
-import { ProductThumb } from '../../components/display/product-thumb';
+import { SiteModelPreviewItem } from './site-model-preview-item';
 
+import type { SiteModelPreviewEditing } from './site-model-preview-item';
 import type { SiteModelProduct } from '@admin/site-models/model';
 
 interface SiteModelProductsPreviewProps {
@@ -10,13 +10,13 @@ interface SiteModelProductsPreviewProps {
   loading: boolean;
   error: boolean;
   onRetry: () => void;
+  /** The switcher pickers and «Усі ознаки» for each product (R-002b); without it the list only shows. */
+  editing?: SiteModelPreviewEditing;
 }
 
-const price = (value: number | null) =>
-  value === null ? '—' : `${value.toLocaleString('uk-UA')} грн`;
-
-/** The products of an opened model under its row in «Моделі»: photo, name, code, price, and whether the site shows it. */
+/** The products of an opened model under its row in «Моделі» (spec 001 R-002a, R-002b). */
 export function SiteModelProductsPreview({
+  editing,
   error,
   loading,
   onRetry,
@@ -40,41 +40,18 @@ export function SiteModelProductsPreview({
     );
 
   return (
+    // The grid would take typing and arrows in a picker as its own navigation.
     <Stack
-      component="ul"
-      spacing={0.5}
-      sx={{ listStyle: 'none', m: 0, pl: 7, py: 1, width: '100%' }}
+      onKeyDown={(event) => event.stopPropagation()}
+      spacing={1}
+      sx={{ pl: 7, py: 1, width: '100%' }}
     >
-      {products.map((product) => (
-        <Box
-          component="li"
-          key={product.productId}
-          sx={{
-            alignItems: 'center',
-            display: 'grid',
-            gap: 1.5,
-            gridTemplateColumns: '40px minmax(0, 1fr) auto auto',
-          }}
-        >
-          <ProductThumb size={40} src={product.photo} />
-          <Box sx={{ minWidth: 0 }}>
-            <Typography sx={{ overflowWrap: 'anywhere' }} variant="body2">
-              {product.name}
-            </Typography>
-            <Typography color="text.secondary" variant="caption">
-              Код {product.productId}
-            </Typography>
-          </Box>
-          <Typography sx={{ fontVariantNumeric: 'tabular-nums' }} variant="body2">
-            {price(product.retailPrice)}
-          </Typography>
-          {product.exportToSite ? (
-            <StatusPill label="На сайті" tone="success" />
-          ) : (
-            <StatusPill label="Не на сайті" tone="neutral" />
-          )}
-        </Box>
-      ))}
+      {editing?.error ? <Alert severity="error">{editing.error}</Alert> : null}
+      <Stack component="ul" spacing={1.5} sx={{ listStyle: 'none', m: 0, p: 0 }}>
+        {products.map((product) => (
+          <SiteModelPreviewItem editing={editing} key={product.productId} product={product} />
+        ))}
+      </Stack>
     </Stack>
   );
 }
