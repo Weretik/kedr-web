@@ -85,3 +85,5 @@ export type { SiteProductCandidate, SiteProductScope } from './mappers/site-prod
 export { siteProductCandidates } from './mappers/site-product-candidates';
 export type { LoneModelCandidate } from './entities/showcase/lone-product-model';
 export { similarModelForProduct } from './entities/showcase/lone-product-model';
+export { isProductsRow, siteModelsGridRows } from './mappers/site-models-grid-rows';
+export type { SiteModelProductsRow, SiteModelsGridRow } from './mappers/site-models-grid-rows';
