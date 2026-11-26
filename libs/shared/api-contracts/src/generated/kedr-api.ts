@@ -3514,10 +3514,6 @@ export interface components {
             shareImageMediaFileId: null | number;
             shareImageUrl: null | string;
             isManual: boolean;
-            /** Format: int32 */
-            modelCount: null | number;
-            /** Format: int32 */
-            proposedModelCount: null | number;
         };
         AdminCodeCategoryDto: {
             /** Format: int32 */
