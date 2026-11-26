@@ -91,6 +91,7 @@ describe('products navigation context', () => {
         isSale: false,
         isNew: false,
         exportToSite: false,
+        groupId: null,
       },
       refetch: vi.fn(),
     });
@@ -298,6 +299,7 @@ describe('products navigation context', () => {
         isSale: false,
         isNew: false,
         exportToSite: true,
+        groupId: null,
       },
       refetch: vi.fn(),
     });

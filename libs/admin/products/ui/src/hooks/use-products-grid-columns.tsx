@@ -2,6 +2,7 @@ import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 
 import { ProductsBooleanFilterHeader } from '../tables/cells/products-boolean-filter-header';
+import { ProductsModelCell } from '../tables/cells/products-model-cell';
 import { ProductsViewActionCell } from '../tables/cells/products-view-action-cell';
 import { productCategoryPath } from '../tables/grid/product-category-path';
 import { productsDataGridColumns } from '../tables/grid/products-data-grid.columns';
@@ -29,6 +30,8 @@ export interface ProductsGridColumnsOptions {
   onAddProduct?: (product: AdminProductListItem) => void;
   /** «Без фото»: no price filter and only the stock header filter. */
   basicFilters: boolean;
+  /** Set on the site tabs: «Модель» replaces «Категорія». */
+  onOpenModel?: (modelId: number) => void;
 }
 
 /** Static product columns plus the category path, boolean filter headers, and the actions column. */
@@ -40,6 +43,7 @@ export function useProductsGridColumns({
   onEditProduct,
   onAddProduct,
   basicFilters,
+  onOpenModel,
 }: ProductsGridColumnsOptions) {
   const theme = useTheme();
   const phone = useMediaQuery(theme.breakpoints.down('sm'));
@@ -51,6 +55,20 @@ export function useProductsGridColumns({
     () => [
       ...productsDataGridColumns.map((column) => {
         if (column.field === 'name') return { ...column, minWidth: phone ? 140 : 180 };
+        if (column.field === 'category' && onOpenModel)
+          return {
+            ...column,
+            field: 'model',
+            headerName: 'Модель',
+            minWidth: 100,
+            flex: 0,
+            width: 110,
+            sortable: false,
+            valueGetter: (_value: unknown, row: AdminProductListItem) => row.groupId,
+            renderCell: ({ row }: GridRenderCellParams<AdminProductListItem>) => (
+              <ProductsModelCell modelId={row.groupId} onOpen={onOpenModel} />
+            ),
+          };
         if (column.field === 'category')
           return {
             ...column,
@@ -107,6 +125,7 @@ export function useProductsGridColumns({
       onViewProduct,
       phone,
       basicFilters,
+      onOpenModel,
     ],
   );
 }
