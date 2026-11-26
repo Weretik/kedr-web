@@ -52,7 +52,7 @@ A new feature card in `docs/features/<app>/<module>/` briefly records its route,
 - When an SDD status changes, update its row in the [specification index](../../specs/README.md) in the same change.
 - When tests for a feature are added, moved, or removed, update the card's “Tests” section.
 - A small fix that does not change the card's facts does not touch the card.
-- After a backend OpenAPI change merges, run `npm run contracts:sync` (it downloads the generated contract from the KedrStore default branch; `-- --ref <branch>` takes an unmerged backend branch) and commit the snapshot and generated types together. CI fails while the snapshot differs from the backend, and a daily workflow opens the sync pull request on its own.
+- After a backend OpenAPI change merges, run `npm run contracts:sync` (it downloads the generated contract from the KedrStore default branch; `-- --ref <branch>` takes an unmerged backend branch) and commit the snapshot and generated types together. CI fails while the snapshot differs from the backend, and a daily workflow opens the sync pull request on its own. The branch does not wait for that: it updates from `master` and syncs the contract itself before merge, without asking the owner (order: merge backend → sync contract in the frontend branch → merge frontend; see [automatic synchronization](../../contracts/README.md#automatic-synchronization)).
 
 Scope is complete when:
 
