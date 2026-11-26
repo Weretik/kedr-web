@@ -21,6 +21,7 @@ export const adminProductListItemSchema = z.object({
   stock: finite,
   quantityInPack: nonNegativeInt,
   deletedAt: z.unknown().optional(),
+  groupId: finite.nullish(),
 });
 
 export const adminProductsPageSchema = z.object({

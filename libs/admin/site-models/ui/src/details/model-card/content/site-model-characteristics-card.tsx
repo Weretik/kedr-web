@@ -16,7 +16,7 @@ export function SiteModelCharacteristicsCard({
           Спільних значень у товарів моделі немає.
         </Typography>
       ) : (
-        <DetailFieldList>
+        <DetailFieldList columns={3}>
           {characteristics.map((item) => (
             <DetailField key={item.attributeId} label={item.name} value={item.values.join(', ')} />
           ))}

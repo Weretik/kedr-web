@@ -47,7 +47,7 @@ describe('useNewSiteModel', () => {
 
   it('offers final categories only and preselects the product it came with', () => {
     const { result } = renderHook(() =>
-      useNewSiteModel({ productIds: [11], name: 'Ручка', categoryId: 1 }, vi.fn(), vi.fn()),
+      useNewSiteModel({ productIds: [11], name: 'Ручка', categoryId: 1 }, vi.fn()),
     );
     expect(result.current.categories.map((category) => category.id)).toEqual([3]);
     expect(result.current.categoryId).toBeUndefined();
@@ -58,8 +58,7 @@ describe('useNewSiteModel', () => {
   it('creates the model with two products and opens it (SC-005)', async () => {
     api.create.mockReturnValue({ unwrap: () => Promise.resolve({ id: 42 }) });
     const onCreated = vi.fn();
-    const onNotice = vi.fn();
-    const { result } = renderHook(() => useNewSiteModel({}, onCreated, onNotice));
+    const { result } = renderHook(() => useNewSiteModel({}, onCreated));
     act(() => {
       result.current.onNameChange(' Ручка Рим ');
       result.current.onCategoryChange(3);
@@ -67,17 +66,16 @@ describe('useNewSiteModel', () => {
       result.current.onToggle({ productId: 12, name: 'Ручка 12' });
     });
     act(() => result.current.onSubmit());
-    await waitFor(() => expect(onCreated).toHaveBeenCalledWith(42));
+    await waitFor(() => expect(onCreated).toHaveBeenCalledWith(42, 'Модель створено'));
     expect(api.create).toHaveBeenCalledWith({
       categoryId: 3,
       name: 'Ручка Рим',
       productIds: [11, 12],
     });
-    expect(onNotice).toHaveBeenCalledWith('Модель створено');
   });
 
   it('does not create without a name or a category, and shows a server error', async () => {
-    const { result } = renderHook(() => useNewSiteModel({}, vi.fn(), vi.fn()));
+    const { result } = renderHook(() => useNewSiteModel({}, vi.fn()));
     act(() => result.current.onSubmit());
     expect(api.create).not.toHaveBeenCalled();
     api.create.mockReturnValue({ unwrap: () => Promise.reject({ status: 400 }) });
@@ -92,7 +90,7 @@ describe('useNewSiteModel', () => {
   });
 
   it('drops a picked product on a second toggle', () => {
-    const { result } = renderHook(() => useNewSiteModel({ productIds: [11] }, vi.fn(), vi.fn()));
+    const { result } = renderHook(() => useNewSiteModel({ productIds: [11] }, vi.fn()));
     act(() => result.current.onToggle({ productId: 11, name: 'Ручка 11' }));
     expect(result.current.selected).toEqual([]);
   });

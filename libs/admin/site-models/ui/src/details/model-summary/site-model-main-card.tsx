@@ -18,7 +18,7 @@ export function SiteModelMainCard({ model }: { model: SiteModel }) {
       eyebrow={`ID ${model.id} · /${model.slug}`}
       title="Основне"
     >
-      <DetailFieldList>
+      <DetailFieldList columns={4}>
         <DetailField
           label="Категорія на сайті"
           value={

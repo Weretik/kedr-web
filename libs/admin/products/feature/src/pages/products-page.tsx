@@ -49,6 +49,8 @@ export function ProductsPage({
     [navigate, search],
   );
 
+  const openModel = useCallback((modelId: number) => navigate(`/site-models/${modelId}`), [navigate]);
+
   return (
     <Stack component="section" spacing={3}>
       <ProductsPageToolbar />
@@ -84,6 +86,7 @@ export function ProductsPage({
             categoriesLoading={categoriesQuery.isFetching}
             categoriesError={categoriesQuery.isError}
             basicFilters={basicFilters}
+            onOpenModel={mode === 'site' || mode === 'siteMissing' ? openModel : undefined}
             booleanFilters={currentQuery}
             filterModel={toProductsGridFilterModel(currentQuery, basicFilters)}
             emptyMessage={emptyMessages[mode]}
