@@ -17,5 +17,6 @@ export const baseApi = createApi({
     'CatalogAttributes',
     'SiteModels',
     'AdminSiteOrders',
+    'RetailPrices',
   ],
 });

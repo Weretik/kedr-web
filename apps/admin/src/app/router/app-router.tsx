@@ -26,6 +26,7 @@ import {
 } from '@admin/orders/feature';
 import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
+import { RetailPricesButton } from '@admin/retail-prices/feature';
 import { backgroundTasksRoutes } from '@admin/scheduling/feature';
 import { seoSettingsRoutes } from '@admin/seo-settings/feature';
 import { createSiteModelsRoutes, ProductSiteModelSection } from '@admin/site-models/feature';
@@ -77,6 +78,7 @@ export function AppRouter() {
         ...createProductsRoutes({
           onAddProduct: (productId) => addProductToCurrentOrder(String(productId)),
           renderSiteModel: (productId) => <ProductSiteModelSection productId={productId} />,
+          listActions: <RetailPricesButton />,
           useCanEditCatalog,
         }),
         ...categoriesRoutes,

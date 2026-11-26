@@ -5,9 +5,9 @@ BEGIN;
 -- KedrStore keeps the catalog tables in the `catalog` schema (before 2026-11-18 in `public`); both work.
 SET LOCAL search_path TO catalog, public;
 
--- 12: Catalog:Pricing:RetailPriceTypeId, the retail price on the site; 11 stays so an older KedrStore
--- master, whose product page still defaults to 11, shows the same price.
-INSERT INTO "PriceType" ("Id", "PriceTypeName") VALUES (11, 'Роздрібна (сторінка товару)'), (12, 'Роздрібна');
+-- 11: Catalog:Pricing:RetailPriceTypeId, the retail price on the site, loaded from the owner's price file by its
+-- name (KedrStore spec catalog/010); 12 stays with the same prices for an older KedrStore master that used it.
+INSERT INTO "PriceType" ("Id", "PriceTypeName") VALUES (11, 'Розница халтмаг 30%'), (12, 'Роздрібна');
 
 INSERT INTO "ProductCategories"
   ("Id", "ProductTypeIdOneC", "Name", "Slug", "ParentId", "Path", "Level", "ShortNameUk", "ShortNameRu", "SortOrder", "IsDeleted", "IsShownOnSite")

@@ -13,17 +13,25 @@ export interface ProductsRouteOptions {
   useCanEditCatalog?: () => boolean;
   /** The product's site model block from the site models feature («Модель на сайті»). */
   renderSiteModel?: (productId: number) => ReactNode;
+  /** Header actions of «Каталог товарів» from other features («Завантажити роздрібні ціни»). */
+  listActions?: ReactNode;
 }
 
 export function createProductsRoutes({
   onAddProduct,
   useCanEditCatalog = () => false,
   renderSiteModel,
+  listActions,
 }: ProductsRouteOptions): RouteObject[] {
   function ProductsRoute() {
     const canEdit = useCanEditCatalog();
     return (
-      <ProductsPage canEditSlug={canEdit} canSeeDeleted={canEdit} onAddProduct={onAddProduct} />
+      <ProductsPage
+        canEditSlug={canEdit}
+        canSeeDeleted={canEdit}
+        listActions={listActions}
+        onAddProduct={onAddProduct}
+      />
     );
   }
 
