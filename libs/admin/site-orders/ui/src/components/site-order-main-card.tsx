@@ -33,6 +33,7 @@ export function SiteOrderMainCard({ order }: { order: SiteOrderDetail }) {
           }
         />
         <DetailField label="Номер замовлення" value={siteOrderNumber(order.orderId)} />
+        {order.comment && <DetailField label="Коментар покупця" value={order.comment} />}
       </DetailFieldList>
     </SectionCard>
   );

@@ -15,6 +15,7 @@ const order = (overrides: Partial<SiteOrderDetail> = {}): SiteOrderDetail => ({
   telegramSentAtUtc: '2026-11-24T07:45:02Z',
   telegramLastAttemptAtUtc: '2026-11-24T07:45:02Z',
   telegramLastError: null,
+  comment: null,
   items: [
     { productId: '27254', title: 'Ручка «Кедр»', unitPrice: 136.5, quantity: 3, amount: 409.5 },
   ],
@@ -23,6 +24,14 @@ const order = (overrides: Partial<SiteOrderDetail> = {}): SiteOrderDetail => ({
 
 describe('SiteOrderDetailsContent', () => {
   afterEach(cleanup);
+
+  it('shows the buyer comment only when there is one', () => {
+    const { rerender } = render(<SiteOrderDetailsContent order={order()} />);
+    expect(screen.queryByText('Коментар покупця')).toBeNull();
+    rerender(<SiteOrderDetailsContent order={order({ comment: 'Дзвоніть після 14:00' })} />);
+    expect(screen.getByText('Коментар покупця')).toBeTruthy();
+    expect(screen.getByText('Дзвоніть після 14:00')).toBeTruthy();
+  });
 
   it('shows the buyer, a phone link, the lines with sums and the total', () => {
     render(<SiteOrderDetailsContent order={order()} />);

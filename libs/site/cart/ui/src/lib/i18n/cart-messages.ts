@@ -5,6 +5,7 @@ import type { Locale } from '@site/core/i18n';
 
 export function fieldMessage(locale: Locale, field: CheckoutField, code: string): string {
   const copy = getCartCopy(locale);
+  if (field === 'comment') return copy.commentTooLong;
   if (code === 'required') return field === 'firstName' ? copy.nameRequired : copy.phoneRequired;
   if (code === 'too-long') return field === 'firstName' ? copy.nameLength : copy.phoneTooLong;
   if (code === 'too-short') return field === 'firstName' ? copy.nameLength : copy.phoneInvalid;
