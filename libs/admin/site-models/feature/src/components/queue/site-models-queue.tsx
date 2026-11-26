@@ -3,27 +3,19 @@ import { Box, Card, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
 import { SiteQueueToolbar } from './site-queue-toolbar';
-import { useSiteModelsQueue } from '../../hooks/use-site-models-queue';
+import { useSiteModelsQueue } from '../../hooks/lists/use-site-models-queue';
 import { SiteModelPane } from '../model-pane/site-model-pane';
-import { SiteLoneProductPane } from '../product-pane/site-lone-product-pane';
 
-import type { SiteQueueView } from '@admin/site-models/model';
-
-const emptyTexts: Record<SiteQueueView, string> = {
-  review: 'Немає моделей на перевірку. Усе, що запропонувала система, переглянуто.',
-  problems: 'Погоджених моделей з проблемами немає.',
-  lone: 'Усі товари сайту входять у моделі.',
-  all: 'У цій категорії немає товарів на сайті.',
-};
+const emptyText = 'Немає моделей на перевірку. Усе, що запропонувала система, переглянуто.';
 
 /** Only the queue list scrolls, beside the page; the open model takes the height it needs. */
 const queueListHeight = { xs: 360, md: 'calc(100vh - 140px)' };
 
-/** «Моделі» of «Вітрина сайту»: the queue on the left, the open model beside it (canvas variant B). */
+/** «Нові моделі» of «Перевірка»: proposals on the left, the open one beside it, reviewed one by one. */
 export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void }) {
   const queue = useSiteModelsQueue();
-  const { rows, selection, showcase, state, update } = queue;
-  const { lone, modelId, nextKey, selectedKey } = selection;
+  const { rows, selection, showcase, update } = queue;
+  const { modelId, nextKey, selectedKey } = selection;
   const [help, setHelp] = useState(false);
 
   return (
@@ -50,7 +42,7 @@ export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void
           variant="outlined"
         >
           <SiteQueueList
-            emptyText={emptyTexts[state.view]}
+            emptyText={emptyText}
             error={showcase.isError}
             loading={showcase.isFetching}
             onRetry={() => void showcase.refetch()}
@@ -68,13 +60,6 @@ export function SiteModelsQueue({ onNotice }: { onNotice: (text: string) => void
               modelId={modelId}
               onNext={queue.openNext}
               onNotice={onNotice}
-            />
-          ) : lone ? (
-            <SiteLoneProductPane
-              key={lone.key}
-              onCreated={(id) => update({ view: 'all', item: `m${id}` })}
-              onNotice={onNotice}
-              row={lone}
             />
           ) : rows.length > 0 || selectedKey ? (
             <Typography color="text.secondary" sx={{ p: 2 }} variant="body2">

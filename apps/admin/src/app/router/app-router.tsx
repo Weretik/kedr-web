@@ -1,5 +1,5 @@
 import { articlesRoutes } from '@admin/articles/feature';
-import { CatalogDictionaryTab } from '@admin/catalog-attributes/feature';
+import { CatalogDictionaryTab, useUnresolvedCodesCount } from '@admin/catalog-attributes/feature';
 import { createCategoriesRoutes } from '@admin/categories/feature';
 import { createClientsRoutes } from '@admin/clients/feature';
 import { companyAdminRoutes, companyRoutes } from '@admin/company/feature';
@@ -28,7 +28,7 @@ import { pageSeoRoutes } from '@admin/page-seo/feature';
 import { createProductsRoutes } from '@admin/products/feature';
 import { backgroundTasksRoutes } from '@admin/scheduling/feature';
 import { seoSettingsRoutes } from '@admin/seo-settings/feature';
-import { createSiteModelsRoutes } from '@admin/site-models/feature';
+import { createSiteModelsRoutes, ProductSiteModelSection } from '@admin/site-models/feature';
 import { siteOrdersRoutes } from '@admin/site-orders/feature';
 import { SiteRefreshButton } from '@admin/site-refresh/feature';
 import { createProfileRoutes, createUsersRoutes } from '@admin/users/feature';
@@ -52,6 +52,7 @@ const categoriesRoutes = createCategoriesRoutes({ useCanEditCatalog });
 const siteModelsRoutes = createSiteModelsRoutes({
   useCanEditCatalog,
   renderDictionaryTab: (props) => <CatalogDictionaryTab {...props} />,
+  useUnresolvedCodesCount,
 });
 const mediaRoutes = createMediaRoutes({ useCanDelete: useCanDeleteMedia });
 const dashboardRoutes = createDashboardRoutes({
@@ -75,6 +76,7 @@ export function AppRouter() {
         ...dashboardRoutes,
         ...createProductsRoutes({
           onAddProduct: (productId) => addProductToCurrentOrder(String(productId)),
+          renderSiteModel: (productId) => <ProductSiteModelSection productId={productId} />,
           useCanEditCatalog,
         }),
         ...categoriesRoutes,

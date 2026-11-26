@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  modelAddCandidates,
-  siteQueueSelection,
   nextSiteQueueKey,
+  siteQueueSelection,
+  siteReviewCounts,
   similarSiteModels,
-  siteQueueCounts,
-  siteQueueFilter,
 } from './site-queue';
 
 import type { SiteModelCategory, SiteShowcaseRow } from './site-showcase';
@@ -43,26 +41,13 @@ const row = (id: number, name: string, status: 'proposed' | 'accepted', category
   }) satisfies SiteShowcaseRow;
 
 describe('site queue', () => {
-  it('maps each view to the showcase filters', () => {
-    expect(siteQueueFilter('review')).toEqual({ status: 'proposed' });
-    expect(siteQueueFilter('problems')).toEqual({ status: 'accepted', problem: 'any' });
-    expect(siteQueueFilter('lone')).toEqual({ status: 'none' });
-    expect(siteQueueFilter('all')).toEqual({});
-  });
-
-  it('counts the top categories for the whole site and one category when selected', () => {
+  it('counts proposals and products in no model over the top categories', () => {
     const categories = [
       category(1, null, { acceptedModels: 3, proposedModels: 5, problemCount: 2, loneProducts: 1 }),
       category(2, 1, { acceptedModels: 1, proposedModels: 2, problemCount: 1 }),
       category(3, null, { proposedModels: 1 }),
     ];
-    expect(siteQueueCounts(categories, undefined)).toEqual({
-      review: 6,
-      problems: 2,
-      lone: 1,
-      all: 10,
-    });
-    expect(siteQueueCounts(categories, 2)).toEqual({ review: 2, problems: 1, lone: 0, all: 3 });
+    expect(siteReviewCounts(categories)).toEqual({ review: 6, lone: 1 });
   });
 
   it('moves to the next key, or to the previous one after the last', () => {
@@ -88,42 +73,19 @@ describe('site queue', () => {
   });
 });
 
-describe('modelAddCandidates', () => {
-  const item = (productId: number) => ({ productId }) as SiteShowcaseRow['products'][number];
-  const lone = (productId: number) =>
-    ({
-      ...row(0, 'Ручка', 'proposed'),
-      key: `p${productId}`,
-      model: null,
-      products: [item(productId)],
-    }) satisfies SiteShowcaseRow;
-
-  it('offers lone and proposed-model products that are not in the model yet', () => {
-    const rows = [
-      lone(1),
-      { ...row(2, 'Ручка А', 'proposed'), products: [item(2), item(3)] },
-      { ...row(4, 'Ручка Б', 'accepted'), products: [item(4)] },
-    ];
-    expect(modelAddCandidates(rows, [3]).map((candidate) => candidate.productId)).toEqual([1, 2]);
-  });
-});
-
 describe('siteQueueSelection', () => {
-  const lone = { ...row(0, 'Ручка', 'proposed'), key: 'p5', model: null } satisfies SiteShowcaseRow;
-  const rows = [row(1, 'Завіса', 'proposed'), lone, row(2, 'Ручка А', 'accepted')];
+  const rows = [row(1, 'Завіса', 'proposed'), row(2, 'Ручка А', 'proposed')];
 
   it('opens the first row when nothing is chosen and offers the next one', () => {
     expect(siteQueueSelection(rows, undefined)).toEqual({
       selectedKey: 'm1',
-      nextKey: 'p5',
+      nextKey: 'm2',
       modelId: 1,
-      lone: undefined,
     });
   });
 
-  it('opens a lone product row and goes back one row after the last', () => {
-    expect(siteQueueSelection(rows, 'p5')).toMatchObject({ modelId: undefined, lone });
-    expect(siteQueueSelection(rows, 'm2').nextKey).toBe('p5');
+  it('goes back one row after the last and has none after the only one', () => {
+    expect(siteQueueSelection(rows, 'm2').nextKey).toBe('m1');
     expect(siteQueueSelection([rows[0]], 'm1').nextKey).toBeUndefined();
   });
 });

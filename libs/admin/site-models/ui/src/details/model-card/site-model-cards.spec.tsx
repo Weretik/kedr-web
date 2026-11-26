@@ -35,6 +35,7 @@ const model: SiteModel = {
   texts: [],
   characteristics: [],
   problems: [],
+  oneCCategories: [],
 };
 
 describe('model card', () => {

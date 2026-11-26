@@ -12,6 +12,7 @@ import { addProductFeedback } from '../model/add-product-feedback';
 
 import type { AddProductFeedback } from '../model/add-product-feedback';
 import type { AddProductResult } from '../products.routes';
+import type { ReactNode } from 'react';
 
 const photoStorageUrl = 'https://images-kedr.cdn.express/~/o/products';
 const publicPathPrefix = '/uk/product/';
@@ -20,9 +21,11 @@ const publicPathPrefix = '/uk/product/';
 export function ProductDetailsPage({
   canEditSlug = false,
   onAddProduct,
+  renderSiteModel,
 }: {
   canEditSlug?: boolean;
   onAddProduct?: (productId: number) => AddProductResult;
+  renderSiteModel?: (productId: number) => ReactNode;
 }) {
   const { productSlug } = useParams();
   const location = useLocation();
@@ -93,6 +96,7 @@ export function ProductDetailsPage({
                 : undefined
             }
           />
+          {renderSiteModel?.(query.data.id)}
           <PublicAddressCard pathPrefix={publicPathPrefix} slug={query.data.productSlug} />
           <ProductEditPanel
             canEditSlug={canEditSlug}

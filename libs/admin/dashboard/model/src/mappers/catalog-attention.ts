@@ -3,7 +3,7 @@ import { countUk } from './plural';
 import type { AttentionItem } from '../entities/attention-item';
 import type { DashboardCatalog } from '../entities/dashboard-overview';
 
-/** Site showcase, photo, and category text problems of the catalog. */
+/** Site models, photo, and category text problems of the catalog. */
 export function catalogAttention(catalog: DashboardCatalog): AttentionItem[] {
   const items: AttentionItem[] = [];
   const site = catalog.siteModels;
@@ -14,7 +14,7 @@ export function catalogAttention(catalog: DashboardCatalog): AttentionItem[] {
       tone: 'error',
       title: `Товари на сайті без моделі: ${site.productsWithoutModel}`,
       detail: 'На сайті вони не мають своєї сторінки',
-      href: '/site-showcase?view=lone',
+      href: '/site-review?tab=lone',
       actionLabel: 'Відкрити товари без моделі',
     });
   }
@@ -53,8 +53,8 @@ export function catalogAttention(catalog: DashboardCatalog): AttentionItem[] {
         ]
           .filter(Boolean)
           .join(' · ') || null,
-      href: '/site-showcase',
-      actionLabel: 'Відкрити вітрину сайту',
+      href: '/site-models?problem=any',
+      actionLabel: 'Відкрити моделі',
     });
   }
 
@@ -74,7 +74,7 @@ export function catalogAttention(catalog: DashboardCatalog): AttentionItem[] {
         ]
           .filter(Boolean)
           .join(' · ') || null,
-      href: '/site-showcase?view=problems',
+      href: '/site-models?problem=any',
       actionLabel: 'Відкрити моделі з проблемами',
     });
   }
@@ -96,7 +96,7 @@ export function catalogAttention(catalog: DashboardCatalog): AttentionItem[] {
       tone: 'note',
       title: `Запропоновані моделі: ${site.proposedModels}`,
       detail: 'Перегляньте кожну й погодьте, щоб товари отримали свої сторінки',
-      href: '/site-showcase?view=review',
+      href: '/site-review?tab=new',
       actionLabel: 'Перевірити моделі',
     });
   }

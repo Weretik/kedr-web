@@ -1,5 +1,5 @@
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /** Something to pick by name: an attribute or a value. */
 export interface PickerOption {
@@ -29,7 +29,8 @@ interface CreatablePickerProps {
   createText: string;
   disabled?: boolean;
   error?: boolean;
-  autoFocus?: boolean;
+  /** Moves the focus into the picker when it appears (the person just asked to add one). */
+  focusOnOpen?: boolean;
   onPick: (id: number) => void;
   /** Creates an option with the typed name and returns its id, or `undefined` when it failed. */
   onCreate: (name: string) => Promise<number | undefined>;
@@ -42,7 +43,13 @@ interface CreatablePickerProps {
  */
 export function CreatablePicker(props: CreatablePickerProps) {
   const [creating, setCreating] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { focusOnOpen } = props;
   const selected = props.options.find((option) => option.id === props.value) ?? null;
+
+  useEffect(() => {
+    if (focusOnOpen) inputRef.current?.focus();
+  }, [focusOnOpen]);
 
   const create = async (name: string) => {
     setCreating(true);
@@ -81,7 +88,7 @@ export function CreatablePicker(props: CreatablePickerProps) {
       renderInput={(params) => (
         <TextField
           {...params}
-          autoFocus={props.autoFocus}
+          inputRef={inputRef}
           error={props.error}
           label={props.label}
           placeholder={props.emptyText}
