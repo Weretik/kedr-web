@@ -1,4 +1,5 @@
-import { lazy } from 'react';
+import { PageLoader } from '@admin/shared/ui';
+import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { SiteModelPanelsProvider } from './components/panels/site-model-panels-provider';
@@ -28,11 +29,16 @@ function LegacyRedirect({ to }: { to: (params: URLSearchParams) => string }) {
   return <Navigate replace to={to(new URLSearchParams(location.search))} />;
 }
 
-/** Every site page opens the same model panels (R-011). */
+/**
+ * Every site page opens the same model panels (R-011). The pages load lazily inside the provider, so moving from one
+ * page to another (for example to a model just created) keeps the panels and their notice.
+ */
 function SitePagesLayout() {
   return (
     <SiteModelPanelsProvider>
-      <Outlet />
+      <Suspense fallback={<PageLoader label="Завантаження" />}>
+        <Outlet />
+      </Suspense>
     </SiteModelPanelsProvider>
   );
 }
