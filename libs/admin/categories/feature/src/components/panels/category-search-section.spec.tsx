@@ -49,6 +49,7 @@ const category: AdminCategory = {
   siteNameRu: null,
   isClosedFromSearch: false,
   sharePicture: null,
+  isManual: false,
 };
 
 const ok = () => ({ unwrap: () => Promise.resolve(category) });
