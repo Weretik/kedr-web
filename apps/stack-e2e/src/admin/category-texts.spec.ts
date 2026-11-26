@@ -7,16 +7,16 @@ const heading = `Ручки-кноби для перевірки E2E ${Date.now(
 test('a category heading saved in the Admin reaches the site after «Оновити сайт зараз»', async ({
   page,
 }) => {
-  await page.goto('/categories/6488?category=6488');
-  await page.getByRole('button', { name: 'Редагувати' }).first().click();
+  await page.goto('/categories/6488?tab=seo');
+  // The first «Редагувати» belongs to «Основне»; the second opens the Ukrainian column of the SEO tab,
+  // the only open form, so its «Зберегти» is unique.
+  await page.getByRole('button', { name: 'Редагувати' }).nth(1).click();
 
-  // The open language tab of «Тексти для сайту»; the panel has other save buttons (site names, search).
-  const texts = page.getByRole('dialog').getByRole('tabpanel');
-  await texts.getByLabel('Заголовок H1').fill(heading);
+  await page.getByLabel('Заголовок H1').fill(heading);
   const saved = page.waitForResponse(
     (response) => response.url().includes('/api/categories/6488/content/uk') && response.ok(),
   );
-  await texts.getByRole('button', { name: 'Зберегти', exact: true }).click();
+  await page.getByRole('button', { name: 'Зберегти', exact: true }).click();
   await saved;
 
   await page.goto('/dashboard');

@@ -3,16 +3,16 @@ import { CategoriesDataGrid } from '@admin/categories/ui';
 import { AdminPageHeader, NoticeSnackbar } from '@admin/shared/ui';
 import { Card, Stack, Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { CategoryExplorer } from '../components/explorer/category-explorer';
-import { NewCategoryFlow } from '../components/placement/new-category-flow';
+import { CategoryTreeTable } from '../components/list/category-tree-table';
+import { NewCategoryFlow } from '../components/list/new-category-flow';
 
 type CategoriesTab = 'active' | 'deleted';
 
 /**
- * Categories as a tree with the selected category beside it, and «Нова категорія» for editors; the «Видалені» tab and editing
- * exist for administrators only (R-002).
+ * Categories as one tree table (spec 003 R-001), «Нова категорія» for editors; the «Видалені» tab and changes exist for
+ * administrators only.
  */
 export function CategoriesPage({
   canEdit = false,
@@ -21,12 +21,12 @@ export function CategoriesPage({
   canEdit?: boolean;
   canSeeDeleted: boolean;
 }) {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const tab: CategoriesTab =
     canSeeDeleted && searchParams.get('tab') === 'deleted' ? 'deleted' : 'active';
   const query = useGetAdminCategoriesQuery({ deleted: tab === 'deleted' });
   const [notice, setNotice] = useState<string | null>(null);
-  const selectedId = Number(searchParams.get('category')) || null;
 
   return (
     <Stack component="section" spacing={3}>
@@ -35,11 +35,11 @@ export function CategoriesPage({
           canEdit && tab === 'active' ? (
             <NewCategoryFlow
               categories={query.data ?? []}
-              onCreated={(categoryId) => {
-                setSearchParams({ category: String(categoryId) });
-                setNotice('Категорію створено.');
-              }}
-              selectedId={selectedId}
+              onCreated={(categoryId) =>
+                navigate(`/categories/${categoryId}`, {
+                  state: { notice: 'Категорію створено.' },
+                })
+              }
             />
           ) : undefined
         }
@@ -68,11 +68,12 @@ export function CategoriesPage({
           />
         </Card>
       ) : (
-        <CategoryExplorer
+        <CategoryTreeTable
           canEdit={canEdit}
           categories={query.data ?? []}
           error={query.isError}
           loading={query.isLoading}
+          onNotice={setNotice}
           onRetry={() => query.refetch()}
         />
       )}

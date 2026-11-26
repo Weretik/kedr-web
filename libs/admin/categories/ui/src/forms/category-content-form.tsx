@@ -15,6 +15,7 @@ interface CategoryContentFormProps {
   /** Server error in the words of the page. */
   saveError?: string;
   onChange: (draft: CategoryContentDraft) => void;
+  /** Drops the changes and leaves the edit mode (spec 003 R-009). */
   onReset: () => void;
   onSave: () => void;
 }
@@ -81,8 +82,8 @@ export function CategoryContentForm({
       </Stack>
       {saveError ? <Alert severity="error">{saveError}</Alert> : null}
       <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-        <Button disabled={!dirty || saving} onClick={onReset}>
-          Скасувати зміни
+        <Button disabled={saving} onClick={onReset}>
+          Скасувати
         </Button>
         <Button disabled={!dirty || saving} type="submit" variant="contained">
           {saving ? 'Збереження…' : 'Зберегти'}

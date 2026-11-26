@@ -1,4 +1,3 @@
-import { SectionCard } from '@admin/shared/ui';
 import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 
 import type { FormEvent } from 'react';
@@ -35,35 +34,33 @@ export function CategorySiteNamesForm({
   };
 
   return (
-    <SectionCard title="Назва на сайті">
-      <Stack component="form" noValidate onSubmit={submit} spacing={2}>
-        <Typography color="text.secondary" variant="body2">
-          Назва в каталозі, хлібних крихтах і заголовках. Порожньо — назва з 1С ({sourceName}).
-        </Typography>
-        <TextField
-          autoComplete="off"
-          label="Українською"
-          onChange={(event) => onChange({ ...value, uk: event.target.value })}
-          slotProps={{ htmlInput: { maxLength: siteNameMaxLength } }}
-          value={value.uk}
-        />
-        <TextField
-          autoComplete="off"
-          label="Російською"
-          onChange={(event) => onChange({ ...value, ru: event.target.value })}
-          slotProps={{ htmlInput: { maxLength: siteNameMaxLength } }}
-          value={value.ru}
-        />
-        {error ? <Alert severity="error">{error}</Alert> : null}
-        <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-          <Button disabled={!dirty || saving} onClick={onReset}>
-            Скасувати
-          </Button>
-          <Button disabled={!dirty || saving} type="submit" variant="contained">
-            {saving ? 'Збереження…' : 'Зберегти'}
-          </Button>
-        </Stack>
+    <Stack component="form" noValidate onSubmit={submit} spacing={2}>
+      <Typography color="text.secondary" variant="body2">
+        Назва в каталозі, хлібних крихтах і заголовках. Порожньо — назва з 1С ({sourceName}).
+      </Typography>
+      <TextField
+        autoComplete="off"
+        label="Українською"
+        onChange={(event) => onChange({ ...value, uk: event.target.value })}
+        slotProps={{ htmlInput: { maxLength: siteNameMaxLength } }}
+        value={value.uk}
+      />
+      <TextField
+        autoComplete="off"
+        label="Російською"
+        onChange={(event) => onChange({ ...value, ru: event.target.value })}
+        slotProps={{ htmlInput: { maxLength: siteNameMaxLength } }}
+        value={value.ru}
+      />
+      {error ? <Alert severity="error">{error}</Alert> : null}
+      <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
+        <Button disabled={!dirty || saving} onClick={onReset}>
+          Скасувати
+        </Button>
+        <Button disabled={!dirty || saving} type="submit" variant="contained">
+          {saving ? 'Збереження…' : 'Зберегти'}
+        </Button>
       </Stack>
-    </SectionCard>
+    </Stack>
   );
 }

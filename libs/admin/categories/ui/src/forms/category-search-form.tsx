@@ -1,4 +1,3 @@
-import { SectionCard } from '@admin/shared/ui';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import { Alert, Box, Button, FormControlLabel, Stack, Switch, Typography } from '@mui/material';
@@ -38,67 +37,61 @@ export function CategorySearchForm({
   };
 
   return (
-    <SectionCard title="Пошук і поширення">
-      <Stack component="form" noValidate onSubmit={submit} spacing={2}>
-        <Stack spacing={0.5}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isClosedFromSearch}
-                onChange={(event) => onClosedChange(event.target.checked)}
-              />
-            }
-            label="Закрити від пошуку"
-          />
-          <Typography color="text.secondary" variant="body2">
-            Категорія лишається на сайті, але Google її не індексує. Діє й на підкатегорії та їхні
-            товари.
-          </Typography>
-        </Stack>
-        <Stack spacing={1}>
-          <Typography variant="subtitle2">Фото для поширення</Typography>
-          {picture?.url ? (
-            <Box
-              alt="Фото для поширення"
-              component="img"
-              src={picture.url}
-              sx={{ borderRadius: 1, maxHeight: 160, maxWidth: '100%', objectFit: 'contain' }}
+    <Stack component="form" noValidate onSubmit={submit} spacing={2}>
+      <Stack spacing={0.5}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isClosedFromSearch}
+              onChange={(event) => onClosedChange(event.target.checked)}
             />
-          ) : (
-            <Typography color="text.secondary" variant="body2">
-              {picture ? 'Файл видалено з медіатеки.' : 'Не вибрано — сайт покаже загальне фото.'}
-            </Typography>
-          )}
-          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
-            <Button
-              disabled={saving}
-              onClick={onPickPicture}
-              startIcon={<PhotoLibraryOutlinedIcon />}
-              variant="outlined"
-            >
-              Вибрати з медіатеки
+          }
+          label="Закрити від пошуку"
+        />
+        <Typography color="text.secondary" variant="body2">
+          Категорія лишається на сайті, але Google її не індексує. Діє й на підкатегорії та їхні
+          товари.
+        </Typography>
+      </Stack>
+      <Stack spacing={1}>
+        <Typography variant="subtitle2">Фото для поширення</Typography>
+        {picture?.url ? (
+          <Box
+            alt="Фото для поширення"
+            component="img"
+            src={picture.url}
+            sx={{ borderRadius: 1, maxHeight: 160, maxWidth: '100%', objectFit: 'contain' }}
+          />
+        ) : (
+          <Typography color="text.secondary" variant="body2">
+            {picture ? 'Файл видалено з медіатеки.' : 'Не вибрано — сайт покаже загальне фото.'}
+          </Typography>
+        )}
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
+          <Button
+            disabled={saving}
+            onClick={onPickPicture}
+            startIcon={<PhotoLibraryOutlinedIcon />}
+            variant="outlined"
+          >
+            Вибрати з медіатеки
+          </Button>
+          {picture ? (
+            <Button disabled={saving} onClick={onRemovePicture} startIcon={<DeleteOutlinedIcon />}>
+              Прибрати
             </Button>
-            {picture ? (
-              <Button
-                disabled={saving}
-                onClick={onRemovePicture}
-                startIcon={<DeleteOutlinedIcon />}
-              >
-                Прибрати
-              </Button>
-            ) : null}
-          </Stack>
-        </Stack>
-        {error ? <Alert severity="error">{error}</Alert> : null}
-        <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-          <Button disabled={!dirty || saving} onClick={onReset}>
-            Скасувати
-          </Button>
-          <Button disabled={!dirty || saving} type="submit" variant="contained">
-            {saving ? 'Збереження…' : 'Зберегти'}
-          </Button>
+          ) : null}
         </Stack>
       </Stack>
-    </SectionCard>
+      {error ? <Alert severity="error">{error}</Alert> : null}
+      <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
+        <Button disabled={saving} onClick={onReset}>
+          Скасувати
+        </Button>
+        <Button disabled={!dirty || saving} type="submit" variant="contained">
+          {saving ? 'Збереження…' : 'Зберегти'}
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
