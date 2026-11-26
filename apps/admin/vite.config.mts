@@ -20,14 +20,10 @@ export default defineConfig(({ mode }) => {
       }),
       nxReadySignal(),
     ],
-    // Scan every admin library up front: a dependency first met in a lazily loaded page (for example a new icon)
-    // otherwise makes the dev server re-optimize and reload the page in the middle of a session.
+    // The React Compiler adds `react/compiler-runtime` to every component after the scan, so the dev server met it
+    // late, re-optimized and reloaded the page mid-session (the e2e check lost its notice to that reload).
     optimizeDeps: {
-      entries: [
-        'index.html',
-        '../../libs/admin/**/src/**/*.tsx',
-        '!../../libs/admin/**/*.spec.tsx',
-      ],
+      include: ['react/compiler-runtime'],
     },
     server: {
       host: 'localhost',
