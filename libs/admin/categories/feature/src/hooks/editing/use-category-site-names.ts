@@ -1,7 +1,7 @@
 import { useSetCategorySiteNamesMutation } from '@admin/categories/data-access';
 import { useState } from 'react';
 
-import { categoryContentErrorMessage } from '../errors/category-content-error-message';
+import { categoryContentErrorMessage } from '../../errors/category-content-error-message';
 
 import type { AdminCategory } from '@admin/categories/model';
 

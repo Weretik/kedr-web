@@ -23,14 +23,9 @@ const siteModelListItem = (overrides: Partial<SiteModelListItem> = {}): SiteMode
 });
 
 describe('SiteModelCategoryCell', () => {
-  it('shows the site category and the differing 1C categories of a moved model', () => {
+  it('shows only the site category, never where 1C keeps the products', () => {
     render(<SiteModelCategoryCell model={siteModelListItem({ oneCCategories: ['Накладки'] })} />);
     expect(screen.getByText('Ручки')).toBeTruthy();
-    expect(screen.getByText('У 1С: Накладки')).toBeTruthy();
-  });
-
-  it('shows nothing more when 1C agrees', () => {
-    render(<SiteModelCategoryCell model={siteModelListItem()} />);
-    expect(screen.queryByText(/У 1С/)).toBeNull();
+    expect(screen.queryByText(/У 1С|Накладки/)).toBeNull();
   });
 });

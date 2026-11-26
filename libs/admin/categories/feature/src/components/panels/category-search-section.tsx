@@ -1,8 +1,8 @@
 import { CategorySearchForm, CategorySiteNamesForm } from '@admin/categories/ui';
 import { MediaPickerDialog } from '@admin/media/ui';
 
-import { useCategorySearchSettings } from '../hooks/use-category-search-settings';
-import { useCategorySiteNames } from '../hooks/use-category-site-names';
+import { useCategorySearchSettings } from '../../hooks/editing/use-category-search-settings';
+import { useCategorySiteNames } from '../../hooks/editing/use-category-site-names';
 
 import type { AdminCategory } from '@admin/categories/model';
 

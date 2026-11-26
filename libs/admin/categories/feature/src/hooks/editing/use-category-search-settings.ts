@@ -2,7 +2,7 @@ import { useSetCategorySearchSettingsMutation } from '@admin/categories/data-acc
 import { useMediaPicker } from '@admin/media/data-access';
 import { useState } from 'react';
 
-import { categoryContentErrorMessage } from '../errors/category-content-error-message';
+import { categoryContentErrorMessage } from '../../errors/category-content-error-message';
 
 import type { AdminCategory, CategorySharePicture } from '@admin/categories/model';
 

@@ -23,6 +23,7 @@ export const adminCategorySchema = z.object({
   isClosedFromSearch: z.boolean().nullish(),
   shareImageMediaFileId: z.number().nullish(),
   shareImageUrl: z.string().nullish(),
+  isManual: z.boolean().nullish(),
 });
 
 /** Runtime shape of the site texts of a category in one language. */

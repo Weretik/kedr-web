@@ -23,6 +23,7 @@ const category = (overrides: Partial<AdminCategory>): AdminCategory => ({
   siteNameRu: null,
   isClosedFromSearch: false,
   sharePicture: null,
+  isManual: false,
   ...overrides,
 });
 

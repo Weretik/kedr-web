@@ -116,7 +116,7 @@ describe('SiteModelPage', () => {
       '/site-models?search=%D1%80%D0%B8%D0%BC',
     );
     expect(screen.getByText('Не перевірена')).toBeTruthy();
-    expect(screen.getByText('У 1С: Накладки')).toBeTruthy();
+    expect(screen.queryByText(/У 1С/)).toBeNull();
     expect(screen.getByText('Ручка Рим хром')).toBeTruthy();
     expect(screen.queryByRole('textbox')).toBeNull();
   });

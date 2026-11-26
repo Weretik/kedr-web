@@ -1,5 +1,7 @@
 import { DetailField, DetailFieldList, SectionCard } from '@admin/shared/ui';
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
+
+import { CategoryManualChip } from '../components/category-manual-chip';
 
 import type { AdminCategory } from '@admin/categories/model';
 
@@ -12,9 +14,12 @@ interface CategoryInformationCardProps {
 export function CategoryInformationCard({ category, path }: CategoryInformationCardProps) {
   return (
     <SectionCard as="article" eyebrow="Категорія" title={category.nameUk} titleVariant="h5">
-      <Typography color="text.secondary" variant="body2">
-        ID {category.id}
-      </Typography>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Typography color="text.secondary" variant="body2">
+          ID {category.id}
+        </Typography>
+        <CategoryManualChip isManual={category.isManual} />
+      </Stack>
       <DetailFieldList columns={2}>
         <DetailField label="Назва російською" value={category.nameRu} />
         <DetailField label="Назва в 1С" value={category.sourceName} />

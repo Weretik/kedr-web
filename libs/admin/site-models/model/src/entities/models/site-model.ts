@@ -79,7 +79,7 @@ export interface SiteModel {
   texts: readonly SiteModelText[];
   characteristics: readonly SiteModelCharacteristic[];
   problems: readonly SiteModelProblem[];
-  /** 1C categories of its products that differ from the site category; shown as «У 1С: …». */
+  /** 1C categories of its products that differ from the site category; not shown in the admin. */
   oneCCategories: readonly string[];
 }
 

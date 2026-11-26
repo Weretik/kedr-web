@@ -2,7 +2,7 @@ import { useSaveCategoryContentMutation } from '@admin/categories/data-access';
 import { isSameCategoryContent, validateCategoryContent } from '@admin/categories/model';
 import { useEffect, useState } from 'react';
 
-import { categoryContentErrorMessage } from '../errors/category-content-error-message';
+import { categoryContentErrorMessage } from '../../errors/category-content-error-message';
 
 import type { CategoryContentByLanguage } from '@admin/categories/data-access';
 import type {

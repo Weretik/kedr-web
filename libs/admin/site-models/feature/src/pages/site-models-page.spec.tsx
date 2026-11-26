@@ -120,9 +120,49 @@ describe('SiteModelsPage', () => {
   it('maps the models (SC-002)', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: 'Моделі' })).toBeTruthy();
-    expect(screen.getByText('У 1С: Накладки')).toBeTruthy();
+    expect(screen.queryByText(/У 1С/)).toBeNull();
     expect(screen.getByText('Не перевірена')).toBeTruthy();
     expect(screen.getByText('Немає фото')).toBeTruthy();
+  });
+
+  it('opens a model with its arrow and lists its products under the row (SC-002a)', () => {
+    api.model.mockReturnValue({
+      data: {
+        ...model,
+        products: [
+          {
+            productId: 101,
+            name: 'Ручка Рим AB',
+            photo: '',
+            retailPrice: 250,
+            exportToSite: true,
+            values: [],
+            problems: [],
+          },
+          {
+            productId: 102,
+            name: 'Ручка Рим CR',
+            photo: '',
+            retailPrice: null,
+            exportToSite: false,
+            values: [],
+            problems: [],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    });
+    renderPage();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Показати товари: Ручка Рим' }));
+
+    expect(api.model).toHaveBeenLastCalledWith(5);
+    expect(screen.getByText('Ручка Рим AB')).toBeTruthy();
+    expect(screen.getByText('Код 102')).toBeTruthy();
+    expect(screen.getByText('Не на сайті')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Сховати товари: Ручка Рим' }));
+    expect(screen.queryByText('Ручка Рим AB')).toBeNull();
   });
 
   it('keeps a picked filter in the address and resets the page (SC-003)', () => {

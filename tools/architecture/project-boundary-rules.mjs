@@ -27,6 +27,9 @@ const documentedCrossDomainFlows = new Set([
   'admin-categories-feature->admin-media-data-access',
   'admin-categories-feature->admin-media-model',
   'admin-categories-feature->admin-media-ui',
+  // «Моделі на сайті» of a final category lists its site models and adds others (admin categories 002 R-006).
+  'admin-categories-feature->admin-site-models-data-access',
+  'admin-categories-feature->admin-site-models-model',
   // «Фільтри категорій» lists the categories shown on the site, as «Моделі» does (Catalog 007 stage 4c).
   'admin-catalog-attributes-feature->admin-site-models-data-access',
   // Products are priced for the selected customer (Kedr Manager stage 4).
