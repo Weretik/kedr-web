@@ -44,6 +44,7 @@ To consume a new or changed operation: merge the backend change, run `contracts:
   - [Public products](catalog/public-products.md)
   - [Admin products](catalog/admin-products.md)
   - [Products without a photo](catalog/missing-photo-products.md)
+  - [Admin retail prices from a file](catalog/admin-retail-prices.md)
   - [Admin categories](catalog/admin-categories.md)
   - [Quick order](catalog/quick-order.md)
 - Media:
