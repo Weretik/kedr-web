@@ -35,6 +35,16 @@ npm run contracts:drift                    # the snapshot matches the backend de
 
 CI runs `contracts:check` and `contracts:drift`, so a pull request fails while the snapshot lags the backend. Every weekday at 07:00 Kyiv time the workflow `contract-sync.yml` syncs the snapshot and, when it changed, opens or updates the pull request `chore/sync-backend-contract` with the typecheck result. CI does not start by itself on that pull request (a GitHub rule for workflow-created pull requests): close and reopen it, or push a commit.
 
+### Automatic synchronization
+
+A branch (or agent thread) that touches a backend contract synchronizes the snapshot itself, before its pull request is merged, without waiting for `contracts:drift` to fail and without asking the owner:
+
+1. Merge the KedrStore change into `master` first. While it is unmerged, use `npm run contracts:sync -- --ref <backend branch>` for development.
+2. Update the frontend branch from `master`, then run `npm run contracts:sync` (from the backend default branch) and `npm run contracts:check`.
+3. Commit the snapshot and generated types in the same pull request, then merge the frontend.
+
+Order: merge backend → sync the contract in the frontend branch → merge frontend.
+
 To consume a new or changed operation: merge the backend change, run `contracts:sync`, fix the type errors it shows, call the operation through `apiClient` in the domain `data-access` (path and body come from the contract), map the response to the domain model, and update the consumer page and tests.
 
 ## Consumer projections
