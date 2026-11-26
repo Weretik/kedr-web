@@ -1,4 +1,8 @@
-export type { AdminCategory, CategorySharePicture } from './entities/admin-category';
+export type {
+  AdminCategory,
+  CategorySharePicture,
+  CategorySiteModel,
+} from './entities/admin-category';
 export { missingContentLanguages } from './entities/admin-category';
 export {
   contentLanguages,
@@ -29,3 +33,11 @@ export {
   descendantCount,
   expandableCategoryIds,
 } from './mappers/category-family';
+export {
+  categoryNameError,
+  categoryNameMaxLength,
+  categoryNeighbourPosition,
+  categoryParentOptions,
+  topLevelLabel,
+} from './mappers/category-placement';
+export type { CategoryParentOption, NewCategoryDraft } from './mappers/category-placement';

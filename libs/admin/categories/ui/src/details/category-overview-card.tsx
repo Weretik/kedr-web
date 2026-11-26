@@ -5,6 +5,7 @@ import { Alert, Box, Button, Chip, Skeleton, Stack, Typography } from '@mui/mate
 import { CategoryBreadcrumbs } from './category-breadcrumbs';
 import { CategoryLanguageSummary } from './category-language-summary';
 import { CategorySiteVisibility } from './category-site-visibility';
+import { CategoryManualChip } from '../components/category-manual-chip';
 
 import type { AdminCategory, CategoryContent, ContentLanguage } from '@admin/categories/model';
 
@@ -60,6 +61,11 @@ export function CategoryOverviewCard({
       titleVariant="h5"
     >
       <CategoryBreadcrumbs ancestors={ancestors} category={category} onSelect={onSelect} />
+      {category.isManual ? (
+        <Box>
+          <CategoryManualChip isManual />
+        </Box>
+      ) : null}
       <CategorySiteVisibility category={category} onToggleSite={onToggleSite} />
       <DetailFieldList columns={2}>
         <DetailField label="Назва російською" value={orDash(category.nameRu)} />

@@ -25,7 +25,7 @@ const model = (overrides: Partial<SiteModel> = {}): SiteModel => ({
 });
 
 describe('SiteModelMainCard', () => {
-  it('shows the site category with the 1C note, the proposal mark and problems', () => {
+  it('shows only the site category, the proposal mark and problems', () => {
     render(
       <SiteModelMainCard
         model={model({
@@ -37,7 +37,7 @@ describe('SiteModelMainCard', () => {
       />,
     );
     expect(screen.getByText('Ручки')).toBeTruthy();
-    expect(screen.getByText('У 1С: Накладки')).toBeTruthy();
+    expect(screen.queryByText(/У 1С|Накладки/)).toBeNull();
     expect(screen.getByText('Не перевірена')).toBeTruthy();
     expect(screen.getByText('Колір')).toBeTruthy();
     expect(screen.getByText('Немає SEO-текстів')).toBeTruthy();

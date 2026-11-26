@@ -25,6 +25,8 @@ export interface AdminCategory {
   siteNameRu: string | null;
   /** «Закрити від пошуку»: the site keeps the page but search engines do not index it or its products. */
   isClosedFromSearch: boolean;
+  /** Made by hand in the admin, not by 1C: only such a category can be deleted (spec 002 R-002, R-004). */
+  isManual: boolean;
   /** Link-preview picture of the category page; `url` is `null` in lists or when the file left the library. */
   sharePicture: CategorySharePicture | null;
 }
@@ -40,4 +42,15 @@ export function missingContentLanguages(category: AdminCategory): ContentLanguag
   return (['uk', 'ru'] as const).filter(
     (language) => !category.filledLanguages?.includes(language),
   );
+}
+
+/** A site model placed in a category, for «Моделі на сайті» (spec 002 R-006). */
+export interface CategorySiteModel {
+  id: number;
+  name: string;
+  /** A proposal is «Не перевірена». */
+  isProposed: boolean;
+  productCount: number;
+  /** The model's current site category, shown when picking a model from elsewhere. */
+  categoryName: string;
 }

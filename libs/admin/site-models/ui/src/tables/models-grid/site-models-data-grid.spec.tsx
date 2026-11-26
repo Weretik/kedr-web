@@ -63,7 +63,7 @@ describe('SiteModelsDataGrid', () => {
       ],
     });
     const rows = screen.getAllByRole('row').slice(1);
-    expect(within(rows[0] as HTMLElement).getByText('У 1С: Накладки')).toBeTruthy();
+    expect(within(rows[0] as HTMLElement).queryByText(/У 1С/)).toBeNull();
     expect(within(rows[0] as HTMLElement).getByText('Колір')).toBeTruthy();
     expect(within(rows[0] as HTMLElement).queryByText(/Немає|бракує/)).toBeNull();
     expect(within(rows[1] as HTMLElement).getByText('Не перевірена')).toBeTruthy();

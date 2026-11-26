@@ -1,0 +1,81 @@
+import {
+  useGetAdminCategoryQuery,
+  useGetCategoryContentQuery,
+} from '@admin/categories/data-access';
+import { AdminEditPanel, PageLoader, SlugEditCard } from '@admin/shared/ui';
+import { Alert, Button } from '@mui/material';
+
+import { CategoryContentSection } from './category-content-section';
+import { CategorySearchSection } from './category-search-section';
+import { useCategoryContentEditor } from '../../hooks/editing/use-category-content-editor';
+import { useCategorySlugChange } from '../../hooks/editing/use-category-slug-change';
+import { CategoryPlacementSection } from '../placement/category-placement-section';
+
+const publicPathPrefix = '/uk/catalog/';
+
+interface CategoryEditPanelProps {
+  /** The last edited category; it stays set after closing so unsaved texts survive a reopen. */
+  categoryId: number | undefined;
+  open: boolean;
+  onClose: () => void;
+  onNotice: (message: string) => void;
+  /** After a manual category is deleted (spec 002 R-004). */
+  onDeleted: (parentId: number | null) => void;
+}
+
+/** Everything an administrator edits in a category: address, texts, site names, search, place, and deleting. */
+export function CategoryEditPanel({
+  categoryId,
+  onClose,
+  onDeleted,
+  onNotice,
+  open,
+}: CategoryEditPanelProps) {
+  const id = categoryId ?? 0;
+  const skip = categoryId === undefined;
+  const categoryQuery = useGetAdminCategoryQuery(id, { skip });
+  const contentQuery = useGetCategoryContentQuery(id, { skip });
+  const editor = useCategoryContentEditor(id, contentQuery.data, onNotice);
+  const slugChange = useCategorySlugChange(id, onNotice);
+  const category = categoryQuery.data;
+
+  return (
+    <AdminEditPanel
+      busy={editor.saving || slugChange.saving}
+      onClose={onClose}
+      open={open && !skip}
+      subtitle={category?.nameUk}
+      title="Редагування категорії"
+    >
+      {categoryQuery.isLoading ? (
+        <PageLoader label="Завантаження категорії" />
+      ) : categoryQuery.isError || !category ? (
+        <Alert
+          action={<Button onClick={() => categoryQuery.refetch()}>Повторити</Button>}
+          severity="error"
+        >
+          Не вдалося завантажити категорію. Спробуйте ще раз.
+        </Alert>
+      ) : (
+        <>
+          <SlugEditCard
+            currentSlug={category.slug}
+            error={slugChange.error}
+            onSubmit={(input) => void slugChange.submit(input)}
+            pathPrefix={publicPathPrefix}
+            saving={slugChange.saving}
+          />
+          <CategoryContentSection
+            content={contentQuery.data}
+            editor={editor}
+            error={contentQuery.isError}
+            loading={contentQuery.isLoading}
+            onRetry={() => contentQuery.refetch()}
+          />
+          <CategorySearchSection category={category} onNotice={onNotice} />
+          <CategoryPlacementSection category={category} onDeleted={onDeleted} onNotice={onNotice} />
+        </>
+      )}
+    </AdminEditPanel>
+  );
+}

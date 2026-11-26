@@ -30,6 +30,8 @@ export interface SiteOrderDetail {
   telegramSentAtUtc: string | null;
   telegramLastAttemptAtUtc: string | null;
   telegramLastError: string | null;
+  /** The buyer's note from the checkout; `null` when there is none. */
+  comment: string | null;
   items: readonly SiteOrderLine[];
 }
 

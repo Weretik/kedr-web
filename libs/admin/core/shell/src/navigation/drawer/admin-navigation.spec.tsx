@@ -1,0 +1,146 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+
+import { AdminNavigation } from './admin-navigation';
+import { AdminShellSessionProvider } from '../../providers/admin-shell-session-provider';
+
+const renderNavigation = (
+  canManageUsers: boolean,
+  path = '/',
+  groupCounts?: Record<string, number>,
+) =>
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <AdminShellSessionProvider
+        onLogout={async () => undefined}
+        profileHref="/profile"
+        user={{
+          avatarUrl: null,
+          canManageUsers,
+          isAdmin: canManageUsers,
+          email: 'staff@kedr.ua',
+          fullName: 'Staff',
+          roleLabel: 'Роль',
+          roleBadge: 'Role',
+          cabinetTitle: 'Кабінет',
+        }}
+      >
+        <AdminNavigation groupCounts={groupCounts} />
+      </AdminShellSessionProvider>
+    </MemoryRouter>,
+  );
+
+describe('AdminNavigation by role', () => {
+  it('shows the users section to an admin', () => {
+    renderNavigation(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Система' }));
+
+    expect(screen.getByRole('link', { name: 'Користувачі' }).getAttribute('href')).toBe('/users');
+    expect(screen.getByRole('link', { name: 'Реквізити' }).getAttribute('href')).toBe(
+      '/company-requisites',
+    );
+    expect(screen.getByRole('link', { name: 'Звіт роботи' }).getAttribute('href')).toBe(
+      '/work-report',
+    );
+    expect(screen.getByRole('link', { name: 'Фонові задачі' }).getAttribute('href')).toBe(
+      '/background-tasks',
+    );
+  });
+
+  it('gives every staff member «Мої задачі» but the work report only to an admin', () => {
+    renderNavigation(false, '/my-tasks');
+
+    expect(screen.getByRole('link', { name: 'Мої задачі' }).getAttribute('href')).toBe('/my-tasks');
+    expect(screen.queryByRole('link', { name: 'Звіт роботи' })).toBeNull();
+  });
+
+  it('opens the current order from «Замовлення» and the list from «Історія замовлень»', () => {
+    renderNavigation(false, '/orders/new');
+
+    const current = screen.getByRole('link', { name: 'Замовлення' });
+    const history = screen.getByRole('link', { name: 'Історія замовлень' });
+    expect(current.getAttribute('href')).toBe('/orders/new');
+    expect(history.getAttribute('href')).toBe('/orders');
+    expect(current.getAttribute('aria-current')).toBe('page');
+    expect(history.getAttribute('aria-current')).toBeNull();
+  });
+
+  it('highlights «Історія замовлень» on the list and on an order', () => {
+    renderNavigation(false, '/orders/42');
+
+    expect(
+      screen.getByRole('link', { name: 'Історія замовлень' }).getAttribute('aria-current'),
+    ).toBe('page');
+    expect(
+      screen.getByRole('link', { name: 'Замовлення' }).getAttribute('aria-current'),
+    ).toBeNull();
+  });
+
+  it('hides the users section from a manager', () => {
+    renderNavigation(false, '/orders');
+
+    expect(screen.queryByRole('link', { name: 'Користувачі' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Реквізити' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Фонові задачі' })).toBeNull();
+    expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Замовлення з сайту' }).getAttribute('href')).toBe(
+      '/site-orders',
+    );
+  });
+
+  it('hides the whole «Система» block from a manager', () => {
+    renderNavigation(false);
+
+    expect(screen.queryByRole('button', { name: 'Система' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Продаж' })).toBeTruthy();
+  });
+
+  it('opens the block of the current page and collapses it on click', () => {
+    renderNavigation(true, '/catalog');
+
+    const catalog = screen.getByRole('button', { name: 'Каталог' });
+    expect(catalog.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('link', { name: 'Товари' }).getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('button', { name: 'Продаж' }).getAttribute('aria-expanded')).toBe(
+      'false',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Продаж' }));
+    expect(screen.getByRole('link', { name: 'Замовлення' })).toBeTruthy();
+  });
+
+  it('lists the site pages of «Каталог» in order, without «Вітрина сайту»', () => {
+    renderNavigation(false, '/site-review');
+
+    const catalog = screen.getByRole('button', { name: 'Каталог' });
+    const panel = document.getElementById(catalog.getAttribute('aria-controls') ?? '');
+    const list = panel?.querySelectorAll('a') ?? [];
+    expect([...list].map((link) => link.textContent)).toEqual([
+      'Товари',
+      'Моделі',
+      'Перевірка',
+      'Ознаки та фільтри',
+      'Категорії',
+      'Медіа',
+    ]);
+    expect(screen.getByRole('link', { name: 'Моделі' }).getAttribute('href')).toBe('/site-models');
+    expect(screen.getByRole('link', { name: 'Перевірка' }).getAttribute('aria-current')).toBe(
+      'page',
+    );
+    expect(screen.getByRole('link', { name: 'Ознаки та фільтри' }).getAttribute('href')).toBe(
+      '/site-attributes',
+    );
+    expect(screen.queryByRole('link', { name: 'Вітрина сайту' })).toBeNull();
+  });
+
+  it('marks a closed block that holds the current page and shows a counter only above zero', () => {
+    renderNavigation(true, '/catalog', { catalog: 0, sales: 12 });
+
+    expect(screen.queryByRole('img', { name: 'Тут поточна сторінка' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Каталог' }));
+
+    expect(screen.getByRole('img', { name: 'Тут поточна сторінка' })).toBeTruthy();
+    expect(screen.getByText('12')).toBeTruthy();
+    expect(screen.queryByText('0')).toBeNull();
+  });
+});

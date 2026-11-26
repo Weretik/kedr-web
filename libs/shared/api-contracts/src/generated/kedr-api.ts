@@ -217,7 +217,11 @@ export interface paths {
         /** List categories for catalog administration */
         get: operations["getAdminCategories"];
         put?: never;
-        post?: never;
+        /**
+         * Create a category by hand
+         * @description Spec catalog/012 MC-01, MC-02. Under any active category without site models, or at the top without parentId. It takes the parent's «show on site» (unless isShownOnSite is sent) and «closed from search»; the 1C sync never deletes or moves it. The same Ukrainian name under the same parent answers 409.
+         */
+        post: operations["createAdminCategory"];
         delete?: never;
         options?: never;
         head?: never;
@@ -235,7 +239,11 @@ export interface paths {
         get: operations["getAdminCategoryById"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete an empty category made by hand
+         * @description Spec catalog/012 MC-04. Only a category made by hand (400 for a 1C one) and only without subcategories, site models, or products (409). It moves to «Видалені».
+         */
+        delete: operations["deleteAdminCategory"];
         options?: never;
         head?: never;
         patch?: never;
@@ -352,6 +360,66 @@ export interface paths {
          */
         put: operations["saveAdminCategoryContent"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/parent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put a category under another one
+         * @description Spec catalog/012 MC-03, MC-09. Any category, from 1C or made by hand, goes under an active category without site models, or to the top without parentId; its subcategories go with it. The 1C sync keeps the place. A move under itself or its subcategory answers 400. Repeating the same request is safe.
+         */
+        put: operations["moveAdminCategory"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Move a category up or down among its neighbours
+         * @description Spec catalog/012 MC-10: direction «up» or «down». The neighbours get the order by hand, and the 1C sync keeps it. At the edge nothing changes.
+         */
+        put: operations["reorderAdminCategory"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}/site-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Put site models into a category
+         * @description Spec catalog/012 MC-07, spec 007 R-22. 1–200 models into a final category in one transaction; a proposed model is accepted first. A parent category answers 400, an unknown model 404. Repeating the same request is safe.
+         */
+        post: operations["addAdminCategorySiteModels"];
         delete?: never;
         options?: never;
         head?: never;
@@ -512,6 +580,26 @@ export interface paths {
          * @description Requires `CanManageProducts` (Manager, Seo, or Admin). Deleted products and categories are not counted.
          */
         get: operations["getAdminCatalogOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/seo-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Category and model pages whose search texts need work
+         * @description Requires `CanManageSiteCatalog` (Seo or Admin). Spec platform/010: categories shown on the site and open to search engines, and accepted models in them, per language; only pages with an issue are listed. Read-only.
+         */
+        get: operations["getAdminCatalogSeoReview"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1812,6 +1900,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/content/seo-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Article pages whose search texts need work
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Spec platform/010: published articles per language; `kind` is `article`; `issues` holds `noDescription`, `longTitle`, `duplicateTitle`. Only articles with an issue are listed. Read-only.
+         */
+        get: operations["getAdminContentSeoReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/content/requisites": {
         parameters: {
             query?: never;
@@ -1992,6 +2100,74 @@ export interface paths {
          * @description Public, because the site builds page metadata for anonymous visitors. Only pages with a title or a description in this language are listed.
          */
         get: operations["listPublicPageSeo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/redirects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List site redirects
+         * @description Requires `CanManageContent` (Manager, Seo, or Admin). Newest change first; every word of `search` must appear in the old or the new address. `pageSize` is 1–100.
+         */
+        get: operations["listAdminSiteRedirects"];
+        put?: never;
+        /**
+         * Add a site redirect
+         * @description Requires `CanManageContent`. The old address is stored as the site matches it (path only, decoded, lower case, no trailing slash). 409 when that address already has a redirect, so repeating the request is safe; 400 for a chain (the new address is redirected itself, or another redirect leads to the old one).
+         */
+        post: operations["createAdminSiteRedirect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/content/redirects/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change a site redirect
+         * @description Requires `CanManageContent`. Replaces both addresses under the same rules as the create; a `version` older than the stored one answers 409. Repeating it is safe.
+         */
+        put: operations["updateAdminSiteRedirect"];
+        post?: never;
+        /**
+         * Remove a site redirect
+         * @description Requires `CanManageContent`. A repeat answers 404.
+         */
+        delete: operations["deleteAdminSiteRedirect"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/content/redirects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List every site redirect
+         * @description Public, because the site answers anonymous visitors with a 301; it keeps the list in memory for a few minutes. `from` is a decoded, lower-case path without a trailing slash; `to` is a site path or a full URL. At most 2000 entries.
+         */
+        get: operations["listPublicSiteRedirects"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3144,6 +3320,9 @@ export interface components {
         AcceptSiteModelsRequest: {
             ids?: number[];
         };
+        AddCategorySiteModelsRequest: {
+            modelIds: number[];
+        };
         AddGalleryPhotosRequest: {
             mediaFileIds: null | number[];
         };
@@ -3334,6 +3513,7 @@ export interface components {
             /** Format: int64 */
             shareImageMediaFileId: null | number;
             shareImageUrl: null | string;
+            isManual: boolean;
         };
         AdminCodeCategoryDto: {
             /** Format: int32 */
@@ -3595,6 +3775,26 @@ export interface components {
             acceptedBy: null | string;
             /** Format: date-time */
             acceptedAt: null | string;
+        };
+        AdminSiteRedirectPageResponse: {
+            items: components["schemas"]["AdminSiteRedirectResponse"][];
+            /** Format: int32 */
+            totalCount: number;
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+        };
+        AdminSiteRedirectResponse: {
+            /** Format: int64 */
+            id: number;
+            from: string;
+            to: string;
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: string;
+            /** Format: uint32 */
+            version: number;
         };
         AdminSiteSeoSettingsResponse: {
             googleAnalyticsId: null | string;
@@ -3926,6 +4126,14 @@ export interface components {
             sundayOpens: null | string;
             sundayCloses: null | string;
         };
+        ContentSeoReviewItem: {
+            kind: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            language: string;
+            issues: string[];
+        };
         CreateAdminOrderLineRequest: {
             productId: string;
             /** Format: int32 */
@@ -3967,6 +4175,13 @@ export interface components {
             /** Format: int32 */
             sortOrder: number;
         };
+        CreateCategoryRequest: {
+            nameUk: string;
+            nameRu: string;
+            /** Format: int32 */
+            parentId: null | number;
+            isShownOnSite: null | boolean;
+        };
         CreateOrderLineRequest: {
             productId: string;
             title: string;
@@ -3979,6 +4194,7 @@ export interface components {
             firstName: string;
             phone: string;
             lines: components["schemas"]["CreateOrderLineRequest"][];
+            comment?: null | string;
         };
         CreateProductGroupRequest: {
             /** Format: int32 */
@@ -4161,6 +4377,7 @@ export interface components {
             telegramLastAttemptAtUtc: null | string;
             telegramLastError: null | string;
             items: components["schemas"]["GetAdminQuickOrderItemResponse"][];
+            comment: null | string;
         };
         GetAdminQuickOrderItemResponse: {
             productId: string;
@@ -4306,6 +4523,10 @@ export interface components {
             /** Format: int32 */
             expiresIn: number;
             refreshToken: string;
+        };
+        MoveCategoryRequest: {
+            /** Format: int32 */
+            parentId: null | number;
         };
         MoveMediaFilesRequest: {
             fileIds: number[];
@@ -4615,6 +4836,10 @@ export interface components {
             seoTitle: string;
             seoDescription: string;
         };
+        PublicSiteRedirectResponse: {
+            from: string;
+            to: string;
+        };
         PublicWholesalePageResponse: {
             text: components["schemas"]["WholesaleTextPayload"];
             /** Format: date-time */
@@ -4644,6 +4869,9 @@ export interface components {
         };
         RenameSiteModelRequest: {
             name?: string;
+        };
+        ReorderCategoryRequest: {
+            direction: string;
         };
         ReorderGalleryRequest: {
             ids: null | number[];
@@ -4750,6 +4978,12 @@ export interface components {
             /** Format: uint32 */
             version?: null | number;
         };
+        SaveSiteRedirectRequest: {
+            from: null | string;
+            to: null | string;
+            /** Format: uint32 */
+            version?: null | number;
+        };
         SaveSiteSeoSettingsRequest: {
             googleAnalyticsId: null | string;
             googleTagManagerId: null | string;
@@ -4823,6 +5057,14 @@ export interface components {
             toHour: null | number;
             times: null | string[];
             days: null | number[];
+        };
+        SeoReviewItemResponse: {
+            kind: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            language: string;
+            issues: string[];
         };
         SessionLoginRequest: {
             email: string;
@@ -6095,6 +6337,66 @@ export interface operations {
             };
         };
     };
+    createAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     getAdminCategoryById: {
         parameters: {
             query?: never;
@@ -6126,6 +6428,62 @@ export interface operations {
             };
             /** @description Not Found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6432,6 +6790,163 @@ export interface operations {
             };
             /** @description Conflict */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    moveAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    reorderAdminCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    addAdminCategorySiteModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddCategorySiteModelsRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6856,6 +7371,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminCatalogOverviewResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    getAdminCatalogSeoReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeoReviewItemResponse"][];
                 };
             };
             /** @description Forbidden */
@@ -9983,6 +10527,35 @@ export interface operations {
             };
         };
     };
+    getAdminContentSeoReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentSeoReviewItem"][];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     getAdminCompanyRequisites: {
         parameters: {
             query?: never;
@@ -10341,6 +10914,183 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    listAdminSiteRedirects: {
+        parameters: {
+            query?: {
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteRedirectPageResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    createAdminSiteRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveSiteRedirectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteRedirectResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    updateAdminSiteRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveSiteRedirectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSiteRedirectResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    deleteAdminSiteRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    listPublicSiteRedirects: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSiteRedirectResponse"][];
                 };
             };
         };

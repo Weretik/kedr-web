@@ -1,25 +1,15 @@
-import { oneCCategoriesNote } from '@admin/site-models/model';
-import { Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 import type { SiteModelListItem } from '@admin/site-models/model';
 
-/** «Категорія на сайті»: the site category, and «У 1С: …» below it when 1C differs. */
+/** «Категорія на сайті»: only the site category; where 1C keeps the products is not shown (owner, 2026-11-26). */
 export function SiteModelCategoryCell({ model }: { model: SiteModelListItem }) {
-  const note = oneCCategoriesNote(model.oneCCategories);
   return (
-    <Stack spacing={0.25} sx={{ py: 1, width: '100%' }}>
-      <Typography sx={{ overflowWrap: 'anywhere', whiteSpace: 'normal' }} variant="body2">
-        {model.categoryName}
-      </Typography>
-      {note ? (
-        <Typography
-          color="text.secondary"
-          sx={{ overflowWrap: 'anywhere', whiteSpace: 'normal' }}
-          variant="caption"
-        >
-          {note}
-        </Typography>
-      ) : null}
-    </Stack>
+    <Typography
+      sx={{ overflowWrap: 'anywhere', py: 1, whiteSpace: 'normal', width: '100%' }}
+      variant="body2"
+    >
+      {model.categoryName}
+    </Typography>
   );
 }

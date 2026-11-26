@@ -20,7 +20,11 @@ export type {
   CheckoutCommandIssue,
   CheckoutCommandParseResult,
 } from './lib/checkout/checkout-types';
-export { validateCheckoutDraft, formatPhoneInput } from './lib/checkout/checkout-validation';
+export {
+  CHECKOUT_COMMENT_MAX_LENGTH,
+  validateCheckoutDraft,
+  formatPhoneInput,
+} from './lib/checkout/checkout-validation';
 export { buildCheckoutCommand, parseCheckoutCommand } from './lib/checkout/checkout-command';
 export {
   CART_STORAGE_KEY,
