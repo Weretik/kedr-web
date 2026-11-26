@@ -3,16 +3,11 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { NavigationGroupButton } from './navigation-group-button';
-import {
-  isItemActive,
-  navigationGroups,
-  overviewItem,
-  type NavigationGroup,
-  type NavigationItem,
-} from './navigation-groups';
 import { NavigationLink } from './navigation-link';
 import { sidebarColors } from './sidebar-colors';
-import { useAdminShellUser } from '../providers/admin-shell-session-provider';
+import { useAdminShellUser } from '../../providers/admin-shell-session-provider';
+import { navigationGroups, overviewItem } from '../menu/navigation-groups';
+import { isItemActive, type NavigationGroup, type NavigationItem } from '../menu/navigation-item';
 
 export const adminDrawerWidth = 264;
 export const adminDrawerCollapsedWidth = 84;

@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 import { sidebarColors } from './sidebar-colors';
 
-import type { NavigationGroup } from './navigation-groups';
+import type { NavigationGroup } from '../menu/navigation-item';
 
 interface NavigationGroupButtonProps {
   group: NavigationGroup;

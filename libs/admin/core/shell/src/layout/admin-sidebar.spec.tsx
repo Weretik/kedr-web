@@ -5,7 +5,7 @@ import { AdminSidebar } from './admin-sidebar';
 import {
   navigationCollapsedStorageKey,
   useNavigationCollapsed,
-} from '../navigation/use-navigation-collapsed';
+} from '../navigation/drawer/use-navigation-collapsed';
 
 function CollapsibleSidebar() {
   const { isCollapsed, toggleCollapsed } = useNavigationCollapsed();

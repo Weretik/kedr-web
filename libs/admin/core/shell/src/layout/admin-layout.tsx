@@ -5,9 +5,9 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { AdminSidebar } from './admin-sidebar';
 import { RouteLoadingFallback } from './route-loading-fallback';
 import { RouteErrorBoundary } from '../error-pages/route-error-boundary';
-import { adminDrawerCollapsedWidth, adminDrawerWidth } from '../navigation/admin-navigation';
-import { sidebarColors } from '../navigation/sidebar-colors';
-import { useNavigationCollapsed } from '../navigation/use-navigation-collapsed';
+import { adminDrawerCollapsedWidth, adminDrawerWidth } from '../navigation/drawer/admin-navigation';
+import { sidebarColors } from '../navigation/drawer/sidebar-colors';
+import { useNavigationCollapsed } from '../navigation/drawer/use-navigation-collapsed';
 import { AdminTopBar } from '../top-bar/admin-top-bar';
 
 import type { ReactNode } from 'react';

@@ -43,7 +43,7 @@ libs/admin/site-orders/
 ├── ui/src/tables/                                     # data grid, columns, toolbar with switch, Telegram and eye cells
 └── ui/src/components/                                 # detail content, main card, problem alert, lines table
 
-libs/admin/core/shell/src/navigation/navigation-groups.tsx  # menu item in «Продаж»
+libs/admin/core/shell/src/navigation/menu/navigation-groups.tsx  # menu item in «Продаж»
 apps/admin/src/app/router/app-router.tsx                     # routes in the shell
 ```
 

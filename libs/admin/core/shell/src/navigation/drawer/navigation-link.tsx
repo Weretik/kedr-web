@@ -1,8 +1,8 @@
 import { Box, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { isItemActive, type NavigationItem } from './navigation-groups';
 import { sidebarColors } from './sidebar-colors';
+import { isItemActive, type NavigationItem } from '../menu/navigation-item';
 
 interface NavigationLinkProps {
   isCollapsed: boolean;
