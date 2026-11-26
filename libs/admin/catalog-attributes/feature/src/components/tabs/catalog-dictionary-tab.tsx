@@ -12,8 +12,8 @@ export interface CatalogDictionaryTabProps {
 }
 
 /**
- * The «Ознаки», «Не розшифровані коди», and «Фільтри категорій» tabs of «Вітрина сайту» (spec catalog/006 phase 3,
- * catalog/007 stage 4c).
+ * The «Ознаки» and «Фільтри категорій» tabs of «Ознаки та фільтри» and «Коди з 1С» of «Перевірка» (spec
+ * catalog/006 phase 3, catalog/007 stage 4c, admin/site-models/001).
  */
 export function CatalogDictionaryTab(props: CatalogDictionaryTabProps) {
   switch (props.tab) {

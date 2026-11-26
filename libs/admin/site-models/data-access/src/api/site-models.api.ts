@@ -2,7 +2,6 @@ import { apiCall, apiClient, baseApi, isConflict } from '@admin/shared/api-clien
 
 import {
   mapSiteModel,
-  mapSiteModelCategories,
   mapSiteModelHealth,
   mapSiteShowcase,
   toSetSiteModelTextBody,
@@ -11,7 +10,6 @@ import {
 
 import type {
   SiteModel,
-  SiteModelCategory,
   SiteModelHealth,
   SiteModelLanguage,
   SiteModelsPage,
@@ -36,14 +34,6 @@ export const siteModelsApi = baseApi.injectEndpoints({
             signal,
           }),
           mapSiteShowcase,
-        ),
-      providesTags: ['SiteModels'],
-    }),
-    getSiteModelCategories: build.query<SiteModelCategory[], void>({
-      queryFn: (_arg, { signal }) =>
-        apiCall(
-          apiClient.GET('/api/admin/site-models/categories', { signal }),
-          mapSiteModelCategories,
         ),
       providesTags: ['SiteModels'],
     }),
@@ -83,6 +73,18 @@ export const siteModelsApi = baseApi.injectEndpoints({
           apiClient.PUT('/api/admin/site-models/{id}', {
             params: { path: { id } },
             body: { name },
+            signal,
+          }),
+          mapSiteModel,
+        ),
+      invalidatesTags: (_result, error) => (error ? [] : ['SiteModels']),
+    }),
+    changeSiteModelCategory: build.mutation<SiteModel, { id: number; categoryId: number }>({
+      queryFn: ({ id, categoryId }, { signal }) =>
+        apiCall(
+          apiClient.PUT('/api/admin/site-models/{id}/category', {
+            params: { path: { id } },
+            body: { categoryId },
             signal,
           }),
           mapSiteModel,
@@ -157,9 +159,9 @@ export const siteModelsApi = baseApi.injectEndpoints({
 export const {
   useAcceptSiteModelsMutation,
   useAddSiteModelProductsMutation,
+  useChangeSiteModelCategoryMutation,
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
-  useGetSiteModelCategoriesQuery,
   useGetSiteModelQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,

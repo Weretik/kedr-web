@@ -12,9 +12,9 @@ export {
 export {
   useAcceptSiteModelsMutation,
   useAddSiteModelProductsMutation,
+  useChangeSiteModelCategoryMutation,
   useCreateSiteModelMutation,
   useFillSiteModelFromNamesMutation,
-  useGetSiteModelCategoriesQuery,
   useGetSiteModelQuery,
   useGetSiteShowcaseQuery,
   useRemoveSiteModelProductMutation,
@@ -22,3 +22,4 @@ export {
   useSetSiteModelAxesMutation,
   useSetSiteModelTextMutation,
 } from './api/site-models.api';
+export { useGetSiteModelCategoriesQuery, useGetSiteModelsQuery } from './api/site-model-lists.api';

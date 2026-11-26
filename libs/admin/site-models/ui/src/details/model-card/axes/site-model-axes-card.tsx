@@ -16,6 +16,8 @@ interface SiteModelAxesCardProps {
   onChange: (attributeIds: number[]) => void;
   /** Creates a list attribute with this name (spec catalog/007 M-06) and returns its id. */
   onCreateAttribute: (name: string) => Promise<number | undefined>;
+  /** «Перемикачі» in the edit panel; «Чим відрізняються товари» by default. */
+  title?: string;
 }
 
 const maxAxes = 6;
@@ -31,6 +33,7 @@ export function SiteModelAxesCard({
   onChange,
   onCreateAttribute,
   options,
+  title = 'Чим відрізняються товари',
 }: SiteModelAxesCardProps) {
   const [adding, setAdding] = useState(false);
   const ids = axes.map((axis) => axis.attributeId);
@@ -53,7 +56,7 @@ export function SiteModelAxesCard({
           </Button>
         ) : null
       }
-      title="Чим відрізняються товари"
+      title={title}
     >
       <Typography color="text.secondary" variant="body2">
         Ці ознаки стають перемикачами на сторінці моделі: покупець вибирає колір, розмір чи сторону.
@@ -84,7 +87,7 @@ export function SiteModelAxesCard({
       {adding ? (
         <CreatablePicker
           ariaLabel="Ознака"
-          autoFocus
+          focusOnOpen
           createText="Створити ознаку"
           label="Ознака"
           onBlur={() => setAdding(false)}

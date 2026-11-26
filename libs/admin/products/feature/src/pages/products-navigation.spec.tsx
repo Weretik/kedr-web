@@ -235,6 +235,23 @@ describe('products navigation context', () => {
     ).toBe('cable');
   });
 
+  it('shows the site model block the app gives for the product (site models spec 001 SC-011)', () => {
+    const renderSiteModel = vi.fn((productId: number) => <p>Модель товару {productId}</p>);
+    render(
+      <MemoryRouter initialEntries={['/catalog/cable']}>
+        <Routes>
+          <Route
+            element={<ProductDetailsPage renderSiteModel={renderSiteModel} />}
+            path="/catalog/:productSlug"
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(renderSiteModel).toHaveBeenCalled();
+    expect(screen.getByText(/^Модель товару \d+$/u)).toBeTruthy();
+  });
+
   it('shows the missing-product state for the normalized 404 error', () => {
     api.details.mockReturnValue({
       error: { code: 'NotFound', status: 404 },

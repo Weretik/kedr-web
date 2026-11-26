@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 
+import type { ReactNode } from 'react';
 import type { RouteObject } from 'react-router-dom';
 
 const ProductsPage = lazy(() => import('./pages/products-page'));
@@ -10,11 +11,14 @@ export interface ProductsRouteOptions {
   onAddProduct: (productId: number) => AddProductResult;
   /** Hook from the app: whether the signed-in user may change addresses and see deleted products. */
   useCanEditCatalog?: () => boolean;
+  /** The product's site model block from the site models feature («Модель на сайті»). */
+  renderSiteModel?: (productId: number) => ReactNode;
 }
 
 export function createProductsRoutes({
   onAddProduct,
   useCanEditCatalog = () => false,
+  renderSiteModel,
 }: ProductsRouteOptions): RouteObject[] {
   function ProductsRoute() {
     const canEdit = useCanEditCatalog();
@@ -24,7 +28,13 @@ export function createProductsRoutes({
   }
 
   function ProductDetailsRoute() {
-    return <ProductDetailsPage canEditSlug={useCanEditCatalog()} onAddProduct={onAddProduct} />;
+    return (
+      <ProductDetailsPage
+        canEditSlug={useCanEditCatalog()}
+        onAddProduct={onAddProduct}
+        renderSiteModel={renderSiteModel}
+      />
+    );
   }
 
   return [

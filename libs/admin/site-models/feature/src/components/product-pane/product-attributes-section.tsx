@@ -6,7 +6,7 @@ import {
 } from '@admin/site-models/ui';
 import { Alert, Button, Skeleton } from '@mui/material';
 
-import { useProductAttributesEditor } from '../../hooks/use-product-attributes-editor';
+import { useProductAttributesEditor } from '../../hooks/model-editor/use-product-attributes-editor';
 
 /** «Ознаки» and «Перевірка» in the product edit panel (spec catalog/006). */
 export function ProductAttributesSection({ productId }: { productId: number }) {

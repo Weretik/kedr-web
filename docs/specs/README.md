@@ -21,6 +21,7 @@
 - [Redesign: design system and shell](admin/redesign/001-design-system-and-shell/README.md)
 - [Redesign: tables and lists](admin/redesign/002-tables-and-lists/README.md)
 - [Redesign: detail pages, forms, and dialogs](admin/redesign/003-details-forms-dialogs/README.md)
+- [Site models: «Моделі», «Перевірка», «Ознаки та фільтри»](admin/site-models/001-showcase-pages/README.md) — implemented 2026-11-26 (backend KedrStore #273).
 
 ## Mobile React Native
 

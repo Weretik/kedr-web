@@ -101,17 +101,19 @@ describe('attentionItems', () => {
     expect(items[0]).toMatchObject({
       tone: 'error',
       title: 'Товари на сайті без моделі: 12',
-      href: '/site-showcase?view=lone',
+      href: '/site-review?tab=lone',
     });
     expect(items[2]).toMatchObject({
       title: 'Товари на сайті з неповними ознаками: 5',
       detail: 'без ознак 3 · не заповнена ознака 2',
+      href: '/site-models?problem=any',
+      actionLabel: 'Відкрити моделі',
     });
     expect(items[3]).toMatchObject({
       detail: 'без SEO 40 · без фото 1',
-      href: '/site-showcase?view=problems',
+      href: '/site-models?problem=any',
     });
-    expect(items[5].href).toBe('/site-showcase?view=review');
+    expect(items[5].href).toBe('/site-review?tab=new');
   });
 
   it('links a single problem straight to its page', () => {
