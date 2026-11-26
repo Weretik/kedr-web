@@ -122,7 +122,8 @@ describe('article detail metadata', () => {
     'describes the %s article with its source fields and absolute Open Graph cover',
     (locale) => {
       const metadata = buildArticleMetadata(locale, article, production);
-      expect(metadata.title).toBe(article.title);
+      // Over 60 characters with the brand, so the title goes without it.
+      expect(metadata.title).toEqual({ absolute: article.title });
       expect(metadata.description).toBe(article.excerpt);
       expect(metadata.alternates).toEqual({
         canonical: '/' + locale + '/articles/' + article.slug,
