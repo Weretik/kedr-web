@@ -4279,6 +4279,7 @@ export interface components {
             photos: string[];
             /** Format: double */
             stock: number;
+            inStock: boolean;
             categoryName: string;
             categorySlug: string;
             /** Format: int32 */
