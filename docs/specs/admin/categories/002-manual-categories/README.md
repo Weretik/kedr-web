@@ -1,6 +1,6 @@
 # 002 — Managing the category tree by hand (Admin)
 
-**Application:** Admin (React, MUI). **Status:** accepted 2026-11-26 (owner: «да» to the plan, then «поменяй вообще управление категориями…», «изменения на сайте приоритетнее, чем 1С», «не надо, чтобы оно писало, как оно в 1С»). **Backend:** KedrStore spec `docs/sdd/specs/catalog/011-manual-categories` (MC-01…MC-10).
+**Application:** Admin (React, MUI). **Status:** accepted 2026-11-26 (owner: «да» to the plan, then «поменяй вообще управление категориями…», «изменения на сайте приоритетнее, чем 1С», «не надо, чтобы оно писало, как оно в 1С»). **Backend:** KedrStore spec `docs/sdd/specs/catalog/012-manual-categories` (MC-01…MC-10).
 
 ## Goal and boundaries
 
@@ -18,7 +18,7 @@ On «Категорії» a person who may edit categories (Admin, Seo) creates 
 - **R-006. «Моделі на сайті».** A final category (no subcategories) shows the card «Моделі на сайті» under its overview: the models placed in it (name with «Не перевірена» for a proposal, products count), each a link to the model page, and for editors «Додати моделі». The button opens the panel «Додати моделі в категорію»: a search over all models by name (server-side), a list with checkboxes where the models already here are checked and locked, and «Додати (N)» with a pending lock. Success closes the panel and says «Моделі додано».
 - **R-007. Model pages.** «Категорія на сайті» shows only the site category: the «У 1С: …» note under it is removed from the model page, the «Моделі» table and the panels (owner, 2026-11-26). Manual final categories appear in the model category picker like any other (same query).
 
-**Repeated submits:** every action has a pending lock; none of the endpoints takes an `Idempotency-Key` (backend spec 011 idempotency note: a repeated create answers 409 on the same name, the rest set a state).
+**Repeated submits:** every action has a pending lock; none of the endpoints takes an `Idempotency-Key` (backend spec 012 idempotency note: a repeated create answers 409 on the same name, the rest set a state).
 
 ## API
 
@@ -66,4 +66,4 @@ Checked against code organization, boundaries, repeated submits, and the feature
 | AF-002-03 | Low      | accepted | «Додати моделі» searches on every typed letter (deferred, not debounced).                                               | Admin-only and cached by RTK Query; revisit if the list grows slow.                                                                   |
 | AF-002-04 | Low      | open     | No stack E2E for creating a category and adding a model yet; the page, hooks and panels are covered by component tests. | Add `apps/stack-e2e/src/admin/manual-category.spec.ts` after both PRs merge.                                                          |
 
-Repeated submits: «Створити», «Зберегти», «Вище» / «Нижче», «Видалити» and «Додати (N)» are locked while their request runs; none takes an idempotency key (backend 011).
+Repeated submits: «Створити», «Зберегти», «Вище» / «Нижче», «Видалити» and «Додати (N)» are locked while their request runs; none takes an idempotency key (backend 012).

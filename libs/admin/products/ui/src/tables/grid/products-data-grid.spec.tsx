@@ -28,6 +28,7 @@ describe('ProductsDataGrid responsive actions', () => {
       isSale: false,
       isNew: false,
       exportToSite: false,
+      groupId: null,
       price: 100,
       stock: 2,
       quantityInPack: 1,
@@ -148,6 +149,7 @@ describe('ProductsDataGrid responsive actions', () => {
             isSale: false,
             isNew: true,
             exportToSite: true,
+            groupId: null,
             price: 100,
             stock: 2,
             quantityInPack: 1,
@@ -170,6 +172,61 @@ describe('ProductsDataGrid responsive actions', () => {
     expect(cellText('stock')).toBe('2');
     expect(cellText('isNew')).toBe('Новинка');
     expect(screen.getByRole('img', { name: 'Ні' }).textContent).toBe('—');
+  });
+
+  it('replaces «Категорія» with the «Модель» column when a model opener is given', () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
+    const onOpenModel = vi.fn();
+
+    render(
+      <ProductsDataGrid
+        booleanFilters={{}}
+        loading={false}
+        filterModel={{ items: [] }}
+        onFilterChange={() => undefined}
+        onBooleanFilterChange={() => undefined}
+        onOpenModel={onOpenModel}
+        onPageChange={() => undefined}
+        onPageSizeChange={() => undefined}
+        onRetry={() => undefined}
+        onSortChange={() => undefined}
+        onViewProduct={() => undefined}
+        page={0}
+        pageSize={20}
+        rowCount={1}
+        rows={[
+          {
+            id: 7,
+            nameUk: 'Кабель',
+            nameRu: 'Кабель',
+            productSlug: 'cable',
+            photo: '',
+            categoryId: null,
+            categoryName: 'Електрика',
+            inStock: true,
+            isSale: false,
+            isNew: false,
+            exportToSite: true,
+            groupId: 42,
+            price: 100,
+            stock: 2,
+            quantityInPack: 1,
+            deletedAt: null,
+          },
+        ]}
+        sort="id-asc"
+      />,
+    );
+
+    expect(screen.queryByRole('columnheader', { name: 'Категорія' })).toBeNull();
+    expect(screen.getByRole('columnheader', { name: 'Модель' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Відкрити модель 42' }));
+    expect(onOpenModel).toHaveBeenCalledWith(42);
   });
 
   it('offers independent yes/no filters in boolean column headers', () => {

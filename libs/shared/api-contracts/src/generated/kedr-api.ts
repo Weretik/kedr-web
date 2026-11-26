@@ -219,7 +219,7 @@ export interface paths {
         put?: never;
         /**
          * Create a category by hand
-         * @description Spec catalog/011 MC-01, MC-02. Under any active category without site models, or at the top without parentId. It takes the parent's «show on site» (unless isShownOnSite is sent) and «closed from search»; the 1C sync never deletes or moves it. The same Ukrainian name under the same parent answers 409.
+         * @description Spec catalog/012 MC-01, MC-02. Under any active category without site models, or at the top without parentId. It takes the parent's «show on site» (unless isShownOnSite is sent) and «closed from search»; the 1C sync never deletes or moves it. The same Ukrainian name under the same parent answers 409.
          */
         post: operations["createAdminCategory"];
         delete?: never;
@@ -241,7 +241,7 @@ export interface paths {
         post?: never;
         /**
          * Delete an empty category made by hand
-         * @description Spec catalog/011 MC-04. Only a category made by hand (400 for a 1C one) and only without subcategories, site models, or products (409). It moves to «Видалені».
+         * @description Spec catalog/012 MC-04. Only a category made by hand (400 for a 1C one) and only without subcategories, site models, or products (409). It moves to «Видалені».
          */
         delete: operations["deleteAdminCategory"];
         options?: never;
@@ -299,7 +299,7 @@ export interface paths {
         get?: never;
         /**
          * Set the Ukrainian and Russian site names of a category
-         * @description Spec catalog/010 R-02. The names win over the 1C name and the configured short name on the site, in breadcrumbs, and in titles; the 1C sync never changes them. A blank name goes back to the name from 1C at once. Repeating the same request is safe.
+         * @description Spec catalog/011 R-02. The names win over the 1C name and the configured short name on the site, in breadcrumbs, and in titles; the 1C sync never changes them. A blank name goes back to the name from 1C at once. Repeating the same request is safe.
          */
         put: operations["setAdminCategorySiteNames"];
         post?: never;
@@ -319,7 +319,7 @@ export interface paths {
         get?: never;
         /**
          * Close a category from search engines and set its link-preview picture
-         * @description Spec catalog/010 R-01, R-03. Closing or opening applies to every subcategory too; the site keeps showing a closed category and its products, with noindex and outside the sitemap. A new 1C category takes its parent's mark. The picture is a media-library file; null removes it and the site keeps its own. Repeating the same request is safe.
+         * @description Spec catalog/011 R-01, R-03. Closing or opening applies to every subcategory too; the site keeps showing a closed category and its products, with noindex and outside the sitemap. A new 1C category takes its parent's mark. The picture is a media-library file; null removes it and the site keeps its own. Repeating the same request is safe.
          */
         put: operations["setAdminCategorySearchSettings"];
         post?: never;
@@ -376,7 +376,7 @@ export interface paths {
         get?: never;
         /**
          * Put a category under another one
-         * @description Spec catalog/011 MC-03, MC-09. Any category, from 1C or made by hand, goes under an active category without site models, or to the top without parentId; its subcategories go with it. The 1C sync keeps the place. A move under itself or its subcategory answers 400. Repeating the same request is safe.
+         * @description Spec catalog/012 MC-03, MC-09. Any category, from 1C or made by hand, goes under an active category without site models, or to the top without parentId; its subcategories go with it. The 1C sync keeps the place. A move under itself or its subcategory answers 400. Repeating the same request is safe.
          */
         put: operations["moveAdminCategory"];
         post?: never;
@@ -396,7 +396,7 @@ export interface paths {
         get?: never;
         /**
          * Move a category up or down among its neighbours
-         * @description Spec catalog/011 MC-10: direction «up» or «down». The neighbours get the order by hand, and the 1C sync keeps it. At the edge nothing changes.
+         * @description Spec catalog/012 MC-10: direction «up» or «down». The neighbours get the order by hand, and the 1C sync keeps it. At the edge nothing changes.
          */
         put: operations["reorderAdminCategory"];
         post?: never;
@@ -417,7 +417,7 @@ export interface paths {
         put?: never;
         /**
          * Put site models into a category
-         * @description Spec catalog/011 MC-07, spec 007 R-22. 1–200 models into a final category in one transaction; a proposed model is accepted first. A parent category answers 400, an unknown model 404. Repeating the same request is safe.
+         * @description Spec catalog/012 MC-07, spec 007 R-22. 1–200 models into a final category in one transaction; a proposed model is accepted first. A parent category answers 400, an unknown model 404. Repeating the same request is safe.
          */
         post: operations["addAdminCategorySiteModels"];
         delete?: never;
@@ -861,6 +861,66 @@ export interface paths {
         get: operations["getPublicProductBySlug"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/retail-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the retail price type and how many of its prices the price file keeps from 1C
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). The retail price type is the one the site shows (`Catalog:Pricing:RetailPriceTypeId`); its name is the price column the file must have.
+         */
+        get: operations["getAdminRetailPriceStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/retail-prices/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set the site's retail prices from the 1C price list in Excel
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). Multipart `file` (.xlsx up to 10 MB) with a header row holding «Код» and the retail price type's name; only that price type changes, by product code. `protectFromOneC` (default true) keeps the prices from the file from the 1C sync; false gives them back to it. The product list is rebuilt before the answer. 409 when a 1C sync changed the same prices meanwhile.
+         */
+        post: operations["importAdminRetailPrices"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/retail-prices/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Give the retail prices from the price file back to the 1C sync
+         * @description Policy CanManageProducts (Manager, Seo, and Admin). Removes the lock from every retail price; the amounts stay until the next 1C price sync. A repeat changes nothing. 409 when a 1C sync changed the same prices meanwhile.
+         */
+        post: operations["unlockAdminRetailPrices"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4689,6 +4749,28 @@ export interface components {
         };
         /** @enum {integer} */
         ResultStatus: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+        RetailPriceImportResultDto: {
+            /** Format: int32 */
+            changed: number;
+            /** Format: int32 */
+            unchanged: number;
+            /** Format: int32 */
+            notFoundCount: number;
+            notFoundCodes: string[];
+            /** Format: int32 */
+            withoutPriceCount: number;
+            withoutPriceCodes: string[];
+            status: components["schemas"]["RetailPriceStatusDto"];
+        };
+        RetailPriceStatusDto: {
+            /** Format: int32 */
+            priceTypeId: number;
+            priceTypeName: string;
+            /** Format: int32 */
+            lockedCount: number;
+            /** Format: date-time */
+            lastLockedAt: null | string;
+        };
         RetryAdminOrderSyncRequest: {
             reason?: string;
         };
@@ -7898,6 +7980,137 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CatalogRedirect"];
+                };
+            };
+        };
+    };
+    getAdminRetailPriceStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPriceStatusDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    importAdminRetailPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    file?: components["schemas"]["IFormFile"];
+                } & {
+                    protectFromOneC?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPriceImportResultDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    unlockAdminRetailPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPriceStatusDto"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

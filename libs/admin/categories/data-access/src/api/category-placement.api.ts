@@ -15,7 +15,7 @@ export interface NewCategoryInput {
 const changed = (_result: unknown, error: unknown) =>
   error ? [] : (['Categories', 'SiteModels'] as const);
 
-/** Managing the tree by hand (spec 002, backend catalog/011): create, move, order, delete, add models. */
+/** Managing the tree by hand (spec 002, backend catalog/012): create, move, order, delete, add models. */
 export const categoryPlacementApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     createCategory: build.mutation<AdminCategory, NewCategoryInput>({

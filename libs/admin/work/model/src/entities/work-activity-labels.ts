@@ -19,6 +19,7 @@ export const workActivityAreaLabels: Readonly<Record<string, string>> = {
   ProductAttributes: 'Властивості товару',
   ProductGroups: 'Групи варіантів',
   Products: 'Товари',
+  RetailPrices: 'Роздрібні ціни',
   SiteModels: 'Моделі',
   SiteRefresh: 'Оновлення сайту',
   Users: 'Користувачі',

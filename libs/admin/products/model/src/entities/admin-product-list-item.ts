@@ -10,6 +10,8 @@ export interface AdminProductListItem {
   isSale: boolean;
   isNew: boolean;
   exportToSite: boolean;
+  /** ID of the site model (product group) the product belongs to; null when it has none. */
+  groupId: number | null;
   price: number | null;
   stock: number;
   quantityInPack: number;

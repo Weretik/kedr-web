@@ -17,6 +17,7 @@ import type { AddProductFeedback } from '../model/add-product-feedback';
 import type { ProductsListMode } from '../model/products-url-state';
 import type { AddProductResult } from '../products.routes';
 import type { AdminProductListItem } from '@admin/products/model';
+import type { ReactNode } from 'react';
 
 const emptyMessages: Partial<Record<ProductsListMode, string>> = {
   missing: 'Товарів без фото немає.',
@@ -27,10 +28,13 @@ const emptyMessages: Partial<Record<ProductsListMode, string>> = {
 export function ProductsPage({
   canEditSlug = false,
   canSeeDeleted = false,
+  listActions,
   onAddProduct,
 }: {
   canEditSlug?: boolean;
   canSeeDeleted?: boolean;
+  /** Header actions another feature gives through the app, such as «Завантажити роздрібні ціни». */
+  listActions?: ReactNode;
   onAddProduct?: (productId: number) => AddProductResult;
 }) {
   const navigate = useNavigate();
@@ -49,9 +53,11 @@ export function ProductsPage({
     [navigate, search],
   );
 
+  const openModel = useCallback((modelId: number) => navigate(`/site-models/${modelId}`), [navigate]);
+
   return (
     <Stack component="section" spacing={3}>
-      <ProductsPageToolbar />
+      <ProductsPageToolbar actions={listActions} />
       {feedback && (
         <Alert onClose={() => setFeedback(null)} severity={feedback.severity}>
           {feedback.message}
@@ -84,6 +90,7 @@ export function ProductsPage({
             categoriesLoading={categoriesQuery.isFetching}
             categoriesError={categoriesQuery.isError}
             basicFilters={basicFilters}
+            onOpenModel={mode === 'site' || mode === 'siteMissing' ? openModel : undefined}
             booleanFilters={currentQuery}
             filterModel={toProductsGridFilterModel(currentQuery, basicFilters)}
             emptyMessage={emptyMessages[mode]}

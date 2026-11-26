@@ -179,7 +179,9 @@
       "@admin/site-orders/model": ["./libs/admin/site-orders/model/src/index.ts"],
       "@admin/site-orders/data-access": ["./libs/admin/site-orders/data-access/src/index.ts"],
       "@admin/site-orders/ui": ["./libs/admin/site-orders/ui/src/index.ts"],
-      "@admin/site-orders/feature": ["./libs/admin/site-orders/feature/src/index.ts"]
+      "@admin/site-orders/feature": ["./libs/admin/site-orders/feature/src/index.ts"],
+      "@admin/retail-prices/data-access": ["./libs/admin/retail-prices/data-access/src/index.ts"],
+      "@admin/retail-prices/feature": ["./libs/admin/retail-prices/feature/src/index.ts"]
     }
   }
 }

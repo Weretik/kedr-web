@@ -91,6 +91,7 @@ describe('products navigation context', () => {
         isSale: false,
         isNew: false,
         exportToSite: false,
+        groupId: null,
       },
       refetch: vi.fn(),
     });
@@ -118,6 +119,21 @@ describe('products navigation context', () => {
       ),
     );
     expect(screen.getByTestId('location').textContent).toContain('missingPage=2');
+  });
+
+  it('shows the header actions the app gives', () => {
+    render(
+      <MemoryRouter initialEntries={['/catalog']}>
+        <Routes>
+          <Route
+            element={<ProductsPage listActions={<button>Завантажити роздрібні ціни</button>} />}
+            path="/catalog"
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Завантажити роздрібні ціни' })).toBeTruthy();
   });
 
   it('uses a separate server query when switching to missing photos', async () => {
@@ -298,6 +314,7 @@ describe('products navigation context', () => {
         isSale: false,
         isNew: false,
         exportToSite: true,
+        groupId: null,
       },
       refetch: vi.fn(),
     });

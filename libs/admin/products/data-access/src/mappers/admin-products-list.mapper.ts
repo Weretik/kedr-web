@@ -40,6 +40,7 @@ function mapAdminProductListItem(data: unknown): AdminProductListItem {
     isSale: value.isSale,
     isNew: value.isNew,
     exportToSite: value.exportToSite,
+    groupId: value.groupId ?? null,
     price: value.price ?? null,
     stock: value.stock,
     quantityInPack: value.quantityInPack,
