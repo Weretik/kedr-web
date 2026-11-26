@@ -13,6 +13,13 @@ const { contacts } = vi.hoisted(() => ({
       viber: 'viber://chat?number=%2B380671112233',
       map: 'https://maps.app.goo.gl/abc',
     },
+    store: null as null | {
+      name: string | null;
+      streetAddress: { uk: string; ru: string };
+      region: null;
+      postalCode: string | null;
+      hours: never[];
+    },
   },
 }));
 
@@ -66,5 +73,26 @@ describe.each([
       item: `${siteConfig.siteUrl}/${locale}/contacts`,
     });
     expect(container.innerHTML).not.toContain('"@type":"Organization"');
+  });
+
+  it('adds the shop as a local business once its street is filled in', async () => {
+    contacts.store = {
+      name: 'Крамниця',
+      streetAddress: { uk: 'вул. Ахієзерів, 46', ru: 'ул. Ахиезеров, 46' },
+      region: null,
+      postalCode: '61038',
+      hours: [],
+    };
+    const container = document.createElement('div');
+    container.innerHTML = renderToStaticMarkup(await ContactsPage({ locale }));
+    contacts.store = null;
+
+    const graphs = [...container.querySelectorAll('script[type="application/ld+json"]')].map(
+      (script) => JSON.parse(script.textContent ?? '{}'),
+    );
+    expect(graphs.map((graph) => graph['@type'])).toEqual(['BreadcrumbList', 'HardwareStore']);
+    expect(graphs[1].address.streetAddress).toBe(
+      locale === 'uk' ? 'вул. Ахієзерів, 46' : 'ул. Ахиезеров, 46',
+    );
   });
 });

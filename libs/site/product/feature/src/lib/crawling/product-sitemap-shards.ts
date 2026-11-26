@@ -21,7 +21,7 @@ const escapeXml = (value: string) =>
 function entryXmlBytes(entry: MetadataRoute.Sitemap[number]): number {
   // This helper sizes product entries only. Additional sitemap fields must first gain explicit sizing.
   if (
-    entry.lastModified !== undefined ||
+    (entry.lastModified !== undefined && typeof entry.lastModified !== 'string') ||
     entry.changeFrequency !== undefined ||
     entry.priority !== undefined ||
     entry.images !== undefined ||
@@ -40,6 +40,7 @@ function entryXmlBytes(entry: MetadataRoute.Sitemap[number]): number {
       escapeXml(url) +
       '" />\n';
   }
+  if (entry.lastModified) xml += '<lastmod>' + escapeXml(entry.lastModified) + '</lastmod>\n';
   return bytes(xml + '</url>\n');
 }
 

@@ -16,4 +16,6 @@ export type ProductSeoInput = {
   /** Model page: the SEO title and description from «Вітрина сайту»; the generated text is used without them. */
   title?: string;
   description?: string;
+  /** `false` for a page of a category closed from search: `noindex, follow`. */
+  indexable?: boolean;
 };

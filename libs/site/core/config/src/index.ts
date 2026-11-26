@@ -7,6 +7,8 @@ export {
   viberChatLink,
 } from './lib/company/company-contacts';
 export type { CompanyContacts } from './lib/company/company-contacts';
+export { FALLBACK_COMPANY_STORE, WEEKDAYS } from './lib/company/company-store';
+export type { CompanyStore, StoreDay, StoreHours } from './lib/company/company-store';
 export { createSiteConfig, siteConfig } from './lib/site/site-config';
 export type { SiteConfig, SiteEnvironment } from './lib/site/site-config';
 export { FALLBACK_COMPANY_REQUISITES } from './lib/company/company-requisites';

@@ -1,4 +1,4 @@
-import { normalizeUaPhone } from '@admin/company/model';
+import { companyStoreFields, normalizeUaPhone } from '@admin/company/model';
 
 import { companyContactsSchema } from '../validators/company-contacts.schemas';
 
@@ -10,7 +10,12 @@ export function mapCompanyContacts(response: unknown): CompanyContacts {
   return { ...contacts, updatedBy: contacts.updatedBy ?? null };
 }
 
-/** Trimmed values; phones in `+380…` form whatever way they were typed. */
+const toStore = (draft: CompanyContactsDraft): NonNullable<SaveCompanyContactsBody['store']> =>
+  Object.fromEntries(
+    companyStoreFields.map((field) => [field, draft[field].trim() || null]),
+  ) as NonNullable<SaveCompanyContactsBody['store']>;
+
+/** Trimmed values; phones in `+380…` form whatever way they were typed; an empty shop field is `null`. */
 export function toSaveCompanyContactsBody(draft: CompanyContactsDraft): SaveCompanyContactsBody {
   return {
     salesPhone: normalizeUaPhone(draft.salesPhone),
@@ -20,5 +25,6 @@ export function toSaveCompanyContactsBody(draft: CompanyContactsDraft): SaveComp
     mapUrl: draft.mapUrl.trim(),
     cityUk: draft.cityUk.trim(),
     cityRu: draft.cityRu.trim(),
+    store: toStore(draft),
   };
 }

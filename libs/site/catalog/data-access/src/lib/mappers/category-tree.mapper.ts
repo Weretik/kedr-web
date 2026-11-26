@@ -1,7 +1,7 @@
 import { CATALOG_ROOTS } from '@site/catalog/model';
 
 import type { components } from '@shared/api-contracts';
-import type { CatalogTreeNode } from '@site/catalog/model';
+import type { CatalogCrawlNode, CatalogTreeNode } from '@site/catalog/model';
 
 type CategoryTreeNode = components['schemas']['CategoryResponse'];
 
@@ -27,6 +27,18 @@ export function mapCatalogTree(nodes: readonly CategoryTreeNode[]): CatalogTreeN
 /** The API tree as the site shows it: {@link siteTopLevel}, then mapped like {@link mapCatalogTree}. */
 export function mapSiteCatalogTree(nodes: readonly CategoryTreeNode[]): CatalogTreeNode[] {
   return siteTopLevel(nodes).filter(hasRoute).map(mapNode);
+}
+
+const mapCrawlNode = (node: CategoryTreeNode): CatalogCrawlNode => ({
+  slug: node.slug,
+  isClosedFromSearch: node.isClosedFromSearch,
+  updatedAt: node.updatedAt ?? null,
+  children: [...node.children].filter(hasRoute).sort(bySortOrder).map(mapCrawlNode),
+});
+
+/** The site tree as the sitemaps need it: the same nodes and order as {@link mapSiteCatalogTree}. */
+export function mapSiteCrawlTree(nodes: readonly CategoryTreeNode[]): CatalogCrawlNode[] {
+  return siteTopLevel(nodes).filter(hasRoute).map(mapCrawlNode);
 }
 
 /**

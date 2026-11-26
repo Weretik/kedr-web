@@ -29,6 +29,8 @@ const details = {
       sortOrder: 1,
       level: 2,
       productCount: 5,
+      isClosedFromSearch: true,
+      updatedAt: null,
       children: [],
     },
   ],
@@ -41,6 +43,9 @@ const details = {
   minPrice: 0,
   maxPrice: 980,
   content,
+  isClosedFromSearch: true,
+  shareImageUrl: ' https://images-kedr.cdn.express/c/9.webp ',
+  updatedAt: '2026-11-26T10:00:00Z',
 };
 
 describe('mapCategoryDetails', () => {
@@ -64,6 +69,8 @@ describe('mapCategoryDetails', () => {
         bodyHtml: '<p>Text</p>',
         faq: [{ question: 'Q?', answer: 'A' }],
       },
+      isClosedFromSearch: true,
+      shareImageUrl: 'https://images-kedr.cdn.express/c/9.webp',
     });
   });
 

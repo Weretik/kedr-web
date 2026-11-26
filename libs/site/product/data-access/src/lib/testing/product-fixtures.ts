@@ -78,6 +78,7 @@ export const modelPageFixture = (
     isAccepted: true,
     colors: [],
     productId: null,
+    updatedAt: null,
   })),
   filters: [],
   exactMatch: null,
