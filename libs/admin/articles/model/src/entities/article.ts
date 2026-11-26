@@ -8,6 +8,8 @@ export const articleLimits = {
   title: 200,
   excerpt: 300,
   bodyHtml: 50_000,
+  seoTitle: 70,
+  metaDescription: 160,
 } as const;
 
 /** One language of an article as the admin edits it; `bodyHtml` comes from the rich text editor. */
@@ -15,6 +17,10 @@ export interface ArticleText {
   title: string;
   excerpt: string;
   bodyHtml: string;
+  /** Search title; empty lets the site use the title. */
+  seoTitle: string;
+  /** Search description; empty lets the site use the short description. */
+  metaDescription: string;
 }
 
 /** A row of the article list; the title is Ukrainian. */

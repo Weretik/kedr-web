@@ -18,8 +18,8 @@ export function CompanyContactsPage() {
     <Stack component="section" spacing={3}>
       <AdminPageHeader title="Контакти компанії" />
       <Typography color="text.secondary" variant="body2">
-        Телефон, email, месенджери, карта і місто, які сайт показує на всіх сторінках, у політиці
-        конфіденційності та в даних для пошукових систем.
+        Телефон, email, месенджери, карта, місто, адреса і години роботи магазину, які сайт показує
+        на всіх сторінках, у політиці конфіденційності та в даних для пошукових систем.
       </Typography>
       {query.isLoading ? (
         <PageLoader label="Завантаження контактів" />

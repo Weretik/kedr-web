@@ -4,6 +4,7 @@ export { buildSitemapEntries } from './lib/crawling/sitemap-entries';
 export type { SitemapPage } from './lib/crawling/sitemap-entries';
 export { JsonLd, serializeJsonLd } from './lib/json-ld/json-ld';
 export type { JsonLdData } from './lib/json-ld/json-ld';
+export { buildLocalBusinessJsonLd } from './lib/json-ld/local-business-json-ld';
 export { buildOrganizationJsonLd, buildWebSiteJsonLd } from './lib/json-ld/site-json-ld';
 export { buildCanonicalPath, buildLanguageAlternates } from './lib/metadata/alternates';
 export {

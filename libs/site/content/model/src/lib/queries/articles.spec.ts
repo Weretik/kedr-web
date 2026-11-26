@@ -17,6 +17,8 @@ const articles: Article[] = Array.from({ length: 51 }, (_, index) => ({
   image: null,
   publishedAt: '2026-03-24',
   updatedAt: '2026-03-25T08:00:00Z',
+  seoTitle: null,
+  metaDescription: null,
 }));
 describe('article URL and listing rules', () => {
   it('defaults to 10 and offers exactly 10/20/50', () => {

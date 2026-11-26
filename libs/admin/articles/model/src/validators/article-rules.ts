@@ -7,6 +7,8 @@ export interface ArticleTextErrors {
   title?: string;
   excerpt?: string;
   bodyHtml?: string;
+  seoTitle?: string;
+  metaDescription?: string;
 }
 
 export interface ArticleDraftErrors {
@@ -23,6 +25,9 @@ export const isEmptyHtml = (html: string) => {
   const trimmed = html.trim();
   return !trimmed || trimmed === '<p></p>';
 };
+
+const optional = (value: string, max: number) =>
+  value.trim().length > max ? `Не більше ${max} символів.` : undefined;
 
 const required = (value: string, max: number, missing: string) => {
   const trimmed = value.trim();
@@ -61,6 +66,8 @@ export function validateArticleDraft(
         : text.bodyHtml.length > articleLimits.bodyHtml
           ? 'Текст задовгий. Скоротіть його.'
           : undefined,
+      seoTitle: optional(text.seoTitle, articleLimits.seoTitle),
+      metaDescription: optional(text.metaDescription, articleLimits.metaDescription),
     };
     if (Object.values(errors).some(Boolean)) texts[language] = errors;
   }

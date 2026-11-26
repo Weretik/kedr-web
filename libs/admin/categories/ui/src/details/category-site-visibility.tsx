@@ -19,13 +19,18 @@ export function CategorySiteVisibility({ category, onToggleSite }: CategorySiteV
       spacing={1.5}
       sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}
     >
-      {category.isShownOnSite ? (
-        <Typography variant="body2">Показується на сайті</Typography>
-      ) : (
-        <Box>
-          <StatusPill label="Не показується на сайті" tone="warning" />
-        </Box>
-      )}
+      <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+        {category.isShownOnSite ? (
+          <Typography variant="body2">Показується на сайті</Typography>
+        ) : (
+          <Box>
+            <StatusPill label="Не показується на сайті" tone="warning" />
+          </Box>
+        )}
+        {category.isShownOnSite && category.isClosedFromSearch ? (
+          <StatusPill label="Закрито від пошуку" tone="warning" />
+        ) : null}
+      </Stack>
       {onToggleSite ? (
         <Button
           color={category.isShownOnSite ? 'inherit' : 'primary'}

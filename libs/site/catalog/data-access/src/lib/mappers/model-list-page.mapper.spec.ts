@@ -17,6 +17,7 @@ const card = {
     { slug: 'dub', name: 'Дуб', hex: 'oak', textureUrl: 'https://evil.example/t.jpg' },
   ],
   productId: null,
+  updatedAt: null,
 };
 
 describe('mapModelCard', () => {

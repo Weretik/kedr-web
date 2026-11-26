@@ -24,7 +24,13 @@ export function mapModelIndexPage(
     const name = typeof model?.name === 'string' ? model.name.trim() : '';
     if (!name || !isValidProductSlug(model.slug) || seen.has(model.slug)) continue;
     seen.add(model.slug);
-    items.push({ sku: model.slug, slug: model.slug, name });
+    items.push({
+      sku: model.slug,
+      slug: model.slug,
+      name,
+      ...(model.categorySlug ? { categorySlug: model.categorySlug } : {}),
+      ...(model.updatedAt ? { updatedAt: model.updatedAt } : {}),
+    });
   }
   return {
     kind: 'ok',

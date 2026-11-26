@@ -16,6 +16,10 @@ vi.mock('@site/shared/company', () => ({
     phone: { display: '(067) 111-22-33', e164: '+380671112233' },
   })),
 }));
+vi.mock('@site/core/config', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@site/core/config')>();
+  return { ...actual, siteConfig: { ...actual.siteConfig, indexingEnabled: true } };
+});
 vi.mock('next/image', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
 }));
@@ -65,6 +69,7 @@ const model: SiteModel = {
   ],
   products: [variant('1', 'khrom', true, true), variant('2', 'zoloto', false)],
   characteristics: [{ name: 'Матеріал', values: ['Сталь'] }],
+  isClosedFromSearch: false,
 };
 
 const other: ProductSummary = {
@@ -173,5 +178,32 @@ describe('ModelPage', () => {
     expect(metadata.title).toBe('Завіси FLUSH купити');
     expect(metadata.description).toBe('Прихована завіса');
     expect(String(metadata.alternates?.canonical)).toMatch(/\/uk\/product\/zavisa-flush$/);
+    expect(metadata.robots).toEqual({ index: true, follow: true });
+  });
+
+  it('marks a model of a category closed from search noindex', async () => {
+    vi.mocked(getSiteModel).mockResolvedValue({
+      kind: 'ok',
+      model: { ...model, isClosedFromSearch: true },
+    });
+    vi.mocked(getProductDetails).mockResolvedValue({ kind: 'ok', product: productFixture });
+
+    expect((await getModelMetadata('uk', 'zavisa-flush')).robots).toEqual({
+      index: false,
+      follow: true,
+    });
+  });
+
+  it('marks an own product page of a closed category noindex', async () => {
+    vi.mocked(getSiteModel).mockResolvedValue({
+      kind: 'ok',
+      model: { ...model, isAccepted: false, slug: 'handle-7', isClosedFromSearch: true },
+    });
+    vi.mocked(getProductDetails).mockResolvedValue({ kind: 'ok', product: productFixture });
+
+    expect((await getModelMetadata('uk', 'handle-7')).robots).toEqual({
+      index: false,
+      follow: true,
+    });
   });
 });

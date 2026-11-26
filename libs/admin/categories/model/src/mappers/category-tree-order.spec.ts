@@ -19,6 +19,10 @@ const category = (overrides: Partial<AdminCategory>): AdminCategory => ({
   sourceName: '',
   productCount: null,
   filledLanguages: null,
+  siteNameUk: null,
+  siteNameRu: null,
+  isClosedFromSearch: false,
+  sharePicture: null,
   ...overrides,
 });
 

@@ -55,6 +55,8 @@ describe('article loaders', () => {
         image: 'https://api.example.test/api/content/articles/4/cover?v=2',
         publishedAt: '2026-03-24',
         updatedAt: '2026-11-04T00:00:00Z',
+        seoTitle: null,
+        metaDescription: null,
       },
       expect.objectContaining({ id: 5, image: null }),
       expect.objectContaining({ id: 6, image: 'https://images-kedr.cdn.express/articles/a.webp' }),
@@ -72,14 +74,19 @@ describe('article loaders', () => {
   it('reads one article with its body, and separates missing from unavailable', async () => {
     siteApiGet.mockResolvedValueOnce({
       kind: 'ok',
-      data: { ...summary, bodyHtml: '<p>Текст</p>' },
+      data: { ...summary, bodyHtml: '<p>Текст</p>', seoTitle: ' Петлі ', metaDescription: '' },
     });
     siteApiGet.mockResolvedValueOnce({ kind: 'not-found' });
     siteApiGet.mockResolvedValueOnce({ kind: 'unavailable', status: 503 });
 
     expect(await getArticle('uk', 'prykhovani-petli')).toMatchObject({
       kind: 'ok',
-      article: { bodyHtml: '<p>Текст</p>', slug: 'prykhovani-petli' },
+      article: {
+        bodyHtml: '<p>Текст</p>',
+        slug: 'prykhovani-petli',
+        seoTitle: 'Петлі',
+        metaDescription: null,
+      },
     });
     expect(siteApiGet).toHaveBeenCalledWith('/api/content/{lang}/articles/{slug}', {
       path: { lang: 'uk', slug: 'prykhovani-petli' },

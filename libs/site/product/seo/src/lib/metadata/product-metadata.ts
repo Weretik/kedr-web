@@ -20,7 +20,7 @@ export function buildProductMetadata(
       ? `${input.name}. Код ${input.sku}. Інформація про товар, ціну та наявність у ${COMPANY.name}.`
       : `${input.name}. Код ${input.sku}. Информация о товаре, цене и наличии в ${COMPANY.name}.`);
   const base = buildPageMetadata(
-    { locale: input.locale, path: input.path, title, description },
+    { locale: input.locale, path: input.path, title, description, indexable: input.indexable },
     config,
   );
   const canonical = canonicalProductUrl(input, config);
