@@ -11941,7 +11941,9 @@
           "isClosedFromSearch",
           "shareImageMediaFileId",
           "shareImageUrl",
-          "isManual"
+          "isManual",
+          "modelCount",
+          "proposedModelCount"
         ],
         "type": "object",
         "properties": {
@@ -12014,6 +12016,14 @@
           },
           "isManual": {
             "type": "boolean"
+          },
+          "modelCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "proposedModelCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
           }
         }
       },
