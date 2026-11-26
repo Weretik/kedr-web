@@ -54,3 +54,16 @@ tools/architecture/project-boundary-rules.mjs                 # categories featu
 - **SC-003 (R-003, R-005).** Picker options leave out the category and its subcategories; «Вище» is disabled for the first neighbour — `category-placement.spec.ts`, `category-place-card.spec.tsx`.
 - **SC-004 (R-006).** The models card lists models and the panel adds two, keeping the present ones locked — `category-add-models-panel.spec.tsx`, `use-category-site-models.spec.ts`.
 - **SC-005 (R-007).** No «У 1С» under a model's category — `site-model-category-cell.spec.tsx`, `site-model-main-card.spec.tsx`, `site-models-data-grid.spec.tsx`.
+
+## Final audit (2026-11-26)
+
+Checked against code organization, boundaries, repeated submits, and the feature review list. `architecture:structure`, `architecture:boundaries`, lint, typecheck and the focused tests of the categories and site models projects pass.
+
+| ID        | Severity | Status   | Finding                                                                                                                 | Change and evidence                                                                                                                   |
+| --------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| AF-002-01 | Medium   | fixed    | `feature/src/hooks` and `components` would hold more than six files and mix files with folders.                         | Split into `hooks/editing`, `hooks/tree`, `hooks/placement` and `components/panels`, `explorer`, `placement`; structure check passes. |
+| AF-002-02 | Medium   | fixed    | `ui` imported the router for the model link and used non-role folders (`placement/`, `site-models/`).                   | The card links with `href`; files moved to `components/`, `forms/`, `panels/`, `dialogs/`.                                            |
+| AF-002-03 | Low      | accepted | «Додати моделі» searches on every typed letter (deferred, not debounced).                                               | Admin-only and cached by RTK Query; revisit if the list grows slow.                                                                   |
+| AF-002-04 | Low      | open     | No stack E2E for creating a category and adding a model yet; the page, hooks and panels are covered by component tests. | Add `apps/stack-e2e/src/admin/manual-category.spec.ts` after both PRs merge.                                                          |
+
+Repeated submits: «Створити», «Зберегти», «Вище» / «Нижче», «Видалити» and «Додати (N)» are locked while their request runs; none takes an idempotency key (backend 011).
