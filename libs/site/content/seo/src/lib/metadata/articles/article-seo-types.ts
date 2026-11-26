@@ -5,6 +5,9 @@ export type ArticleSeoData = {
   excerpt: string;
   image: string | null;
   publishedAt: string;
+  /** Admin overrides of the title and description; `null` or absent uses the title and the excerpt. */
+  seoTitle?: string | null;
+  metaDescription?: string | null;
 };
 
 export type ArticlesSeoInput = {

@@ -23,6 +23,13 @@ export function mapAdminCategory(data: unknown): AdminCategory {
     filledLanguages: dto.filledContentLanguages
       ? dto.filledContentLanguages.filter((language) => language === 'uk' || language === 'ru')
       : null,
+    siteNameUk: dto.siteNameUk?.trim() || null,
+    siteNameRu: dto.siteNameRu?.trim() || null,
+    isClosedFromSearch: dto.isClosedFromSearch ?? false,
+    sharePicture:
+      typeof dto.shareImageMediaFileId === 'number'
+        ? { mediaFileId: dto.shareImageMediaFileId, url: dto.shareImageUrl ?? null }
+        : null,
   };
 }
 

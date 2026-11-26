@@ -10,12 +10,17 @@ import { productSeoInput } from '../mapping/product-seo-input';
 import type { Locale } from '@site/core/i18n';
 import type { Metadata } from 'next';
 
-export async function getProductMetadata(locale: Locale, slug: string): Promise<Metadata> {
+export async function getProductMetadata(
+  locale: Locale,
+  slug: string,
+  { indexable = true }: { indexable?: boolean } = {},
+): Promise<Metadata> {
   const product = await loadProductOrRespond(locale, slug);
   const languagePaths = await getProductLanguagePaths(locale, product);
-  return buildProductMetadata(
-    productSeoInput(locale, product, productCrumbs(locale, product), languagePaths),
-  );
+  return buildProductMetadata({
+    ...productSeoInput(locale, product, productCrumbs(locale, product), languagePaths),
+    indexable,
+  });
 }
 
 /** A small real seed set; never walk the whole catalog or invent a placeholder. */

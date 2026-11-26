@@ -64,8 +64,20 @@ describe('article mapper', () => {
       isPublished: true,
       cover: { mediaFileId: 12, url: 'https://cdn.example.test/articles/a.webp' },
       texts: {
-        uk: { title: ' Петлі ', excerpt: 'Коротко.', bodyHtml: '<p>Текст</p>' },
-        ru: { title: 'Петли', excerpt: 'Кратко.', bodyHtml: '<p>Текст</p>' },
+        uk: {
+          title: ' Петлі ',
+          excerpt: 'Коротко.',
+          bodyHtml: '<p>Текст</p>',
+          seoTitle: ' Приховані петлі ',
+          metaDescription: ' ',
+        },
+        ru: {
+          title: 'Петли',
+          excerpt: 'Кратко.',
+          bodyHtml: '<p>Текст</p>',
+          seoTitle: '',
+          metaDescription: '',
+        },
       },
     });
 
@@ -77,6 +89,8 @@ describe('article mapper', () => {
       title: 'Петлі',
       excerpt: 'Коротко.',
       bodyHtml: '<p>Текст</p>',
+      seoTitle: 'Приховані петлі',
+      metaDescription: null,
     });
   });
 
@@ -86,8 +100,8 @@ describe('article mapper', () => {
       publishedOn: '2026-11-04',
       isPublished: true,
       texts: {
-        uk: { title: 'Т', excerpt: 'К', bodyHtml: '<p>Т</p>' },
-        ru: { title: 'Т', excerpt: 'К', bodyHtml: '<p>Т</p>' },
+        uk: { title: 'Т', excerpt: 'К', bodyHtml: '<p>Т</p>', seoTitle: '', metaDescription: '' },
+        ru: { title: 'Т', excerpt: 'К', bodyHtml: '<p>Т</p>', seoTitle: '', metaDescription: '' },
       },
     };
 

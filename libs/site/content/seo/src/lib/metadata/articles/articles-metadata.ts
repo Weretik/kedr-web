@@ -35,7 +35,10 @@ export function buildArticlesMetadata(
   return metadata;
 }
 
-/** Source title, excerpt and publication date; no author or modification date is fabricated. */
+/**
+ * The admin SEO title and description when set, else the source title and excerpt; the publication date. No
+ * author or modification date is fabricated.
+ */
 export function buildArticleMetadata(
   locale: Locale,
   article: ArticleSeoData,
@@ -45,8 +48,8 @@ export function buildArticleMetadata(
     {
       locale,
       path: '/articles/' + article.slug,
-      title: article.title,
-      description: article.excerpt,
+      title: article.seoTitle || article.title,
+      description: article.metaDescription || article.excerpt,
     },
     config,
   );

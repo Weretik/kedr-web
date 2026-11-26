@@ -12,6 +12,18 @@ const draft: CompanyContactsDraft = {
   mapUrl: 'https://maps.app.goo.gl/D2rH3HcaxLfxik5H6',
   cityUk: 'Харків',
   cityRu: 'Харьков',
+  storeName: 'Крамниця Дверна фурнітура CLASS',
+  streetAddressUk: 'вул. Ахієзерів, 46',
+  streetAddressRu: 'ул. Ахиезеров, 46',
+  regionUk: 'Харківська обл.',
+  regionRu: 'Харьковская обл.',
+  postalCode: '61038',
+  weekdaysOpens: '09:00',
+  weekdaysCloses: '16:00',
+  saturdayOpens: '',
+  saturdayCloses: '',
+  sundayOpens: '',
+  sundayCloses: '',
 };
 
 const renderForm = (props: Partial<Parameters<typeof CompanyContactsForm>[0]> = {}) => {
@@ -52,6 +64,18 @@ describe('CompanyContactsForm', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Зберегти' }));
     expect(handlers.onSave).toHaveBeenCalledTimes(1);
+  });
+
+  it('edits the shop address and hours', () => {
+    const handlers = renderForm({ errors: { postalCode: 'П’ять цифр, наприклад 61038.' } });
+
+    expect(screen.getByRole('textbox', { name: 'Вулиця і будинок українською' })).toHaveProperty(
+      'value',
+      'вул. Ахієзерів, 46',
+    );
+    expect(screen.getByText('П’ять цифр, наприклад 61038.')).toBeTruthy();
+    fireEvent.change(screen.getByLabelText('Субота: з'), { target: { value: '10:00' } });
+    expect(handlers.onChange).toHaveBeenCalledWith({ ...draft, saturdayOpens: '10:00' });
   });
 
   it('puts field errors under their fields and shows the server error', () => {
