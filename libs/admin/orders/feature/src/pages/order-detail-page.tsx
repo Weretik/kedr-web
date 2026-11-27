@@ -1,10 +1,10 @@
 import { useGetWorkspaceOrderQuery } from '@admin/orders/data-access';
-import { OrderDocumentView, OrderSyncCard } from '@admin/orders/ui';
+import { OrderDocumentView, OrderSyncCard, SiteOrderLink } from '@admin/orders/ui';
 import { useRouteNotice } from '@admin/shared/routing';
 import { NoticeSnackbar, PageLoader } from '@admin/shared/ui';
 import { Alert, Button, Stack } from '@mui/material';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { DetailHeader } from '../components/detail-header';
 import { OrderSyncRetryPanel } from '../components/order-sync-retry-panel';
@@ -16,6 +16,7 @@ export function OrderDetailPage() {
   const query = useGetWorkspaceOrderQuery(id, { skip: !valid });
   const [retryOpen, setRetryOpen] = useState(false);
   const [retried, setRetried] = useState<string | null>(null);
+  const navigate = useNavigate();
   return (
     <Stack component="section" spacing={3}>
       <NoticeSnackbar message={notice} onClose={closeNotice} />
@@ -58,6 +59,15 @@ export function OrderDetailPage() {
               lineAmount: line.amount,
             }))}
             totalAmount={query.data.totalAmount}
+            siteOrder={
+              query.data.siteOrderId && query.data.siteOrderNumber ? (
+                <SiteOrderLink
+                  onOpen={(siteOrderId) => navigate(`/site-orders/${siteOrderId}`)}
+                  siteOrderId={query.data.siteOrderId}
+                  siteOrderNumber={query.data.siteOrderNumber}
+                />
+              ) : undefined
+            }
           />
         </>
       ) : null}

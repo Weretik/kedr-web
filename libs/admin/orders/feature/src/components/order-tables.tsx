@@ -127,6 +127,7 @@ export function OrderTables({ prefix, counterpartyId, returnTo, panelOnly = fals
                 }
               : undefined
           }
+          onOpenSiteOrder={mode === 'orders' ? (id) => navigate(`/site-orders/${id}`) : undefined}
           onRetry={list.retry}
         />
       </Card>

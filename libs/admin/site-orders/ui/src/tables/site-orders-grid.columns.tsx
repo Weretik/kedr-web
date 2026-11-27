@@ -6,6 +6,7 @@ import {
 
 import { SiteOrderGridViewCell } from './site-order-grid-view-cell';
 import { SiteOrderTelegramCell } from './site-order-telegram-cell';
+import { SiteOrderOneCLink } from '../components/site-order-one-c-link';
 
 import type { SiteOrderListItem } from '@admin/site-orders/model';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -15,6 +16,7 @@ const fixed = { sortable: false, filterable: false, disableColumnMenu: true } as
 /** Columns of spec R-002; the server orders the rows newest first, so no column sorts. */
 export function siteOrdersGridColumns(
   onView: (orderId: string) => void,
+  onOpenOrder: (orderId: number) => void,
 ): GridColDef<SiteOrderListItem>[] {
   return [
     {
@@ -56,6 +58,13 @@ export function siteOrdersGridColumns(
       headerName: 'Telegram',
       minWidth: 150,
       renderCell: ({ row }) => <SiteOrderTelegramCell order={row} />,
+    },
+    {
+      ...fixed,
+      field: 'oneCOrderNumber',
+      headerName: 'Замовлення 1С',
+      minWidth: 170,
+      renderCell: ({ row }) => <SiteOrderOneCLink onOpenOrder={onOpenOrder} order={row} />,
     },
     {
       ...fixed,

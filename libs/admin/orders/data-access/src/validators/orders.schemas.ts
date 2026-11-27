@@ -46,6 +46,8 @@ export const orderSummarySchema = z.object({
   syncLastAttemptAtUtc: date.nullable().default(null),
   syncNextAttemptAtUtc: date.nullable().default(null),
   adjustmentAmount: adjustment,
+  siteOrderId: z.string().uuid().nullable().default(null),
+  siteOrderNumber: z.string().nullable().default(null),
 });
 export const draftSummarySchema = z.object({
   draftId: positive,

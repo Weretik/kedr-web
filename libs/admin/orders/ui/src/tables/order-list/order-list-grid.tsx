@@ -31,6 +31,7 @@ interface OrderListGridProps {
   onView: (id: number) => void;
   onEdit?: (id: number) => void;
   onDelete?: (row: DraftSummary) => void;
+  onOpenSiteOrder?: (siteOrderId: string) => void;
   onRetry: () => void;
 }
 export function OrderListGrid(props: OrderListGridProps) {

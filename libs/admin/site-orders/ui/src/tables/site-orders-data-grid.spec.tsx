@@ -15,6 +15,9 @@ const row = (overrides: Partial<SiteOrderListItem>): SiteOrderListItem => ({
   total: 7209,
   telegramStatus: 'sent',
   telegramLastError: null,
+  oneCOrderId: null,
+  oneCOrderNumber: null,
+  oneCDocumentNumber: null,
   ...overrides,
 });
 
@@ -27,6 +30,7 @@ function renderGrid(overrides: Partial<SiteOrdersDataGridProps> = {}) {
     onProblemOnlyChange: vi.fn(),
     onRetry: vi.fn(),
     onSearchChange: vi.fn(),
+    onOpenOrder: vi.fn(),
     onView: vi.fn(),
     page: 1,
     pageSize: 20,
@@ -49,6 +53,25 @@ describe('SiteOrdersDataGrid', () => {
     expect(screen.getByText(/7\s209,00/)).toBeTruthy();
     expect(screen.queryByText('Не надіслано')).toBeNull();
     expect(screen.queryByRole('checkbox', { name: /select/i })).toBeNull();
+  });
+
+  it('links the order made for 1C, with the 1C document number, without opening the site order', () => {
+    const { props } = renderGrid({
+      rows: [
+        row({ oneCOrderId: 42, oneCOrderNumber: 'SO-20261126-42', oneCDocumentNumber: 'DOC-7' }),
+      ],
+    });
+
+    expect(screen.getByRole('columnheader', { name: 'Замовлення 1С' })).toBeTruthy();
+    expect(screen.getByText('1С № DOC-7')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Відкрити замовлення SO-20261126-42' }));
+    expect(props.onOpenOrder).toHaveBeenCalledWith(42);
+    expect(props.onView).not.toHaveBeenCalled();
+  });
+
+  it('leaves the 1C cell empty while the order for 1C is not made yet', () => {
+    renderGrid();
+    expect(screen.queryByRole('button', { name: /Відкрити замовлення SO-/ })).toBeNull();
   });
 
   it('shows the chip with the reason for a waiting order with an error and for a failed one', () => {

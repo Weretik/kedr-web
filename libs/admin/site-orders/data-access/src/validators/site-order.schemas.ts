@@ -13,6 +13,20 @@ const listItemSchema = z.object({
   total: z.number().nonnegative(),
   telegramStatus,
   telegramLastError: z.string().nullable(),
+  oneCOrderId: z
+    .number()
+    .int()
+    .positive()
+    .nullish()
+    .transform((value) => value ?? null),
+  oneCOrderNumber: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? null),
+  oneCDocumentNumber: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? null),
 });
 
 export const siteOrderPageSchema = z.object({
@@ -36,6 +50,20 @@ export const siteOrderDetailSchema = z.object({
   telegramLastAttemptAtUtc: instant.nullable(),
   telegramLastError: z.string().nullable(),
   comment: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? null),
+  oneCOrderId: z
+    .number()
+    .int()
+    .positive()
+    .nullish()
+    .transform((value) => value ?? null),
+  oneCOrderNumber: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? null),
+  oneCDocumentNumber: z
     .string()
     .nullish()
     .transform((value) => value ?? null),

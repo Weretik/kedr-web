@@ -10,6 +10,12 @@ export interface SiteOrderListItem {
   total: number;
   telegramStatus: SiteOrderTelegramStatus;
   telegramLastError: string | null;
+  /** The order made from this one for 1C; null until it is made. */
+  oneCOrderId: number | null;
+  /** That order's number in «Історія замовлень». */
+  oneCOrderNumber: string | null;
+  /** The document number 1C gave that order; null until 1C accepts it. */
+  oneCDocumentNumber: string | null;
 }
 
 export interface SiteOrderLine {
@@ -32,6 +38,12 @@ export interface SiteOrderDetail {
   telegramLastError: string | null;
   /** The buyer's note from the checkout; `null` when there is none. */
   comment: string | null;
+  /** The order made from this one for 1C; null until it is made. */
+  oneCOrderId: number | null;
+  /** That order's number in «Історія замовлень». */
+  oneCOrderNumber: string | null;
+  /** The document number 1C gave that order; null until 1C accepts it. */
+  oneCDocumentNumber: string | null;
   items: readonly SiteOrderLine[];
 }
 

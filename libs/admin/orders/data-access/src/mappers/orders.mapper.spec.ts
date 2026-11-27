@@ -31,6 +31,31 @@ describe('Admin workspace runtime contract', () => {
       }).pageInfo.totalRecords,
     ).toBe(61);
   });
+  it('keeps the site order an order was made from, and none for a manager order', () => {
+    const row = {
+      orderId: 12,
+      orderNumber: 'SO-12',
+      counterpartyId: 'C1',
+      counterpartyName: 'Клієнт',
+      createdAtUtc: '2026-10-21T10:00:00Z',
+      lineCount: 1,
+      totalAmount: 20,
+      syncStatus: 'Pending',
+      adjustmentAmount: 0,
+    };
+    const siteOrderId = '3f2b8c1e-7a4d-4e1b-9c2a-1d2e3f4a5b6c';
+    const page = mapOrderPage({
+      pagedInfo: { pageNumber: 1, pageSize: 20, totalPages: 1, totalRecords: 2 },
+      value: [
+        { ...row, siteOrderId, siteOrderNumber: '3F2B8C1E' },
+        { ...row, orderId: 13 },
+      ],
+    });
+    expect(page.items.map((item) => [item.siteOrderId, item.siteOrderNumber])).toEqual([
+      [siteOrderId, '3F2B8C1E'],
+      [null, null],
+    ]);
+  });
   it('rejects a quote with missing prices before checkout', () => {
     expect(() =>
       mapQuote({

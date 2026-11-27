@@ -6,10 +6,18 @@ import {
 } from '@admin/site-orders/model';
 import { Link } from '@mui/material';
 
+import { SiteOrderOneCLink } from './site-order-one-c-link';
+
 import type { SiteOrderDetail } from '@admin/site-orders/model';
 
 /** Who ordered and when: the main information block of the detail page. */
-export function SiteOrderMainCard({ order }: { order: SiteOrderDetail }) {
+export function SiteOrderMainCard({
+  order,
+  onOpenOrder,
+}: {
+  order: SiteOrderDetail;
+  onOpenOrder: (orderId: number) => void;
+}) {
   return (
     <SectionCard
       as="article"
@@ -33,6 +41,16 @@ export function SiteOrderMainCard({ order }: { order: SiteOrderDetail }) {
           }
         />
         <DetailField label="Номер замовлення" value={siteOrderNumber(order.orderId)} />
+        <DetailField
+          label="Замовлення в 1С"
+          value={
+            order.oneCOrderId === null ? (
+              'Ще не створено'
+            ) : (
+              <SiteOrderOneCLink onOpenOrder={onOpenOrder} order={order} />
+            )
+          }
+        />
         {order.comment && <DetailField label="Коментар покупця" value={order.comment} />}
       </DetailFieldList>
     </SectionCard>

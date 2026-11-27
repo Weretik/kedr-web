@@ -9,7 +9,7 @@ import { SiteOrderDetailsContent } from '@admin/site-orders/ui';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { Alert, Button, Stack } from '@mui/material';
 import { useEffect, useRef } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { useSiteOrderResend } from '../hooks/use-site-order-resend';
 
@@ -17,6 +17,7 @@ import { useSiteOrderResend } from '../hooks/use-site-order-resend';
 export function SiteOrderDetailsPage() {
   const { orderId } = useParams<{ orderId: string }>();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const headingReference = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     headingReference.current?.focus();
@@ -42,7 +43,9 @@ export function SiteOrderDetailsPage() {
       </Alert>
     );
   } else {
-    content = <SiteOrderDetailsContent order={order} />;
+    content = (
+      <SiteOrderDetailsContent onOpenOrder={(id) => navigate(`/orders/${id}`)} order={order} />
+    );
   }
 
   return (

@@ -9,6 +9,8 @@ export interface OrderListActions {
   onView: (id: number) => void;
   onEdit?: (id: number) => void;
   onDelete?: (row: DraftSummary) => void;
+  /** Opens the site order an order was made from; without it the «З сайту» column is hidden. */
+  onOpenSiteOrder?: (siteOrderId: string) => void;
 }
 
 export function OrderListActionsCell({

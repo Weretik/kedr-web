@@ -14714,7 +14714,10 @@
           "telegramLastAttemptAtUtc",
           "telegramLastError",
           "items",
-          "comment"
+          "comment",
+          "oneCOrderId",
+          "oneCOrderNumber",
+          "oneCDocumentNumber"
         ],
         "type": "object",
         "properties": {
@@ -14758,6 +14761,16 @@
           },
           "comment": {
             "type": ["null", "string"]
+          },
+          "oneCOrderId": {
+            "type": ["null", "integer"],
+            "format": "int64"
+          },
+          "oneCOrderNumber": {
+            "type": ["null", "string"]
+          },
+          "oneCDocumentNumber": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -14794,7 +14807,10 @@
           "lineCount",
           "total",
           "telegramStatus",
-          "telegramLastError"
+          "telegramLastError",
+          "oneCOrderId",
+          "oneCOrderNumber",
+          "oneCDocumentNumber"
         ],
         "type": "object",
         "properties": {
@@ -14824,6 +14840,16 @@
             "type": "string"
           },
           "telegramLastError": {
+            "type": ["null", "string"]
+          },
+          "oneCOrderId": {
+            "type": ["null", "integer"],
+            "format": "int64"
+          },
+          "oneCOrderNumber": {
+            "type": ["null", "string"]
+          },
+          "oneCDocumentNumber": {
             "type": ["null", "string"]
           }
         }
@@ -18551,7 +18577,9 @@
           "syncError",
           "syncAttempts",
           "syncLastAttemptAtUtc",
-          "syncNextAttemptAtUtc"
+          "syncNextAttemptAtUtc",
+          "siteOrderId",
+          "siteOrderNumber"
         ],
         "type": "object",
         "properties": {
@@ -18605,6 +18633,13 @@
           "syncNextAttemptAtUtc": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "siteOrderId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "siteOrderNumber": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -18622,7 +18657,9 @@
           "syncError",
           "syncAttempts",
           "syncLastAttemptAtUtc",
-          "syncNextAttemptAtUtc"
+          "syncNextAttemptAtUtc",
+          "siteOrderId",
+          "siteOrderNumber"
         ],
         "type": "object",
         "properties": {
@@ -18672,6 +18709,13 @@
           "syncNextAttemptAtUtc": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "siteOrderId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "siteOrderNumber": {
+            "type": ["null", "string"]
           }
         }
       },

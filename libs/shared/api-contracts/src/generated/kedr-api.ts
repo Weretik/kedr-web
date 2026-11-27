@@ -4382,6 +4382,10 @@ export interface components {
             telegramLastError: null | string;
             items: components["schemas"]["GetAdminQuickOrderItemResponse"][];
             comment: null | string;
+            /** Format: int64 */
+            oneCOrderId: null | number;
+            oneCOrderNumber: null | string;
+            oneCDocumentNumber: null | string;
         };
         GetAdminQuickOrderItemResponse: {
             productId: string;
@@ -4406,6 +4410,10 @@ export interface components {
             total: number;
             telegramStatus: string;
             telegramLastError: null | string;
+            /** Format: int64 */
+            oneCOrderId: null | number;
+            oneCOrderNumber: null | string;
+            oneCDocumentNumber: null | string;
         };
         GrantStaffAccessRequest: {
             fullName: string;
@@ -5572,6 +5580,9 @@ export interface components {
             syncLastAttemptAtUtc: null | string;
             /** Format: date-time */
             syncNextAttemptAtUtc: null | string;
+            /** Format: uuid */
+            siteOrderId: null | string;
+            siteOrderNumber: null | string;
         };
         WorkspaceOrderListItem: {
             /** Format: int64 */
@@ -5595,6 +5606,9 @@ export interface components {
             syncLastAttemptAtUtc: null | string;
             /** Format: date-time */
             syncNextAttemptAtUtc: null | string;
+            /** Format: uuid */
+            siteOrderId: null | string;
+            siteOrderNumber: null | string;
         };
         WorkspaceOverview: {
             /** Format: int32 */
