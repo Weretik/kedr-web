@@ -59,6 +59,8 @@ For any new or changed Admin, Mobile, or Site code, apply the [code organization
 
 For a new or substantially changed feature, update the [feature catalog](docs/features/README.md) under the [delivery rules](docs/standards/shared/delivery-rules.md); small internal changes do not require rewriting its card.
 
+**Branch names:** `<type>/<short-kebab-description>` in English, 3-6 words, types `feat fix hotfix refactor perf docs test chore`, e.g. `feat/site-order-1c-link`; the same name in every repository of one feature; no `claude`, hashes, or dates. The `Branch name` workflow fails a pull request otherwise ([rules](docs/standards/shared/delivery-rules.md#branch-names)).
+
 ## Process priority
 
 The user's direct request and this repository's rules define the scope of work. For feature specification, implementation, and verification, use the relevant `frontend-*` skills and project documents as the primary process. Apply additional skills only for a needed method; they do not add repeated approval, mandatory agents, a worktree, or a separate TDD cycle on top of the project process. Run checks and tests according to this repository's rules and the task requirements.
