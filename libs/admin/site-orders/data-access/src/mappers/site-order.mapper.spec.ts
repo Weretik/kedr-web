@@ -18,6 +18,9 @@ describe('site order mappers', () => {
           total: 7209,
           telegramStatus: 'failed',
           telegramLastError: 'Forbidden: bot was kicked',
+          oneCOrderId: 42,
+          oneCOrderNumber: 'SO-20261126-42',
+          oneCDocumentNumber: 'DOC-7',
           isSuccess: true,
         },
       ],
@@ -34,6 +37,9 @@ describe('site order mappers', () => {
           total: 7209,
           telegramStatus: 'failed',
           telegramLastError: 'Forbidden: bot was kicked',
+          oneCOrderId: 42,
+          oneCOrderNumber: 'SO-20261126-42',
+          oneCDocumentNumber: 'DOC-7',
         },
       ],
       pageNumber: 1,
@@ -71,6 +77,11 @@ describe('site order mappers', () => {
     ]);
     expect(detail.telegramStatus).toBe('sent');
     expect(detail.comment).toBe('  Дзвоніть після 14:00 ');
+    expect([detail.oneCOrderId, detail.oneCOrderNumber, detail.oneCDocumentNumber]).toEqual([
+      null,
+      null,
+      null,
+    ]);
   });
 
   it('rejects an unknown delivery state', () => {

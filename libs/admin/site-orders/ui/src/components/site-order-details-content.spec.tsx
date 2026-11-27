@@ -1,5 +1,5 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SiteOrderDetailsContent } from './site-order-details-content';
 
@@ -16,6 +16,9 @@ const order = (overrides: Partial<SiteOrderDetail> = {}): SiteOrderDetail => ({
   telegramLastAttemptAtUtc: '2026-11-24T07:45:02Z',
   telegramLastError: null,
   comment: null,
+  oneCOrderId: null,
+  oneCOrderNumber: null,
+  oneCDocumentNumber: null,
   items: [
     { productId: '27254', title: 'Ручка «Кедр»', unitPrice: 136.5, quantity: 3, amount: 409.5 },
   ],
@@ -25,16 +28,41 @@ const order = (overrides: Partial<SiteOrderDetail> = {}): SiteOrderDetail => ({
 describe('SiteOrderDetailsContent', () => {
   afterEach(cleanup);
 
+  it('links the order made for 1C and says when it is not made yet', () => {
+    const onOpenOrder = vi.fn();
+    const { rerender } = render(
+      <SiteOrderDetailsContent onOpenOrder={onOpenOrder} order={order()} />,
+    );
+    expect(screen.getByText('Ще не створено')).toBeTruthy();
+    rerender(
+      <SiteOrderDetailsContent
+        onOpenOrder={onOpenOrder}
+        order={order({
+          oneCOrderId: 42,
+          oneCOrderNumber: 'SO-20261126-42',
+          oneCDocumentNumber: null,
+        })}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Відкрити замовлення SO-20261126-42' }));
+    expect(onOpenOrder).toHaveBeenCalledWith(42);
+  });
+
   it('shows the buyer comment only when there is one', () => {
-    const { rerender } = render(<SiteOrderDetailsContent order={order()} />);
+    const { rerender } = render(<SiteOrderDetailsContent onOpenOrder={vi.fn()} order={order()} />);
     expect(screen.queryByText('Коментар покупця')).toBeNull();
-    rerender(<SiteOrderDetailsContent order={order({ comment: 'Дзвоніть після 14:00' })} />);
+    rerender(
+      <SiteOrderDetailsContent
+        onOpenOrder={vi.fn()}
+        order={order({ comment: 'Дзвоніть після 14:00' })}
+      />,
+    );
     expect(screen.getByText('Коментар покупця')).toBeTruthy();
     expect(screen.getByText('Дзвоніть після 14:00')).toBeTruthy();
   });
 
   it('shows the buyer, a phone link, the lines with sums and the total', () => {
-    render(<SiteOrderDetailsContent order={order()} />);
+    render(<SiteOrderDetailsContent onOpenOrder={vi.fn()} order={order()} />);
     expect(screen.getByRole('heading', { name: 'Ірина' })).toBeTruthy();
     expect(screen.getByRole('link', { name: '+38 (067) 123-45-67' }).getAttribute('href')).toBe(
       'tel:+380671234567',

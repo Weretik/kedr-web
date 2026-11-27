@@ -42,6 +42,7 @@ export function SiteOrdersPage() {
           onProblemOnlyChange={(problemOnly) => setListQuery({ problemOnly }, true)}
           onRetry={() => void ordersQuery.refetch()}
           onSearchChange={(search) => setListQuery({ search }, true)}
+          onOpenOrder={(orderId) => navigate(`/orders/${orderId}`)}
           onView={(orderId) => navigate(`/site-orders/${orderId}${siteOrderPageSearch(query)}`)}
           page={query.page}
           pageSize={query.pageSize}

@@ -16,6 +16,7 @@ import {
 import { PriceAdjustmentText } from '../components/price-adjustment-text';
 
 import type { PricedLine } from '@admin/orders/model';
+import type { ReactNode } from 'react';
 
 interface Props {
   customerName: string;
@@ -26,6 +27,8 @@ interface Props {
   lines: PricedLine[];
   totalAmount: number | null;
   pricingUnavailable?: boolean;
+  /** Link to the site order this order was made from. */
+  siteOrder?: ReactNode;
 }
 const money = new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH' });
 const dateFormat = new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium', timeStyle: 'short' });
@@ -40,6 +43,7 @@ export function OrderDocumentView({
   lines,
   totalAmount,
   pricingUnavailable,
+  siteOrder,
 }: Props) {
   const adjusted = lines.some((line) => line.priceAdjustment);
   return (
@@ -65,6 +69,7 @@ export function OrderDocumentView({
         <SectionCard eyebrow="Документ" title={reference}>
           <DetailFieldList columns={2}>
             <DetailField label="Дата" value={dateFormat.format(new Date(date))} />
+            {siteOrder && <DetailField label="Замовлення з сайту" value={siteOrder} />}
             {note && (
               <Box sx={{ gridColumn: '1 / -1' }}>
                 <DetailField label="Примітка" value={note} />

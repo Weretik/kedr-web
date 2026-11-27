@@ -16,7 +16,7 @@
 
 ## Response projection and UI
 
-- List rows: `orderId`, `placedAtUtc`, `firstName`, `phone`, `lineCount`, `total`, `telegramStatus` (`sent`, `pending`, `failed`), nullable `telegramLastError`. `value` may be `null`; the mapper treats it as an empty page.
-- Detail: the same buyer fields, `telegramSentAtUtc`, `telegramLastAttemptAtUtc`, `telegramLastError` (nullable), and `items[{productId,title,unitPrice,quantity,amount}]`.
+- List rows: `orderId`, `placedAtUtc`, `firstName`, `phone`, `lineCount`, `total`, `telegramStatus` (`sent`, `pending`, `failed`), nullable `telegramLastError`, and the order made for 1C (spec sales/009, R-015): nullable `oneCOrderId`, `oneCOrderNumber`, `oneCDocumentNumber`. `value` may be `null`; the mapper treats it as an empty page.
+- Detail: the same buyer fields, `telegramSentAtUtc`, `telegramLastAttemptAtUtc`, `telegramLastError` (nullable), `items[{productId,title,unitPrice,quantity,amount}]`, and the same three `oneC*` fields.
 - Resend: 202 with `{orderId, telegramStatus}`; the Admin only refreshes the order and the list. 409 carries a Ukrainian `detail` the Admin shows as is; 404 is «Замовлення не знайдено».
 - `@admin/site-orders/data-access` validates responses with zod (an unknown `telegramStatus` fails the request) and maps them to the domain model; feature and UI do not import DTOs. Name and phone are personal data and are never logged.

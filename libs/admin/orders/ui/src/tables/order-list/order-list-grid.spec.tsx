@@ -24,6 +24,8 @@ const order = (
     syncLastAttemptAtUtc: null,
     syncNextAttemptAtUtc: null,
     adjustmentAmount: 0,
+    siteOrderId: null,
+    siteOrderNumber: null,
     ...sync,
   }) satisfies OrderSummary;
 
@@ -74,6 +76,27 @@ describe('OrderListGrid', () => {
 
     expect(screen.getByText('Клієнта не знайдено · Спроб: 1')).toBeTruthy();
     expect(screen.queryAllByText(/Спроб/)).toHaveLength(1);
+  });
+
+  it('names the site order of an order made from one and opens it without opening the order', () => {
+    const onOpenSiteOrder = vi.fn();
+    const onView = vi.fn();
+    const siteOrderId = '3f2b8c1e-7a4d-4e1b-9c2a-1d2e3f4a5b6c';
+    renderGrid({
+      onOpenSiteOrder,
+      onView,
+      rowCount: 2,
+      rows: [
+        order(1, 'Accepted', { siteOrderId, siteOrderNumber: '3F2B8C1E' }),
+        order(2, 'Accepted'),
+      ],
+    });
+
+    expect(screen.getByRole('columnheader', { name: 'З сайту' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Відкрити замовлення з сайту № 3F2B8C1E' }));
+    expect(onOpenSiteOrder).toHaveBeenCalledWith(siteOrderId);
+    expect(onView).not.toHaveBeenCalled();
+    expect(screen.getAllByRole('button', { name: /Відкрити замовлення з сайту/ })).toHaveLength(1);
   });
 
   it('shows a load error inside the table with a retry action', () => {

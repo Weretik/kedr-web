@@ -4,6 +4,7 @@ import { OrderListActionsCell } from './order-list-actions-cell';
 import { OrderStatusChip } from '../../components/order-status-chip';
 import { OrderSyncNote } from '../../components/order-sync-note';
 import { PriceAdjustmentText } from '../../components/price-adjustment-text';
+import { SiteOrderLink } from '../../components/site-order-link';
 
 import type { OrderListActions } from './order-list-actions-cell';
 import type { DraftSummary, OrderSummary } from '@admin/orders/model';
@@ -54,6 +55,7 @@ export function orderListColumns(
           sortable: false,
           renderCell: ({ value }) => <PriceAdjustmentText value={Number(value ?? 0)} />,
         },
+        ...siteOrderColumn(actions.onOpenSiteOrder),
         {
           field: 'syncStatus',
           headerName: '1C',
@@ -97,4 +99,28 @@ export function orderListColumns(
     ),
   });
   return columns;
+}
+
+/** «З сайту»: the site order an order was made from (KedrStore spec sales/009, R-015); empty for a manager's order. */
+function siteOrderColumn(onOpen: OrderListActions['onOpenSiteOrder']): GridColDef[] {
+  if (!onOpen) return [];
+  return [
+    {
+      field: 'siteOrderNumber',
+      headerName: 'З сайту',
+      minWidth: 130,
+      flex: 0.6,
+      sortable: false,
+      renderCell: ({ row }) => {
+        const { siteOrderId, siteOrderNumber } = row as OrderSummary;
+        return siteOrderId && siteOrderNumber ? (
+          <SiteOrderLink
+            onOpen={onOpen}
+            siteOrderId={siteOrderId}
+            siteOrderNumber={siteOrderNumber}
+          />
+        ) : null;
+      },
+    },
+  ];
 }

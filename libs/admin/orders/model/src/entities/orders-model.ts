@@ -60,6 +60,10 @@ export interface OrderSummary {
   syncNextAttemptAtUtc: string | null;
   /** Sum of discounts (negative) and markups (positive) over all units. */
   adjustmentAmount: number;
+  /** The site order this order was made from; null for a manager's order. */
+  siteOrderId: string | null;
+  /** Its 8-character number, as the site and Telegram show it. */
+  siteOrderNumber: string | null;
 }
 export interface DraftSummary {
   draftId: number;

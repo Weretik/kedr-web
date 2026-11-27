@@ -17,6 +17,8 @@ export interface SiteOrdersDataGridProps {
   onRetry: () => void;
   onSearchChange: (search: string | undefined) => void;
   onView: (orderId: string) => void;
+  /** Opens the order made for 1C in «Історія замовлень» (KedrStore spec sales/009, R-015). */
+  onOpenOrder: (orderId: number) => void;
   page: number;
   pageSize: number;
   problemOnly: boolean;
@@ -36,7 +38,8 @@ export function SiteOrdersDataGrid(props: SiteOrdersDataGridProps) {
     >
       <Box sx={{ minWidth: 0, width: '100%' }}>
         <DataGrid
-          columns={siteOrdersGridColumns(props.onView)}
+          columns={siteOrdersGridColumns(props.onView, props.onOpenOrder)}
+          getRowHeight={() => 'auto'}
           disableColumnFilter
           disableRowSelectionOnClick
           filterMode="server"
