@@ -11,7 +11,7 @@ Stock and price are independent. No stock leads to the manager availability cont
 ## Data, routing and SEO
 
 - `getPublicProductBySlug`, `GET /api/catalog/{lang}/product/{productSlug}`, public price type11; [Site consumer projection](../../contracts/catalog/public-products.md#site-product-details-and-discovery). Generated aliases and unknown response parsing stay private in data-access `contracts/`; normalization stays in mappers.
-- Shared typed GET, success `cacheLife('hours')`, short failure lifetime, `catalog`/`catalog:products`/product SKU/slug tags; no cookies, session or cart in the shared cache.
+- Shared typed GET, success `cacheLife('hours')`, an API failure is never cached (thrown inside `'use cache'`, answered `unavailable` outside), `catalog`/`catalog:products`/product SKU/slug tags; no cookies, session or cart in the shared cache.
 - Current URL renders the product; old slug permanently redirects, category redirect body permanently redirects to the category, bare missing is 404, unavailable data throws to the existing error frame. Resolution precedes streaming; `instant=false` follows the category route.
 - Prerender uses real first-page candidates and at most five detail verifications per locale; there is no fake placeholder. If no real seed can be confirmed, preparation fails explicitly.
 - Feature filters hidden catalog roots and resolves category destinations through the allowed `product-feature -> catalog-model` flow. One visible trail feeds UI and BreadcrumbList; ready `categoryHref` passes through the server view to identity, with no category URL policy in UI.

@@ -3,3 +3,4 @@ export { siteApiGet } from './lib/site-api';
 export type { PublicGetPath, SiteApiGetOptions } from './lib/site-api';
 export { siteApiCreateQuickOrder } from './lib/site-order-api';
 export type { SiteOrderApiOptions, SiteOrderApiResult } from './lib/site-order-api';
+export { SiteApiUnavailableError, readWithoutCachingFailure } from './lib/uncached-failure';
