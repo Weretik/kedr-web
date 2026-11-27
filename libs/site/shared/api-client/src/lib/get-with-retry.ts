@@ -1,41 +1,80 @@
-/** Pauses before the 2nd and 3rd attempt; short, so a page waits well under a second for a brief API hiccup. */
-export const RETRY_DELAYS_MS = [150, 450] as const;
+/** How patiently a public read waits for the API before the page shows its error view. */
+export type RetryPolicy = {
+  /** Pause before each repeat; their count is the number of repeats. */
+  delaysMs: readonly number[];
+  /** Longest one attempt waits for an answer. */
+  attemptTimeoutMs: number;
+  /** Whole wait of all attempts and pauses together; no attempt starts once less than a second is left. */
+  budgetMs: number;
+  /** Longest `Retry-After` of a 429 that is waited for; a longer one gets the normal pause. */
+  maxRetryAfterMs: number;
+  /** Clock, for tests. */
+  now?: () => number;
+};
+
+/**
+ * Pauses of about 6 s in total cover a Cloud Run cold start (3.8 s median, 5.2 s P95, measured 2026-11-19) and an
+ * instance replaced during a deploy; the 20 s budget keeps a visitor from waiting forever when the API is really down.
+ */
+export const DEFAULT_RETRY_POLICY: RetryPolicy = {
+  delaysMs: [300, 1_000, 2_000, 3_000],
+  attemptTimeoutMs: 10_000,
+  budgetMs: 20_000,
+  maxRetryAfterMs: 5_000,
+};
+
+const MIN_ATTEMPT_MS = 1_000;
 
 type Fetch = typeof fetch;
 
-/** A brief failure worth repeating: a busy or restarting API (429, 5xx), not an answer about the data. */
+/** A brief failure worth repeating: a busy or starting API (429, 5xx), not an answer about the data. */
 const isTransientStatus = (status: number) => status === 429 || status >= 500;
 
-const isTimeout = (error: unknown) =>
-  error instanceof DOMException && (error.name === 'TimeoutError' || error.name === 'AbortError');
+const pause = (ms: number) =>
+  ms > 0 ? new Promise<void>((resolve) => setTimeout(resolve, ms)) : Promise.resolve();
 
-const pause = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+/** Seconds of a 429 `Retry-After` within the cap, otherwise the normal pause. */
+const pauseAfter = (response: Response | undefined, delayMs: number, maxRetryAfterMs: number) => {
+  const seconds = Number(response?.status === 429 ? response.headers.get('Retry-After') : NaN);
+  if (!Number.isFinite(seconds) || seconds <= 0) return delayMs;
+  return Math.max(delayMs, Math.min(seconds * 1_000, maxRetryAfterMs));
+};
 
 /**
- * A public GET that repeats a brief failure, so one dropped connection or a Cloud Run instance that is starting
- * or being replaced during a deploy does not turn into an error page. Each attempt has its own timeout; a timeout
- * is not repeated, because the visitor has already waited for it. Only safe reads go through here.
+ * A public GET that waits out a brief failure (dropped connection, timeout, 429, 5xx), so a Cloud Run instance that
+ * is starting or being replaced does not turn into an error page. Each attempt has its own timeout, and all attempts
+ * share one budget. Only safe reads go through here.
  */
 export async function getWithRetry(
   fetchImpl: Fetch,
   url: URL,
   headers: HeadersInit,
-  timeoutMs: number,
-  delaysMs: readonly number[] = RETRY_DELAYS_MS,
+  policy: RetryPolicy = DEFAULT_RETRY_POLICY,
 ): Promise<Response> {
+  const now = policy.now ?? Date.now;
+  const deadline = now() + policy.budgetMs;
+
   for (let attempt = 0; ; attempt++) {
-    const isLast = attempt >= delaysMs.length;
+    const isLast = attempt >= policy.delaysMs.length;
+    let response: Response | undefined;
+    let failure: unknown;
     try {
-      const response = await fetchImpl(url, {
+      response = await fetchImpl(url, {
         headers,
-        signal: AbortSignal.timeout(timeoutMs),
+        signal: AbortSignal.timeout(Math.min(policy.attemptTimeoutMs, deadline - now())),
       });
-      if (isLast || !isTransientStatus(response.status)) return response;
-      // Release the connection of the discarded answer before the next attempt.
-      await response.body?.cancel();
+      if (!isTransientStatus(response.status)) return response;
     } catch (error) {
-      if (isLast || isTimeout(error)) throw error;
+      failure = error;
     }
-    await pause(delaysMs[attempt]);
+
+    const wait = pauseAfter(response, policy.delaysMs[attempt] ?? 0, policy.maxRetryAfterMs);
+    if (isLast || deadline - now() - wait < MIN_ATTEMPT_MS) {
+      if (response) return response;
+      throw failure;
+    }
+    // Release the connection of the discarded answer before the next attempt.
+    await response?.body?.cancel();
+    await pause(wait);
   }
 }
