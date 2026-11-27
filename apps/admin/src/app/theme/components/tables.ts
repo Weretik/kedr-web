@@ -10,7 +10,7 @@ import { adminMotion } from '../foundation/motion';
  * Every table scrolls inside itself so a laptop screen never needs a long page scroll:
  * the height follows the window, the width follows the card, and the header stays pinned.
  */
-const tableViewportHeight = 'calc(100dvh - 224px)';
+const tableViewportHeight = 'calc(100dvh - 140px)';
 
 /** Data grids and tables. */
 export const adminTableComponents = {
