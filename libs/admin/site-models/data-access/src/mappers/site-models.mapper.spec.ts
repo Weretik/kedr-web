@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  mapSiteCategoryRefs,
   mapSiteModel,
   mapSiteShowcase,
   toSetSiteModelTextBody,
@@ -122,5 +123,17 @@ describe('site models mapper', () => {
         seoDescription: '',
       }),
     ).toEqual({ shortDescription: 'a', description: '', seoTitle: 'T', seoDescription: '' });
+  });
+
+  it('keeps only the place in the tree of every catalog category, empty ones included', () => {
+    expect(
+      mapSiteCategoryRefs([
+        { id: 5, name: 'На розетці', parentId: 2, productCount: 0, slug: 'x' },
+        { id: 2, name: 'Ручки', parentId: null },
+      ]),
+    ).toEqual([
+      { id: 5, name: 'На розетці', parentId: 2 },
+      { id: 2, name: 'Ручки', parentId: null },
+    ]);
   });
 });

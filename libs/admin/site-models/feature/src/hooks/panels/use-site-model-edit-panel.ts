@@ -1,7 +1,7 @@
 import {
   useChangeSiteModelCategoryMutation,
   useGetAttributeOptionsQuery,
-  useGetSiteModelCategoriesQuery,
+  useGetSiteCategoryOptionsQuery,
 } from '@admin/site-models/data-access';
 import { siteFinalCategories } from '@admin/site-models/model';
 import { useMemo, useState } from 'react';
@@ -12,7 +12,7 @@ import { useSiteModelEditor } from '../model-editor/use-site-model-editor';
 /** «Редагування моделі»: the model editor plus the site category, each block saving on its own (spec 001 R-004). */
 export function useSiteModelEditPanel(modelId: number, onNotice: (text: string) => void) {
   const editor = useSiteModelEditor(modelId, onNotice);
-  const categoriesQuery = useGetSiteModelCategoriesQuery();
+  const categoriesQuery = useGetSiteCategoryOptionsQuery();
   const attributeOptions = useGetAttributeOptionsQuery();
   const [changeCategory, categoryState] = useChangeSiteModelCategoryMutation();
   const [categoryError, setCategoryError] = useState<string | null>(null);

@@ -1,6 +1,6 @@
 import {
   useCreateSiteModelMutation,
-  useGetSiteModelCategoriesQuery,
+  useGetSiteCategoryOptionsQuery,
 } from '@admin/site-models/data-access';
 import { siteFinalCategories } from '@admin/site-models/model';
 import { useMemo, useState } from 'react';
@@ -23,7 +23,7 @@ export function useNewSiteModel(
   /** Opens the new model with the notice to show there. */
   onCreated: (modelId: number, notice: string) => void,
 ) {
-  const categoriesQuery = useGetSiteModelCategoriesQuery();
+  const categoriesQuery = useGetSiteCategoryOptionsQuery();
   const categories = useMemo(
     () => siteFinalCategories(categoriesQuery.data ?? []),
     [categoriesQuery.data],

@@ -1,6 +1,6 @@
 import { siteCategoryAncestors } from '../entities/showcase/site-category-tree';
 
-import type { SiteModelCategory } from '../entities/showcase/site-showcase';
+import type { SiteCategoryRef } from '../entities/showcase/site-showcase';
 
 /** A category a model can live in: one without subcategories, with its path for the picker. */
 export interface SiteFinalCategory {
@@ -11,7 +11,7 @@ export interface SiteFinalCategory {
 }
 
 /** Final categories (no children in the list) sorted by their path. */
-export function siteFinalCategories(categories: readonly SiteModelCategory[]): SiteFinalCategory[] {
+export function siteFinalCategories(categories: readonly SiteCategoryRef[]): SiteFinalCategory[] {
   const parents = new Set(categories.map((category) => category.parentId));
   const names = new Map(categories.map((category) => [category.id, category.name] as const));
   return categories

@@ -10,7 +10,7 @@ const api = vi.hoisted(() => ({
 
 vi.mock('@admin/site-models/data-access', () => ({
   useGetSiteModelQuery: () => ({ data: undefined, isLoading: true, isError: false }),
-  useGetSiteModelCategoriesQuery: () => ({
+  useGetSiteCategoryOptionsQuery: () => ({
     data: [
       { id: 1, name: 'Фурнітура', parentId: null },
       { id: 3, name: 'Ручки', parentId: 1 },
