@@ -47,6 +47,7 @@ export {
 } from './entities/models/site-model';
 export type { SiteModelListItem, SiteModelListQuery } from './entities/models/site-model-list';
 export type {
+  SiteCategoryRef,
   SiteModelCategory,
   SiteModelHealth,
   SiteModelsPage,

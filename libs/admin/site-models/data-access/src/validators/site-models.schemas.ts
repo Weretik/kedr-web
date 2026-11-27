@@ -134,6 +134,14 @@ export const siteModelCategoriesSchema = z.array(
   }),
 );
 
+export const siteCategoryRefsSchema = z.array(
+  z.object({
+    id: z.number().int().min(1),
+    name: z.string(),
+    parentId: z.number().int().nullish(),
+  }),
+);
+
 export const siteModelHealthSchema = z.object({
   productsWithoutModel: z.number().int().nonnegative(),
   productsWithoutAttributes: z.number().int().nonnegative(),

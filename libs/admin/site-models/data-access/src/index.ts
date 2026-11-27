@@ -22,4 +22,8 @@ export {
   useSetSiteModelAxesMutation,
   useSetSiteModelTextMutation,
 } from './api/site-models.api';
-export { useGetSiteModelCategoriesQuery, useGetSiteModelsQuery } from './api/site-model-lists.api';
+export {
+  useGetSiteCategoryOptionsQuery,
+  useGetSiteModelCategoriesQuery,
+  useGetSiteModelsQuery,
+} from './api/site-model-lists.api';

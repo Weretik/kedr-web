@@ -28,6 +28,14 @@ vi.mock('@admin/site-models/data-access', () => ({
     ],
     isLoading: false,
   }),
+  useGetSiteCategoryOptionsQuery: () => ({
+    data: [
+      { id: 1, name: 'Фурнітура', parentId: null },
+      { id: 3, name: 'Ручки', parentId: 1 },
+      { id: 4, name: 'Накладки', parentId: 1 },
+    ],
+    isLoading: false,
+  }),
   useGetSiteShowcaseQuery: () => ({
     data: {
       items: [11, 12].map((productId) => ({
