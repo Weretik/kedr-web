@@ -39,6 +39,10 @@ If the user authorizes an entire feature, phase, or set of `SC-*` scenarios, the
 
 Implement a feature in stages (one scenario, task slice, or layer at a time) without a separate structure check after each stage. After the whole feature is implemented, run one full `$frontend-code-audit` of the feature against all [architecture](../../architecture/frontend-inventory.md) and [code organization](code-organization.md) rules: boundaries, layers and role folders, one responsibility per file, tests first and minimum tests, feature card, and dump folders, plus `npm run architecture:structure` and `npm run architecture:boundaries`. Fix every finding before handoff.
 
+## Branch names
+
+Every branch follows Conventional Branch: `<type>/<short-description-in-kebab-case>`, in English, 3-6 words in the description. Types: `feat/` (new feature), `fix/` (bug), `hotfix/` (urgent production fix), `refactor/`, `perf/`, `docs/`, `test/`, `chore/` (infrastructure, dependencies, CI). Examples: `feat/site-order-1c-link`, `fix/model-category-save-button`, `chore/ci-contract-drift`. One feature or fix uses the same branch name in every repository it touches. No `claude` in the name, no random suffixes, hashes, or dates. Branches of `dependabot/*` and `renovate/*` are allowed. The `Branch name` workflow (`.github/workflows/branch-name.yml`) fails a pull request whose branch does not match; rename the branch and open a new pull request.
+
 ## Closing checklist
 
 Before reporting a feature complete, check each item that applies: the feature card and [feature catalog](../../features/README.md) row are created or updated; the [specification index](../../specs/README.md) row and traceability are current; the card's "Tests" section is current; the contract snapshot and generated types are synced after a backend change; loading, empty, and error states exist; the existing theme (light and dark), responsive rules, and locale are respected; architecture documentation is updated when a module, route, or boundary is added or changed; the full feature audit is done and its findings are fixed.
