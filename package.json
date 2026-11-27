@@ -22,6 +22,7 @@
     "architecture:structure:fixtures": "node --test tools/architecture/check-structure.spec.mjs",
     "ci:test-scripts": "node tools/ci/check-test-scripts.mjs",
     "ci:test-scripts:fixtures": "node --test tools/ci/test-scripts.spec.mjs",
+    "site:build-patch:fixtures": "node --test tools/scripts/patch-next-use-cache.spec.mjs",
     "test:web": "nx run-many -t vite:test --parallel=1 --projects=admin,admin-* -- --run",
     "test:web:coverage": "nx run-many -t vite:test --projects=admin,admin-shared-api-client -- --run --coverage",
     "test:stack:e2e": "playwright test -c apps/stack-e2e/playwright.config.ts",

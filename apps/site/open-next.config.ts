@@ -13,6 +13,8 @@ const config = defineCloudflareConfig({
 });
 
 // apps/site has no package.json: OpenNext starts in the workspace root, and next.config.mjs must be loaded from its own folder.
-config.buildCommand = 'cd apps/site && npx next build';
+// The patch turns off Next.js sharing of one 'use cache' read between concurrent requests, which hangs on Workers.
+config.buildCommand =
+  'node tools/scripts/patch-next-use-cache.mjs && cd apps/site && npx next build';
 
 export default config;
