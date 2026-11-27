@@ -8,7 +8,10 @@ const { siteApiGet, cacheLife, cacheTag } = vi.hoisted(() => ({
 
 vi.mock('server-only', () => ({}));
 vi.mock('next/cache', () => ({ cacheLife, cacheTag }));
-vi.mock('@site/shared/api-client', () => ({ siteApiGet }));
+vi.mock('@site/shared/api-client', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@site/shared/api-client')>()),
+  siteApiGet,
+}));
 
 const category = (slug: string) => ({
   id: 9,
@@ -65,10 +68,11 @@ describe('getCategory', () => {
     expect(await getCategory('uk', 'missing')).toEqual({ kind: 'not-found' });
   });
 
-  it('reports an unavailable API with a short lifetime', async () => {
+  it('reports an unavailable API without caching it', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
     siteApiGet.mockResolvedValue({ kind: 'unavailable', status: 503 });
 
     expect(await getCategory('uk', 'zavisy')).toEqual({ kind: 'unavailable' });
-    expect(cacheLife).toHaveBeenCalledWith({ stale: 60, revalidate: 60, expire: 3600 });
+    expect(cacheLife).not.toHaveBeenCalled();
   });
 });

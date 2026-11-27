@@ -173,6 +173,15 @@ describe('ModelPage', () => {
     expect(html).not.toContain('Інші моделі в категорії');
   });
 
+  it('shows the error view instead of a 404 when the model API is unavailable', async () => {
+    vi.mocked(getSiteModel).mockResolvedValue({ kind: 'unavailable' });
+    vi.mocked(getProductDetails).mockResolvedValue({ kind: 'not-found' });
+    await expect(
+      ModelPage({ locale: 'uk', slug: 'zavisa-flush', searchParams: {} }),
+    ).rejects.toThrow('Model API unavailable');
+    await expect(getModelMetadata('uk', 'zavisa-flush')).rejects.toThrow('Model API unavailable');
+  });
+
   it('builds canonical metadata from the model texts without the query', async () => {
     const metadata = await getModelMetadata('uk', 'zavisa-flush');
     expect(metadata.title).toBe('Завіси FLUSH купити');

@@ -41,6 +41,7 @@ jobs:
       - run: npm run architecture:structure
       - run: npm run ci:test-scripts:fixtures
       - run: npm run ci:test-scripts
+      - run: npm run site:build-patch:fixtures
       - run: npx nx $NX_MODE -t lint
 
   typecheck:

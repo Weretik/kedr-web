@@ -1,9 +1,13 @@
 import 'server-only';
 
-import { siteApiGet } from '@site/shared/api-client';
+import {
+  SiteApiUnavailableError,
+  readWithoutCachingFailure,
+  siteApiGet,
+} from '@site/shared/api-client';
 import { cacheLife, cacheTag } from 'next/cache';
 
-import { CATALOG_CACHE_TAGS, FAILURE_LIFE } from '../cache-tags';
+import { CATALOG_CACHE_TAGS } from '../cache-tags';
 import { mapCategoryDetails, readRedirectSlug } from '../mappers/category-details.mapper';
 
 import type { CategoryDetails } from '@site/catalog/model';
@@ -16,11 +20,18 @@ export type CategoryResult =
   | { kind: 'not-found' }
   | { kind: 'unavailable' };
 
+const CATEGORY_PATH = '/api/catalog/{lang}/categories/by-slug/{categorySlug}';
+
 /**
  * One category by slug. A former slug answers with the current one, and a deleted category with an active
- * ancestor answers 404 naming it; both become `moved`, so the page redirects permanently.
+ * ancestor answers 404 naming it; both become `moved`, so the page redirects permanently. An API failure is not
+ * cached: the next request reads the API again.
  */
 export async function getCategory(locale: Locale, slug: string): Promise<CategoryResult> {
+  return readWithoutCachingFailure(() => readCategory(locale, slug), { kind: 'unavailable' });
+}
+
+async function readCategory(locale: Locale, slug: string): Promise<CategoryResult> {
   'use cache';
   cacheTag(
     CATALOG_CACHE_TAGS.all,
@@ -28,14 +39,11 @@ export async function getCategory(locale: Locale, slug: string): Promise<Categor
     CATALOG_CACHE_TAGS.category(slug),
   );
 
-  const result = await siteApiGet('/api/catalog/{lang}/categories/by-slug/{categorySlug}', {
+  const result = await siteApiGet(CATEGORY_PATH, {
     path: { lang: locale, categorySlug: slug },
   });
 
-  if (result.kind === 'unavailable') {
-    cacheLife(FAILURE_LIFE);
-    return { kind: 'unavailable' };
-  }
+  if (result.kind === 'unavailable') throw new SiteApiUnavailableError(CATEGORY_PATH);
 
   cacheLife('hours');
   if (result.kind === 'ok') {

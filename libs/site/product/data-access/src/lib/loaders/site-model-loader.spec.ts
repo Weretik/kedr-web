@@ -7,7 +7,10 @@ const { siteApiGet, cacheLife, cacheTag } = vi.hoisted(() => ({
 }));
 vi.mock('server-only', () => ({}));
 vi.mock('next/cache', () => ({ cacheLife, cacheTag }));
-vi.mock('@site/shared/api-client', () => ({ siteApiGet }));
+vi.mock('@site/shared/api-client', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@site/shared/api-client')>()),
+  siteApiGet,
+}));
 
 const modelDto = {
   slug: 'zavisa-flush',
@@ -125,7 +128,10 @@ describe('getSiteModel', () => {
     siteApiGet.mockResolvedValueOnce({ kind: 'not-found' });
     expect(await getSiteModel('uk', 'nemaye')).toEqual({ kind: 'not-found' });
     siteApiGet.mockResolvedValueOnce({ kind: 'unavailable', status: 503 });
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    cacheLife.mockClear();
     expect(await getSiteModel('uk', 'zavisa-flush')).toEqual({ kind: 'unavailable' });
+    expect(cacheLife).not.toHaveBeenCalled();
     expect(await getSiteModel('uk', '../x')).toEqual({ kind: 'not-found' });
     expect(siteApiGet).toHaveBeenCalledTimes(2);
   });

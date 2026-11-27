@@ -8,7 +8,10 @@ const { siteApiGet, cacheLife, cacheTag } = vi.hoisted(() => ({
 }));
 vi.mock('server-only', () => ({}));
 vi.mock('next/cache', () => ({ cacheLife, cacheTag }));
-vi.mock('@site/shared/api-client', () => ({ siteApiGet }));
+vi.mock('@site/shared/api-client', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@site/shared/api-client')>()),
+  siteApiGet,
+}));
 
 describe('getProductDetails', () => {
   beforeEach(() => vi.resetAllMocks());
@@ -73,10 +76,11 @@ describe('getProductDetails', () => {
     { kind: 'unavailable', status: 400 },
     { kind: 'unavailable' },
     { kind: 'gone' },
-  ])('does not turn failure %o into 404 or a product', async (result) => {
+  ])('does not turn failure %o into 404 or a product and does not cache it', async (result) => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
     siteApiGet.mockResolvedValue(result);
     expect(await getProductDetails('uk', 'ruchka-731')).toEqual({ kind: 'unavailable' });
-    expect(cacheLife).toHaveBeenCalledWith({ stale: 60, revalidate: 60, expire: 3600 });
+    expect(cacheLife).not.toHaveBeenCalled();
   });
 
   it('rejects a malformed mandatory identity as unavailable', async () => {
