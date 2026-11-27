@@ -72,11 +72,16 @@ export function mapSiteModelCategories(response: unknown): SiteModelCategory[] {
     .map((category) => ({ ...category, parentId: category.parentId ?? null }));
 }
 
-/** Every live catalog category (the admin list), reduced to what the picker needs. */
+/**
+ * Every live catalog category (the admin list), reduced to what the picker needs. The name is the one the site
+ * and «Моделі» show (short name, else the 1C name): the 1C names can differ from the site ones.
+ */
 export function mapSiteCategoryRefs(response: unknown): SiteCategoryRef[] {
-  return siteCategoryRefsSchema
-    .parse(response)
-    .map((category) => ({ ...category, parentId: category.parentId ?? null }));
+  return siteCategoryRefsSchema.parse(response).map((category) => ({
+    id: category.id,
+    name: category.shortNameUk?.trim() || category.name,
+    parentId: category.parentId ?? null,
+  }));
 }
 
 export function mapSiteModelHealth(response: unknown): SiteModelHealth {
