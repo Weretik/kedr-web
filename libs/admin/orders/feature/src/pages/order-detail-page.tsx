@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { DetailHeader } from '../components/detail-header';
 import { OrderSyncRetryPanel } from '../components/order-sync-retry-panel';
+import { OrderSyncSendNowButton } from '../components/order-sync-send-now-button';
 
 export function OrderDetailPage() {
   const { notice, close: closeNotice } = useRouteNotice();
@@ -38,6 +39,14 @@ export function OrderDetailPage() {
           <OrderSyncCard
             oneCDocumentNumber={query.data.oneCDocumentNumber}
             onRetry={() => setRetryOpen(true)}
+            sendNow={
+              <OrderSyncSendNowButton
+                onSent={() =>
+                  setRetried('Замовлення піде в 1С під час найближчого запуску, до 5 хвилин.')
+                }
+                orderId={query.data.orderId}
+              />
+            }
             sync={query.data}
           />
           <OrderSyncRetryPanel

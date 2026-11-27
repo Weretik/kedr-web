@@ -10,22 +10,27 @@ import {
 import { formatSyncTime } from '../components/order-sync-note';
 
 import type { OrderSyncState } from '../components/order-sync-note';
+import type { ReactNode } from 'react';
 
 interface Props {
   sync: OrderSyncState;
   oneCDocumentNumber: string | null;
   /** Opens the retry panel; the button shows only when 1C refused the order or every attempt failed. */
   onRetry?: () => void;
+  /** «Надіслати зараз», shown only while the next automatic attempt is scheduled. */
+  sendNow?: ReactNode;
 }
 
 /** «Стан 1С» of one order: the label, the 1C document, and for a problem its reason and attempts. */
-export function OrderSyncCard({ sync, oneCDocumentNumber, onRetry }: Props) {
+export function OrderSyncCard({ sync, oneCDocumentNumber, onRetry, sendNow }: Props) {
   const problem = isOneCSyncProblem(sync.syncStatus);
   const retry =
     onRetry && canRetryOneCSync(sync.syncStatus) ? (
       <Button onClick={onRetry} startIcon={<ReplayOutlinedIcon />} variant="outlined">
         Повторити
       </Button>
+    ) : sync.syncStatus === 'RetryScheduled' ? (
+      sendNow
     ) : undefined;
 
   return (

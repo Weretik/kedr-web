@@ -74,4 +74,29 @@ describe('OrderSyncCard', () => {
     );
     expect(screen.queryByRole('button', { name: 'Повторити' })).toBeNull();
   });
+  it('offers «Надіслати зараз» instead of a retry while the next attempt is scheduled', () => {
+    render(
+      <OrderSyncCard
+        oneCDocumentNumber={null}
+        onRetry={vi.fn()}
+        sendNow={<button type="button">Надіслати зараз</button>}
+        sync={sync({ syncStatus: 'RetryScheduled', syncAttempts: 7 })}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Надіслати зараз' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Повторити' })).toBeNull();
+  });
+
+  it('does not offer «Надіслати зараз» for other states', () => {
+    render(
+      <OrderSyncCard
+        oneCDocumentNumber={null}
+        sendNow={<button type="button">Надіслати зараз</button>}
+        sync={sync({ syncStatus: 'Pending' })}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: 'Надіслати зараз' })).toBeNull();
+  });
 });

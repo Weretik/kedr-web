@@ -2871,7 +2871,7 @@ export interface paths {
         put?: never;
         /**
          * Schedule a failed order for another 1C delivery cycle
-         * @description Allowed only for BusinessError and DeadLetter. The request records an audit entry and puts the order back in the outbox queue (state Pending, attempts from zero); it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
+         * @description Allowed for BusinessError and DeadLetter (back in the outbox queue, state Pending, attempts from zero) and for RetryScheduled («Надіслати зараз»: the waiting attempt is due now, attempts kept). The request records an audit entry; it does not call 1C synchronously. Policy CanManageOrders (Manager, Seo, and Admin).
          */
         post: operations["retryAdminOrderSync"];
         delete?: never;

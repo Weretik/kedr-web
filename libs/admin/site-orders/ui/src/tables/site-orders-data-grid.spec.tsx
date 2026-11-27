@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SiteOrdersDataGrid } from './site-orders-data-grid';
+import { siteOrdersGridColumns } from './site-orders-grid.columns';
 
 import type { SiteOrdersDataGridProps } from './site-orders-data-grid';
 import type { SiteOrderListItem } from '@admin/site-orders/model';
@@ -53,6 +54,16 @@ describe('SiteOrdersDataGrid', () => {
     expect(screen.getByText(/7\s209,00/)).toBeTruthy();
     expect(screen.queryByText('Не надіслано')).toBeNull();
     expect(screen.queryByRole('checkbox', { name: /select/i })).toBeNull();
+  });
+
+  it('keeps the phone on one line and gives the name less room than the phone', () => {
+    const columns = siteOrdersGridColumns(vi.fn(), vi.fn());
+    const name = columns.find((column) => column.field === 'firstName')!;
+    const phone = columns.find((column) => column.field === 'phone')!;
+    expect(phone.minWidth).toBeGreaterThanOrEqual(180);
+    expect(name.minWidth).toBeLessThan(phone.minWidth!);
+    renderGrid();
+    expect(getComputedStyle(screen.getByText('+380671234567')).whiteSpace).toBe('nowrap');
   });
 
   it('links the order made for 1C, with the 1C document number, without opening the site order', () => {
