@@ -60,7 +60,6 @@ export function OrderListGrid(props: OrderListGridProps) {
         <Box sx={{ overflowX: 'auto' }}>
           <Box sx={{ minWidth: 700 }}>
             <DataGrid
-              autoHeight
               columns={columns}
               disableRowSelectionOnClick
               getRowHeight={orders ? () => 'auto' : undefined}

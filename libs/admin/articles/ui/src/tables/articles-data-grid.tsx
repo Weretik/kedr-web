@@ -20,7 +20,6 @@ export function ArticlesDataGrid({ error, loading, onOpen, onRetry, rows }: Arti
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={articlesColumns}
         disableColumnFilter
         disableColumnMenu

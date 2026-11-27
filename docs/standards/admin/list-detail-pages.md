@@ -7,7 +7,7 @@
 - Use a short page heading. The MUI Card containing the list includes mode tabs when needed and the MUI X Data Grid. Tabs have internal Card padding.
 - Place search in the Data Grid toolbar. Sorting, filters, and pagination follow the server contract and apply before the page is fetched. Do not repeat the result count below the table.
 - Use consistent row heights, Card styling, empty/loading/error states, and a non-sortable, non-filterable “Actions” column with an eye icon, tooltip, and accessible name. When the row can be edited by the current role, the column also has a pencil (`RowEditAction`) that opens the [edit panel](#editing-in-the-right-panel) over the list. Data sets and supported filters vary by feature.
-- The Ukrainian MUI and Data Grid locale is connected centrally through the Admin theme. A narrow table keeps all columns and scrolls inside the Card; check toolbar, action, and pagination usability on phones and tablets against the code.
+- The Ukrainian MUI and Data Grid locale is connected centrally through the Admin theme. A table keeps all columns and scrolls inside the Card both ways (height follows the window, the header is pinned; set centrally by the theme, see the [design system](design-system.md)), so a long list never forces a long page scroll; check toolbar, action, and pagination usability on phones and tablets against the code.
 
 ## Details
 

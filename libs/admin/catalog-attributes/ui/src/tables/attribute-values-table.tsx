@@ -35,7 +35,7 @@ export function AttributeValuesTable({
     aliases.filter((alias) => alias.valueId === value.id);
 
   return (
-    <TableContainer sx={{ overflowX: 'auto' }}>
+    <TableContainer>
       <Table size="small" sx={{ minWidth: 560 }}>
         <TableHead>
           <TableRow>

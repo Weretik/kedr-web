@@ -48,7 +48,6 @@ export function SiteModelsDataGrid(props: SiteModelsDataGridProps) {
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <SiteModelsToolbarContext.Provider value={props.filters}>
         <DataGrid
-          autoHeight
           columns={columns}
           disableColumnFilter
           disableColumnSorting

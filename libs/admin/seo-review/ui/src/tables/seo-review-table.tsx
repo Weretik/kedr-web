@@ -19,7 +19,6 @@ export function SeoReviewTable({ error, loading, onOpen, onRetry, rows }: SeoRev
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={seoReviewColumns(onOpen)}
         disableColumnFilter
         disableRowSelectionOnClick

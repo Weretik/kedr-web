@@ -39,7 +39,6 @@ export function CategoryTreeGrid(props: CategoryTreeGridProps) {
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={columns}
         disableColumnFilter
         disableColumnSorting
