@@ -14,7 +14,7 @@ The public site runs on Cloudflare Workers (Workers Paid plan: the free plan's 1
 | `npx nx run site:deploy-cloudflare`  | `opennextjs-cloudflare deploy`  | fills the KV cache with prerendered data and deploys the Worker         |
 
 - Cloudflare Workers Builds is connected to `Weretik/kedr-web`: root directory empty (workspace root), build command `npx nx run site:build-cloudflare`, deploy command `npx nx run site:deploy-cloudflare`. Node comes from `.nvmrc`.
-- `apps/site` has no `package.json`, so `open-next.config.ts` sets `buildCommand` to run `next build` from `apps/site`. Before it, `tools/scripts/patch-next-use-cache.mjs` turns off Next.js sharing of one `'use cache'` read between concurrent requests, which hangs on Workers ([rendering and caching](rendering-and-caching.md)); its test runs in CI as `npm run site:build-patch:fixtures`.
+- `apps/site` has no `package.json`, so `open-next.config.ts` sets `buildCommand` to run `next build` from `apps/site`. Before it, `tools/scripts/patch-next-use-cache.mjs` turns off Next.js sharing of one `'use cache'` read between concurrent requests, which hangs on Workers ([rendering and caching](rendering-and-caching.md)); its test runs in CI as `npm run site:build-patch:fixtures`. The same rule holds for our own code: module-level state shared by requests (such as the proxy's redirect list in `libs/site/core/redirects`) keeps data, never a pending promise, because a promise of a request that has ended can never settle in another one and the waiting request answers 500.
 - The build reads the live catalog API: `generateStaticParams` and sitemaps need real categories and products, so a build without API access fails.
 
 ## Cache

@@ -17,12 +17,19 @@ export interface RedirectListOptions {
 export interface RedirectList {
   /**
    * The current list. A stale list is answered at once while a new one loads in the background
-   * (`waitUntil` keeps the worker alive for it); only the very first request waits for the API.
+   * (`waitUntil` keeps the worker alive for it); a request with no list yet waits for its own load.
    */
   get(waitUntil?: (promise: Promise<unknown>) => void): Promise<SiteRedirectMap>;
 }
 
-/** In-memory copy of the redirect table for the proxy; an API failure never breaks the site. */
+/**
+ * In-memory copy of the redirect table for the proxy; an API failure never breaks the site.
+ *
+ * Only data is shared between requests, never a promise: on Cloudflare Workers a promise created by
+ * one request can never settle in another once the first one ended (a cancelled prefetch), and the
+ * waiting request fails with a 500. So every load belongs to the request that started it; a timestamp
+ * keeps concurrent requests from starting a background refresh each.
+ */
 export function createRedirectList({
   apiUrl,
   fetchImpl = fetch,
@@ -34,7 +41,7 @@ export function createRedirectList({
   const url = `${apiUrl}/api/content/redirects`;
   let current: SiteRedirectMap | null = null;
   let freshUntil = 0;
-  let pending: Promise<SiteRedirectMap> | null = null;
+  let refreshingUntil = 0;
 
   async function load(): Promise<SiteRedirectMap> {
     try {
@@ -47,9 +54,7 @@ export function createRedirectList({
       freshUntil = now() + ttlMs;
     } catch {
       current ??= EMPTY_REDIRECTS;
-      freshUntil = now() + retryMs;
-    } finally {
-      pending = null;
+      freshUntil = Math.max(freshUntil, now() + retryMs);
     }
     return current;
   }
@@ -57,9 +62,11 @@ export function createRedirectList({
   return {
     get(waitUntil) {
       if (now() < freshUntil && current) return Promise.resolve(current);
-      const loading = (pending ??= load());
-      if (!current) return loading;
-      waitUntil?.(loading);
+      if (!current) return load();
+      if (now() >= refreshingUntil) {
+        refreshingUntil = now() + timeoutMs;
+        waitUntil?.(load());
+      }
       return Promise.resolve(current);
     },
   };
