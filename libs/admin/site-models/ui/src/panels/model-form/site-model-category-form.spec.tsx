@@ -25,8 +25,10 @@ describe('SiteModelCategoryForm', () => {
     expect(screen.getByText(/Пропозицію буде погоджено/)).toBeTruthy();
     const save = screen.getByRole('button', { name: 'Зберегти категорію' }) as HTMLButtonElement;
     expect(save.disabled).toBe(true);
+    expect(screen.getByText('Модель уже в цій категорії.')).toBeTruthy();
     fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Категорія на сайті' }));
     fireEvent.click(screen.getByRole('option', { name: 'Фурнітура / Ручки' }));
+    expect(screen.queryByText('Модель уже в цій категорії.')).toBeNull();
     fireEvent.click(save);
     expect(onSubmit).toHaveBeenCalledWith(4);
   });

@@ -138,6 +138,7 @@ export const siteCategoryRefsSchema = z.array(
   z.object({
     id: z.number().int().min(1),
     name: z.string(),
+    shortNameUk: z.string().nullish(),
     parentId: z.number().int().nullish(),
   }),
 );
