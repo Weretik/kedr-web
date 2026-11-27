@@ -8,6 +8,8 @@ interface SiteFinalCategorySelectProps {
   loading: boolean;
   value: number | undefined;
   disabled?: boolean;
+  /** Replaces the default hint, e.g. «Модель уже в цій категорії». */
+  hint?: string;
   onChange: (categoryId: number | undefined) => void;
 }
 
@@ -27,7 +29,7 @@ export function SiteFinalCategorySelect(props: SiteFinalCategorySelectProps) {
       renderInput={(params) => (
         <TextField
           {...params}
-          helperText="Лише кінцеві категорії (без підкатегорій)."
+          helperText={props.hint ?? 'Лише кінцеві категорії (без підкатегорій).'}
           label="Категорія на сайті"
           size="small"
         />

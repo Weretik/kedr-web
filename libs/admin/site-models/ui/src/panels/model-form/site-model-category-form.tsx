@@ -32,6 +32,7 @@ export function SiteModelCategoryForm(props: SiteModelCategoryFormProps) {
       <SiteFinalCategorySelect
         categories={props.categories}
         disabled={props.saving}
+        hint={categoryId === props.initialCategoryId ? 'Модель уже в цій категорії.' : undefined}
         loading={props.loading}
         onChange={setCategoryId}
         value={categoryId}

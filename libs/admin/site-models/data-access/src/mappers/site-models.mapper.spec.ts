@@ -125,14 +125,16 @@ describe('site models mapper', () => {
     ).toEqual({ shortDescription: 'a', description: '', seoTitle: 'T', seoDescription: '' });
   });
 
-  it('keeps only the place in the tree of every catalog category, empty ones included', () => {
+  it('names a category as the site does: short name, else the 1C name; empty ones are kept', () => {
     expect(
       mapSiteCategoryRefs([
-        { id: 5, name: 'На розетці', parentId: 2, productCount: 0, slug: 'x' },
+        { id: 5, name: 'KEDR Ручки на планцi', shortNameUk: 'На розетці (R-08/R-10)', parentId: 2 },
+        { id: 6, name: 'KEDR Замки', shortNameUk: '  ', parentId: 2, productCount: 0 },
         { id: 2, name: 'Ручки', parentId: null },
       ]),
     ).toEqual([
-      { id: 5, name: 'На розетці', parentId: 2 },
+      { id: 5, name: 'На розетці (R-08/R-10)', parentId: 2 },
+      { id: 6, name: 'KEDR Замки', parentId: 2 },
       { id: 2, name: 'Ручки', parentId: null },
     ]);
   });
