@@ -39,11 +39,15 @@ export interface SiteShowcaseRow {
   problems: readonly SiteModelProblem[];
 }
 
-/** A category shown on the site with on-site products; counts include subcategories. */
-export interface SiteModelCategory {
+/** A catalog category with its place in the tree: what the model category picker needs. */
+export interface SiteCategoryRef {
   id: number;
   name: string;
   parentId: number | null;
+}
+
+/** A category shown on the site with on-site products; counts include subcategories. */
+export interface SiteModelCategory extends SiteCategoryRef {
   onSiteProducts: number;
   acceptedModels: number;
   proposedModels: number;

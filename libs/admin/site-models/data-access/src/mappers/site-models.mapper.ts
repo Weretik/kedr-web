@@ -1,4 +1,5 @@
 import {
+  siteCategoryRefsSchema,
   siteModelCategoriesSchema,
   siteModelHealthSchema,
   siteModelSchema,
@@ -6,6 +7,7 @@ import {
 } from '../validators/site-models.schemas';
 
 import type {
+  SiteCategoryRef,
   SiteModel,
   SiteModelCategory,
   SiteModelHealth,
@@ -66,6 +68,13 @@ export function mapSiteShowcase(response: unknown): SiteModelsPage<SiteShowcaseR
 
 export function mapSiteModelCategories(response: unknown): SiteModelCategory[] {
   return siteModelCategoriesSchema
+    .parse(response)
+    .map((category) => ({ ...category, parentId: category.parentId ?? null }));
+}
+
+/** Every live catalog category (the admin list), reduced to what the picker needs. */
+export function mapSiteCategoryRefs(response: unknown): SiteCategoryRef[] {
+  return siteCategoryRefsSchema
     .parse(response)
     .map((category) => ({ ...category, parentId: category.parentId ?? null }));
 }

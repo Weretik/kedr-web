@@ -1,9 +1,10 @@
 import { apiCall, apiClient, baseApi } from '@admin/shared/api-client';
 
 import { mapSiteModelList, toSiteModelListParams } from '../mappers/site-model-list.mapper';
-import { mapSiteModelCategories } from '../mappers/site-models.mapper';
+import { mapSiteCategoryRefs, mapSiteModelCategories } from '../mappers/site-models.mapper';
 
 import type {
+  SiteCategoryRef,
   SiteModelCategory,
   SiteModelListItem,
   SiteModelListQuery,
@@ -32,7 +33,16 @@ export const siteModelListsApi = baseApi.injectEndpoints({
         ),
       providesTags: ['SiteModels'],
     }),
+    getSiteCategoryOptions: build.query<SiteCategoryRef[], void>({
+      queryFn: (_arg, { signal }) =>
+        apiCall(apiClient.GET('/api/categories', { signal }), mapSiteCategoryRefs),
+      providesTags: ['SiteModels', { type: 'Categories', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetSiteModelCategoriesQuery, useGetSiteModelsQuery } = siteModelListsApi;
+export const {
+  useGetSiteCategoryOptionsQuery,
+  useGetSiteModelCategoriesQuery,
+  useGetSiteModelsQuery,
+} = siteModelListsApi;

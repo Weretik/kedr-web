@@ -6,7 +6,7 @@ import { useNewSiteModel } from './use-new-site-model';
 const api = vi.hoisted(() => ({ create: vi.fn(), showcase: vi.fn() }));
 
 vi.mock('@admin/site-models/data-access', () => ({
-  useGetSiteModelCategoriesQuery: () => ({
+  useGetSiteCategoryOptionsQuery: () => ({
     data: [
       { id: 1, name: 'Фурнітура', parentId: null },
       { id: 3, name: 'Ручки', parentId: 1 },

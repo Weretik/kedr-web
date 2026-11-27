@@ -48,6 +48,7 @@ vi.mock('@admin/site-models/data-access', () => ({
   useGetAttributeValueOptionsQuery: () => ({ data: undefined }),
   useGetAttributeOptionsQuery: () => ({ data: [] }),
   useGetSiteModelCategoriesQuery: () => ({ data: [], isLoading: false }),
+  useGetSiteCategoryOptionsQuery: () => ({ data: [], isLoading: false }),
   useChangeSiteModelCategoryMutation: api.idle,
   useAcceptSiteModelsMutation: () => [api.accept, { isLoading: false }],
   useAddSiteModelProductsMutation: () => [api.add, { isLoading: false }],

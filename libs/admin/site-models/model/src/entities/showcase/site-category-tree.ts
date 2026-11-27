@@ -1,4 +1,4 @@
-import type { SiteModelCategory } from './site-showcase';
+import type { SiteCategoryRef, SiteModelCategory } from './site-showcase';
 
 /** A category of the «Моделі» and «Вітрина сайту» tree with its subcategories. */
 export interface SiteCategoryNode {
@@ -31,7 +31,7 @@ export function siteCategoryTree(categories: readonly SiteModelCategory[]): Site
 
 /** IDs of a category's ancestors present in the list, nearest first. */
 export function siteCategoryAncestors(
-  categories: readonly SiteModelCategory[],
+  categories: readonly SiteCategoryRef[],
   categoryId: number | undefined,
 ): number[] {
   const byId = new Map(categories.map((category) => [category.id, category] as const));
