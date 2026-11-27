@@ -33,8 +33,16 @@ export function siteOrdersGridColumns(
       minWidth: 160,
       valueFormatter: (value: string) => formatSiteOrderTime(value),
     },
-    { ...fixed, field: 'firstName', headerName: 'Ім’я', flex: 1, minWidth: 140 },
-    { ...fixed, field: 'phone', headerName: 'Телефон', minWidth: 150 },
+    { ...fixed, field: 'firstName', headerName: 'Ім’я', flex: 0.5, minWidth: 110 },
+    {
+      ...fixed,
+      field: 'phone',
+      headerName: 'Телефон',
+      flex: 0.5,
+      minWidth: 180,
+      // «+38 (050) 280-42-86» always stays on one line (owner request 2026-11-27).
+      renderCell: ({ value }) => <span style={{ whiteSpace: 'nowrap' }}>{value as string}</span>,
+    },
     {
       ...fixed,
       align: 'right',
