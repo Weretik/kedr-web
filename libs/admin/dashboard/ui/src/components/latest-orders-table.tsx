@@ -1,5 +1,15 @@
 import { SectionCard, StatusPill } from '@admin/shared/ui';
-import { Box, Button, Link, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import {
+  Box,
+  Button,
+  Link,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 
 import type { DashboardOrder } from '@admin/dashboard/model';
 
@@ -23,7 +33,7 @@ export function LatestOrdersTable({ orders }: { orders: readonly DashboardOrder[
       {orders.length === 0 ? (
         <Box color="text.secondary">Замовлень ще немає.</Box>
       ) : (
-        <Box sx={{ overflowX: 'auto' }}>
+        <TableContainer>
           <Table size="small" sx={{ minWidth: 560 }}>
             <TableHead>
               <TableRow>
@@ -56,7 +66,7 @@ export function LatestOrdersTable({ orders }: { orders: readonly DashboardOrder[
               ))}
             </TableBody>
           </Table>
-        </Box>
+        </TableContainer>
       )}
     </SectionCard>
   );

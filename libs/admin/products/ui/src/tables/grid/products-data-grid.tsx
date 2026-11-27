@@ -72,7 +72,6 @@ export function ProductsDataGrid({
         }}
       >
         <DataGrid
-          autoHeight
           columns={columns}
           columnHeaderHeight={76}
           disableColumnSorting={!sortable}

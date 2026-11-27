@@ -6,6 +6,12 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 
 import { adminMotion } from '../foundation/motion';
 
+/**
+ * Every table scrolls inside itself so a laptop screen never needs a long page scroll:
+ * the height follows the window, the width follows the card, and the header stays pinned.
+ */
+const tableViewportHeight = 'calc(100dvh - 224px)';
+
 /** Data grids and tables. */
 export const adminTableComponents = {
   MuiDataGrid: {
@@ -17,6 +23,9 @@ export const adminTableComponents = {
         border: 0,
         borderRadius: 0,
         fontSize: '0.875rem',
+        height: tableViewportHeight,
+        maxWidth: '100%',
+        minHeight: 320,
         '& .MuiTablePagination-toolbar': { paddingInline: theme.spacing(2) },
         [theme.breakpoints.down('sm')]: {
           '& .MuiTablePagination-selectLabel': { display: 'none' },
@@ -55,6 +64,11 @@ export const adminTableComponents = {
       withBorderColor: ({ theme }) => ({ borderColor: (theme.vars ?? theme).palette.divider }),
     },
   },
+  MuiTableContainer: {
+    styleOverrides: {
+      root: { maxHeight: tableViewportHeight, maxWidth: '100%', overflow: 'auto' },
+    },
+  },
   MuiTableBody: {
     styleOverrides: {
       root: {
@@ -75,6 +89,9 @@ export const adminTableComponents = {
           backgroundColor: (theme.vars ?? theme).palette.background.paper,
           color: (theme.vars ?? theme).palette.text.secondary,
           fontSize: '0.75rem',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
           fontWeight: 700,
           letterSpacing: '0.06em',
           lineHeight: 1,
