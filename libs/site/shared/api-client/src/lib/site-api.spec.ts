@@ -1,11 +1,24 @@
 import { siteApiGet } from './site-api';
 
+import type { RetryPolicy } from './get-with-retry';
+
 vi.mock('server-only', () => ({}));
+
+const API = 'https://api.example.com';
+const NO_WAIT: RetryPolicy = {
+  delaysMs: [0, 0, 0, 0],
+  attemptTimeoutMs: 1000,
+  budgetMs: 60_000,
+  maxRetryAfterMs: 0,
+};
 
 const jsonResponse = (status: number, body: unknown = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 describe('siteApiGet', () => {
+  beforeEach(() => vi.spyOn(console, 'error').mockImplementation(() => undefined));
+  afterEach(() => vi.restoreAllMocks());
+
   it('fills path parameters, encodes them, and sorts the query', async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, { slug: 'locks' }));
 
@@ -13,7 +26,8 @@ describe('siteApiGet', () => {
       '/api/catalog/{lang}/{categorySlug}/products',
       { path: { lang: 'uk', categorySlug: 'zamki 1' }, query: { pageSize: 8, inStock: true } },
       fetchMock,
-      'https://api.example.com',
+      API,
+      NO_WAIT,
     );
 
     expect(result).toEqual({ kind: 'ok', data: { slug: 'locks' } });
@@ -29,7 +43,8 @@ describe('siteApiGet', () => {
         '/api/catalog/{lang}/categories',
         { path: { lang: 'ru' } },
         vi.fn().mockResolvedValue(jsonResponse(status)),
-        'https://api.example.com',
+        API,
+        NO_WAIT,
       );
 
     expect(await call(404)).toEqual({ kind: 'not-found', body: {} });
@@ -47,7 +62,8 @@ describe('siteApiGet', () => {
       '/api/catalog/{lang}/categories',
       { path: { lang: 'uk' } },
       fetchMock,
-      'https://api.example.com',
+      API,
+      NO_WAIT,
     );
 
     expect(result).toEqual({ kind: 'ok', data: [{ slug: 'zamky' }] });
@@ -60,7 +76,8 @@ describe('siteApiGet', () => {
         '/api/catalog/{lang}/categories',
         { path: { lang: 'uk' } },
         vi.fn().mockResolvedValue(response),
-        'https://api.example.com',
+        API,
+        NO_WAIT,
       );
 
     expect(await call(jsonResponse(404, { redirectSlug: 'zamky' }))).toEqual({
@@ -75,9 +92,28 @@ describe('siteApiGet', () => {
       '/api/catalog/{lang}/categories',
       { path: { lang: 'uk' } },
       vi.fn().mockRejectedValue(new TypeError('fetch failed')),
-      'https://api.example.com',
+      API,
+      NO_WAIT,
     );
 
     expect(result).toEqual({ kind: 'unavailable' });
+    expect(console.error).toHaveBeenCalledWith('Site API read failed', {
+      path: '/api/catalog/{lang}/categories',
+      name: 'TypeError',
+      message: 'fetch failed',
+    });
+  });
+
+  it('uses the caller timeout for each attempt', async () => {
+    const timeoutSpy = vi.spyOn(AbortSignal, 'timeout');
+    await siteApiGet(
+      '/api/catalog/{lang}/categories',
+      { path: { lang: 'uk' }, timeoutMs: 2_500 },
+      vi.fn().mockResolvedValue(jsonResponse(200)),
+      API,
+      NO_WAIT,
+    );
+
+    expect(timeoutSpy).toHaveBeenCalledWith(2_500);
   });
 });
