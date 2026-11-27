@@ -27,7 +27,6 @@ export function LoneProductsGrid(props: LoneProductsGridProps) {
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={loneProductsGridColumns(props)}
         disableColumnFilter
         disableRowSelectionOnClick

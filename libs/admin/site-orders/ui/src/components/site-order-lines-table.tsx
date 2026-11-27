@@ -1,6 +1,14 @@
 import { SectionCard } from '@admin/shared/ui';
 import { formatSiteOrderMoney } from '@admin/site-orders/model';
-import { Box, Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 
 import type { SiteOrderLine } from '@admin/site-orders/model';
 
@@ -14,7 +22,7 @@ export function SiteOrderLinesTable({
 }) {
   return (
     <SectionCard title="Товари">
-      <Box sx={{ overflowX: 'auto' }}>
+      <TableContainer>
         <Table aria-label="Товари замовлення" size="small" sx={{ minWidth: 560 }}>
           <TableHead>
             <TableRow>
@@ -47,7 +55,7 @@ export function SiteOrderLinesTable({
             </TableRow>
           </TableFooter>
         </Table>
-      </Box>
+      </TableContainer>
     </SectionCard>
   );
 }

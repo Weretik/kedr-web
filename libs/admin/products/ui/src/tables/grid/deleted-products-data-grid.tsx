@@ -102,7 +102,6 @@ export function DeletedProductsDataGrid({
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={columns}
         disableColumnFilter
         disableColumnMenu

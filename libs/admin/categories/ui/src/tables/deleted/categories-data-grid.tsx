@@ -19,7 +19,6 @@ export function CategoriesDataGrid({ error, loading, onRetry, rows }: Categories
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={deletedCategoriesColumns}
         disableColumnFilter
         disableColumnMenu

@@ -36,7 +36,6 @@ export function SiteOrdersDataGrid(props: SiteOrdersDataGridProps) {
     >
       <Box sx={{ minWidth: 0, width: '100%' }}>
         <DataGrid
-          autoHeight
           columns={siteOrdersGridColumns(props.onView)}
           disableColumnFilter
           disableRowSelectionOnClick

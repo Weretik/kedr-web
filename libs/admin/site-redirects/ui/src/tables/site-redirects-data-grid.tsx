@@ -32,7 +32,6 @@ export function SiteRedirectsDataGrid(props: SiteRedirectsDataGridProps) {
   return (
     <Box sx={{ minWidth: 0, width: '100%' }}>
       <DataGrid
-        autoHeight
         columns={siteRedirectsGridColumns({ onDelete: props.onDelete, onEdit: props.onEdit })}
         disableColumnFilter
         disableRowSelectionOnClick
