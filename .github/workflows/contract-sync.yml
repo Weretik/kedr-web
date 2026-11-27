@@ -52,7 +52,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -C "$BRANCH"
           git add docs/contracts/openapi libs/shared/api-contracts
-          git commit -m 'Sync the KedrStore API contract'
+          git commit -m 'chore(contracts): sync the KedrStore API contract'
           git push --force origin "$BRANCH"
           if [ "$TYPECHECK" = 'success' ]; then
             result='Typecheck passed: the frontend compiles against the new contract.'
@@ -65,7 +65,7 @@ jobs:
             'CI does not start on a pull request opened by this workflow; close and reopen it, or push a commit, to run CI.')"
           number="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')"
           if [ -z "$number" ]; then
-            gh pr create --head "$BRANCH" --base main --title 'Sync the KedrStore API contract' --body "$body"
+            gh pr create --head "$BRANCH" --base main --title 'chore(contracts): sync the KedrStore API contract' --body "$body"
           else
             gh pr edit "$number" --body "$body"
           fi
