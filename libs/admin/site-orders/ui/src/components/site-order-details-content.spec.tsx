@@ -80,6 +80,7 @@ describe('SiteOrderDetailsContent', () => {
   it('shows the problem with the error text when Telegram has not got the order', () => {
     render(
       <SiteOrderDetailsContent
+        onOpenOrder={vi.fn()}
         order={order({
           telegramStatus: 'failed',
           telegramSentAtUtc: null,

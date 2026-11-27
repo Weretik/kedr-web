@@ -29,6 +29,9 @@ const failedOrder: SiteOrderDetail = {
   telegramLastAttemptAtUtc: '2026-11-24T14:45:00Z',
   telegramLastError: 'chat not found',
   comment: null,
+  oneCOrderId: null,
+  oneCOrderNumber: null,
+  oneCDocumentNumber: null,
   items: [{ productId: '27254', title: 'Ручка', unitPrice: 136.5, quantity: 3, amount: 409.5 }],
 };
 const refetch = vi.fn();
